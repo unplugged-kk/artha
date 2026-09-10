@@ -281,6 +281,27 @@ export class UsersService {
         // later would depend on that object not having been touched by the
         // update in between.
         const previousDefaultCurrency = before?.defaultCurrency;
+        // Currencies are created on demand rather than seeded up front, so the
+        // newly chosen default must exist BEFORE the UPDATE below writes it --
+        // otherwise the currencies FK rejects the write on a fresh database.
+        // Runs inside this transaction (scoped-db re-entrancy); resolved
+        // lazily via ModuleRef to avoid a UsersModule -> CurrenciesModule
+        // import that would create a circular dependency through Notifications.
+        if (
+          dto.defaultCurrency !== undefined &&
+          dto.defaultCurrency !== previousDefaultCurrency
+        ) {
+          try {
+            const currenciesService = this.moduleRef.get(CurrenciesService, {
+              strict: false,
+            });
+            await currenciesService.ensureSystemCurrency(dto.defaultCurrency);
+          } catch (err) {
+            this.logger.warn(
+              `Could not ensure default currency ${dto.defaultCurrency} exists: ${err.message}`,
+            );
+          }
+        }
         // The update is written out rather than delegated to
         // `patchUserPreferences`, which looks like duplication and is not: that
         // helper materializes the row itself, and this method has to read
@@ -304,25 +325,13 @@ export class UsersService {
     // Fetch fresh exchange rates whenever the user picks a new default
     // currency so multi-currency totals (Net Worth card, account group totals)
     // can convert immediately instead of waiting for the next daily cron.
-    // Resolved lazily via ModuleRef to avoid a UsersModule -> CurrenciesModule
-    // import that would create a circular dependency through Notifications.
+    // (The currency row itself is ensured before the write above.) Resolved
+    // lazily via ModuleRef to avoid a UsersModule -> CurrenciesModule import
+    // that would create a circular dependency through Notifications.
     if (
       dto.defaultCurrency !== undefined &&
       dto.defaultCurrency !== previousDefaultCurrency
     ) {
-      // Currencies are created on demand rather than seeded up front, so make
-      // sure the newly chosen default currency exists (with a proper symbol)
-      // before anything tries to display or convert it.
-      try {
-        const currenciesService = this.moduleRef.get(CurrenciesService, {
-          strict: false,
-        });
-        await currenciesService.ensureSystemCurrency(dto.defaultCurrency);
-      } catch (err) {
-        this.logger.warn(
-          `Could not ensure default currency ${dto.defaultCurrency} exists: ${err.message}`,
-        );
-      }
       try {
         const exchangeRateService = this.moduleRef.get(ExchangeRateService, {
           strict: false,
