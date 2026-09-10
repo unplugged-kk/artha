@@ -22,9 +22,9 @@
  */
 import {
   copyFileSync,
-  cpSync,
   existsSync,
   mkdirSync,
+  readdirSync,
   statSync,
 } from "node:fs";
 import { dirname, join } from "node:path";
@@ -68,6 +68,23 @@ const ENTRIES = [
   },
 ];
 
+/**
+ * Copy a directory file by file. Node's recursive cpSync fails with EACCES
+ * when the target is a Docker Desktop (macOS) bind mount, while single-file
+ * copies to the same mount succeed -- so never use cpSync here.
+ * (ponytail: flat loop would do today; recursion is 2 lines and survives
+ * upstream adding a subdirectory.)
+ */
+function copyDirFiles(source, target) {
+  mkdirSync(target, { recursive: true });
+  for (const name of readdirSync(source)) {
+    const from = join(source, name);
+    const to = join(target, name);
+    if (statSync(from).isDirectory()) copyDirFiles(from, to);
+    else copyFileSync(from, to);
+  }
+}
+
 for (const entry of ENTRIES) {
   if (!existsSync(entry.source)) {
     console.error(
@@ -77,7 +94,7 @@ for (const entry of ENTRIES) {
   }
 
   if (entry.directory) {
-    cpSync(entry.source, entry.target, { recursive: true });
+    copyDirFiles(entry.source, entry.target);
     console.log(`[copy-vendor] copied ${entry.label} to ${entry.target}`);
     continue;
   }
