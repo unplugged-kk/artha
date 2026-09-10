@@ -1,0 +1,17 @@
+{
+  "preferences": {
+    "toasts": {
+      "colorThemeSaveFailed": "Failed to save color theme"
+    },
+    "colorThemeLabel": "Color theme",
+    "colorThemeOptions": {
+      "colorblind": "Color-blind safe"
+    }
+  },
+  "about": {
+    "description": "What this instance is running, and where to find the release notes, license and security policy.",
+    "license": {
+      "label": "License"
+    }
+  }
+}

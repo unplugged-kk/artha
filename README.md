@@ -2,4 +2,485 @@
 
 Unified self-hosted India-first personal finance platform.
 
-AGPL-3.0-only. Fork lineage: https://github.com/kenlasko/monize - see audit in Phase 1 work.
+> **Provenance:** artha is a fork of [Monize](https://github.com/kenlasko/monize) (AGPL-3.0-only, all upstream copyright notices and license files retained verbatim). Divergence roadmap is India-first: AMFI/NSE market data, UPI/SMS/CAS imports, India instruments, FY-versioned tax engine. Upstream attribution is preserved; see LICENSE.
+
+<p align="center">
+  <img src="frontend/public/icons/monize-logo.svg" alt="Monize" width="128" height="128" />
+</p>
+
+# Monize
+> [!CAUTION] 
+> This project is 100% written by AI. I've done practically zero manual changes. I am not a programmer by trade, but have dabbled in various languages over the years. This gives me high-level awareness on coding practices, but **I AM NOT SKILLED IN THE LANGUAGES USED IN THIS PRODUCT**. I have spent months prompting Claude Code for features, updates, fixes and tweaks. I have taken steps to ensure this is secure as it can be, given the constraints. I've performed numerous security audits (both AI-prompted and 3rd party) and have implemented best-practice security measures as much as I can (including 2FA and OIDC support). Every build must pass NPM audits and security scans before publishing. However, I can't personally guarantee the security of this code. **YOU HAVE BEEN WARNED**. 
+
+<div align="center">
+<table>
+<tr>
+<td align="center"><a href="https://raw.githubusercontent.com/wiki/kenlasko/monize/images/dashboard-overview.png"><img src="https://raw.githubusercontent.com/wiki/kenlasko/monize/images/dashboard-overview.png" width="400" alt="Dashboard Overview"/></a></td>
+<td align="center"><a href="https://raw.githubusercontent.com/wiki/kenlasko/monize/images/transactions-page.png"><img src="https://raw.githubusercontent.com/wiki/kenlasko/monize/images/transactions-page.png" width="400" alt="Transactions"/></a></td>
+<td align="center"><a href="https://raw.githubusercontent.com/wiki/kenlasko/monize/images/bills-deposits-page.png"><img src="https://raw.githubusercontent.com/wiki/kenlasko/monize/images/bills-deposits-page.png" width="400" alt="Bills & Deposits"/></a></td>
+<td align="center"><a href="https://raw.githubusercontent.com/wiki/kenlasko/monize/images/investments-page.png"><img src="https://raw.githubusercontent.com/wiki/kenlasko/monize/images/investments-page.png" width="400" alt="Investments"/></a></td>
+</tr>
+<tr>
+<td align="center"><b>Dashboard</b></td>
+<td align="center"><b>Transactions</b></td>
+<td align="center"><b>Bills & Deposits</b></td>
+<td align="center"><b>Investments</b></td>
+</tr>
+</table>
+</div>
+
+A comprehensive personal finance management application built with NestJS and Next.js. Designed as a replacement for Microsoft Money and Intuit Quicken. 100% built using farm-fresh, free-range Claude Code.
+
+<div align="center">
+
+### [**Live Demo**](https://demo.monize.net) | [**Wiki**](https://github.com/kenlasko/monize/wiki)
+
+</div>
+
+## Why This Exists?
+The personal finance ecosystem is flooded with personal finance platforms. I've tried many of them, but every single one of them had deal-breakers I couldn't work with. I finally decided to try my hand at creating my own platform that met all my criteria by using  "vibe-coding", which is a dirty word in the self-hosting community. I just wanted to see what was possible with the current state of AI. It turned out to be more successful than I ever could have imagined, which is why I'm making this available for others.
+
+### A bit of background on my specific situation that brought me to create this project:
+I've been a rabid user of [Microsoft Money](https://en.wikipedia.org/wiki/Microsoft_Money) since 1995, when I had my first real job outside of university doing tech support for Microsoft. I started using it to keep track of my finances and to help get myself out of credit card debt. It allowed me to keep track of every aspect of my finances: chequing accounts, credit cards, loans, mortgages, investments, and more. Being software of the 90's, it didn't have much in the way of automation, especially for non-US customers. This forced me to meticulously enter every single transaction manually into Microsoft Money.
+
+This "feature" helped me truly understand the state of my finances. I knew where every single penny went. Nothing was ever a surprise. I could forecast my finances out a year or more with precision. I've kept that going for more than THIRTY YEARS. Yes, even though Microsoft Money hasn't had a new version since 2010, I still use it. Everything from 1995 to today is stored in Microsoft Money. I can tell you my detailed financial picture going back to 1995. It certainly isn't perfect. I can only run it on one machine. There's no mobile app or anything of the sort. When I go on a trip or something, it can take hours after I return to enter and categorize my data. I've been increasingly wanting a true replacement for Microsoft Money. 
+
+My perfect product to replace MS Money needed the following features:
+- Must support all types of banking and investment types, including:
+  - Chequing
+  - Savings
+  - Credit Cards
+  - Loans
+  - Mortgages
+  - Line of Credit
+  - Brokerage accounts
+  - Asset accounts
+- Must support importing from QIF (the export format used by MS Money and Quicken)
+- Must be self-hostable via containerization
+- Must support multiple currencies
+- Must support pulling currency exchange rates and stock prices on a regular basis
+- Must support PostgreSQL for the backend tables
+- Must have a usable mobile app or web interface
+
+Since I couldn't find anything out there to meet that criteria, I decided to create Monize! After weeks of vibe-coding and testing, I finally was able to migrate ALL of 30+ years of Microsoft Money data into Monize with no errors or discrepancies. Microsoft Money has finally been retired!
+
+Monize is running in my [Kubernetes cluster](https://github.com/kenlasko/k8s).
+
+
+## Features
+### Account Management
+- Ten account types: Chequing, Savings, Credit Card, Loan, Mortgage, Line of Credit, Investment, Cash, Asset and Other
+- Investment accounts with brokerage and investment-cash sub-types
+- Support for multiple currencies per account
+- Track balances, credit limits, and interest rates
+- Credit card statement dates: configurable due date and settlement date (billing cycle closing date)
+- Favourite accounts on dashboard with credit card date indicators
+- Account reconciliation
+
+### Transaction Management
+- Full transaction tracking with categories and payees
+- Split transaction support for complex transactions
+- Transaction tags for flexible cross-category labelling
+- Transaction reconciliation and clearing
+- Bulk update and bulk delete operations with filter-based selection
+- Payees with auto-categorization rules, aliases with wildcard patterns, and merge capability
+- Multi-currency transactions with automatic exchange rate tracking
+- Import from CSV, OFX/QFX, and QIF (Quicken and Microsoft Money) with smart column auto-matching
+- Microsoft Money full-file import: read a `.mny` file directly -- accounts, transfers, splits, investments, price history, exchange rates and scheduled bills -- and reconcile every balance against the file afterwards ([guide](docs/import-ms-money.md))
+- Quicken full-file import: import all accounts, categories, and tags from a single QIF export
+- Data reset: wipe financial data and re-import without losing your user account or settings
+- Share into the app on Android: with Monize installed as a PWA, share a receipt photo, a PDF or a statement export (CSV, OFX, QFX, QIF) to it from another app and land on a review screen that offers to attach it to a new transaction or open the import wizard. Nothing is imported or attached until you choose it, and shared files are kept on the device for an hour
+
+### Investment Features
+- Track stocks, bonds, ETFs, mutual funds, options, GICs and cryptocurrency
+- Exchange-aware symbol resolution for North American, European and Asian markets (NYSE, NASDAQ, AMEX, ARCA, TSX, TSX-V, CSE, NEO, LSE, Frankfurt, XETRA, Euronext Paris, ASX, Tokyo, HKEX)
+- Daily price updates from Yahoo Finance
+- Manual price management: add, edit, and delete individual price entries
+- Price backfill from transaction history (uses buy/sell prices when market data unavailable)
+- Investment transactions: buy, sell, dividend, interest, splits, transfers
+- Portfolio tracking with real-time valuations
+- Historical price backfill
+
+### Multi-Currency Support
+- 44 currencies with built-in symbol and formatting metadata (USD, CAD, EUR, GBP, JPY, CHF, AUD, CNY and more), created on demand rather than pre-seeded
+- Daily exchange rate updates
+- Automatic currency conversion for reporting
+- Per-account currency settings
+
+### Multi-Language Support
+- Full user interface translation, including server-generated messages and emails
+- Available languages (22 locales): English (with US, Canadian and UK variants), German (Deutsch), Spanish (Español), French (Français), Hindi (हिन्दी), Indonesian (Bahasa Indonesia), Italian (Italiano), Japanese (日本語), Korean (한국어), Dutch (Nederlands), Polish (Polski), Portuguese (Português), Brazilian Portuguese (Português do Brasil), Russian (Русский), Turkish (Türkçe), Ukrainian (Українська), Vietnamese (Tiếng Việt), Simplified Chinese (简体中文) and Traditional Chinese (繁體中文)
+- Language can be chosen on the sign-in and registration screens and in Settings -> Preferences
+
+### Scheduled Transactions
+- Recurring payment tracking (daily, weekly, bi-weekly, monthly, quarterly, yearly)
+- Automatic transaction entry option
+- Skip and override individual occurrences
+- Bill payment history tracking
+
+### Reports
+- **Built-in Reports** -- 46 across ten categories (spending, income, net worth, tax, debt, investment, insights, maintenance, budget, bills), all server-side aggregated. A sample:
+  - Spending by Category / Payee
+  - Income by Source
+  - Monthly Spending Trend
+  - Income vs Expenses
+  - Cash Flow
+  - Year over Year Comparison
+  - Weekend vs Weekday Spending
+  - Spending Anomalies Detection
+  - Tax Summary
+  - Recurring Expenses
+  - Bill Payment History
+  - Uncategorized Transactions
+  - Duplicate Transaction Finder
+- **Net Worth Report**: Historical net worth tracking with monthly snapshots
+- **Custom Reports**: Build your own reports with flexible filters
+- Visual charts (pie, bar, line, area)
+
+### Budget Planner
+- Create and manage budgets with per-category allocations
+- Track spending against budget targets
+- Budget period snapshots and historical tracking
+- Budget alerts for threshold notifications
+
+### AI Financial Assistant
+- **Natural language queries** about your finances ("How much did I spend on dining last month?", "What are my top expense categories?")
+- **Multi-provider support**: Anthropic (Claude), OpenAI (GPT), Ollama (local models), and any OpenAI-compatible endpoint
+- **Real-time streaming** responses via Server-Sent Events
+- **6 financial analysis tools**: transaction search/aggregation, account balances, spending by category, income summary, net worth history, and period comparison
+- **Per-user provider configuration** with encrypted API key storage (AES-256-GCM)
+- **Usage tracking** with per-request token and cost analytics
+- **Provider fallback chain** with priority-based ordering
+- **Connection testing** to verify provider setup before use
+- **Suggested queries** for quick exploration of your financial data
+- **MCP (Model Context Protocol)** server for integration with AI-powered tools
+- No financial data is sent to AI providers beyond what is needed to answer the specific query
+
+### Security
+- OIDC (OpenID Connect) authentication (Authentik, Authelia, Pocket-ID, etc.)
+- Local credential authentication with bcrypt hashing
+- JWT-based session management with httpOnly cookies
+- "Remember Me" option with configurable extended session duration (default 30 days)
+- TOTP two-factor authentication with trusted device support
+- Personal access tokens (PAT) for API and MCP access
+- Admin user management with role-based access (admin/user)
+- Password reset via email with temporary passwords
+- Forced password change and forced 2FA policies
+- Rate limiting and request throttling
+- Helmet security headers (with `DISABLE_HTTPS_HEADERS` option for plain HTTP deployments)
+- CORS protection
+- Demo mode with sample data and daily resets
+
+## Technology Stack
+
+### Backend
+- **Framework**: NestJS (Node.js/TypeScript)
+- **Database**: PostgreSQL 16+ (developed against PG16, daily usage with PG18)
+- **Authentication**: Passport.js (Local & OIDC strategies)
+- **API Documentation**: Swagger/OpenAPI (development only)
+- **ORM**: TypeORM
+- **Validation**: class-validator & class-transformer
+
+### Frontend
+- **Framework**: Next.js 16 (React 19/TypeScript)
+- **Styling**: Tailwind CSS
+- **State Management**: Zustand
+- **Charts**: Recharts
+- **Forms**: React Hook Form
+- **HTTP Client**: Axios
+- **Date Handling**: date-fns
+
+### DevOps
+- **Runtime**: Node.js 24
+- **Containerization**: Docker & Docker Compose
+- **Orchestration**: Kubernetes-ready (Helm charts included)
+- **Output**: Next.js standalone build for minimal container size
+
+## Project Structure
+
+```
+monize/
+├── backend/                    # NestJS backend application
+│   ├── src/
+│   │   ├── auth/              # Authentication (Local, OIDC, 2FA, trusted devices, PAT)
+│   │   ├── users/             # User management & preferences
+│   │   ├── admin/             # Admin user management (roles, status, password reset)
+│   │   ├── accounts/          # Account management
+│   │   ├── transactions/      # Transaction management
+│   │   ├── categories/        # Category management (hierarchical)
+│   │   ├── payees/            # Payee management
+│   │   ├── currencies/        # Currency & exchange rates
+│   │   ├── securities/        # Stock/security management & portfolio
+│   │   ├── scheduled-transactions/   # Recurring payments
+│   │   ├── budgets/           # Budget planner & tracking
+│   │   ├── notifications/     # Email notifications (SMTP)
+│   │   ├── net-worth/         # Net worth calculations
+│   │   ├── built-in-reports/  # Server-side report aggregation
+│   │   ├── reports/           # User-defined custom reports
+│   │   ├── ai/                # AI assistant (providers, query engine, usage tracking)
+│   │   ├── mcp/               # Model Context Protocol server
+│   │   ├── tags/               # Transaction tags
+│   │   ├── import/            # QIF, CSV, OFX/QFX and Microsoft Money (.mny) file import
+│   │   ├── health/            # Health check endpoints
+│   │   └── main.ts            # Application entry point
+│   └── Dockerfile
+├── frontend/                   # Next.js frontend application
+│   ├── src/
+│   │   ├── app/               # Next.js App Router pages
+│   │   ├── components/        # React components
+│   │   ├── contexts/          # React contexts
+│   │   ├── lib/               # API clients and utilities
+│   │   ├── hooks/             # Custom React hooks
+│   │   ├── store/             # Zustand state stores
+│   │   └── types/             # TypeScript type definitions
+│   └── Dockerfile
+├── database/
+│   ├── schema.sql             # Complete PostgreSQL schema
+│   └── migrations/            # Incremental schema migrations
+├── e2e/                       # End-to-end tests
+├── helm/                      # Helm charts for Kubernetes
+├── docker-compose.dev.yml     # Development environment
+├── docker-compose.prod.yml    # Production environment
+├── docker-compose.demo.yml    # Demo environment
+├── docker-compose.e2e.yml     # End-to-end test environment
+├── docker-compose.zap.yml     # ZAP security-scan environment
+├── .env.example               # Environment variables template
+└── README.md
+```
+
+## Getting Started
+
+### Prerequisites
+
+- Docker and Docker Compose
+- Node.js 24 (for local development -- matches the container images)
+- PostgreSQL 16+ (if running without Docker)
+
+### Quick Start with Docker
+
+1. Clone the repository:
+```bash
+git clone git@github.com:kenlasko/monize.git
+cd monize
+```
+
+2. Copy environment variables:
+```bash
+cp .env.example .env
+```
+
+3. Edit `.env` and configure:
+   - `POSTGRES_PASSWORD` - secure database password
+   - `JWT_SECRET` - generate with `openssl rand -base64 32`
+   - `PUBLIC_APP_URL` - your public frontend URL
+   - OIDC settings (optional) for SSO authentication
+
+4. Start the application:
+```bash
+docker compose -f docker-compose.dev.yml up -d
+```
+
+   The `-f` is required: every stack in this repository is an explicit target
+   (see the tree above) and there is no default Compose file to fall back on.
+
+5. Access the application:
+   - Frontend: http://localhost:3001
+   - Backend API: http://localhost:3000
+
+### Development Setup (Without Docker)
+
+1. Install backend dependencies:
+```bash
+cd backend
+npm install
+```
+
+2. Set up PostgreSQL database:
+```bash
+createdb monize
+psql monize < ../database/schema.sql
+```
+
+3. Create `backend/.env`:
+```env
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_NAME=monize
+DATABASE_USER=your_user
+DATABASE_PASSWORD=your_password
+JWT_SECRET=your-secret-key
+PUBLIC_APP_URL=http://localhost:3001
+```
+
+4. Start the backend:
+```bash
+npm run start:dev
+```
+
+5. In a new terminal, set up frontend:
+```bash
+cd frontend
+npm install
+cp ../.env.example .env.local  # Update INTERNAL_API_URL if needed
+npm run dev
+```
+
+## Environment Variables
+
+### Required Variables
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `POSTGRES_DB` | Database name | `monize` |
+| `POSTGRES_USER` | Database user | `monize_user` |
+| `POSTGRES_PASSWORD` | Database password | `secure-password` |
+| `JWT_SECRET` | JWT signing key (min 32 chars) | `openssl rand -base64 32` |
+| `PUBLIC_APP_URL` | Public frontend URL | `https://money.example.com` |
+
+### Optional Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `INTERNAL_API_URL` | Backend URL for server-side calls | `http://localhost:3000` |
+| `CORS_ORIGIN` | Additional CORS origin | - |
+| `LOCAL_AUTH_ENABLED` | Enable local auth | `true` |
+| `REGISTRATION_ENABLED` | Allow new user registration | `true` |
+| `FORCE_2FA` | Require 2FA for all local users | `false` |
+| `OIDC_ISSUER_URL` | OIDC provider URL | - |
+| `OIDC_CLIENT_ID` | OIDC client ID | - |
+| `OIDC_CLIENT_SECRET` | OIDC client secret | - |
+| `OIDC_CALLBACK_URL` | OIDC callback URL | - |
+| `SMTP_HOST` | SMTP server host | - |
+| `SMTP_PORT` | SMTP server port | `587` |
+| `SMTP_USER` | SMTP username | - |
+| `SMTP_PASSWORD` | SMTP password | - |
+| `EMAIL_FROM` | Email sender address | - |
+| `ENCRYPTION_KEY` | **Set this.** Encrypts AI provider keys, emergency-access credentials and the password your backups are encrypted with (`openssl rand -hex 32`). Without it, backups are written unencrypted and no secret can be stored; the server warns on every boot and will require it in a future release. Keep it safe and keep it unchanged -- losing it makes every stored secret unreadable. Formerly `AI_ENCRYPTION_KEY`, which is still accepted | - |
+| `AI_DEFAULT_PROVIDER` | System-level default AI provider (the centrally managed AI) | - |
+| `AI_DEFAULT_MODEL` | Default model for the provider | - |
+| `AI_DEFAULT_API_KEY` | System-wide AI API key | - |
+| `AI_DEFAULT_BASE_URL` | Base URL for Ollama or compatible endpoints | - |
+| `AI_QUERY_MAX_ITERATIONS` | Analysis steps per AI Assistant question, centrally managed provider only | `5` |
+| `AI_QUERY_MAX_TOOL_CALLS` | Data lookups per question, centrally managed provider only | `15` |
+| `AI_QUERY_TIMEOUT_MINUTES` | Wall-clock minutes per question, centrally managed provider only | `20` |
+| `AI_QUERY_MAX_INPUT_TOKENS` | Cumulative input tokens per question, centrally managed provider only | `200000` |
+| `AI_QUERY_MAX_TOOL_RESULT_CHARS` | Characters kept from one tool result, centrally managed provider only | `50000` |
+| `JWT_EXPIRATION` | JWT token expiration time | `15m` |
+| `REMEMBER_ME_DAYS` | Duration for "Remember Me" sessions (days) | `30` |
+| `DISABLE_HTTPS_HEADERS` | Disable HSTS and COOP headers for plain HTTP | `false` |
+| `DEMO_MODE` | Enable demo mode with sample data | `false` |
+| `BACKUP_CONTAINER_DIR` | Container folder automatic backups are written to (each user gets a `<ab>/<cd>/<user-id>/` folder underneath it) | `/data/backups` |
+| `BACKUP_HOST_DIR` | Host folder mapped to `BACKUP_CONTAINER_DIR` by docker-compose | `./monize/backups` |
+| `ATTACHMENT_CONTAINER_DIR` | Container folder local attachments are written to (was `ATTACHMENT_LOCAL_DIR`) | `/data/attachments` |
+| `ATTACHMENT_HOST_DIR` | Host folder mapped to `ATTACHMENT_CONTAINER_DIR` by docker-compose | `./monize/attachments` |
+| `SMTP_SECURE` | Use TLS for SMTP | `false` |
+
+The `AI_DEFAULT_*` and `AI_QUERY_*` variables configure the **centrally managed
+AI** -- the provider used for any user who has not configured one of their own.
+A user who adds their own provider in Settings -> AI owns its settings
+completely, per-provider query limits included, and the environment does not
+reach them.
+
+
+## Deployment
+
+### Docker Compose (Production)
+
+1. Create `.env` from the example and set production values:
+```bash
+cp .env.example .env
+# Edit .env: set NODE_ENV=production, strong passwords, your domain, etc.
+```
+
+2. Build and start:
+```bash
+docker compose -f docker-compose.prod.yml up -d
+```
+
+### Kubernetes
+
+The application is Kubernetes-ready with:
+- Health endpoints: `/api/v1/health/live` and `/api/v1/health/ready`
+- Standalone Next.js build for minimal image size
+- Environment-based configuration
+
+Example environment for K8s:
+```yaml
+# Frontend pod
+- name: INTERNAL_API_URL
+  value: "http://backend-svc:3000"
+- name: PUBLIC_APP_URL
+  value: "https://money.example.com"
+
+# Backend pod
+- name: PUBLIC_APP_URL
+  value: "https://money.example.com"
+```
+
+## API Documentation
+
+Swagger UI is available at `/api/docs` in **development mode only** (disabled in production for security).
+
+### Key Endpoints
+
+- `POST /api/v1/auth/register` - Register with local credentials
+- `POST /api/v1/auth/login` - Login with local credentials
+- `POST /api/v1/auth/2fa/verify` - Verify TOTP 2FA code
+- `POST /api/v1/auth/2fa/setup` - Set up 2FA
+- `GET /api/v1/auth/2fa/trusted-devices` - List trusted devices
+- `GET /api/v1/auth/oidc` - Initiate OIDC authentication
+- `GET /api/v1/accounts` - List accounts
+- `GET /api/v1/transactions` - List transactions
+- `GET /api/v1/portfolio/summary` - Investment portfolio summary
+- `GET /api/v1/portfolio/top-movers` - Daily top movers
+- `GET /api/v1/admin/users` - Admin: list all users
+- `POST /api/v1/ai/query` - Natural language financial query
+- `POST /api/v1/ai/query/stream` - Streaming financial query (SSE)
+- `GET /api/v1/ai/configs` - List AI provider configurations
+- `POST /api/v1/ai/configs` - Add AI provider
+- `POST /api/v1/ai/configs/:id/test` - Test AI provider connection
+- `GET /api/v1/ai/usage` - AI usage summary
+- `GET /api/v1/ai/status` - AI feature availability
+- `GET /api/v1/built-in-reports/*` - Pre-aggregated reports
+- `POST /api/v1/mcp` - MCP (Model Context Protocol) endpoint, serving revision 2026-07-28 and the 2025-era revisions
+- `GET /api/v1/auth/tokens` - List personal access tokens
+- `POST /api/v1/auth/tokens` - Create personal access token
+- `GET /api/v1/health/live` - Liveness probe
+- `GET /api/v1/health/ready` - Readiness probe
+
+## Database Schema
+
+Main tables:
+- **users** / **user_preferences**: User accounts and settings
+- **trusted_devices**: 2FA trusted browser tokens
+- **refresh_tokens**: JWT refresh token rotation
+- **personal_access_tokens**: API tokens for MCP and programmatic access
+- **accounts**: Financial accounts (bank, credit, investment)
+- **transactions** / **transaction_splits**: Financial transactions
+- **categories**: Hierarchical transaction categories
+- **payees**: Payees with default category auto-assignment
+- **currencies** / **exchange_rates**: Currency definitions and historical rates
+- **scheduled_transactions** / **scheduled_transaction_overrides**: Recurring payments
+- **securities** / **security_prices** / **holdings**: Stocks, price history, and positions
+- **investment_transactions**: Buy/sell/dividend transactions
+- **budgets** / **budget_categories** / **budget_periods**: Budget planner and tracking
+- **monthly_account_balances**: Net worth snapshots
+- **custom_reports**: User-defined report configurations
+- **ai_provider_configs**: Per-user AI provider settings (encrypted API keys)
+- **ai_usage_logs**: AI query usage tracking (tokens, duration, provider)
+- **ai_insights**: AI-generated spending insights and anomaly detection
+
+## Security Notes
+
+- Swagger/OpenAPI is **disabled in production**
+- JWT tokens stored in httpOnly cookies with refresh token rotation
+- TOTP 2FA with trusted device tokens (SHA256-hashed, httpOnly cookies)
+- Personal access tokens for API/MCP integration
+- Rate limiting enabled on authentication endpoints
+- Admin role required for user management operations
+- Always use HTTPS in production
+- Generate strong JWT secrets (`openssl rand -base64 32`)
+
+## License
+
+AGPL-3.0 License - See LICENSE file for details.

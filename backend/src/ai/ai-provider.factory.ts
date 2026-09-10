@@ -1,0 +1,80 @@
+import { Injectable, BadRequestException } from "@nestjs/common";
+import { tr } from "../i18n/translate";
+import { EncryptionService } from "../common/encryption/encryption.service";
+import { AiProviderConfig } from "./entities/ai-provider-config.entity";
+import { AiProvider } from "./providers/ai-provider.interface";
+import { AnthropicProvider } from "./providers/anthropic.provider";
+import { OpenAiProvider } from "./providers/openai.provider";
+import { OllamaProvider } from "./providers/ollama.provider";
+import { OllamaCloudProvider } from "./providers/ollama-cloud.provider";
+import { OpenAiCompatibleProvider } from "./providers/openai-compatible.provider";
+
+@Injectable()
+export class AiProviderFactory {
+  constructor(private readonly encryptionService: EncryptionService) {}
+
+  createProvider(config: AiProviderConfig): AiProvider {
+    const apiKey = config.apiKeyEnc
+      ? this.encryptionService.decrypt(config.apiKeyEnc)
+      : "";
+
+    switch (config.provider) {
+      case "anthropic":
+        return new AnthropicProvider(apiKey, config.model || undefined);
+
+      case "openai":
+        return new OpenAiProvider(
+          apiKey,
+          config.model || undefined,
+          config.baseUrl || undefined,
+        );
+
+      case "ollama":
+        return new OllamaProvider(
+          config.baseUrl || undefined,
+          config.model || undefined,
+        );
+
+      case "ollama-cloud":
+        if (!apiKey) {
+          throw new BadRequestException(
+            tr(
+              "errors.ai.ollamaCloudApiKeyRequired",
+              "apiKey is required for ollama-cloud provider",
+            ),
+          );
+        }
+        // Ollama Cloud uses a fixed SaaS endpoint; any user-supplied
+        // baseUrl is intentionally dropped here to close an SSRF vector.
+        return new OllamaCloudProvider(
+          apiKey,
+          undefined,
+          config.model || undefined,
+        );
+
+      case "openai-compatible":
+        if (!config.baseUrl) {
+          throw new BadRequestException(
+            tr(
+              "errors.ai.openaiCompatibleBaseUrlRequired",
+              "baseUrl is required for openai-compatible provider",
+            ),
+          );
+        }
+        return new OpenAiCompatibleProvider(
+          apiKey,
+          config.baseUrl,
+          config.model || "gpt-4o",
+        );
+
+      default:
+        throw new BadRequestException(
+          tr(
+            "errors.ai.unknownProvider",
+            `Unknown AI provider: ${config.provider}`,
+            { provider: config.provider },
+          ),
+        );
+    }
+  }
+}

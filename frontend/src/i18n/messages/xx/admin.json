@@ -1,0 +1,173 @@
+{
+  "createUserModal": {
+    "title": "[XX-Add User-XX]",
+    "description": "[XX-Create a new account. You can email an invite, set a password yourself, or generate a temporary one to share.-XX]",
+    "emailLabel": "[XX-Email-XX]",
+    "emailPlaceholder": "[XX-user@example.com-XX]",
+    "firstNameLabel": "[XX-First name (optional)-XX]",
+    "firstNamePlaceholder": "[XX-First name-XX]",
+    "lastNameLabel": "[XX-Last name (optional)-XX]",
+    "lastNamePlaceholder": "[XX-Last name-XX]",
+    "roleLabel": "[XX-Role-XX]",
+    "roleUser": "[XX-User-XX]",
+    "roleAdmin": "[XX-Admin-XX]",
+    "credentialsLegend": "[XX-Credentials-XX]",
+    "inviteLabel": "[XX-Send an email invite to set a password-XX]",
+    "inviteSmtpNote": "[XX-Requires SMTP to be configured.-XX]",
+    "setPasswordLabel": "[XX-Set a password now-XX]",
+    "tempPasswordLabel": "[XX-Generate a temporary password-XX]",
+    "tempPasswordNote": "[XX-Shown once after creation. The user must change it on first login.-XX]",
+    "passwordFieldLabel": "[XX-Password-XX]",
+    "passwordPlaceholder": "[XX-Set a password-XX]",
+    "createButton": "[XX-Create User-XX]",
+    "validation": {
+      "invalidPassword": "[XX-Invalid password.-XX]"
+    },
+    "toasts": {
+      "createFailed": "[XX-Failed to create user-XX]"
+    }
+  },
+  "resetPasswordModal": {
+    "defaultTitle": "[XX-Password Reset Successful-XX]",
+    "defaultDescription": "[XX-A temporary password has been set for {userName}.-XX]",
+    "temporaryPasswordLabel": "[XX-Temporary Password-XX]",
+    "copy": "[XX-Copy-XX]",
+    "copied": "[XX-Copied-XX]",
+    "notShownAgain": "[XX-This password will not be shown again.-XX]",
+    "mustChangeOnLogin": "[XX-The user will be required to change their password on next login.-XX]",
+    "toasts": {
+      "copied": "[XX-Password copied to clipboard-XX]",
+      "copyFailed": "[XX-Failed to copy to clipboard-XX]"
+    }
+  },
+  "userTable": {
+    "colUser": "[XX-User-XX]",
+    "colRole": "[XX-Role-XX]",
+    "colProvider": "[XX-Provider-XX]",
+    "colStatus": "[XX-Status-XX]",
+    "colLastLogin": "[XX-Last Login-XX]",
+    "colActions": "[XX-Actions-XX]",
+    "youSuffix": "[XX-(you)-XX]",
+    "noEmail": "[XX-No email-XX]",
+    "unknown": "[XX-Unknown-XX]",
+    "never": "[XX-Never-XX]",
+    "providerSso": "[XX-SSO-XX]",
+    "providerLocal": "[XX-Local-XX]",
+    "roleAdmin": "[XX-Admin-XX]",
+    "roleUser": "[XX-User-XX]",
+    "statusActive": "[XX-Active-XX]",
+    "statusDisabled": "[XX-Disabled-XX]",
+    "clickToDisable": "[XX-Click to disable-XX]",
+    "clickToEnable": "[XX-Click to enable-XX]",
+    "resetPassword": "[XX-Reset Password-XX]",
+    "noUsers": "[XX-No users found.-XX]"
+  },
+  "usersPage": {
+    "title": "[XX-User Management-XX]",
+    "userCount": "[XX-{count, plural, one {# user} other {# users}}-XX]",
+    "newUser": "[XX-+ New User-XX]",
+    "loadingUsers": "[XX-Loading users...-XX]",
+    "toasts": {
+      "inviteSent": "[XX-Invite email sent to {email}-XX]",
+      "userCreated": "[XX-{name} has been created-XX]",
+      "userUpgraded": "[XX-{name} was upgraded to a full account-XX]",
+      "roleChanged": "[XX-{name} is now {role}-XX]",
+      "roleAdmin": "[XX-an admin-XX]",
+      "roleUser": "[XX-a user-XX]",
+      "userEnabled": "[XX-{name} has been enabled-XX]",
+      "userDisabled": "[XX-{name} has been disabled-XX]",
+      "userDeleted": "[XX-{name} has been deleted-XX]",
+      "userDowngraded": "[XX-{name}'s own data was removed; their delegate access remains.-XX]",
+      "loadFailed": "[XX-Failed to load users-XX]",
+      "deleteFailed": "[XX-Failed to delete user-XX]",
+      "disableFailed": "[XX-Failed to disable user-XX]",
+      "resetFailed": "[XX-Failed to reset password-XX]"
+    },
+    "dialogs": {
+      "promoteTitle": "[XX-Promote User?-XX]",
+      "demoteTitle": "[XX-Demote User?-XX]",
+      "promoteMessage": "[XX-Are you sure you want to promote {name} to {role}?-XX]",
+      "demoteMessage": "[XX-Are you sure you want to demote {name} to {role}?-XX]",
+      "promoteConfirm": "[XX-Promote to Admin-XX]",
+      "demoteConfirm": "[XX-Demote to User-XX]",
+      "disableTitle": "[XX-Disable User?-XX]",
+      "disableMessage": "[XX-Are you sure you want to disable {name}? They will be unable to log in.-XX]",
+      "disableConfirm": "[XX-Disable User-XX]",
+      "resetTitle": "[XX-Reset Password?-XX]",
+      "resetMessage": "[XX-This will generate a new temporary password for {name}. They will be required to change it on next login.-XX]",
+      "resetConfirm": "[XX-Reset Password-XX]",
+      "deleteTitle": "[XX-Delete User?-XX]",
+      "deleteMessage": "[XX-Are you sure you want to delete {name}? This will permanently remove their account and all associated data. This action cannot be undone. If they are a delegate of another account, their own data is removed but their login is kept so the delegation still works -- they become a delegate-only user.-XX]",
+      "deleteConfirm": "[XX-Delete User-XX]",
+      "tempPasswordTitleCreated": "[XX-User Created-XX]",
+      "tempPasswordTitleUpgraded": "[XX-Account Upgraded-XX]",
+      "tempPasswordDescCreated": "[XX-A temporary password was generated for {name}. Share it with them to sign in.-XX]",
+      "tempPasswordDescUpgraded": "[XX-An existing shared user was upgraded to a full account. Share this temporary password with {name}.-XX]"
+    }
+  },
+  "notificationsPage": {
+    "title": "[XX-Notifications-XX]",
+    "subtitle": "[XX-Delivery channels this Monize instance offers, and the push identity behind them.-XX]",
+    "loading": "[XX-Loading notification settings...-XX]",
+    "loadUnavailable": "[XX-Monize could not read the notification settings from the server. Reload the page to try again.-XX]",
+    "channelsHeading": "[XX-Delivery channels-XX]",
+    "identityHeading": "[XX-Web Push identity-XX]",
+    "perAccountNote": "[XX-Devices, test notifications and per-notification preferences belong to each account and are managed in Settings. An administrator configures the instance and never sends to, or sees, another person’s notifications.-XX]",
+    "channelState": {
+      "on": "[XX-On-XX]",
+      "off": "[XX-Off-XX]",
+      "unconfigured": "[XX-Unavailable-XX]",
+      "unknown": "[XX-Unknown-XX]"
+    },
+    "channels": {
+      "inApp": {
+        "name": "[XX-In-app notifications-XX]",
+        "description": "[XX-The bell in the header. Always available and cannot be switched off: it is where a notification lives even when every other channel fails.-XX]"
+      },
+      "webPush": {
+        "name": "[XX-Browser push-XX]",
+        "description": "[XX-Notifications delivered to a phone or desktop even when Monize is closed. Needs no Firebase, Google Play or Apple Developer account.-XX]",
+        "toggleLabel": "[XX-Enable browser push for this instance-XX]",
+        "missingKeys": "[XX-This instance has no push key pair. Set ENCRYPTION_KEY and restart: Monize generates the pair itself on the next start.-XX]",
+        "keyUnreadable": "[XX-This instance cannot decrypt its stored push key pair, so nothing can be delivered. Rotate the key pair below to recover.-XX]",
+        "serverKeyMissing": "[XX-This instance has no ENCRYPTION_KEY, so it cannot open the push key pair it stored. Set ENCRYPTION_KEY in the deployment and restart — rotating cannot help while the key is missing.-XX]"
+      },
+      "email": {
+        "name": "[XX-Email-XX]",
+        "description": "[XX-Bill reminders, budget digests and system alerts sent to each account’s email address.-XX]",
+        "missingSmtp": "[XX-No mail server is configured. Set the SMTP environment variables to enable email.-XX]",
+        "statusUnavailable": "[XX-Monize could not read the mail server status.-XX]"
+      },
+      "ntfy": {
+        "name": "[XX-ntfy and UnifiedPush-XX]",
+        "description": "[XX-The same encrypted push, delivered to a self-hosted UnifiedPush distributor (ntfy, NextPush) instead of Google or Apple infrastructure. It shares this instance’s push key pair and switch; each person registers their endpoint from their UnifiedPush app and turns the channel on in Settings.-XX]",
+        "followsWebPush": "[XX-Unavailable while browser push is off or its key pair cannot be used — this channel is delivered with the same key pair.-XX]"
+      }
+    },
+    "identity": {
+      "fingerprintLabel": "[XX-Key fingerprint-XX]",
+      "generatedLabel": "[XX-Generated-XX]",
+      "devicesLabel": "[XX-Registered devices-XX]",
+      "deviceCounts": "[XX-{live} active, {disabled} retired-XX]",
+      "rotateDescription": "[XX-Rotating replaces this instance’s key pair. Every registered device stops being reachable and has to turn push on again, so rotate only if the key may have been exposed.-XX]",
+      "rotateButton": "[XX-Rotate key pair-XX]",
+      "rotatingButton": "[XX-Rotating...-XX]",
+      "missingEncryptionKey": "[XX-This instance has no push key pair, because ENCRYPTION_KEY is not set and the private key would have to be stored unencrypted. Set it and restart: Monize generates the pair itself.-XX]",
+      "keyUnreadable": "[XX-This instance holds a push key pair it can no longer decrypt, so nothing can be delivered. It happens when ENCRYPTION_KEY changes under a live database, or when a backup is restored onto a different instance. Rotate the key pair to recover; every device will register again.-XX]",
+      "serverKeyMissing": "[XX-This instance has no ENCRYPTION_KEY set, so it cannot open the push key pair it stored. Rotating will not help while the key is missing: set ENCRYPTION_KEY in the deployment and restart, and push works again with the existing devices.-XX]"
+    },
+    "dialogs": {
+      "rotateTitle": "[XX-Rotate the push key pair?-XX]",
+      "rotateMessage": "[XX-{count, plural, =0 {No device is registered yet, so nothing is lost.} one {One registered device will stop receiving notifications until someone turns push back on in that browser.} other {# registered devices will stop receiving notifications until someone turns push back on in each browser.}}-XX]",
+      "rotateConfirm": "[XX-Rotate-XX]"
+    },
+    "toasts": {
+      "loadFailed": "[XX-Could not load notification settings-XX]",
+      "pushEnabled": "[XX-Browser push enabled for this instance-XX]",
+      "pushDisabled": "[XX-Browser push disabled for this instance-XX]",
+      "pushToggleFailed": "[XX-Could not change the browser push setting-XX]",
+      "rotated": "[XX-{count, plural, =0 {Key pair rotated} one {Key pair rotated; 1 device must register again} other {Key pair rotated; # devices must register again}}-XX]",
+      "rotateFailed": "[XX-Could not rotate the key pair-XX]"
+    }
+  }
+}

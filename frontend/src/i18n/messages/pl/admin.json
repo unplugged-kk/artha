@@ -1,0 +1,173 @@
+{
+  "createUserModal": {
+    "title": "Dodaj użytkownika",
+    "description": "Utwórz nowe konto. Możesz wysłać zaproszenie e-mail, ustawić hasło samodzielnie lub wygenerować hasło tymczasowe do udostępnienia.",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "user@example.com",
+    "firstNameLabel": "Imię (opcjonalnie)",
+    "firstNamePlaceholder": "Imię",
+    "lastNameLabel": "Nazwisko (opcjonalnie)",
+    "lastNamePlaceholder": "Nazwisko",
+    "roleLabel": "Uprawnienia",
+    "roleUser": "Użytkownik",
+    "roleAdmin": "Administrator",
+    "credentialsLegend": "Dane logowania",
+    "inviteLabel": "Wyślij zaproszenie e-mail, aby ustawić hasło",
+    "inviteSmtpNote": "Wymaga skonfigurowanego SMTP.",
+    "setPasswordLabel": "Ustaw hasło teraz",
+    "tempPasswordLabel": "Wygeneruj hasło tymczasowe",
+    "tempPasswordNote": "Wyświetlane jednorazowo po utworzeniu. Użytkownik musi je zmienić przy pierwszym logowaniu.",
+    "passwordFieldLabel": "Hasło",
+    "passwordPlaceholder": "Ustaw hasło",
+    "createButton": "Utwórz użytkownika",
+    "validation": {
+      "invalidPassword": "Nieprawidłowe hasło."
+    },
+    "toasts": {
+      "createFailed": "Nie udało się utworzyć użytkownika"
+    }
+  },
+  "resetPasswordModal": {
+    "defaultTitle": "Reset hasła zakończony powodzeniem",
+    "defaultDescription": "Dla użytkownika {userName} ustawiono hasło tymczasowe.",
+    "temporaryPasswordLabel": "Hasło tymczasowe",
+    "copy": "Kopiuj",
+    "copied": "Skopiowano",
+    "notShownAgain": "To hasło nie zostanie wyświetlone ponownie.",
+    "mustChangeOnLogin": "Użytkownik będzie musiał zmienić hasło przy następnym logowaniu.",
+    "toasts": {
+      "copied": "Skopiowano hasło do schowka",
+      "copyFailed": "Nie udało się skopiować do schowka"
+    }
+  },
+  "userTable": {
+    "colUser": "Użytkownik",
+    "colRole": "Uprawnienia",
+    "colProvider": "Dostawca",
+    "colStatus": "Status",
+    "colLastLogin": "Ostatnie logowanie",
+    "colActions": "Akcje",
+    "youSuffix": "(Ty)",
+    "noEmail": "Brak adresu e-mail",
+    "unknown": "Nieznany",
+    "never": "Nigdy",
+    "providerSso": "SSO",
+    "providerLocal": "Lokalny",
+    "roleAdmin": "Administrator",
+    "roleUser": "Użytkownik",
+    "statusActive": "Aktywny",
+    "statusDisabled": "Wyłączony",
+    "clickToDisable": "Kliknij, aby wyłączyć",
+    "clickToEnable": "Kliknij, aby włączyć",
+    "resetPassword": "Zresetuj hasło",
+    "noUsers": "Nie znaleziono użytkowników."
+  },
+  "usersPage": {
+    "title": "Zarządzanie użytkownikami",
+    "userCount": "{count, plural, one {# użytkownik} few {# użytkownicy} many {# użytkowników} other {# użytkownika}}",
+    "newUser": "+ Nowy użytkownik",
+    "loadingUsers": "Wczytywanie użytkowników...",
+    "toasts": {
+      "inviteSent": "Wysłano zaproszenie e-mail na adres {email}",
+      "userCreated": "Utworzono użytkownika {name}",
+      "userUpgraded": "Użytkownik {name} został przekształcony w pełne konto",
+      "roleChanged": "{name} ma teraz rolę: {role}",
+      "roleAdmin": "administrator",
+      "roleUser": "użytkownik",
+      "userEnabled": "Użytkownik {name} został włączony",
+      "userDisabled": "Użytkownik {name} został wyłączony",
+      "userDeleted": "Użytkownik {name} został usunięty",
+      "userDowngraded": "Własne dane użytkownika {name} zostały usunięte; jego dostęp delegowany pozostaje aktywny.",
+      "loadFailed": "Nie udało się wczytać użytkowników",
+      "deleteFailed": "Nie udało się usunąć użytkownika",
+      "disableFailed": "Nie udało się wyłączyć użytkownika",
+      "resetFailed": "Nie udało się zresetować hasła"
+    },
+    "dialogs": {
+      "promoteTitle": "Awansować użytkownika?",
+      "demoteTitle": "Zdegradować użytkownika?",
+      "promoteMessage": "Czy na pewno chcesz awansować użytkownika {name} do roli {role}?",
+      "demoteMessage": "Czy na pewno chcesz zdegradować użytkownika {name} do roli {role}?",
+      "promoteConfirm": "Awansuj na administratora",
+      "demoteConfirm": "Zdegraduj na użytkownika",
+      "disableTitle": "Wyłączyć użytkownika?",
+      "disableMessage": "Czy na pewno chcesz wyłączyć użytkownika {name}? Nie będzie mógł się zalogować.",
+      "disableConfirm": "Wyłącz użytkownika",
+      "resetTitle": "Zresetować hasło?",
+      "resetMessage": "Spowoduje to wygenerowanie nowego hasła tymczasowego dla użytkownika {name}. Przy następnym logowaniu będzie wymagana jego zmiana.",
+      "resetConfirm": "Zresetuj hasło",
+      "deleteTitle": "Usunąć użytkownika?",
+      "deleteMessage": "Czy na pewno chcesz usunąć użytkownika {name}? Spowoduje to trwałe usunięcie jego konta i wszystkich powiązanych danych. Tej operacji nie można cofnąć. Jeśli jest delegatem innego konta, jego własne dane zostaną usunięte, ale login pozostanie zachowany, aby delegacja nadal działała -- stanie się użytkownikiem wyłącznie delegowanym.",
+      "deleteConfirm": "Usuń użytkownika",
+      "tempPasswordTitleCreated": "Utworzono użytkownika",
+      "tempPasswordTitleUpgraded": "Konto zaktualizowane",
+      "tempPasswordDescCreated": "Wygenerowano hasło tymczasowe dla użytkownika {name}. Przekaż mu je, aby mógł się zalogować.",
+      "tempPasswordDescUpgraded": "Istniejący użytkownik współdzielony został przekształcony w pełne konto. Przekaż użytkownikowi {name} to hasło tymczasowe."
+    }
+  },
+  "notificationsPage": {
+    "title": "Powiadomienia",
+    "subtitle": "Kanały dostarczania dostępne w tej instancji Monize i tożsamość push, która za nimi stoi.",
+    "loading": "Wczytywanie ustawień powiadomień...",
+    "loadUnavailable": "Monize nie odczytał ustawień powiadomień z serwera. Odśwież stronę, aby spróbować ponownie.",
+    "channelsHeading": "Kanały dostarczania",
+    "identityHeading": "Tożsamość Web Push",
+    "perAccountNote": "Urządzenia, powiadomienia testowe i preferencje należą do każdego konta i są zarządzane w Ustawieniach. Administrator konfiguruje instancję i nigdy nie wysyła ani nie widzi cudzych powiadomień.",
+    "channelState": {
+      "on": "Włączony",
+      "off": "Wyłączony",
+      "unconfigured": "Niedostępny",
+      "unknown": "Nieznany"
+    },
+    "channels": {
+      "inApp": {
+        "name": "Powiadomienia w aplikacji",
+        "description": "Dzwonek w nagłówku. Zawsze dostępny i nie można go wyłączyć: to tutaj powiadomienie pozostaje nawet wtedy, gdy każdy inny kanał zawiedzie."
+      },
+      "webPush": {
+        "name": "Push w przeglądarce",
+        "description": "Powiadomienia docierające na telefon lub komputer nawet przy zamkniętym Monize. Nie wymaga Firebase ani konta Google Play czy Apple Developer.",
+        "toggleLabel": "Włącz push w przeglądarce dla tej instancji",
+        "missingKeys": "Ta instancja nie ma pary kluczy push. Ustaw ENCRYPTION_KEY i uruchom ponownie: przy następnym starcie Monize sam wygeneruje parę.",
+        "keyUnreadable": "Ta instancja nie potrafi odszyfrować zapisanej pary kluczy push, więc nic nie jest dostarczane. Wymień parę kluczy poniżej, aby odzyskać kanał.",
+        "serverKeyMissing": "Ta instancja nie ma ENCRYPTION_KEY, więc nie może otworzyć zapisanej pary kluczy push. Ustaw ENCRYPTION_KEY we wdrożeniu i zrestartuj — rotacja nie pomoże, dopóki brakuje klucza."
+      },
+      "email": {
+        "name": "E-mail",
+        "description": "Przypomnienia o rachunkach, podsumowania budżetu i alerty systemowe wysyłane na adres e-mail każdego konta.",
+        "missingSmtp": "Nie skonfigurowano serwera poczty. Ustaw zmienne środowiskowe SMTP, aby włączyć e-mail.",
+        "statusUnavailable": "Monize nie odczytał stanu serwera poczty."
+      },
+      "ntfy": {
+        "name": "ntfy i UnifiedPush",
+        "description": "Te same zaszyfrowane powiadomienia push, dostarczane do samodzielnie hostowanego dystrybutora UnifiedPush (ntfy, NextPush) zamiast infrastruktury Google lub Apple. Kanał współdzieli parę kluczy push i przełącznik tej instancji; każda osoba rejestruje swój endpoint w aplikacji UnifiedPush i włącza kanał w Ustawieniach.",
+        "followsWebPush": "Niedostępny, dopóki push w przeglądarce jest wyłączony lub jego para kluczy nie może być użyta — ten kanał jest dostarczany tą samą parą kluczy."
+      }
+    },
+    "identity": {
+      "fingerprintLabel": "Odcisk klucza",
+      "generatedLabel": "Wygenerowano",
+      "devicesLabel": "Zarejestrowane urządzenia",
+      "deviceCounts": "aktywne: {live}, wyłączone: {disabled}",
+      "rotateDescription": "Wymiana zastępuje parę kluczy tej instancji. Każde zarejestrowane urządzenie przestaje być osiągalne i musi ponownie włączyć push, więc wymieniaj klucze tylko wtedy, gdy klucz mógł zostać ujawniony.",
+      "rotateButton": "Wymień parę kluczy",
+      "rotatingButton": "Wymiana...",
+      "missingEncryptionKey": "Ta instancja nie ma pary kluczy push, ponieważ nie ustawiono ENCRYPTION_KEY, a klucz prywatny musiałby zostać zapisany bez szyfrowania. Ustaw ją i uruchom ponownie: Monize sam wygeneruje parę.",
+      "keyUnreadable": "Ta instancja ma parę kluczy push, której nie potrafi już odszyfrować, więc nic nie jest dostarczane. Dzieje się tak, gdy ENCRYPTION_KEY zmieni się przy działającej bazie albo gdy kopia zapasowa zostanie przywrócona na inną instancję. Wymień parę kluczy, aby odzyskać kanał; każde urządzenie zarejestruje się ponownie.",
+      "serverKeyMissing": "Ta instancja nie ma ustawionego ENCRYPTION_KEY, więc nie może otworzyć zapisanej pary kluczy push. Rotacja nie pomoże, dopóki brakuje klucza: ustaw ENCRYPTION_KEY we wdrożeniu i zrestartuj — powiadomienia push zadziałają z dotychczasowymi urządzeniami."
+    },
+    "dialogs": {
+      "rotateTitle": "Wymienić parę kluczy push?",
+      "rotateMessage": "{count, plural, =0 {Nie zarejestrowano jeszcze żadnego urządzenia, więc nic nie zostanie utracone.} one {Jedno zarejestrowane urządzenie przestanie otrzymywać powiadomienia, dopóki ktoś ponownie nie włączy push w tamtej przeglądarce.} few {# zarejestrowane urządzenia przestaną otrzymywać powiadomienia, dopóki push nie zostanie ponownie włączony w każdej z tych przeglądarek.} many {# zarejestrowanych urządzeń przestanie otrzymywać powiadomienia, dopóki push nie zostanie ponownie włączony w każdej z tych przeglądarek.} other {# zarejestrowanego urządzenia przestanie otrzymywać powiadomienia, dopóki push nie zostanie ponownie włączony w każdej z tych przeglądarek.}}",
+      "rotateConfirm": "Wymień"
+    },
+    "toasts": {
+      "loadFailed": "Nie udało się wczytać ustawień powiadomień",
+      "pushEnabled": "Włączono push w przeglądarce dla tej instancji",
+      "pushDisabled": "Wyłączono push w przeglądarce dla tej instancji",
+      "pushToggleFailed": "Nie udało się zmienić ustawienia push w przeglądarce",
+      "rotated": "{count, plural, =0 {Wymieniono parę kluczy} one {Wymieniono parę kluczy; 1 urządzenie musi zarejestrować się ponownie} few {Wymieniono parę kluczy; # urządzenia muszą zarejestrować się ponownie} many {Wymieniono parę kluczy; # urządzeń musi zarejestrować się ponownie} other {Wymieniono parę kluczy; # urządzenia musi zarejestrować się ponownie}}",
+      "rotateFailed": "Nie udało się wymienić pary kluczy"
+    }
+  }
+}

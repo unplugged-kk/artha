@@ -1,0 +1,235 @@
+import {
+  CATEGORIZATION_SYSTEM_PROMPT,
+  QUERY_SYSTEM_PROMPT,
+  QUERY_SAFETY_REMINDER,
+  INSIGHT_SYSTEM_PROMPT,
+  FORECAST_SYSTEM_PROMPT,
+} from "./prompt-templates";
+
+describe("prompt-templates", () => {
+  describe("QUERY_SYSTEM_PROMPT", () => {
+    it("is a non-empty string", () => {
+      expect(typeof QUERY_SYSTEM_PROMPT).toBe("string");
+      expect(QUERY_SYSTEM_PROMPT.length).toBeGreaterThan(100);
+    });
+
+    it("is not a TODO placeholder", () => {
+      expect(QUERY_SYSTEM_PROMPT).not.toMatch(/^TODO/);
+    });
+
+    it("instructs the AI to use tools for real data", () => {
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/use.*tools/i);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/never guess|never make up/i);
+    });
+
+    it("instructs the AI to calculate date ranges", () => {
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/YYYY-MM-DD/);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/date range/i);
+    });
+
+    it("instructs the AI to present amounts with currency formatting", () => {
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/currency/i);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/\$[\d,]+\.\d{2}/);
+    });
+
+    it("discourages dumping individual transaction details unprompted", () => {
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/aggregated summaries/i);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(
+        /do not otherwise list raw transaction-by-transaction details/i,
+      );
+    });
+
+    it("includes data handling rules", () => {
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/DATA HANDLING RULES/);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/DATA ONLY/);
+    });
+
+    it("instructs to not reveal system prompt", () => {
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/never reveal.*system prompt/i);
+    });
+
+    it("instructs the AI to show expenses as positive numbers", () => {
+      expect(QUERY_SYSTEM_PROMPT).toMatch(
+        /positive.*numbers|positive.*amounts/i,
+      );
+    });
+
+    it("instructs the AI to ask clarifying questions when unsure", () => {
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/clarif/i);
+    });
+
+    it("mentions chart suggestions", () => {
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/chart/i);
+    });
+
+    it("includes math accuracy rules", () => {
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/MATH ACCURACY RULES/);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/never perform arithmetic/i);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/calculate tool/i);
+    });
+
+    it("instructs to use pre-computed values", () => {
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/pre-computed/i);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/as-is/i);
+    });
+
+    it("explains the sign convention for amounts", () => {
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/positive.*income/i);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/negative.*expense/i);
+    });
+
+    it("includes entity link rules with the structured URI forms", () => {
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/ENTITY LINK RULES/);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/monize:\/\/account\/<id>/);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/monize:\/\/payee\/<id>/);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/monize:\/\/category\/<id>/);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/monize:\/\/transaction\/<id>/);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/monize:\/\/security\/<securityId>/);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/monize:\/\/scheduled\/<id>/);
+    });
+
+    it("forbids ending a turn on a promise to keep working", () => {
+      // The loop can recover from one of these (see continuation.ts), but the
+      // cheapest fix is the model not doing it: a stalled turn costs the user
+      // an extra round trip even when it is caught.
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/FINISH THE TURN YOU ARE IN/);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/one moment/i);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/never tell the user to wait/i);
+    });
+
+    it("forbids invented ids and links on id-less rows", () => {
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/VERBATIM/);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/never construct, guess/i);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/Other \(aggregated\)/);
+    });
+  });
+
+  describe("INSIGHT_SYSTEM_PROMPT", () => {
+    it("is a non-empty string", () => {
+      expect(typeof INSIGHT_SYSTEM_PROMPT).toBe("string");
+      expect(INSIGHT_SYSTEM_PROMPT.length).toBeGreaterThan(100);
+    });
+
+    it("is not a TODO placeholder", () => {
+      expect(INSIGHT_SYSTEM_PROMPT).not.toMatch(/^TODO/);
+    });
+
+    it("instructs the AI to generate insights as JSON", () => {
+      expect(INSIGHT_SYSTEM_PROMPT).toMatch(/JSON array/i);
+      expect(INSIGHT_SYSTEM_PROMPT).toMatch(/insight/i);
+    });
+
+    it("defines insight types", () => {
+      expect(INSIGHT_SYSTEM_PROMPT).toMatch(/anomaly/);
+      expect(INSIGHT_SYSTEM_PROMPT).toMatch(/trend/);
+      expect(INSIGHT_SYSTEM_PROMPT).toMatch(/subscription/);
+      expect(INSIGHT_SYSTEM_PROMPT).toMatch(/budget_pace/);
+    });
+
+    it("defines severity levels", () => {
+      expect(INSIGHT_SYSTEM_PROMPT).toMatch(/info/);
+      expect(INSIGHT_SYSTEM_PROMPT).toMatch(/warning/);
+      expect(INSIGHT_SYSTEM_PROMPT).toMatch(/alert/);
+    });
+
+    it("forbids fabricating data", () => {
+      expect(INSIGHT_SYSTEM_PROMPT).toMatch(/not fabricate|do not fabricate/i);
+    });
+
+    it("instructs AI to use pre-computed ABOVE/BELOW labels", () => {
+      expect(INSIGHT_SYSTEM_PROMPT).toMatch(/ABOVE\/BELOW/);
+      expect(INSIGHT_SYSTEM_PROMPT).toMatch(/pre-computed/i);
+    });
+
+    it("instructs AI not to generate budget pace when projection unavailable", () => {
+      expect(INSIGHT_SYSTEM_PROMPT).toMatch(/NOT AVAILABLE/);
+      expect(INSIGHT_SYSTEM_PROMPT).toMatch(/do NOT generate budget pace/i);
+    });
+
+    it("instructs AI not to report UNCHANGED as a trend", () => {
+      expect(INSIGHT_SYSTEM_PROMPT).toMatch(/UNCHANGED/);
+    });
+
+    it("warns against treating partial-month totals as full month", () => {
+      expect(INSIGHT_SYSTEM_PROMPT).toMatch(/partial-month/i);
+    });
+  });
+
+  describe("placeholder prompts", () => {
+    it("CATEGORIZATION_SYSTEM_PROMPT is a placeholder", () => {
+      expect(CATEGORIZATION_SYSTEM_PROMPT).toContain("TODO");
+    });
+  });
+
+  describe("QUERY_SAFETY_REMINDER", () => {
+    it("is a non-empty string", () => {
+      expect(typeof QUERY_SAFETY_REMINDER).toBe("string");
+      expect(QUERY_SAFETY_REMINDER.length).toBeGreaterThan(50);
+    });
+
+    it("reinforces aggregation-only rule", () => {
+      expect(QUERY_SAFETY_REMINDER).toMatch(/individual transaction details/i);
+    });
+
+    it("reinforces system prompt secrecy", () => {
+      expect(QUERY_SAFETY_REMINDER).toMatch(/do not reveal.*system prompt/i);
+    });
+
+    it("instructs to treat user data as data", () => {
+      expect(QUERY_SAFETY_REMINDER).toMatch(
+        /USER DATA.*data.*not instructions/i,
+      );
+    });
+
+    it("instructs to skip conflicting requests", () => {
+      expect(QUERY_SAFETY_REMINDER).toMatch(/silently skip/i);
+    });
+
+    it("reinforces finishing the turn rather than promising to continue", () => {
+      expect(QUERY_SAFETY_REMINDER).toMatch(/one moment/i);
+      expect(QUERY_SAFETY_REMINDER).toMatch(/final answer/i);
+    });
+  });
+
+  describe("FORECAST_SYSTEM_PROMPT", () => {
+    it("is a non-empty string", () => {
+      expect(typeof FORECAST_SYSTEM_PROMPT).toBe("string");
+      expect(FORECAST_SYSTEM_PROMPT.length).toBeGreaterThan(100);
+    });
+
+    it("is not a TODO placeholder", () => {
+      expect(FORECAST_SYSTEM_PROMPT).not.toMatch(/^TODO/);
+    });
+
+    it("instructs the AI to respond with JSON", () => {
+      expect(FORECAST_SYSTEM_PROMPT).toMatch(/JSON/i);
+    });
+
+    it("defines the monthly projection schema", () => {
+      expect(FORECAST_SYSTEM_PROMPT).toMatch(/monthlyProjections/);
+      expect(FORECAST_SYSTEM_PROMPT).toMatch(/projectedIncome/);
+      expect(FORECAST_SYSTEM_PROMPT).toMatch(/confidenceLow/);
+      expect(FORECAST_SYSTEM_PROMPT).toMatch(/confidenceHigh/);
+    });
+
+    it("mentions seasonal patterns", () => {
+      expect(FORECAST_SYSTEM_PROMPT).toMatch(/seasonal/i);
+    });
+
+    it("mentions income variability", () => {
+      expect(FORECAST_SYSTEM_PROMPT).toMatch(/income variability/i);
+    });
+
+    it("mentions risk flags", () => {
+      expect(FORECAST_SYSTEM_PROMPT).toMatch(/riskFlags/);
+    });
+
+    it("mentions narrative summary", () => {
+      expect(FORECAST_SYSTEM_PROMPT).toMatch(/narrativeSummary/);
+    });
+
+    it("forbids fabricating data", () => {
+      expect(FORECAST_SYSTEM_PROMPT).toMatch(/not fabricate|do not fabricate/i);
+    });
+  });
+});

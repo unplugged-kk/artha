@@ -1,0 +1,299 @@
+import { Injectable, Logger } from "@nestjs/common";
+import { Cron } from "@nestjs/schedule";
+import { DataSource } from "typeorm";
+import { withScopedDb } from "../common/db/scoped-db";
+import { ConfigService } from "@nestjs/config";
+import { I18nService } from "nestjs-i18n";
+import { emailTranslator } from "../i18n/email-translator";
+import { DEFAULT_LOCALE } from "../i18n/config";
+import { Budget } from "./entities/budget.entity";
+import { BudgetPeriod, PeriodStatus } from "./entities/budget-period.entity";
+import { User } from "../users/entities/user.entity";
+import { UserPreference } from "../users/entities/user-preference.entity";
+import { BudgetPeriodService } from "./budget-period.service";
+import { BudgetReportsService } from "./budget-reports.service";
+import { EmailService } from "../notifications/email.service";
+import { budgetMonthlySummaryTemplate } from "../notifications/email-templates";
+import { numberFormatterFor } from "../common/number-locale.util";
+import { withSystemContext, withUserContext } from "../common/db/with-context";
+import { NotificationCategory } from "../notification-center/entities/notification.entity";
+import { NotificationPreferenceService } from "../notification-center/notification-preference.service";
+
+interface ClosedPeriodInfo {
+  budget: Budget;
+  period: BudgetPeriod;
+}
+
+@Injectable()
+export class BudgetPeriodCronService {
+  private readonly logger = new Logger(BudgetPeriodCronService.name);
+
+  constructor(
+    private dataSource: DataSource,
+    private budgetPeriodService: BudgetPeriodService,
+    private budgetReportsService: BudgetReportsService,
+    private emailService: EmailService,
+    private configService: ConfigService,
+    private readonly i18n: I18nService,
+    // The monthly summary is a BUDGETS email, gated by the same channel matrix
+    // as the weekly digest.
+    private readonly notificationPreferences: NotificationPreferenceService,
+  ) {}
+
+  @Cron("0 0 1 * *")
+  async closeExpiredPeriods(): Promise<void> {
+    this.logger.log("Running budget period close check...");
+
+    try {
+      // RLS (task C2): cross-user fan-out over all active budgets.
+      const activeBudgets = await withSystemContext(() =>
+        withScopedDb(this.dataSource, (m) =>
+          m.getRepository(Budget).find({
+            where: { isActive: true },
+            relations: [
+              "categories",
+              "categories.category",
+              "categories.transferAccount",
+            ],
+          }),
+        ),
+      );
+
+      if (activeBudgets.length === 0) {
+        this.logger.log("No active budgets found");
+        return;
+      }
+
+      let closedCount = 0;
+      let errorCount = 0;
+      const closedPeriods: ClosedPeriodInfo[] = [];
+
+      for (const budget of activeBudgets) {
+        try {
+          // RLS (task C2): per-user reads/writes run under the owner's context.
+          const openPeriod = await withUserContext(budget.userId, () =>
+            withScopedDb(this.dataSource, (m) =>
+              m.getRepository(BudgetPeriod).findOne({
+                where: { budgetId: budget.id, status: PeriodStatus.OPEN },
+              }),
+            ),
+          );
+
+          if (!openPeriod) {
+            continue;
+          }
+
+          const periodEnd = new Date(openPeriod.periodEnd + "T23:59:59");
+          const now = new Date();
+
+          if (now > periodEnd) {
+            const closedPeriod = await withUserContext(budget.userId, () =>
+              this.budgetPeriodService.closePeriod(budget.userId, budget.id),
+            );
+            closedCount++;
+            closedPeriods.push({ budget, period: closedPeriod });
+            this.logger.log(
+              `Closed period for budget "${budget.name}" (${budget.id})`,
+            );
+          }
+        } catch (error) {
+          errorCount++;
+          this.logger.error(
+            `Failed to close period for budget ${budget.id}`,
+            error instanceof Error ? error.stack : error,
+          );
+        }
+      }
+
+      this.logger.log(
+        `Budget period close complete: ${closedCount} closed, ${errorCount} errors`,
+      );
+
+      if (closedPeriods.length > 0) {
+        await this.sendMonthlySummaryEmails(closedPeriods);
+      }
+    } catch (error) {
+      this.logger.error(
+        "Failed to run budget period close check",
+        error instanceof Error ? error.stack : error,
+      );
+    }
+  }
+
+  async sendMonthlySummaryEmails(
+    closedPeriods: ClosedPeriodInfo[],
+  ): Promise<void> {
+    if (!this.emailService.getStatus().configured) {
+      this.logger.debug(
+        "SMTP not configured, skipping monthly budget summary emails",
+      );
+      return;
+    }
+
+    const periodsByUser = new Map<string, ClosedPeriodInfo[]>();
+    for (const info of closedPeriods) {
+      const existing = periodsByUser.get(info.budget.userId) || [];
+      existing.push(info);
+      periodsByUser.set(info.budget.userId, existing);
+    }
+
+    let sentCount = 0;
+
+    for (const [userId, userPeriods] of periodsByUser) {
+      try {
+        // RLS (task C2): per-user body keeps the owner's RLS net.
+        const sent = await withUserContext(userId, () =>
+          this.sendMonthlySummaryForUser(userId, userPeriods),
+        );
+        if (sent) sentCount++;
+      } catch (error) {
+        this.logger.error(
+          `Failed to send monthly summary email for user ${userId}`,
+          error instanceof Error ? error.stack : error,
+        );
+      }
+    }
+
+    this.logger.log(`Monthly summary emails sent: ${sentCount}`);
+  }
+
+  private async sendMonthlySummaryForUser(
+    userId: string,
+    periods: ClosedPeriodInfo[],
+  ): Promise<boolean> {
+    // A budget monthly summary is the BUDGETS category; email is gated by that
+    // channel matrix and the global email master switch together (the resolver
+    // reads both), exactly as the weekly digest is. Runs under the user's own
+    // withUserContext, which the resolver's nested withScopedDb joins.
+    const emailEnabled = await this.notificationPreferences.resolveEmail(
+      userId,
+      NotificationCategory.BUDGETS,
+    );
+    if (!emailEnabled) return false;
+
+    // The user's stored locale and the digest's own toggle.
+    const prefs = await withScopedDb(this.dataSource, (m) =>
+      m.getRepository(UserPreference).findOne({
+        where: { userId },
+      }),
+    );
+    if (prefs && prefs.budgetDigestEnabled === false) return false;
+
+    const user = await withScopedDb(this.dataSource, (m) =>
+      m.getRepository(User).findOne({
+        where: { id: userId },
+      }),
+    );
+    if (!user || !user.email) return false;
+
+    const appUrl = this.configService.get<string>(
+      "PUBLIC_APP_URL",
+      "http://localhost:3000",
+    );
+
+    const summaries = await Promise.all(
+      periods.map(async ({ budget, period }) => {
+        let healthScore: number | null = null;
+        let healthLabel: string | null = null;
+        try {
+          const health = await this.budgetReportsService.getHealthScore(
+            userId,
+            budget.id,
+          );
+          healthScore = health.score;
+          healthLabel = health.label;
+        } catch {
+          // Health score is optional
+        }
+
+        const categories = budget.categories || [];
+        const expenseCategories = categories.filter((c) => !c.isIncome);
+
+        const periodCategories = period.periodCategories || [];
+
+        const categoryData = expenseCategories.map((bc) => {
+          const pc = periodCategories.find((p) => p.budgetCategoryId === bc.id);
+          return {
+            categoryName: bc.category?.name || "Uncategorized",
+            budgeted: Number(pc?.budgetedAmount ?? bc.amount),
+            actual: Number(pc?.actualAmount ?? 0),
+            percentUsed:
+              Number(pc?.budgetedAmount ?? bc.amount) > 0
+                ? Math.round(
+                    (Number(pc?.actualAmount ?? 0) /
+                      Number(pc?.budgetedAmount ?? bc.amount)) *
+                      10000,
+                  ) / 100
+                : 0,
+          };
+        });
+
+        const overBudgetCategories = categoryData.filter(
+          (c) => c.percentUsed > 100,
+        );
+
+        const topCategories = [...categoryData]
+          .sort((a, b) => b.actual - a.actual)
+          .slice(0, 5);
+
+        const totalBudgeted = Number(period.totalBudgeted);
+        const totalSpent = Number(period.actualExpenses);
+        const totalIncome = Number(period.actualIncome);
+        const remaining = totalBudgeted - totalSpent;
+        const percentUsed =
+          totalBudgeted > 0
+            ? Math.round((totalSpent / totalBudgeted) * 10000) / 100
+            : 0;
+
+        const periodDate = new Date(period.periodStart + "T00:00:00");
+        const periodLabel = periodDate.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+        });
+
+        return {
+          budgetName: budget.name,
+          currencyCode: budget.currencyCode,
+          periodLabel,
+          totalBudgeted,
+          totalSpent,
+          totalIncome,
+          remaining,
+          percentUsed,
+          healthScore,
+          healthLabel,
+          overBudgetCategories,
+          topCategories,
+        };
+      }),
+    );
+
+    const lang = prefs?.language || DEFAULT_LOCALE;
+    const t = emailTranslator(this.i18n, lang);
+    const n = numberFormatterFor(prefs?.numberFormat, prefs?.language);
+
+    const html = budgetMonthlySummaryTemplate(
+      user.firstName || "",
+      summaries,
+      appUrl,
+      t,
+      n,
+    );
+
+    const subject =
+      summaries.length === 1
+        ? t(
+            "emails.budgetMonthlySummary.subject",
+            `Monize: Monthly budget summary - ${summaries[0].periodLabel}`,
+            { period: summaries[0].periodLabel },
+          )
+        : t(
+            "emails.budgetMonthlySummary.subjectPlural",
+            `Monize: Monthly budget summary for ${summaries.length} budgets`,
+            { count: summaries.length },
+          );
+
+    await this.emailService.sendMail(user.email, subject, html);
+    return true;
+  }
+}

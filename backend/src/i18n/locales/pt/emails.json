@@ -1,0 +1,294 @@
+{
+  "test": {
+    "subject": "Monize - E-mail de teste",
+    "heading": "E-mail de teste do Monize",
+    "greeting": "Olá {{ name }},",
+    "body": "Este é um e-mail de teste do Monize. Se o recebeu, as suas notificações por e-mail estão a funcionar corretamente."
+  },
+  "billReminder": {
+    "subjectOne": "Monize: 1 fatura próxima precisa de atenção",
+    "subjectMany": "Monize: {{ count }} faturas próximas precisam de atenção",
+    "heading": "Lembrete de fatura próxima",
+    "greeting": "Olá {{ name }},",
+    "introOne": "Tem 1 fatura próxima que precisa de atenção:",
+    "introMany": "Tem {{ count }} faturas próximas que precisam de atenção:",
+    "colPayee": "Beneficiário",
+    "colDueDate": "Data de vencimento",
+    "colType": "Tipo",
+    "colAmount": "Montante",
+    "typeIncome": "Receita",
+    "typeExpense": "Despesa",
+    "typeUnknown": "Sentido desconhecido",
+    "amountUnavailable": "Valor não disponível",
+    "button": "Ver Faturas &amp; Depósitos"
+  },
+  "mortgageReminder": {
+    "subject": "Monize: 1 renovação de crédito habitação próxima",
+    "subjectPlural": "Monize: {{ count }} renovações de crédito habitação próximas",
+    "heading": "Lembrete de renovação de crédito habitação",
+    "greeting": "Olá {{ name }},",
+    "introOne": "Tem 1 crédito habitação com uma renovação de prazo próxima. Contacte o seu banco para discutir as opções de renovação antes do fim do prazo:",
+    "introMany": "Tem {{ count }} créditos habitação com uma renovação de prazo próxima. Contacte o seu banco para discutir as opções de renovação antes do fim do prazo:",
+    "colMortgage": "Crédito habitação",
+    "colTermEndDate": "Data de fim do prazo",
+    "colTimeRemaining": "Tempo restante",
+    "daysRemainingOne": "1 dia",
+    "daysRemainingMany": "{{ count }} dias",
+    "button": "Ver contas"
+  },
+  "severity": {
+    "critical": "Crítico",
+    "warning": "Aviso",
+    "success": "Boas notícias",
+    "info": "Informação"
+  },
+  "budgetAlertImmediate": {
+    "subject": "Monize: Alerta - {{ title }}",
+    "subjectPlural": "Monize: {{ count }} alertas precisam de atenção",
+    "heading": "Alerta",
+    "greeting": "Olá {{ name }},",
+    "intro": "O seu orçamento precisa de atenção:",
+    "colSeverity": "Gravidade",
+    "colAlert": "Alerta",
+    "colDetails": "Detalhes",
+    "button": "Ver orçamento"
+  },
+  "budgetWeeklyDigest": {
+    "subject": "Monize: O seu resumo semanal de orçamento",
+    "heading": "Resumo semanal de orçamento",
+    "greeting": "Olá {{ name }},",
+    "intro": "Aqui está o seu resumo semanal de orçamento para: <strong>{{ budgets }}</strong>",
+    "criticalOne": "crítico",
+    "criticalMany": "críticos",
+    "warningOne": "aviso",
+    "warningMany": "avisos",
+    "positiveOne": "positivo",
+    "positiveMany": "positivos",
+    "thisWeek": "Esta semana:",
+    "noAlerts": "Sem alertas",
+    "totalAlerts": "Total de alertas: {{ count }}",
+    "topAlertsHeading": "Principais alertas",
+    "andMore": "...e mais {{ count }}",
+    "button": "Ver painel de orçamento"
+  },
+  "budgetMonthlySummary": {
+    "subject": "Monize: Resumo mensal de orçamento - {{ period }}",
+    "subjectPlural": "Monize: Resumo mensal de orçamento para {{ count }} orçamentos",
+    "heading": "Resumo mensal de orçamento",
+    "greeting": "Olá {{ name }},",
+    "intro": "Aqui está o seu resumo mensal de orçamento para o período que acabou de encerrar:",
+    "overBudget": "Acima do orçamento",
+    "healthScore": "Pontuação de saúde:",
+    "labelBudgeted": "Orçamentado",
+    "labelSpent": "Gasto",
+    "labelRemaining": "Restante",
+    "percentUsed": "{{ percent }}% utilizado",
+    "topCategories": "Principais categorias",
+    "button": "Ver painel de orçamento"
+  },
+  "oidcLink": {
+    "subject": "Monize: Confirmar associação de conta SSO",
+    "heading": "Associar a sua conta SSO",
+    "greeting": "Olá {{ name }},",
+    "intro": "Alguém tentou iniciar sessão via SSO com um e-mail que corresponde à sua conta Monize existente. Para associar a sua identidade SSO a esta conta, clique no botão abaixo:",
+    "button": "Confirmar associação de conta",
+    "disclaimer": "Se não iniciou este pedido, pode ignorar este e-mail com segurança. O link expira em 1 hora."
+  },
+  "accountLocked": {
+    "subject": "Conta temporariamente bloqueada",
+    "heading": "Conta temporariamente bloqueada",
+    "greeting": "Olá {{ name }},",
+    "body1": "A sua conta Monize foi temporariamente bloqueada devido a múltiplas tentativas de início de sessão falhadas. Esta é uma medida de segurança para proteger a sua conta.",
+    "body2": "O bloqueio expirará automaticamente. Se não tentou iniciar sessão, recomendamos que redefina a sua palavra-passe imediatamente."
+  },
+  "passwordReset": {
+    "subject": "Redefinição de palavra-passe do Monize",
+    "heading": "Pedido de redefinição de palavra-passe",
+    "greeting": "Olá {{ name }},",
+    "intro": "Recebemos um pedido para redefinir a sua palavra-passe. Clique no botão abaixo para definir uma nova palavra-passe:",
+    "button": "Redefinir palavra-passe",
+    "disclaimer": "Este link expira em 1 hora. Se não solicitou uma redefinição de palavra-passe, pode ignorar este e-mail com segurança."
+  },
+  "emailVerification": {
+    "subject": "Verifique o seu e-mail do Monize",
+    "heading": "Verifique o seu endereço de e-mail",
+    "greeting": "Olá {{ name }},",
+    "intro": "Obrigado por se registar no Monize. Confirme o seu endereço de e-mail para ativar a sua conta e iniciar sessão:",
+    "button": "Verificar e-mail",
+    "disclaimer": "Este link expira em 24 horas. Se não criou uma conta Monize, pode ignorar este e-mail com segurança."
+  },
+  "accountInvite": {
+    "subject": "A sua conta Monize está pronta",
+    "heading": "A sua conta Monize está pronta",
+    "greeting": "Olá {{ name }},",
+    "intro": "Um administrador criou uma conta Monize para si. Clique no botão abaixo para definir a sua palavra-passe e iniciar sessão:",
+    "button": "Definir a sua palavra-passe",
+    "disclaimer": "Este link expira em 24 horas. Se não estava à espera disto, pode ignorar este e-mail com segurança."
+  },
+  "delegateInvite": {
+    "subject": "Foi convidado para o Monize",
+    "heading": "Foi convidado para o Monize",
+    "greeting": "Olá {{ name }},",
+    "intro": "{{ owner }} convidou-o(a) para aceder à sua conta Monize como delegado. Clique no botão abaixo para definir a sua palavra-passe e começar:",
+    "button": "Definir a sua palavra-passe",
+    "disclaimer": "Este link expira em 24 horas. Se não estava à espera deste convite, pode ignorar este e-mail com segurança."
+  },
+  "emergencyAccessReminder": {
+    "subjectOne": "Monize: a sua conta esteve inativa durante 1 dia",
+    "subjectMany": "Monize: a sua conta esteve inativa durante {{ daysSinceLogin }} dias",
+    "heading": "Lembrete de acesso de emergência do Monize",
+    "greeting": "Olá {{ name }},",
+    "grantPhraseToday": "hoje",
+    "grantPhraseFutureOne": "em 1 dia",
+    "grantPhraseFutureMany": "em {{ count }} dias",
+    "bodyOne": "Não iniciou sessão no Monize há <strong>1 dia</strong>. Se permanecer inativo, os seus contactos de emergência designados terão acesso total à sua conta {{ grantPhrase }}.",
+    "bodyMany": "Não iniciou sessão no Monize há <strong>{{ daysSinceLogin }} dias</strong>. Se permanecer inativo, os seus contactos de emergência designados terão acesso total à sua conta {{ grantPhrase }}.",
+    "contactsLabel": "Contactos designados:",
+    "button": "Iniciar sessão agora",
+    "footer": "Iniciar sessão reinicia o temporizador. Se já não pretender esta funcionalidade ativada, pode desativá-la em Definições → Acesso de emergência."
+  },
+  "emergencyAccessGrant": {
+    "subject": "Foi-lhe concedido acesso de emergência à conta Monize de {{ owner }}",
+    "heading": "Acesso de emergência concedido",
+    "greeting": "Olá {{ name }},",
+    "body": "<strong>{{ owner }}</strong> designou-o(a) anteriormente como contacto de emergência na sua conta Monize. Uma vez que não iniciou sessão durante um período prolongado, está agora a ser concedido acesso total para assumir a conta.",
+    "claimIntro": "Para reivindicar o acesso, clique no link abaixo e defina uma nova palavra-passe. Iniciará sessão como titular da conta.",
+    "button": "Reivindicar acesso de emergência",
+    "expiry": "Este link é válido até <strong>{{ expiry }}</strong> e só pode ser utilizado uma vez. Se vários contactos receberam este e-mail, o primeiro a reivindicar assumirá a conta."
+  },
+  "emergencyAccessGrantRevoked": {
+    "subject": "Monize: o acesso de emergência foi concedido enquanto esteve ausente",
+    "heading": "O acesso de emergência foi concedido enquanto esteve ausente",
+    "greeting": "Olá {{ name }},",
+    "body1": "Porque a sua conta esteve inativa, os seus contactos de emergência designados receberam links para assumir a sua conta. Iniciou sessão novamente, pelo que <strong>esses links foram revogados</strong> e a salvaguarda foi rearmada.",
+    "body2": "Se era esperado, não é necessária nenhuma ação. Se não era esperado, reveja a sua atividade de início de sessão e as suas definições de acesso de emergência.",
+    "button": "Rever acesso de emergência"
+  },
+  "providerOutage": {
+    "subject": "Monize: {{ provider }} não responde",
+    "heading": "Fornecedor de dados de mercado indisponível",
+    "greeting": "Olá {{ name }},",
+    "intro": "O Monize não consegue contactar <strong>{{ provider }}</strong> desde {{ since }} ({{ duration }}). Os pedidos a este fornecedor estão suspensos por agora e são repetidos em intervalos cada vez maiores.",
+    "labelFailures": "Tentativas falhadas",
+    "labelLastError": "Último erro",
+    "labelLastSuccess": "Última resposta com êxito",
+    "valueNever": "nunca",
+    "valueUnknown": "desconhecido",
+    "impact": "Cotações, gráficos e comparações de índices que dependem deste fornecedor podem estar em falta ou desatualizados até voltar a responder. Nada do que está registado no Monize foi perdido.",
+    "whatToCheck": "Se o fornecedor estiver operacional, verifique o acesso de rede de saída e o DNS deste servidor -- um contentor que não consegue resolver nem alcançar o fornecedor falha exatamente assim.",
+    "throttleNote": "Receberá mais um e-mail quando voltar a funcionar. Os alertas sobre o mesmo fornecedor são enviados no máximo uma vez a cada {{ hours }} horas, para que um fornecedor instável não encha a sua caixa de entrada.",
+    "durationMinutes": "{{ minutes }} min",
+    "durationHoursMinutes": "{{ hours }} h {{ minutes }} min"
+  },
+  "providerRecovery": {
+    "subject": "Monize: {{ provider }} voltou a responder",
+    "heading": "O fornecedor de dados de mercado voltou a responder",
+    "greeting": "Olá {{ name }},",
+    "intro": "<strong>{{ provider }}</strong> voltou a responder às {{ restoredAt }}. A interrupção durou {{ duration }}.",
+    "backfill": "As cotações e o histórico de índices que faltaram durante a interrupção são recuperados na próxima atualização agendada; não é necessária qualquer ação."
+  },
+  "systemAlert": {
+    "subject": "Monize: {{ title }}",
+    "heading": "Alerta de sistema",
+    "greeting": "Olá {{ name }},",
+    "intro": "Um problema na sua instalação do Monize requer a atenção de um administrador.",
+    "footer": "Este alerta também é mostrado no sino de notificações da aplicação. É gerado no máximo uma vez por ocorrência, independentemente do número de réplicas do servidor que a detetaram."
+  },
+  "notificationImmediate": {
+    "subject": "Tem uma nova notificação do Monize",
+    "eyebrow": "Notificação do Monize",
+    "button": "Abrir no Monize",
+    "footer": "Recebe isto porque o e-mail imediato está ativado para este tipo de notificação. Altere em Definições, Notificações."
+  },
+  "notificationCopy": {
+    "billDue": {
+      "titleOverdue": "{{ payee }} em atraso",
+      "titleToday": "{{ payee }} vence hoje",
+      "titleTomorrow": "{{ payee }} vence amanhã",
+      "titleInDays": "{{ payee }} vence em {{ days }} dias",
+      "amountDue": "{{ amount }} a pagar em {{ date }}",
+      "amountUnavailable": "Valor indisponível (sem taxa de câmbio atual), vence em {{ date }}"
+    },
+    "gemSignal": {
+      "riskTitle": "{{ strategy }} mudou para {{ state }}",
+      "riskMessage": "A sua estratégia GEM «{{ strategy }}» mudou de {{ fromState }} para {{ toState }}. Abra para rever a recomendação.",
+      "allocationTitle": "{{ strategy }} alterou o objetivo",
+      "allocationMessage": "A sua estratégia GEM «{{ strategy }}» agora tem como objetivo {{ target }}. Abra para rever a recomendação.",
+      "riskOn": "risk-on",
+      "riskOff": "risk-off",
+      "roles": {
+        "US_EQUITY": "S&P 500",
+        "EX_US_EQUITY": "Mercados desenvolvidos ex-EUA",
+        "EM_EQUITY": "Mercados emergentes",
+        "SAFE": "Ativo seguro",
+        "RISK_FREE": "Referência sem risco"
+      },
+      "allocationMessageUnknown": "A sua estratégia GEM «{{ strategy }}» mudou de alvo. Abra-a para rever a recomendação."
+    },
+    "portfolioMovement": {
+      "titleUp": "Investimentos a subir {{ percent }}%",
+      "titleDown": "Investimentos a descer {{ percent }}%",
+      "messageUp": "Os seus investimentos subiram {{ percent }}% hoje, excluindo depósitos e levantamentos. Abra para rever.",
+      "messageDown": "Os seus investimentos desceram {{ percent }}% hoje, excluindo depósitos e levantamentos. Abra para rever."
+    },
+    "balanceThreshold": {
+      "titleLow": "{{ account }} está abaixo do seu limite",
+      "titleHigh": "{{ account }} está acima do seu limite",
+      "messageLow": "{{ account }} desceu para {{ balance }}, abaixo do seu limite de {{ threshold }}.",
+      "messageHigh": "{{ account }} subiu para {{ balance }}, acima do seu limite de {{ threshold }}."
+    },
+    "system": {
+      "backupFailed": {
+        "title": "Falha na cópia de segurança automática",
+        "message": "A cópia de segurança automática de {{ user }} falhou: {{ error }}"
+      },
+      "backupPartial": {
+        "title": "Cópia de segurança automática incompleta",
+        "messageAttachments": "A cópia de segurança de {{ user }} foi escrita, mas não foi possível incluir {{ missing }} de {{ expected }} anexos e {{ inconsistent }} não correspondiam aos seus metadados. As cópias completas foram preservadas.",
+        "messagePromotion": "A cópia diária de {{ user }} foi concluída, mas a sua cópia semanal ou mensal não pôde ser escrita: {{ error }}",
+        "messageRetention": "A cópia de segurança de {{ user }} foi concluída, mas os ficheiros de cópias antigas não puderam ser eliminados: {{ error }}"
+      },
+      "encryptionKeyMissing": {
+        "title": "Chave de encriptação não configurada",
+        "message": "A ENCRYPTION_KEY não está definida, pelo que as cópias de segurança são escritas sem encriptação e não é possível guardar segredos. Uma versão futura não arrancará sem ela."
+      },
+      "smtpFailure": {
+        "title": "O envio de email está a falhar",
+        "message": "O Monize não conseguiu enviar email: {{ error }}. As notificações e os lembretes não estão a ser entregues."
+      },
+      "providerOutage": {
+        "title": "{{ provider }} não responde",
+        "message": "Os dados de mercado de {{ provider }} estão indisponíveis. Os preços e os dados de índices podem estar desatualizados até que volte a responder."
+      },
+      "providerRecovered": {
+        "title": "{{ provider }} está a responder novamente",
+        "message": "A interrupção terminou e os dados de mercado de {{ provider }} estão novamente a ser atualizados."
+      },
+      "scheduledPostFailed": {
+        "title": "Não foi possível registar {{ name }}",
+        "message": "A sua transação agendada com vencimento em {{ date }} não foi registada automaticamente: {{ error }}. Pode registá-la manualmente em Faturas e depósitos."
+      }
+    },
+    "budget": {
+      "overTitle": "{{ category }} ultrapassou o orçamento",
+      "overMessage": "Gastou {{ amount }} do orçamento de {{ limit }} para {{ category }} ({{ percent }}%).",
+      "criticalTitle": "{{ category }} aproxima-se do limite",
+      "warningTitle": "{{ category }} está a atingir o limite do orçamento",
+      "thresholdMessage": "Utilizou {{ percent }}% do orçamento de {{ category }} ({{ amount }} de {{ limit }}).",
+      "projectedTitle": "Prevê-se que {{ category }} ultrapasse o orçamento",
+      "projectedMessage": "Ao ritmo atual, prevê-se que as despesas de {{ category }} atinjam {{ projected }} até ao fim do período (orçamento: {{ budgeted }}).",
+      "flexTitle": "Grupo flexível «{{ group }}» a {{ percent }}%",
+      "flexMessage": "O grupo flexível «{{ group }}» utilizou {{ spent }} do orçamento conjunto de {{ budgeted }} ({{ percent }}%).",
+      "incomeTitle": "Rendimento abaixo do esperado",
+      "incomeMessage": "O seu rendimento real ({{ actual }}) corresponde a {{ ratio }}% do rendimento esperado ({{ expected }}) nesta fase do período.",
+      "milestoneTitle": "Orçamento dentro do previsto",
+      "milestoneMessage": "Decorreu {{ progress }}% do período e utilizou apenas {{ percent }}% do orçamento total. Continue assim!",
+      "seasonalTitle": "Prevê-se um aumento sazonal em {{ category }}",
+      "seasonalMessage": "No último mês de {{ month }}, gastou {{ increase }} vezes o habitual em {{ category }}. Considere ajustar o orçamento."
+    },
+    "priceMovement": {
+      "title": "Alerta de variação do preço: {{ symbol }} ({{ percent }}%)",
+      "message": "{{ symbol }}: {{ percent }}% face à sessão anterior disponível."
+    }
+  }
+}

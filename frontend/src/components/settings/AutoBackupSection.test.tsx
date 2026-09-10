@@ -1,0 +1,776 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent, waitFor, act } from '@/test/render';
+import { AutoBackupSection } from './AutoBackupSection';
+
+vi.mock('@/lib/backupApi', () => ({
+  backupApi: {
+    getAutoBackupSettings: vi.fn(),
+    getAutoBackupCapability: vi.fn(),
+    updateAutoBackupSettings: vi.fn(),
+    validateFolder: vi.fn(),
+    browseFolders: vi.fn(),
+    runAutoBackup: vi.fn(),
+    exportBackup: vi.fn(),
+    restoreBackup: vi.fn(),
+  },
+}));
+
+vi.mock('@/lib/errors', () => ({
+  getErrorMessage: vi.fn((_error: unknown, fallback: string) => fallback),
+}));
+
+vi.mock('@/store/preferencesStore', () => ({
+  usePreferencesStore: vi.fn((selector: (s: Record<string, unknown>) => unknown) =>
+    selector({ preferences: { timezone: 'America/New_York' } }),
+  ),
+}));
+
+import { backupApi } from '@/lib/backupApi';
+import toast from 'react-hot-toast';
+
+const defaultSettings = {
+  userId: '123',
+  enabled: false,
+  folderPath: '',
+  frequency: 'daily' as const,
+  backupTime: '02:00',
+  timezone: 'America/New_York',
+  retentionDaily: 7,
+  retentionWeekly: 4,
+  retentionMonthly: 6,
+  lastBackupAt: null,
+  lastBackupStatus: null,
+  lastBackupError: null,
+  nextBackupAt: null,
+  createdAt: '2026-01-01',
+  updatedAt: '2026-01-01',
+};
+
+async function renderAutoBackupSection() {
+  let result: ReturnType<typeof render>;
+  await act(async () => {
+    result = render(<AutoBackupSection />);
+  });
+  return result!;
+}
+
+describe('AutoBackupSection', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    (
+      backupApi.getAutoBackupCapability as ReturnType<typeof vi.fn>
+    ).mockResolvedValue({
+      available: true,
+      folderPath: '/data/backups',
+    });
+    (backupApi.getAutoBackupSettings as ReturnType<typeof vi.fn>).mockResolvedValue(
+      defaultSettings,
+    );
+  });
+
+  it('renders the auto-backup section with default settings', async () => {
+    await renderAutoBackupSection();
+
+    expect(screen.getByText('Automatic Backup')).toBeInTheDocument();
+    expect(screen.getByText('Enable automatic backups')).toBeInTheDocument();
+    expect(screen.getByLabelText('Backup Folder')).toHaveValue('');
+    expect(screen.getByLabelText('Backup Frequency')).toHaveValue('daily');
+  });
+
+  it('shows loading state initially', async () => {
+    (backupApi.getAutoBackupSettings as ReturnType<typeof vi.fn>).mockReturnValue(
+      new Promise(() => {}),
+    );
+
+    // Rendered inside act even though the assertion is about the first paint:
+    // the capability probe beside the settings load *does* resolve, and a bare
+    // render leaves its state update outside act.
+    await renderAutoBackupSection();
+
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
+  });
+
+  it('shows error toast on load failure', async () => {
+    (backupApi.getAutoBackupSettings as ReturnType<typeof vi.fn>).mockRejectedValue(
+      new Error('Load failed'),
+    );
+
+    await renderAutoBackupSection();
+
+    expect(toast.error).toHaveBeenCalledWith('Failed to load auto-backup settings');
+  });
+
+  it('populates form with existing settings', async () => {
+    (backupApi.getAutoBackupSettings as ReturnType<typeof vi.fn>).mockResolvedValue({
+      ...defaultSettings,
+      enabled: true,
+      folderPath: '/backups',
+      frequency: 'weekly',
+      retentionDaily: 14,
+      retentionWeekly: 8,
+      retentionMonthly: 12,
+    });
+
+    await renderAutoBackupSection();
+
+    const toggle = screen.getByRole('switch', { name: 'Enable automatic backups' });
+    expect(toggle).toHaveAttribute('aria-checked', 'true');
+    expect(screen.getByLabelText('Backup Folder')).toHaveValue('/backups');
+    expect(screen.getByLabelText('Backup Frequency')).toHaveValue('weekly');
+    expect(screen.getByLabelText('Daily backups')).toHaveValue('14');
+    expect(screen.getByLabelText('Weekly backups')).toHaveValue('8');
+    expect(screen.getByLabelText('Monthly backups')).toHaveValue('12');
+  });
+
+  it('enables save button when form is dirty', async () => {
+    await renderAutoBackupSection();
+
+    const saveButton = screen.getByText('Save Settings');
+    expect(saveButton).toBeDisabled();
+
+    await act(async () => {
+      fireEvent.change(screen.getByLabelText('Backup Folder'), {
+        target: { value: '/backups' },
+      });
+    });
+
+    expect(saveButton).not.toBeDisabled();
+  });
+
+  it('validates folder path', async () => {
+    (backupApi.validateFolder as ReturnType<typeof vi.fn>).mockResolvedValue({
+      valid: true,
+    });
+
+    await renderAutoBackupSection();
+
+    await act(async () => {
+      fireEvent.change(screen.getByLabelText('Backup Folder'), {
+        target: { value: '/backups' },
+      });
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('Validate'));
+    });
+
+    await waitFor(() => {
+      expect(backupApi.validateFolder).toHaveBeenCalledWith('/backups');
+      expect(toast.success).toHaveBeenCalledWith('Folder is valid and writable');
+    });
+  });
+
+  it('shows validation error for invalid folder', async () => {
+    (backupApi.validateFolder as ReturnType<typeof vi.fn>).mockResolvedValue({
+      valid: false,
+      error: 'Folder does not exist',
+    });
+
+    await renderAutoBackupSection();
+
+    await act(async () => {
+      fireEvent.change(screen.getByLabelText('Backup Folder'), {
+        target: { value: '/invalid' },
+      });
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('Validate'));
+    });
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith('Folder does not exist');
+    });
+  });
+
+  it('saves settings on save button click', async () => {
+    (backupApi.updateAutoBackupSettings as ReturnType<typeof vi.fn>).mockResolvedValue({
+      ...defaultSettings,
+      folderPath: '/backups',
+    });
+
+    await renderAutoBackupSection();
+
+    await act(async () => {
+      fireEvent.change(screen.getByLabelText('Backup Folder'), {
+        target: { value: '/backups' },
+      });
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('Save Settings'));
+    });
+
+    await waitFor(() => {
+      expect(backupApi.updateAutoBackupSettings).toHaveBeenCalledWith(
+        expect.objectContaining({
+          folderPath: '/backups',
+          frequency: 'daily',
+          retentionDaily: 7,
+          retentionWeekly: 4,
+          retentionMonthly: 6,
+        }),
+      );
+      expect(toast.success).toHaveBeenCalledWith('Auto-backup settings saved');
+    });
+  });
+
+  it('shows error toast on save failure', async () => {
+    (backupApi.updateAutoBackupSettings as ReturnType<typeof vi.fn>).mockRejectedValue(
+      new Error('Save failed'),
+    );
+
+    await renderAutoBackupSection();
+
+    await act(async () => {
+      fireEvent.change(screen.getByLabelText('Backup Folder'), {
+        target: { value: '/backups' },
+      });
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('Save Settings'));
+    });
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith('Failed to save settings');
+    });
+  });
+
+  it('shows Run Backup Now button when folder is configured', async () => {
+    (backupApi.getAutoBackupSettings as ReturnType<typeof vi.fn>).mockResolvedValue({
+      ...defaultSettings,
+      folderPath: '/backups',
+    });
+
+    await renderAutoBackupSection();
+
+    expect(screen.getByText('Run Backup Now')).toBeInTheDocument();
+  });
+
+  it('does not show Run Backup Now button when no folder configured', async () => {
+    await renderAutoBackupSection();
+
+    expect(screen.queryByText('Run Backup Now')).not.toBeInTheDocument();
+  });
+
+  it('runs manual backup', async () => {
+    (backupApi.getAutoBackupSettings as ReturnType<typeof vi.fn>).mockResolvedValue({
+      ...defaultSettings,
+      folderPath: '/backups',
+    });
+    (backupApi.runAutoBackup as ReturnType<typeof vi.fn>).mockResolvedValue({
+      message: 'Backup completed',
+      filename: 'monize-backup-2026-04-02T10-00-00.json.gz',
+    });
+
+    await renderAutoBackupSection();
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('Run Backup Now'));
+    });
+
+    await waitFor(() => {
+      expect(backupApi.runAutoBackup).toHaveBeenCalled();
+      expect(toast.success).toHaveBeenCalledWith(
+        'Backup created: monize-backup-2026-04-02T10-00-00.json.gz',
+      );
+    });
+  });
+
+  it('shows status section when last backup exists', async () => {
+    (backupApi.getAutoBackupSettings as ReturnType<typeof vi.fn>).mockResolvedValue({
+      ...defaultSettings,
+      folderPath: '/backups',
+      lastBackupAt: '2026-04-01T10:00:00Z',
+      lastBackupStatus: 'success',
+      nextBackupAt: '2026-04-02T10:00:00Z',
+    });
+
+    await renderAutoBackupSection();
+
+    expect(screen.getByText('Status')).toBeInTheDocument();
+    expect(screen.getByText('Last backup')).toBeInTheDocument();
+    expect(screen.getByText('Success')).toBeInTheDocument();
+    expect(screen.getByText('Next backup')).toBeInTheDocument();
+  });
+
+  it('shows error details when last backup failed', async () => {
+    (backupApi.getAutoBackupSettings as ReturnType<typeof vi.fn>).mockResolvedValue({
+      ...defaultSettings,
+      folderPath: '/backups',
+      lastBackupAt: '2026-04-01T10:00:00Z',
+      lastBackupStatus: 'failed',
+      lastBackupError: 'Folder not writable',
+    });
+
+    await renderAutoBackupSection();
+
+    expect(screen.getByText('Failed')).toBeInTheDocument();
+    expect(screen.getByText('Folder not writable')).toBeInTheDocument();
+  });
+
+  it('changes frequency selection', async () => {
+    await renderAutoBackupSection();
+
+    await act(async () => {
+      fireEvent.change(screen.getByLabelText('Backup Frequency'), {
+        target: { value: 'every6hours' },
+      });
+    });
+
+    expect(screen.getByLabelText('Backup Frequency')).toHaveValue('every6hours');
+  });
+
+  it('changes retention values', async () => {
+    await renderAutoBackupSection();
+
+    await act(async () => {
+      fireEvent.change(screen.getByLabelText('Daily backups'), {
+        target: { value: '14' },
+      });
+    });
+
+    expect(screen.getByLabelText('Daily backups')).toHaveValue('14');
+  });
+
+  it('disables validate button when folder path is empty', async () => {
+    await renderAutoBackupSection();
+
+    expect(screen.getByText('Validate')).toBeDisabled();
+  });
+
+  it('renders backup time field with default value', async () => {
+    await renderAutoBackupSection();
+
+    const timeInput = screen.getByLabelText('Backup Time (America/New_York)');
+    expect(timeInput).toBeInTheDocument();
+    expect(timeInput).toHaveValue('02:00');
+  });
+
+  it('populates backup time from settings', async () => {
+    (backupApi.getAutoBackupSettings as ReturnType<typeof vi.fn>).mockResolvedValue({
+      ...defaultSettings,
+      backupTime: '14:30',
+    });
+
+    await renderAutoBackupSection();
+
+    expect(screen.getByLabelText('Backup Time (America/New_York)')).toHaveValue('14:30');
+  });
+
+  it('includes backupTime when saving settings', async () => {
+    (backupApi.updateAutoBackupSettings as ReturnType<typeof vi.fn>).mockResolvedValue({
+      ...defaultSettings,
+      backupTime: '08:00',
+    });
+
+    await renderAutoBackupSection();
+
+    await act(async () => {
+      fireEvent.change(screen.getByLabelText('Backup Time (America/New_York)'), {
+        target: { value: '08:00' },
+      });
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('Save Settings'));
+    });
+
+    await waitFor(() => {
+      expect(backupApi.updateAutoBackupSettings).toHaveBeenCalledWith(
+        expect.objectContaining({
+          backupTime: '08:00',
+        }),
+      );
+    });
+  });
+
+  it('displays timezone from user preferences in backup time label', async () => {
+    await renderAutoBackupSection();
+
+    expect(screen.getByLabelText('Backup Time (America/New_York)')).toBeInTheDocument();
+  });
+
+  it('sends timezone when saving settings', async () => {
+    (backupApi.updateAutoBackupSettings as ReturnType<typeof vi.fn>).mockResolvedValue({
+      ...defaultSettings,
+      folderPath: '/backups',
+    });
+
+    await renderAutoBackupSection();
+
+    await act(async () => {
+      fireEvent.change(screen.getByLabelText('Backup Folder'), {
+        target: { value: '/backups' },
+      });
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('Save Settings'));
+    });
+
+    await waitFor(() => {
+      expect(backupApi.updateAutoBackupSettings).toHaveBeenCalledWith(
+        expect.objectContaining({
+          timezone: 'America/New_York',
+        }),
+      );
+    });
+  });
+
+  it('shows Browse button for folder selection', async () => {
+    await renderAutoBackupSection();
+
+    expect(screen.getByText('Browse...')).toBeInTheDocument();
+  });
+
+  it('opens folder browser and displays directories', async () => {
+    (backupApi.browseFolders as ReturnType<typeof vi.fn>).mockResolvedValue({
+      current: '/',
+      directories: ['backups', 'data', 'tmp'],
+    });
+
+    await renderAutoBackupSection();
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('Browse...'));
+    });
+
+    await waitFor(() => {
+      expect(backupApi.browseFolders).toHaveBeenCalledWith('/');
+      expect(screen.getByText('backups')).toBeInTheDocument();
+      expect(screen.getByText('data')).toBeInTheDocument();
+      expect(screen.getByText('tmp')).toBeInTheDocument();
+    });
+  });
+
+  it('keeps browse panel open when folder has no subdirectories', async () => {
+    (backupApi.browseFolders as ReturnType<typeof vi.fn>)
+      .mockResolvedValueOnce({
+        current: '/',
+        directories: ['backups'],
+      })
+      .mockResolvedValueOnce({
+        current: '/backups',
+        directories: [],
+      });
+
+    await renderAutoBackupSection();
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('Browse...'));
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('backups')).toBeInTheDocument();
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('backups'));
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('No subdirectories')).toBeInTheDocument();
+      expect(screen.getByText('Select This Folder')).toBeInTheDocument();
+    });
+  });
+
+  it('navigates into a subdirectory when clicked', async () => {
+    (backupApi.browseFolders as ReturnType<typeof vi.fn>)
+      .mockResolvedValueOnce({
+        current: '/',
+        directories: ['backups', 'data'],
+      })
+      .mockResolvedValueOnce({
+        current: '/backups',
+        directories: ['daily', 'weekly'],
+      });
+
+    await renderAutoBackupSection();
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('Browse...'));
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('backups')).toBeInTheDocument();
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('backups'));
+    });
+
+    await waitFor(() => {
+      expect(backupApi.browseFolders).toHaveBeenCalledWith('/backups');
+      expect(screen.getByText('daily')).toBeInTheDocument();
+    });
+  });
+
+  describe('per-user folder', () => {
+    it("shows where this user's backups actually land", async () => {
+      (backupApi.getAutoBackupSettings as ReturnType<typeof vi.fn>).mockResolvedValue({
+        ...defaultSettings,
+        folderPath: '/data/backups',
+        resolvedFolderPath:
+          '/data/backups/12/34/12345678-1234-1234-1234-123456789abc',
+      });
+
+      await renderAutoBackupSection();
+
+      // The folder field holds the base; the files go in a per-user folder
+      // underneath it, so showing the base alone would send an admin looking
+      // in a directory that only contains shard directories.
+      expect(
+        screen.getByText(
+          /Yours: \/data\/backups\/12\/34\/12345678-1234-1234-1234-123456789abc/,
+        ),
+      ).toBeInTheDocument();
+    });
+
+    it('still explains the layout when the server sent no resolved folder', async () => {
+      await renderAutoBackupSection();
+
+      expect(
+        screen.getByText(/their own folder inside this one/),
+      ).toBeInTheDocument();
+    });
+
+    it('says the settings are administrator-only and everyone else is enrolled', async () => {
+      await renderAutoBackupSection();
+
+      expect(
+        screen.getByText(/Only administrators can change these settings/),
+      ).toBeInTheDocument();
+    });
+  });
+
+  /**
+   * Saving an enabled schedule already fails when the deployment cannot write --
+   * the server creates the directory and probes it. But that happens only after
+   * the user has chosen a frequency, a time and a retention policy and pressed
+   * save, and the answer never depended on any of those. The capability endpoint
+   * exists so the section can say so first; the server refusal stays the
+   * authoritative guard.
+   */
+  describe('when the deployment has no backup storage', () => {
+    beforeEach(() => {
+      (
+        backupApi.getAutoBackupCapability as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
+        available: false,
+        folderPath: '/data/backups',
+        reason: 'EROFS: read-only file system',
+      });
+    });
+
+    it('says so, and names the folder', async () => {
+      await renderAutoBackupSection();
+
+      // Scoped to the banner: the section's own intro copy also mentions
+      // /data/backups, so an unscoped query matches both and proves nothing
+      // about the banner.
+      const banner = await screen.findByRole('status');
+      expect(banner).toHaveTextContent(/no backup storage/i);
+      expect(banner).toHaveTextContent('/data/backups');
+    });
+
+    it('disables the enable toggle rather than letting the save fail', async () => {
+      await renderAutoBackupSection();
+      await screen.findByRole('status');
+
+      const toggle = screen.getByRole('switch');
+      expect(toggle).toBeDisabled();
+    });
+
+    /**
+     * The first version of the banner disabled the toggle unconditionally, which
+     * is wrong in the case that matters most: storage that *used* to work. A
+     * volume unmounted or turned read-only leaves a schedule armed and failing,
+     * and the user arrives at this screen wanting to switch it off. Disabling
+     * the control in both directions leaves them looking at a setting they can
+     * see is broken and cannot change (F3RRR-005).
+     */
+    it('still lets the user switch an already-armed schedule off', async () => {
+      (
+        backupApi.getAutoBackupSettings as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
+        ...defaultSettings,
+        enabled: true,
+        folderPath: '/data/backups',
+      });
+      (
+        backupApi.updateAutoBackupSettings as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({ ...defaultSettings, enabled: false });
+
+      await renderAutoBackupSection();
+      await screen.findByRole('status');
+
+      const toggle = screen.getByRole('switch');
+      expect(toggle).not.toBeDisabled();
+
+      await act(async () => {
+        fireEvent.click(toggle);
+      });
+      await act(async () => {
+        fireEvent.click(screen.getByText('Save Settings'));
+      });
+
+      // Off has to reach the server, not merely the local state -- the schedule
+      // runs from the stored row.
+      expect(backupApi.updateAutoBackupSettings).toHaveBeenCalledWith(
+        expect.objectContaining({ enabled: false }),
+      );
+    });
+
+    it('does not offer a backup run that has nowhere to write', async () => {
+      (
+        backupApi.getAutoBackupSettings as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
+        ...defaultSettings,
+        enabled: true,
+        folderPath: '/data/backups',
+      });
+
+      await renderAutoBackupSection();
+      await screen.findByRole('status');
+
+      expect(
+        screen.getByRole('button', { name: 'Run Backup Now' }),
+      ).toBeDisabled();
+    });
+  });
+
+  describe('when the capability cannot be read', () => {
+    it('fails open: a capability read that errors does not lock the controls', async () => {
+      // A capability probe we could not read is not a refusal (maintainer
+      // finding). Blocking here on a transient error, or on a backend that
+      // predates the endpoint (rolling deploy), would strand the toggle and Run
+      // Now with no way back; the server still creates and probes the folder on
+      // save, so it stays the authoritative guard.
+      (
+        backupApi.getAutoBackupSettings as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
+        ...defaultSettings,
+        enabled: false,
+        folderPath: '/data/backups',
+      });
+      (
+        backupApi.getAutoBackupCapability as ReturnType<typeof vi.fn>
+      ).mockRejectedValue(new Error('network'));
+
+      await renderAutoBackupSection();
+      await act(async () => {}); // flush the capability rejection handler
+
+      await waitFor(() => {
+        expect(screen.getByRole('switch')).not.toBeDisabled();
+      });
+      expect(
+        screen.getByText('Run Backup Now').closest('button'),
+      ).not.toBeDisabled();
+      // A failed read is not a definitive "unavailable", so no banner either.
+      expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    });
+
+    it('still lets an already-enabled schedule be switched off when storage is unavailable', async () => {
+      // The other direction: a user whose backups have started failing must be
+      // able to turn them off. A persisted-enabled schedule stays interactive
+      // even when the capability is unavailable (uses the persisted state, not
+      // the mutable toggle).
+      (
+        backupApi.getAutoBackupSettings as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
+        ...defaultSettings,
+        enabled: true,
+        folderPath: '/data/backups',
+      });
+      (
+        backupApi.getAutoBackupCapability as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
+        available: false,
+        folderPath: '/data/backups',
+        reason: 'not writable',
+      });
+
+      await renderAutoBackupSection();
+
+      await waitFor(() => {
+        expect(screen.getByRole('switch')).not.toBeDisabled();
+      });
+    });
+  });
+
+  describe('re-reads capability after actions that can change it', () => {
+    it('re-checks after a folder validates, clearing a stale no-storage banner', async () => {
+      // Capability is read once at mount; without a re-check, pointing at a
+      // writable alternate folder and validating it leaves the toggle disabled
+      // until a full save (maintainer finding). A successful validate re-probes.
+      (
+        backupApi.getAutoBackupSettings as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
+        ...defaultSettings,
+        enabled: false,
+        folderPath: '/data/backups',
+      });
+      (backupApi.getAutoBackupCapability as ReturnType<typeof vi.fn>)
+        .mockResolvedValueOnce({ available: false, folderPath: '/data/backups' })
+        .mockResolvedValueOnce({ available: true, folderPath: '/data/backups' });
+      (backupApi.validateFolder as ReturnType<typeof vi.fn>).mockResolvedValue({
+        valid: true,
+      });
+
+      await renderAutoBackupSection();
+      await screen.findByRole('status');
+
+      await act(async () => {
+        fireEvent.change(screen.getByLabelText('Backup Folder'), {
+          target: { value: '/data/backups' },
+        });
+      });
+      await act(async () => {
+        fireEvent.click(screen.getByText('Validate'));
+      });
+
+      await waitFor(() => {
+        expect(backupApi.getAutoBackupCapability).toHaveBeenCalledTimes(2);
+      });
+      expect(screen.queryByRole('status')).not.toBeInTheDocument();
+      expect(screen.getByRole('switch')).not.toBeDisabled();
+    });
+
+    it('re-checks after settings are saved', async () => {
+      // The saved folder is what the server now probes, so capability is re-read
+      // against it rather than leaving the mount-time answer on screen.
+      (
+        backupApi.getAutoBackupSettings as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({
+        ...defaultSettings,
+        enabled: false,
+        folderPath: '/data/backups',
+      });
+      (backupApi.getAutoBackupCapability as ReturnType<typeof vi.fn>)
+        .mockResolvedValueOnce({ available: false, folderPath: '/data/backups' })
+        .mockResolvedValueOnce({ available: true, folderPath: '/new' });
+      (
+        backupApi.updateAutoBackupSettings as ReturnType<typeof vi.fn>
+      ).mockResolvedValue({ ...defaultSettings, folderPath: '/new' });
+
+      await renderAutoBackupSection();
+      await screen.findByRole('status');
+
+      await act(async () => {
+        fireEvent.change(screen.getByLabelText('Backup Folder'), {
+          target: { value: '/new' },
+        });
+      });
+      await act(async () => {
+        fireEvent.click(screen.getByText('Save Settings'));
+      });
+
+      await waitFor(() => {
+        expect(backupApi.getAutoBackupCapability).toHaveBeenCalledTimes(2);
+      });
+      expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    });
+  });
+});

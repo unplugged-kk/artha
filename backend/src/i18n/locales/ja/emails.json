@@ -1,0 +1,294 @@
+{
+  "test": {
+    "subject": "Monize テストメール",
+    "heading": "Monize テストメール",
+    "greeting": "{{ name }} 様、",
+    "body": "これはMonizeからのテストメールです。このメールが届いた場合、メール通知が正常に機能しています。"
+  },
+  "billReminder": {
+    "subjectOne": "Monize: 1件の支払いにご注意ください",
+    "subjectMany": "Monize: {{ count }} 件の支払いにご注意ください",
+    "heading": "支払い予定リマインダー",
+    "greeting": "{{ name }} 様、",
+    "introOne": "1件の支払いが近づいています：",
+    "introMany": "{{ count }} 件の支払いが近づいています：",
+    "colPayee": "支払先",
+    "colDueDate": "支払期日",
+    "colType": "種類",
+    "colAmount": "金額",
+    "typeIncome": "収入",
+    "typeExpense": "支出",
+    "typeUnknown": "方向不明",
+    "amountUnavailable": "金額を取得できません",
+    "button": "支払い予定を確認する"
+  },
+  "mortgageReminder": {
+    "subject": "Monize: 1件の住宅ローン更新が近づいています",
+    "subjectPlural": "Monize: {{ count }} 件の住宅ローン更新が近づいています",
+    "heading": "住宅ローン更新リマインダー",
+    "greeting": "{{ name }} 様、",
+    "introOne": "1件の住宅ローンの期間更新が近づいています。期間終了前に貸し手に更新オプションについてご相談ください：",
+    "introMany": "{{ count }} 件の住宅ローンの期間更新が近づいています。期間終了前に貸し手に更新オプションについてご相談ください：",
+    "colMortgage": "住宅ローン",
+    "colTermEndDate": "期間終了日",
+    "colTimeRemaining": "残り期間",
+    "daysRemainingOne": "1日",
+    "daysRemainingMany": "{{ count }} 日",
+    "button": "口座を確認する"
+  },
+  "severity": {
+    "critical": "緊急",
+    "warning": "警告",
+    "success": "お知らせ",
+    "info": "情報"
+  },
+  "budgetAlertImmediate": {
+    "subject": "Monize: アラート - {{ title }}",
+    "subjectPlural": "Monize: {{ count }} 件のアラートにご注意ください",
+    "heading": "アラート",
+    "greeting": "{{ name }} 様、",
+    "intro": "予算に注意が必要です：",
+    "colSeverity": "重大度",
+    "colAlert": "アラート",
+    "colDetails": "詳細",
+    "button": "予算を確認する"
+  },
+  "budgetWeeklyDigest": {
+    "subject": "Monize: 週次予算サマリー",
+    "heading": "週次予算サマリー",
+    "greeting": "{{ name }} 様、",
+    "intro": "以下の週次予算サマリーです：<strong>{{ budgets }}</strong>",
+    "criticalOne": "緊急",
+    "criticalMany": "緊急",
+    "warningOne": "警告",
+    "warningMany": "警告",
+    "positiveOne": "良好",
+    "positiveMany": "良好",
+    "thisWeek": "今週：",
+    "noAlerts": "アラートなし",
+    "totalAlerts": "アラート合計：{{ count }}",
+    "topAlertsHeading": "主なアラート",
+    "andMore": "...他 {{ count }} 件",
+    "button": "予算ダッシュボードを確認する"
+  },
+  "budgetMonthlySummary": {
+    "subject": "Monize: 月次予算サマリー - {{ period }}",
+    "subjectPlural": "Monize: {{ count }} 件の予算の月次サマリー",
+    "heading": "月次予算サマリー",
+    "greeting": "{{ name }} 様、",
+    "intro": "先月の期間が終了した月次予算サマリーです：",
+    "overBudget": "予算超過",
+    "healthScore": "健全性スコア：",
+    "labelBudgeted": "予算額",
+    "labelSpent": "支出額",
+    "labelRemaining": "残額",
+    "percentUsed": "{{ percent }}% 使用済み",
+    "topCategories": "主なカテゴリ",
+    "button": "予算ダッシュボードを確認する"
+  },
+  "oidcLink": {
+    "subject": "Monize: SSOアカウントのリンクを確認してください",
+    "heading": "SSOアカウントをリンクする",
+    "greeting": "{{ name }} 様、",
+    "intro": "SSOを通じてサインインしようとした際に、既存のMonizeアカウントと一致するメールアドレスが見つかりました。SSOのIDをこのアカウントにリンクするには、以下のボタンをクリックしてください：",
+    "button": "アカウントのリンクを確認する",
+    "disclaimer": "このリクエストを開始していない場合は、このメールを無視してください。リンクは1時間後に有効期限が切れます。"
+  },
+  "accountLocked": {
+    "subject": "アカウントが一時的にロックされました",
+    "heading": "アカウントが一時的にロックされました",
+    "greeting": "{{ name }} 様、",
+    "body1": "ログイン試行が複数回失敗したため、Monizeアカウントが一時的にロックされました。これはアカウントを保護するためのセキュリティ対策です。",
+    "body2": "ロックは自動的に解除されます。ログイン試行に心当たりがない場合は、直ちにパスワードをリセットすることをお勧めします。"
+  },
+  "passwordReset": {
+    "subject": "Monize パスワードリセット",
+    "heading": "パスワードリセットのリクエスト",
+    "greeting": "{{ name }} 様、",
+    "intro": "パスワードをリセットするリクエストを受け付けました。以下のボタンをクリックして新しいパスワードを設定してください：",
+    "button": "パスワードをリセットする",
+    "disclaimer": "このリンクは1時間後に有効期限が切れます。パスワードリセットをリクエストしていない場合は、このメールを無視してください。"
+  },
+  "emailVerification": {
+    "subject": "Monizeのメールアドレスを確認してください",
+    "heading": "メールアドレスを確認してください",
+    "greeting": "{{ name }} 様、",
+    "intro": "Monizeにご登録いただきありがとうございます。メールアドレスを確認してアカウントを有効化し、サインインしてください：",
+    "button": "メールを確認する",
+    "disclaimer": "このリンクは24時間後に有効期限が切れます。Monizeアカウントを作成していない場合は、このメールを無視してください。"
+  },
+  "accountInvite": {
+    "subject": "Monizeアカウントの準備ができました",
+    "heading": "Monizeアカウントの準備ができました",
+    "greeting": "{{ name }} 様、",
+    "intro": "管理者がMonizeアカウントを作成しました。以下のボタンをクリックしてパスワードを設定し、サインインしてください：",
+    "button": "パスワードを設定する",
+    "disclaimer": "このリンクは24時間後に有効期限が切れます。ご不明な点がある場合は、このメールを無視してください。"
+  },
+  "delegateInvite": {
+    "subject": "Monizeに招待されました",
+    "heading": "Monizeに招待されました",
+    "greeting": "{{ name }} 様、",
+    "intro": "{{ owner }} があなたをMonizeアカウントの代理人として招待しました。以下のボタンをクリックしてパスワードを設定し、始めてください：",
+    "button": "パスワードを設定する",
+    "disclaimer": "このリンクは24時間後に有効期限が切れます。この招待に心当たりがない場合は、このメールを無視してください。"
+  },
+  "emergencyAccessReminder": {
+    "subjectOne": "Monize: あなたのアカウントは1日間非アクティブです",
+    "subjectMany": "Monize: あなたのアカウントは {{ daysSinceLogin }} 日間非アクティブです",
+    "heading": "Monize 緊急アクセスリマインダー",
+    "greeting": "{{ name }} 様、",
+    "grantPhraseToday": "本日",
+    "grantPhraseFutureOne": "1日後",
+    "grantPhraseFutureMany": "{{ count }} 日後",
+    "bodyOne": "Monizeに<strong>1日間</strong>サインインしていません。このまま非アクティブの状態が続くと、指定した緊急連絡先に{{ grantPhrase }}アカウントへのフルアクセスが付与されます。",
+    "bodyMany": "Monizeに<strong>{{ daysSinceLogin }} 日間</strong>サインインしていません。このまま非アクティブの状態が続くと、指定した緊急連絡先に{{ grantPhrase }}アカウントへのフルアクセスが付与されます。",
+    "contactsLabel": "指定した緊急連絡先：",
+    "button": "今すぐサインインする",
+    "footer": "サインインするとタイマーがリセットされます。この機能が不要な場合は、設定 → 緊急アクセスから無効にできます。"
+  },
+  "emergencyAccessGrant": {
+    "subject": "{{ owner }} のMonizeアカウントへの緊急アクセスが付与されました",
+    "heading": "緊急アクセスが付与されました",
+    "greeting": "{{ name }} 様、",
+    "body": "<strong>{{ owner }}</strong> があなたをMonizeアカウントの緊急連絡先として指定していました。彼らは長期間サインインしていないため、アカウントを引き継ぐためのフルアクセスが付与されました。",
+    "claimIntro": "アクセスを取得するには、以下のリンクをクリックして新しいパスワードを設定してください。アカウントホルダーとしてサインインされます。",
+    "button": "緊急アクセスを取得する",
+    "expiry": "このリンクは<strong>{{ expiry }}</strong>まで有効で、一度のみ使用できます。複数の連絡先がこのメールを受け取った場合、最初に取得した人がアカウントを引き継ぎます。"
+  },
+  "emergencyAccessGrantRevoked": {
+    "subject": "Monize: 不在中に緊急アクセスが付与されました",
+    "heading": "不在中に緊急アクセスが付与されました",
+    "greeting": "{{ name }} 様、",
+    "body1": "アカウントが非アクティブだったため、指定した緊急連絡先にアカウントを引き継ぐリンクが送信されました。あなたが再度サインインしたため、<strong>それらのリンクは無効化されました</strong>。セーフガードは再設定されました。",
+    "body2": "これが予期されていた場合は、何もする必要はありません。心当たりがない場合は、サインインアクティビティと緊急アクセス設定を確認してください。",
+    "button": "緊急アクセスを確認する"
+  },
+  "providerOutage": {
+    "subject": "Monize: {{ provider }} が応答していません",
+    "heading": "市場データプロバイダーに接続できません",
+    "greeting": "{{ name }} 様、",
+    "intro": "Monize は {{ since }} から（{{ duration }}）<strong>{{ provider }}</strong> に接続できていません。このプロバイダーへのリクエストは現在停止しており、間隔を広げながら再試行します。",
+    "labelFailures": "失敗した試行回数",
+    "labelLastError": "最後のエラー",
+    "labelLastSuccess": "最後に成功した応答",
+    "valueNever": "なし",
+    "valueUnknown": "不明",
+    "impact": "このプロバイダーに依存する価格・チャート・指数比較は、復旧するまで欠落または古い値になる可能性があります。Monize に記録されたデータは失われていません。",
+    "whatToCheck": "プロバイダー側が稼働している場合は、このサーバーの外向き通信と DNS を確認してください。プロバイダーの名前を解決できない、または到達できないコンテナーは、まさにこの形で失敗します。",
+    "throttleNote": "復旧時にもう 1 通メールが届きます。同じプロバイダーに関する通知は最大でも {{ hours }} 時間に 1 回しか送信しないため、不安定なプロバイダーで受信トレイが埋まることはありません。",
+    "durationMinutes": "{{ minutes }} 分",
+    "durationHoursMinutes": "{{ hours }} 時間 {{ minutes }} 分"
+  },
+  "providerRecovery": {
+    "subject": "Monize: {{ provider }} が再び応答しています",
+    "heading": "市場データプロバイダーが復旧しました",
+    "greeting": "{{ name }} 様、",
+    "intro": "<strong>{{ provider }}</strong> は {{ restoredAt }} に再び応答しました。障害は {{ duration }} 続きました。",
+    "backfill": "障害中に取得できなかった価格と指数の履歴は、次回の定期更新で補完されます。対応は不要です。"
+  },
+  "systemAlert": {
+    "subject": "Monize: {{ title }}",
+    "heading": "システムアラート",
+    "greeting": "{{ name }} 様、",
+    "intro": "Monize の環境で管理者の対応が必要な問題が発生しています。",
+    "footer": "このアラートはアプリの通知ベルにも表示されます。サーバーのレプリカ数にかかわらず、1 件の事象につき最大 1 回だけ発生します。"
+  },
+  "notificationImmediate": {
+    "subject": "新しい Monize の通知があります",
+    "eyebrow": "Monize の通知",
+    "button": "Monize で開く",
+    "footer": "この通知タイプで即時メールが有効になっているため送信されています。設定の通知で変更できます。"
+  },
+  "notificationCopy": {
+    "billDue": {
+      "titleOverdue": "{{ payee }} は支払期日超過",
+      "titleToday": "{{ payee }} は今日が支払期日",
+      "titleTomorrow": "{{ payee }} は明日が支払期日",
+      "titleInDays": "{{ payee }} は{{ days }}日後が支払期日",
+      "amountDue": "{{ date }} に {{ amount }} の支払い",
+      "amountUnavailable": "金額が不明です (現在の為替レートがありません)。支払期日は {{ date }}"
+    },
+    "gemSignal": {
+      "riskTitle": "{{ strategy }} が {{ state }} に切り替わりました",
+      "riskMessage": "GEM戦略「{{ strategy }}」が {{ fromState }} から {{ toState }} に変わりました。推奨内容を確認するには開いてください。",
+      "allocationTitle": "{{ strategy }} の目標が変わりました",
+      "allocationMessage": "GEM戦略「{{ strategy }}」の目標が {{ target }} になりました。推奨内容を確認するには開いてください。",
+      "riskOn": "リスクオン",
+      "riskOff": "リスクオフ",
+      "roles": {
+        "US_EQUITY": "S&P 500",
+        "EX_US_EQUITY": "米国除く先進国",
+        "EM_EQUITY": "新興国",
+        "SAFE": "安全資産",
+        "RISK_FREE": "無リスクのベンチマーク"
+      },
+      "allocationMessageUnknown": "GEM戦略「{{ strategy }}」の投資対象が変更されました。開いて推奨内容を確認してください。"
+    },
+    "portfolioMovement": {
+      "titleUp": "投資が {{ percent }}% 上昇",
+      "titleDown": "投資が {{ percent }}% 下落",
+      "messageUp": "本日、入出金を除いて投資が {{ percent }}% 上昇しています。確認するには開いてください。",
+      "messageDown": "本日、入出金を除いて投資が {{ percent }}% 下落しています。確認するには開いてください。"
+    },
+    "balanceThreshold": {
+      "titleLow": "{{ account }} がしきい値を下回っています",
+      "titleHigh": "{{ account }} がしきい値を上回っています",
+      "messageLow": "{{ account }} が {{ balance }} に下がり、しきい値 {{ threshold }} を下回りました。",
+      "messageHigh": "{{ account }} が {{ balance }} に上がり、しきい値 {{ threshold }} を上回りました。"
+    },
+    "system": {
+      "backupFailed": {
+        "title": "自動バックアップに失敗しました",
+        "message": "{{ user }} の自動バックアップに失敗しました: {{ error }}"
+      },
+      "backupPartial": {
+        "title": "自動バックアップが不完全です",
+        "messageAttachments": "{{ user }} のバックアップは書き込まれましたが、{{ expected }} 件中 {{ missing }} 件の添付ファイルを含められず、{{ inconsistent }} 件はメタデータと一致しませんでした。完全なバックアップは保持されています。",
+        "messagePromotion": "{{ user }} の日次バックアップは成功しましたが、週次または月次のコピーを書き込めませんでした: {{ error }}",
+        "messageRetention": "{{ user }} のバックアップは成功しましたが、古いバックアップファイルを削除できませんでした: {{ error }}"
+      },
+      "encryptionKeyMissing": {
+        "title": "暗号化キーが設定されていません",
+        "message": "ENCRYPTION_KEY が設定されていないため、バックアップは暗号化されずに書き込まれ、シークレットを保存できません。将来のリリースではこのキーがないと起動しなくなります。"
+      },
+      "smtpFailure": {
+        "title": "メール送信に失敗しています",
+        "message": "Monize はメールを送信できませんでした: {{ error }}。通知やリマインダーが配信されていません。"
+      },
+      "providerOutage": {
+        "title": "{{ provider }} が応答していません",
+        "message": "{{ provider }} からの市場データを取得できません。再び応答するまで、価格や指数データが古い可能性があります。"
+      },
+      "providerRecovered": {
+        "title": "{{ provider }} が再び応答しています",
+        "message": "障害は解消し、{{ provider }} からの市場データは再び更新されています。"
+      },
+      "scheduledPostFailed": {
+        "title": "{{ name }} を記帳できませんでした",
+        "message": "{{ date }} が期日の定期取引を自動で記帳できませんでした: {{ error }}。請求書・入金の画面から手動で記帳できます。"
+      }
+    },
+    "budget": {
+      "overTitle": "{{ category }}が予算を超過しています",
+      "overMessage": "{{ category }}の予算{{ limit }}のうち{{ amount }}を支出しました（{{ percent }}%）。",
+      "criticalTitle": "{{ category }}が上限に近づいています",
+      "warningTitle": "{{ category }}が予算の上限に達しつつあります",
+      "thresholdMessage": "{{ category }}の予算の{{ percent }}%を使用しました（{{ limit }}のうち{{ amount }}）。",
+      "projectedTitle": "{{ category }}は予算を超過する見込みです",
+      "projectedMessage": "現在のペースでは、期間終了時の{{ category }}の支出は{{ projected }}に達する見込みです（予算：{{ budgeted }}）。",
+      "flexTitle": "フレックスグループ「{{ group }}」が{{ percent }}%に達しました",
+      "flexMessage": "フレックスグループ「{{ group }}」は合計予算{{ budgeted }}のうち{{ spent }}を使用しました（{{ percent }}%）。",
+      "incomeTitle": "収入が予想を下回っています",
+      "incomeMessage": "この期間の現時点で、実際の収入（{{ actual }}）は予想収入（{{ expected }}）の{{ ratio }}%です。",
+      "milestoneTitle": "予算は順調です",
+      "milestoneMessage": "期間の{{ progress }}%が経過しましたが、予算全体の{{ percent }}%しか使用していません。その調子です！",
+      "seasonalTitle": "{{ category }}の季節的な支出増加が予想されます",
+      "seasonalMessage": "前回の{{ month }}には、{{ category }}に通常の{{ increase }}倍を支出しました。予算の調整を検討してください。"
+    },
+    "priceMovement": {
+      "title": "価格変動アラート: {{ symbol }} ({{ percent }}%)",
+      "message": "{{ symbol }}：直前の利用可能な取引日比 {{ percent }}%。"
+    }
+  }
+}

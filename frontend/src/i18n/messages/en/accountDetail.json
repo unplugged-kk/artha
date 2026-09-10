@@ -1,0 +1,49 @@
+{
+  "header": {
+    "viewTransactions": "View Transactions",
+    "reconcile": "Reconcile",
+    "edit": "Edit Account",
+    "back": "Back to Accounts",
+    "switchAccount": "Switch to another account",
+    "switchFavourites": "Favourites",
+    "switchOtherAccounts": "Other accounts",
+    "switchPlaceholder": "Filter accounts...",
+    "switchNoMatches": "No accounts match",
+    "jointBadge": "Joint",
+    "jointSharedBy": "Shared by {owner}",
+    "jointSharedWith": "Shared with {count, plural, one {# person} other {# people}}"
+  },
+  "loading": "Loading account details...",
+  "error": {
+    "retry": "Retry"
+  },
+  "recurring": {
+    "title": "Recurring Charges",
+    "subtitle": "Scheduled bills on this account, plus possible subscriptions found in its transactions",
+    "empty": "No recurring charges detected on this account",
+    "scheduledTitle": "Scheduled",
+    "detectedTitle": "Possible recurring charges",
+    "detectedSubtitle": "Found in your transaction history but not yet scheduled",
+    "nextDue": "Next due {date}",
+    "createBill": "Create bill",
+    "createBillAria": "Create a scheduled bill for {payee}",
+    "createTitle": "New Scheduled Bill",
+    "frequency": {
+      "weekly": "Weekly",
+      "biweekly": "Every 2 weeks",
+      "monthly": "Monthly",
+      "quarterly": "Quarterly",
+      "yearly": "Yearly",
+      "irregular": "Irregular"
+    }
+  },
+  "forecastUnavailable": {
+    "intro": "The projected balance is not shown because at least one upcoming scheduled item cannot be priced yet. A projection runs one day into the next, so a single unknown amount would make every day after it wrong.",
+    "requestFailed": "The projected balance could not be loaded. Reload the page to try again.",
+    "reasonUnavailable": "The reason was not reported. Check the exchange rates for any scheduled item in a foreign currency.",
+    "missingRatePair": "{name}: no exchange rate is available for {from} to {to}, so the amount this occurrence will post is unknown.",
+    "missingRate": "{name}: the exchange rate this occurrence settles at is not available, so the amount it will post is unknown.",
+    "crossCurrencyTransfer": "{name}: a transfer arriving from an account in {from} while this account is in {to}. The amount that lands here is set when the transfer posts, so it cannot be projected in advance.",
+    "howToFix": "To fix a missing rate: open Currencies and refresh the rates, or check that the security and its settlement account carry the currencies you expect."
+  }
+}

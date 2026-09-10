@@ -1,0 +1,148 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: monize-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - monize-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API (NestJS)
+  backend:
+    image: ghcr.io/kenlasko/monize-backend:latest
+    container_name: monize-backend
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: ${BACKEND_PORT:-3000}
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: ${POSTGRES_DB}
+      DATABASE_USER: ${POSTGRES_USER}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      # Row-Level Security (defense-in-depth; off by default). See
+      # docs/future-plans/row-level-security.md and the runbook before enabling.
+      # Empty-safe so an existing .env without these keys upgrades unchanged.
+      RLS_MODE: ${RLS_MODE:-off}
+      DATABASE_APP_USER: ${DATABASE_APP_USER:-monize_app}
+      DATABASE_APP_PASSWORD: ${DATABASE_APP_PASSWORD:-}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-15m}
+      PUBLIC_APP_URL: ${PUBLIC_APP_URL}
+      CORS_ORIGIN: ${CORS_ORIGIN:-${PUBLIC_APP_URL}}
+      MSN_API_KEY: ${MSN_API_KEY}
+      # Authentication
+      LOCAL_AUTH_ENABLED: ${LOCAL_AUTH_ENABLED:-true}
+      REGISTRATION_ENABLED: ${REGISTRATION_ENABLED:-true}
+      FORCE_2FA: ${FORCE_2FA:-false}
+      REMEMBER_ME_DAYS: ${REMEMBER_ME_DAYS:-30}
+      # Reminder cron limits (empty values use backend defaults)
+      UNIFIEDPUSH_PRIVATE_ENDPOINTS: ${UNIFIEDPUSH_PRIVATE_ENDPOINTS:-}
+      NOTIFICATION_REMINDER_CLAIM_BATCH: ${NOTIFICATION_REMINDER_CLAIM_BATCH:-}
+      NOTIFICATION_REMINDER_REEMIT_CONCURRENCY: ${NOTIFICATION_REMINDER_REEMIT_CONCURRENCY:-}
+      # Backup
+      BACKUP_CONTAINER_DIR: ${BACKUP_CONTAINER_DIR:-/data/backups}
+      # Attachments (used by ATTACHMENT_STORAGE_PROVIDER=local)
+      ATTACHMENT_CONTAINER_DIR: ${ATTACHMENT_CONTAINER_DIR:-/data/attachments}
+      # Demo mode (optional)
+      DEMO_MODE: ${DEMO_MODE:-false}
+      # OIDC (optional)
+      OIDC_ISSUER_URL: ${OIDC_ISSUER_URL:-}
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID:-}
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET:-}
+      OIDC_CALLBACK_URL: ${OIDC_CALLBACK_URL:-}
+      # SMTP (optional)
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      EMAIL_FROM: ${EMAIL_FROM:-}
+      # AI Integration (optional)
+      # Set one of these: everything stored encrypted at rest (AI provider keys,
+      # emergency-access credentials, the password automatic backups are
+      # encrypted with) needs it, and without it backups go out unencrypted. The
+      # backend warns on every boot while it is missing and a future release
+      # will require it. AI_ENCRYPTION_KEY is the former name and is still
+      # accepted, so an existing .env keeps working untouched.
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-}
+      AI_ENCRYPTION_KEY: ${AI_ENCRYPTION_KEY:-}
+      AI_DEFAULT_PROVIDER: ${AI_DEFAULT_PROVIDER:-}
+      AI_DEFAULT_MODEL: ${AI_DEFAULT_MODEL:-}
+      AI_DEFAULT_API_KEY: ${AI_DEFAULT_API_KEY:-}
+      AI_DEFAULT_BASE_URL: ${AI_DEFAULT_BASE_URL:-}
+      # HTTP mode (optional)
+      DISABLE_HTTPS_HEADERS: ${DISABLE_HTTPS_HEADERS:-false}
+    volumes:
+      # Automatic backups are written to BACKUP_CONTAINER_DIR in the container.
+      - ${BACKUP_HOST_DIR:-./monize/backups}:${BACKUP_CONTAINER_DIR:-/data/backups}
+      # Attachments are written to ATTACHMENT_CONTAINER_DIR in the container
+      # when ATTACHMENT_STORAGE_PROVIDER=local.
+      - ${ATTACHMENT_HOST_DIR:-./monize/attachments}:${ATTACHMENT_CONTAINER_DIR:-/data/attachments}
+    networks:
+      - monize-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:' + (process.env.PORT || 3000) + '/api/v1/health/live').then(r => { if (!r.ok) process.exit(1) }).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend (Next.js)
+  frontend:
+    image: ghcr.io/kenlasko/monize-frontend:latest
+    container_name: monize-frontend
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: ${FRONTEND_PORT:-3000}
+      INTERNAL_API_URL: http://backend:${BACKEND_PORT:-3000}
+      PUBLIC_APP_URL: ${PUBLIC_APP_URL}
+      DISABLE_HTTPS_HEADERS: ${DISABLE_HTTPS_HEADERS:-false}
+    ports:
+      - "${FRONTEND_PORT:-3000}:${FRONTEND_PORT:-3000}"
+    networks:
+      - monize-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:' + (process.env.PORT || 3000) + '/api/v1/health/live').then(r => { if (!r.ok) process.exit(1) }).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  monize-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local

@@ -1,0 +1,49 @@
+{
+  "header": {
+    "viewTransactions": "查看交易",
+    "reconcile": "对账",
+    "edit": "编辑账户",
+    "back": "返回账户",
+    "switchAccount": "切换到其他账户",
+    "switchFavourites": "收藏",
+    "switchOtherAccounts": "其他账户",
+    "switchPlaceholder": "筛选账户...",
+    "switchNoMatches": "没有匹配的账户",
+    "jointBadge": "联名",
+    "jointSharedBy": "由 {owner} 共享",
+    "jointSharedWith": "已与 {count, plural, other {# 人}}共享"
+  },
+  "loading": "正在加载账户详情...",
+  "error": {
+    "retry": "重试"
+  },
+  "recurring": {
+    "title": "定期扣款",
+    "subtitle": "此账户上的计划账单，以及在其交易中发现的可能订阅",
+    "empty": "此账户未检测到定期扣款",
+    "scheduledTitle": "已计划",
+    "detectedTitle": "可能的定期扣款",
+    "detectedSubtitle": "在您的交易历史中发现，但尚未计划",
+    "nextDue": "下次到期 {date}",
+    "createBill": "创建账单",
+    "createBillAria": "为 {payee} 创建计划账单",
+    "createTitle": "新建计划账单",
+    "frequency": {
+      "weekly": "每周",
+      "biweekly": "每两周",
+      "monthly": "每月",
+      "quarterly": "每季度",
+      "yearly": "每年",
+      "irregular": "不定期"
+    }
+  },
+  "forecastUnavailable": {
+    "intro": "未显示预计余额，因为至少有一笔即将到来的计划项目暂时无法确定金额。预测会把每一天的余额结转到下一天，所以只要有一笔金额未知，之后每一天都会出错。",
+    "requestFailed": "无法加载预计余额。请重新加载页面后重试。",
+    "reasonUnavailable": "未报告原因。请检查以外币计价的计划项目的汇率。",
+    "missingRatePair": "{name}：找不到 {from} 兑 {to} 的汇率，因此这笔到期项目将记录的金额未知。",
+    "missingRate": "{name}：找不到这笔到期项目的结算汇率，因此金额未知。",
+    "crossCurrencyTransfer": "{name}：本账户为 {to}，而这是一笔来自 {from} 账户的转账。到账金额在转账记账时才确定，因此无法提前预测。",
+    "howToFix": "缺少汇率时的处理：打开“货币”页面刷新汇率，或检查该证券及其结算账户的币种是否符合预期。"
+  }
+}

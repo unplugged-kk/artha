@@ -1,0 +1,76 @@
+{
+  "page": {
+    "title": "Рахунки до сплати та надходження",
+    "subtitle": "Керуйте регулярними транзакціями та запланованими платежами",
+    "newButton": "+ Новий розклад",
+    "summaryActiveBills": "Активні рахунки",
+    "summaryActiveDeposits": "Активні надходження",
+    "summaryMonthlyNet": "Місячний підсумок",
+    "summaryAmountUnavailable": "Недоступно",
+    "summaryNetRatesUnavailable": "Курси обміну зараз недоступні, тому підсумок обчислити неможливо.",
+    "summaryNetMissingRates": "Немає курсу обміну для {currencies} — додайте його в розділі Валюти",
+    "summaryNetMissingRatesAndUnpriceable": "Немає курсу обміну для {currencies}, і суму одного або кількох розписів визначити не вдалося.",
+    "summaryNetUnpriceable": "Не вдалося визначити суму одного або кількох розписів",
+    "summaryDueNow": "До сплати зараз",
+    "loadingText": "Завантаження запланованих транзакцій...",
+    "chartUnavailable": "Графік тимчасово недоступний"
+  },
+  "viewTabs": {
+    "list": "Список",
+    "calendar": "Календар",
+    "filterAll": "Усі ({count})",
+    "filterBills": "Рахунки ({count})",
+    "filterDeposits": "Надходження ({count})",
+    "todayButton": "Сьогодні"
+  },
+  "form": {
+    "titleNew": "Нова запланована транзакція",
+    "titleEdit": "Редагувати заплановану транзакцію"
+  },
+  "overrideConfirm": {
+    "title": "Знайдено наявні перевизначення",
+    "message": "Ця запланована транзакція має {count, plural, one {# окреме входження} other {# окремих входжень}} з індивідуальними змінами.",
+    "question": "Що зробити з цими змінами під час оновлення базового шаблону?",
+    "keepButton": "Зберегти зміни",
+    "deleteButton": "Видалити всі зміни"
+  },
+  "forecast": {
+    "title": "Прогноз грошових потоків",
+    "scheduledCount": "{count, plural, one {# запланована транзакція} other {# запланованих транзакцій}} у прогнозі",
+    "tooltipTransactions": "Транзакції:",
+    "tooltipMore": "+{count} ще",
+    "noData": "Немає даних для відображення",
+    "noAccounts": "Рахунки не знайдено",
+    "noScheduled": "Немає запланованих транзакцій",
+    "noMatchingAccount": "Виберіть рахунок із запланованими транзакціями",
+    "noUpcoming": "Немає майбутніх транзакцій у цьому періоді — відображається поточний баланс",
+    "summaryStarting": "Початковий",
+    "summaryEnding": "Кінцевий",
+    "summaryLowest": "Найнижчий",
+    "summaryMinBalance": "Мін. баланс",
+    "allAccounts": "Усі рахунки",
+    "accountsAriaLabel": "Рахунки для прогнозу",
+    "totalOfAccounts": "Разом за рахунками",
+    "legendAriaLabel": "Лінії прогнозу",
+    "tooltipTransactionForAccount": "{name} ({account})",
+    "unavailableMissingRates": "Цей прогноз не можна показати у {displayCurrency}: немає курсу обміну для {currencies}, а прогнозований баланс спирається на кожен попередній день. Додайте курс або виберіть рахунок з однією валютою."
+  },
+  "calendar": {
+    "days": {
+      "sun": "Нд",
+      "mon": "Пн",
+      "tue": "Вт",
+      "wed": "Ср",
+      "thu": "Чт",
+      "fri": "Пт",
+      "sat": "Сб"
+    },
+    "more": "+{count} ще"
+  },
+  "toasts": {
+    "overridesDeleted": "Перевизначення видалено",
+    "notFound": "Запланований платіж не знайдено",
+    "loadFailed": "Не вдалося завантажити заплановані транзакції",
+    "overridesDeleteFailed": "Не вдалося видалити перевизначення"
+  }
+}

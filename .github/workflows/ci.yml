@@ -1,0 +1,1435 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  # Two publish paths share this file:
+  #
+  #   * Preview (push to main): builds a lightweight image so merged work is
+  #     pullable before a formal release (issue #727), moving a single
+  #     multi-arch `:beta` tag. No version bump, no GitHub release, no
+  #     cosign/SBOM. Per-PR `:pr-<number>` images were published here too until
+  #     they were retired -- see the preview section below for why.
+  #
+  #   * Release (workflow_dispatch): the formal release. Trigger from the
+  #     Actions tab (or `gh workflow run "CI Pipeline" --ref main`) when you
+  #     actually want a release: it bumps the version, builds/signs/scans/pushes
+  #     the versioned + `:latest` images, and cuts a GitHub release. The inputs
+  #     below choose the version bump and let you supply your own release notes
+  #     (see docs/release-notes/README.md).
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Version bump (ignored when an explicit "version" is given)'
+        type: choice
+        default: patch
+        options:
+          - patch
+          - minor
+          - major
+      version:
+        description: 'Explicit version, e.g. 1.11.0 (overrides "release_type"; blank = bump)'
+        type: string
+        default: ''
+      release_notes:
+        description: 'Release notes (Markdown). Blank = use docs/release-notes/<version>.md, else GitHub auto-notes'
+        type: string
+        default: ''
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Default to read-only access for all jobs. Jobs that need more (e.g. the
+# build-and-push job which pushes a version commit and GHCR images) opt in
+# with their own `permissions:` block. See CWE-275.
+permissions:
+  contents: read
+
+jobs:
+  backend-lint:
+    name: Backend Lint & Type Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npm run lint
+      - run: npx tsc --noEmit
+      # tsconfig.json excludes test/ (it drives the build and pins rootDir to
+      # src/), so `tsc --noEmit` above never type-checked the test tree. Four
+      # `test/*.e2e-spec.ts` suites sat uncompilable for over a week as a result
+      # -- ESLint's glob covers the directory but a namespace import called as a
+      # function is a type error, not a lint error, and CI runs neither
+      # `test:e2e` nor a typecheck that reaches them.
+      - run: npm run typecheck
+      # Migration idempotency: every migration body must be a no-op when
+      # re-applied to an up-to-date database, or a half-applied migration
+      # crash-loops the backend at startup (task B1). Self-test first, then lint.
+      - run: npm run push:client:test
+      - run: npm run push:tls:test
+      - run: npm run migration:lint:test
+      - run: npm run migration:lint
+
+  backend-unit-tests:
+    name: Backend Unit Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npm run test:unit -- --coverage
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: backend-unit-coverage
+          path: backend/coverage/
+
+  backend-integration-tests:
+    name: Backend Integration Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        # Pinned by digest to satisfy zizmor's unpinned-images audit. Refresh
+        # alongside production postgres bumps so CI matches what we ship.
+        image: postgres:16-alpine@sha256:16bc17c64a573ef34162af9298258d1aec548232985b33ed7b1eac33ba35c229
+        env:
+          POSTGRES_DB: monize_test
+          POSTGRES_USER: monize_test
+          POSTGRES_PASSWORD: test_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DATABASE_HOST: localhost
+      DATABASE_PORT: 5432
+      DATABASE_NAME: monize_test
+      DATABASE_USER: monize_test
+      DATABASE_PASSWORD: test_password
+      JWT_SECRET: test-jwt-secret-for-ci-minimum-32-characters-long
+      NODE_ENV: test
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npm run build
+      - run: npm run test:integration
+
+  frontend-lint:
+    name: Frontend Lint & Type Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run type-check
+      # Fail if the generated pseudo-locale (xx) has drifted from the English
+      # source. Run `npm run i18n:pseudo` to regenerate after editing en/*.json.
+      - run: npm run i18n:check
+
+  frontend-unit-tests:
+    name: Frontend Unit Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npm run test:cov
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: frontend-coverage
+          path: frontend/coverage/
+
+  npm-audit:
+    name: NPM Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 24
+      # The gate's own logic, before it is trusted to gate anything. It is the
+      # part that decides whether a red X means "you shipped a vulnerability"
+      # or "npmjs is down", and it costs ~100ms.
+      - name: Verify the audit gate
+        run: node --test scripts/npm-audit-gate.test.mjs
+      # Blocking gate: what we actually ship. A high-severity advisory in a
+      # runtime dependency fails the build.
+      #
+      # Not a bare `npm audit`: that exits 1 both for an advisory and for an
+      # advisories endpoint it could not reach, so an npmjs outage was
+      # indistinguishable from a vulnerability (twice on PR #1308, while
+      # `npm ci` in this same job resolved every package). The gate reads
+      # `--json`, retries ONLY a no-answer, and still fails if the endpoint
+      # never answers -- "we could not verify" is not "verified clean" -- but
+      # now says which of the two happened. See scripts/lib/npm-audit-gate.mjs.
+      - name: Audit production dependencies (blocking)
+        run: |
+          (cd backend && npm ci)
+          (cd frontend && npm ci)
+          node scripts/npm-audit-gate.mjs
+      # Visibility only: build tooling (eslint, jest, the Nest CLI) never
+      # reaches a user, and its advisories are routinely unfixable for weeks --
+      # the current one, brace-expansion GHSA-mh99-v99m-4gvg, has no patched
+      # 1.x release at all, and forcing the fixed 5.x onto minimatch@3 breaks
+      # it outright. Blocking every PR on that is noise, but silence would be
+      # worse, so the full audit still runs and its findings stay in the log.
+      - name: Audit dev dependencies (informational)
+        continue-on-error: true
+        run: |
+          cd backend && npm audit --audit-level=high
+          cd ../frontend && npm audit --audit-level=high
+
+  license-check:
+    name: License Compliance (${{ matrix.package }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [backend, frontend]
+    defaults:
+      run:
+        working-directory: ${{ matrix.package }}
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 24
+      - run: npm ci
+      # Allowed: permissive (MIT, BSD, ISC, Apache-2.0, 0BSD, Unlicense,
+      # Unicode-DFS-2016/Unicode-3.0 -- the Unicode Data Files license,
+      # BSD-equivalent, accepted by ASF and FSF; e.g. make-plural via
+      # nestjs-i18n);
+      # the project's own license (AGPL-3.0 family); LGPL variants (compatible
+      # with AGPL since npm dependency = dynamic-linking equivalent which LGPL
+      # permits; e.g. @img/sharp-libvips-*); MPL-2.0 (weak copyleft, AGPL
+      # compatible; e.g. lightningcss, dompurify); Zlib (e.g. pako).
+      #
+      # MIT* matches packages whose license is inferred from a LICENSE file
+      # but not declared via SPDX (currently pause, rgbcolor) -- still MIT in
+      # practice. Compound SPDX expressions are matched literally because
+      # license-checker doesn't parse them; new ones will need to be added
+      # as they appear.
+      #
+      # Disallowed: GPL-2.0/3.0 (incompatible network-use semantics),
+      # proprietary, UNKNOWN, anything not listed.
+      - name: Check licenses
+        run: |
+          npx --yes license-checker-rseidelsohn \
+            --production \
+            --excludePrivatePackages \
+            --onlyAllow 'MIT;MIT-0;Apache-2.0;BSD-2-Clause;BSD-3-Clause;BSD;ISC;0BSD;CC0-1.0;CC-BY-3.0;CC-BY-4.0;Unlicense;Unicode-DFS-2016;Unicode-3.0;Python-2.0;BlueOak-1.0.0;AGPL-3.0;AGPL-3.0-only;AGPL-3.0-or-later;LGPL-3.0;LGPL-3.0-or-later;LGPL-3.0-only;LGPL-2.1;LGPL-2.1-or-later;LGPL-2.1-only;MPL-2.0;Zlib;WTFPL;MIT*;(MIT AND BSD-3-Clause);(MIT AND Zlib);(MIT AND ISC);(MPL-2.0 OR Apache-2.0)'
+
+  schema-drift:
+    name: Schema vs Migrations Drift
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+      - name: Verify schema.sql matches migrations state
+        run: scripts/verify-schema.sh
+
+  frontend-bundle-size:
+    name: Frontend Bundle Size
+    runs-on: ubuntu-latest
+    # Skip on the build-and-push commit so we don't double-build on main.
+    if: github.event_name == 'pull_request'
+    defaults:
+      run:
+        working-directory: frontend
+    permissions:
+      contents: read
+      pull-requests: write # so the bundle-size report can be posted as a PR comment (today it only writes to the job summary)
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npm run build
+        env:
+          # Same env the e2e build uses so the bundle reflects production output.
+          NODE_ENV: production
+      - name: Report bundle sizes
+        run: |
+          {
+            echo "## Frontend bundle sizes"
+            echo
+            echo '| Path | Size |'
+            echo '|------|------|'
+            # Top 20 largest files under .next/static
+            find .next/static -type f -printf '%s\t%P\n' \
+              | sort -rn | head -20 \
+              | awk '{ printf "| %s | %.1f KB |\n", $2, $1/1024 }'
+            echo
+            echo '### Totals'
+            echo
+            TOTAL_STATIC=$(du -sb .next/static | cut -f1)
+            TOTAL_STANDALONE=$(du -sb .next/standalone 2>/dev/null | cut -f1 || echo 0)
+            printf -- '- .next/static: **%.1f MB**\n' "$(echo "$TOTAL_STATIC/1048576" | bc -l)"
+            printf -- '- .next/standalone: **%.1f MB**\n' "$(echo "$TOTAL_STANDALONE/1048576" | bc -l)"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  env-doc-check:
+    name: Documentation vs Manifests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+          # The migration-prefix check compares this branch's migrations against
+          # the base branch's; a shallow clone has no base ref and the check
+          # reports that it skipped rather than passing silently.
+          fetch-depth: 0
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 24
+      - name: Verify env vars are documented
+        run: node scripts/check-env-docs.mjs
+      # The documented setup path must name files that exist and defaults that
+      # match the manifests: the README's Quick Start pointed at a
+      # `docker-compose.yml` this repository has never contained, and the Helm
+      # install command at a chart directory that does not exist.
+      - name: Verify documented paths and Helm defaults match the manifests
+        run: node scripts/check-docs-manifests.mjs
+      # A migration prefix that collides with one already on the base branch is
+      # applied out of order on every database that recorded the other filename
+      # -- and `database/CLAUDE.md` stating the rule in prose did not stop two
+      # branches from both taking the next counter value (issue #1277). New
+      # migrations therefore carry a UTC timestamp prefix, which cannot collide;
+      # this check refuses a new file named under the retired NNN_ scheme. The
+      # "what did this branch add" half needs the base ref, hence fetch-depth 0.
+      - name: Verify migration prefixes are unique and timestamp-named
+        run: node scripts/check-migration-prefixes.mjs
+      # The GHCR prune sweep DELETES package versions, and its predicate is the
+      # only thing standing between "clear the retired per-PR tags" and
+      # unpublishing `:latest`: a version can wear several tags at once, so a
+      # digest tagged both `pr-1290` and `beta` must be kept. Nothing else
+      # exercises that -- the script itself only runs on a schedule, against
+      # the live registry.
+      - name: Verify the GHCR version classifier
+        run: node --test scripts/ghcr-version-class.test.mjs
+
+  helm-chart:
+    name: Helm Chart Lint & Render
+    runs-on: ubuntu-latest
+    # The chart is a released deployment artifact, and nothing verified it: a
+    # template/value mismatch can ship alongside signed images while every other
+    # check stays green. Lint plus a render of each documented value variant is
+    # the cheap half of P7-010; a kind/k3d install with backup-volume
+    # persistence remains open.
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+      # Installed from the official release rather than via a third-party
+      # action, so there is no extra action SHA to pin and keep fresh. The
+      # tarball is checked against the checksum file published beside it: that
+      # protects against a truncated or corrupted download, not against a
+      # compromised release, which is the same trust boundary every
+      # `setup-*` action sits behind.
+      - name: Install Helm
+        env:
+          HELM_VERSION: v3.16.4
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          TARBALL="helm-${HELM_VERSION}-linux-amd64.tar.gz"
+          curl -fsSLO "https://get.helm.sh/${TARBALL}"
+          curl -fsSLO "https://get.helm.sh/${TARBALL}.sha256sum"
+          sha256sum -c "${TARBALL}.sha256sum"
+          tar -xzf "$TARBALL"
+          install -m 0755 linux-amd64/helm /usr/local/bin/helm
+          helm version --short
+      - name: helm lint
+        run: helm lint ./helm
+      - name: Render default values
+        # Keep the rendered output: the YAML-parse step below parses it (and the
+        # variant renders below) rather than rendering the defaults a second time.
+        # Assert the route the defaults turn on is actually present: parsing only
+        # proves each rendered doc is valid, not that the value flag produced the
+        # resource it exists to produce -- a template that silently rendered
+        # nothing would leave the valid statefulsets/services and pass the parse.
+        run: |
+          helm template monize ./helm > "$RUNNER_TEMP/rendered.yaml"
+          grep -q '^kind: HTTPRoute$' "$RUNNER_TEMP/rendered.yaml" \
+            || { echo "default values rendered no HTTPRoute (httpRoute.enabled defaults true)"; exit 1; }
+      # Each variant the README documents. Rendering only the defaults would
+      # leave the Ingress and HTTPRoute paths -- which are mutually exclusive in
+      # practice -- unexercised. Keep each variant's output too: the Ingress
+      # resource never appears in the default render, so discarding it to
+      # /dev/null would mean the one manifest a value flag turns on is the one
+      # the parse step below never kind/apiVersion-checks. Assert its presence
+      # here as well, since parsing a doc that never rendered cannot fail.
+      - name: Render with Ingress enabled
+        run: |
+          helm template monize ./helm \
+            --set ingress.enabled=true \
+            --set httpRoute.enabled=false \
+            --set ingress.className=nginx > "$RUNNER_TEMP/rendered-ingress.yaml"
+          grep -q '^kind: Ingress$' "$RUNNER_TEMP/rendered-ingress.yaml" \
+            || { echo "ingress.enabled=true rendered no Ingress -- the value flag is not turning the resource on"; exit 1; }
+      - name: Render with HTTPRoute disabled
+        run: helm template monize ./helm --set httpRoute.enabled=false > "$RUNNER_TEMP/rendered-minimal.yaml"
+      # PyYAML happens to be present on the current ubuntu-latest image, which
+      # is not the same as this job declaring it. An undeclared dependency that
+      # disappears in a runner-image bump turns the check below into an
+      # ImportError somebody has to diagnose, so install it explicitly and pin
+      # the version.
+      - name: Install PyYAML
+        # --break-system-packages: ubuntu-latest ships an externally-managed
+        # Python (PEP 668), which refuses a system-level `pip install` outright.
+        # The flag exists in pip 23.0.1+, which every current GitHub-hosted
+        # image ships; it keeps the install from being the thing that breaks on
+        # a runner-image bump to a managed Python.
+        run: python3 -m pip install --disable-pip-version-check --break-system-packages --quiet 'PyYAML==6.0.2'
+      # A rendered manifest that helm accepts can still be invalid Kubernetes.
+      # Parse every document -- across every rendered variant -- so a malformed
+      # template fails here rather than at `kubectl apply` time on someone's
+      # cluster. Globbing the variant files means the Ingress manifest, absent
+      # from the default render, is checked too.
+      - name: Parse rendered manifests as YAML
+        run: |
+          python3 - <<'PY'
+          import os, sys, glob, yaml
+          # Same base directory the render steps wrote to, so a self-hosted
+          # runner with a persistent /tmp cannot feed a stale file into the glob.
+          tmp = os.environ["RUNNER_TEMP"]
+          files = sorted(glob.glob(os.path.join(tmp, "rendered*.yaml")))
+          if not files:
+              sys.exit("no rendered manifests found to parse")
+          for path in files:
+              with open(path) as fh:
+                  docs = [d for d in yaml.safe_load_all(fh) if d]
+              if not docs:
+                  sys.exit(f"{path}: rendered chart produced no manifests")
+              for d in docs:
+                  if not isinstance(d, dict):
+                      sys.exit(f"{path}: top-level document is not a mapping: {d!r}")
+                  if "kind" not in d or "apiVersion" not in d:
+                      sys.exit(f"{path}: manifest without kind/apiVersion: {d!r}")
+              print(f"{path}: {len(docs)} manifest(s) parsed")
+          PY
+
+  zizmor-scan:
+    name: Workflow Security Scan (zizmor)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write # for github/codeql-action/upload-sarif to publish zizmor findings to the Security tab
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          # This job only runs `uv tool install zizmor` -- there are no Python
+          # dependency manifests to key a cache on, so leaving caching enabled
+          # only produces setup-uv's "cache will never get invalidated" warning.
+          enable-cache: false
+      - name: Install zizmor
+        run: uv tool install zizmor
+      - name: Run zizmor
+        run: zizmor --format sarif .github/workflows/ > zizmor.sarif || true
+      - name: Upload SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@fb0994ef1c058010acf1efccff928b0a83b1ed54 # v4.32.6
+        with:
+          sarif_file: zizmor.sarif
+          category: zizmor
+
+  dockerfile-lint:
+    name: Dockerfile Lint (hadolint)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+      - name: Lint backend Dockerfile
+        uses: hadolint/hadolint-action@54c9adbab1582c2ef04b2016b760714a4bfde3cf # v3.1.0
+        with:
+          dockerfile: backend/Dockerfile
+          config: .hadolint.yaml
+      - name: Lint frontend Dockerfile
+        uses: hadolint/hadolint-action@54c9adbab1582c2ef04b2016b760714a4bfde3cf # v3.1.0
+        with:
+          dockerfile: frontend/Dockerfile
+          config: .hadolint.yaml
+
+  bearer-scan:
+    name: Bearer Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+      - name: Bearer
+        uses: bearer/bearer-action@828eeb928ce2f4a7ca5ed57fb8b59508cb8c79bc # v2
+        with:
+          # We explicitly don't provide HTTPS out-of-the-box since most users self-host in environments where HTTPS is terminated at a reverse proxy, and we provide guidance on how to securely configure this in our docs. 
+          # We also have some known exception messages that contain payee names which would otherwise be flagged as potential secrets, but we have determined that the risk of these being exploited is low and the value of having the full exception message in our logs outweighs the risk.
+          skip-rule: "javascript_lang_logger_leak,javascript_express_https_protocol_missing,javascript_lang_exception" 
+          # Exclude some false positives and low-risk findings that we are aware of and have accepted for now.
+          # Each entry has a "review-by" date; the bearer-exceptions-review workflow
+          # opens an issue when any entry is past due, so exceptions don't become permanent debt.
+          #
+          # A fingerprint is md5("<rule id>_<path>") plus an instance index, so an
+          # accepted finding that moves file re-reports under a new id, and a finding
+          # whose code was fixed simply stops being reported. Bearer prints the ids in
+          # the list that it no longer detects; an id it names is dead weight, not an
+          # exception, and belongs deleted (issue #1323 found three).
+          #
+          # The demo login. DEMO_MODE deployments publish their own credentials
+          # (.env.example prints them, the login page pre-fills them), so the literal
+          # is public by design and cannot be moved out of the source. What the
+          # review changed is how many places spell it: the seed, the nightly reset,
+          # the start-up probe and the client each had their own copy, so the value
+          # now lives in one module per layer and a guard fails a second spelling
+          # (backend/src/database/demo-credentials.spec.ts scans backend/src;
+          # frontend/src/lib/demo-credentials.contract.test.ts scans frontend/src and
+          # checks the two layers agree). The two ids below replace
+          # b65bd7b1a0585cd1d0a326cdb09ce40d_0 (seed.service.ts) and
+          # 95857358158e4664c01c05441df9f2a9_0 (login/page.tsx), which no longer hold
+          # the literal.
+          # df1db3090cab23fd55c9a22789aa6b2f_0 - Demo login [CWE-798], backend/src/database/demo-credentials.ts, public by design - review-by: 2026-12-08
+          # 9a51af5fd92c92c4c022addd331ee9c6_0 - Demo login [CWE-798], frontend/src/lib/demo-credentials.ts, public by design and contract-tested against the backend copy - review-by: 2026-12-08
+          # The password the E2E suite registers every throwaway user with. It opens
+          # nothing outside the e2e database the run creates and drops, and the admin
+          # fixture already overrides it from the environment. Eight literal copies
+          # across helpers and specs became one constant in e2e/helpers/credentials.ts;
+          # the id below replaces da119900eefffd8b84e7693e0388568a_0 (e2e/helpers/auth.ts).
+          # 8145f16fcf77da087020769e5609a11b_0 - E2E test password [CWE-798], e2e/helpers/credentials.ts, throwaway database only - review-by: 2026-12-08
+          # Retired by the same review (issue #1323), with no replacement:
+          #   842822dd22cd4403ab5800ac89480c0a_0 (Math.random for a split row's temporary
+          #     id in SplitEditor.tsx) -- fixed: crypto.randomUUID(), and
+          #     frontend/src/test/ui-conventions.test.ts now fails Math.random in any
+          #     production source.
+          #   30770548d4592a14c9099ac0103a2564_0 (CWE-208 in longestCommonTokenPrefix,
+          #     payee-auto-merge.service.ts) -- the compared value was a payee-name word
+          #     held in a local named `token`, which is what the rule keys on; renamed,
+          #     so the rule reads the comparison correctly and no exception is needed.
+          # The two below are safePath() in backend/src/backup/auto-backup.service.ts:
+          # resolve(basePath, filename) and the containment check on its result. The
+          # same shape as the local-storage pair above, and the same false positive:
+          # Bearer's dataflow cannot see that the startsWith() guard constrains the
+          # value, so it reports the resolve() and the guard itself. What reaches it
+          # is the user id turned into shard segments, artifact names the service
+          # composes itself, and directory entries it just listed -- and the guard is
+          # what turns an id that is not a safe path segment into a refusal:
+          # auto-backup.service.spec.ts has runManualBackup("../../etc") rejecting
+          # with nothing written under the root. The folder the segments are joined
+          # to is validated separately by assertAllowedRoot. NOTE: the finding depends on
+          # Bearer's dataflow, and a local binary older than CI's (v2.1.1 at the time
+          # of writing) does not report it -- a scan that says these ids are "no
+          # longer detected" is only evidence if it ran the version CI runs.
+          # b04cb91b90deb5e16504baa7ab95f678_0 - resolve() of the backup filename against its validated base [CWE-22] - review-by: 2026-12-08
+          # b04cb91b90deb5e16504baa7ab95f678_1 - containment check on the resolved backup path [CWE-22] - review-by: 2026-12-08
+          # The five below are in backend/src/updates/release-notes.service.ts, which reads the
+          # committed docs/release-notes/<version>.md digest. The version is the trusted
+          # package.json value matched against a strict semver regex that forbids path separators,
+          # and the directory is a fixed candidate allowlist (the notes are bundled into the image)
+          # -- no user input reaches these fs calls, so the CWE-22/CWE-73 findings are false positives.
+          # b6c4552155ecc9b65a9205911f502bf1_0 - Non-literal fs path in release-notes reader [CWE-73] - review-by: 2026-10-23
+          # b6c4552155ecc9b65a9205911f502bf1_1 - Non-literal fs path in release-notes reader [CWE-73] - review-by: 2026-10-23
+          # b6c4552155ecc9b65a9205911f502bf1_2 - Non-literal fs path scanning the release-notes dir allowlist [CWE-73] - review-by: 2026-10-23
+          # b6c4552155ecc9b65a9205911f502bf1_3 - Non-literal fs path scanning the release-notes dir allowlist [CWE-73] - review-by: 2026-10-23
+          # c055716bae113b20589f9ea5c5963e65_0 - path.join of the validated running version [CWE-22] - review-by: 2026-10-23
+          # The two below are in backend/src/attachments/storage/local-storage.provider.ts.
+          # The storage key is a server-generated UUID that is passed through basename()
+          # and then required to match ^[A-Za-z0-9_-]+$ -- an allowlist that cannot express
+          # a path separator, a dot, or a NUL, so "..", "." and "a/../b" are all rejected
+          # before any fs call. The resolved path is additionally asserted to be contained
+          # by the base directory. Bearer's dataflow cannot see that a comparison guard
+          # constrains the value, so it reports the resolve() and the containment check
+          # itself; both are false positives. Covered by the traversal cases in
+          # local-storage.provider.spec.ts.
+          # f9b26e7d59d0f577ff9a0e93ea4f7b7c_0 - resolve() of the allowlisted attachment key [CWE-22] - review-by: 2026-10-23
+          # f9b26e7d59d0f577ff9a0e93ea4f7b7c_1 - containment check on the resolved path [CWE-22] - review-by: 2026-10-23
+          # The one below is in backend/src/import/mny/__fixtures__/mny-fixtures.ts. It is the
+          # publicly documented test password for money2008-pwd.mny, a tiny sample file committed
+          # from the jackcess-encrypt project (Apache-2.0, see the __fixtures__ README) and used
+          # only by unit specs to exercise the MSISAM decryptor. It opens nothing but that file.
+          # f6196720ad017b3d11d24487792c1479_0 - Test fixture password for a sample .mny file [CWE-798] - review-by: 2026-10-23
+          # The three below are in frontend/src/hooks/useMnyImport.ts. The compared
+          # value is an API error code string ("mnyPasswordRequired" /
+          # "mnyPasswordIncorrect"), not a password or any part of one -- the
+          # identifier names are what Bearer's dataflow keys on. Distinguishing the
+          # two codes is the point: one asks for a password, the other says the
+          # password was wrong. Same false positive as the payee-token comparison above.
+          # 45093073db7d96d61cd30bceb943f63f_0 - Observable timing discrepancy [CWE-208] comparing .mny error codes - review-by: 2026-10-30
+          # 45093073db7d96d61cd30bceb943f63f_1 - Observable timing discrepancy [CWE-208] comparing .mny error codes - review-by: 2026-10-30
+          # 45093073db7d96d61cd30bceb943f63f_2 - Observable timing discrepancy [CWE-208] comparing .mny error codes - review-by: 2026-10-30
+          # The one below is in backend/src/auth/auth.controller.ts, the OIDC callback's
+          # re-authentication branch. The redirect TARGET is `FRONTEND_URL` from config, not
+          # request input -- the four sibling redirects in the same handler build the same
+          # base and are not flagged. What Bearer traces here is the cookie-derived
+          # re-auth purpose and the minted artifact reaching the URL as *parameters*: the
+          # purpose is validated against the OIDC_REAUTH_PURPOSES allowlist
+          # (`isOidcReauthPurpose`) before it is used, the artifact is a JWT this server
+          # just signed, and both go through encodeURIComponent. An open redirect needs a
+          # controllable destination, which this is not. Covered by oidc-reauth.service.spec.ts
+          # and the callback cases in auth.controller.spec.ts.
+          # b7502b6ea7c0a272ab08099b55d0392c_0 - Unsanitized user input in redirect [CWE-601], config-supplied target - review-by: 2026-11-06
+          # The two below are the backup module's attachment-integrity checks. The
+          # compared value is a SHA-256 digest already stored in transaction_attachments,
+          # recomputed from bytes the caller already has in the artifact they uploaded --
+          # not a secret an attacker could extract by timing a match. Same class as the
+          # payee-token and .mny-error-code exceptions above.
+          #
+          # These replace 82b63da498c997078f4520c82ea0a31a_0/_1, which were the same two
+          # comparisons while both sat in backend/src/backup/backup.service.ts. Issue
+          # #1092 split that file, and a Bearer fingerprint covers a location as well as
+          # a finding, so moving accepted code re-reports it under a new id. The
+          # acceptance decision has not changed, so the review-by date does not move
+          # either -- a refactor must not quietly reset somebody else's review clock.
+          # 4beb484f871a7489b5f5ff2df93f72f1_0 - Observable timing discrepancy [CWE-208] in the shared bytes-vs-metadata check, backend/src/backup/attachment-integrity.util.ts - review-by: 2026-11-05
+          # 0ff64c8083ce01b1e8c867832c0dff85_0 - Observable timing discrepancy [CWE-208] comparing a legacy-staged attachment against its stored checksum, backend/src/backup/backup-attachment-transfer.service.ts - review-by: 2026-11-05
+          # The one below is in backend/src/backup/support-backup/support-backup.service.ts,
+          # the support-backup password gate. It is a typeof/length guard confirming a
+          # password was supplied at all, not a comparison against any known value --
+          # there is nothing secret on either side for a timing attack to reveal.
+          # 1f87dd3b3950178c2eac383cfcead816_0 - Observable timing discrepancy [CWE-208] on a password-presence guard, no value compared - review-by: 2026-11-05
+          # The one below is escapeHtml in frontend/public/sw.js, the service worker's
+          # offline-fallback page builder. Bearer flags any hand-rolled sanitizer; a DOM
+          # or DOMPurify does not exist inside a service worker, so escaping is the only
+          # tool available there. The escaper covers all five HTML metacharacters
+          # (& < > " '), its inputs are length-capped strings from our own postMessage
+          # handshake (localized catalog copy), and the two values that reach a CSS
+          # context are separately allowlist-validated (SAFE_CSS_COLOR), not escaped.
+          # Covered by the escaping and CSS-injection cases in src/test/sw-offline.test.ts.
+          # e717be7fe9c133adba7d48ccb371c6ba_0 - Manual HTML sanitization [CWE-79] in the SW offline fallback, no DOM sanitizer available in a worker - review-by: 2026-11-19
+          # The one below is the presence check at the top of
+          # verifyRestoreUploadTicket (backend/src/backup/restore-upload-ticket.ts):
+          # `typeof token !== "string" || token.trim() === ""`. It compares nothing
+          # secret -- it answers "did this request carry a ticket at all" before any
+          # key is touched. The signature itself is compared with timingSafeEqual on
+          # equal-length buffers, and the expiry inside the token is only read after
+          # that comparison holds, so no secret material is inferable from how early
+          # the function returns: the caller already knows whether it sent a
+          # well-formed token. Same rule and same reasoning as the payee-token entry
+          # above. NOTE for whoever tidies this file: the fingerprint covers that
+          # exact line, so hoisting the two `token.trim()` calls into a local will
+          # re-report it under a new id.
+          # 173289a7a56f6f6b27dc2314746e9451_0 - Observable timing discrepancy [CWE-208] on the ticket presence check, no secret compared - review-by: 2026-11-26
+          # The two below arrived with the push notification work.
+          #
+          # The first is the Playwright fixture's stub backend (e2e/push/fixture.ts):
+          # `req.headers['x-csrf-token'] === state.csrfToken`. Both sides are values
+          # the fixture invented for itself a few lines earlier, in the same process,
+          # to make the mock answer 201 or 403 on demand. There is no deployment, no
+          # attacker and nothing behind the token: a constant-time compare here would
+          # be ceremony around a test double, not a mitigation.
+          #
+          # The second is the service worker's CSRF retrieval (frontend/public/sw.js).
+          # Bearer names the line, but nothing on it is COMPARED -- it is
+          # `typeof data.csrfToken !== 'string'` plus two length bounds, answering
+          # "did the CSRF endpoint hand back a usable token at all" before the worker
+          # puts it in a header. Exactly the class of the password-presence and
+          # ticket-presence entries above, and for the same reason: no secret sits on
+          # either side of it. NOTE, as on the ticket entry: the fingerprint covers
+          # that line, so splitting the condition re-reports it under a new id.
+          # 242a05abd45296bc2ba6d9174dc6f3dd_0 - Observable timing discrepancy [CWE-208] in the E2E push fixture's stub backend, e2e/push/fixture.ts, a mock comparing its own invented token - review-by: 2026-12-08
+          # 90aa4e42622acc64795b7d291a5d74f9_0 - Observable timing discrepancy [CWE-208] on the SW CSRF presence guard, frontend/public/sw.js, a typeof/length check with no value compared - review-by: 2026-12-08
+          exclude-fingerprint: "df1db3090cab23fd55c9a22789aa6b2f_0,9a51af5fd92c92c4c022addd331ee9c6_0,8145f16fcf77da087020769e5609a11b_0,b04cb91b90deb5e16504baa7ab95f678_0,b04cb91b90deb5e16504baa7ab95f678_1,b6c4552155ecc9b65a9205911f502bf1_0,b6c4552155ecc9b65a9205911f502bf1_1,b6c4552155ecc9b65a9205911f502bf1_2,b6c4552155ecc9b65a9205911f502bf1_3,c055716bae113b20589f9ea5c5963e65_0,f9b26e7d59d0f577ff9a0e93ea4f7b7c_0,f9b26e7d59d0f577ff9a0e93ea4f7b7c_1,f6196720ad017b3d11d24487792c1479_0,45093073db7d96d61cd30bceb943f63f_0,45093073db7d96d61cd30bceb943f63f_1,45093073db7d96d61cd30bceb943f63f_2,b7502b6ea7c0a272ab08099b55d0392c_0,4beb484f871a7489b5f5ff2df93f72f1_0,0ff64c8083ce01b1e8c867832c0dff85_0,1f87dd3b3950178c2eac383cfcead816_0,e717be7fe9c133adba7d48ccb371c6ba_0,173289a7a56f6f6b27dc2314746e9451_0,242a05abd45296bc2ba6d9174dc6f3dd_0,90aa4e42622acc64795b7d291a5d74f9_0"
+
+  # Resolve the release version and shared build metadata ONCE, so the parallel
+  # backend/frontend build jobs below stamp identical version/date/sha values.
+  # No commit happens here: the release job owns the version-bump commit so the
+  # bump is only published after both images build and pass their CVE scan.
+  prepare-release:
+    name: Prepare Release
+    runs-on: ubuntu-latest
+    # Manual-only: this is the release step (version bump, tag, signed images,
+    # SBOM/provenance attestations, Trivy scan). Triggered from the Actions tab
+    # rather than on every push, so merges to main don't auto-publish.
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    needs:
+      [
+        backend-lint,
+        backend-unit-tests,
+        backend-integration-tests,
+        frontend-lint,
+        frontend-unit-tests,
+        npm-audit,
+        bearer-scan,
+        dockerfile-lint,
+        license-check,
+        schema-drift,
+        zizmor-scan,
+        env-doc-check,
+        e2e-tests,
+        helm-chart,
+      ]
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      build_date: ${{ steps.meta.outputs.build_date }}
+      git_sha: ${{ steps.meta.outputs.git_sha }}
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 24
+          # Disable the package-manager cache: zizmor's cache-poisoning audit
+          # flags caches restored in a job that feeds a release. This job only
+          # runs `npm version`, so it never needs the cache anyway.
+          package-manager-cache: false
+
+      # Decide the new version from the workflow inputs. An explicit `version`
+      # wins; otherwise bump major/minor/patch off backend/package.json. Inputs
+      # are read via env (never interpolated into the script) to avoid template
+      # injection.
+      - name: Resolve version
+        id: version
+        env:
+          RELEASE_TYPE: ${{ inputs.release_type }}
+          EXPLICIT_VERSION: ${{ inputs.version }}
+        run: |
+          CURRENT=$(node -p "require('./backend/package.json').version")
+          if [ -n "$EXPLICIT_VERSION" ]; then
+            if ! printf '%s' "$EXPLICIT_VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+              echo "::error::Invalid version '$EXPLICIT_VERSION' (expected MAJOR.MINOR.PATCH, e.g. 1.11.0)"
+              exit 1
+            fi
+            NEW_VERSION="$EXPLICIT_VERSION"
+          else
+            IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT"
+            case "${RELEASE_TYPE:-patch}" in
+              major) NEW_VERSION="$((MAJOR + 1)).0.0" ;;
+              minor) NEW_VERSION="$MAJOR.$((MINOR + 1)).0" ;;
+              *)     NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))" ;;
+            esac
+          fi
+          echo "version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+          echo "Resolved version: $CURRENT -> $NEW_VERSION (type=${RELEASE_TYPE:-patch}, explicit=${EXPLICIT_VERSION:-none})"
+
+      - name: Set build metadata
+        id: meta
+        env:
+          GIT_SHA: ${{ github.sha }}
+        run: |
+          echo "git_sha=$GIT_SHA" >> "$GITHUB_OUTPUT"
+          echo "build_date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_OUTPUT"
+
+  # Build, push, sign, attest and scan the two images IN PARALLEL (one matrix
+  # leg per image) instead of sequentially. Each leg publishes its own image so
+  # they share nothing at runtime; the buildx gha cache is scoped per image to
+  # keep the parallel legs from clobbering each other's layers.
+  build-and-push:
+    name: Build & Push (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    needs: prepare-release
+    permissions:
+      packages: write # to push the signed multi-arch images to GHCR
+      id-token: write # for cosign keyless signing via GitHub's OIDC token
+      attestations: write # for SBOM and provenance attestations on the published images
+      security-events: write # for Trivy to upload SARIF results to the Security tab
+    strategy:
+      # Don't cancel the frontend build if the backend fails (or vice versa) -
+      # we want both results.
+      fail-fast: false
+      matrix:
+        include:
+          - name: backend
+            image: ghcr.io/kenlasko/monize-backend
+            context: .
+            file: backend/Dockerfile
+            workdir: backend
+            title: Monize Backend
+            description: Backend for Monize, a self-hosted personal finance app
+          - name: frontend
+            image: ghcr.io/kenlasko/monize-frontend
+            context: frontend
+            file: frontend/Dockerfile
+            workdir: frontend
+            title: Monize Frontend
+            description: Frontend for Monize, a self-hosted personal finance app
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 24
+          # Disable the package-manager cache in this publish job. zizmor's
+          # cache-poisoning audit flags caches that are restored in a job which
+          # publishes runtime artifacts (the signed GHCR images below): a
+          # poisoned cache could taint a release. This job only runs `npm
+          # version`, so it never needs the cache anyway.
+          package-manager-cache: false
+
+      # Stamp the resolved version into this image's package.json so the built
+      # artifact reports the right version. The bump is intentionally NOT
+      # committed here - the release job below owns the version-bump commit.
+      - name: Stamp version
+        env:
+          VERSION: ${{ needs.prepare-release.outputs.version }}
+          WORKDIR: ${{ matrix.workdir }}
+        run: cd "$WORKDIR" && npm version "$VERSION" --no-git-tag-version --allow-same-version
+
+      - name: Log in to GHCR
+        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@06116385d9baf250c9f4dcb4858b16962ea869c3 # v4.1.0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5 # v4.1.0
+
+      - name: Build and push image
+        id: build
+        uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.file }}
+          target: production
+          push: true
+          platforms: linux/amd64,linux/arm64
+          provenance: true
+          sbom: true
+          tags: |
+            ${{ matrix.image }}:latest
+            ${{ matrix.image }}:${{ needs.prepare-release.outputs.version }}
+          build-args: |
+            GIT_SHA=${{ needs.prepare-release.outputs.git_sha }}
+            BUILD_DATE=${{ needs.prepare-release.outputs.build_date }}
+            VERSION=${{ needs.prepare-release.outputs.version }}
+          annotations: |
+            index:org.opencontainers.image.title=${{ matrix.title }}
+            index:org.opencontainers.image.description=${{ matrix.description }}
+            index:org.opencontainers.image.source=https://github.com/kenlasko/monize
+            index:org.opencontainers.image.url=https://github.com/kenlasko/monize
+            index:org.opencontainers.image.authors=ken.lasko@gmail.com
+            index:org.opencontainers.image.vendor=Ken Lasko
+            index:org.opencontainers.image.revision=${{ needs.prepare-release.outputs.git_sha }}
+            index:org.opencontainers.image.created=${{ needs.prepare-release.outputs.build_date }}
+            index:org.opencontainers.image.version=${{ needs.prepare-release.outputs.version }}
+          cache-from: type=gha,scope=${{ matrix.name }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.name }}
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@7e8b541eb2e61bf99390e1afd4be13a184e9ebc5 # v3.10.1
+
+      # Keyless signing via GitHub OIDC. No long-lived keys to manage; the
+      # signature is bound to this workflow's identity and verifiable with
+      # `cosign verify --certificate-identity-regexp ...`.
+      - name: Sign image
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+          IMAGE: ${{ matrix.image }}
+          VERSION: ${{ needs.prepare-release.outputs.version }}
+        run: |
+          cosign sign --yes \
+            "${IMAGE}@${DIGEST}" \
+            "${IMAGE}:${VERSION}" \
+            "${IMAGE}:latest"
+
+      # Generate and attest an SPDX SBOM for the image. The provenance and SBOM
+      # produced by docker/build-push-action above are embedded in the OCI
+      # manifest; this attestation makes them discoverable via
+      # `gh attestation verify` for downstream consumers.
+      - name: Generate SBOM
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+        with:
+          image: ${{ matrix.image }}@${{ steps.build.outputs.digest }}
+          format: spdx-json
+          output-file: ${{ matrix.name }}-sbom.spdx.json
+
+      - name: Attest SBOM
+        # Pinned to v3.0.0: the last release before attest-sbom was deprecated
+        # in favor of actions/attest (v4.0.0+), and the first to run on Node 24.
+        # Inputs are unchanged from v2.
+        uses: actions/attest-sbom@4651f806c01d8637787e274ac3bdf724ef169f34 # v3.0.0
+        with:
+          subject-name: ${{ matrix.image }}
+          subject-digest: ${{ steps.build.outputs.digest }}
+          sbom-path: ${{ matrix.name }}-sbom.spdx.json
+          push-to-registry: true
+
+      # Scan the pushed image for OS + library CVEs. SARIF goes to the Security
+      # tab so findings are tracked over time. We fail on CRITICAL only - HIGH
+      # issues surface in the Security tab but do not block releases, matching
+      # the npm-audit policy.
+      - name: Scan image (Trivy)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: ${{ matrix.image }}@${{ steps.build.outputs.digest }}
+          format: sarif
+          output: trivy-${{ matrix.name }}.sarif
+          severity: CRITICAL,HIGH
+          exit-code: '0'
+          ignore-unfixed: true
+
+      - name: Upload Trivy SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@fb0994ef1c058010acf1efccff928b0a83b1ed54 # v4.32.6
+        with:
+          sarif_file: trivy-${{ matrix.name }}.sarif
+          category: trivy-${{ matrix.name }}
+
+      - name: Fail on critical CVEs
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: ${{ matrix.image }}@${{ steps.build.outputs.digest }}
+          format: table
+          severity: CRITICAL
+          exit-code: '1'
+          ignore-unfixed: true
+
+  # Both images are built, signed, attested and scanned at this point. Now -
+  # and only now - commit/push the version bump and cut the GitHub release, so
+  # a failed or vulnerable build never leaves a dangling version commit.
+  release:
+    name: Commit Version & Release
+    runs-on: ubuntu-latest
+    needs: [prepare-release, build-and-push]
+    permissions:
+      contents: write # to push the version-bump commit and create the GitHub release
+    steps:
+      # persist-credentials is intentionally left at its default (true) here:
+      # the "Commit version bump" step runs `git push` to publish the version
+      # bump and needs the token wired into the checkout.
+      #
+      # RELEASE_TOKEN is a fine-grained PAT owned by a repo admin (Contents:
+      # write, scoped to this repo). The default GITHUB_TOKEN acts as
+      # github-actions[bot], which is NOT an admin and so cannot bypass branch
+      # protection; pushing with an admin PAT lets the [skip ci] version-bump
+      # commit through the required "Verify PR checklist" check on main, given
+      # that "Do not allow bypassing the above settings" is unchecked on the
+      # main rule (admins may bypass). No PR/check is forged.
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          token: ${{ secrets.RELEASE_TOKEN }}
+          persist-credentials: true
+
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      # Re-apply the resolved version to both package.json files (kept in
+      # lockstep) and commit it. Deterministic: the version was decided in
+      # prepare-release.
+      - name: Bump version
+        env:
+          VERSION: ${{ needs.prepare-release.outputs.version }}
+        run: |
+          cd backend  && npm version "$VERSION" --no-git-tag-version --allow-same-version && cd ..
+          cd frontend && npm version "$VERSION" --no-git-tag-version --allow-same-version && cd ..
+
+      # Pushes the version bump directly to protected main. The push is
+      # authenticated with RELEASE_TOKEN (admin PAT, wired in via the checkout
+      # above), so it bypasses the required status check rather than forging one.
+      - name: Commit version bump
+        env:
+          VERSION: ${{ needs.prepare-release.outputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add backend/package.json backend/package-lock.json frontend/package.json frontend/package-lock.json
+          git commit -m "chore: bump version to ${VERSION} [skip ci]"
+          git pull --rebase
+          git push
+
+      # Resolve the release notes body. Precedence: the `release_notes` input,
+      # then a committed docs/release-notes/<version>.md, then GitHub's
+      # auto-generated notes. The input is read via env to avoid injection.
+      - name: Resolve release notes
+        id: notes
+        env:
+          VERSION: ${{ needs.prepare-release.outputs.version }}
+          RELEASE_NOTES_INPUT: ${{ inputs.release_notes }}
+        run: |
+          NOTES_FILE="docs/release-notes/${VERSION}.md"
+          if [ -n "$RELEASE_NOTES_INPUT" ]; then
+            printf '%s\n' "$RELEASE_NOTES_INPUT" > "$RUNNER_TEMP/release-notes.md"
+            echo "path=$RUNNER_TEMP/release-notes.md" >> "$GITHUB_OUTPUT"
+            echo "Release notes: workflow input"
+          elif [ -f "$NOTES_FILE" ]; then
+            # Strip the leading "# v<version>" heading (and any blank lines that
+            # follow it) so the release body does not duplicate the "v<version>"
+            # release title. Only the matching version heading is removed; a real
+            # first-line heading is left untouched.
+            awk -v ver="$VERSION" '
+              NR == 1 && $0 == "# v" ver { skip = 1; next }
+              skip && $0 ~ /^[[:space:]]*$/ { next }
+              { skip = 0; print }
+            ' "$NOTES_FILE" > "$RUNNER_TEMP/release-notes.md"
+            echo "path=$RUNNER_TEMP/release-notes.md" >> "$GITHUB_OUTPUT"
+            echo "Release notes: $NOTES_FILE"
+          else
+            echo "path=" >> "$GITHUB_OUTPUT"
+            echo "Release notes: GitHub auto-generated (no input or notes file found)"
+          fi
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ needs.prepare-release.outputs.version }}
+          NOTES_PATH: ${{ steps.notes.outputs.path }}
+        run: |
+          if [ -n "$NOTES_PATH" ]; then
+            gh release create "v${VERSION}" \
+              --title "v${VERSION}" \
+              --notes-file "$NOTES_PATH"
+          else
+            gh release create "v${VERSION}" \
+              --title "v${VERSION}" \
+              --generate-notes
+          fi
+
+  # ---------------------------------------------------------------------------
+  # Preview publish (push to main)
+  #
+  # Publishes a lightweight image so merged work is pullable before a formal
+  # release (issue #727): a push to main moves a single multi-arch `:beta` tag.
+  # It reuses the same full test/security gate as the release path (those jobs
+  # already run on push), but stays deliberately light on the publish side: no
+  # version-bump commit, no GitHub release, no cosign/SBOM/provenance, and it
+  # never touches `:latest`.
+  #
+  # An open PR used to publish `:pr-<number>` alongside this. That is retired,
+  # and the reasoning is worth keeping because it argues against reinstating it:
+  #
+  #   * Nobody was told the images existed. The tag was written only to
+  #     $GITHUB_STEP_SUMMARY -- no PR comment, nothing in README or
+  #     CONTRIBUTING -- so finding one meant opening the Actions run for your
+  #     own PR and scrolling to a job summary.
+  #   * The contributors most likely to want one could never get one. A fork
+  #     PR's GITHUB_TOKEN is read-only, so every fork PR was skipped; across
+  #     the merge history that was 0 of 19 fork PRs against 24 of 26 same-repo
+  #     ones. Both external contributors work from forks, and #714 (Fork
+  #     Images) exists because of it.
+  #   * Ten weeks of per-version download counts showed no one pulling them.
+  #     Every `pr-` tag's count tracked its AGE and nothing else -- about one
+  #     per six days, no tag an outlier among 481 -- which is crawler traffic.
+  #     For comparison, `:latest` took 66 downloads in two days while the
+  #     oldest `pr-` tag managed 13 in seventy-three.
+  #   * They were never cleaned up: prune-ghcr-untagged.sh deleted only
+  #     UNTAGGED versions, so 481 tags accumulated holding ~17.7 GB, about
+  #     three quarters of the registry footprint. That script now sweeps them.
+  #
+  # `:beta` is what issue #727 actually asked for and it stays. If per-PR
+  # images are ever wanted again, advertise them on the PR itself -- shipping
+  # them unannounced is the one arrangement already known not to work.
+  # ---------------------------------------------------------------------------
+
+  # Resolve the stamped version ONCE so the parallel backend/frontend builds
+  # stamp identical values. The version build-arg is the *next* patch release
+  # (off backend/package.json, which holds the last published version) suffixed
+  # with `-beta`. No commit here.
+  prepare-preview:
+    name: Prepare Preview
+    runs-on: ubuntu-latest
+    # Runs on a push to main (a merge) only. The manual release dispatch is
+    # handled by prepare-release instead, and a PR publishes nothing.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs:
+      [
+        backend-lint,
+        backend-unit-tests,
+        backend-integration-tests,
+        frontend-lint,
+        frontend-unit-tests,
+        npm-audit,
+        bearer-scan,
+        dockerfile-lint,
+        license-check,
+        schema-drift,
+        zizmor-scan,
+        env-doc-check,
+        e2e-tests,
+        helm-chart,
+      ]
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.resolve.outputs.version }}
+      build_date: ${{ steps.meta.outputs.build_date }}
+      git_sha: ${{ steps.meta.outputs.git_sha }}
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      # Stamp the *next* patch release suffixed with `-beta`. The tag,
+      # platforms and annotation level are constants now that this job runs
+      # only for a push to main, so they are written at the one place that
+      # consumes them rather than threaded through as single-valued outputs.
+      - name: Resolve preview build
+        id: resolve
+        run: |
+          CURRENT=$(node -p "require('./backend/package.json').version")
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT"
+          VERSION="$MAJOR.$MINOR.$((PATCH + 1))-beta"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Resolved: tag=beta version=$VERSION"
+
+      - name: Set build metadata
+        id: meta
+        env:
+          GIT_SHA: ${{ github.sha }}
+        run: |
+          echo "git_sha=$GIT_SHA" >> "$GITHUB_OUTPUT"
+          echo "build_date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_OUTPUT"
+
+  # Build + push the two preview images IN PARALLEL (one matrix leg per image).
+  # Unlike the release build-and-push, this deliberately skips cosign signing,
+  # SBOM/provenance attestation and the Trivy gate: a preview is a convenience
+  # image, not a signed release. It pushes only the single `:beta` tag and
+  # never touches `:latest`.
+  build-preview:
+    name: Build & Push Preview (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    needs: prepare-preview
+    permissions:
+      contents: read
+      packages: write # to push the preview images to GHCR
+    strategy:
+      # Build both images even if one fails, so we get whatever succeeded.
+      fail-fast: false
+      matrix:
+        include:
+          - name: backend
+            image: ghcr.io/kenlasko/monize-backend
+            context: .
+            file: backend/Dockerfile
+            workdir: backend
+            title: Monize Backend
+            description: Backend for Monize, a self-hosted personal finance app
+          - name: frontend
+            image: ghcr.io/kenlasko/monize-frontend
+            context: frontend
+            file: frontend/Dockerfile
+            workdir: frontend
+            title: Monize Frontend
+            description: Frontend for Monize, a self-hosted personal finance app
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      # Stamp the resolved version into this image's package.json so the built
+      # artifact reports e.g. 1.11.2-beta. Not committed -- preview never bumps
+      # the repo version.
+      - name: Stamp version
+        env:
+          VERSION: ${{ needs.prepare-preview.outputs.version }}
+          WORKDIR: ${{ matrix.workdir }}
+        run: cd "$WORKDIR" && npm version "$VERSION" --no-git-tag-version --allow-same-version
+
+      - name: Log in to GHCR
+        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@06116385d9baf250c9f4dcb4858b16962ea869c3 # v4.1.0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5 # v4.1.0
+
+      - name: Build and push image
+        uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.file }}
+          target: production
+          push: true
+          platforms: linux/amd64,linux/arm64
+          # Plain image: no provenance/SBOM attestation manifest (unlike the
+          # signed release), keeping the preview build fast and the registry
+          # listing clean.
+          provenance: false
+          sbom: false
+          tags: |
+            ${{ matrix.image }}:beta
+          build-args: |
+            GIT_SHA=${{ needs.prepare-preview.outputs.git_sha }}
+            BUILD_DATE=${{ needs.prepare-preview.outputs.build_date }}
+            VERSION=${{ needs.prepare-preview.outputs.version }}
+          # `index` matches the export: a multi-arch build produces an image
+          # index, and that is the only shape this job builds. (A single
+          # platform has no index, and index-level annotations are rejected
+          # outright for one -- which is why the retired per-PR build had to
+          # annotate the manifest instead.)
+          annotations: |
+            index:org.opencontainers.image.title=${{ matrix.title }}
+            index:org.opencontainers.image.description=${{ matrix.description }}
+            index:org.opencontainers.image.source=https://github.com/kenlasko/monize
+            index:org.opencontainers.image.url=https://github.com/kenlasko/monize
+            index:org.opencontainers.image.authors=ken.lasko@gmail.com
+            index:org.opencontainers.image.vendor=Ken Lasko
+            index:org.opencontainers.image.revision=${{ needs.prepare-preview.outputs.git_sha }}
+            index:org.opencontainers.image.created=${{ needs.prepare-preview.outputs.build_date }}
+            index:org.opencontainers.image.version=${{ needs.prepare-preview.outputs.version }}
+          cache-from: type=gha,scope=${{ matrix.name }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.name }}
+
+      - name: Summary
+        if: success()
+        env:
+          NAME: ${{ matrix.name }}
+          IMAGE: ${{ matrix.image }}
+        run: |
+          {
+            echo "### ${NAME} preview image pushed"
+            echo ""
+            echo '```'
+            echo "${IMAGE}:beta"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # Pre-download and cache the Playwright browsers ONCE, before the sharded
+  # test jobs run. The shards then restore from this cache (guaranteed hit) and
+  # never touch cdn.playwright.dev themselves. This avoids the failure we hit
+  # when four shards raced on a cold cache: the ones that missed downloaded
+  # browsers concurrently and some downloads stalled indefinitely (the Playwright
+  # downloader has no timeout), wedging the whole job. The download timeout below
+  # also caps any future CDN stall so this job fails fast and can be re-run
+  # instead of hanging.
+  e2e-browsers:
+    name: E2E Browser Cache
+    runs-on: ubuntu-latest
+    needs: [backend-unit-tests, frontend-unit-tests]
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 24
+      - name: Install E2E dependencies
+        working-directory: e2e
+        run: npm ci
+      - name: Cache Playwright browsers
+        id: pw-cache
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-firefox-${{ runner.os }}-${{ hashFiles('e2e/package-lock.json') }}
+      - name: Download Playwright browsers
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        working-directory: e2e
+        timeout-minutes: 15
+        run: npx playwright install chromium firefox
+
+  # Runs the Playwright suite against a full stack (postgres + backend +
+  # frontend) brought up via docker-compose.e2e.yml. Runs chromium + firefox.
+  # Gates releases: build-and-push lists this job in its needs, so a red E2E
+  # run blocks the container build/push. Retries (2 in CI) absorb flakiness.
+  e2e-tests:
+    name: E2E Tests (shard ${{ matrix.shard }}/4)
+    runs-on: ubuntu-latest
+    # Depends on e2e-browsers so the Playwright cache is fully populated before
+    # any shard starts; the backend/frontend unit-test gate is inherited
+    # transitively through e2e-browsers.
+    needs: [e2e-browsers]
+    # Shard across 4 runners. Each shard brings up its OWN isolated stack
+    # (postgres + backend + frontend) below, so there is no shared database
+    # state between shards. Within a shard Playwright still runs serially
+    # (workers: 1 in playwright.config.ts), preserving the existing ordering
+    # guarantees (e.g. zz-danger-zone last). fail-fast: false lets every shard
+    # finish so we see all failures, not just the first shard to go red.
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    permissions:
+      contents: read
+      pull-requests: write # so the failure-diagnostics step can post container logs as a PR comment via the issues/comments API
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 24
+
+      - name: Build application images
+        run: docker compose -f docker-compose.e2e.yml build
+
+      - name: Start application stack
+        run: docker compose -f docker-compose.e2e.yml up -d --wait --wait-timeout 600
+
+      - name: Install E2E dependencies
+        working-directory: e2e
+        run: npm ci
+
+      - name: Restore Playwright browsers
+        id: pw-cache
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-firefox-${{ runner.os }}-${{ hashFiles('e2e/package-lock.json') }}
+
+      # Browsers come from the cache populated by e2e-browsers, so normally only
+      # the apt system deps are installed here (fast, no CDN download). The else
+      # branch is a safety net for the rare case the cache was evicted between
+      # jobs; the timeout caps a stalled download instead of hanging the shard.
+      - name: Install Playwright system dependencies
+        working-directory: e2e
+        timeout-minutes: 10
+        env:
+          PW_CACHE_HIT: ${{ steps.pw-cache.outputs.cache-hit }}
+        run: |
+          if [ "$PW_CACHE_HIT" = "true" ]; then
+            npx playwright install-deps chromium firefox
+          else
+            npx playwright install --with-deps chromium firefox
+          fi
+
+      - name: Run Chromium push integration
+        if: matrix.shard == 1
+        working-directory: e2e
+        timeout-minutes: 5
+        run: npm run test:push
+
+      - name: Upload Chromium push report
+        if: always() && matrix.shard == 1
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: chromium-push-report
+          path: e2e/playwright-push-report/
+          retention-days: 7
+
+      - name: Run E2E tests
+        working-directory: e2e
+        timeout-minutes: 30
+        env:
+          BASE_URL: http://localhost:3001
+          CI: 'true'
+          SHARD: ${{ matrix.shard }}
+        run: |
+          set -o pipefail
+          npx playwright test --shard="${SHARD}/4" --max-failures=5 2>&1 | tee /tmp/pw-output.txt
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: e2e-report-shard-${{ matrix.shard }}
+          path: e2e/playwright-report/
+          retention-days: 7
+
+      # The auth-gated raw logs aren't reachable programmatically, so mirror
+      # container status + logs into both the job summary AND a PR comment.
+      - name: Collect diagnostics on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          SHARD: ${{ matrix.shard }}
+          REPO: ${{ github.repository }}
+        run: |
+          {
+            echo "## E2E diagnostics (shard ${SHARD}/4)"
+            echo
+            if [ -f /tmp/pw-output.txt ]; then
+              echo '### Playwright output (tail)'
+              echo '```'
+              tail -c 12000 /tmp/pw-output.txt
+              echo '```'
+            fi
+            echo '### docker compose ps'
+            echo '```'
+            docker compose -f docker-compose.e2e.yml ps -a 2>&1 || true
+            echo '```'
+            for svc in postgres backend frontend; do
+              echo "<details><summary>$svc (last 150 lines)</summary>"
+              echo
+              echo '```'
+              docker compose -f docker-compose.e2e.yml logs "$svc" --no-color --tail=150 2>&1 | tail -c 16000 || true
+              echo '```'
+              echo
+              echo '</details>'
+            done
+          } > /tmp/e2e-diag.md
+          cat /tmp/e2e-diag.md >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "$PR_NUMBER" ]; then
+            jq -Rs '{body: .}' /tmp/e2e-diag.md > /tmp/e2e-diag.json
+            http=$(curl -sS -o /tmp/resp.json -w '%{http_code}' -X POST \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${REPO}/issues/$PR_NUMBER/comments" \
+              -d @/tmp/e2e-diag.json)
+            echo "PR comment POST -> HTTP $http"
+            [ "$http" = "201" ] || cat /tmp/resp.json
+          fi
+
+      - name: Stop services
+        if: always()
+        run: docker compose -f docker-compose.e2e.yml down -v

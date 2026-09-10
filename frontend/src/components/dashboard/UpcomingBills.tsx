@@ -1,0 +1,342 @@
+'use client';
+
+import { useMemo } from 'react';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { differenceInDays, isPast, isToday, isTomorrow, startOfDay } from 'date-fns';
+import { ScheduledTransaction } from '@/types/scheduled-transaction';
+import { Account } from '@/types/account';
+import { parseLocalDate } from '@/lib/utils';
+import { useDateFormat } from '@/hooks/useDateFormat';
+import { useNumberFormat } from '@/hooks/useNumberFormat';
+import {
+  SCHEDULED_KIND_AMOUNT_CLASSES,
+  occurrenceKind,
+  type ScheduledKind,
+} from '@/lib/scheduled-kind';
+import { UnknownAmount } from '@/components/ui/UnknownAmount';
+import {
+  nextOccurrenceDueDate,
+  nextOccurrenceEffectiveAmount,
+  occurrenceSettlementAccountId,
+} from '@/lib/scheduled-effective-amount';
+import { roundMoney } from '@/lib/investmentFold';
+import { WidgetHeading } from './widget-meta';
+import { CARD_CLASS } from '@/components/ui/Card';
+
+const LIABILITY_TYPES = new Set(['CREDIT_CARD', 'LOAN', 'MORTGAGE', 'LINE_OF_CREDIT']);
+
+interface UpcomingBillsProps {
+  scheduledTransactions: ScheduledTransaction[];
+  accounts: Account[];
+  isLoading: boolean;
+  maxItems: number;
+}
+
+export function UpcomingBills({ scheduledTransactions, accounts, isLoading, maxItems }: UpcomingBillsProps) {
+  const t = useTranslations('dashboard');
+  const router = useRouter();
+  const { formatDate } = useDateFormat();
+  const { formatCurrency: formatCurrencyBase } = useNumberFormat();
+
+  // Filter to active bills, deposits, and transfers: overdue items + within each item's reminder window
+  const today = useMemo(() => startOfDay(new Date()), []);
+  const upcomingItems = useMemo(() => scheduledTransactions
+    .filter((st) => {
+      if (!st.isActive) return false;
+      const dueDate = parseLocalDate(nextOccurrenceDueDate(st));
+      const daysUntil = differenceInDays(dueDate, today);
+      // Include overdue items (daysUntil < 0) and items within their reminder window
+      return daysUntil < 0 || (daysUntil >= 0 && daysUntil <= (st.reminderDaysBefore ?? 3));
+    })
+    .sort((a, b) => {
+      const dateDiff =
+        parseLocalDate(nextOccurrenceDueDate(a)).getTime() -
+        parseLocalDate(nextOccurrenceDueDate(b)).getTime();
+      if (dateDiff !== 0) return dateDiff;
+      // On the same day, show manual items first so they're visible before truncation
+      if (!a.autoPost && b.autoPost) return -1;
+      if (a.autoPost && !b.autoPost) return 1;
+      return 0;
+    }), [scheduledTransactions, today]);
+
+  // Build a map of account ID -> Account for quick lookups
+  const accountMap = useMemo(() => {
+    const map = new Map<string, Account>();
+    for (const acc of accounts) {
+      map.set(acc.id, acc);
+    }
+    return map;
+  }, [accounts]);
+
+  // Compute which upcoming items will cause a non-liability account balance to go negative.
+  // Uses running balances per account, processing items in date order (which they already are).
+  const negativeBalanceItems = useMemo(() => {
+    const result = new Set<string>();
+    // Running balance per settlement account: currentBalance + futureTransactionsSum
+    const runningBalances = new Map<string, number>();
+    /** Accounts whose projection hit an unknown amount and cannot continue. */
+    const unknown = new Set<string>();
+
+    for (const item of upcomingItems) {
+      // The account the cash actually moves through, which for an investment
+      // schedule is the settlement account and not `accountId` (the brokerage).
+      // Charging the brokerage warned that a purchase would overdraw it while
+      // the funding account covering the trade to the cent went unprojected
+      // (issue #1247).
+      const settlementAccountId = occurrenceSettlementAccountId(item, accountMap);
+      if (!settlementAccountId) continue;
+      const account = accountMap.get(settlementAccountId);
+      if (!account) continue;
+
+      // Skip liability accounts - they normally carry negative balances
+      if (LIABILITY_TYPES.has(account.accountType)) continue;
+
+      if (!runningBalances.has(settlementAccountId)) {
+        runningBalances.set(
+          settlementAccountId,
+          roundMoney(
+            (Number(account.currentBalance) || 0) + (Number(account.futureTransactionsSum) || 0),
+          ),
+        );
+      }
+
+      // A running balance built from an unknown amount is not a smaller
+      // balance, it is an unknown one -- so the projection stops for that
+      // account rather than carrying on as if the item cost nothing and
+      // flagging (or clearing) the rows after it (issue #1247).
+      const { amount: effectiveAmount, currencyCode } = nextOccurrenceEffectiveAmount(item);
+      if (effectiveAmount === null) {
+        unknown.add(settlementAccountId);
+        continue;
+      }
+      // An amount and its currency are one value. Converting here would invent a
+      // rate this widget holds no table for, and adding the bare number would
+      // compare foreign units against this balance, so a mismatch is unknown.
+      if (currencyCode !== account.currencyCode) {
+        unknown.add(settlementAccountId);
+        continue;
+      }
+      if (unknown.has(settlementAccountId)) continue;
+      // Money precision, not float precision: a balance and the amount that
+      // empties it are both decimal(20,4), and only the rounded difference is
+      // one. An unrounded sum lands a fraction of a ten-thousandth below zero
+      // and warns about an account that ends at exactly zero.
+      const newBalance = roundMoney(runningBalances.get(settlementAccountId)! + effectiveAmount);
+      runningBalances.set(settlementAccountId, newBalance);
+
+      if (newBalance < 0) {
+        result.add(item.id);
+      }
+    }
+    return result;
+  }, [upcomingItems, accountMap]);
+
+  const formatCurrency = (amount: number, currency: string) => {
+    return formatCurrencyBase(Math.abs(amount), currency);
+  };
+
+  const isOverdue = (dateStr: string) => {
+    const date = parseLocalDate(dateStr);
+    return isPast(date) && !isToday(date);
+  };
+
+  const getDueDateLabel = (dateStr: string) => {
+    const date = parseLocalDate(dateStr);
+    if (isPast(date) && !isToday(date)) return t('upcomingBills.overdue');
+    if (isToday(date)) return t('upcomingBills.today');
+    if (isTomorrow(date)) return t('upcomingBills.tomorrow');
+    const days = differenceInDays(date, today);
+    if (days <= 14) return t('upcomingBills.daysUntil', { count: days });
+    return formatDate(dateStr);
+  };
+
+  const getDueDateColour = (dateStr: string) => {
+    const date = parseLocalDate(dateStr);
+    const days = differenceInDays(date, today);
+    if (days <= 0) return 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30';
+    if (days <= 2) return 'text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/30';
+    return 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30';
+  };
+
+  // The amount this occurrence would post TODAY, from the server's
+  // effective-amount contract -- `null` when it cannot be determined (issue
+  // #1247). Never `nextOverride?.amount ?? amount`: for an FX-sensitive schedule
+  // that scalar was written at an older rate, which is how this widget came to
+  // disagree with the cash-flow forecast about the same bill.
+  const getEffective = (item: ScheduledTransaction) =>
+    nextOccurrenceEffectiveAmount(item);
+
+  const getItemType = (item: ScheduledTransaction): ScheduledKind =>
+    occurrenceKind(getEffective(item), item);
+
+  const getTypeBadge = (type: ScheduledKind) => {
+    switch (type) {
+      case 'bill':
+        return <span className="px-1.5 py-0.5 bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400 text-xs rounded font-medium">{t('upcomingBills.typeBadge.bill')}</span>;
+      case 'deposit':
+        return <span className="px-1.5 py-0.5 bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400 text-xs rounded font-medium">{t('upcomingBills.typeBadge.deposit')}</span>;
+      case 'transfer':
+        return <span className="px-1.5 py-0.5 bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 text-xs rounded font-medium">{t('upcomingBills.typeBadge.transfer')}</span>;
+      case 'reminder':
+        return <span className="px-1.5 py-0.5 bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 text-xs rounded font-medium">{t('upcomingBills.typeBadge.reminder')}</span>;
+      case 'unknown':
+        // The server could not derive which way this occurrence goes, so the
+        // badge says that rather than picking a colour: red would read as money
+        // out and green as money in (issue #1247 re-audit).
+        return <span className="px-1.5 py-0.5 bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 text-xs rounded font-medium">{t('upcomingBills.typeBadge.unknown')}</span>;
+    }
+  };
+
+  const getAmountDisplay = (item: ScheduledTransaction) => {
+    const effective = getEffective(item);
+    const type = getItemType(item);
+    // A reminder carries no sign: its amount is a placeholder the user will fill
+    // in when the real one arrives, so it is neither money out nor money in.
+    const sign = type === 'bill' ? '-' : type === 'deposit' ? '+' : '';
+    return {
+      text:
+        effective.amount === null
+          ? null
+          : `${sign}${formatCurrency(effective.amount, effective.currencyCode)}`,
+      className: SCHEDULED_KIND_AMOUNT_CLASSES[type],
+    };
+  };
+
+  const goToPost = (id: string) => {
+    router.push(`/bills?postBillId=${encodeURIComponent(id)}`);
+  };
+
+  const sectionTitle = t('upcomingBills.title');
+
+  if (isLoading) {
+    return (
+      <div className={`${CARD_CLASS} p-3 sm:p-6 lg:self-start`}>
+        <WidgetHeading id="upcoming-bills" onClick={() => router.push('/bills')} className="mb-4">
+          {sectionTitle}
+        </WidgetHeading>
+        <div className="animate-pulse space-y-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-12 bg-gray-200 dark:bg-gray-700 rounded" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (upcomingItems.length === 0) {
+    return (
+      <div className={`${CARD_CLASS} p-3 sm:p-6 lg:self-start`}>
+        <WidgetHeading id="upcoming-bills" onClick={() => router.push('/bills')} className="mb-4">
+          {sectionTitle}
+        </WidgetHeading>
+        <p className="text-gray-500 dark:text-gray-400 text-sm">
+          {t('upcomingBills.empty')}
+        </p>
+      </div>
+    );
+  }
+
+  // This widget lists occurrences and nothing else: the summed "Total due" row
+  // went in #1264 and "Total incoming" followed it, so no figure here stands for
+  // more than the one occurrence printed beside it. Do not reintroduce a summary
+  // row -- a per-row amount needs no completeness flag, no cross-currency
+  // conversion and no subtotal marking, which is why the widget no longer reads
+  // exchange rates at all.
+  const visibleItems = upcomingItems.slice(0, maxItems);
+  const hiddenCount = upcomingItems.length - visibleItems.length;
+
+  return (
+    <div className={`${CARD_CLASS} p-3 sm:p-6 lg:self-start`}>
+      <div className="flex items-center justify-between mb-4">
+        <WidgetHeading id="upcoming-bills" onClick={() => router.push('/bills')}>
+          {sectionTitle}
+        </WidgetHeading>
+        <span className="hidden sm:inline text-sm text-gray-500 dark:text-gray-400">{t('upcomingBills.perReminderSettings')}</span>
+      </div>
+      <div className="space-y-2 sm:space-y-3">
+        {visibleItems.map((item) => {
+          const amountDisplay = getAmountDisplay(item);
+          const type = getItemType(item);
+          return (
+            <div
+              key={item.id}
+              role="button"
+              tabIndex={0}
+              onClick={() => goToPost(item.id)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  goToPost(item.id);
+                }
+              }}
+              title={t('upcomingBills.postTransaction')}
+              className={`flex items-center justify-between p-2 sm:p-3 rounded-lg border cursor-pointer transition-colors hover:border-blue-400 hover:bg-gray-50 dark:hover:border-blue-500 dark:hover:bg-gray-700/50 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                isOverdue(nextOccurrenceDueDate(item))
+                  ? 'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/10'
+                  : 'border-gray-200 dark:border-gray-700'
+              }`}
+            >
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                <span
+                  className={`px-2 py-1 text-xs font-medium rounded ${getDueDateColour(
+                    nextOccurrenceDueDate(item)
+                  )}`}
+                >
+                  {getDueDateLabel(nextOccurrenceDueDate(item))}
+                </span>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-medium text-gray-900 dark:text-gray-100 truncate">
+                      {item.name}
+                    </span>
+                    <span className="hidden sm:inline">{getTypeBadge(type)}</span>
+                    {!item.autoPost && (
+                      <span className="hidden sm:inline px-1.5 py-0.5 bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400 text-xs rounded" title={t('upcomingBills.manualTitle')}>
+                        {t('upcomingBills.manual')}
+                      </span>
+                    )}
+                  </div>
+                  {(item.payeeName || item.payee?.name) && (
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      {item.payeeName || item.payee?.name}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="flex items-center gap-1 ml-2">
+                {negativeBalanceItems.has(item.id) && (
+                  <span
+                    className="flex-shrink-0 text-amber-500 dark:text-amber-400"
+                    title={t('upcomingBills.negativeBalanceWarning')}
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.168 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 6a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 6zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                    </svg>
+                  </span>
+                )}
+                <div className={`font-semibold ${amountDisplay.className} whitespace-nowrap`}>
+                  {amountDisplay.text ?? <UnknownAmount />}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      {hiddenCount > 0 && (
+        <button
+          onClick={() => router.push('/bills')}
+          className="mt-2 w-full text-center text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-300"
+        >
+          {t('upcomingBills.moreItems', { count: hiddenCount })}
+        </button>
+      )}
+      <button
+        onClick={() => router.push('/bills')}
+        className="mt-3 w-full text-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
+      >
+        {t('upcomingBills.viewAll')}
+      </button>
+    </div>
+  );
+}

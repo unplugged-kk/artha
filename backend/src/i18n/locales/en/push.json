@@ -1,0 +1,35 @@
+{
+  "test": {
+    "title": "Monize test notification",
+    "body": "Push notifications are working on this device."
+  },
+  "notification": {
+    "payments": {
+      "title": "Payment reminder",
+      "body": "A bill or scheduled payment needs your attention. Open Monize for the details."
+    },
+    "budgets": {
+      "title": "Budget alert",
+      "body": "One of your budgets needs your attention. Open Monize for the details."
+    },
+    "system": {
+      "title": "System notice",
+      "body": "Monize has a system notice for you. Open the app for the details."
+    },
+    "balances": {
+      "title": "Balance alert",
+      "body": "An account balance crossed a threshold you set. Open Monize for the details."
+    },
+    "investments": {
+      "title": "Investment movement",
+      "body": "Your investments moved today. Open Monize for the details."
+    },
+    "strategies": {
+      "title": "Strategy signal",
+      "body": "One of your strategies changed its recommendation. Open Monize for the details."
+    }
+  },
+  "actions": {
+    "stopReminder": "Stop reminders"
+  }
+}

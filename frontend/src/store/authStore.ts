@@ -1,0 +1,206 @@
+import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { AxiosError } from 'axios';
+import { User } from '@/types/auth';
+import { clearAllCache } from '@/lib/apiCache';
+import { markWhatsNewPendingForLogin } from './whatsNewStore';
+import type {
+  DelegateContext,
+  DelegateCapabilityFlags,
+  DelegateSectionGrants,
+} from '@/lib/delegation';
+
+interface AuthState {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+  _hasHydrated: boolean;
+  // Delegate "acting as owner" context (Phase 1). null = acting as self.
+  actingAsUserId: string | null;
+  availableContexts: DelegateContext[];
+  delegateCapabilities: DelegateCapabilityFlags | null;
+  delegateSections: DelegateSectionGrants | null;
+  setUser: (user: User | null) => void;
+  setToken: (token: string | null) => void;
+  setError: (error: string | null) => void;
+  setLoading: (loading: boolean) => void;
+  setDelegation: (
+    actingAsUserId: string | null,
+    contexts: DelegateContext[],
+    capabilities: DelegateCapabilityFlags | null,
+    sections: DelegateSectionGrants | null,
+  ) => void;
+  login: (user: User, token: string) => void;
+  logout: () => void;
+  clearError: () => void;
+  setHasHydrated: (state: boolean) => void;
+}
+
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      token: null,
+      isAuthenticated: false,
+      isLoading: true,
+      error: null,
+      _hasHydrated: false,
+      actingAsUserId: null,
+      availableContexts: [],
+      delegateCapabilities: null,
+      delegateSections: null,
+
+      setUser: (user) => set({ user, isAuthenticated: !!user }),
+
+      setDelegation: (
+        actingAsUserId,
+        availableContexts,
+        delegateCapabilities,
+        delegateSections,
+      ) =>
+        set({
+          actingAsUserId,
+          availableContexts,
+          delegateCapabilities,
+          delegateSections,
+        }),
+
+      // auth_token is httpOnly — backend manages the cookie, not JS
+      setToken: (token) => set({ token }),
+
+      setError: (error) => set({ error }),
+
+      setLoading: (loading) => set({ isLoading: loading }),
+
+      login: (user, token) => {
+        // The only place a real login happens, so it is where the What's New
+        // digest gets its one-shot permission to auto-open. A refresh
+        // rehydrates isAuthenticated from localStorage without coming through
+        // here, which is exactly why the digest used to reappear on every one.
+        markWhatsNewPendingForLogin();
+        // Backend sets httpOnly cookies; we only track auth state in Zustand
+        set({
+          user,
+          token,
+          isAuthenticated: true,
+          error: null,
+          isLoading: false,
+        });
+      },
+
+      logout: () => {
+        // Backend clears httpOnly cookies via /auth/logout; we only clear Zustand state
+        clearAllCache();
+        // SECURITY: A share is one account's document. Drop the stash so the
+        // next account to sign in on this device does not find it waiting.
+        import('@/lib/share-inbox').then(({ clearShareInbox }) => {
+          void clearShareInbox();
+        });
+        // SECURITY: Clear preferences store to remove userId from localStorage
+        import('@/store/preferencesStore').then(({ usePreferencesStore }) => {
+          usePreferencesStore.getState().clearPreferences();
+        });
+        // SECURITY: Clear AI chat history so conversations don't leak across accounts
+        try {
+          if (typeof window !== 'undefined') {
+            window.localStorage.removeItem('monize:ai-chat-messages');
+            window.localStorage.removeItem('monize:monte-carlo-results');
+          }
+        } catch {
+          // localStorage unavailable — nothing to do
+        }
+        set({
+          user: null,
+          token: null,
+          isAuthenticated: false,
+          error: null,
+          isLoading: false,
+          actingAsUserId: null,
+          availableContexts: [],
+          delegateCapabilities: null,
+          delegateSections: null,
+        });
+      },
+
+      clearError: () => set({ error: null }),
+
+      setHasHydrated: (state) => {
+        set({ _hasHydrated: state, isLoading: false });
+      },
+    }),
+    {
+      name: 'auth-storage',
+      storage: createJSONStorage(() => localStorage),
+      // SECURITY: Only persist isAuthenticated flag to localStorage.
+      // User PII (email, name, role) is fetched from API on page load.
+      // Token is in httpOnly cookies managed by backend.
+      partialize: (state) => ({
+        isAuthenticated: state.isAuthenticated,
+      }),
+      onRehydrateStorage: () => (state) => {
+        if (state?.isAuthenticated) {
+          // Restore the user profile AND the delegation context together
+          // before flipping _hasHydrated. Anything that gates rendering on
+          // `isDelegateView` (DelegateSectionGuard, dashboard view split,
+          // nav visibility) would otherwise see actingAsUserId=null for one
+          // render and flash the wrong page before the contexts request
+          // settles.
+          Promise.all([import('@/lib/auth'), import('@/lib/delegation')]).then(
+            ([{ authApi }, { delegationApi }]) => {
+              Promise.all([
+                authApi.getProfile(),
+                // Contexts is best-effort: a normal user with no delegations
+                // still gets a successful empty payload. Treat any failure
+                // here as "no delegation context" rather than blocking login
+                // restoration.
+                delegationApi.getContexts().catch(() => null),
+              ])
+                .then(([user, contexts]) => {
+                  state.setUser(user as User);
+                  if (contexts) {
+                    state.setDelegation(
+                      contexts.actingAsUserId,
+                      contexts.contexts,
+                      contexts.capabilities,
+                      contexts.sections,
+                    );
+                  }
+                  state.setHasHydrated(true);
+                })
+                .catch((error: unknown) => {
+                  const status =
+                    error instanceof AxiosError
+                      ? error.response?.status
+                      : undefined;
+                  if (
+                    status === 502 ||
+                    (error instanceof AxiosError && !error.response)
+                  ) {
+                    // Backend unreachable -- keep isAuthenticated from localStorage so the app
+                    // shell renders with the BackendDownBanner visible. This is safe because:
+                    // (a) all API calls fail with 502 during downtime (no data access)
+                    // (b) window.location.reload() on recovery forces full re-auth via getProfile()
+                    // (c) if JWT/refresh token expired, the 401 interceptor triggers logout
+                    import('@/store/connectionStore').then(
+                      ({ useConnectionStore }) => {
+                        useConnectionStore.getState().setBackendDown();
+                      },
+                    );
+                    state.setHasHydrated(true);
+                  } else {
+                    // Genuine auth failure (401, etc.) — log out
+                    state.logout();
+                    state.setHasHydrated(true);
+                  }
+                });
+            },
+          );
+        } else {
+          state?.setHasHydrated(true);
+        }
+      },
+    },
+  ),
+);

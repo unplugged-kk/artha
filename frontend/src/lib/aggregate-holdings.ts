@@ -1,0 +1,67 @@
+import { HoldingWithMarketValue } from '@/types/investment';
+
+export interface AggregatedHolding extends HoldingWithMarketValue {
+  /** Per-account breakdown for this security across the filtered account set. */
+  accountBreakdowns: HoldingWithMarketValue[];
+}
+
+/**
+ * Group holdings by security, summing quantities, cost basis and market values
+ * across accounts. Average cost is recomputed from the aggregated totals so
+ * cross-account rollups remain self-consistent. All input holdings for a given
+ * security are assumed to share the same security currency (backend invariant).
+ *
+ * The aggregated row exposes `accountBreakdowns` so callers can render a
+ * per-account drill-down without re-fetching.
+ */
+export function aggregateHoldingsBySecurity(
+  holdings: HoldingWithMarketValue[],
+): AggregatedHolding[] {
+  const map = new Map<string, AggregatedHolding>();
+
+  for (const h of holdings) {
+    const existing = map.get(h.securityId);
+    if (!existing) {
+      map.set(h.securityId, { ...h, accountBreakdowns: [h] });
+      continue;
+    }
+
+    const totalQuantity = Number(existing.quantity) + Number(h.quantity);
+    const totalCostBasis = Number(existing.costBasis) + Number(h.costBasis);
+    // A sum with an unknown component is unknown: `Number(null)` is 0, which
+    // silently dropped a whole account's basis from the rollup and overstated
+    // the gain computed against it.
+    const totalCostBasisAccountCurrency =
+      existing.costBasisAccountCurrency === null ||
+      h.costBasisAccountCurrency === null
+        ? null
+        : existing.costBasisAccountCurrency + h.costBasisAccountCurrency;
+    const existingMv = existing.marketValue;
+    const addMv = h.marketValue;
+    // Same rule for market value: one unpriced account makes the security's
+    // aggregate value unknown, not the priced accounts' subtotal.
+    const totalMarketValue =
+      existingMv === null || addMv === null ? null : existingMv + addMv;
+    const gainLoss =
+      totalMarketValue !== null ? totalMarketValue - totalCostBasis : null;
+    const gainLossPercent =
+      gainLoss !== null && totalCostBasis > 0
+        ? (gainLoss / totalCostBasis) * 100
+        : null;
+    const averageCost = totalQuantity > 0 ? totalCostBasis / totalQuantity : 0;
+
+    map.set(h.securityId, {
+      ...existing,
+      quantity: totalQuantity,
+      averageCost,
+      costBasis: totalCostBasis,
+      costBasisAccountCurrency: totalCostBasisAccountCurrency,
+      marketValue: totalMarketValue,
+      gainLoss,
+      gainLossPercent,
+      accountBreakdowns: [...existing.accountBreakdowns, h],
+    });
+  }
+
+  return Array.from(map.values());
+}

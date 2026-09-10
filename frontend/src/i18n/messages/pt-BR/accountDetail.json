@@ -1,0 +1,49 @@
+{
+  "header": {
+    "viewTransactions": "Ver Transações",
+    "reconcile": "Reconciliar",
+    "edit": "Editar Conta",
+    "back": "Voltar às Contas",
+    "switchAccount": "Mudar para outra conta",
+    "switchFavourites": "Favoritos",
+    "switchOtherAccounts": "Outras contas",
+    "switchPlaceholder": "Filtrar contas...",
+    "switchNoMatches": "Nenhuma conta corresponde",
+    "jointBadge": "Conjunta",
+    "jointSharedBy": "Compartilhada por {owner}",
+    "jointSharedWith": "Compartilhada com {count, plural, one {# pessoa} other {# pessoas}}"
+  },
+  "loading": "Carregando detalhes da conta...",
+  "error": {
+    "retry": "Tentar novamente"
+  },
+  "recurring": {
+    "title": "Cobranças Recorrentes",
+    "subtitle": "Contas agendadas nesta conta, além de possíveis assinaturas encontradas em suas transações",
+    "empty": "Nenhuma cobrança recorrente detectada nesta conta",
+    "scheduledTitle": "Agendadas",
+    "detectedTitle": "Possíveis cobranças recorrentes",
+    "detectedSubtitle": "Encontradas no seu histórico de transações, mas ainda não agendadas",
+    "nextDue": "Próximo vencimento em {date}",
+    "createBill": "Criar conta",
+    "createBillAria": "Criar uma conta agendada para {payee}",
+    "createTitle": "Nova Conta Agendada",
+    "frequency": {
+      "weekly": "Semanal",
+      "biweekly": "A cada 2 semanas",
+      "monthly": "Mensal",
+      "quarterly": "Trimestral",
+      "yearly": "Anual",
+      "irregular": "Irregular"
+    }
+  },
+  "forecastUnavailable": {
+    "intro": "O saldo previsto não é exibido porque pelo menos um item agendado próximo ainda não pode ser valorado. Uma projeção leva cada dia para o seguinte, então um único valor desconhecido deixaria errados todos os dias posteriores.",
+    "requestFailed": "Não foi possível carregar o saldo previsto. Recarregue a página para tentar novamente.",
+    "reasonUnavailable": "O motivo não foi informado. Verifique as taxas de câmbio de itens programados em moeda estrangeira.",
+    "missingRatePair": "{name}: não há taxa de câmbio disponível de {from} para {to}, então o valor que esta ocorrência vai lançar é desconhecido.",
+    "missingRate": "{name}: a taxa de câmbio em que esta ocorrência é liquidada não está disponível, então o valor é desconhecido.",
+    "crossCurrencyTransfer": "{name}: uma transferência chegando de uma conta em {from} enquanto esta conta está em {to}. O valor que entra aqui é definido no momento do lançamento, então não pode ser projetado com antecedência.",
+    "howToFix": "Para corrigir uma taxa ausente: abra Moedas e atualize as taxas, ou verifique se o ativo e sua conta de liquidação estão nas moedas que você espera."
+  }
+}

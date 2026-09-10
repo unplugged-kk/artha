@@ -1,0 +1,253 @@
+{
+  "page": {
+    "welcomePrefix": "Chào mừng",
+    "welcomeWithName": "Chào mừng, {name}!",
+    "subtitle": "Đây là tổng quan tài chính của bạn"
+  },
+  "favouriteAccounts": {
+    "title": "Tài khoản yêu thích",
+    "empty": "Chưa có tài khoản yêu thích nào. Đánh dấu tài khoản là yêu thích để xem tại đây.",
+    "reorder": "Sắp xếp lại",
+    "dragToReorder": "Kéo tài khoản để sắp xếp lại, hoặc dùng các nút mũi tên.",
+    "done": "Xong",
+    "moveUp": "Lên",
+    "moveDown": "Xuống",
+    "marketValue": "Giá trị thị trường",
+    "due": "Đến hạn: {ordinal}",
+    "dueTooltip": "Ngày mỗi tháng khi đến hạn thanh toán thẻ tín dụng",
+    "settlement": "Thanh toán: {ordinal}",
+    "settlementTooltip": "Ngày cuối cùng của chu kỳ thanh toán. Các giao dịch được ghi vào hoặc trước ngày này xuất hiện trong sao kê hiện tại."
+  },
+  "upcomingBills": {
+    "title": "Hóa đơn & Tiền gửi sắp tới",
+    "empty": "Không có hóa đơn, tiền gửi hay chuyển khoản nào quá hạn hoặc sắp tới trong khung nhắc nhở.",
+    "perReminderSettings": "Theo cài đặt nhắc nhở",
+    "postTransaction": "Đăng giao dịch này",
+    "manual": "Thủ công",
+    "manualTitle": "Yêu cầu đăng thủ công",
+    "negativeBalanceWarning": "Giao dịch này sẽ khiến số dư tài khoản xuống dưới không",
+    "viewAll": "Xem tất cả hóa đơn & tiền gửi",
+    "moreItems": "+{count} thêm",
+    "overdue": "Quá hạn",
+    "today": "Hôm nay",
+    "tomorrow": "Ngày mai",
+    "daysUntil": "{count} ngày",
+    "typeBadge": {
+      "bill": "Hóa đơn",
+      "deposit": "Tiền gửi",
+      "transfer": "Chuyển khoản",
+      "reminder": "Nhắc nhở",
+      "unknown": "Không rõ"
+    }
+  },
+  "gettingStarted": {
+    "title": "Bắt đầu",
+    "subtitle": "Thiết lập tài khoản của bạn qua vài bước nhanh",
+    "dismiss": "Bỏ qua",
+    "steps": {
+      "settings": {
+        "title": "Xem lại cài đặt",
+        "description": "Đặt tiền tệ, định dạng ngày và giao diện"
+      },
+      "categories": {
+        "title": "Thiết lập danh mục",
+        "description": "Tạo danh mục hoặc nhập bộ mặc định"
+      },
+      "account": {
+        "title": "Thêm tài khoản đầu tiên",
+        "description": "Tạo tài khoản ngân hàng để bắt đầu theo dõi"
+      },
+      "import": {
+        "title": "Nhập từ QIF",
+        "description": "Nhập tài khoản và giao dịch từ tệp QIF"
+      }
+    }
+  },
+  "budgetStatus": {
+    "title": "Trạng thái ngân sách",
+    "noBudget": "Không tìm thấy ngân sách đang hoạt động. Hãy tạo ngân sách để theo dõi chi tiêu.",
+    "createBudget": "Tạo ngân sách",
+    "viewFullBudget": "Xem ngân sách đầy đủ",
+    "daysLeft": "Còn {count} ngày",
+    "safeToSpend": "An toàn để chi tiêu hôm nay",
+    "topCategories": "Danh mục hàng đầu"
+  },
+  "insights": {
+    "title": "Thông tin chi tiêu",
+    "empty": "Chưa có thông tin chi tiết. Truy cập trang Thông tin chi tiết để tạo phân tích đầu tiên.",
+    "goToInsights": "Đến Thông tin chi tiết",
+    "viewAll": "Xem tất cả thông tin",
+    "activeCount": "{count} đang hoạt động"
+  },
+  "topMovers": {
+    "title": "Biến động hàng đầu",
+    "empty": {
+      "noInvestments": "Thêm tài khoản đầu tư để theo dõi biến động hàng ngày.",
+      "noPrices": "Chưa có dữ liệu thay đổi giá.",
+      "noGainers": "Không có cổ phiếu tăng hôm nay.",
+      "noLosers": "Không có cổ phiếu giảm hôm nay."
+    },
+    "dailyChange": "Thay đổi hàng ngày",
+    "openPriceHistory": "Lịch sử giá của {symbol}",
+    "refreshPrices": "Làm mới giá",
+    "viewPortfolio": "Xem danh mục đầu tư",
+    "filter": {
+      "all": "Tất cả",
+      "gainers": "Tăng",
+      "losers": "Giảm"
+    }
+  },
+  "favouriteSecurities": {
+    "title": "Chứng khoán yêu thích",
+    "empty": "Chưa có chứng khoán yêu thích nào. Truy cập <securitiesLink>trang Chứng khoán</securitiesLink> và gắn sao các chứng khoán bạn muốn theo dõi tại đây.",
+    "noPriceYet": "Chưa có giá",
+    "dailyChange": "Thay đổi hàng ngày",
+    "openPriceHistory": "Lịch sử giá của {symbol}",
+    "refreshPrices": "Làm mới giá",
+    "manage": "Quản lý chứng khoán"
+  },
+  "netWorth": {
+    "title": "Tài sản ròng",
+    "empty": "Chưa có dữ liệu tài sản ròng.",
+    "past12Months": "12 tháng qua",
+    "viewReport": "Xem báo cáo đầy đủ"
+  },
+  "assetsVsLiabilities": {
+    "title": "Tài sản và nợ phải trả",
+    "empty": "Chưa có dữ liệu tài sản ròng.",
+    "current": "Hiện tại",
+    "netWorthLabel": "Tài sản ròng",
+    "assets": "Tài sản",
+    "liabilities": "Nợ phải trả"
+  },
+  "expensesPieChart": {
+    "title": "Chi tiêu theo danh mục",
+    "empty": "Không có dữ liệu chi tiêu trong kỳ này.",
+    "total": "Tổng cộng",
+    "uncategorized": "Chưa phân loại",
+    "other": "Khác"
+  },
+  "incomeExpenses": {
+    "title": "Thu nhập và Chi tiêu",
+    "income": "Thu nhập",
+    "expenses": "Chi tiêu",
+    "net": "Ròng"
+  },
+  "customize": {
+    "button": "Tùy chỉnh",
+    "title": "Tùy chỉnh trang tổng quan",
+    "description": "Bố cục bên dưới phản ánh trang tổng quan của bạn: các tiện ích xếp từ trái sang phải, hai tiện ích mỗi hàng trên màn hình lớn.",
+    "moveEarlier": "Chuyển {name} lên trước",
+    "moveLater": "Chuyển {name} ra sau",
+    "dragToReorder": "Kéo các tiện ích để sắp xếp lại, hoặc dùng các nút mũi tên.",
+    "hiddenWidgets": "Tiện ích đã ẩn",
+    "hide": "Ẩn {name}",
+    "show": "Hiện {name}",
+    "atLeastOne": "Chọn ít nhất một tiện ích để hiển thị trên trang tổng quan.",
+    "reset": "Đặt lại mặc định",
+    "toasts": {
+      "saveFailed": "Không thể lưu bố cục trang tổng quan"
+    }
+  },
+  "favouriteReports": {
+    "title": "Báo cáo yêu thích",
+    "empty": "Chưa có báo cáo yêu thích nào. Gắn sao các báo cáo trên trang Báo cáo để xem tại đây.",
+    "browseReports": "Xem các báo cáo"
+  },
+  "widgets": {
+    "configure": "Cấu hình {name}",
+    "done": "Xong",
+    "configSaveFailed": "Không thể lưu cài đặt tiện ích. Vui lòng thử lại.",
+    "timeframe": "Khung thời gian",
+    "accounts": "Tài khoản",
+    "chartType": "Loại biểu đồ",
+    "view": "Chế độ xem",
+    "displayName": "Tên hiển thị",
+    "description": "Mô tả",
+    "descriptionPlaceholder": "Thêm mô tả tùy chọn",
+    "rangeLabels": {
+      "1m": "1M",
+      "3m": "3M",
+      "6m": "6M",
+      "1y": "1Y",
+      "2y": "2Y",
+      "5y": "5Y",
+      "ytd": "YTD",
+      "all": "Tất cả"
+    }
+  },
+  "portfolioValue": {
+    "title": "Giá trị danh mục đầu tư",
+    "empty": "Chưa có lịch sử đầu tư để hiển thị.",
+    "refresh": "Làm mới giá trị hiện tại"
+  },
+  "spendingByPayee": {
+    "title": "Chi tiêu theo người nhận",
+    "empty": "Không có chi tiêu trong kỳ này.",
+    "totalLabel": "Tổng"
+  },
+  "monthlySpendingTrend": {
+    "title": "Xu hướng chi tiêu hàng tháng",
+    "empty": "Không có dữ liệu trong kỳ này.",
+    "expenses": "Chi phí",
+    "income": "Thu nhập"
+  },
+  "incomeBySource": {
+    "title": "Thu nhập theo nguồn",
+    "empty": "Không có thu nhập trong kỳ này.",
+    "totalLabel": "Tổng thu nhập"
+  },
+  "creditUtilizationAccounts": {
+    "title": "Mức sử dụng tín dụng theo tài khoản",
+    "empty": "Không có tài khoản tín dụng nào được đặt hạn mức.",
+    "utilization": "Mức sử dụng",
+    "used": "Đã dùng",
+    "noRate": "không có sẵn (không có tỷ giá {currency})"
+  },
+  "creditUtilizationTotal": {
+    "title": "Tổng mức sử dụng tín dụng",
+    "empty": "Không có tài khoản tín dụng nào được đặt hạn mức.",
+    "used": "Đã dùng",
+    "available": "Khả dụng"
+  },
+  "sectorWeightings": {
+    "title": "Phân bổ ngành",
+    "empty": "Không có dữ liệu ngành.",
+    "direct": "Trực tiếp",
+    "etf": "ETF"
+  },
+  "securityTypeAllocation": {
+    "title": "Phân bổ theo loại chứng khoán",
+    "empty": "Không có vị thế để hiển thị.",
+    "types": {
+      "STOCK": "Cổ phiếu",
+      "ETF": "ETFs",
+      "MUTUAL_FUND": "Quỹ tương hỗ",
+      "BOND": "Trái phiếu",
+      "CASH": "Tiền mặt"
+    }
+  },
+  "geographicAllocation": {
+    "title": "Phân bổ theo địa lý",
+    "empty": "Không có vị thế để hiển thị.",
+    "viewRegion": "Khu vực",
+    "viewExchange": "Sàn giao dịch",
+    "viewCountry": "Quốc gia"
+  },
+  "recurringExpenses": {
+    "title": "Chi phí định kỳ hàng đầu",
+    "empty": "Không tìm thấy chi phí định kỳ nào.",
+    "minOccurrences": "Số lần xuất hiện tối thiểu",
+    "minOccurrencesOption": "{count} trở lên",
+    "occurrences": "{count} lần xuất hiện",
+    "monthlyEstimate": "Ước tính hàng tháng"
+  },
+  "weekendVsWeekday": {
+    "title": "Chi tiêu cuối tuần so với ngày thường",
+    "empty": "Không có chi tiêu trong kỳ này.",
+    "weekendLabel": "Cuối tuần",
+    "weekdayLabel": "Ngày thường",
+    "viewOverview": "Tổng quan",
+    "viewByDay": "Theo ngày"
+  }
+}

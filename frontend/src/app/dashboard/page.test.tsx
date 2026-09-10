@@ -1,0 +1,467 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, waitFor } from '@/test/render';
+import DashboardPage from './page';
+
+// Mock next/image
+vi.mock('next/image', () => ({
+  default: ({ priority, fill, ...props }: any) => <img alt="" {...props} />,
+}));
+
+// Mock logger
+vi.mock('@/lib/logger', () => ({
+  createLogger: () => ({
+    error: vi.fn(),
+    warn: vi.fn(),
+    info: vi.fn(),
+    debug: vi.fn(),
+  }),
+}));
+
+// Mock auth store (mutable so tests can switch to a delegate context)
+const { authState } = vi.hoisted(() => {
+  const baseUser = {
+    id: 'test-user-id',
+    email: 'test@example.com',
+    firstName: 'Test',
+    lastName: 'User',
+    role: 'user',
+    hasPassword: true,
+  };
+  return {
+    authState: {
+      current: {
+        user: baseUser,
+        isAuthenticated: true,
+        isLoading: false,
+        _hasHydrated: true,
+        logout: () => {},
+        actingAsUserId: null as string | null,
+        delegateSections: null as Record<string, boolean> | null,
+      },
+    },
+  };
+});
+
+vi.mock('@/store/authStore', () => ({
+  useAuthStore: Object.assign(
+    (selector?: any) =>
+      selector ? selector(authState.current) : authState.current,
+    { getState: () => authState.current },
+  ),
+}));
+
+// Mock preferences store (mutable so tests can set a custom widget layout)
+const { prefsState } = vi.hoisted(() => ({
+  prefsState: {
+    current: {
+      twoFactorEnabled: true,
+      theme: 'system',
+      dashboardWidgets: [] as string[],
+    },
+  },
+}));
+vi.mock('@/store/preferencesStore', () => ({
+  usePreferencesStore: (selector?: any) => {
+    const state = {
+      preferences: prefsState.current,
+      isLoaded: true,
+      _hasHydrated: true,
+      updatePreferences: vi.fn(),
+    };
+    return selector ? selector(state) : state;
+  },
+}));
+
+// Mock auth API for ProtectedRoute
+vi.mock('@/lib/auth', () => ({
+  authApi: {
+    getAuthMethods: vi.fn().mockResolvedValue({
+      local: true,
+      oidc: false,
+      registration: true,
+      smtp: false,
+      force2fa: false, demo: false,
+    }),
+    logout: vi.fn().mockResolvedValue(undefined),
+  },
+}));
+
+// Mock all API libs
+const mockGetAccounts = vi.fn().mockResolvedValue([]);
+vi.mock('@/lib/accounts', () => ({
+  accountsApi: {
+    getAll: (...args: any[]) => mockGetAccounts(...args),
+  },
+}));
+
+vi.mock('@/lib/transactions', () => ({
+  transactionsApi: {
+    getAll: vi.fn().mockResolvedValue({ data: [], pagination: { page: 1, totalPages: 1, total: 0, hasMore: false } }),
+    getAllPages: vi.fn().mockResolvedValue([]),
+  },
+}));
+
+vi.mock('@/lib/categories', () => ({
+  categoriesApi: {
+    getAll: vi.fn().mockResolvedValue([]),
+  },
+}));
+
+const { mockGetScheduled } = vi.hoisted(() => ({
+  mockGetScheduled: vi.fn().mockResolvedValue([]),
+}));
+vi.mock('@/lib/scheduled-transactions', () => ({
+  scheduledTransactionsApi: {
+    getAll: (...args: any[]) => mockGetScheduled(...args),
+  },
+}));
+
+const mockGetTopMovers = vi.fn().mockResolvedValue([]);
+const mockGetFavouriteSecurities = vi.fn().mockResolvedValue([]);
+const mockGetSecurities = vi.fn().mockResolvedValue([{ id: 'sec-1', symbol: 'AAPL' }]);
+const mockGetPortfolioSummary = vi.fn().mockResolvedValue(null);
+vi.mock('@/lib/investments', () => ({
+  investmentsApi: {
+    getTopMovers: (...args: any[]) => mockGetTopMovers(...args),
+    getFavouriteSecurities: (...args: any[]) => mockGetFavouriteSecurities(...args),
+    getSecurities: (...args: any[]) => mockGetSecurities(...args),
+    getPortfolioSummary: (...args: any[]) => mockGetPortfolioSummary(...args),
+  },
+}));
+
+vi.mock('@/lib/apiCache', () => ({
+  invalidateCache: vi.fn(),
+}));
+
+vi.mock('@/lib/net-worth', () => ({
+  netWorthApi: {
+    getMonthly: vi.fn().mockResolvedValue([]),
+  },
+}));
+
+// Mock all dashboard child components
+vi.mock('@/components/dashboard/FavouriteAccounts', () => ({
+  FavouriteAccounts: ({ isLoading }: any) => <div data-testid="favourite-accounts">{isLoading ? 'loading' : 'loaded'}</div>,
+}));
+
+vi.mock('@/components/dashboard/UpcomingBills', () => ({
+  UpcomingBills: ({ isLoading }: any) => <div data-testid="upcoming-bills">{isLoading ? 'loading' : 'loaded'}</div>,
+}));
+
+vi.mock('@/components/dashboard/ExpensesPieChart', () => ({
+  ExpensesPieChart: () => <div data-testid="expenses-chart">ExpensesPieChart</div>,
+}));
+
+vi.mock('@/components/dashboard/IncomeExpensesBarChart', () => ({
+  IncomeExpensesBarChart: () => <div data-testid="income-expenses-chart">IncomeExpensesBarChart</div>,
+}));
+
+vi.mock('@/components/dashboard/GettingStarted', () => ({
+  GettingStarted: () => <div data-testid="getting-started">GettingStarted</div>,
+}));
+
+vi.mock('@/components/dashboard/TopMovers', () => ({
+  TopMovers: ({ hasInvestmentAccounts }: any) => (
+    <div data-testid="top-movers">{hasInvestmentAccounts ? 'has-investments' : 'no-investments'}</div>
+  ),
+}));
+
+vi.mock('@/components/dashboard/NetWorthChart', () => ({
+  NetWorthChart: () => <div data-testid="net-worth-chart">NetWorthChart</div>,
+}));
+
+vi.mock('@/components/dashboard/AssetsVsLiabilities', () => ({
+  AssetsVsLiabilities: () => <div data-testid="assets-vs-liabilities">AssetsVsLiabilities</div>,
+}));
+
+vi.mock('@/components/dashboard/FavouriteSecurities', () => ({
+  FavouriteSecurities: ({ securities, isLoading }: any) => (
+    <div data-testid="favourite-securities">{isLoading ? 'loading' : `count-${securities.length}`}</div>
+  ),
+}));
+
+vi.mock('@/components/dashboard/PortfolioValueWidget', () => ({
+  PortfolioValueWidget: ({ isLoading }: any) => (
+    <div data-testid="portfolio-value-widget">{isLoading ? 'loading' : 'loaded'}</div>
+  ),
+}));
+
+vi.mock('@/components/dashboard/InsightsWidget', () => ({
+  InsightsWidget: ({ isLoading }: any) => <div data-testid="insights-widget">{isLoading ? 'loading' : 'loaded'}</div>,
+}));
+
+vi.mock('@/components/dashboard/BudgetStatusWidget', () => ({
+  BudgetStatusWidget: ({ isLoading }: any) => <div data-testid="budget-status">{isLoading ? 'loading' : 'loaded'}</div>,
+}));
+
+vi.mock('@/components/dashboard/FavouriteReportsWidget', () => ({
+  FavouriteReportsWidget: ({ isLoading }: any) => (
+    <div data-testid="favourite-reports">{isLoading ? 'loading' : 'loaded'}</div>
+  ),
+}));
+
+const mockTriggerAutoRefresh = vi.fn();
+vi.mock('@/hooks/usePriceRefresh', () => ({
+  usePriceRefresh: () => ({
+    isRefreshing: false,
+    triggerManualRefresh: vi.fn(),
+    triggerAutoRefresh: mockTriggerAutoRefresh,
+  }),
+}));
+
+// Mock PageLayout to simplify
+vi.mock('@/components/layout/PageLayout', () => ({
+  PageLayout: ({ children }: { children: React.ReactNode }) => <div data-testid="page-layout">{children}</div>,
+}));
+
+describe('DashboardPage', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockGetAccounts.mockResolvedValue([]);
+    mockGetScheduled.mockResolvedValue([]);
+    mockGetTopMovers.mockResolvedValue([]);
+    mockGetFavouriteSecurities.mockResolvedValue([]);
+    mockGetSecurities.mockResolvedValue([{ id: 'sec-1', symbol: 'AAPL' }]);
+    mockGetPortfolioSummary.mockResolvedValue(null);
+    authState.current.actingAsUserId = null;
+    authState.current.delegateSections = null;
+    prefsState.current = {
+      twoFactorEnabled: true,
+      theme: 'system',
+      dashboardWidgets: [],
+    };
+  });
+
+  it('renders the welcome message with user name', async () => {
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByText(/Welcome, Test!/)).toBeInTheDocument();
+    });
+  });
+
+  it('renders the financial overview subtitle', async () => {
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByText(/financial overview/i)).toBeInTheDocument();
+    });
+  });
+
+  it('renders dashboard child components', async () => {
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId('favourite-accounts')).toBeInTheDocument();
+      expect(screen.getByTestId('upcoming-bills')).toBeInTheDocument();
+      expect(screen.getByTestId('expenses-chart')).toBeInTheDocument();
+      expect(screen.getByTestId('income-expenses-chart')).toBeInTheDocument();
+    });
+  });
+
+  it('renders within the page layout', async () => {
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId('page-layout')).toBeInTheDocument();
+    });
+  });
+
+  it('renders GettingStarted component', async () => {
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId('getting-started')).toBeInTheDocument();
+    });
+  });
+
+  it('renders NetWorthChart component', async () => {
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId('net-worth-chart')).toBeInTheDocument();
+    });
+  });
+
+  it('renders TopMovers component', async () => {
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId('top-movers')).toBeInTheDocument();
+    });
+  });
+
+  it('detects investment accounts and sets hasInvestments', async () => {
+    mockGetAccounts.mockResolvedValue([
+      { id: 'acc-1', name: 'Brokerage', accountType: 'INVESTMENT', isClosed: false },
+    ]);
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId('top-movers')).toHaveTextContent('has-investments');
+    });
+  });
+
+  it('does not set hasInvestments when no investment accounts exist', async () => {
+    mockGetAccounts.mockResolvedValue([
+      { id: 'acc-1', name: 'Checking', accountType: 'CHECKING', isClosed: false },
+    ]);
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId('top-movers')).toHaveTextContent('no-investments');
+    });
+  });
+
+  it('ignores closed investment accounts for hasInvestments', async () => {
+    mockGetAccounts.mockResolvedValue([
+      { id: 'acc-1', name: 'Old Brokerage', accountType: 'INVESTMENT', isClosed: true },
+    ]);
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId('top-movers')).toHaveTextContent('no-investments');
+    });
+  });
+
+  it('triggers auto price refresh when investment accounts exist', async () => {
+    mockGetAccounts.mockResolvedValue([
+      { id: 'acc-1', name: 'Brokerage', accountType: 'INVESTMENT', isClosed: false },
+    ]);
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(mockTriggerAutoRefresh).toHaveBeenCalled();
+    });
+  });
+
+  it('loads top movers directly when investment accounts exist', async () => {
+    mockGetAccounts.mockResolvedValue([
+      { id: 'acc-1', name: 'Brokerage', accountType: 'INVESTMENT', isClosed: false },
+    ]);
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(mockGetTopMovers).toHaveBeenCalled();
+    });
+  });
+
+  it('does not load top movers when no investment accounts', async () => {
+    mockGetAccounts.mockResolvedValue([
+      { id: 'acc-1', name: 'Checking', accountType: 'CHECKING', isClosed: false },
+    ]);
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId('top-movers')).toHaveTextContent('no-investments');
+    });
+    expect(mockGetTopMovers).not.toHaveBeenCalled();
+  });
+
+  it('shows loading state in child components while data loads', async () => {
+    mockGetAccounts.mockReturnValue(new Promise(() => {}));
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId('favourite-accounts')).toHaveTextContent('loading');
+    });
+  });
+
+  it('delegate without the Bills grant sees only Favourite Accounts', async () => {
+    authState.current.actingAsUserId = 'owner-1';
+    authState.current.delegateSections = { bills: false };
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId('favourite-accounts')).toBeInTheDocument();
+    });
+    expect(screen.queryByTestId('upcoming-bills')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('getting-started')).not.toBeInTheDocument();
+    expect(mockGetScheduled).not.toHaveBeenCalled();
+  });
+
+  it('delegate with the Bills grant also sees Upcoming Bills', async () => {
+    authState.current.actingAsUserId = 'owner-1';
+    authState.current.delegateSections = { bills: true };
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId('upcoming-bills')).toBeInTheDocument();
+    });
+    expect(screen.getByTestId('favourite-accounts')).toBeInTheDocument();
+    expect(mockGetScheduled).toHaveBeenCalled();
+  });
+
+  it('renders the AssetsVsLiabilities and FavouriteSecurities widgets', async () => {
+    // Favourite Securities is opt-in (not part of the default layout), so add it.
+    prefsState.current.dashboardWidgets = ['assets-liabilities', 'favourite-securities'];
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId('assets-vs-liabilities')).toBeInTheDocument();
+      expect(screen.getByTestId('favourite-securities')).toBeInTheDocument();
+    });
+  });
+
+  it('passes loaded favourite securities to the widget', async () => {
+    prefsState.current.dashboardWidgets = ['favourite-securities'];
+    mockGetFavouriteSecurities.mockResolvedValue([
+      { securityId: '1', symbol: 'AAPL', name: 'Apple', currencyCode: 'USD', currentPrice: 1, previousPrice: 1, dailyChange: 0, dailyChangePercent: 0 },
+    ]);
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId('favourite-securities')).toHaveTextContent('count-1');
+    });
+  });
+
+  it('hides Top Movers and Favourite Securities when there are no securities', async () => {
+    prefsState.current.dashboardWidgets = ['top-movers', 'favourite-securities', 'assets-liabilities'];
+    mockGetSecurities.mockResolvedValue([]);
+    render(<DashboardPage />);
+    await waitFor(() => {
+      // Assets row still renders, so the dashboard has finished loading.
+      expect(screen.getByTestId('assets-vs-liabilities')).toBeInTheDocument();
+    });
+    expect(screen.queryByTestId('top-movers')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('favourite-securities')).not.toBeInTheDocument();
+  });
+
+  it('shows Top Movers and Favourite Securities when securities exist', async () => {
+    prefsState.current.dashboardWidgets = ['top-movers', 'favourite-securities'];
+    mockGetSecurities.mockResolvedValue([{ id: 'sec-1', symbol: 'AAPL' }]);
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId('top-movers')).toBeInTheDocument();
+      expect(screen.getByTestId('favourite-securities')).toBeInTheDocument();
+    });
+  });
+
+  it('shows the Customize button for the account owner', async () => {
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByText('Customize')).toBeInTheDocument();
+    });
+  });
+
+  it('hides the Customize button in the delegate view', async () => {
+    authState.current.actingAsUserId = 'owner-1';
+    authState.current.delegateSections = { bills: false };
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId('favourite-accounts')).toBeInTheDocument();
+    });
+    expect(screen.queryByText('Customize')).not.toBeInTheDocument();
+  });
+
+  it('renders only the configured widgets when the layout is customized', async () => {
+    prefsState.current.dashboardWidgets = ['insights', 'favourite-accounts'];
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId('insights-widget')).toBeInTheDocument();
+      expect(screen.getByTestId('favourite-accounts')).toBeInTheDocument();
+    });
+    expect(screen.queryByTestId('upcoming-bills')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('expenses-chart')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('net-worth-chart')).not.toBeInTheDocument();
+  });
+
+  it('renders the Favourite Reports widget when configured', async () => {
+    prefsState.current.dashboardWidgets = ['favourite-reports'];
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId('favourite-reports')).toBeInTheDocument();
+    });
+    expect(screen.queryByTestId('favourite-accounts')).not.toBeInTheDocument();
+  });
+
+  it('does not render the Favourite Reports widget in the default layout', async () => {
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId('favourite-accounts')).toBeInTheDocument();
+    });
+    expect(screen.queryByTestId('favourite-reports')).not.toBeInTheDocument();
+  });
+});

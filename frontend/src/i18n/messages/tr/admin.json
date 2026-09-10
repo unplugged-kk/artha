@@ -1,0 +1,173 @@
+{
+  "createUserModal": {
+    "title": "Kullanıcı Ekle",
+    "description": "Yeni bir hesap oluşturun. E-posta ile davet gönderebilir, şifreyi kendiniz belirleyebilir veya geçici bir şifre oluşturabilirsiniz.",
+    "emailLabel": "E-posta",
+    "emailPlaceholder": "kullanici@ornek.com",
+    "firstNameLabel": "Ad (isteğe bağlı)",
+    "firstNamePlaceholder": "Ad",
+    "lastNameLabel": "Soyad (isteğe bağlı)",
+    "lastNamePlaceholder": "Soyad",
+    "roleLabel": "Rol",
+    "roleUser": "Kullanıcı",
+    "roleAdmin": "Yönetici",
+    "credentialsLegend": "Kimlik Bilgileri",
+    "inviteLabel": "Şifre belirlemek için e-posta daveti gönder",
+    "inviteSmtpNote": "SMTP yapılandırılmış olmalıdır.",
+    "setPasswordLabel": "Şimdi bir şifre belirle",
+    "tempPasswordLabel": "Geçici şifre oluştur",
+    "tempPasswordNote": "Oluşturulduktan sonra bir kez gösterilir. Kullanıcı ilk girişinde şifrelerini değiştirmelidir.",
+    "passwordFieldLabel": "Şifre",
+    "passwordPlaceholder": "Şifre belirle",
+    "createButton": "Kullanıcı Oluştur",
+    "validation": {
+      "invalidPassword": "Geçersiz şifre."
+    },
+    "toasts": {
+      "createFailed": "Kullanıcı oluşturulamadı"
+    }
+  },
+  "resetPasswordModal": {
+    "defaultTitle": "Şifre Sıfırlama Başarılı",
+    "defaultDescription": "{userName} için geçici bir şifre belirlendi.",
+    "temporaryPasswordLabel": "Geçici Şifre",
+    "copy": "Kopyala",
+    "copied": "Kopyalandı",
+    "notShownAgain": "Bu şifre bir daha gösterilmeyecektir.",
+    "mustChangeOnLogin": "Kullanıcının bir sonraki girişinde şifresini değiştirmesi gerekecektir.",
+    "toasts": {
+      "copied": "Şifre panoya kopyalandı",
+      "copyFailed": "Panoya kopyalanamadı"
+    }
+  },
+  "userTable": {
+    "colUser": "Kullanıcı",
+    "colRole": "Rol",
+    "colProvider": "Sağlayıcı",
+    "colStatus": "Durum",
+    "colLastLogin": "Son Giriş",
+    "colActions": "İşlemler",
+    "youSuffix": "(siz)",
+    "noEmail": "E-posta yok",
+    "unknown": "Bilinmiyor",
+    "never": "Hiçbir zaman",
+    "providerSso": "SSO",
+    "providerLocal": "Yerel",
+    "roleAdmin": "Yönetici",
+    "roleUser": "Kullanıcı",
+    "statusActive": "Aktif",
+    "statusDisabled": "Devre Dışı",
+    "clickToDisable": "Devre dışı bırakmak için tıklayın",
+    "clickToEnable": "Etkinleştirmek için tıklayın",
+    "resetPassword": "Şifreyi Sıfırla",
+    "noUsers": "Kullanıcı bulunamadı."
+  },
+  "usersPage": {
+    "title": "Kullanıcı Yönetimi",
+    "userCount": "{count, plural, one {# kullanıcı} other {# kullanıcı}}",
+    "newUser": "+ Yeni Kullanıcı",
+    "loadingUsers": "Kullanıcılar yükleniyor...",
+    "toasts": {
+      "inviteSent": "{email} adresine davet e-postası gönderildi",
+      "userCreated": "{name} oluşturuldu",
+      "userUpgraded": "{name} tam hesaba yükseltildi",
+      "roleChanged": "{name} artık {role}",
+      "roleAdmin": "bir yönetici",
+      "roleUser": "bir kullanıcı",
+      "userEnabled": "{name} etkinleştirildi",
+      "userDisabled": "{name} devre dışı bırakıldı",
+      "userDeleted": "{name} silindi",
+      "userDowngraded": "{name}'in kendi verileri kaldırıldı; temsilci erişimi devam ediyor.",
+      "loadFailed": "Kullanıcılar yüklenemedi",
+      "deleteFailed": "Kullanıcı silinemedi",
+      "disableFailed": "Kullanıcı devre dışı bırakılamadı",
+      "resetFailed": "Şifre sıfırlanamadı"
+    },
+    "dialogs": {
+      "promoteTitle": "Kullanıcı Yükseltilsin mi?",
+      "demoteTitle": "Kullanıcı Düşürülsün mü?",
+      "promoteMessage": "{name} adlı kullanıcıyı {role} olarak yükseltmek istediğinizden emin misiniz?",
+      "demoteMessage": "{name} adlı kullanıcıyı {role} olarak düşürmek istediğinizden emin misiniz?",
+      "promoteConfirm": "Yöneticiye Yükselt",
+      "demoteConfirm": "Kullanıcıya Düşür",
+      "disableTitle": "Kullanıcı Devre Dışı Bırakılsın mı?",
+      "disableMessage": "{name} adlı kullanıcıyı devre dışı bırakmak istediğinizden emin misiniz? Giriş yapamayacaklar.",
+      "disableConfirm": "Kullanıcıyı Devre Dışı Bırak",
+      "resetTitle": "Şifre Sıfırlansın mı?",
+      "resetMessage": "Bu işlem {name} için yeni bir geçici şifre oluşturacaktır. Bir sonraki girişlerinde şifrelerini değiştirmeleri gerekecektir.",
+      "resetConfirm": "Şifreyi Sıfırla",
+      "deleteTitle": "Kullanıcı Silinsin mi?",
+      "deleteMessage": "{name} adlı kullanıcıyı silmek istediğinizden emin misiniz? Bu işlem hesabını ve tüm ilişkili verilerini kalıcı olarak kaldıracaktır. Bu işlem geri alınamaz. Başka bir hesabın temsilcisiyse kendi verileri kaldırılır ancak delegasyon çalışmaya devam edebilmesi için girişleri korunur -- salt temsilci kullanıcı olurlar.",
+      "deleteConfirm": "Kullanıcıyı Sil",
+      "tempPasswordTitleCreated": "Kullanıcı Oluşturuldu",
+      "tempPasswordTitleUpgraded": "Hesap Yükseltildi",
+      "tempPasswordDescCreated": "{name} için geçici bir şifre oluşturuldu. Giriş yapmaları için paylaşın.",
+      "tempPasswordDescUpgraded": "Mevcut paylaşımlı bir kullanıcı tam hesaba yükseltildi. Bu geçici şifreyi {name} ile paylaşın."
+    }
+  },
+  "notificationsPage": {
+    "title": "Bildirimler",
+    "subtitle": "Bu Monize örneğinin sunduğu teslim kanalları ve arkalarındaki anlık bildirim kimliği.",
+    "loading": "Bildirim ayarları yükleniyor...",
+    "loadUnavailable": "Monize bildirim ayarlarını sunucudan okuyamadı. Yeniden denemek için sayfayı yenileyin.",
+    "channelsHeading": "Teslim kanalları",
+    "identityHeading": "Web Push kimliği",
+    "perAccountNote": "Cihazlar, test bildirimleri ve bildirim tercihleri her hesabın kendisine aittir ve Ayarlar'dan yönetilir. Yönetici örneği yapılandırır; başkasının bildirimlerini ne gönderir ne de görür.",
+    "channelState": {
+      "on": "Açık",
+      "off": "Kapalı",
+      "unconfigured": "Kullanılamıyor",
+      "unknown": "Bilinmiyor"
+    },
+    "channels": {
+      "inApp": {
+        "name": "Uygulama içi bildirimler",
+        "description": "Başlıktaki zil. Her zaman kullanılabilir ve kapatılamaz: diğer tüm kanallar başarısız olsa bile bildirim burada durur."
+      },
+      "webPush": {
+        "name": "Tarayıcı anlık bildirimi",
+        "description": "Monize kapalıyken bile telefona veya masaüstüne ulaşan bildirimler. Firebase, Google Play veya Apple Developer hesabı gerekmez.",
+        "toggleLabel": "Bu örnek için tarayıcı anlık bildirimini etkinleştir",
+        "missingKeys": "Bu örneğin anlık bildirim anahtar çifti yok. ENCRYPTION_KEY değerini ayarlayıp yeniden başlatın: Monize bir sonraki açılışta çifti kendisi üretir.",
+        "keyUnreadable": "Bu örnek, kayıtlı anlık bildirim anahtar çiftini çözemiyor; bu yüzden hiçbir şey teslim edilmiyor. Kurtarmak için aşağıdan anahtar çiftini değiştirin.",
+        "serverKeyMissing": "Bu örnekte ENCRYPTION_KEY yok, bu yüzden kaydettiği push anahtar çiftini açamıyor. Dağıtımda ENCRYPTION_KEY ayarlayın ve yeniden başlatın — anahtar yokken döndürmek yardımcı olamaz."
+      },
+      "email": {
+        "name": "E-posta",
+        "description": "Fatura hatırlatmaları, bütçe özetleri ve sistem uyarıları her hesabın e-posta adresine gönderilir.",
+        "missingSmtp": "Yapılandırılmış bir posta sunucusu yok. E-postayı etkinleştirmek için SMTP ortam değişkenlerini ayarlayın.",
+        "statusUnavailable": "Monize posta sunucusunun durumunu okuyamadı."
+      },
+      "ntfy": {
+        "name": "ntfy ve UnifiedPush",
+        "description": "Aynı şifreli push, Google veya Apple altyapısı yerine kendi barındırdığınız bir UnifiedPush dağıtıcısına (ntfy, NextPush) teslim edilir. Bu örneğin push anahtar çiftini ve anahtarını paylaşır; herkes uç noktasını kendi UnifiedPush uygulamasından kaydeder ve kanalı Ayarlar’dan açar.",
+        "followsWebPush": "Tarayıcı push’u kapalıyken veya anahtar çifti kullanılamıyorken kullanılamaz — bu kanal aynı anahtar çiftiyle teslim edilir."
+      }
+    },
+    "identity": {
+      "fingerprintLabel": "Anahtar parmak izi",
+      "generatedLabel": "Oluşturulma",
+      "devicesLabel": "Kayıtlı cihazlar",
+      "deviceCounts": "{live} etkin, {disabled} devre dışı",
+      "rotateDescription": "Değiştirme bu örneğin anahtar çiftini yeniler. Kayıtlı her cihaz erişilemez hale gelir ve anlık bildirimleri yeniden açması gerekir; bu nedenle yalnızca anahtar ifşa olmuş olabilecekse değiştirin.",
+      "rotateButton": "Anahtar çiftini değiştir",
+      "rotatingButton": "Değiştiriliyor...",
+      "missingEncryptionKey": "ENCRYPTION_KEY ayarlanmadığı ve özel anahtarın şifrelenmeden saklanması gerekeceği için bu örneğin anlık bildirim anahtar çifti yok. Değişkeni ayarlayıp yeniden başlatın: Monize çifti kendisi üretir.",
+      "keyUnreadable": "Bu örnek, artık çözemediği bir anlık bildirim anahtar çifti tutuyor; bu yüzden hiçbir şey teslim edilmiyor. Çalışan bir veritabanında ENCRYPTION_KEY değiştiğinde ya da bir yedek başka bir örneğe geri yüklendiğinde olur. Kurtarmak için anahtar çiftini değiştirin; her cihaz yeniden kaydolacaktır.",
+      "serverKeyMissing": "Bu örnekte ENCRYPTION_KEY tanımlı değil, bu yüzden kaydettiği push anahtar çiftini açamıyor. Anahtar yokken döndürmek işe yaramaz: dağıtımda ENCRYPTION_KEY değerini ayarlayın ve yeniden başlatın; push mevcut cihazlarla yeniden çalışır."
+    },
+    "dialogs": {
+      "rotateTitle": "Anlık bildirim anahtar çifti değiştirilsin mi?",
+      "rotateMessage": "{count, plural, =0 {Henüz kayıtlı cihaz yok, kaybedilecek bir şey de yok.} one {Kayıtlı 1 cihaz, o tarayıcıda anlık bildirimler yeniden açılana kadar bildirim almayı bırakacak.} other {Kayıtlı # cihaz, her tarayıcıda anlık bildirimler yeniden açılana kadar bildirim almayı bırakacak.}}",
+      "rotateConfirm": "Değiştir"
+    },
+    "toasts": {
+      "loadFailed": "Bildirim ayarları yüklenemedi",
+      "pushEnabled": "Bu örnek için tarayıcı anlık bildirimi etkinleştirildi",
+      "pushDisabled": "Bu örnek için tarayıcı anlık bildirimi kapatıldı",
+      "pushToggleFailed": "Tarayıcı anlık bildirim ayarı değiştirilemedi",
+      "rotated": "{count, plural, =0 {Anahtar çifti değiştirildi} one {Anahtar çifti değiştirildi; 1 cihazın yeniden kaydolması gerekiyor} other {Anahtar çifti değiştirildi; # cihazın yeniden kaydolması gerekiyor}}",
+      "rotateFailed": "Anahtar çifti değiştirilemedi"
+    }
+  }
+}

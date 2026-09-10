@@ -1,0 +1,484 @@
+import { Injectable, Logger } from "@nestjs/common";
+import { DataSource } from "typeorm";
+import { withScopedDb } from "../common/db/scoped-db";
+import * as bcrypt from "bcryptjs";
+import { withSystemContext } from "../common/db/with-context";
+import { DEMO_USER_EMAIL, DEMO_USER_PASSWORD } from "./demo-credentials";
+
+@Injectable()
+export class SeedService {
+  private readonly logger = new Logger(SeedService.name);
+
+  constructor(private dataSource: DataSource) {}
+
+  async seedAll(): Promise<void> {
+    this.logger.log("Starting database seeding");
+
+    // RLS (task C3): the seed creates a demo user and all their data before any
+    // request context exists, so the whole flow runs under a system context.
+    // Inert at RLS_MODE=off -- withSystemContext only seeds AsyncLocalStorage.
+    await withSystemContext(() => this.seedAllWithinContext());
+
+    this.logger.log("Database seeding completed successfully");
+  }
+
+  private async seedAllWithinContext(): Promise<void> {
+    await this.seedCurrencies();
+    const userId = await this.seedDemoUser();
+    await this.seedCategories(userId);
+    const accountIds = await this.seedAccounts(userId);
+    await this.seedTransactions(userId, accountIds);
+  }
+
+  private async seedCurrencies(): Promise<void> {
+    this.logger.log("Seeding currencies");
+
+    const currencies = [
+      { code: "USD", name: "US Dollar", symbol: "$", decimals: 2 },
+      { code: "EUR", name: "Euro", symbol: "€", decimals: 2 },
+      { code: "JPY", name: "Japanese Yen", symbol: "¥", decimals: 0 },
+      { code: "GBP", name: "British Pound", symbol: "£", decimals: 2 },
+      { code: "AUD", name: "Australian Dollar", symbol: "A$", decimals: 2 },
+      { code: "CAD", name: "Canadian Dollar", symbol: "CA$", decimals: 2 },
+      { code: "CHF", name: "Swiss Franc", symbol: "CHF", decimals: 2 },
+      { code: "CNY", name: "Chinese Yuan", symbol: "¥", decimals: 2 },
+      { code: "HKD", name: "Hong Kong Dollar", symbol: "HK$", decimals: 2 },
+      { code: "NZD", name: "New Zealand Dollar", symbol: "NZ$", decimals: 2 },
+      { code: "SEK", name: "Swedish Krona", symbol: "kr", decimals: 2 },
+      { code: "KRW", name: "South Korean Won", symbol: "₩", decimals: 0 },
+      { code: "SGD", name: "Singapore Dollar", symbol: "S$", decimals: 2 },
+      { code: "NOK", name: "Norwegian Krone", symbol: "kr", decimals: 2 },
+      { code: "MXN", name: "Mexican Peso", symbol: "MX$", decimals: 2 },
+      { code: "INR", name: "Indian Rupee", symbol: "₹", decimals: 2 },
+      { code: "RUB", name: "Russian Ruble", symbol: "₽", decimals: 2 },
+      { code: "ZAR", name: "South African Rand", symbol: "R", decimals: 2 },
+      { code: "TRY", name: "Turkish Lira", symbol: "₺", decimals: 2 },
+      { code: "BRL", name: "Brazilian Real", symbol: "R$", decimals: 2 },
+      { code: "TWD", name: "Taiwan Dollar", symbol: "NT$", decimals: 2 },
+      { code: "DKK", name: "Danish Krone", symbol: "kr", decimals: 2 },
+      { code: "PLN", name: "Polish Zloty", symbol: "zł", decimals: 2 },
+      { code: "THB", name: "Thai Baht", symbol: "฿", decimals: 2 },
+      { code: "IDR", name: "Indonesian Rupiah", symbol: "Rp", decimals: 0 },
+      { code: "HUF", name: "Hungarian Forint", symbol: "Ft", decimals: 2 },
+      { code: "CZK", name: "Czech Koruna", symbol: "Kč", decimals: 2 },
+      { code: "ILS", name: "Israeli Shekel", symbol: "₪", decimals: 2 },
+      { code: "CLP", name: "Chilean Peso", symbol: "CL$", decimals: 0 },
+      { code: "PHP", name: "Philippine Peso", symbol: "₱", decimals: 2 },
+    ];
+
+    for (const currency of currencies) {
+      await withScopedDb(this.dataSource, (manager) =>
+        manager.query(
+          `INSERT INTO currencies (code, name, symbol, decimal_places)
+         VALUES ($1, $2, $3, $4)
+         ON CONFLICT (code) DO UPDATE SET
+           name = EXCLUDED.name,
+           symbol = EXCLUDED.symbol,
+           decimal_places = EXCLUDED.decimal_places`,
+          [currency.code, currency.name, currency.symbol, currency.decimals],
+        ),
+      );
+    }
+
+    this.logger.log(`Seeded ${currencies.length} currencies`);
+  }
+
+  private async seedDemoUser(): Promise<string> {
+    this.logger.log("Seeding demo user");
+
+    const email = DEMO_USER_EMAIL;
+    const hashedPassword = await bcrypt.hash(DEMO_USER_PASSWORD, 10);
+
+    const existingUser = await withScopedDb(this.dataSource, (manager) =>
+      manager.query("SELECT id FROM users WHERE email = $1", [email]),
+    );
+
+    if (existingUser.length > 0) {
+      this.logger.log("Demo user already exists");
+      return existingUser[0].id;
+    }
+
+    const result = await withScopedDb(this.dataSource, (manager) =>
+      manager.query(
+        `INSERT INTO users (email, password_hash, first_name, last_name, auth_provider, is_active, email_verified)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       RETURNING id`,
+        [email, hashedPassword, "Demo", "User", "local", true, true],
+      ),
+    );
+
+    this.logger.log(`Created demo user: ${email}`);
+    return result[0].id;
+  }
+
+  private async seedCategories(userId: string): Promise<void> {
+    this.logger.log("Seeding categories");
+
+    // Income categories
+    const incomeCategories = [
+      { name: "Salary", icon: "💰", color: "#2ECC71", isIncome: true },
+      { name: "Freelance", icon: "💼", color: "#1ABC9C", isIncome: true },
+      {
+        name: "Investment Income",
+        icon: "📈",
+        color: "#3498DB",
+        isIncome: true,
+      },
+      { name: "Other Income", icon: "💵", color: "#16A085", isIncome: true },
+    ];
+
+    // Expense categories with subcategories
+    const expenseCategories = [
+      {
+        name: "Housing",
+        icon: "🏠",
+        color: "#E74C3C",
+        subcategories: [
+          "Rent/Mortgage",
+          "Utilities",
+          "Property Tax",
+          "Maintenance",
+        ],
+      },
+      {
+        name: "Transportation",
+        icon: "🚗",
+        color: "#3498DB",
+        subcategories: [
+          "Fuel",
+          "Public Transit",
+          "Car Insurance",
+          "Maintenance",
+        ],
+      },
+      {
+        name: "Food",
+        icon: "🍽️",
+        color: "#E67E22",
+        subcategories: ["Groceries", "Restaurants", "Coffee Shops"],
+      },
+      {
+        name: "Shopping",
+        icon: "🛍️",
+        color: "#9B59B6",
+        subcategories: ["Clothing", "Electronics", "Home Goods"],
+      },
+      {
+        name: "Entertainment",
+        icon: "🎬",
+        color: "#F39C12",
+        subcategories: ["Movies", "Concerts", "Streaming Services", "Games"],
+      },
+      {
+        name: "Health",
+        icon: "⚕️",
+        color: "#27AE60",
+        subcategories: ["Insurance", "Doctor Visits", "Pharmacy", "Gym"],
+      },
+      {
+        name: "Education",
+        icon: "📚",
+        color: "#2980B9",
+        subcategories: ["Tuition", "Books", "Courses"],
+      },
+      {
+        name: "Personal Care",
+        icon: "💇",
+        color: "#8E44AD",
+        subcategories: ["Haircut", "Cosmetics", "Spa"],
+      },
+      {
+        name: "Bills & Utilities",
+        icon: "📄",
+        color: "#C0392B",
+        subcategories: [
+          "Phone",
+          "Internet",
+          "Electricity",
+          "Water",
+          "Insurance",
+        ],
+      },
+      {
+        name: "Gifts & Donations",
+        icon: "🎁",
+        color: "#E91E63",
+        subcategories: [],
+      },
+      { name: "Travel", icon: "✈️", color: "#00BCD4", subcategories: [] },
+      {
+        name: "Miscellaneous",
+        icon: "📌",
+        color: "#95A5A6",
+        subcategories: [],
+      },
+    ];
+
+    let categoryCount = 0;
+
+    // Seed income categories
+    for (const cat of incomeCategories) {
+      await withScopedDb(this.dataSource, (manager) =>
+        manager.query(
+          `INSERT INTO categories (user_id, name, icon, color, is_income)
+         VALUES ($1, $2, $3, $4, $5)`,
+          [userId, cat.name, cat.icon, cat.color, cat.isIncome],
+        ),
+      );
+      categoryCount++;
+    }
+
+    // Seed expense categories with subcategories
+    for (const cat of expenseCategories) {
+      const parentResult = await withScopedDb(this.dataSource, (manager) =>
+        manager.query(
+          `INSERT INTO categories (user_id, name, icon, color, is_income)
+         VALUES ($1, $2, $3, $4, $5)
+         RETURNING id`,
+          [userId, cat.name, cat.icon, cat.color, false],
+        ),
+      );
+      categoryCount++;
+
+      const parentId = parentResult[0].id;
+
+      // Add subcategories
+      for (const subName of cat.subcategories) {
+        await withScopedDb(this.dataSource, (manager) =>
+          manager.query(
+            `INSERT INTO categories (user_id, parent_id, name, is_income)
+           VALUES ($1, $2, $3, $4)`,
+            [userId, parentId, subName, false],
+          ),
+        );
+        categoryCount++;
+      }
+    }
+
+    this.logger.log(
+      `Seeded ${categoryCount} categories (including subcategories)`,
+    );
+  }
+
+  private async seedAccounts(
+    userId: string,
+  ): Promise<{ [key: string]: string }> {
+    this.logger.log("Seeding accounts");
+
+    const accounts = [
+      {
+        type: "CHEQUING",
+        name: "Primary Chequing",
+        currency: "CAD",
+        balance: 5420.5,
+        description: "Main everyday banking account",
+      },
+      {
+        type: "SAVINGS",
+        name: "Emergency Fund",
+        currency: "CAD",
+        balance: 15000.0,
+        description: "6 months of expenses",
+      },
+      {
+        type: "CREDIT_CARD",
+        name: "Visa Rewards",
+        currency: "CAD",
+        balance: -1250.75,
+        creditLimit: 10000,
+        interestRate: 19.99,
+        description: "Cashback credit card",
+      },
+      {
+        type: "INVESTMENT",
+        name: "RRSP - Retirement Savings",
+        currency: "CAD",
+        balance: 42500.0,
+        description: "Long-term retirement investments",
+      },
+      {
+        type: "INVESTMENT",
+        name: "TFSA - Tax-Free Savings",
+        currency: "CAD",
+        balance: 28750.0,
+        description: "Tax-free investment account",
+      },
+      {
+        type: "INVESTMENT",
+        name: "Stock Portfolio",
+        currency: "USD",
+        balance: 12300.0,
+        description: "Individual stocks and ETFs",
+      },
+    ];
+
+    const accountIds: { [key: string]: string } = {};
+
+    for (const acc of accounts) {
+      const result = await withScopedDb(this.dataSource, (manager) =>
+        manager.query(
+          `INSERT INTO accounts (
+          user_id, account_type, name, description, currency_code,
+          opening_balance, current_balance, credit_limit, interest_rate
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        RETURNING id`,
+          [
+            userId,
+            acc.type,
+            acc.name,
+            acc.description,
+            acc.currency,
+            acc.balance,
+            acc.balance,
+            acc.creditLimit || null,
+            acc.interestRate || null,
+          ],
+        ),
+      );
+      accountIds[acc.type] = result[0].id;
+    }
+
+    this.logger.log(`Seeded ${accounts.length} accounts`);
+    return accountIds;
+  }
+
+  private async seedTransactions(
+    userId: string,
+    accountIds: { [key: string]: string },
+  ): Promise<void> {
+    this.logger.log("Seeding transactions");
+
+    const transactions = [
+      // Income transactions
+      {
+        accountId: accountIds.CHEQUING,
+        date: "2026-01-15",
+        payeeName: "ABC Corporation",
+        amount: 4500.0,
+        description: "Monthly salary",
+        status: "CLEARED",
+      },
+      {
+        accountId: accountIds.CHEQUING,
+        date: "2026-01-20",
+        payeeName: "Freelance Client",
+        amount: 1200.0,
+        description: "Website development project",
+        status: "CLEARED",
+      },
+
+      // Expense transactions
+      {
+        accountId: accountIds.CHEQUING,
+        date: "2026-01-03",
+        payeeName: "City Apartments",
+        amount: -1800.0,
+        description: "January rent",
+        status: "RECONCILED",
+      },
+      {
+        accountId: accountIds.CHEQUING,
+        date: "2026-01-05",
+        payeeName: "Grocery Store",
+        amount: -157.32,
+        description: "Weekly groceries",
+        status: "CLEARED",
+      },
+      {
+        accountId: accountIds.CREDIT_CARD,
+        date: "2026-01-07",
+        payeeName: "Gas Station",
+        amount: -65.0,
+        description: "Fuel",
+        status: "UNRECONCILED",
+      },
+      {
+        accountId: accountIds.CREDIT_CARD,
+        date: "2026-01-10",
+        payeeName: "Restaurant",
+        amount: -87.5,
+        description: "Dinner with friends",
+        status: "UNRECONCILED",
+      },
+      {
+        accountId: accountIds.CHEQUING,
+        date: "2026-01-12",
+        payeeName: "Electric Company",
+        amount: -125.0,
+        description: "Electricity bill",
+        status: "CLEARED",
+      },
+      {
+        accountId: accountIds.CHEQUING,
+        date: "2026-01-14",
+        payeeName: "Internet Provider",
+        amount: -79.99,
+        description: "Monthly internet",
+        status: "CLEARED",
+      },
+      {
+        accountId: accountIds.CREDIT_CARD,
+        date: "2026-01-16",
+        payeeName: "Coffee Shop",
+        amount: -5.75,
+        description: "Morning coffee",
+        status: "UNRECONCILED",
+      },
+      {
+        accountId: accountIds.CREDIT_CARD,
+        date: "2026-01-18",
+        payeeName: "Streaming Service",
+        amount: -15.99,
+        description: "Netflix subscription",
+        status: "UNRECONCILED",
+      },
+      {
+        accountId: accountIds.CHEQUING,
+        date: "2026-01-19",
+        payeeName: "Pharmacy",
+        amount: -42.3,
+        description: "Prescription medication",
+        status: "CLEARED",
+      },
+      {
+        accountId: accountIds.CHEQUING,
+        date: "2026-01-21",
+        payeeName: "Transit Authority",
+        amount: -100.0,
+        description: "Monthly transit pass",
+        status: "CLEARED",
+      },
+      {
+        accountId: accountIds.CREDIT_CARD,
+        date: "2026-01-22",
+        payeeName: "Online Store",
+        amount: -145.0,
+        description: "New headphones",
+        status: "UNRECONCILED",
+      },
+    ];
+
+    for (const tx of transactions) {
+      await withScopedDb(this.dataSource, (manager) =>
+        manager.query(
+          `INSERT INTO transactions (
+          user_id, account_id, transaction_date, payee_name, amount,
+          currency_code, description, status
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+          [
+            userId,
+            tx.accountId,
+            tx.date,
+            tx.payeeName,
+            tx.amount,
+            "CAD",
+            tx.description,
+            tx.status,
+          ],
+        ),
+      );
+    }
+
+    this.logger.log(`Seeded ${transactions.length} transactions`);
+  }
+}

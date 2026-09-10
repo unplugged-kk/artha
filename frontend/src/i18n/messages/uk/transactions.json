@@ -1,0 +1,601 @@
+{
+  "payeeWidget": {
+    "totalSpent": "Всього витрачено",
+    "income": "Дохід",
+    "net": "Підсумок",
+    "transactions": "Транзакції",
+    "averageAmount": "Середня сума",
+    "lastTransaction": "Остання транзакція",
+    "defaultCategory": "Категорія за замовчуванням",
+    "nextBill": "Наступний рахунок",
+    "viewBills": "Переглянути в рахунках та депозитах",
+    "topCategories": "Основні категорії",
+    "uncategorized": "Без категорії",
+    "aliases": "Псевдоніми",
+    "recurring": "Регулярно: {cadence} · {amount}",
+    "recurringTooltip": "Визначено за повторюваними списаннями за вибраний період (або за останні 12 місяців, якщо фільтр за датою не задано).",
+    "cadence": {
+      "weekly": "Щотижня",
+      "biweekly": "Кожні 2 тижні",
+      "monthly": "Щомісяця",
+      "quarterly": "Щокварталу",
+      "yearly": "Щороку"
+    },
+    "inactive": "Неактивний",
+    "noTransactions": "Немає транзакцій за цей період",
+    "editAria": "Редагувати одержувача платежу",
+    "detailsAria": "Показати відомості про одержувача",
+    "collapseAria": "Приховати інформацію про одержувача",
+    "show": "Показати інформацію про одержувача",
+    "amountUnavailable": "Немає курсу"
+  },
+  "categoryWidget": {
+    "detailsAria": "Показати відомості про категорію",
+    "totalSpent": "Всього витрачено",
+    "totalEarned": "Всього отримано",
+    "income": "Дохід",
+    "expense": "Витрата",
+    "budgetThisMonth": "Бюджет на цей місяць",
+    "budgetProgress": "{spent} із {budgeted}",
+    "transactions": "Транзакції",
+    "averageAmount": "Середня сума",
+    "monthlyAverage": "Середнє за місяць",
+    "subcategories": "Підкатегорії",
+    "thisCategory": "Ця категорія",
+    "topPayees": "Основні одержувачі",
+    "noPayee": "Без одержувача",
+    "nextScheduled": "Наступна запланована",
+    "noTransactions": "Немає транзакцій за цей період",
+    "editAria": "Редагувати категорію",
+    "collapseAria": "Приховати інформацію про категорію",
+    "show": "Показати інформацію про категорію",
+    "amountUnavailable": "Немає курсу"
+  },
+  "accountWidget": {
+    "currentBalance": "Поточний баланс",
+    "nextPayment": "Наступний платіж",
+    "viewBills": "Переглянути в рахунках та депозитах",
+    "viewDetailsAria": "Переглянути деталі рахунку",
+    "type": "Тип",
+    "accountNumber": "Номер рахунку",
+    "currency": "Валюта",
+    "creditLimit": "Кредитний ліміт",
+    "interestRate": "Відсоткова ставка",
+    "currentPayment": "Поточний платіж",
+    "currentPaymentTooltip": "Останній регулярний платіж: основна сума плюс відсотки.",
+    "estPayoff": "Очік. погашення",
+    "estRemainingInterest": "Очік. залишок відсотків",
+    "estRemainingInterestTooltip": "Відсотки, які ще належить сплатити за поточного платежу та ставки.",
+    "notAvailable": "Н/Д",
+    "paidOff": "Погашено",
+    "statementSettlement": "День виписки",
+    "statementSettlementTooltip": "Останній день розрахункового циклу. Транзакції, проведені до цього дня включно, відображаються в поточній виписці.",
+    "statementDue": "Дата платежу",
+    "closed": "Закритий",
+    "editAria": "Редагувати налаштування рахунку",
+    "collapseAria": "Приховати інформацію про рахунок",
+    "showAccountNumber": "Показати номер рахунку",
+    "hideAccountNumber": "Приховати номер рахунку",
+    "show": "Показати інформацію про рахунок"
+  },
+  "page": {
+    "title": "Транзакції",
+    "subtitle": "Управляйте своїми доходами та витратами",
+    "newButton": "+ Нова транзакція",
+    "editModal": {
+      "editTitle": "Редагувати транзакцію",
+      "duplicateTitle": "Дублювати транзакцію",
+      "newTitle": "Нова транзакція",
+      "scheduleTitle": "Запланувати як повторювану",
+      "editPayeeTitle": "Редагувати одержувача платежу",
+      "editCategoryTitle": "Редагувати категорію"
+    },
+    "loading": "Завантаження транзакцій...",
+    "totalCount": "{count, plural, one {# транзакція} other {# транзакцій}}",
+    "bulkDelete": {
+      "title": "Видалити транзакції",
+      "message": "Ви впевнені, що хочете видалити {count, plural, one {# транзакцію} other {# транзакцій}}? Це також видалить пов'язані зустрічні перекази. Цю дію неможливо скасувати."
+    },
+    "toasts": {
+      "scheduledCreated": "Заплановану транзакцію створено",
+      "investmentLinked": "Ця транзакція пов'язана з інвестицією. Відкриваємо на сторінці Інвестицій."
+    }
+  },
+  "list": {
+    "empty": {
+      "title": "Немає транзакцій",
+      "body": "Розпочніть, створивши нову транзакцію."
+    },
+    "header": {
+      "date": "Дата",
+      "account": "Рахунок",
+      "payee": "Одержувач платежу",
+      "category": "Категорія",
+      "description": "Опис",
+      "refNumber": "Реф. №",
+      "tags": "Теги",
+      "amount": "Сума",
+      "currency": "Валюта",
+      "paidAmount": "Сплачена сума",
+      "feePaid": "Сплачена комісія",
+      "balance": "Баланс",
+      "attachments": "Вкладення",
+      "status": "Статус",
+      "actions": "Дії"
+    },
+    "dateDisplay": {
+      "toggleLabel": "Приховати рік",
+      "toggleTitle": "Прибрати рік із дат, щоб вмістилося більше імені одержувача"
+    },
+    "attachmentsCount": "{count, plural, one {# вкладення} few {# вкладення} many {# вкладень} other {# вкладення}}",
+    "today": "Сьогодні",
+    "export": {
+      "button": "Експорт",
+      "exporting": "Експорт...",
+      "title": "Експортувати транзакції в CSV",
+      "success": "{count, plural, one {Експортовано # транзакцію} other {Експортовано # транзакцій}}",
+      "noData": "Немає транзакцій для експорту",
+      "error": "Не вдалося експортувати транзакції"
+    },
+    "delete": {
+      "transferTitle": "Видалити переказ",
+      "transactionTitle": "Видалити транзакцію",
+      "transferMessage": "Ви впевнені, що хочете видалити цей переказ? Обидві пов'язані транзакції буде видалено.",
+      "transactionMessage": "Ви впевнені, що хочете видалити цю транзакцію? Цю дію неможливо скасувати.",
+      "success": "Транзакцію видалено",
+      "transferSuccess": "Переказ видалено",
+      "error": "Не вдалося видалити транзакцію",
+      "reconciledWarning": "Цю транзакцію звірено, тому її видалення вплине на завершену звірку."
+    },
+    "status": {
+      "voidError": "Відредагуйте транзакцію, щоб змінити її статус із «Анульовано»",
+      "changed": "Статус змінено на {status}",
+      "changedLockedUndo": "Статус змінено на {status}. Звірені операції заблоковано; натисніть ще раз протягом {seconds} секунд, щоб скасувати.",
+      "updateError": "Не вдалося оновити статус",
+      "unreconciled": "Не звірено",
+      "cleared": "Проведено",
+      "reconciled": "Звірено",
+      "void": "Анульовано",
+      "clearedDense": "П",
+      "reconciledDense": "З",
+      "voidDense": "А",
+      "pendingDense": "○",
+      "pending": "Очікує",
+      "cycleTitle": "Натисніть для зміни статусу"
+    },
+    "row": {
+      "viewPayeeTitle": "Показати відомості про {name}",
+      "ref": "Реф: {number}",
+      "investmentLabel": "Інвестиція",
+      "linkedInvestmentTitle": "Переглянути в Інвестиціях",
+      "filterByDate": "Фільтрувати за датою «{date}»",
+      "filterByAccount": "Фільтрувати за «{name}»",
+      "filterByPayee": "Фільтрувати за «{name}»",
+      "filterByCategory": "Фільтрувати за {name}",
+      "filterByTag": "Фільтрувати за тегом {name}",
+      "transfer": "Переказ",
+      "transferTitle": "Переказ {direction} {name}",
+      "split": "Розподіл",
+      "uncategorized": "Без категорії",
+      "splitMore": "+{count} ще",
+      "filteredAmountTitle": "Відфільтрована сума (повна транзакція: {amount})",
+      "viewButton": "Переглянути",
+      "editButton": "Редагувати",
+      "deleteButton": "Видалити"
+    },
+    "itemNamePlural": "транзакцій"
+  },
+  "row": {
+    "copyOptions": {
+      "title": "Параметри копіювання",
+      "duplicateTitle": "Дублювати транзакцію",
+      "copy": "Копіювати",
+      "duplicate": "Дублювати",
+      "scheduleRecurring": "Запланувати як повторювану"
+    }
+  },
+  "actionSheet": {
+    "defaultTitle": "Транзакція",
+    "filterByDate": "Фільтрувати за датою «{date}»",
+    "filterByAccount": "Фільтрувати за «{name}»",
+    "filterByPayee": "Фільтрувати за «{name}»",
+    "filterByCategory": "Фільтрувати за «{name}»",
+    "filterByTag": "Фільтрувати за тегом «{name}»",
+    "edit": "Редагувати",
+    "duplicate": "Дублювати",
+    "scheduleRecurring": "Запланувати як повторювану",
+    "delete": "Видалити"
+  },
+  "filter": {
+    "favourites": "Вибране:",
+    "panel": {
+      "title": "Фільтри",
+      "clear": "Очистити",
+      "hide": "Приховати",
+      "show": "Показати"
+    },
+    "accounts": {
+      "label": "Показати рахунки:",
+      "all": "Всі",
+      "active": "Активні",
+      "closed": "Закриті"
+    },
+    "fields": {
+      "accounts": "Рахунки",
+      "payees": "Одержувачі платежів",
+      "categories": "Категорії",
+      "tags": "Теги",
+      "timePeriod": "Часовий період",
+      "startDate": "Дата початку",
+      "endDate": "Дата кінця",
+      "amountFrom": "Сума від",
+      "amountTo": "Сума до",
+      "status": "Статус",
+      "search": "Пошук",
+      "tagKey": "Ключ тегу",
+      "tagKeyOp": "Умова",
+      "tagKeyValue": "Значення",
+      "currency": "Валюта",
+      "hasAttachments": "Вкладення"
+    },
+    "hasAttachmentsOptions": {
+      "any": "Будь-які",
+      "yes": "Так",
+      "no": "Ні"
+    },
+    "placeholders": {
+      "accounts": "Всі рахунки",
+      "payees": "Всі одержувачі платежів",
+      "categories": "Всі категорії",
+      "tags": "Всі теги",
+      "statuses": "Всі статуси",
+      "amountMin": "Мін",
+      "amountMax": "Макс",
+      "search": "Пошук за одержувачем, категорією, сумою, тегом, описом, реф. №...",
+      "tagKeyValue": "напр. usa"
+    },
+    "tagKeyNone": "Будь-який (без фільтра за ключем)",
+    "tagKeyOps": {
+      "hasValue": "Має значення",
+      "noValue": "Не має значення",
+      "contains": "Значення містить",
+      "notContains": "Значення не містить"
+    },
+    "chips": {
+      "removeAccount": "Видалити фільтр {name}",
+      "removePayee": "Видалити фільтр {name}",
+      "removeCategory": "Видалити фільтр {name}",
+      "removeTag": "Видалити фільтр {name}",
+      "removeDate": "Видалити фільтр за датою",
+      "removeAmount": "Видалити фільтр за сумою",
+      "removeSearch": "Видалити фільтр пошуку",
+      "dateFrom": "Від {date}",
+      "dateUntil": "До {date}",
+      "amountFrom": "Від {amount}",
+      "amountUpTo": "До {amount}",
+      "removeCurrency": "Видалити фільтр за валютою {name}",
+      "hasAttachments": "З вкладеннями",
+      "noAttachments": "Без вкладень",
+      "removeAttachments": "Прибрати фільтр вкладень"
+    },
+    "bulkUpdate": "Масове оновлення",
+    "cancelBulk": "Скасувати масове",
+    "statusLabels": {
+      "unreconciled": "Не звірено",
+      "cleared": "Проведено",
+      "reconciled": "Звірено",
+      "void": "Анульовано"
+    },
+    "periods": {
+      "select": "Оберіть період...",
+      "allDates": "Усі дати",
+      "today": "Сьогодні",
+      "yesterday": "Вчора",
+      "thisWeek": "Цей тиждень",
+      "lastWeek": "Минулий тиждень",
+      "last30Days": "Останні 30 днів",
+      "monthToDate": "З початку місяця",
+      "lastMonth": "Минулий місяць",
+      "last365Days": "Останні 365 днів",
+      "yearToDate": "З початку року",
+      "lastYear": "Минулий рік",
+      "custom": "Довільний"
+    }
+  },
+  "bulk": {
+    "banner": {
+      "selected": "{count, plural, one {# транзакцію вибрано} other {# транзакцій вибрано}}",
+      "selectAllMatching": "Вибрати всі {count} відповідних транзакцій",
+      "allMatching": "(всі відповідні транзакції)",
+      "clearSelection": "Очистити вибір",
+      "bulkUpdate": "Масове оновлення"
+    },
+    "modal": {
+      "title": "Масове оновлення транзакцій",
+      "subtitle": "Оновити {count, plural, one {# вибрану транзакцію} other {# вибраних транзакцій}}. Увімкніть поля, які хочете змінити.",
+      "submitLabel": "Оновити {count, plural, one {# транзакцію} other {# транзакцій}}",
+      "payee": "Одержувач платежу",
+      "category": "Категорія",
+      "description": "Опис",
+      "status": "Статус",
+      "tags": "Теги",
+      "payeePlaceholder": "Оберіть або введіть назву одержувача...",
+      "categoryPlaceholder": "Оберіть категорію...",
+      "descriptionPlaceholder": "Введіть опис (залиште порожнім для очищення)",
+      "tagsPlaceholder": "Оберіть теги (залиште порожнім для очищення всіх)...",
+      "statusOptions": {
+        "pending": "Очікує",
+        "cleared": "Проведено",
+        "void": "Анульовано"
+      },
+      "notes": {
+        "transfer": "Переказні транзакції також матимуть оновлену пов'язану зустрічну транзакцію.",
+        "split": "Розподілені транзакції: нова категорія застосовується до їхніх розподілів (за активного фільтра категорій — лише до розподілів, що відповідають фільтру). Розподіли, що стосуються переказів та інвестицій, не змінюються."
+      }
+    },
+    "toasts": {
+      "updated": "{count, plural, one {# транзакцію оновлено} other {# транзакцій оновлено}}",
+      "skipped": "{count, plural, one {# транзакцію пропущено} other {# транзакцій пропущено}}",
+      "splitLines": "{count, plural, one {Категорію змінено для # розподілу} other {Категорію змінено для # розподілів}}"
+    }
+  },
+  "form": {
+    "modeTransaction": "Транзакція",
+    "modeSplit": "Розподіл",
+    "modeTransfer": "Переказ",
+    "transferBadge": "Переказ",
+    "isLinkedTransfer": "Це пов'язана переказна транзакція",
+    "fields": {
+      "account": "Рахунок",
+      "date": "Дата",
+      "createDate": "Дата створення",
+      "payee": "Одержувач платежу",
+      "category": "Категорія",
+      "amount": "Сума",
+      "totalAmount": "Загальна сума",
+      "referenceNumber": "Референсний номер",
+      "description": "Опис",
+      "status": "Статус",
+      "tags": "Теги",
+      "fromAccount": "Рахунок-джерело",
+      "toAccount": "Рахунок-отримувач",
+      "transferAmount": "Сума переказу",
+      "transferAmountWithCurrency": "Сума переказу ({currency})",
+      "amountReceived": "Отримана сума ({currency})",
+      "payeeOptional": "Одержувач платежу (необов'язково)",
+      "categoryOptional": "Категорія (необов'язково)"
+    },
+    "placeholders": {
+      "selectAccount": "Оберіть рахунок...",
+      "selectDestinationAccount": "Оберіть рахунок-отримувач...",
+      "selectOrTypePayee": "Оберіть або введіть назву одержувача...",
+      "selectOrCreateCategory": "Оберіть або створіть категорію...",
+      "referenceNumber": "Номер чека, підтвердження №...",
+      "optionalDescription": "Необов'язковий опис...",
+      "selectTags": "Оберіть теги...",
+      "createNewTag": "Створити новий тег..."
+    },
+    "splitSection": {
+      "title": "Розподіл транзакції",
+      "cancelSplit": "Скасувати розподіл"
+    },
+    "statusOptions": {
+      "unreconciled": "Не звірено",
+      "cleared": "Проведено",
+      "reconciled": "Звірено",
+      "void": "Анульовано"
+    },
+    "submitCreate": "Створити {mode}",
+    "submitCreateAndNew": "Створити {mode} і продовжити",
+    "submitCreateDescription": "Зберегти й закрити це вікно.",
+    "submitCreateAndNewDescription": "Зберегти й почати наступну з тим самим рахунком і датою.",
+    "submitOptions": "Виберіть, що станеться після створення",
+    "submitUpdate": "Оновити {mode}",
+    "reconciledConfirm": {
+      "title": "Редагувати звірену транзакцію?",
+      "message": "Цю транзакцію звірено. Її зміна вплине на завершену звірку. Усе одно зберегти зміни?",
+      "confirm": "Зберегти зміни"
+    },
+    "modeLabel": {
+      "transfer": "Переказ",
+      "transaction": "Транзакція"
+    },
+    "transferAmountNote": "Сума для переказів має бути позитивною",
+    "transferCandidates": {
+      "sharedWithYou": "Доступні вам",
+      "yourAccounts": "Ваші рахунки",
+      "optionLabel": "{name} ({currency}) — {owner}"
+    },
+    "crossOwnerLockedNote": "Інша сторона цього переказу знаходиться на рахунку, яким з вами більше не діляться. Його сума, дата та рахунки заблоковані, але ви все ще можете редагувати деталі цієї транзакції.",
+    "transferCategoryNote": "Необов'язково. Переказ і надалі не враховуватиметься як дохід чи витрата, але ця категорія дозволяє йому з'являтися в щомісячному розподілі за категоріями (наприклад, щомісячні інвестиційні внески).",
+    "amountReceivedNote": "Отримана сума після конвертації валюти",
+    "splitTransaction": "Розподілити транзакцію",
+    "splitDisabledDuringTour": "Недоступно під час інтерактивного туру",
+    "newTagTitle": "Новий тег",
+    "toasts": {
+      "transferCreated": "Переказ створено",
+      "transferUpdated": "Переказ оновлено",
+      "transactionCreated": "Транзакцію створено",
+      "transactionUpdated": "Транзакцію оновлено",
+      "attachmentsUploadFailed": "Транзакцію збережено, але не вдалося завантажити вкладень: {count}",
+      "saveFailed": "Не вдалося зберегти транзакцію",
+      "loadFailed": "Не вдалося завантажити дані форми",
+      "splitsNotEqual": "Сума розподілів ({splitTotal}) має дорівнювати сумі транзакції ({txAmount})",
+      "destinationRequired": "Оберіть рахунок-отримувач",
+      "sameAccount": "Рахунок-джерело та рахунок-отримувач мають бути різними",
+      "negativeTransfer": "Сума переказу не може бути від'ємною",
+      "payeeCreated": "Одержувача платежу «{name}» створено",
+      "payeeCreateFailed": "Не вдалося створити одержувача платежу",
+      "payeeReactivated": "Одержувача платежу «{name}» реактивовано",
+      "payeeReactivateFailed": "Не вдалося реактивувати одержувача платежу",
+      "categoryCreated": "Категорію «{name}» створено",
+      "categoryCreateFailed": "Не вдалося створити категорію",
+      "tagCreated": "Тег «{name}» створено",
+      "fxRateRequired": "Введіть курс обміну або конвертовану суму перед збереженням операції в іноземній валюті.",
+      "jointPayeeCreateNotGranted": "Власник рахунку не надав вам дозволу створювати отримувачів. Виберіть одного з наявних отримувачів."
+    },
+    "ariaHistory": "Показати нещодавні транзакції",
+    "ariaHistoryForPayee": "Показати нещодавні транзакції для цього одержувача",
+    "historyTitle": "Швидке заповнення з нещодавньої транзакції",
+    "currencyPicker": {
+      "label": "Валюта введення",
+      "ariaLabel": "Змінити валюту введення",
+      "title": "Ввести суму в",
+      "accountCurrency": "Валюта рахунку ({code})",
+      "addCurrency": "Додати валюту...",
+      "optionLabel": "{symbol} - {name} ({code})",
+      "createFailed": "Не вдалося додати валюту",
+      "reactivated": "{code} знову активовано"
+    },
+    "fx": {
+      "totalInCurrency": "Разом у {currency}",
+      "rateCaption": "1 {from} = {rate} {to} ({date})",
+      "noRateWarning": "Не знайдено курс обміну {from} на {to} на {date}. Введіть конвертовану суму вручну.",
+      "usingLatestRateHint": "Використовується останній доступний курс (не на дату {date}).",
+      "displayToggle": {
+        "account": "Рахунок",
+        "original": "Оригінал"
+      },
+      "feeCaption": "Включає комісію за закордонну операцію {percent}% ({fee})."
+    },
+    "jointSplitDisabled": "Розділеними транзакціями на спільному рахунку може керувати лише власник"
+  },
+  "splitEditor": {
+    "header": "Деталі розподілу",
+    "distributeProportionally": "Розподілити пропорційно",
+    "distributeProportionallyTitle": "Розподілити залишок пропорційно на основі суми кожного розподілу",
+    "distributeEvenly": "Розподілити рівномірно",
+    "addSplit": "Додати розподіл",
+    "removeMinimum": "Мінімально необхідно 2 розподіли",
+    "removeSplit": "Видалити розподіл",
+    "removeAndConvert": "Видалити розподіл та перетворити на звичайну транзакцію",
+    "convertConfirm": {
+      "title": "Перетворити на звичайну транзакцію?",
+      "message": "Видалення цього розподілу перетворить транзакцію назад на звичайну з категорією залишкового розподілу.",
+      "confirm": "Перетворити"
+    },
+    "noUnassigned": "Немає нерозподіленої суми",
+    "addRemaining": "Додати залишок до цього розподілу",
+    "total": "Разом",
+    "balanced": "Збалансовано",
+    "remaining": "Залишок: {symbol}{amount}",
+    "needAmount": "Потрібно {symbol}{amount} (залишок: {symbol}{remaining})",
+    "setTotal": "Встановити загальну суму {symbol}{amount}",
+    "currencyToggle": {
+      "title": "Змінити валюту, у якій відображаються та редагуються суми розбиття",
+      "ariaAmountsIn": "Показувати та редагувати суми розбиття в {code}"
+    },
+    "splitLabel": "Розподіл {number}",
+    "columns": {
+      "type": "Тип",
+      "categoryAccount": "Категорія / Рахунок",
+      "category": "Категорія",
+      "amount": "Сума",
+      "memo": "Примітка",
+      "tags": "Теги"
+    },
+    "splitTypes": {
+      "category": "Категорія",
+      "transfer": "Переказ",
+      "investment": "Інвестиція"
+    },
+    "selectCategory": "Оберіть категорію...",
+    "selectAccount": "Оберіть рахунок...",
+    "memoPlaceholder": "Необов'язкова примітка",
+    "mobileMemoPlaceholder": "Примітка",
+    "tagsPlaceholder": "Теги..."
+  },
+  "recentPopover": {
+    "recentForPayee": "Нещодавні для {name}",
+    "recentTransactions": "Нещодавні транзакції",
+    "loading": "Завантаження...",
+    "noRecent": "Немає нещодавніх транзакцій.",
+    "noRecentForPayee": "Немає нещодавніх транзакцій для цього одержувача.",
+    "noPayee": "(без одержувача)",
+    "uncategorized": "(без категорії)"
+  },
+  "investmentSplit": {
+    "ariaAction": "Інвестиційна дія",
+    "ariaSecurity": "Цінний папір",
+    "selectSecurity": "Оберіть цінний папір...",
+    "quantityPlaceholder": "Кількість",
+    "pricePlaceholder": "Ціна",
+    "commissionPlaceholder": "Комісія",
+    "amountPlaceholder": "Сума ({currency})",
+    "ratePlaceholder": "{to} за 1 {from}",
+    "ariaRate": "Курс обміну ({to} за 1 {from})",
+    "rateHint": "Кількість, ціна та комісія вказані у {from}; цей курс переводить грошовий результат у {to}.",
+    "rateUnresolved": "Немає курсу {from} до {to}. Введіть його — без нього грошовий результат не обчислити, а дві валюти не рівні."
+  },
+  "charts": {
+    "balanceHistory": {
+      "title": "Історія балансу",
+      "noData": "Немає даних балансу",
+      "starting": "Початковий",
+      "current": "Поточний",
+      "ending": "Кінцевий",
+      "lowest": "Найнижчий",
+      "minBalance": "Мін. баланс",
+      "projected": "Прогнозовано",
+      "range": "{start} – {end}"
+    },
+    "zeroBalances": {
+      "message": "Усі вибрані рахунки мають нульовий баланс, тому немає графіка балансу для показу."
+    },
+    "monthlyTotals": {
+      "title": "Місячні підсумки",
+      "noData": "Немає даних транзакцій",
+      "monthlyAvg": "Місячне середнє",
+      "quarterlyAvg": "Квартальне середнє",
+      "yearlyAvg": "Річне середнє",
+      "total": "Разом",
+      "transactions": "Транзакції",
+      "tooltip": "{count, plural, one {# транзакція} other {# транзакцій}}",
+      "quarterLabel": "{quarter} кв. {year}",
+      "quarterTick": "{quarter} кв. {year}",
+      "granularityLabel": "Групування",
+      "granularity": {
+        "auto": "Авто",
+        "month": "Місяць",
+        "quarter": "Квартал",
+        "year": "Рік"
+      },
+      "granularityAutoTitle": "Авто ({granularity})",
+      "granularityTitle": "Вигляд: {label}"
+    },
+    "accountBalances": {
+      "title": "Баланси рахунків",
+      "noData": "Немає даних балансів рахунків",
+      "average": "Середнє",
+      "total": "Разом",
+      "accounts": "Рахунки",
+      "scaleLabel": "Масштаб осі Y",
+      "auto": "Авто",
+      "linear": "Лінійний",
+      "log": "Логарифмічний",
+      "autoTitle": "Авто ({scale})",
+      "scaleTitle": "Масштаб {label}"
+    }
+  },
+  "toasts": {
+    "payeeUpdated": "Одержувача платежу оновлено",
+    "deleted": "{count, plural, one {# транзакцію видалено} other {# транзакцій видалено}}",
+    "noneToExport": "Немає транзакцій для експорту",
+    "exported": "{count, plural, one {Експортовано # транзакцію} other {Експортовано # транзакцій}}",
+    "loadFormDataFailed": "Не вдалося завантажити дані форми",
+    "loadFailed": "Не вдалося завантажити транзакції",
+    "loadPayeeFailed": "Не вдалося завантажити дані одержувача",
+    "payeeUpdateFailed": "Не вдалося оновити одержувача платежу",
+    "categoryUpdated": "Категорію оновлено",
+    "categoryUpdateFailed": "Не вдалося оновити категорію",
+    "exportFailed": "Не вдалося експортувати транзакції"
+  },
+  "validation": {
+    "dateRequired": "Дата обов'язкова"
+  },
+  "tagKeyBreakdown": {
+    "title": "Витрати за {key}",
+    "other": "Інше",
+    "noData": "Немає позначених тегами витрат для розподілу за цим ключем."
+  }
+}

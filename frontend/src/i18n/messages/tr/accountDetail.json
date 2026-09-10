@@ -1,0 +1,49 @@
+{
+  "header": {
+    "viewTransactions": "İşlemleri Görüntüle",
+    "reconcile": "Mutabakat",
+    "edit": "Hesabı Düzenle",
+    "back": "Hesaplara Dön",
+    "switchAccount": "Başka bir hesaba geç",
+    "switchFavourites": "Favoriler",
+    "switchOtherAccounts": "Diğer hesaplar",
+    "switchPlaceholder": "Hesapları filtrele...",
+    "switchNoMatches": "Eşleşen hesap yok",
+    "jointBadge": "Ortak",
+    "jointSharedBy": "{owner} tarafından paylaşıldı",
+    "jointSharedWith": "{count, plural, other {# kişiyle}} paylaşıldı"
+  },
+  "loading": "Hesap ayrıntıları yükleniyor...",
+  "error": {
+    "retry": "Yeniden Dene"
+  },
+  "recurring": {
+    "title": "Yinelenen Ödemeler",
+    "subtitle": "Bu hesaptaki zamanlanmış faturalar ve işlemlerinde bulunan olası abonelikler",
+    "empty": "Bu hesapta yinelenen ödeme algılanmadı",
+    "scheduledTitle": "Zamanlanmış",
+    "detectedTitle": "Olası yinelenen ödemeler",
+    "detectedSubtitle": "İşlem geçmişinizde bulundu ancak henüz zamanlanmadı",
+    "nextDue": "Sonraki vade {date}",
+    "createBill": "Fatura oluştur",
+    "createBillAria": "{payee} için zamanlanmış bir fatura oluştur",
+    "createTitle": "Yeni Zamanlanmış Fatura",
+    "frequency": {
+      "weekly": "Haftalık",
+      "biweekly": "2 haftada bir",
+      "monthly": "Aylık",
+      "quarterly": "Üç aylık",
+      "yearly": "Yıllık",
+      "irregular": "Düzensiz"
+    }
+  },
+  "forecastUnavailable": {
+    "intro": "Öngörülen bakiye gösterilmiyor, çünkü yaklaşan planlanmış kayıtlardan en az birinin tutarı henüz belirlenemiyor. Projeksiyon her günü sonraki güne devreder; bu yüzden tek bir bilinmeyen tutar sonraki bütün günleri yanlış yapar.",
+    "requestFailed": "Öngörülen bakiye yüklenemedi. Yeniden denemek için sayfayı yenileyin.",
+    "reasonUnavailable": "Sebep bildirilmedi. Yabancı para birimindeki planlanmış kalemlerin döviz kurlarını kontrol edin.",
+    "missingRatePair": "{name}: {from} biriminden {to} birimine döviz kuru bulunamadı, bu nedenle bu kaydın işleyeceği tutar bilinmiyor.",
+    "missingRate": "{name}: bu kaydın uzlaştığı döviz kuru bulunamadı, bu nedenle tutar bilinmiyor.",
+    "crossCurrencyTransfer": "{name}: bu hesap {to} biriminde iken {from} biriminde bir hesaptan gelen bir aktarım. Buraya girecek tutar aktarım işlenirken belirlenir, bu yüzden önceden öngörülemez.",
+    "howToFix": "Eksik kuru düzeltmek için: Para Birimleri'ni açıp kurları yenileyin ya da menkul kıymetin ve uzlaşma hesabının beklediğiniz para birimlerinde olduğunu doğrulayın."
+  }
+}

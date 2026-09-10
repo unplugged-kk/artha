@@ -1,0 +1,95 @@
+{
+  "title": "Reconciliar conta",
+  "subtitle": "Confira seus registros com o extrato bancário",
+  "subtitleActive": "Reconciliando: {name}",
+  "setup": {
+    "title": "Iniciar reconciliação",
+    "intro": "Reconcilie sua conta com um extrato bancário para garantir que seus registros coincidem.",
+    "accountLabel": "Conta",
+    "accountPlaceholder": "Selecionar conta...",
+    "statementDateLabel": "Data do extrato",
+    "statementBalanceLabel": "Saldo final do extrato",
+    "start": "Iniciar reconciliação"
+  },
+  "summary": {
+    "statementBalance": "Saldo do extrato",
+    "reconciledBalance": "Saldo reconciliado",
+    "selected": "Selecionadas ({count})",
+    "difference": "Diferença"
+  },
+  "list": {
+    "heading": "Transações não reconciliadas ({count})",
+    "selectAll": "Selecionar todas",
+    "selectNone": "Desmarcar todas",
+    "empty": "Não foram encontradas transações não reconciliadas neste período.",
+    "colSelect": "Selecionar",
+    "colDate": "Data",
+    "colPayee": "Beneficiário",
+    "colCategory": "Categoria",
+    "colAmount": "Valor",
+    "colStatus": "Status",
+    "finish": "Concluir reconciliação",
+    "colActions": "Ações",
+    "selectRow": "Selecionar a transação de {payee}",
+    "groupByFlow": "Agrupar por entradas e saídas",
+    "groupCredits": "Entradas ({count})",
+    "groupDebits": "Saídas ({count})",
+    "groupSubtotal": "Subtotal do grupo {amount}",
+    "addTransaction": "Adicionar Transação",
+    "lockedRow": "Bloqueada"
+  },
+  "status": {
+    "cleared": "Confirmada",
+    "unreconciled": "Não reconciliada",
+    "void": "Anulada",
+    "reconciled": "Reconciliada"
+  },
+  "complete": {
+    "title": "Reconciliação concluída",
+    "message": "Sua conta foi reconciliada com sucesso em {date}.",
+    "existingPayment": "Esta conta tem um pagamento agendado, <b>{name}</b>. Deseja atualizar a próxima ocorrência para o saldo reconciliado de <b>{amount}</b>?",
+    "updatePayment": "Atualizar próximo pagamento",
+    "noPayment": "Não foi encontrado nenhum pagamento agendado para esta conta. Deseja criar um para o saldo reconciliado de <b>{amount}</b>?",
+    "createPayment": "Criar pagamento agendado",
+    "backToAccounts": "Voltar às contas",
+    "reconcileAnother": "Reconciliar outra conta"
+  },
+  "toasts": {
+    "loadAccountsFailed": "Falha ao carregar contas",
+    "fillAllFields": "Preencha todos os campos",
+    "loadDataFailed": "Falha ao carregar dados de reconciliação",
+    "differenceRequired": "A diferença deve ser {amount} para concluir a reconciliação",
+    "noneSelected": "Nenhuma transação selecionada para reconciliação",
+    "success": "{count, plural, one {# transação reconciliada com sucesso} other {# transações reconciliadas com sucesso}}",
+    "reconcileFailed": "Falha ao reconciliar transações",
+    "deleted": "Transação excluída",
+    "transferDeleted": "Transferência excluída",
+    "deleteFailed": "Falha ao excluir a transação",
+    "voidStatus": "Uma transação anulada só pode ser alterada no formulário da transação",
+    "statusFailed": "Falha ao alterar o status"
+  },
+  "form": {
+    "newTitle": "Nova Transação",
+    "editTitle": "Editar Transação"
+  },
+  "delete": {
+    "title": "Excluir Transação",
+    "message": "Excluir esta transação? Ela será removida da conta e desta reconciliação.",
+    "transferTitle": "Excluir Transferência",
+    "transferMessage": "Excluir esta transferência? Os dois lados são removidos, nesta conta e na outra."
+  },
+  "stale": {
+    "missedChip": "Omitida",
+    "missedTooltip": "Esta transação tem data igual ou anterior ao último extrato reconciliado, então esse extrato foi reconciliado sem ela.",
+    "overdueChip": "Em atraso",
+    "overdueTooltip": "Esta transação está aguardando reconciliação há mais de um ciclo de extrato."
+  },
+  "reminder": {
+    "title": "Reconciliação",
+    "badgeLabel": "{count, plural, one {# transação aguardando reconciliação} other {# transações aguardando reconciliação}}",
+    "accountLine": "{count, plural, one {# transação} other {# transações}}, a mais antiga {date}",
+    "missedLine": "{count, plural, one {# omitida de um extrato reconciliado} other {# omitidas de extratos reconciliados}}",
+    "overdueLine": "{count, plural, one {# com mais de {days} dias} other {# com mais de {days} dias}}",
+    "reconcileAction": "Conciliar"
+  }
+}

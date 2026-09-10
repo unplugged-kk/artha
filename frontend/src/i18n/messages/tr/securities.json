@@ -1,0 +1,351 @@
+{
+  "priceRefresh": {
+    "noneToUpdate": "Güncellenecek menkul kıymet yok",
+    "updated": "{count, plural, one {# menkul kıymet fiyatı güncellendi} other {# menkul kıymet fiyatı güncellendi}}",
+    "partialFailure": "Fiyatlar güncellendi: {updated} başarılı, {failed} başarısız{symbols}",
+    "failed": "Fiyatlar yenilenemedi"
+  },
+  "page": {
+    "title": "Menkul Kıymetler",
+    "subtitle": "Hisselerinizi, ETF'lerinizi, yatırım fonlarınızı ve diğer menkul kıymetlerinizi yönetin",
+    "newSecurity": "+ Yeni Menkul Kıymet",
+    "searchPlaceholder": "Sembol veya ada göre ara...",
+    "statusAll": "Tümü ({count})",
+    "statusActive": "Aktif ({count})",
+    "statusInactive": "Pasif ({count})",
+    "modalTitleEdit": "Menkul Kıymeti Düzenle",
+    "modalTitleNew": "Yeni Menkul Kıymet",
+    "loading": "Menkul kıymetler yükleniyor...",
+    "count": "{count, plural, one {# menkul kıymet} other {# menkul kıymet}}",
+    "toasts": {
+      "loadFailed": "Menkul kıymetler yüklenemedi",
+      "updated": "Menkul kıymet başarıyla güncellendi",
+      "created": "Menkul kıymet başarıyla oluşturuldu",
+      "deactivated": "Menkul kıymet devre dışı bırakıldı",
+      "activated": "Menkul kıymet etkinleştirildi",
+      "statusFailed": "Menkul kıymet durumu güncellenemedi",
+      "deleted": "\"{symbol}\" menkul kıymeti silindi",
+      "deleteFailed": "Menkul kıymet silinemedi",
+      "favouriteFailed": "Favori güncellenemedi",
+      "updateFailed": "Menkul kıymet güncellenemedi",
+      "createFailed": "Menkul kıymet oluşturulamadı"
+    },
+    "deleteConfirm": {
+      "title": "Menkul Kıymeti Sil",
+      "message": "\"{symbol}\" menkul kıymetini silmek istediğinizden emin misiniz? Tüm fiyat geçmişi de silinecektir. Bu işlem geri alınamaz.",
+      "confirmLabel": "Sil",
+      "cancelLabel": "İptal"
+    }
+  },
+  "summary": {
+    "totalSecurities": "Toplam Menkul Kıymet",
+    "types": "Türler",
+    "exchanges": "Borsalar",
+    "currencies": "Para Birimleri"
+  },
+  "list": {
+    "columns": {
+      "symbol": "Sembol",
+      "name": "Ad",
+      "type": "Tür",
+      "shares": "Hisse",
+      "value": "Değer",
+      "exchange": "Borsa",
+      "currency": "Para Birimi",
+      "provider": "Sağlayıcı",
+      "source": "Kaynak",
+      "status": "Durum",
+      "actions": "İşlemler",
+      "favourite": "Favori"
+    },
+    "statusBadge": {
+      "active": "Aktif",
+      "activeShort": "Akt",
+      "inactive": "Pasif",
+      "inactiveShort": "Pas"
+    },
+    "providerTitle": {
+      "override": "Menkul kıymet bazında sağlayıcı geçersiz kılma",
+      "inherited": "Varsayılan Fiyat Teklifi Sağlayıcısı tercihinizden devralındı"
+    },
+    "columnTitles": {
+      "shares": "Tüm hesaplarda tutulan güncel hisse sayısı",
+      "value": "Tüm hesaplardaki paylar, en güncel fiyatla ve menkul kıymetin kendi para biriminde",
+      "source": "En güncel fiyatın kaynağı"
+    },
+    "actions": {
+      "edit": "Düzenle",
+      "deactivate": "Devre Dışı Bırak",
+      "activate": "Etkinleştir",
+      "delete": "Sil"
+    },
+    "favouriteButton": {
+      "add": "Favorilere ekle",
+      "remove": "Favorilerden kaldır"
+    },
+    "empty": {
+      "title": "Menkul kıymet yok",
+      "subtitle": "İlk menkul kıymetinizi ekleyerek başlayın."
+    },
+    "contextMenu": {
+      "editSecurity": "Menkul Kıymeti Düzenle",
+      "deactivate": "Devre Dışı Bırak",
+      "activate": "Etkinleştir",
+      "delete": "Sil"
+    }
+  },
+  "typeLabels": {
+    "STOCK": "Hisse",
+    "ETF": "ETF",
+    "MUTUAL_FUND": "Yatırım Fonu",
+    "BOND": "Tahvil",
+    "OPTION": "Opsiyon",
+    "CRYPTO": "Kripto",
+    "OTHER": "Diğer",
+    "STOCK_short": "His",
+    "ETF_short": "ETF",
+    "MUTUAL_FUND_short": "YF",
+    "BOND_short": "Tah",
+    "OPTION_short": "Ops",
+    "CRYPTO_short": "Kri",
+    "OTHER_short": "Diğ"
+  },
+  "form": {
+    "symbolLabel": "Sembol",
+    "nameLabel": "Ad",
+    "typeLabel": "Tür",
+    "exchangeLabel": "Borsa",
+    "currencyLabel": "Para Birimi",
+    "currencyNotConfigured": "{code} — para birimlerinizde yok",
+    "quoteProviderLabel": "Fiyat Teklifi Sağlayıcısı",
+    "msnIdLabel": "MSN Araç ID'si (gelişmiş)",
+    "lookupProviderAriaLabel": "Sağlayıcıyı ara",
+    "lookupButton": "Ara",
+    "revertButton": "Geri Al",
+    "clearButton": "Temizle",
+    "revertTitle": "Orijinal değerlere geri dön",
+    "clearTitle": "Tüm alanları temizle",
+    "favouriteLabel": "Favori",
+    "addToFavourites": "Favorilere ekle",
+    "removeFromFavourites": "Favorilerden kaldır",
+    "submitCreate": "Menkul Kıymet Oluştur",
+    "submitUpdate": "Menkul Kıymeti Güncelle",
+    "toasts": {
+      "lookupTooShort": "Arama için sembol veya ad girin (en az 2 karakter)",
+      "notFound": "\"{query}\" için menkul kıymet bulunamadı",
+      "found": "Bulundu: {details}",
+      "lookupFailed": "Arama başarısız - lütfen tekrar deneyin",
+      "tagCreated": "\"{name}\" etiketi oluşturuldu"
+    },
+    "msnNotConfigured": "Varsayılan fiyat teklifi sağlayıcısı olarak MSN seçildi, ancak sunucuda MSN_API_KEY yapılandırılmamış. Bir yönetici ortam değişkenini ayarlayıp arka ucu yeniden başlatana kadar MSN fiyat teklifleri başarısız olacak.",
+    "providers": {
+      "auto": "Otomatik",
+      "yahoo": "Yahoo",
+      "msn": "MSN"
+    },
+    "types": {
+      "select": "Tür seçin...",
+      "stock": "Hisse",
+      "etf": "ETF",
+      "mutualFund": "Yatırım Fonu",
+      "bond": "Tahvil",
+      "option": "Opsiyon",
+      "crypto": "Kripto Para",
+      "other": "Diğer"
+    },
+    "quoteProviderUseDefault": "Varsayılanı kullan ({provider})",
+    "symbolPlaceholder": "örn., AAPL, XEQT, BTC",
+    "namePlaceholder": "örn., Apple Inc., iShares Core Equity ETF",
+    "exchangeSearchPlaceholder": "Borsa ara...",
+    "exchangePlaceholder": "Hisse kodundan otomatik çözümlenir; yanlışsa geçersiz kılın",
+    "descriptionLabel": "Açıklama",
+    "descriptionPlaceholder": "Bu menkul kıymet hakkında notlar.",
+    "websiteLabel": "Web sitesi",
+    "irWebsiteLabel": "Yatırımcı ilişkileri sitesi",
+    "irWebsiteHint": "Hiçbir fiyat sağlayıcısı bu adresi yayımlamıyor, bu yüzden elle yazılması gerekiyor.",
+    "tagsLabel": "Etiketler",
+    "tagsPlaceholder": "Etiket seçin...",
+    "createNewTag": "Yeni etiket oluştur...",
+    "newTagTitle": "Yeni Etiket",
+    "allocation": {
+      "help": "Fiyat sağlayıcıları ETF’ler ve fonlar için ülke dağılımı sağlamaz. Bunu yüzde olarak elle ekleyin. %100’ün altındaki her şey \"Diğer\" olarak gösterilir. Doldurmak için bir dökümü Yapay Zekâ Asistanına yapıştırabilirsiniz.",
+      "sectionTitle": "Coğrafi dağılım",
+      "countryPlaceholder": "Ülke seçin veya yazın",
+      "addRow": "Ülke ekle",
+      "removeRow": "Satırı kaldır",
+      "other": "Diğer",
+      "total": "Toplam: %{total}",
+      "overError": "Tahsis toplamı %100'ü aşıyor.",
+      "nameAriaLabel": "Ülke",
+      "weightAriaLabel": "Yüzde"
+    },
+    "assetAllocation": {
+      "sectionTitle": "Varlık Sınıfı Dağılımı",
+      "help": "Kendiniz tanımlamadıysanız bir fiyat sağlayıcı fonun hisse/tahvil/nakit dağılımını doldurabilir; buraya girdikleriniz korunur ve asla üzerine yazılmaz. Yüzde olarak ekleyin — istediğiniz sınıf adını yazın, sonrasında diğer menkul kıymetlerinizde de önerilir. %100’ün altında kalan her şey \"Diğer\" olarak gösterilir.",
+      "placeholder": "Varlık sınıfı seçin veya yazın",
+      "addRow": "Varlık sınıfı ekle",
+      "nameAriaLabel": "Varlık sınıfı",
+      "deleteOption": "Varlık sınıfını sil",
+      "deleteTitle": "Varlık sınıfı silinsin mi?",
+      "deleteMessage": "\"{name}\" listenizden ve onu kullanan tüm menkul kıymetlerden kaldırılacak. Bu menkul kıymetler dağılımlarının geri kalanını korur ve boşalan yüzde \"Diğer\" olur.",
+      "deleteConfirm": "Sil",
+      "deleteSuccess": "\"{name}\" varlık sınıfı silindi",
+      "deleteFailed": "\"{name}\" varlık sınıfı silinemedi"
+    }
+  },
+  "priceForm": {
+    "dateLabel": "Tarih",
+    "closePriceLabel": "Kapanış Fiyatı",
+    "openPriceLabel": "Açılış Fiyatı",
+    "highPriceLabel": "En Yüksek Fiyat",
+    "lowPriceLabel": "En Düşük Fiyat",
+    "volumeLabel": "Hacim",
+    "optionalPlaceholder": "İsteğe bağlı",
+    "submitCreate": "Fiyat Ekle",
+    "submitUpdate": "Fiyatı Güncelle"
+  },
+  "priceHistory": {
+    "forceUpdateButton": "Fiyatları Zorla Güncelle",
+    "forceUpdateTitle": "Bu menkul kıymeti tuttuğunuz sürenin tamamı için geçmiş fiyatları yeniden çekin",
+    "addPriceButton": "+ Fiyat Ekle",
+    "addPriceSection": "Fiyat Ekle",
+    "editPriceSection": "Fiyatı Düzenle",
+    "loading": "Fiyatlar yükleniyor...",
+    "markers": {
+      "bought": "Alım {quantity} · {account}",
+      "sold": "Satım {quantity} · {account}"
+    },
+    "empty": "Fiyat geçmişi mevcut değil",
+    "columns": {
+      "date": "Tarih",
+      "close": "Kapanış",
+      "open": "Açılış",
+      "high": "En Yüksek",
+      "low": "En Düşük",
+      "volume": "Hacim",
+      "source": "Kaynak",
+      "actions": "İşlemler",
+      "adjustedClose": "Düzelt. kapanış",
+      "adjustedCloseTitle": "Bölünme ve temettüye göre düzeltilmiş kapanış (toplam getiri). Fiyat sağlayıcısı vermediğinde boş kalır."
+    },
+    "toasts": {
+      "added": "Fiyat eklendi",
+      "updated": "Fiyat güncellendi",
+      "deleted": "Fiyat silindi",
+      "loadFailed": "Fiyat geçmişi yüklenemedi",
+      "addFailed": "Fiyat eklenemedi",
+      "updateFailed": "Fiyat güncellenemedi",
+      "deleteFailed": "Fiyat silinemedi",
+      "updatedCount": "{count, plural, one {{symbol} için # fiyat güncellendi} other {{symbol} için # fiyat güncellendi}}",
+      "noPricesFound": "{symbol} için fiyat bulunamadı",
+      "updatePricesFailed": "{symbol} için fiyatlar güncellenemedi",
+      "updateFetchFailed": "Fiyatlar güncellenemedi"
+    },
+    "deleteConfirm": {
+      "title": "Fiyatı Sil",
+      "message": "{date} tarihli fiyat kaydı silinsin mi?",
+      "confirmLabel": "Sil"
+    },
+    "collapseAll": "Tümünü daralt",
+    "expandAll": "Tümünü genişlet",
+    "groupCount": "{count} fiyat"
+  },
+  "transactionHistory": {
+    "accountLabel": "Hesap",
+    "allAccounts": "Tüm hesaplar ({shares})",
+    "accountClosed": "{name} (kapalı)",
+    "addTransaction": "+ İşlem ekle",
+    "loading": "İşlemler yükleniyor...",
+    "emptyAll": "Bu menkul kıymet için işlem yok.",
+    "emptyAccount": "Seçilen hesapta bu menkul kıymet için işlem yok.",
+    "editTransactionTitle": "İşlemi Düzenle",
+    "columns": {
+      "date": "Tarih",
+      "account": "Hesap",
+      "action": "İşlem",
+      "quantity": "Miktar",
+      "runningTotal": "Kümülatif Toplam",
+      "price": "Fiyat",
+      "amount": "Tutar",
+      "actionsLabel": "İşlemler"
+    },
+    "actionLabels": {
+      "BUY": "Al",
+      "SELL": "Sat",
+      "DIVIDEND": "Temettü",
+      "INTEREST": "Faiz",
+      "CAPITAL_GAIN": "Sermaye Kazancı",
+      "SPLIT": "Bölünme",
+      "TRANSFER_IN": "Transfer Girişi",
+      "TRANSFER_OUT": "Transfer Çıkışı",
+      "REINVEST": "Yeniden Yatır",
+      "ADD_SHARES": "Hisse Ekle",
+      "REMOVE_SHARES": "Hisse Çıkar",
+      "REINVEST_INTEREST": "Faizi Yeniden Yatır",
+      "REINVEST_CAPITAL_GAIN_SHORT": "Kısa Vadeli Kazancı Yeniden Yatır",
+      "REINVEST_CAPITAL_GAIN_LONG": "Uzun Vadeli Kazancı Yeniden Yatır",
+      "CAPITAL_GAIN_SHORT": "Kısa Vadeli Sermaye Kazancı",
+      "CAPITAL_GAIN_LONG": "Uzun Vadeli Sermaye Kazancı",
+      "REDEEM": "CD/Tahvil İtfası"
+    },
+    "toasts": {
+      "loadHistoryFailed": "Geçmiş yüklenemedi",
+      "loadTransactionFailed": "İşlem yüklenemedi"
+    }
+  },
+  "shareAdjustment": {
+    "heading": "Hisse ayarla",
+    "accountLabel": "Hesap",
+    "accountPlaceholder": "Hesap seçin...",
+    "actionLabel": "İşlem",
+    "quantityLabel": "Miktar (Hisse)",
+    "dateLabel": "Tarih",
+    "descriptionLabel": "Açıklama (isteğe bağlı)",
+    "descriptionPlaceholder": "örn. Kalan hisseleri temizle",
+    "saving": "Kaydediliyor...",
+    "submitButton": "Ayarlamayı kaydet",
+    "accountClosed": "{name} (kapalı)",
+    "adjustmentActions": {
+      "REMOVE_SHARES": "Hisse Çıkar",
+      "ADD_SHARES": "Hisse Ekle"
+    },
+    "toasts": {
+      "selectAccount": "Hesap seçin",
+      "quantityRequired": "Miktar sıfırdan büyük olmalıdır",
+      "recorded": "Ayarlama kaydedildi",
+      "failed": "Ayarlama kaydedilemedi"
+    }
+  },
+  "lookupPicker": {
+    "title": "\"{query}\" için birden fazla eşleşme",
+    "subtitle": "Kullanmak istediğiniz menkul kıymeti seçin.",
+    "columns": {
+      "symbol": "Sembol",
+      "name": "Ad",
+      "exchange": "Borsa",
+      "currency": "Para Birimi",
+      "type": "Tür",
+      "source": "Kaynak"
+    },
+    "selectButton": "Seç"
+  },
+  "validation": {
+    "symbolRequired": "Sembol zorunludur",
+    "symbolMax": "Sembol 20 karakter veya daha az olmalıdır",
+    "nameRequired": "Ad zorunludur",
+    "nameMax": "Ad 255 karakter veya daha az olmalıdır",
+    "currencyRequired": "Para birimi zorunludur",
+    "descriptionMax": "Açıklama en fazla 5000 karakter olabilir"
+  },
+  "priceValidation": {
+    "dateRequired": "Tarih zorunludur",
+    "priceRequired": "Fiyat zorunludur",
+    "priceNonNegative": "Fiyat negatif olmayan bir sayı olmalıdır"
+  },
+  "priceAlert": {
+    "label": "Fiyat değişimi uyarısı (%)",
+    "help": "Devre dışı bırakmak için boş bırakın. Önceki mevcut seansa göre yükseliş veya düşüşü, araç başına UTC gününde en fazla bir kez bildirir.",
+    "range": "0,1 ile 1000 arasında bir yüzde girin.",
+    "chartLabel": "Fiyat uyarılarına grafik ekle"
+  }
+}

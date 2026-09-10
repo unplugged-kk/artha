@@ -1,0 +1,152 @@
+import { formatDate } from './utils';
+
+export const PAGE_SIZE = 50;
+
+/**
+ * Rows to ask for when a screen wants a security's whole price history: the
+ * detail page's chart, its Performance card and the price table all reason over
+ * the complete series, so a page of prices would give them a partial answer that
+ * still looks like a total.
+ *
+ * It is a cap rather than "everything" because the endpoint requires a limit.
+ * ~40 years of daily closes fits, which is beyond any history a provider
+ * backfills -- but a series longer than this is silently truncated, so a screen
+ * that starts reporting a suspiciously short "all" range should look here first.
+ */
+export const SECURITY_PRICE_HISTORY_LIMIT = 9999;
+
+type DateFormatOption = { value: string; label: string };
+
+/**
+ * Date-format picker options. The pattern labels (YYYY-MM-DD, etc.) are format
+ * codes shown verbatim; only the descriptive "browser" entry is translated.
+ * `t` is the `common` namespace translator.
+ */
+export function getDateFormatOptions(
+  t: (key: string, values?: Record<string, string | number>) => string,
+  browserLocale?: string,
+): DateFormatOption[] {
+  // Preview the format 'browser' mode actually produces, using the same date
+  // the pattern options show (2024-12-31) formatted with the effective locale
+  // (e.g. "12/31/2024"). Mirrors formatDate's 'browser' branch.
+  const sample = formatDate('2024-12-31', 'browser', browserLocale);
+  return [
+    { value: 'browser', label: t('dateFormat.browserAuto', { sample }) },
+    { value: 'YYYY-MM-DD', label: 'YYYY-MM-DD (2024-12-31)' },
+    { value: 'MM/DD/YYYY', label: 'MM/DD/YYYY (12/31/2024)' },
+    { value: 'DD/MM/YYYY', label: 'DD/MM/YYYY (31/12/2024)' },
+    { value: 'DD-MMM-YYYY', label: 'DD-MMM-YYYY (31-Dec-2024)' },
+  ];
+}
+
+/** Export picker options: the date formats plus a "Custom..." entry. */
+export function getExportDateFormatOptions(
+  t: (key: string, values?: Record<string, string | number>) => string,
+  browserLocale?: string,
+): DateFormatOption[] {
+  return [
+    ...getDateFormatOptions(t, browserLocale),
+    { value: 'custom', label: t('dateFormat.custom') },
+  ];
+}
+
+export const EXCHANGE_OPTIONS = [
+  // North America
+  { value: 'NYSE', label: 'NYSE', subtitle: 'New York Stock Exchange (US)' },
+  { value: 'NASDAQ', label: 'NASDAQ', subtitle: 'NASDAQ (US)' },
+  { value: 'AMEX', label: 'AMEX', subtitle: 'American Stock Exchange (US)' },
+  { value: 'ARCA', label: 'ARCA', subtitle: 'NYSE Arca (US)' },
+  { value: 'BATS', label: 'BATS', subtitle: 'BATS Global Markets (US)' },
+  { value: 'TSX', label: 'TSX', subtitle: 'Toronto Stock Exchange (Canada)' },
+  { value: 'TSX-V', label: 'TSX-V', subtitle: 'TSX Venture Exchange (Canada)' },
+  { value: 'CSE', label: 'CSE', subtitle: 'Canadian Securities Exchange (Canada)' },
+  { value: 'NEO', label: 'NEO', subtitle: 'NEO Exchange (Canada)' },
+  // Europe
+  { value: 'LSE', label: 'LSE', subtitle: 'London Stock Exchange (UK)' },
+  { value: 'XETRA', label: 'XETRA', subtitle: 'XETRA (Germany)' },
+  { value: 'Frankfurt', label: 'Frankfurt', subtitle: 'Frankfurt Stock Exchange (Germany)' },
+  { value: 'Paris', label: 'Paris', subtitle: 'Euronext Paris (France)' },
+  { value: 'AMS', label: 'AMS', subtitle: 'Euronext Amsterdam (Netherlands)' },
+  { value: 'MIL', label: 'MIL', subtitle: 'Borsa Italiana (Italy)' },
+  { value: 'STO', label: 'STO', subtitle: 'Stockholm Stock Exchange (Sweden)' },
+  // Asia-Pacific
+  { value: 'Tokyo', label: 'Tokyo', subtitle: 'Tokyo Stock Exchange (Japan)' },
+  { value: 'HKEX', label: 'HKEX', subtitle: 'Hong Kong Stock Exchange (Hong Kong)' },
+  { value: 'SHA', label: 'SHA', subtitle: 'Shanghai Stock Exchange (China)' },
+  { value: 'SHE', label: 'SHE', subtitle: 'Shenzhen Stock Exchange (China)' },
+  { value: 'ASX', label: 'ASX', subtitle: 'Australian Securities Exchange (Australia)' },
+  { value: 'KRX', label: 'KRX', subtitle: 'Korea Exchange (South Korea)' },
+  { value: 'TAI', label: 'TAI', subtitle: 'Taiwan Stock Exchange (Taiwan)' },
+  { value: 'SGX', label: 'SGX', subtitle: 'Singapore Exchange (Singapore)' },
+  { value: 'BSE', label: 'BSE', subtitle: 'Bombay Stock Exchange (India)' },
+  { value: 'NSE', label: 'NSE', subtitle: 'National Stock Exchange (India)' },
+];
+
+/**
+ * Canonical country names for manual ETF/fund country allocations. Mirrors the
+ * backend `COUNTRY_OPTIONS` in `securities/security-enums.ts` -- keep the two in
+ * sync. Used by the AllocationEditor combobox; custom values are still allowed.
+ */
+export const COUNTRY_NAMES = [
+  'United States',
+  'Canada',
+  'United Kingdom',
+  'Germany',
+  'France',
+  'Switzerland',
+  'Netherlands',
+  'Italy',
+  'Spain',
+  'Sweden',
+  'Norway',
+  'Denmark',
+  'Finland',
+  'Belgium',
+  'Austria',
+  'Ireland',
+  'Portugal',
+  'Luxembourg',
+  'Poland',
+  'Greece',
+  'Czech Republic',
+  'Hungary',
+  'Russia',
+  'Turkey',
+  'Japan',
+  'China',
+  'Hong Kong',
+  'Taiwan',
+  'South Korea',
+  'India',
+  'Australia',
+  'New Zealand',
+  'Singapore',
+  'Malaysia',
+  'Indonesia',
+  'Thailand',
+  'Philippines',
+  'Vietnam',
+  'Pakistan',
+  'Israel',
+  'Saudi Arabia',
+  'United Arab Emirates',
+  'Qatar',
+  'Kuwait',
+  'South Africa',
+  'Egypt',
+  'Nigeria',
+  'Kenya',
+  'Morocco',
+  'Brazil',
+  'Mexico',
+  'Argentina',
+  'Chile',
+  'Colombia',
+  'Peru',
+] as const;
+
+/** Combobox-ready options for the manual country allocation editor. */
+export const COUNTRY_OPTIONS = COUNTRY_NAMES.map((name) => ({
+  value: name,
+  label: name,
+}));

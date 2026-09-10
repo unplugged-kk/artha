@@ -1,0 +1,14 @@
+{
+  "openInInvestments": "Abrir em Investimentos",
+  "income": {
+    "title": "Rendimentos de Investimento",
+    "dividendsInterest": "Dividendos e Juros",
+    "realizedGains": "Ganhos Realizados",
+    "ytd": "Ano até hoje",
+    "empty": "Sem rendimentos de investimento este ano"
+  },
+  "register": {
+    "deleteFailed": "Falha ao excluir a transação",
+    "loadFailed": "Falha ao carregar a transação"
+  }
+}

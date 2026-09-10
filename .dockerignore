@@ -1,0 +1,34 @@
+# Build context is the repo root (see docker-compose*.yml `context: .`), so
+# these patterns are matched from there. Keep host-only and generated artifacts
+# out of the image build context: they bloat/slow the build and -- critically --
+# a stale tsconfig.tsbuildinfo copied in makes an incremental `nest build`
+# emit an incomplete dist/ (missing db-init.js etc.).
+**/node_modules
+**/dist
+**/.next
+**/*.tsbuildinfo
+**/coverage
+**/.nyc_output
+**/*.log
+
+# VCS and local tooling
+.git
+.gitignore
+**/.vscode
+**/.idea
+
+# The marketing site is static files deployed to Cloudflare Pages, not part of
+# either image. The backend context is the repo root, so without this its
+# assets ride along into the image for nothing.
+website
+
+# Secrets and local env (the image gets config via runtime env vars)
+**/.env
+**/.env.*
+!**/.env.example
+
+# Microsoft Money files. A .mny is somebody's entire financial history, and the
+# backend context is the repo root -- so a file dropped anywhere in the tree to
+# test an import would otherwise be baked into the image. The committed test
+# fixtures are excluded too: nothing in the image reads them.
+**/*.mny

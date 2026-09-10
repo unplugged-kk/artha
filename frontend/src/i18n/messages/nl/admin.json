@@ -1,0 +1,173 @@
+{
+  "createUserModal": {
+    "title": "Gebruiker toevoegen",
+    "description": "Maak een nieuw account aan. Je kunt een uitnodiging e-mailen, zelf een wachtwoord instellen of een tijdelijk wachtwoord genereren om te delen.",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "gebruiker@voorbeeld.nl",
+    "firstNameLabel": "Voornaam (optioneel)",
+    "firstNamePlaceholder": "Voornaam",
+    "lastNameLabel": "Achternaam (optioneel)",
+    "lastNamePlaceholder": "Achternaam",
+    "roleLabel": "Rol",
+    "roleUser": "Gebruiker",
+    "roleAdmin": "Beheerder",
+    "credentialsLegend": "Inloggegevens",
+    "inviteLabel": "Stuur een e-mailuitnodiging om een wachtwoord in te stellen",
+    "inviteSmtpNote": "Vereist geconfigureerde SMTP.",
+    "setPasswordLabel": "Nu een wachtwoord instellen",
+    "tempPasswordLabel": "Een tijdelijk wachtwoord genereren",
+    "tempPasswordNote": "Eenmalig weergegeven na aanmaken. De gebruiker moet het bij eerste inlog wijzigen.",
+    "passwordFieldLabel": "Wachtwoord",
+    "passwordPlaceholder": "Stel een wachtwoord in",
+    "createButton": "Gebruiker aanmaken",
+    "validation": {
+      "invalidPassword": "Ongeldig wachtwoord."
+    },
+    "toasts": {
+      "createFailed": "Gebruiker aanmaken mislukt"
+    }
+  },
+  "resetPasswordModal": {
+    "defaultTitle": "Wachtwoord opnieuw ingesteld",
+    "defaultDescription": "Er is een tijdelijk wachtwoord ingesteld voor {userName}.",
+    "temporaryPasswordLabel": "Tijdelijk wachtwoord",
+    "copy": "Kopiëren",
+    "copied": "Gekopieerd",
+    "notShownAgain": "Dit wachtwoord wordt niet opnieuw weergegeven.",
+    "mustChangeOnLogin": "De gebruiker moet het wachtwoord wijzigen bij de volgende inlog.",
+    "toasts": {
+      "copied": "Wachtwoord naar klembord gekopieerd",
+      "copyFailed": "Kopiëren naar klembord mislukt"
+    }
+  },
+  "userTable": {
+    "colUser": "Gebruiker",
+    "colRole": "Rol",
+    "colProvider": "Provider",
+    "colStatus": "Status",
+    "colLastLogin": "Laatste inlog",
+    "colActions": "Acties",
+    "youSuffix": "(jij)",
+    "noEmail": "Geen e-mail",
+    "unknown": "Onbekend",
+    "never": "Nooit",
+    "providerSso": "SSO",
+    "providerLocal": "Lokaal",
+    "roleAdmin": "Beheerder",
+    "roleUser": "Gebruiker",
+    "statusActive": "Actief",
+    "statusDisabled": "Uitgeschakeld",
+    "clickToDisable": "Klik om uit te schakelen",
+    "clickToEnable": "Klik om in te schakelen",
+    "resetPassword": "Wachtwoord opnieuw instellen",
+    "noUsers": "Geen gebruikers gevonden."
+  },
+  "usersPage": {
+    "title": "Gebruikersbeheer",
+    "userCount": "{count, plural, one {# gebruiker} other {# gebruikers}}",
+    "newUser": "+ Nieuwe gebruiker",
+    "loadingUsers": "Gebruikers laden...",
+    "toasts": {
+      "inviteSent": "Uitnodigings-e-mail verstuurd naar {email}",
+      "userCreated": "{name} is aangemaakt",
+      "userUpgraded": "{name} is omgezet naar een volledig account",
+      "roleChanged": "{name} is nu {role}",
+      "roleAdmin": "een beheerder",
+      "roleUser": "een gebruiker",
+      "userEnabled": "{name} is ingeschakeld",
+      "userDisabled": "{name} is uitgeschakeld",
+      "userDeleted": "{name} is verwijderd",
+      "userDowngraded": "De eigen gegevens van {name} zijn verwijderd; de gedelegeerde toegang blijft behouden.",
+      "loadFailed": "Gebruikers laden mislukt",
+      "deleteFailed": "Gebruiker verwijderen mislukt",
+      "disableFailed": "Gebruiker uitschakelen mislukt",
+      "resetFailed": "Wachtwoord opnieuw instellen mislukt"
+    },
+    "dialogs": {
+      "promoteTitle": "Gebruiker promoveren?",
+      "demoteTitle": "Gebruiker degraderen?",
+      "promoteMessage": "Weet je zeker dat je {name} wilt promoveren naar {role}?",
+      "demoteMessage": "Weet je zeker dat je {name} wilt degraderen naar {role}?",
+      "promoteConfirm": "Promoveren tot beheerder",
+      "demoteConfirm": "Degraderen tot gebruiker",
+      "disableTitle": "Gebruiker uitschakelen?",
+      "disableMessage": "Weet je zeker dat je {name} wilt uitschakelen? Ze kunnen dan niet meer inloggen.",
+      "disableConfirm": "Gebruiker uitschakelen",
+      "resetTitle": "Wachtwoord opnieuw instellen?",
+      "resetMessage": "Er wordt een nieuw tijdelijk wachtwoord gegenereerd voor {name}. Ze moeten het bij de volgende inlog wijzigen.",
+      "resetConfirm": "Wachtwoord opnieuw instellen",
+      "deleteTitle": "Gebruiker verwijderen?",
+      "deleteMessage": "Weet je zeker dat je {name} wilt verwijderen? Hiermee wordt het account en alle bijbehorende gegevens permanent verwijderd. Dit kan niet ongedaan worden gemaakt. Als ze gedelegeerde zijn van een ander account, worden hun eigen gegevens verwijderd maar blijft de login bewaard zodat de delegatie werkt — ze worden dan een gebruiker met uitsluitend gedelegeerde toegang.",
+      "deleteConfirm": "Gebruiker verwijderen",
+      "tempPasswordTitleCreated": "Gebruiker aangemaakt",
+      "tempPasswordTitleUpgraded": "Account bijgewerkt",
+      "tempPasswordDescCreated": "Er is een tijdelijk wachtwoord gegenereerd voor {name}. Deel dit met hen om in te loggen.",
+      "tempPasswordDescUpgraded": "Een bestaande gedeelde gebruiker is omgezet naar een volledig account. Deel dit tijdelijke wachtwoord met {name}."
+    }
+  },
+  "notificationsPage": {
+    "title": "Meldingen",
+    "subtitle": "Bezorgkanalen die deze Monize-instantie biedt, en de push-identiteit erachter.",
+    "loading": "Meldingsinstellingen laden...",
+    "loadUnavailable": "Monize kon de meldingsinstellingen niet van de server lezen. Herlaad de pagina om het opnieuw te proberen.",
+    "channelsHeading": "Bezorgkanalen",
+    "identityHeading": "Web Push-identiteit",
+    "perAccountNote": "Apparaten, testmeldingen en meldingsvoorkeuren horen bij elk account en worden beheerd in Instellingen. Een beheerder configureert de instantie en verstuurt of ziet nooit de meldingen van iemand anders.",
+    "channelState": {
+      "on": "Aan",
+      "off": "Uit",
+      "unconfigured": "Niet beschikbaar",
+      "unknown": "Onbekend"
+    },
+    "channels": {
+      "inApp": {
+        "name": "Meldingen in de app",
+        "description": "De bel in de kopregel. Altijd beschikbaar en niet uit te schakelen: hier blijft een melding staan, ook als elk ander kanaal faalt."
+      },
+      "webPush": {
+        "name": "Browserpush",
+        "description": "Meldingen op telefoon of desktop, ook als Monize gesloten is. Vereist geen Firebase, Google Play- of Apple Developer-account.",
+        "toggleLabel": "Browserpush inschakelen voor deze instantie",
+        "missingKeys": "Deze instantie heeft geen pushsleutelpaar. Stel ENCRYPTION_KEY in en start opnieuw: Monize genereert het paar bij de volgende start zelf.",
+        "keyUnreadable": "Deze instantie kan haar opgeslagen pushsleutelpaar niet ontsleutelen, dus er wordt niets bezorgd. Vervang het sleutelpaar hieronder om te herstellen.",
+        "serverKeyMissing": "Deze instantie heeft geen ENCRYPTION_KEY en kan het opgeslagen push-sleutelpaar dus niet openen. Stel ENCRYPTION_KEY in de deployment in en start opnieuw op — roteren helpt niet zolang de sleutel ontbreekt."
+      },
+      "email": {
+        "name": "E-mail",
+        "description": "Factuurherinneringen, budgetsamenvattingen en systeemwaarschuwingen naar het e-mailadres van elk account.",
+        "missingSmtp": "Er is geen mailserver geconfigureerd. Stel de SMTP-omgevingsvariabelen in om e-mail in te schakelen.",
+        "statusUnavailable": "Monize kon de status van de mailserver niet lezen."
+      },
+      "ntfy": {
+        "name": "ntfy en UnifiedPush",
+        "description": "Dezelfde versleutelde push, bezorgd via een zelf gehoste UnifiedPush-distributor (ntfy, NextPush) in plaats van de infrastructuur van Google of Apple. Het kanaal deelt het push-sleutelpaar en de schakelaar van deze instantie; iedereen registreert het eigen endpoint vanuit de UnifiedPush-app en zet het kanaal aan in Instellingen.",
+        "followsWebPush": "Niet beschikbaar zolang browserpush uit staat of het sleutelpaar niet gebruikt kan worden — dit kanaal wordt met hetzelfde sleutelpaar bezorgd."
+      }
+    },
+    "identity": {
+      "fingerprintLabel": "Sleutelvingerafdruk",
+      "generatedLabel": "Gegenereerd",
+      "devicesLabel": "Geregistreerde apparaten",
+      "deviceCounts": "{live} actief, {disabled} stopgezet",
+      "rotateDescription": "Vervangen wisselt het sleutelpaar van deze instantie. Elk geregistreerd apparaat is daarna onbereikbaar en moet push opnieuw inschakelen; vervang dus alleen als de sleutel mogelijk is gelekt.",
+      "rotateButton": "Sleutelpaar vervangen",
+      "rotatingButton": "Vervangen...",
+      "missingEncryptionKey": "Deze instantie heeft geen pushsleutelpaar, omdat ENCRYPTION_KEY niet is ingesteld en de privésleutel onversleuteld opgeslagen zou moeten worden. Stel de variabele in en start opnieuw: Monize genereert het paar zelf.",
+      "keyUnreadable": "Deze instantie heeft een pushsleutelpaar dat ze niet meer kan ontsleutelen, dus er wordt niets bezorgd. Dat gebeurt als ENCRYPTION_KEY verandert bij een draaiende database, of als een back-up op een andere instantie wordt teruggezet. Vervang het sleutelpaar om te herstellen; elk apparaat registreert zich opnieuw.",
+      "serverKeyMissing": "Voor deze instantie is geen ENCRYPTION_KEY ingesteld, waardoor het opgeslagen push-sleutelpaar niet geopend kan worden. Roteren helpt niet zolang de sleutel ontbreekt: stel ENCRYPTION_KEY in de deployment in en start opnieuw op, dan werkt push weer met de bestaande apparaten."
+    },
+    "dialogs": {
+      "rotateTitle": "Pushsleutelpaar vervangen?",
+      "rotateMessage": "{count, plural, =0 {Er is nog geen apparaat geregistreerd, dus er gaat niets verloren.} one {Eén geregistreerd apparaat ontvangt geen meldingen meer totdat push in die browser opnieuw wordt ingeschakeld.} other {# geregistreerde apparaten ontvangen geen meldingen meer totdat push in elke browser opnieuw wordt ingeschakeld.}}",
+      "rotateConfirm": "Vervangen"
+    },
+    "toasts": {
+      "loadFailed": "Kon de meldingsinstellingen niet laden",
+      "pushEnabled": "Browserpush ingeschakeld voor deze instantie",
+      "pushDisabled": "Browserpush uitgeschakeld voor deze instantie",
+      "pushToggleFailed": "Kon de browserpush-instelling niet wijzigen",
+      "rotated": "{count, plural, =0 {Sleutelpaar vervangen} one {Sleutelpaar vervangen; 1 apparaat moet zich opnieuw registreren} other {Sleutelpaar vervangen; # apparaten moeten zich opnieuw registreren}}",
+      "rotateFailed": "Kon het sleutelpaar niet vervangen"
+    }
+  }
+}

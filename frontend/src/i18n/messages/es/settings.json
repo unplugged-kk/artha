@@ -1,0 +1,1239 @@
+{
+  "language": {
+    "label": "Idioma",
+    "browserOption": "Usar idioma del navegador (detectado automáticamente como {locale})",
+    "helpText": "Elige el idioma usado en toda la interfaz de Monize. El formato de números y fechas se controla por separado a continuación.",
+    "saved": "Idioma actualizado",
+    "saveFailed": "Error al guardar el idioma"
+  },
+  "profile": {
+    "heading": "Perfil",
+    "firstNameLabel": "Nombre",
+    "firstNamePlaceholder": "Ingresa tu nombre",
+    "lastNameLabel": "Apellido",
+    "lastNamePlaceholder": "Ingresa tu apellido",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "Ingresa tu correo electrónico",
+    "currentPasswordLabel": "Contraseña actual",
+    "currentPasswordPlaceholder": "Requerida para cambiar el correo",
+    "passwordRequired": "La contraseña actual es necesaria para cambiar el correo electrónico",
+    "noChanges": "No hay cambios para guardar",
+    "passwordConfirmNote": "Se requiere confirmación de contraseña al cambiar tu dirección de correo electrónico.",
+    "saveButton": "Guardar perfil",
+    "savingButton": "Guardando...",
+    "toasts": {
+      "success": "Perfil actualizado correctamente",
+      "updateFailed": "Error al actualizar el perfil"
+    },
+    "validation": {
+      "firstNameMax": "El nombre debe tener 100 caracteres o menos",
+      "lastNameMax": "El apellido debe tener 100 caracteres o menos",
+      "emailRequired": "El correo electrónico es obligatorio",
+      "emailInvalid": "Ingresa una dirección de correo electrónico válida",
+      "emailMax": "El correo electrónico debe tener 254 caracteres o menos",
+      "passwordMax": "La contraseña debe tener 128 caracteres o menos"
+    }
+  },
+  "security": {
+    "heading": "Seguridad",
+    "ssoNotice": "Tu cuenta usa Inicio de Sesión Único (SSO) para la autenticación. La contraseña a continuación no se usa para iniciar sesión, pero puede conservarse como respaldo si se deshabilita el SSO.",
+    "currentPasswordLabel": "Contraseña actual",
+    "currentPasswordPlaceholder": "Ingresa la contraseña actual",
+    "newPasswordLabel": "Nueva contraseña",
+    "newPasswordPlaceholder": "Ingresa la nueva contraseña",
+    "confirmPasswordLabel": "Confirmar nueva contraseña",
+    "confirmPasswordPlaceholder": "Confirma la nueva contraseña",
+    "changePasswordButton": "Cambiar contraseña",
+    "changingPasswordButton": "Cambiando...",
+    "toasts": {
+      "passwordChanged": "Contraseña cambiada correctamente",
+      "passwordChangeFailed": "Error al cambiar la contraseña"
+    },
+    "twoFactor": {
+      "heading": "Autenticación de dos factores",
+      "ssoUnavailable": "La autenticación de dos factores no está disponible para cuentas SSO. La seguridad de la autenticación es administrada por tu proveedor de identidad.",
+      "enabledBadge": "Habilitada",
+      "enabledDescription": "Tu cuenta está protegida con verificación TOTP.",
+      "requiredByAdmin": "Requerida por el administrador",
+      "addLayerDescription": "Agrega una capa adicional de seguridad a tu cuenta.",
+      "enableButton": "Habilitar 2FA",
+      "disableButton": "Deshabilitar 2FA",
+      "disableModal": {
+        "title": "Deshabilitar autenticación de dos factores",
+        "description": "Ingresa tu código actual de 6 dígitos para confirmar la desactivación de 2FA.",
+        "verificationCodeLabel": "Código de verificación",
+        "disablingButton": "Deshabilitando...",
+        "toasts": {
+          "disabled": "Autenticación de dos factores deshabilitada",
+          "disableFailed": "Error al deshabilitar la autenticación de dos factores"
+        }
+      }
+    },
+    "backupCodes": {
+      "heading": "Códigos de respaldo",
+      "description": "Usa códigos de respaldo para iniciar sesión si pierdes acceso a tu aplicación de autenticación.",
+      "regenerateButton": "Regenerar códigos",
+      "regenerateModal": {
+        "title": "Regenerar códigos de respaldo",
+        "description": "Ingresa tu código actual de 6 dígitos para confirmar la regeneración de los códigos de respaldo. Esto invalidará cualquier código existente.",
+        "verificationCodeLabel": "Código de verificación",
+        "regeneratingButton": "Regenerando...",
+        "regenerateButton": "Regenerar"
+      },
+      "toasts": {
+        "generateFailed": "Error al generar los códigos de respaldo"
+      }
+    },
+    "trustedDevices": {
+      "heading": "Dispositivos de confianza",
+      "revokeAllButton": "Revocar todos",
+      "noDevices": "Sin dispositivos de confianza. Cuando marques \"No volver a preguntar en este navegador\" durante el inicio de sesión con 2FA, el dispositivo aparecerá aquí.",
+      "currentBadge": "Actual",
+      "revokeButton": "Revocar",
+      "revokeAllModal": {
+        "title": "Revocar todos los dispositivos de confianza",
+        "description": "Esto eliminará todos los dispositivos de confianza. Necesitarás ingresar tu código 2FA en tu próximo inicio de sesión desde cualquier dispositivo."
+      },
+      "toasts": {
+        "revoked": "Dispositivo revocado",
+        "revokedAll": "{count} dispositivo(s) revocado(s)",
+        "revokeFailed": "Error al revocar el dispositivo",
+        "revokeAllFailed": "Error al revocar los dispositivos"
+      }
+    },
+    "validation": {
+      "currentPasswordRequired": "La contraseña actual es obligatoria",
+      "passwordMax": "La contraseña debe tener 128 caracteres o menos",
+      "confirmRequired": "Confirma tu nueva contraseña",
+      "newPasswordsNoMatch": "Las nuevas contraseñas no coinciden"
+    }
+  },
+  "preferences": {
+    "heading": "Preferencias",
+    "groups": {
+      "languageRegion": "Idioma y región",
+      "appearance": "Apariencia",
+      "datesNumbers": "Fechas y números",
+      "investments": "Inversiones",
+      "transactions": "Transacciones",
+      "application": "Aplicación"
+    },
+    "themeLabel": "Tema",
+    "defaultCurrencyLabel": "Moneda predeterminada",
+    "preferredExchangesLabel": "Bolsas preferidas (para búsqueda de valores)",
+    "preferredExchangesHelp": "Selecciona hasta 3 bolsas en orden de prioridad. Se preferirán al buscar valores.",
+    "exchangePriorityPlaceholder": "Prioridad {n}",
+    "defaultQuoteProviderLabel": "Proveedor de cotizaciones de acciones predeterminado",
+    "defaultQuoteProviderHelp": "Se usa cuando un valor no tiene un proveedor específico. Si el proveedor elegido falla, Monize prueba automáticamente el otro.",
+    "msnNoIntradayNote": "Nota: MSN Money no proporciona datos de cotización intradía, por lo que los rangos 1D / 1W / 1M del gráfico de Valor de Cartera a lo Largo del Tiempo no están disponibles para posiciones rastreadas por MSN.",
+    "msnNotConfigured": "MSN está seleccionado como proveedor de cotizaciones predeterminado, pero MSN_API_KEY no está configurado en el servidor. Las cotizaciones de MSN fallarán hasta que un administrador establezca la variable de entorno y reinicie el backend.",
+    "dateFormatLabel": "Formato de fecha",
+    "numberFormatLabel": "Formato de número",
+    "timezoneLabel": "Zona horaria",
+    "timezonePlaceholder": "Buscar zonas horarias...",
+    "weekStartsOnLabel": "La semana comienza el",
+    "showCreatedAtLabel": "Mostrar fecha de creación en formularios de transacciones",
+    "showCreatedAtTooltip": "Muestra la fecha y hora en que se creó originalmente una transacción en los formularios. Esto es independiente de la fecha de la transacción y puede ayudarte a saber cuándo se agregó realmente la entrada a Monize.",
+    "showWhatsNewLabel": "Mostrar Novedades después de una actualización",
+    "showWhatsNewTooltip": "Muestra un resumen de las notas de la versión la primera vez que inicias sesión después de que Monize se actualice a una nueva versión. Siempre puedes volver a abrirlo haciendo clic en el número de versión que aparece en la parte inferior de esta página o en la pantalla de inicio de sesión.",
+    "lockReconciledLabel": "Bloquear transacciones conciliadas",
+    "lockReconciledTooltip": "Mientras esto esté desactivado, Monize te avisa antes de un cambio que modificaría la fecha o el importe de una transacción conciliada y luego lo permite. Mientras esté activado, las transacciones conciliadas no se pueden editar, eliminar ni desconciliar. Desactívalo de nuevo para hacer una corrección.",
+    "timeFormatLabel": "Formato de hora",
+    "timeFormatOptions": {
+      "h24": "24 horas (14:30)",
+      "h12": "12 horas (2:30 p. m.)"
+    },
+    "recentTransactionsLabel": "Transacciones recientes en completado rápido",
+    "recentTransactionsHelp": "Número de entradas mostradas en el historial emergente junto al campo Beneficiario en los formularios de transacciones.",
+    "mapProviderLabel": "Proveedor de mapas para direcciones",
+    "mapProviderHelp": "Qué servicio de mapas se abre al hacer clic en una dirección en un navegador de escritorio. Los teléfonos y las tabletas siempre abren su propia aplicación de mapas, sea cual sea su elección aquí. Automático usa OpenStreetMap en el escritorio.",
+    "mapProviderOptions": {
+      "device": "Automático",
+      "apple": "Apple Maps",
+      "bing": "Bing Maps",
+      "google": "Google Maps",
+      "openstreetmap": "OpenStreetMap",
+      "waze": "Waze"
+    },
+    "toasts": {
+      "saved": "Preferencias guardadas",
+      "saveFailed": "Error al guardar las preferencias",
+      "themeSaveFailed": "Error al guardar el tema",
+      "colorThemeSaveFailed": "Error al guardar el tema de color"
+    },
+    "browserLocale": "Usar configuración regional del navegador (detección automática)",
+    "numberFormatOptions": {
+      "browser": "Usar configuración regional del navegador (detectado automáticamente como {sample})",
+      "enUS": "English (US) - 1,234.56",
+      "enGB": "English (UK) - 1,234.56",
+      "deDE": "German - 1.234,56",
+      "frFR": "French - 1 234,56"
+    },
+    "weekDays": {
+      "sunday": "Domingo",
+      "monday": "Lunes",
+      "tuesday": "Martes",
+      "wednesday": "Miércoles",
+      "thursday": "Jueves",
+      "friday": "Viernes",
+      "saturday": "Sábado"
+    },
+    "themeOptions": {
+      "system": "Sistema (seguir la configuración del dispositivo)",
+      "light": "Claro",
+      "dark": "Oscuro"
+    },
+    "colorThemeLabel": "Tema de color",
+    "colorThemeHint": "Las vistas previas usan tu modo claro u oscuro actual.",
+    "colorThemeOptions": {
+      "default": "Predeterminado",
+      "latte": "Latte",
+      "msmoney": "MS Money",
+      "newspaper": "Newspaper",
+      "burgundy": "Burgundy",
+      "nord": "Nord",
+      "forest": "Forest",
+      "solarized": "Solarized",
+      "gruvbox": "Gruvbox",
+      "dracula": "Dracula",
+      "tokyonight": "Tokyo Night",
+      "rosepine": "Rosé Pine",
+      "midnight": "Midnight",
+      "highcontrast": "Alto contraste",
+      "colorblind": "Seguro para daltonismo"
+    },
+    "timezoneBrowserOption": "Usar zona horaria del navegador (detectada automáticamente como {tz})"
+  },
+  "notifications": {
+    "heading": "Notificaciones",
+    "portfolioAlert": {
+      "title": "Movimiento del valor de inversiones",
+      "description": "Avísame una vez al día cuando mis cuentas de inversión se muevan más allá de un umbral, medido por cambios de mercado y dividendos (los depósitos y retiros se excluyen).",
+      "enableLabel": "Activar alertas de movimiento de inversiones",
+      "thresholdLabel": "Avisar cuando el movimiento diario sea al menos",
+      "saveError": "No se pudo guardar el umbral",
+      "loadError": "No se pudo cargar la configuración de alertas de inversión",
+      "retry": "Reintentar"
+    },
+    "smtpNotConfigured": "Las notificaciones por correo electrónico no están disponibles. El administrador no ha configurado SMTP.",
+    "emailNotificationsTitle": "Notificaciones por correo electrónico",
+    "emailNotificationsDescription": "Recibe recordatorios por correo para facturas próximas y alertas de presupuesto",
+    "budgetNotificationsHeading": "Notificaciones de presupuesto",
+    "weeklyBudgetDigestTitle": "Resumen semanal de presupuesto",
+    "weeklyBudgetDigestDescription": "Recibe un resumen semanal de alertas y estado del presupuesto",
+    "toggleBudgetDigestLabel": "Activar resumen de presupuesto",
+    "digestDayLabel": "Día del resumen",
+    "digestDayAriaLabel": "Día del resumen de presupuesto",
+    "mondayOption": "Lunes",
+    "fridayOption": "Viernes",
+    "immediateAlertsNote": "Las alertas críticas de presupuesto (presupuesto excedido, déficit de ingresos) se envían de inmediato independientemente de la configuración del resumen.",
+    "sendTestEmailDescription": "Envía un correo de prueba para verificar que tus notificaciones funcionan.",
+    "sendTestEmailButton": "Enviar correo de prueba",
+    "sendingTestEmailButton": "Enviando...",
+    "toasts": {
+      "emailEnabled": "Notificaciones por correo electrónico habilitadas",
+      "emailDisabled": "Notificaciones por correo electrónico deshabilitadas",
+      "digestEnabled": "Resumen de presupuesto habilitado",
+      "digestDisabled": "Resumen de presupuesto deshabilitado",
+      "digestDaySet": "Día del resumen de presupuesto establecido en {day}",
+      "testEmailSent": "¡Correo de prueba enviado! Revisa tu bandeja de entrada.",
+      "emailUpdateFailed": "Error al actualizar la preferencia de notificaciones",
+      "digestUpdateFailed": "Error al actualizar la preferencia del resumen de presupuesto",
+      "digestDayFailed": "Error al actualizar el día del resumen",
+      "testEmailFailed": "Error al enviar el correo de prueba"
+    },
+    "push": {
+      "heading": "Push del navegador",
+      "collapsedDevices": "{count, plural, =0 {Ningún dispositivo registrado} one {# dispositivo registrado} other {# dispositivos registrados}}",
+      "collapsedDevicesWithRetired": "{count, plural, =0 {Ningún dispositivo registrado} one {# dispositivo registrado} other {# dispositivos registrados}}, {retired, plural, one {# retirado} other {# retirados}}",
+      "collapsedDevicesUnavailable": "Lista de dispositivos no disponible",
+      "diagnostics": {
+        "summary": "Diagnóstico de notificaciones",
+        "intro": "Lo que este navegador y dispositivo informan a Monize sobre las notificaciones. Actualiza después de cambiar un ajuste y luego usa Copiar para enviar el informe completo.",
+        "refresh": "Actualizar",
+        "copy": "Copiar informe",
+        "copied": "Diagnóstico copiado al portapapeles"
+      },
+      "description": "Registra este dispositivo para que Monize pueda avisarte incluso con la aplicación cerrada. Por ahora solo se entrega así la notificación de prueba; todo lo demás sigue llegando a la campana.",
+      "androidNotify": "En Android, un permiso concedido no basta: el sistema todavía puede ocultar las notificaciones. Mantén pulsado el icono de Monize en tu pantalla de inicio, toca Información de la aplicación, luego Notificaciones, y asegúrate de que estén activadas.",
+      "permissionHint": "Cuando lo actives, tu navegador pedirá permiso para mostrar notificaciones. No se envía nada hasta que lo permitas.",
+      "enableButton": "Activar en este dispositivo",
+      "enablingButton": "Activando...",
+      "sendTestButton": "Enviar notificación de prueba",
+      "sendingTestButton": "Enviando...",
+      "removeButton": "Quitar",
+      "thisDevice": "Este dispositivo",
+      "unifiedpushBadge": "UnifiedPush",
+      "unnamedDevice": "Dispositivo sin nombre",
+      "noLiveDevices": "Aún no hay ningún dispositivo registrado. Activa el push en este dispositivo para enviar una prueba.",
+      "notConfigured": "El push del navegador no está disponible en esta instancia de Monize. Un administrador puede activarlo en el área de administración.",
+      "disabledByAdmin": "Un administrador ha desactivado el push del navegador en esta instancia de Monize.",
+      "keyUnreadable": "Monize no puede leer el par de claves push de esta instancia, así que no se entrega nada. Un administrador puede recuperarlo rotando el par de claves en el área de administración.",
+      "serverKeyMissing": "A esta instancia de Monize le falta la clave de cifrado que necesita para abrir su par de claves push, así que no se puede entregar nada. Un administrador debe configurarla en el despliegue y reiniciar.",
+      "statusUnavailable": "Monize no pudo comprobar si el push del navegador está disponible. Recarga la página para volver a intentarlo.",
+      "devicesUnavailable": "Monize no pudo cargar tus dispositivos registrados. El resto de esta página sigue funcionando; recarga para volver a intentarlo.",
+      "unsupported": {
+        "unsupported": "Este navegador no puede recibir notificaciones push.",
+        "denied": "Las notificaciones están bloqueadas para Monize en este navegador. Permítelas en la configuración del sitio y recarga esta página.",
+        "ios-browser": "En iPhone y iPad las notificaciones push solo funcionan una vez que Monize está instalado en la pantalla de inicio. Usa Compartir y luego Añadir a pantalla de inicio, y abre Monize desde allí."
+      },
+      "disabledReason": {
+        "GONE": "Ya no es accesible. Vuelve a activar el push en ese navegador.",
+        "KEY_ROTATED": "Retirado cuando esta instancia rotó su par de claves push. Vuelve a activar el push en ese navegador.",
+        "FAILING": "Retirado tras fallos de entrega repetidos. Vuelve a activar el push en ese navegador."
+      },
+      "toasts": {
+        "enabled": "Notificaciones push activadas en este dispositivo",
+        "enableFailed": "No se pudieron activar las notificaciones push",
+        "permissionDenied": "Este navegador está bloqueando las notificaciones de Monize. Permítelas en la configuración del sitio e inténtalo de nuevo.",
+        "permissionDeniedIos": "Las notificaciones están bloqueadas para Monize. Abre Ajustes de iOS, luego Notificaciones, luego Monize, para permitirlas.",
+        "permissionDismissed": "No se activaron las notificaciones. Elige Permitir cuando el navegador lo pregunte.",
+        "permissionNoPrompt": "Las notificaciones no se activaron y no apareció ningún aviso. Abre Ajustes de iOS, luego Notificaciones, luego Monize, y permítelas ahí. Si Monize no aparece, quítalo de la pantalla de inicio, vuelve a añadirlo (Compartir, luego Añadir a pantalla de inicio) e inténtalo de nuevo.",
+        "removed": "Dispositivo eliminado",
+        "removeFailed": "No se pudo eliminar el dispositivo",
+        "testSent": "{count, plural, one {Notificación de prueba enviada a 1 dispositivo} other {Notificación de prueba enviada a # dispositivos}}",
+        "testPartial": "La notificación de prueba llegó a {delivered} de {attempted} dispositivos",
+        "testFailed": "No se pudo entregar la notificación de prueba",
+        "pushServiceRefused": "El servicio push del navegador rechazó el registro. Inténtalo de nuevo en un momento; si sigue fallando, revisa la configuración push del navegador.",
+        "pushServiceRefusedBrave": "Brave bloquea el servicio push de forma predeterminada. En Brave, abre Configuración, luego Privacidad y seguridad, activa «Usar los servicios de Google para la mensajería push», reinicia el navegador e inténtalo de nuevo."
+      },
+      "testResults": {
+        "heading": "Última prueba, por dispositivo",
+        "status": {
+          "sent": "entregado al servicio push",
+          "expired": "suscripción caducada; activa push en ese dispositivo de nuevo",
+          "transient": "no entregado (error temporal); inténtalo de nuevo",
+          "unconfigured": "esta instancia no puede firmar mensajes push ahora"
+        }
+      },
+      "transport": {
+        "webpush": "Push web",
+        "unifiedpush": "UnifiedPush"
+      },
+      "facts": {
+        "endpoint": "Endpoint",
+        "transport": "Se entrega por",
+        "registeredIp": "Registrado desde",
+        "registered": "Registrado",
+        "lastSeen": "Última actividad",
+        "lastDelivery": "Última entrega",
+        "noDelivery": "Aún no se ha entregado nada",
+        "userAgent": "Navegador",
+        "unknownIp": "Desconocida"
+      }
+    },
+    "preferences": {
+      "heading": "Cómo notificarme",
+      "description": "Elige qué tipos envía Monize por correo o push, y con qué frecuencia.",
+      "categoryHeader": "Notificación",
+      "channels": {
+        "emailReport": "Correo (informe)",
+        "emailNotification": "Correo (alerta)",
+        "push": "Push",
+        "unifiedpush": "UnifiedPush",
+        "unifiedpushHint": "Las notificaciones se entregan a través de una aplicación distribuidora que tú mismo ejecutas, como ntfy, en lugar del servicio push del proveedor del navegador. Registra un endpoint en esa aplicación para usar este canal."
+      },
+      "categories": {
+        "PAYMENTS": "Facturas y programados",
+        "BUDGETS": "Presupuestos",
+        "SYSTEM": "Alertas del sistema",
+        "BALANCES": "Saldos de cuentas",
+        "INVESTMENTS": "Valor de inversiones",
+        "STRATEGIES": "Señales de estrategia"
+      },
+      "channelNotApplicable": "No aplicable a este tipo de notificación",
+      "emailToggleLabel": "Correo (informe) para {category}",
+      "saveFailed": "No se pudo guardar ese ajuste",
+      "throttle": {
+        "label": "Espera",
+        "ariaLabel": "Tiempo de espera para {category}",
+        "hint": "Omite una alerta o push si ya se envió una del mismo grupo dentro de este intervalo.",
+        "options": {
+          "0": "Desactivado",
+          "5": "5 minutos",
+          "15": "15 minutos",
+          "30": "30 minutos",
+          "60": "1 hora",
+          "360": "6 horas",
+          "1440": "24 horas"
+        }
+      },
+      "emailNotificationToggleLabel": "Correo de alerta para {category}",
+      "pushToggleLabel": "Push para {category}",
+      "unifiedpushToggleLabel": "UnifiedPush para {category}",
+      "emailUnavailable": "Activa arriba las notificaciones por correo para enviarlas por correo.",
+      "pushUnavailable": "No hay ningún dispositivo registrado para push, así que este canal no puede entregar nada.",
+      "pushEnableHint": "Este navegador no está registrado para notificaciones push."
+    }
+  },
+  "help": {
+    "heading": "Ayuda y soporte",
+    "description": "Encuentra documentación, reporta problemas o únete a la conversación.",
+    "github": {
+      "label": "GitHub",
+      "description": "Ve el código fuente y dale una estrella al proyecto."
+    },
+    "openIssue": {
+      "label": "Abrir un issue",
+      "description": "Reporta un error o solicita una función."
+    },
+    "discussions": {
+      "label": "Discusiones",
+      "description": "Haz preguntas y comparte ideas con la comunidad."
+    },
+    "wiki": {
+      "label": "Wiki",
+      "description": "Consulta guías y documentación."
+    },
+    "supportBackup": {
+      "label": "Crear copia para soporte",
+      "description": "Comparta una copia cifrada y desidentificada de sus datos para que un mantenedor pueda reproducir un error sin ver sus nombres o importes reales."
+    }
+  },
+  "about": {
+    "heading": "Acerca de",
+    "description": "Qué está ejecutando esta instancia y dónde encontrar las notas de la versión, la licencia y la política de seguridad.",
+    "appName": "Monize",
+    "tagline": "Gestión de finanzas personales autoalojada.",
+    "versionLabel": "Versión",
+    "versionUnknown": "Desconocida",
+    "versionButtonTitle": "Ver las notas de la versión v{version}",
+    "apiVersionLabel": "Versión de la API",
+    "versionMismatch": "La aplicación web y la API están ejecutando versiones diferentes. Normalmente significa que una actualización solo se desplegó parcialmente: reinicia o vuelve a desplegar el servicio que va por detrás.",
+    "updateLabel": "Actualizaciones",
+    "updateUpToDate": "Al día",
+    "updateAvailable": "v{version} disponible",
+    "updateAvailableGeneric": "Hay una versión más reciente disponible",
+    "updateViewRelease": "Ver la versión",
+    "whatsNew": {
+      "label": "Novedades de la v{version}",
+      "labelGeneric": "Novedades",
+      "description": "Lee las notas de esta versión sin salir de la aplicación."
+    },
+    "allReleases": {
+      "label": "Todas las versiones",
+      "description": "Consulta todas las versiones y sus notas en GitHub."
+    },
+    "license": {
+      "label": "Licencia",
+      "description": "Monize es software libre bajo la GNU AGPL v3."
+    },
+    "securityPolicy": {
+      "label": "Política de seguridad",
+      "description": "Cómo informar de una vulnerabilidad de forma privada."
+    },
+    "diagnostics": {
+      "label": "Copiar diagnóstico",
+      "description": "Copia los datos de versión, navegador e idioma para pegarlos en un informe de error.",
+      "copied": "Diagnóstico copiado al portapapeles",
+      "copyFailed": "No se pudo copiar el diagnóstico al portapapeles"
+    }
+  },
+  "supportBackup": {
+    "title": "Crear copia para soporte",
+    "howItWorks": "Genera una copia desidentificada de su copia de seguridad: los nombres se enmascaran (se conservan los dos primeros y los dos últimos caracteres), se eliminan notas/descripciones/números de cuenta y cada importe se multiplica por un único factor oculto, mientras los valores públicos (tipos de cambio, precios, tipos de interés) quedan intactos. El archivo siempre se cifra con la contraseña de abajo y se restaura como una copia normal. Protege frente a la exposición casual, no frente a alguien que ya le conoce: las fechas, frecuencias y estructura se conservan para que los errores se reproduzcan.",
+    "sectionsLabel": "Qué incluir",
+    "sections": {
+      "investments": "Inversiones (valores, posiciones, precios)",
+      "scheduled": "Transacciones programadas",
+      "budgets": "Presupuestos",
+      "reports": "Informes y proyecciones",
+      "importMappings": "Asignaciones de columnas de importación",
+      "autoBackup": "Ajustes de copia automática"
+    },
+    "priceHistoryLabel": "Incluir historial de precios de valores",
+    "priceHistoryHint": "Desactivado por defecto: una serie completa de precios coincide con los datos públicos del mercado y puede identificar un símbolo enmascarado. Actívelo solo si el error afecta a precios o valoraciones.",
+    "accountsLabel": "Limitar a cuentas concretas",
+    "accountsHint": "Deje todo sin marcar para incluir todas las cuentas. Elegir un subconjunto arrastra también las cuentas y beneficiarios a los que hace referencia.",
+    "dateRangeLabel": "Rango de fechas (opcional)",
+    "dateRangeHint": "Limite el historial exportado a estas fechas. Los saldos iniciales se ajustan para que el archivo recortado siga cuadrando.",
+    "dateFromLabel": "Desde",
+    "dateToLabel": "Hasta",
+    "multiplierLabel": "Multiplicador de importes",
+    "multiplierHint": "Cada importe privado se multiplica por este número para ocultar los valores reales manteniendo la coherencia. Sirve cualquier número no entero mayor que 1; «Regenerar» elige uno nuevo.",
+    "multiplierWarning": "No comparta el multiplicador con nadie: es la clave que revierte los importes ocultos.",
+    "multiplierInvalid": "Introduzca un número no entero mayor que 1.",
+    "regenerate": "Regenerar",
+    "passwordLabel": "Contraseña de cifrado",
+    "preview": "Vista previa",
+    "previewLabel": "Vista previa",
+    "previewBefore": "Antes",
+    "previewAfter": "Después",
+    "previewEmpty": "No hay filas de ejemplo para esta selección.",
+    "previewFailed": "No se pudo generar la vista previa. Inténtelo de nuevo.",
+    "generate": "Generar",
+    "confirmPasswordTitle": "¿Ha guardado la contraseña?",
+    "confirmPasswordMessage": "El archivo solo puede abrirse con la contraseña de cifrado mostrada arriba. No se almacena en ningún sitio y no podrá recuperarse después: asegúrese de guardarla antes de generar.",
+    "confirmPasswordConfirm": "La guardé — generar",
+    "generatedToast": "Copia para soporte descargada.",
+    "generateFailed": "No se pudo generar la copia para soporte. Inténtelo de nuevo.",
+    "passwordHint": "El archivo siempre va cifrado. Comparta esta contraseña con el investigador por un canal separado, no junto al archivo.",
+    "passwordInvalid": "Introduzca al menos 8 caracteres."
+  },
+  "dangerZone": {
+    "heading": "Zona de peligro",
+    "deleteData": {
+      "heading": "Eliminar datos",
+      "description": "Elimina los datos financieros de tu cuenta. Esta acción no se puede deshacer.",
+      "openButton": "Eliminar datos...",
+      "alwaysDeletedHeading": "Lo siguiente siempre se eliminará:",
+      "optionalHeading": "Opcionalmente también eliminar:",
+      "accountsOption": "Cuentas",
+      "categoriesOption": "Categorías",
+      "payeesOption": "Beneficiarios",
+      "currencyPreferencesOption": "Preferencias de moneda",
+      "balanceResetNote": "Los saldos de las cuentas se restablecerán a su saldo inicial.",
+      "oidcConfirmLabel": "Vuelve a autenticarte con tu proveedor de identidad para confirmar:",
+      "passwordConfirmLabel": "Ingresa tu contraseña para confirmar:",
+      "passwordPlaceholder": "Ingresa tu contraseña",
+      "oidcReauthButton": "Volver a autenticar y eliminar",
+      "deletingButton": "Eliminando...",
+      "confirmButton": "Confirmar eliminación de datos",
+      "toasts": {
+        "success": "Se eliminaron {count} registros correctamente",
+        "failed": "Error al eliminar los datos"
+      }
+    },
+    "deleteAccount": {
+      "heading": "Eliminar cuenta",
+      "description": "Elimina permanentemente tu cuenta y todos los datos asociados. Esta acción no se puede deshacer.",
+      "delegateNotice": {
+        "title": "Eres delegado de otra cuenta.",
+        "body": "Eliminar tu cuenta eliminará tus propios datos, pero tu inicio de sesión y el acceso compartido que otros te otorgaron se mantienen para que la delegación siga funcionando. Para revocar ese acceso, pídele al propietario que te elimine primero de su lista de Acceso compartido."
+      },
+      "openButton": "Eliminar cuenta",
+      "typeDeleteLabel": "Escribe DELETE para confirmar la eliminación de la cuenta:",
+      "typeDeletePlaceholder": "Escribe DELETE",
+      "enterPasswordLabel": "Ingresa tu contraseña:",
+      "enterPasswordPlaceholder": "Ingresa tu contraseña",
+      "deletingButton": "Eliminando...",
+      "confirmButton": "Confirmar eliminación",
+      "toasts": {
+        "downgraded": "Tus propios datos fueron eliminados. Tu inicio de sesión y el acceso compartido se conservan para que la delegación siga en su lugar.",
+        "deleted": "Cuenta eliminada",
+        "failed": "Error al eliminar la cuenta",
+        "reauthRedirect": "Te llevamos a tu proveedor de identidad para confirmar que eres tú. Después volverás aquí."
+      },
+      "errors": {
+        "typeDelete": "Por favor escribe DELETE para confirmar",
+        "passwordRequired": "Ingresa tu contraseña para confirmar"
+      }
+    }
+  },
+  "apiAccess": {
+    "heading": "Acceso a la API",
+    "description": "Crea tokens de acceso personal para conectar herramientas de IA externas como Claude Desktop mediante MCP.",
+    "createTokenButton": "Crear token",
+    "mcpServerUrlLabel": "URL del servidor MCP",
+    "mcpServerUrlHelp": "Usa esta URL al configurar clientes MCP como Claude Code o Claude Desktop.",
+    "copyButton": "Copiar",
+    "copiedButton": "Copiado",
+    "noTokens": "Aún no hay tokens de API. Crea uno para comenzar.",
+    "tokenPrefix": "Último uso",
+    "expires": "Vence",
+    "created": "Creado",
+    "lastUsed": "Último uso",
+    "revokeButton": "Revocar",
+    "revokeModal": {
+      "title": "Revocar token",
+      "message": "Este token dejará de funcionar de inmediato. Cualquier conexión MCP que lo use será desconectada.",
+      "confirmLabel": "Revocar"
+    },
+    "createModal": {
+      "title": "Crear token de API",
+      "tokenNameLabel": "Nombre del token",
+      "tokenNamePlaceholder": "p. ej., Claude Desktop",
+      "scopesLabel": "Permisos",
+      "expirationLabel": "Vencimiento",
+      "creatingButton": "Creando...",
+      "createButton": "Crear token",
+      "scopes": {
+        "read": {
+          "label": "Lectura",
+          "description": "Ver cuentas, transacciones y categorías"
+        },
+        "write": {
+          "label": "Escritura",
+          "description": "Crear transacciones, beneficiarios y categorías"
+        }
+      },
+      "expiry": {
+        "none": "Sin vencimiento",
+        "d30": "30 días",
+        "d90": "90 días",
+        "y1": "1 año"
+      },
+      "validation": {
+        "nameRequired": "El nombre del token es obligatorio",
+        "nameMax": "El nombre del token debe tener 100 caracteres o menos"
+      }
+    },
+    "createdModal": {
+      "title": "Token creado",
+      "warningNote": "Copia este token ahora. No podrás verlo de nuevo.",
+      "doneButton": "Listo"
+    },
+    "toasts": {
+      "copied": "Token copiado al portapapeles",
+      "mcpUrlCopied": "URL de MCP copiada al portapapeles",
+      "revoked": "Token revocado",
+      "selectScope": "Selecciona al menos un permiso",
+      "copyTokenFailed": "Error al copiar el token",
+      "copyUrlFailed": "Error al copiar la URL",
+      "loadFailed": "Error al cargar los tokens de API",
+      "createFailed": "Error al crear el token",
+      "revokeFailed": "Error al revocar el token"
+    },
+    "relative": {
+      "never": "Nunca",
+      "today": "Hoy",
+      "yesterday": "Ayer",
+      "daysAgo": "Hace {count} días",
+      "monthsAgo": "Hace {count} meses"
+    }
+  },
+  "autoBackup": {
+    "heading": "Copia de seguridad automática",
+    "description": "Realiza copias de seguridad automáticas de tus datos en una carpeta según un horario. Dado que Monize se ejecuta en Docker, debes mapear una carpeta del host al contenedor como volumen (p. ej., -v /host/backups:/data/backups).",
+    "adminManagedNote": "Solo los administradores pueden cambiar esta configuración. El resto de los usuarios se respaldan automáticamente con la misma programación y política de retención, cada uno en su propia carpeta.",
+    "loadingText": "Cargando...",
+    "enableLabel": "Habilitar copias de seguridad automáticas",
+    "backupFolderLabel": "Carpeta de copia de seguridad",
+    "backupFolderPlaceholder": "/data/backups",
+    "perUserFolderHelp": "Las copias de seguridad de cada usuario se guardan en su propia carpeta dentro de esta, con el nombre de su ID de usuario.",
+    "perUserFolderHelpWithPath": "Las copias de seguridad de cada usuario se guardan en su propia carpeta dentro de esta, con el nombre de su ID de usuario. La tuya: {path}",
+    "browseButton": "Examinar...",
+    "validateButton": "Validar",
+    "validatingButton": "Validando...",
+    "folderValid": "La carpeta es válida y tiene permisos de escritura",
+    "selectThisFolder": "Seleccionar esta carpeta",
+    "noSubdirectories": "Sin subdirectorios",
+    "frequencyLabel": "Frecuencia de copia de seguridad",
+    "backupTimeLabel": "Hora de copia de seguridad ({timezone})",
+    "backupTimeHelpInterval": "La primera copia de seguridad del día comienza a esta hora ({timezone}). Las siguientes siguen el intervalo configurado.",
+    "backupTimeHelpDaily": "Hora del día para ejecutar la copia de seguridad en tu zona horaria local ({timezone}).",
+    "retention": {
+      "heading": "Política de retención",
+      "description": "Configura cuántas copias de seguridad conservar. Las copias más antiguas que superen estos límites se eliminan automáticamente.",
+      "dailyLabel": "Copias diarias",
+      "dailyHelp": "Copias más recientes a conservar",
+      "weeklyLabel": "Copias semanales",
+      "weeklyHelp": "Una por semana conservada",
+      "monthlyLabel": "Copias mensuales",
+      "monthlyHelp": "Una por mes conservada"
+    },
+    "status": {
+      "heading": "Estado",
+      "lastBackup": "Última copia de seguridad",
+      "nextBackup": "Próxima copia de seguridad",
+      "error": "Error",
+      "success": "Exitoso",
+      "failed": "Fallido",
+      "partial": "Parcial"
+    },
+    "saveButton": "Guardar configuración",
+    "savingButton": "Guardando...",
+    "runNowButton": "Ejecutar copia ahora",
+    "runningButton": "Ejecutando copia...",
+    "toasts": {
+      "saved": "Configuración de copia automática guardada",
+      "backupCreated": "Copia de seguridad creada: {filename}",
+      "folderValid": "La carpeta es válida y tiene permisos de escritura",
+      "loadFailed": "Error al cargar la configuración de copia automática",
+      "saveFailed": "Error al guardar la configuración",
+      "runFailed": "Error al ejecutar la copia de seguridad",
+      "browseFailed": "Error al explorar las carpetas"
+    },
+    "folderErrors": {
+      "required": "La ruta de la carpeta es obligatoria",
+      "validationFailed": "La validación de la carpeta falló",
+      "validationError": "Error de validación"
+    },
+    "frequencyOptions": {
+      "every6hours": "Cada 6 horas",
+      "every12hours": "Cada 12 horas",
+      "daily": "Diariamente",
+      "weekly": "Semanalmente"
+    },
+    "noStorage": {
+      "title": "Esta instalación no tiene almacenamiento para copias de seguridad",
+      "body": "Las copias automáticas se escribirían en {folderPath}, donde esta instalación no puede escribir. Un administrador debe montar almacenamiento allí antes de que se pueda ejecutar una programación."
+    },
+    "never": "Nunca"
+  },
+  "backupRestore": {
+    "heading": "Copia de seguridad y restauración",
+    "encryption": {
+      "heading": "Cifrado de copias de seguridad",
+      "descriptionOidc": "Cifra las copias de seguridad manuales y automáticas con una contraseña de copia de seguridad dedicada que estableces aquí. Se requiere la contraseña para restaurar.",
+      "descriptionLocal": "Tus copias de seguridad se cifran con tu contraseña de inicio de sesión. No hay nada más que recordar: la misma contraseña las restaura.",
+      "unavailable": "Este servidor no está configurado para cifrar las copias de seguridad, así que se escriben sin cifrar.",
+      "enabledBadge": "Habilitado",
+      "disabledBadge": "No activado",
+      "enabledLocalNote": "Las copias de seguridad se cifran con tu contraseña de inicio de sesión.",
+      "disabledLocalNote": "Las copias de seguridad se escriben sin cifrar hasta que confirmes tu contraseña de inicio de sesión.",
+      "enableWithLoginPasswordButton": "Activar con mi contraseña de inicio de sesión",
+      "loading": "Cargando...",
+      "changePasswordButton": "Cambiar contraseña de copia de seguridad",
+      "disableButton": "Deshabilitar",
+      "setPasswordButton": "Establecer contraseña de copia de seguridad",
+      "setupModal": {
+        "titleOidc": "Establecer contraseña de copia de seguridad",
+        "titleLocal": "Activar copias de seguridad cifradas",
+        "descriptionOidc": "Elige una contraseña para cifrar tus copias de seguridad. Guárdala en un lugar seguro -- la necesitarás para restaurar.",
+        "descriptionLocal": "Confirma tu contraseña de inicio de sesión para activar las copias de seguridad cifradas. Es la contraseña con la que se cifrarán y la que necesitarás para restaurarlas.",
+        "placeholderOidc": "Nueva contraseña de copia de seguridad (12+ caracteres)",
+        "placeholderLocal": "Tu contraseña de inicio de sesión",
+        "savingButton": "Guardando...",
+        "confirmButton": "Confirmar"
+      },
+      "toasts": {
+        "enabled": "Copias de seguridad cifradas habilitadas",
+        "disabled": "Copias de seguridad cifradas deshabilitadas",
+        "enableFailed": "Error al habilitar el cifrado",
+        "disableFailed": "Error al deshabilitar el cifrado"
+      }
+    },
+    "export": {
+      "heading": "Crear copia de seguridad",
+      "description": "Descarga una copia de seguridad completa de tus datos financieros. Incluye cuentas, transacciones, categorías, beneficiarios, presupuestos, inversiones y todos los demás datos del usuario.",
+      "downloadButton": "Descargar copia de seguridad",
+      "creatingButton": "Creando copia de seguridad...",
+      "exportPasswordModal": {
+        "title": "Cifrar copia de seguridad",
+        "description": "Ingresa la contraseña para cifrar esta copia de seguridad. La necesitarás para restaurar.",
+        "placeholderOidc": "Contraseña de copia de seguridad",
+        "placeholderLocal": "Contraseña de inicio de sesión",
+        "encryptingButton": "Cifrando...",
+        "downloadButton": "Descargar"
+      },
+      "toasts": {
+        "success": "Copia de seguridad descargada correctamente",
+        "incomplete": "Copia de seguridad descargada, pero está INCOMPLETA: {unusable} de {total} archivo(s) adjunto(s) no se pudieron guardar intactos ({missing} ausentes, {inconsistent} no pasaron la comprobación de integridad). No trate este archivo como una copia completa: corrija el almacenamiento de adjuntos y vuelva a exportar.",
+        "failed": "Error al crear la copia de seguridad"
+      }
+    },
+    "restore": {
+      "heading": "Restaurar desde copia de seguridad",
+      "description": "Reemplaza todos tus datos actuales con los datos de un archivo de copia de seguridad exportado anteriormente. Esto sobrescribirá permanentemente tus datos existentes.",
+      "openButton": "Restaurar desde copia de seguridad...",
+      "warning": "Advertencia: Esto eliminará todos tus datos actuales y los reemplazará con el contenido de la copia de seguridad. Esta acción no se puede deshacer.",
+      "selectFileLabel": "Seleccionar archivo de copia de seguridad",
+      "encryptedBackupLabel": "Esta copia de seguridad está cifrada. Ingresa la contraseña con la que fue creada:",
+      "backupPasswordPlaceholder": "Contraseña de copia de seguridad",
+      "oidcConfirmLabel": "Vuelve a autenticarte con tu proveedor de identidad para confirmar:",
+      "passwordConfirmLabel": "Ingresa la contraseña de tu cuenta para confirmar:",
+      "passwordPlaceholder": "Ingresa tu contraseña",
+      "oidcRestoreButton": "Volver a autenticar y restaurar",
+      "restoringButton": "Restaurando...",
+      "confirmRestoreButton": "Confirmar restauración",
+      "toasts": {
+        "pleaseSelectFile": "Por favor selecciona un archivo de copia de seguridad",
+        "pleaseEnterPassword": "Ingresa tu contraseña para confirmar",
+        "encryptedNeedsPassword": "Esta copia de seguridad está cifrada. Ingresa la contraseña con la que fue creada en el campo \"Contraseña de copia de seguridad\" y vuelve a intentarlo.",
+        "failed": "Error al restaurar la copia de seguridad",
+        "reauthRedirect": "Te llevamos a tu proveedor de identidad para confirmar que eres tú. Vuelve a elegir el archivo de copia de seguridad cuando regreses."
+      }
+    },
+    "restoreResult": {
+      "title": "Restauración completa",
+      "description": "Tus datos han sido restaurados correctamente. Aquí tienes un resumen de lo que se restauró:",
+      "totalRecords": "Total de registros",
+      "doneButton": "Listo",
+      "skippedAttachments": "{count, plural, one {# archivo adjunto no se restauró} other {# archivos adjuntos no se restauraron}}: la copia no contenía bytes utilizables para ellos — faltaban o no pasaron su suma de comprobación al exportarla, o el fichero es anterior a las copias autocontenidas. Exporte una copia nueva cuando el almacenamiento de adjuntos esté correcto.",
+      "unusableAiProviderKeys": "{count, plural, one {Se restauró # proveedor de IA sin una clave de API utilizable} other {Se restauraron # proveedores de IA sin claves de API utilizables}}: la copia de seguridad se creó antes de que las claves de proveedor viajaran en ella, así que la clave guardada pertenece al servidor que generó el archivo, o este servidor no tiene configurada ninguna clave de cifrado con la que almacenarla. Abre Ajustes → Proveedores de IA e introduce de nuevo la clave de API."
+    }
+  },
+  "sharedAccess": {
+    "description": "Los delegados inician sesión con sus propias credenciales y nunca ven tu contraseña. Solo ven las cuentas y secciones que tú les otorgas.",
+    "addDelegateButton": "Agregar delegado",
+    "loading": "Cargando...",
+    "noDelegates": "Aún no hay delegados.",
+    "statusLabel": "Estado: {status}",
+    "sectionsLabel": "Secciones: {count}",
+    "accountsLabel": "Cuentas: {count}",
+    "sharedDataLabel": "Datos compartidos: {count}",
+    "editAccessButton": "Editar acceso",
+    "resetPasswordButton": "Restablecer contraseña",
+    "resetPasswordDisabledTitle": "Esta persona administra su propia contraseña (tiene su propia cuenta de Monize o acceso delegado en otro lugar).",
+    "removeButton": "Eliminar",
+    "createModal": {
+      "title": "Agregar delegado",
+      "description": "Otorga a otra persona acceso limitado a tus cuentas.",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "Correo del delegado",
+      "checkingEmail": "Comprobando este correo con las cuentas de Monize existentes…",
+      "retryEmailCheck": "Comprobar de nuevo",
+      "firstNameLabel": "Nombre",
+      "firstNamePlaceholder": "Nombre (opcional)",
+      "lastNameLabel": "Apellido",
+      "lastNamePlaceholder": "Apellido (opcional)",
+      "existingAccountNotice": "Esta persona ya tiene un inicio de sesión en Monize. Conservará sus propias credenciales y simplemente se le otorgará el acceso compartido adicional — no se necesita contraseña ni invitación.",
+      "sendInviteLabel": "Enviar una invitación por correo en lugar de establecer una contraseña",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "Establecer una contraseña",
+      "submitButton": "Agregar delegado"
+    },
+    "revokeDialog": {
+      "title": "Eliminar delegado",
+      "message": "¿Eliminar este delegado? Perderá el acceso a tu cuenta. Si no tiene otro acceso compartido y nunca reclamó este correo como su propia cuenta de Monize, su inicio de sesión administrado por el propietario también será eliminado.",
+      "removingButton": "Eliminando...",
+      "removeButton": "Eliminar"
+    },
+    "tempPasswordModal": {
+      "title": "Contraseña temporal",
+      "description": "Comparte esto con el delegado de forma segura. Se le pedirá que la cambie en el primer inicio de sesión. No se mostrará de nuevo.",
+      "copyButton": "Copiar",
+      "copiedButton": "Copiado",
+      "doneButton": "Listo"
+    },
+    "toasts": {
+      "created": "Delegado creado",
+      "createdWithTempPassword": "Delegado creado. Contraseña temporal: {password}",
+      "invited": "Correo de invitación enviado",
+      "removed": "Delegado eliminado"
+    },
+    "errors": {
+      "setPasswordOrInvite": "Establece una contraseña o envía una invitación por correo.",
+      "loadFailed": "Error al cargar el acceso compartido",
+      "createFailed": "Error al crear el delegado",
+      "revokeFailed": "Error al revocar el delegado",
+      "resetPasswordFailed": "Error al restablecer la contraseña",
+      "copyFailed": "No se pudo copiar al portapapeles",
+      "lookupFailed": "No se pudo comprobar este correo con las cuentas de Monize existentes. Añadir un delegado queda en pausa hasta que esa comprobación funcione, para que nunca se sobrescriba por error una contraseña existente."
+    },
+    "jointLabel": "{count, plural, one {# cuenta conjunta} other {# cuentas conjuntas}}"
+  },
+  "delegateAccessModal": {
+    "title": "Editar acceso",
+    "tabs": {
+      "accounts": "Cuentas",
+      "sections": "Secciones",
+      "shared": "Datos compartidos"
+    },
+    "sections": {
+      "description": "Otorga acceso de solo lectura a secciones completas de la aplicación. Los datos con alcance de cuenta también necesitan acceso por cuenta."
+    },
+    "accounts": {
+      "noAccounts": "No hay cuentas para otorgar.",
+      "grantAll": "Otorgar todas",
+      "jointRequiresFullAccount": "Las cuentas conjuntas solo se pueden compartir con usuarios que tengan su propia cuenta de Monize"
+    },
+    "shared": {
+      "description": "La LECTURA de beneficiarios, categorías y etiquetas siempre está permitida. Estos controlan crear/editar/eliminar."
+    },
+    "saveButton": "Guardar",
+    "toasts": {
+      "saved": "Acceso actualizado",
+      "saveFailed": "Error al actualizar el acceso"
+    }
+  },
+  "nav": {
+    "sectionsAriaLabel": "Secciones de configuración",
+    "profile": "Perfil",
+    "preferences": "Preferencias",
+    "tours": "Recorridos guiados",
+    "notifications": "Notificaciones",
+    "security": "Seguridad",
+    "sharedAccess": "Acceso compartido",
+    "emergencyAccess": "Acceso de emergencia",
+    "apiAccess": "Acceso a la API",
+    "aiSettings": "Configuración de IA",
+    "backupRestore": "Copia de seguridad y restauración",
+    "autoBackup": "Copia de seguridad automática",
+    "help": "Ayuda y soporte",
+    "dangerZone": "Zona de peligro",
+    "about": "Acerca de",
+    "payeeLookup": "Búsqueda de beneficiarios"
+  },
+  "page": {
+    "title": "Configuración",
+    "demoRestricted": {
+      "heading": "Restringido en modo demo",
+      "body": "La edición de perfil, los cambios de contraseña, la autenticación de dos factores y la eliminación de cuenta están deshabilitados en el modo demo."
+    },
+    "sharedAccessCard": {
+      "title": "Acceso compartido",
+      "description": "Otorga a otra persona acceso detallado a cuentas específicas."
+    },
+    "toursCard": {
+      "title": "Recorridos guiados",
+      "description": "Todos los recorridos que ofrece Monize, con los que ya has visto. Inicia o repite cualquiera de ellos."
+    },
+    "emergencyAccessCard": {
+      "title": "Acceso de emergencia",
+      "description": "Designa contactos que reciben automáticamente acceso completo a tu cuenta si no inicias sesión durante un período prolongado."
+    },
+    "aiSettingsCard": {
+      "title": "Configuración de IA",
+      "description": "Configura proveedores de IA, gestiona claves de API y consulta estadísticas de uso."
+    },
+    "delegateSecurityError": "No se pueden cargar tu configuración de seguridad.",
+    "toasts": {
+      "securityLoadFailed": "Error al cargar la configuración de seguridad",
+      "loadFailed": "Error al cargar la configuración"
+    }
+  },
+  "aiSettings": {
+    "backLink": "Volver a Configuración",
+    "title": "Configuración de IA",
+    "subtitle": "Configura proveedores de IA para funciones financieras inteligentes",
+    "bubble": {
+      "title": "Burbuja de chat flotante",
+      "subtitle": "Muestra un botón de chat en todas las páginas para que puedas preguntarle al asistente AI desde cualquier lugar. Se abre como un panel inferior que puedes ampliar a pantalla completa.",
+      "toggleLabel": "Activar la burbuja de chat AI flotante",
+      "enabled": "Burbuja de chat flotante activada",
+      "disabled": "Burbuja de chat flotante desactivada",
+      "saveFailed": "No se pudo actualizar la configuración de la burbuja de chat"
+    },
+    "demoRestricted": {
+      "heading": "Restringido en modo demo",
+      "body": "La configuración de proveedores de IA está deshabilitada en el modo demo."
+    },
+    "toasts": {
+      "loadFailed": "Error al cargar la configuración de IA",
+      "usageLoadFailed": "Error al cargar los datos de uso"
+    },
+    "mcpRelay": {
+      "title": "Use su propio asistente (relé MCP)",
+      "subtitle": "Responda a las indicaciones del chat con su propio agente MCP en lugar de un proveedor de IA del servidor.",
+      "toggleLabel": "Usar relé MCP",
+      "saved": "Ajuste del relé guardado",
+      "saveFailed": "No se pudo guardar el ajuste del relé",
+      "how": {
+        "intro": "Cuando está activado, el chat de IA no llama a un LLM del servidor. En su lugar:",
+        "step1": "Usted ejecuta un agente MCP (p. ej. Claude CLI) en su propia máquina, con sesión iniciada en su suscripción.",
+        "step2": "El agente sondea Monize mediante long-polling en busca de las indicaciones que escribe en el chat y las responde con las herramientas de Monize.",
+        "step3": "Las respuestas se transmiten de vuelta al chat. Un indicador de estado muestra si su agente está conectado.",
+        "note": "No se ejecuta nada hasta que su agente esté conectado y escuchando. El chat muestra las instrucciones de conexión."
+      }
+    }
+  },
+  "sharedAccessPage": {
+    "backLink": "Volver a Configuración",
+    "title": "Acceso compartido",
+    "subtitle": "Otorga a otra persona acceso detallado a cuentas específicas",
+    "demoRestricted": {
+      "heading": "Restringido en modo demo",
+      "body": "La gestión de delegados está deshabilitada en el modo demo."
+    }
+  },
+  "emergencyAccess": {
+    "backLink": "Volver a Configuración",
+    "title": "Acceso de emergencia",
+    "subtitle": "Designa contactos que reciben automáticamente acceso completo a tu cuenta si no inicias sesión durante un período prolongado",
+    "delegateRestricted": "El acceso de emergencia solo puede ser configurado por el propietario de la cuenta.",
+    "demoRestricted": "El acceso de emergencia está deshabilitado en el modo demo.",
+    "emailNotConfigured": {
+      "heading": "El correo electrónico no está configurado",
+      "body": "El acceso de emergencia depende del envío de correos. Pídele a tu administrador que configure las variables de entorno SMTP (SMTP_HOST, SMTP_USER, SMTP_PASSWORD) e inténtalo de nuevo."
+    },
+    "encryptionNotConfigured": {
+      "heading": "Se requiere una clave de cifrado",
+      "body": "El acceso de emergencia necesita que ENCRYPTION_KEY esté establecida en el servidor. Una concesión almacena cifrado el enlace de acceso de cada contacto para que un reintento pueda reenviar el mismo enlace; sin esa clave no se puede enviar ningún enlace."
+    },
+    "alreadyGranted": {
+      "heading": "Acceso de emergencia ya otorgado",
+      "description": "tus contactos designados recibieron enlaces mágicos para tomar el control de la cuenta. Si esto fue involuntario, borra el estado otorgado a continuación para invalidar los enlaces pendientes.",
+      "clearButton": "Borrar estado otorgado"
+    },
+    "loadError": "No se puede cargar la configuración de acceso de emergencia.",
+    "settings": {
+      "heading": "Configuración",
+      "enableLabel": "Habilitar acceso de emergencia",
+      "grantAfterDaysLabel": "Días de inactividad antes de otorgar el acceso",
+      "reminderAfterDaysLabel": "Días de inactividad antes de los correos de recordatorio",
+      "saveButton": "Guardar configuración",
+      "toasts": {
+        "saved": "Configuración de acceso de emergencia guardada",
+        "saveFailed": "Error al guardar la configuración"
+      }
+    },
+    "message": {
+      "heading": "Mensaje para tus contactos",
+      "description": "Cifrado en reposo. Para ver o editar se requiere reverificar tu identidad.",
+      "unlockTimer": "Desbloqueado por {mins}:{secs}",
+      "messageSet": "Mensaje establecido",
+      "charCount": "({count} caracteres",
+      "updatedAt": ", actualizado {timestamp}",
+      "noMessage": "Sin mensaje establecido",
+      "revealButton": "Mostrar mensaje",
+      "editButton": "Editar mensaje",
+      "addButton": "Agregar mensaje",
+      "emptyMessage": "(vacío)",
+      "lockNowButton": "Bloquear ahora",
+      "editMessageButton": "Editar",
+      "messagePlaceholder": "Notas, instrucciones, ubicación de documentos importantes...",
+      "maxCharsNote": "Máximo 4000 caracteres. Almacenado cifrado en reposo.",
+      "cancelButton": "Cancelar",
+      "saveButton": "Guardar mensaje",
+      "toasts": {
+        "saved": "Mensaje guardado",
+        "verifyAgain": "Verificación expirada -- por favor verifica de nuevo para guardar",
+        "loadFailed": "Error al cargar el mensaje",
+        "saveFailed": "Error al guardar el mensaje"
+      }
+    },
+    "contacts": {
+      "heading": "Contactos de emergencia",
+      "description": "Cada contacto recibe un enlace mágico por correo cuando se otorga el acceso. Lo usan para establecer una nueva contraseña y tomar el control de tu cuenta. El primer contacto que lo reclame gana.",
+      "addButton": "Agregar contacto",
+      "noContacts": "Aún no hay contactos.",
+      "editButton": "Editar",
+      "removeButton": "Eliminar",
+      "contactModal": {
+        "addTitle": "Agregar contacto de emergencia",
+        "editTitle": "Editar contacto",
+        "firstNameLabel": "Nombre",
+        "emailLabel": "Correo electrónico",
+        "addButton": "Agregar contacto",
+        "saveButton": "Guardar cambios"
+      },
+      "removeDialog": {
+        "title": "Eliminar contacto",
+        "message": "Este contacto ya no recibirá acceso de emergencia. Puedes volver a agregarlo más adelante.",
+        "removingButton": "Eliminando...",
+        "removeButton": "Eliminar"
+      },
+      "toasts": {
+        "added": "Contacto agregado",
+        "updated": "Contacto actualizado",
+        "removed": "Contacto eliminado",
+        "saveFailed": "Error al guardar el contacto",
+        "removeFailed": "Error al eliminar el contacto"
+      }
+    },
+    "status": {
+      "heading": "Estado",
+      "lastAccess": "Último acceso: ",
+      "lastReminderSent": "Último recordatorio enviado: ",
+      "grantStatus": "Estado de otorgamiento: ",
+      "unknown": "desconocido",
+      "never": "nunca",
+      "daysAgo": "hace {count} día{plural}",
+      "grantedOn": "otorgado el {timestamp}",
+      "notYetGranted": "aún no otorgado",
+      "timerNote": "El temporizador se reinicia automáticamente cada vez que usas la aplicación — iniciar sesión, ver una página, registrar una transacción, cualquier acción autenticada."
+    },
+    "resetConfirm": {
+      "title": "Borrar estado otorgado",
+      "message": "Esto invalida los enlaces mágicos pendientes, permite que la cadencia de recordatorios comience de nuevo y permite que la cascada de otorgamiento se active de nuevo tras otro período de inactividad.",
+      "clearingButton": "Borrando...",
+      "clearButton": "Borrar",
+      "toasts": {
+        "cleared": "Estado otorgado borrado",
+        "resetFailed": "Error al restablecer el estado otorgado"
+      }
+    },
+    "stepUp": {
+      "reason": "Verifica de nuevo tu identidad para ver o editar tu mensaje de acceso de emergencia."
+    },
+    "toasts": {
+      "loadFailed": "Error al cargar el acceso de emergencia",
+      "reauthFailed": "Error al confirmar la reautenticación"
+    }
+  },
+  "aiProviders": {
+    "heading": "Proveedores de IA",
+    "addButton": "Agregar proveedor",
+    "encryptionWarning": "ENCRYPTION_KEY no está configurado. Puedes usar Ollama (local, sin clave de API necesaria) pero los proveedores en la nube requieren cifrado para almacenar las claves de API de forma segura.",
+    "systemDefault": {
+      "heading": "Proveedor de IA predeterminado del sistema disponible",
+      "description": "Tu administrador ha configurado un proveedor de IA central",
+      "usedAutomatically": "Se usará automáticamente ya que no tienes proveedores personales configurados.",
+      "personalPriority": "Tus proveedores personales tienen prioridad sobre el predeterminado del sistema.",
+      "limitsManaged": "Su configuración, incluido cuánto trabajo puede hacer para responder una pregunta, la gestiona tu administrador. Añade tu propio proveedor para controlarla tú."
+    },
+    "noProviders": {
+      "withSystemDefault": "No hay proveedores de IA personales configurados. Se usará el proveedor predeterminado del sistema.",
+      "withoutSystemDefault": "No hay proveedores de IA configurados. Agrega un proveedor para habilitar las funciones de IA."
+    },
+    "providerCard": {
+      "activeBadge": "Activo",
+      "inactiveBadge": "Inactivo",
+      "priorityLabel": "Prioridad: {n}",
+      "modelLabel": "Modelo: {model}",
+      "keyLabel": "Clave: {key}",
+      "urlLabel": "URL: {url}",
+      "costLabel": "Costo/1M ({currency}): {input} entrada / {output} salida",
+      "disableButton": "Deshabilitar",
+      "enableButton": "Habilitar",
+      "editButton": "Editar",
+      "deleteButton": "Eliminar"
+    },
+    "configForm": {
+      "addTitle": "Agregar proveedor de IA",
+      "editTitle": "Editar proveedor",
+      "providerLabel": "Proveedor",
+      "displayNameLabel": "Nombre para mostrar",
+      "modelLabel": "Modelo",
+      "testButton": "Probar",
+      "testingButton": "Probando...",
+      "ollamaCloudNote": "Los nombres de modelos deben incluir el sufijo -cloud (p. ej., gpt-oss:20b-cloud).",
+      "apiKeyLabel": "Clave de API",
+      "baseUrlLabel": "URL base",
+      "priorityLabel": "Prioridad",
+      "priorityHelp": "Número menor = mayor prioridad. Se usa para el orden de reserva.",
+      "costRatesHeading": "Tarifas de costo (opcional)",
+      "costRatesHelp": "Ingresa las tarifas publicadas por tu proveedor por 1.000.000 de tokens para ver el costo estimado en el panel de Uso. Deja en blanco para omitir las estimaciones de costo.",
+      "inputCostLabel": "Costo de entrada / 1M tokens",
+      "outputCostLabel": "Costo de salida / 1M tokens",
+      "rateCurrencyLabel": "Moneda de la tarifa",
+      "rateCurrencyHelp": "Si difiere de tu moneda local, el panel de Uso puede convertir los costos usando tus tipos de cambio guardados.",
+      "saveButton": "Guardar cambios",
+      "addProviderButton": "Agregar proveedor",
+      "modelPlaceholder": "Ingresa el nombre del modelo",
+      "testModelAria": "Probar modelo",
+      "apiKeyPlaceholder": "Ingresa la clave de API",
+      "saveFailed": "Error al guardar la configuración",
+      "inputCostPlaceholder": "p. ej., 3.00",
+      "outputCostPlaceholder": "p. ej., 15.00",
+      "toasts": {
+        "notReachable": "No se pudo alcanzar el proveedor.",
+        "modelUnavailable": "El modelo \"{model}\" no está disponible en este proveedor.",
+        "modelReady": "El modelo \"{model}\" está listo.",
+        "success": "Conexión exitosa.",
+        "testFailed": "La prueba del modelo falló"
+      },
+      "costCurrencies": {
+        "USD": "USD - Dólar estadounidense",
+        "EUR": "EUR - Euro",
+        "GBP": "GBP - Libra esterlina",
+        "CAD": "CAD - Dólar canadiense",
+        "AUD": "AUD - Dólar australiano",
+        "JPY": "JPY - Yen japonés",
+        "CNY": "CNY - Yuan chino",
+        "INR": "INR - Rupia india"
+      },
+      "validation": {
+        "displayNameMax": "El nombre para mostrar debe tener 100 caracteres o menos",
+        "mustBeNumber": "Debe ser un número",
+        "currencyCode": "Debe ser un código de moneda de 3 letras",
+        "budgetRange": "Debe estar entre {min} y {max}"
+      },
+      "queryBudgets": {
+        "heading": "Límites de consulta (opcional)",
+        "help": "Cuánto trabajo puede hacer este proveedor para responder una pregunta. Deja un campo en blanco para usar el valor predeterminado que se muestra. Aumenta primero los pasos de análisis si el asistente se detiene a menudo antes de terminar de buscar.",
+        "defaultPlaceholder": "Predeterminado: {value}",
+        "maxIterationsLabel": "Pasos de análisis",
+        "maxIterationsHelp": "Vueltas por el bucle de llamadas a herramientas. Un modelo local pequeño suele usar un paso por consulta.",
+        "maxToolCallsLabel": "Consultas de datos",
+        "maxToolCallsHelp": "Total de consultas que el asistente puede hacer al responder una pregunta.",
+        "timeoutMinutesLabel": "Límite de tiempo (minutos)",
+        "timeoutMinutesHelp": "Tiempo disponible para una pregunta. Auméntalo si la inferencia local es lenta.",
+        "maxInputTokensLabel": "Tokens de entrada",
+        "maxInputTokensHelp": "Total de tokens de entrada en todos los pasos. El principal control de costo para un proveedor de pago.",
+        "maxToolResultCharsLabel": "Tamaño del resultado (caracteres)",
+        "maxToolResultCharsHelp": "Qué parte del resultado de una sola consulta ve el modelo antes de que se recorte."
+      }
+    },
+    "testButton": {
+      "testLabel": "Probar",
+      "connectionFailed": "Conexión fallida",
+      "modelUnavailable": "El modelo \"{model}\" no está disponible en este proveedor.",
+      "successWithModel": "Conexión exitosa. El modelo \"{model}\" está listo.",
+      "success": "Conexión exitosa",
+      "testFailed": "La prueba de conexión falló"
+    },
+    "toasts": {
+      "added": "Proveedor agregado",
+      "updated": "Proveedor actualizado",
+      "removed": "Proveedor eliminado",
+      "modelReady": "El modelo \"{model}\" está listo.",
+      "notReachable": "Guardado, pero no se pudo alcanzar el proveedor. Verifica la URL/clave de API.",
+      "modelUnavailable": "Guardado, pero el modelo \"{model}\" no está disponible en este proveedor.",
+      "deleteFailed": "Error al eliminar el proveedor",
+      "updateFailed": "Error al actualizar el proveedor"
+    }
+  },
+  "usage": {
+    "heading": "Uso",
+    "totalRequests": "Total de solicitudes",
+    "inputTokens": "Tokens de entrada",
+    "outputTokens": "Tokens de salida",
+    "estCost": "Costo est.",
+    "setRatesToEnable": "Establece tarifas en un proveedor para habilitar",
+    "inHomeCurrency": "En {currency}",
+    "inProviderCurrency": "En la moneda del proveedor",
+    "byProvider": {
+      "heading": "Por proveedor",
+      "provider": "Proveedor",
+      "requests": "Solicitudes",
+      "inputTokens": "Tokens de entrada",
+      "outputTokens": "Tokens de salida",
+      "estCost": "Costo est."
+    },
+    "recentActivity": {
+      "heading": "Actividad reciente",
+      "date": "Fecha",
+      "provider": "Proveedor",
+      "feature": "Función",
+      "tokens": "Tokens",
+      "duration": "Duración",
+      "estCost": "Costo est."
+    },
+    "noUsage": "Aún no hay datos de uso. El uso aparecerá aquí cuando empieces a usar las funciones de IA.",
+    "periods": {
+      "d7": "7 días",
+      "d30": "30 días",
+      "d90": "90 días",
+      "all": "Todo el tiempo"
+    },
+    "estCostTooltip": "Estimado usando las tarifas de costo que configuraste en cada proveedor. Excluye cualquier actividad para la que no haya una tarifa correspondiente establecida."
+  },
+  "payeeLookup": {
+    "title": "Búsqueda de beneficiarios",
+    "subtitle": "De dónde proceden el sitio web, la dirección, el correo y el teléfono de un beneficiario, y cuándo se ejecuta una búsqueda por sí sola.",
+    "saved": "Ajustes de búsqueda de beneficiarios guardados",
+    "saveFailed": "No se pudieron guardar los ajustes de búsqueda de beneficiarios",
+    "loadFailed": "No se pudieron cargar los ajustes de búsqueda de beneficiarios. Recarga la página para volver a intentarlo.",
+    "googlePlaces": {
+      "toggleLabel": "Usar Google Places para las búsquedas de beneficiarios",
+      "notConfigured": "Añade una clave de API de Google Places para buscar empresas en el directorio de Google en lugar de usar tu proveedor de IA.",
+      "operatorManaged": "Configurado por la administración de este servidor. Puedes desactivarlo para tus propios beneficiarios.",
+      "configure": "Configurar",
+      "edit": "Editar",
+      "removeKey": "Quitar clave",
+      "usage": "Usado este mes: {used} de {cap}",
+      "usageNoCap": "Usado este mes: {used}. Sin límite mensual.",
+      "keyUnreadable": "Este servidor no puede leer la clave de API guardada. Ocurre cuando se restaura una copia de seguridad en otra instancia o cuando cambia la clave de cifrado. Vuelve a introducir la clave para solucionarlo.",
+      "encryptionUnavailable": "Este servidor no tiene clave de cifrado configurada, así que no se puede guardar una clave de API de forma segura. Pide a la administración que configure una.",
+      "modalTitle": "Google Places",
+      "modalSubtitle": "Monize envía a Google el nombre del beneficiario y la dirección que ya tengas, y no almacena nada con ellos.",
+      "apiKeyLabel": "Clave de API",
+      "apiKeyPlaceholder": "Pega tu clave de API de Google Places",
+      "apiKeyHelp": "Crea una clave en la consola de Google Cloud con la Places API (New) activada. Déjalo en blanco para mantener la clave que ya guardaste.",
+      "capToggleLabel": "Limitar las solicitudes cada mes",
+      "capHelp": "Google ofrece {free} solicitudes gratuitas de Text Search al mes para los campos que necesita esta búsqueda. Pasado el límite, las búsquedas recurren a tu proveedor de IA.",
+      "capLabel": "Solicitudes al mes",
+      "capRange": "Introduce un número entre {min} y {max}.",
+      "test": "Probar",
+      "testing": "Probando...",
+      "testSuccess": "Google aceptó la clave.",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "setupInstructions": "Instrucciones de configuración"
+    },
+    "automatic": {
+      "title": "Búsqueda automática de contactos de beneficiarios",
+      "subtitle": "Busca automáticamente el sitio web, la dirección, el correo y el teléfono de un beneficiario nuevo. Se envía el nombre del beneficiario, junto con las notas, el sitio web, la dirección, el correo y el teléfono que ya tenga, para que la búsqueda distinga la empresa y la ubicación correctas.",
+      "toggleLabel": "Activar la búsqueda automática de contactos de beneficiarios",
+      "enabled": "Búsqueda automática de contactos de beneficiarios activada",
+      "disabled": "Búsqueda automática de contactos de beneficiarios desactivada",
+      "saveFailed": "No se pudo actualizar el ajuste de búsqueda de contactos",
+      "noSource": "Active una fuente arriba para buscar beneficiarios automáticamente. Con ambas desactivadas, nada puede responder una búsqueda."
+    },
+    "order": {
+      "title": "Qué fuente responde primero",
+      "placesTitle": "Google Places",
+      "placesHelp": "Datos de directorio, más baratos por búsqueda. Google no tiene direcciones de correo.",
+      "aiTitle": "Proveedor de IA existente",
+      "aiHelp": "Puede encontrar un correo electrónico y cuesta una llamada al modelo en cada búsqueda.",
+      "aiToggleLabel": "Usar un proveedor de IA para las búsquedas de beneficiarios",
+      "aiProviderLabel": "Proveedor a usar",
+      "aiProviderAny": "Cualquier proveedor, por orden de prioridad",
+      "moveUp": "Subir",
+      "moveDown": "Bajar"
+    }
+  }
+}

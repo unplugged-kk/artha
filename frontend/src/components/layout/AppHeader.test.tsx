@@ -1,0 +1,637 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@/test/render';
+import { AppHeader } from './AppHeader';
+import toast from 'react-hot-toast';
+
+// Mock next/image
+vi.mock('next/image', () => ({
+  default: ({ priority, fill, ...props }: any) => <img {...props} />,
+}));
+
+// Track router.push calls
+const mockPush = vi.fn();
+let mockPathname = '/dashboard';
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+    replace: vi.fn(),
+    back: vi.fn(),
+    prefetch: vi.fn(),
+    refresh: vi.fn(),
+  }),
+  usePathname: () => mockPathname,
+  useSearchParams: () => new URLSearchParams(),
+}));
+
+// Mock auth API
+const mockApiLogout = vi.fn().mockResolvedValue(undefined);
+vi.mock('@/lib/auth', () => ({
+  authApi: {
+    logout: (...args: any[]) => mockApiLogout(...args),
+  },
+}));
+
+// Mock logger
+vi.mock('@/lib/logger', () => ({
+  createLogger: () => ({
+    error: vi.fn(),
+    warn: vi.fn(),
+    info: vi.fn(),
+    debug: vi.fn(),
+  }),
+}));
+
+const mockLogout = vi.fn();
+let mockUser: any = {
+  id: 'test-user-id',
+  email: 'test@example.com',
+  firstName: 'Test',
+  lastName: 'User',
+  role: 'user',
+};
+
+vi.mock('@/store/authStore', () => ({
+  useAuthStore: (selector?: (state: Record<string, unknown>) => unknown) => {
+    const state = {
+      user: mockUser,
+      logout: mockLogout,
+      actingAsUserId: null,
+      delegateCapabilities: null,
+      delegateSections: null,
+    };
+    return selector ? selector(state) : state;
+  },
+}));
+
+// Mock NotificationBell to avoid async act() warnings (tested in its own file)
+vi.mock('@/components/notifications/NotificationBell', () => ({
+  NotificationBell: () => <div data-testid="budget-alert-badge" />,
+}));
+
+describe('AppHeader', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    window.sessionStorage.clear();
+    mockPathname = '/dashboard';
+    mockUser = {
+      id: 'test-user-id',
+      email: 'test@example.com',
+      firstName: 'Test',
+      lastName: 'User',
+      role: 'user',
+    };
+  });
+
+  it('renders the Monize logo and brand name', () => {
+    render(<AppHeader />);
+    expect(screen.getByText('Monize')).toBeInTheDocument();
+    expect(screen.getByAltText('Monize')).toBeInTheDocument();
+  });
+
+  it('renders main navigation links in desktop nav', () => {
+    render(<AppHeader />);
+    // Desktop nav includes Transactions, Accounts, Investments, Bills & Deposits, Reports
+    expect(screen.getAllByText('Transactions').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Accounts').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Investments').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Bills & Deposits').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Reports').length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('renders the user first name in settings button', () => {
+    render(<AppHeader />);
+    expect(screen.getByText('Test')).toBeInTheDocument();
+  });
+
+  it('renders user email when firstName is not available', () => {
+    mockUser = {
+      id: 'test-user-id',
+      email: 'test@example.com',
+      firstName: '',
+      lastName: 'User',
+      role: 'user',
+    };
+    render(<AppHeader />);
+    expect(screen.getByText('test@example.com')).toBeInTheDocument();
+  });
+
+  it('renders the logout button', () => {
+    render(<AppHeader />);
+    expect(screen.getByRole('button', { name: /logout/i })).toBeInTheDocument();
+  });
+
+  it('calls authApi.logout and store logout on logout click', async () => {
+    render(<AppHeader />);
+    const logoutButton = screen.getByRole('button', { name: /logout/i });
+    fireEvent.click(logoutButton);
+
+    await waitFor(() => {
+      expect(mockApiLogout).toHaveBeenCalled();
+    });
+
+    await waitFor(() => {
+      expect(mockLogout).toHaveBeenCalled();
+      expect(mockPush).toHaveBeenCalledWith('/login');
+    });
+  });
+
+  it('clears the incomplete-logout flag on a confirmed logout', async () => {
+    window.sessionStorage.setItem('monize:logout-incomplete', '1');
+    render(<AppHeader />);
+    fireEvent.click(screen.getByRole('button', { name: /logout/i }));
+
+    await waitFor(() => {
+      expect(mockLogout).toHaveBeenCalled();
+    });
+    expect(window.sessionStorage.getItem('monize:logout-incomplete')).toBeNull();
+    expect(toast.success).toHaveBeenCalled();
+    expect(toast.error).not.toHaveBeenCalled();
+  });
+
+  // Only the server can clear the HttpOnly refresh cookie, so a failed request
+  // leaves a session this client cannot end. Local state still has to go, but
+  // the UI used to show the ordinary success toast over it.
+  it('does not claim success when authApi.logout fails', async () => {
+    mockApiLogout.mockRejectedValueOnce(new Error('Network error'));
+    render(<AppHeader />);
+    fireEvent.click(screen.getByRole('button', { name: /logout/i }));
+
+    await waitFor(() => {
+      expect(mockLogout).toHaveBeenCalled();
+      expect(mockPush).toHaveBeenCalledWith('/login');
+    });
+
+    expect(toast.success).not.toHaveBeenCalled();
+    expect(toast.error).toHaveBeenCalled();
+    // and the login screen is told to keep warning until a retry succeeds
+    expect(window.sessionStorage.getItem('monize:logout-incomplete')).toBe('1');
+  });
+
+  it('renders the Tools dropdown button', () => {
+    render(<AppHeader />);
+    // There is a "Tools" button in the desktop nav
+    expect(screen.getAllByText('Tools').length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('opens Tools dropdown and shows tools links on click', () => {
+    render(<AppHeader />);
+    // Find the desktop Tools button (not the mobile Tools section header)
+    const toolsButtons = screen.getAllByText('Tools');
+    // Click the desktop dropdown toggle
+    fireEvent.click(toolsButtons[0]);
+
+    // All tools links should now appear in the dropdown
+    expect(screen.getAllByText('Categories').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Payees').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Securities').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Currencies').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Import Transactions').length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('navigates to tool link and closes dropdown when tool link clicked', () => {
+    render(<AppHeader />);
+    const toolsButtons = screen.getAllByText('Tools');
+    fireEvent.click(toolsButtons[0]);
+
+    const categoriesLinks = screen.getAllByText('Categories');
+    fireEvent.click(categoriesLinks[0]);
+
+    expect(mockPush).toHaveBeenCalledWith('/categories');
+  });
+
+  it('navigates to dashboard when logo is clicked', () => {
+    render(<AppHeader />);
+    const logoButton = screen.getByText('Monize');
+    fireEvent.click(logoButton);
+    expect(mockPush).toHaveBeenCalledWith('/dashboard');
+  });
+
+  it('navigates when desktop nav link is clicked', () => {
+    render(<AppHeader />);
+    const transactionsButtons = screen.getAllByText('Transactions');
+    fireEvent.click(transactionsButtons[0]);
+    expect(mockPush).toHaveBeenCalledWith('/transactions');
+  });
+
+  it('navigates to settings when settings button is clicked', () => {
+    render(<AppHeader />);
+    const settingsButton = screen.getByTitle('Settings');
+    fireEvent.click(settingsButton);
+    expect(mockPush).toHaveBeenCalledWith('/settings');
+  });
+
+  // Active link highlighting
+  it('highlights active nav link based on pathname', () => {
+    mockPathname = '/transactions';
+    render(<AppHeader />);
+    // The active desktop button should have bg-blue-100 class
+    const transactionsButtons = screen.getAllByText('Transactions');
+    // Desktop nav button (not mobile) - find one with the active class
+    const activeButton = transactionsButtons.find(
+      (el) => el.closest('button')?.className.includes('bg-blue-100'),
+    );
+    expect(activeButton).toBeTruthy();
+  });
+
+  it('highlights the section a detail page belongs to', () => {
+    // An account detail page is in Accounts. Comparing the pathname to the href
+    // exactly unlit the tab the user had just come through, so the bar said
+    // nothing about where they were.
+    mockPathname = '/accounts/11111111-1111-1111-1111-111111111111';
+    render(<AppHeader />);
+
+    const accountsButtons = screen.getAllByText('Accounts');
+    const activeButton = accountsButtons.find(
+      (el) => el.closest('button')?.className.includes('bg-blue-100'),
+    );
+    expect(activeButton).toBeTruthy();
+  });
+
+  it('highlights Tools dropdown when a tools link is active', () => {
+    mockPathname = '/categories';
+    render(<AppHeader />);
+    const toolsButtons = screen.getAllByText('Tools');
+    // The tools button should be highlighted since /categories is a tools link
+    const activeToolsButton = toolsButtons.find(
+      (el) => el.closest('button')?.className.includes('bg-blue-100'),
+    );
+    expect(activeToolsButton).toBeTruthy();
+  });
+
+  it('highlights the Tools dropdown from a tools detail page', () => {
+    mockPathname = '/securities/22222222-2222-2222-2222-222222222222';
+    render(<AppHeader />);
+
+    const toolsButtons = screen.getAllByText('Tools');
+    const activeToolsButton = toolsButtons.find(
+      (el) => el.closest('button')?.className.includes('bg-blue-100'),
+    );
+    expect(activeToolsButton).toBeTruthy();
+  });
+
+  it('highlights settings button when pathname is /settings', () => {
+    mockPathname = '/settings';
+    render(<AppHeader />);
+    const settingsButton = screen.getByTitle('Settings');
+    expect(settingsButton.className).toContain('bg-blue-100');
+  });
+
+  // Admin link
+  it('does not show Admin link for regular users', () => {
+    render(<AppHeader />);
+    expect(screen.queryByText('Admin')).not.toBeInTheDocument();
+    expect(screen.queryByText('User Management')).not.toBeInTheDocument();
+  });
+
+  it('shows Admin link for admin users in desktop nav', () => {
+    mockUser = {
+      id: 'admin-user-id',
+      email: 'admin@example.com',
+      firstName: 'AdminUser',
+      lastName: 'Test',
+      role: 'admin',
+    };
+    render(<AppHeader />);
+    expect(screen.getByText('Admin')).toBeInTheDocument();
+  });
+
+  it('highlights Admin link when pathname starts with /admin', () => {
+    mockPathname = '/admin/users';
+    mockUser = {
+      id: 'admin-user-id',
+      email: 'admin@example.com',
+      firstName: 'AdminUser',
+      lastName: 'Test',
+      role: 'admin',
+    };
+    render(<AppHeader />);
+    const adminButton = screen.getByText('Admin');
+    expect(adminButton.closest('button')?.className).toContain('bg-blue-100');
+  });
+
+  // Mobile menu
+  it('toggles mobile menu when hamburger button is clicked', () => {
+    render(<AppHeader />);
+    const menuToggle = screen.getByLabelText('Toggle menu');
+
+    // Mobile menu should not be visible initially
+    expect(screen.queryByText('Dashboard')).not.toBeInTheDocument();
+
+    // Click to open
+    fireEvent.click(menuToggle);
+
+    // Now Dashboard should appear in the mobile menu
+    expect(screen.getByText('Dashboard')).toBeInTheDocument();
+    expect(screen.getByText('Settings')).toBeInTheDocument();
+  });
+
+  it('shows all nav links in mobile menu when open', () => {
+    render(<AppHeader />);
+    const menuToggle = screen.getByLabelText('Toggle menu');
+    fireEvent.click(menuToggle);
+
+    // Check for main nav links
+    expect(screen.getByText('Dashboard')).toBeInTheDocument();
+    // Check for tools section header
+    const toolsHeaders = screen.getAllByText('Tools');
+    expect(toolsHeaders.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('navigates to dashboard from mobile menu', () => {
+    render(<AppHeader />);
+    const menuToggle = screen.getByLabelText('Toggle menu');
+    fireEvent.click(menuToggle);
+
+    const dashboardButton = screen.getByText('Dashboard');
+    fireEvent.click(dashboardButton);
+    expect(mockPush).toHaveBeenCalledWith('/dashboard');
+  });
+
+  it('navigates to settings from mobile menu', () => {
+    render(<AppHeader />);
+    const menuToggle = screen.getByLabelText('Toggle menu');
+    fireEvent.click(menuToggle);
+
+    const settingsButton = screen.getByText('Settings');
+    fireEvent.click(settingsButton);
+    expect(mockPush).toHaveBeenCalledWith('/settings');
+  });
+
+  it('shows Admin section in mobile menu for admin users', () => {
+    mockUser = {
+      id: 'admin-user-id',
+      email: 'admin@example.com',
+      firstName: 'Admin',
+      lastName: 'User',
+      role: 'admin',
+    };
+    render(<AppHeader />);
+    const menuToggle = screen.getByLabelText('Toggle menu');
+    fireEvent.click(menuToggle);
+
+    expect(screen.getByText('User Management')).toBeInTheDocument();
+  });
+
+  it('does not show Admin section in mobile menu for regular users', () => {
+    render(<AppHeader />);
+    const menuToggle = screen.getByLabelText('Toggle menu');
+    fireEvent.click(menuToggle);
+
+    expect(screen.queryByText('User Management')).not.toBeInTheDocument();
+  });
+
+  it('navigates to admin/users from mobile menu', () => {
+    mockUser = {
+      id: 'admin-user-id',
+      email: 'admin@example.com',
+      firstName: 'Admin',
+      lastName: 'User',
+      role: 'admin',
+    };
+    render(<AppHeader />);
+    const menuToggle = screen.getByLabelText('Toggle menu');
+    fireEvent.click(menuToggle);
+
+    fireEvent.click(screen.getByText('User Management'));
+    expect(mockPush).toHaveBeenCalledWith('/admin/users');
+  });
+
+  it('highlights active link in mobile menu', () => {
+    mockPathname = '/transactions';
+    render(<AppHeader />);
+    const menuToggle = screen.getByLabelText('Toggle menu');
+    fireEvent.click(menuToggle);
+
+    // Find the Transactions button in the mobile menu that has active style
+    const transactionsButtons = screen.getAllByText('Transactions');
+    const mobileActive = transactionsButtons.find(
+      (el) => el.closest('button')?.className.includes('bg-blue-50'),
+    );
+    expect(mobileActive).toBeTruthy();
+  });
+
+  it('highlights dashboard in mobile menu when pathname is /dashboard', () => {
+    mockPathname = '/dashboard';
+    render(<AppHeader />);
+    const menuToggle = screen.getByLabelText('Toggle menu');
+    fireEvent.click(menuToggle);
+
+    const dashboardButton = screen.getByText('Dashboard');
+    expect(dashboardButton.closest('button')?.className).toContain('bg-blue-50');
+  });
+
+  it('closes mobile menu when the backdrop is clicked', () => {
+    render(<AppHeader />);
+    const menuToggle = screen.getByLabelText('Toggle menu');
+    fireEvent.click(menuToggle);
+
+    expect(screen.getByText('Dashboard')).toBeInTheDocument();
+
+    // The drawer renders inside the shared Modal; clicking its backdrop
+    // (the parent of the dialog) dismisses it.
+    const backdrop = screen.getByRole('dialog').parentElement!;
+    fireEvent.click(backdrop);
+
+    expect(screen.queryByText('Dashboard')).not.toBeInTheDocument();
+  });
+
+  it('closes mobile menu when the close button is clicked', () => {
+    render(<AppHeader />);
+    fireEvent.click(screen.getByLabelText('Toggle menu'));
+    expect(screen.getByText('Dashboard')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByLabelText('Close menu'));
+    expect(screen.queryByText('Dashboard')).not.toBeInTheDocument();
+  });
+
+  it('closes mobile menu on Escape', () => {
+    render(<AppHeader />);
+    fireEvent.click(screen.getByLabelText('Toggle menu'));
+    expect(screen.getByText('Dashboard')).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(screen.queryByText('Dashboard')).not.toBeInTheDocument();
+  });
+
+  it('closes the mobile menu when a link is selected', () => {
+    // Regression: selecting a link must dismiss the drawer (and navigate)
+    // even when the destination equals the current route, where the
+    // route-change effect never fires.
+    render(<AppHeader />);
+    fireEvent.click(screen.getByLabelText('Toggle menu'));
+    expect(screen.getByText('Settings')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText('Settings'));
+    expect(mockPush).toHaveBeenCalledWith('/settings');
+    // Drawer is gone (its Close button no longer rendered).
+    expect(screen.queryByLabelText('Close menu')).not.toBeInTheDocument();
+  });
+
+  it('does not push a browser history entry when the drawer opens', () => {
+    // Regression: the drawer must NOT use Modal's pushHistory. A pushed entry
+    // is popped via history.back() on close, which would revert the
+    // router.push that closes the drawer and leave the user on the old page.
+    render(<AppHeader />);
+    const lengthBeforeOpen = window.history.length;
+    fireEvent.click(screen.getByLabelText('Toggle menu'));
+    expect(screen.getByText('Dashboard')).toBeInTheDocument();
+    expect(window.history.length).toBe(lengthBeforeOpen);
+  });
+
+  it('closes Tools dropdown when clicking outside', () => {
+    render(<AppHeader />);
+    const toolsButtons = screen.getAllByText('Tools');
+    fireEvent.click(toolsButtons[0]);
+
+    // Dropdown is open with Categories
+    expect(screen.getAllByText('Categories').length).toBeGreaterThanOrEqual(1);
+
+    // Click outside
+    fireEvent.mouseDown(document);
+
+    // The dropdown should close. Desktop nav still has Tools button text but
+    // the dropdown items should be gone. We can check if the number of Categories reduced.
+    // Actually, after close, mobile menu is not open so only the desktop Tools remains
+    // Categories should no longer be in dropdown
+  });
+
+  it('shows mobile tools links and navigates', () => {
+    render(<AppHeader />);
+    const menuToggle = screen.getByLabelText('Toggle menu');
+    fireEvent.click(menuToggle);
+
+    // Click a tools link in the mobile menu
+    const categoriesButtons = screen.getAllByText('Categories');
+    fireEvent.click(categoriesButtons[0]);
+    expect(mockPush).toHaveBeenCalledWith('/categories');
+  });
+
+  describe('header search', () => {
+    it('renders the search icon button', () => {
+      render(<AppHeader />);
+      expect(screen.getByLabelText('Open search')).toBeInTheDocument();
+    });
+
+    it('opens the search input when the icon is clicked', () => {
+      render(<AppHeader />);
+      fireEvent.click(screen.getByLabelText('Open search'));
+      const input = screen.getByLabelText('Search transactions');
+      expect(input).toBeInTheDocument();
+    });
+
+    it('navigates to /transactions with the search query, dispatches the apply event, and wipes persisted filters', () => {
+      // Pre-populate localStorage with stale filter values so we can
+      // verify they get cleared.
+      localStorage.setItem('transactions.filter.accountStatus', '"active"');
+      localStorage.setItem('transactions.filter.accountIds', JSON.stringify(['acc-1']));
+      localStorage.setItem('transactions.filter.categoryIds', JSON.stringify(['cat-1']));
+      localStorage.setItem('transactions.filter.payeeIds', JSON.stringify(['p-1']));
+      localStorage.setItem('transactions.filter.tagIds', JSON.stringify(['t-1']));
+      localStorage.setItem('transactions.filter.search', 'old');
+
+      const dispatchSpy = vi.spyOn(window, 'dispatchEvent');
+      try {
+        render(<AppHeader />);
+        fireEvent.click(screen.getByLabelText('Open search'));
+        const input = screen.getByLabelText('Search transactions') as HTMLInputElement;
+        fireEvent.change(input, { target: { value: 'walmart' } });
+        fireEvent.keyDown(input, { key: 'Enter' });
+
+        expect(mockPush).toHaveBeenCalledWith('/transactions?search=walmart');
+
+        const applyEventCall = dispatchSpy.mock.calls.find(
+          (call) => call[0] instanceof CustomEvent && (call[0] as CustomEvent).type === 'transactions:applyHeaderSearch',
+        );
+        expect(applyEventCall).toBeDefined();
+        const applyEvent = applyEventCall![0] as CustomEvent<{ term: string }>;
+        expect(applyEvent.detail).toEqual({ term: 'walmart' });
+
+        // Persisted filters should be wiped before navigation.
+        expect(localStorage.getItem('transactions.filter.accountStatus')).toBeNull();
+        expect(localStorage.getItem('transactions.filter.accountIds')).toBeNull();
+        expect(localStorage.getItem('transactions.filter.categoryIds')).toBeNull();
+        expect(localStorage.getItem('transactions.filter.payeeIds')).toBeNull();
+        expect(localStorage.getItem('transactions.filter.tagIds')).toBeNull();
+        expect(localStorage.getItem('transactions.filter.search')).toBeNull();
+      } finally {
+        dispatchSpy.mockRestore();
+      }
+    });
+
+    it('URL-encodes the search term', () => {
+      render(<AppHeader />);
+      fireEvent.click(screen.getByLabelText('Open search'));
+      const input = screen.getByLabelText('Search transactions') as HTMLInputElement;
+      fireEvent.change(input, { target: { value: 'coffee & tea' } });
+      fireEvent.keyDown(input, { key: 'Enter' });
+      expect(mockPush).toHaveBeenCalledWith('/transactions?search=coffee%20%26%20tea');
+    });
+
+    it('trims whitespace and does nothing for empty submissions', () => {
+      render(<AppHeader />);
+      fireEvent.click(screen.getByLabelText('Open search'));
+      const input = screen.getByLabelText('Search transactions') as HTMLInputElement;
+      fireEvent.change(input, { target: { value: '   ' } });
+      fireEvent.keyDown(input, { key: 'Enter' });
+      expect(mockPush).not.toHaveBeenCalled();
+    });
+
+    it('closes the search box on Escape', () => {
+      render(<AppHeader />);
+      fireEvent.click(screen.getByLabelText('Open search'));
+      const input = screen.getByLabelText('Search transactions') as HTMLInputElement;
+      fireEvent.change(input, { target: { value: 'foo' } });
+      fireEvent.keyDown(input, { key: 'Escape' });
+      // Input is hidden (aria-hidden) after Escape; the open-search button label returns.
+      expect(screen.getByLabelText('Open search')).toBeInTheDocument();
+      expect(input.value).toBe('');
+      expect(mockPush).not.toHaveBeenCalled();
+    });
+
+    it('submits the search when clicking the icon a second time', () => {
+      render(<AppHeader />);
+      fireEvent.click(screen.getByLabelText('Open search'));
+      const input = screen.getByLabelText('Search transactions') as HTMLInputElement;
+      fireEvent.change(input, { target: { value: 'rent' } });
+      // Now the button label is "Search" because the box is open.
+      fireEvent.click(screen.getByLabelText('Search'));
+      expect(mockPush).toHaveBeenCalledWith('/transactions?search=rent');
+    });
+  });
+
+  it('shows no user menu items when user is null', () => {
+    mockUser = null;
+    render(<AppHeader />);
+    // No firstName or email should be rendered
+    expect(screen.queryByText('Test')).not.toBeInTheDocument();
+    expect(screen.queryByText('test@example.com')).not.toBeInTheDocument();
+    // Admin link should not appear
+    expect(screen.queryByText('Admin')).not.toBeInTheDocument();
+  });
+
+  describe('header offset CSS variable', () => {
+    afterEach(() => {
+      document.documentElement.style.removeProperty('--app-header-offset');
+    });
+
+    it('publishes the current header offset so sticky sub-navs can anchor to it', () => {
+      render(<AppHeader />);
+      // Header starts fully visible: offset is 0 until the user scrolls.
+      expect(
+        document.documentElement.style.getPropertyValue('--app-header-offset'),
+      ).toBe('0px');
+    });
+
+    it('clears the offset variable when the header unmounts', () => {
+      const { unmount } = render(<AppHeader />);
+      expect(
+        document.documentElement.style.getPropertyValue('--app-header-offset'),
+      ).toBe('0px');
+      unmount();
+      expect(
+        document.documentElement.style.getPropertyValue('--app-header-offset'),
+      ).toBe('');
+    });
+  });
+});

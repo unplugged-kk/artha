@@ -1,0 +1,1843 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent } from '@/test/render';
+import { TransactionFilterPanel } from './TransactionFilterPanel';
+import { Account } from '@/types/account';
+import { Category } from '@/types/category';
+import { Payee } from '@/types/payee';
+
+function createAccount(overrides: Partial<Account> = {}): Account {
+  return {
+    id: 'acc-1', userId: 'user-1', accountType: 'CHEQUING', accountSubType: null,
+    linkedAccountId: null, name: 'Chequing', description: null, currencyCode: 'CAD',
+    accountNumber: null, institution: null, institutionId: null, openingBalance: 0, currentBalance: 1000,
+    creditLimit: null, interestRate: null, isClosed: false, closedDate: null,
+    isFavourite: false, favouriteSortOrder: 0, excludeFromNetWorth: false, paymentAmount: null, paymentFrequency: null, paymentStartDate: null,
+    sourceAccountId: null, principalCategoryId: null, interestCategoryId: null, overpaymentCategoryId: null, overpaymentMemo: null, overpaymentPayeeId: null, fxFeePercent: null,
+    scheduledTransactionId: null, assetCategoryId: null, dateAcquired: null, linkedLoanAccountId: null,
+    isCanadianMortgage: false, isVariableRate: false, termMonths: null, termEndDate: null,
+    amortizationMonths: null, originalPrincipal: null,
+    statementDueDay: null, statementSettlementDay: null,
+    createdAt: '2024-01-01T00:00:00Z', updatedAt: '2024-01-01T00:00:00Z',
+    ...overrides,
+  };
+}
+
+function createCategory(overrides: Partial<Category> = {}): Category {
+  return {
+    id: 'cat-1',
+    userId: 'user-1',
+    parentId: null,
+    parent: null,
+    children: [],
+    name: 'Groceries',
+    description: null,
+    icon: null,
+    color: null,
+    effectiveColor: null,
+    effectiveIcon: null,
+    isIncome: false,
+    isSystem: false,
+    createdAt: '2024-01-01T00:00:00Z',
+    ...overrides,
+  };
+}
+
+function createPayee(overrides: Partial<Payee> = {}): Payee {
+  return {
+    id: 'payee-1',
+    userId: 'user-1',
+    name: 'Supermarket',
+    defaultCategoryId: null,
+    defaultCategory: null,
+    notes: null,
+    website: null,
+    hasLogo: false,
+    logoFetchedAt: null,
+    contactLookupAt: null,
+    contactLookupSource: null,
+    address: null,
+    email: null,
+    phone: null,
+    isActive: true,
+    createdAt: '2024-01-01T00:00:00Z',
+    ...overrides,
+  };
+}
+
+vi.mock('@/hooks/useDateFormat', () => ({
+  useDateFormat: () => ({ formatDate: (d: string) => d, dateFormat: 'browser', datePattern: 'YYYY-MM-DD' }),
+}));
+
+describe('TransactionFilterPanel', () => {
+  const defaultProps = {
+    filterAccountIds: [] as string[],
+    filterCategoryIds: [] as string[],
+    filterPayeeIds: [] as string[],
+    filterStartDate: '',
+    filterEndDate: '',
+    filterSearch: '',
+    searchInput: '',
+    filterAccountStatus: '' as 'active' | 'closed' | '',
+    filterTimePeriod: '',
+    weekStartsOn: 1 as 0 | 1 | 2 | 3 | 4 | 5 | 6,
+    handleArrayFilterChange: vi.fn(),
+    handleFilterChange: vi.fn(),
+    handleSearchChange: vi.fn(),
+    setFilterAccountStatus: vi.fn(),
+    setFilterAccountIds: vi.fn(),
+    setFilterCategoryIds: vi.fn(),
+    setFilterPayeeIds: vi.fn(),
+    setFilterStartDate: vi.fn(),
+    setFilterEndDate: vi.fn(),
+    setFilterSearch: vi.fn(),
+    setFilterTimePeriod: vi.fn(),
+    filterAmountFrom: '',
+    filterAmountTo: '',
+    setFilterAmountFrom: vi.fn(),
+    setFilterAmountTo: vi.fn(),
+    filtersExpanded: false,
+    setFiltersExpanded: vi.fn(),
+    activeFilterCount: 0,
+    filteredAccounts: [] as Account[],
+    selectedAccounts: [] as Account[],
+    selectedCategories: [] as Category[],
+    selectedPayees: [] as Payee[],
+    accountFilterOptions: [],
+    categoryFilterOptions: [],
+    payeeFilterOptions: [],
+    formatDate: vi.fn((d: string) => d),
+    filterTagIds: [] as string[],
+    setFilterTagIds: vi.fn(),
+    selectedTags: [],
+    tagFilterOptions: [],
+    filterStatuses: [] as never[],
+    setFilterStatuses: vi.fn(),
+    filterOriginalCurrencyCodes: [] as string[],
+    setFilterOriginalCurrencyCodes: vi.fn(),
+    filterTagKey: '',
+    filterTagKeyOp: 'hasValue' as const,
+    filterTagKeyValue: '',
+    setFilterTagKey: vi.fn(),
+    setFilterTagKeyOp: vi.fn(),
+    setFilterTagKeyValue: vi.fn(),
+    filterHasAttachments: '' as '' | 'yes' | 'no',
+    setFilterHasAttachments: vi.fn(),
+    onClearFilters: vi.fn(),
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  // ----------------------------------------------------------------
+  // Existing tests
+  // ----------------------------------------------------------------
+
+  it('renders the filter header with Filters text and Show toggle', () => {
+    render(<TransactionFilterPanel {...defaultProps} />);
+
+    expect(screen.getByText('Filters')).toBeInTheDocument();
+    expect(screen.getByText('Show')).toBeInTheDocument();
+  });
+
+  it('displays Hide when filters are expanded', () => {
+    render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+    expect(screen.getByText('Hide')).toBeInTheDocument();
+  });
+
+  it('toggles filtersExpanded when header is clicked', () => {
+    render(<TransactionFilterPanel {...defaultProps} filtersExpanded={false} />);
+
+    fireEvent.click(screen.getByText('Filters'));
+    expect(defaultProps.setFiltersExpanded).toHaveBeenCalledWith(true);
+  });
+
+  it('shows active filter count badge when filters are active', () => {
+    render(<TransactionFilterPanel {...defaultProps} activeFilterCount={3} />);
+
+    expect(screen.getByText('3')).toBeInTheDocument();
+  });
+
+  it('does not show filter count badge when activeFilterCount is 0', () => {
+    render(<TransactionFilterPanel {...defaultProps} activeFilterCount={0} />);
+
+    expect(screen.queryByText('0')).not.toBeInTheDocument();
+  });
+
+  it('shows Clear button and calls onClearFilters on click', () => {
+    render(<TransactionFilterPanel {...defaultProps} activeFilterCount={2} />);
+
+    const clearButton = screen.getByText('Clear');
+    fireEvent.click(clearButton);
+    expect(defaultProps.onClearFilters).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows the tag key filter only when key:value tags exist', () => {
+    const { rerender } = render(
+      <TransactionFilterPanel
+        {...defaultProps}
+        filtersExpanded={true}
+        tagFilterOptions={[{ value: 't1', label: 'important' }]}
+      />,
+    );
+    // Plain tags -> no key filter offered.
+    expect(screen.queryByText('Tag key')).not.toBeInTheDocument();
+
+    rerender(
+      <TransactionFilterPanel
+        {...defaultProps}
+        filtersExpanded={true}
+        tagFilterOptions={[{ value: 't2', label: 'country:usa' }]}
+      />,
+    );
+    // A key:value tag -> the key filter appears, with the key as an option.
+    expect(screen.getByText('Tag key')).toBeInTheDocument();
+    expect(
+      screen.getByRole('option', { name: 'country' }),
+    ).toBeInTheDocument();
+  });
+
+  it('renders favourite account quick select buttons', () => {
+    const favouriteAccount = createAccount({ id: 'acc-fav', name: 'Savings', isFavourite: true });
+    const regularAccount = createAccount({ id: 'acc-reg', name: 'Chequing', isFavourite: false });
+
+    render(<TransactionFilterPanel {...defaultProps} filteredAccounts={[favouriteAccount, regularAccount]} />);
+
+    expect(screen.getByText('Favourites:')).toBeInTheDocument();
+    expect(screen.getByText('Savings')).toBeInTheDocument();
+  });
+
+  it('does not render favourites section when no favourite accounts exist', () => {
+    const regularAccount = createAccount({ id: 'acc-reg', name: 'Chequing', isFavourite: false });
+
+    render(<TransactionFilterPanel {...defaultProps} filteredAccounts={[regularAccount]} />);
+
+    expect(screen.queryByText('Favourites:')).not.toBeInTheDocument();
+  });
+
+  it('shows account status segmented control when expanded', () => {
+    render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+    expect(screen.getByText('Show accounts:')).toBeInTheDocument();
+    expect(screen.getByText('All')).toBeInTheDocument();
+    expect(screen.getByText('Active')).toBeInTheDocument();
+    expect(screen.getByText('Closed')).toBeInTheDocument();
+  });
+
+  it('renders filter inputs when expanded', () => {
+    render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+    expect(screen.getByText('Start Date')).toBeInTheDocument();
+    expect(screen.getByText('End Date')).toBeInTheDocument();
+    expect(screen.getByText('Search')).toBeInTheDocument();
+  });
+
+  // ----------------------------------------------------------------
+  // Filter panel expand / collapse toggle
+  // ----------------------------------------------------------------
+
+  describe('expand/collapse toggle', () => {
+    it('calls setFiltersExpanded(false) when header is clicked while expanded', () => {
+      render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      fireEvent.click(screen.getByText('Filters'));
+      expect(defaultProps.setFiltersExpanded).toHaveBeenCalledWith(false);
+    });
+
+    it('applies overflow-hidden class to filter body when collapsed', () => {
+      const { container } = render(<TransactionFilterPanel {...defaultProps} filtersExpanded={false} />);
+
+      // When collapsed, the inner wrapper div should have overflow-hidden to hide content
+      const overflowDiv = container.querySelector('.overflow-hidden');
+      expect(overflowDiv).toBeTruthy();
+    });
+
+    it('shows the filter body content when expanded', () => {
+      render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      expect(screen.getByText('Accounts')).toBeInTheDocument();
+      expect(screen.getByText('Categories')).toBeInTheDocument();
+      expect(screen.getByText('Payees')).toBeInTheDocument();
+    });
+
+    it('shows Show label when collapsed and Hide label when expanded', () => {
+      const { rerender } = render(<TransactionFilterPanel {...defaultProps} filtersExpanded={false} />);
+
+      expect(screen.getByText('Show')).toBeInTheDocument();
+      expect(screen.queryByText('Hide')).not.toBeInTheDocument();
+
+      rerender(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      expect(screen.getByText('Hide')).toBeInTheDocument();
+      expect(screen.queryByText('Show')).not.toBeInTheDocument();
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // Date range filter (start/end date inputs)
+  // ----------------------------------------------------------------
+
+  describe('date range filter', () => {
+    it('renders start date and end date inputs when expanded', () => {
+      render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      const startInput = screen.getByLabelText('Start Date');
+      const endInput = screen.getByLabelText('End Date');
+
+      expect(startInput).toBeInTheDocument();
+      expect(endInput).toBeInTheDocument();
+      // Every desktop date field is the shared text input reading the user's
+      // pattern -- a native date box auto-advances its own segments and cannot
+      // take a partial date (issue #1201). The canonical value lives in the
+      // hidden input beside it.
+      expect(startInput).toHaveAttribute('type', 'text');
+      expect(endInput).toHaveAttribute('type', 'text');
+    });
+
+    it('calls handleFilterChange with setFilterStartDate when start date changes', () => {
+      render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      const startInput = screen.getByLabelText('Start Date');
+      fireEvent.change(startInput, { target: { value: '2025-01-15' } });
+
+      expect(defaultProps.handleFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterStartDate,
+        '2025-01-15'
+      );
+    });
+
+    it('calls handleFilterChange with setFilterEndDate when end date changes', () => {
+      render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      const endInput = screen.getByLabelText('End Date');
+      fireEvent.change(endInput, { target: { value: '2025-12-31' } });
+
+      expect(defaultProps.handleFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterEndDate,
+        '2025-12-31'
+      );
+    });
+
+    it('displays current filter start date value', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          filterStartDate="2025-03-01"
+        />
+      );
+
+      const startInput = screen.getByLabelText('Start Date');
+      expect(startInput).toHaveValue('2025-03-01');
+    });
+
+    it('displays current filter end date value', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          filterEndDate="2025-06-30"
+        />
+      );
+
+      const endInput = screen.getByLabelText('End Date');
+      expect(endInput).toHaveValue('2025-06-30');
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // Account filter multi-select
+  // ----------------------------------------------------------------
+
+  describe('account filter multi-select', () => {
+    it('renders the Accounts multi-select with placeholder when expanded', () => {
+      render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      expect(screen.getByText('Accounts')).toBeInTheDocument();
+      expect(screen.getByText('All accounts')).toBeInTheDocument();
+    });
+
+    it('opens the account multi-select dropdown when trigger is clicked', () => {
+      const options = [
+        { value: 'acc-1', label: 'Chequing' },
+        { value: 'acc-2', label: 'Savings' },
+      ];
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          accountFilterOptions={options}
+        />
+      );
+
+      fireEvent.click(screen.getByText('All accounts'));
+      expect(screen.getByText('Chequing')).toBeInTheDocument();
+      expect(screen.getByText('Savings')).toBeInTheDocument();
+    });
+
+    it('calls handleArrayFilterChange when an account option is toggled', () => {
+      const options = [{ value: 'acc-1', label: 'Chequing' }];
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          accountFilterOptions={options}
+        />
+      );
+
+      fireEvent.click(screen.getByText('All accounts'));
+      // Click the checkbox label for the option
+      const checkbox = screen.getByRole('checkbox', { name: /Chequing/i });
+      fireEvent.click(checkbox);
+
+      expect(defaultProps.handleArrayFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterAccountIds,
+        ['acc-1']
+      );
+    });
+
+    it('displays selected account name when one account is selected', () => {
+      const options = [
+        { value: 'acc-1', label: 'Chequing' },
+        { value: 'acc-2', label: 'Savings' },
+      ];
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          accountFilterOptions={options}
+          filterAccountIds={['acc-1']}
+        />
+      );
+
+      expect(screen.getByText('Chequing')).toBeInTheDocument();
+    });
+
+    it('displays count when multiple accounts are selected', () => {
+      const options = [
+        { value: 'acc-1', label: 'Chequing' },
+        { value: 'acc-2', label: 'Savings' },
+      ];
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          accountFilterOptions={options}
+          filterAccountIds={['acc-1', 'acc-2']}
+        />
+      );
+
+      expect(screen.getByText('2 selected')).toBeInTheDocument();
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // Category filter multi-select
+  // ----------------------------------------------------------------
+
+  describe('category filter multi-select', () => {
+    it('renders the Categories multi-select with placeholder when expanded', () => {
+      render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      expect(screen.getByText('Categories')).toBeInTheDocument();
+      expect(screen.getByText('All categories')).toBeInTheDocument();
+    });
+
+    it('opens the category multi-select dropdown when trigger is clicked', () => {
+      const options = [
+        { value: 'cat-1', label: 'Groceries' },
+        { value: 'cat-2', label: 'Rent' },
+      ];
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          categoryFilterOptions={options}
+        />
+      );
+
+      fireEvent.click(screen.getByText('All categories'));
+      expect(screen.getByText('Groceries')).toBeInTheDocument();
+      expect(screen.getByText('Rent')).toBeInTheDocument();
+    });
+
+    it('calls handleArrayFilterChange when a category option is toggled', () => {
+      const options = [{ value: 'cat-1', label: 'Groceries' }];
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          categoryFilterOptions={options}
+        />
+      );
+
+      fireEvent.click(screen.getByText('All categories'));
+      const checkbox = screen.getByRole('checkbox', { name: /Groceries/i });
+      fireEvent.click(checkbox);
+
+      expect(defaultProps.handleArrayFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterCategoryIds,
+        ['cat-1']
+      );
+    });
+
+    it('displays selected category name when one category is selected', () => {
+      const options = [
+        { value: 'cat-1', label: 'Groceries' },
+        { value: 'cat-2', label: 'Rent' },
+      ];
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          categoryFilterOptions={options}
+          filterCategoryIds={['cat-2']}
+        />
+      );
+
+      expect(screen.getByText('Rent')).toBeInTheDocument();
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // Payee filter multi-select
+  // ----------------------------------------------------------------
+
+  describe('payee filter multi-select', () => {
+    it('renders the Payees multi-select with placeholder when expanded', () => {
+      render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      expect(screen.getByText('Payees')).toBeInTheDocument();
+      expect(screen.getByText('All payees')).toBeInTheDocument();
+    });
+
+    it('opens the payee multi-select dropdown when trigger is clicked', () => {
+      const options = [
+        { value: 'payee-1', label: 'Supermarket' },
+        { value: 'payee-2', label: 'Landlord' },
+      ];
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          payeeFilterOptions={options}
+        />
+      );
+
+      fireEvent.click(screen.getByText('All payees'));
+      expect(screen.getByText('Supermarket')).toBeInTheDocument();
+      expect(screen.getByText('Landlord')).toBeInTheDocument();
+    });
+
+    it('calls handleArrayFilterChange when a payee option is toggled', () => {
+      const options = [{ value: 'payee-1', label: 'Supermarket' }];
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          payeeFilterOptions={options}
+        />
+      );
+
+      fireEvent.click(screen.getByText('All payees'));
+      const checkbox = screen.getByRole('checkbox', { name: /Supermarket/i });
+      fireEvent.click(checkbox);
+
+      expect(defaultProps.handleArrayFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterPayeeIds,
+        ['payee-1']
+      );
+    });
+
+    it('displays selected payee name when one payee is selected', () => {
+      const options = [
+        { value: 'payee-1', label: 'Supermarket' },
+        { value: 'payee-2', label: 'Landlord' },
+      ];
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          payeeFilterOptions={options}
+          filterPayeeIds={['payee-2']}
+        />
+      );
+
+      expect(screen.getByText('Landlord')).toBeInTheDocument();
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // Clear all filters button
+  // ----------------------------------------------------------------
+
+  describe('clear all filters button', () => {
+    it('does not show Clear button when no filters are active', () => {
+      render(<TransactionFilterPanel {...defaultProps} activeFilterCount={0} />);
+
+      expect(screen.queryByText('Clear')).not.toBeInTheDocument();
+    });
+
+    it('shows Clear button when filters are active', () => {
+      render(<TransactionFilterPanel {...defaultProps} activeFilterCount={1} />);
+
+      expect(screen.getByText('Clear')).toBeInTheDocument();
+    });
+
+    it('calls onClearFilters when Clear button is clicked', () => {
+      render(<TransactionFilterPanel {...defaultProps} activeFilterCount={5} />);
+
+      fireEvent.click(screen.getByText('Clear'));
+      expect(defaultProps.onClearFilters).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not toggle filter expansion when Clear button is clicked', () => {
+      render(<TransactionFilterPanel {...defaultProps} activeFilterCount={2} />);
+
+      fireEvent.click(screen.getByText('Clear'));
+
+      // Clear button uses stopPropagation, so setFiltersExpanded should NOT be called
+      expect(defaultProps.setFiltersExpanded).not.toHaveBeenCalled();
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // Favourite account quick-select buttons
+  // ----------------------------------------------------------------
+
+  describe('favourite account quick-select buttons', () => {
+    it('renders multiple favourite accounts sorted by favouriteSortOrder', () => {
+      const accounts = [
+        createAccount({ id: 'acc-z', name: 'Zccount', isFavourite: true, favouriteSortOrder: 0 }),
+        createAccount({ id: 'acc-a', name: 'Accoont', isFavourite: true, favouriteSortOrder: 2 }),
+        createAccount({ id: 'acc-m', name: 'Midaccount', isFavourite: true, favouriteSortOrder: 1 }),
+      ];
+
+      render(<TransactionFilterPanel {...defaultProps} filteredAccounts={accounts} />);
+
+      const buttons = screen.getAllByRole('button').filter(b =>
+        ['Accoont', 'Midaccount', 'Zccount'].includes(b.textContent?.trim() ?? '')
+      );
+      expect(buttons).toHaveLength(3);
+
+      // Verify favouriteSortOrder ordering
+      const names = buttons.map(b => b.textContent?.trim());
+      expect(names).toEqual(['Zccount', 'Midaccount', 'Accoont']);
+    });
+
+    it('calls handleArrayFilterChange with account id when favourite button is clicked', () => {
+      const account = createAccount({ id: 'acc-fav', name: 'Savings', isFavourite: true });
+
+      render(<TransactionFilterPanel {...defaultProps} filteredAccounts={[account]} />);
+
+      fireEvent.click(screen.getByText('Savings'));
+
+      expect(defaultProps.handleArrayFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterAccountIds,
+        ['acc-fav']
+      );
+    });
+
+    it('clears account filter when the only selected favourite is clicked again', () => {
+      const account = createAccount({ id: 'acc-fav', name: 'Savings', isFavourite: true });
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filteredAccounts={[account]}
+          filterAccountIds={['acc-fav']}
+        />
+      );
+
+      fireEvent.click(screen.getByText('Savings'));
+
+      expect(defaultProps.handleArrayFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterAccountIds,
+        []
+      );
+    });
+
+    it('replaces selection when a different favourite button is clicked (multiple accounts selected)', () => {
+      const accounts = [
+        createAccount({ id: 'acc-1', name: 'Savings', isFavourite: true }),
+        createAccount({ id: 'acc-2', name: 'Chequing', isFavourite: true }),
+      ];
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filteredAccounts={accounts}
+          filterAccountIds={['acc-1', 'acc-2']}
+        />
+      );
+
+      fireEvent.click(screen.getByText('Chequing'));
+
+      // Even though multiple are selected, clicking should set to just this one
+      expect(defaultProps.handleArrayFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterAccountIds,
+        ['acc-2']
+      );
+    });
+
+    it('does not render non-favourite accounts in the quick-select area', () => {
+      const fav = createAccount({ id: 'acc-fav', name: 'Savings', isFavourite: true });
+      const reg = createAccount({ id: 'acc-reg', name: 'Regular', isFavourite: false });
+
+      render(<TransactionFilterPanel {...defaultProps} filteredAccounts={[fav, reg]} />);
+
+      expect(screen.getByText('Savings')).toBeInTheDocument();
+      // Regular should not appear in the favourites section (it might appear elsewhere if expanded)
+      const favouritesSection = screen.getByText('Favourites:').closest('div');
+      expect(favouritesSection).not.toHaveTextContent('Regular');
+    });
+
+    it('applies selected styling to currently selected favourite account', () => {
+      const account = createAccount({ id: 'acc-fav', name: 'Savings', isFavourite: true });
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filteredAccounts={[account]}
+          filterAccountIds={['acc-fav']}
+        />
+      );
+
+      const button = screen.getByText('Savings').closest('button');
+      expect(button?.className).toContain('bg-emerald-700');
+    });
+
+    it('applies unselected styling to unselected favourite account', () => {
+      const account = createAccount({ id: 'acc-fav', name: 'Savings', isFavourite: true });
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filteredAccounts={[account]}
+          filterAccountIds={[]}
+        />
+      );
+
+      const button = screen.getByText('Savings').closest('button');
+      expect(button?.className).toContain('bg-gray-100');
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // Search text filter input
+  // ----------------------------------------------------------------
+
+  describe('search text filter input', () => {
+    it('renders the search input when expanded', () => {
+      render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      const searchInput = screen.getByLabelText('Search');
+      expect(searchInput).toBeInTheDocument();
+      expect(searchInput).toHaveAttribute('type', 'text');
+    });
+
+    it('displays searchInput value in the search field', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          searchInput="groceries"
+        />
+      );
+
+      const searchInput = screen.getByLabelText('Search');
+      expect(searchInput).toHaveValue('groceries');
+    });
+
+    it('calls handleSearchChange when search input changes', () => {
+      render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      const searchInput = screen.getByLabelText('Search');
+      fireEvent.change(searchInput, { target: { value: 'rent payment' } });
+
+      expect(defaultProps.handleSearchChange).toHaveBeenCalledWith('rent payment');
+    });
+
+    it('shows the search placeholder text', () => {
+      render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      const searchInput = screen.getByPlaceholderText('Search payee, category, amount, tag, description, reference #...');
+      expect(searchInput).toBeInTheDocument();
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // Filter change callbacks fire with correct values
+  // ----------------------------------------------------------------
+
+  describe('filter change callbacks', () => {
+    it('calls setFilterAccountStatus with "active" when Active button is clicked', () => {
+      render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      fireEvent.click(screen.getByText('Active'));
+      expect(defaultProps.setFilterAccountStatus).toHaveBeenCalledWith('active');
+    });
+
+    it('calls setFilterAccountStatus with "closed" when Closed button is clicked', () => {
+      render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      fireEvent.click(screen.getByText('Closed'));
+      expect(defaultProps.setFilterAccountStatus).toHaveBeenCalledWith('closed');
+    });
+
+    it('calls setFilterAccountStatus with empty string when All button is clicked', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          filterAccountStatus="active"
+        />
+      );
+
+      fireEvent.click(screen.getByText('All'));
+      expect(defaultProps.setFilterAccountStatus).toHaveBeenCalledWith('');
+    });
+
+    it('does not call handleSearchChange or handleFilterChange when filters panel is not interacted with', () => {
+      render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      expect(defaultProps.handleSearchChange).not.toHaveBeenCalled();
+      expect(defaultProps.handleFilterChange).not.toHaveBeenCalled();
+      expect(defaultProps.handleArrayFilterChange).not.toHaveBeenCalled();
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // Active filter count badge
+  // ----------------------------------------------------------------
+
+  describe('active filter count badge', () => {
+    it('does not render badge when activeFilterCount is 0', () => {
+      render(<TransactionFilterPanel {...defaultProps} activeFilterCount={0} />);
+
+      // Badge should not exist
+      const badge = screen.queryByText('0');
+      expect(badge).not.toBeInTheDocument();
+    });
+
+    it('renders badge with count 1', () => {
+      render(<TransactionFilterPanel {...defaultProps} activeFilterCount={1} />);
+
+      expect(screen.getByText('1')).toBeInTheDocument();
+    });
+
+    it('renders badge with a high count', () => {
+      render(<TransactionFilterPanel {...defaultProps} activeFilterCount={12} />);
+
+      expect(screen.getByText('12')).toBeInTheDocument();
+    });
+
+    it('renders badge with correct styling', () => {
+      render(<TransactionFilterPanel {...defaultProps} activeFilterCount={5} />);
+
+      const badge = screen.getByText('5');
+      expect(badge.className).toContain('rounded-full');
+      expect(badge.className).toContain('bg-blue-100');
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // Active filter chips when collapsed
+  // ----------------------------------------------------------------
+
+  describe('active filter chips when collapsed', () => {
+    it('shows account chips when collapsed with selected accounts', () => {
+      const selectedAccounts = [
+        createAccount({ id: 'acc-1', name: 'Savings' }),
+        createAccount({ id: 'acc-2', name: 'Chequing' }),
+      ];
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={2}
+          selectedAccounts={selectedAccounts}
+          filterAccountIds={['acc-1', 'acc-2']}
+        />
+      );
+
+      expect(screen.getByText('Savings')).toBeInTheDocument();
+      expect(screen.getByText('Chequing')).toBeInTheDocument();
+    });
+
+    it('shows category chips when collapsed with selected categories', () => {
+      const selectedCategories = [
+        createCategory({ id: 'cat-1', name: 'Groceries', color: '#4CAF50' }),
+      ];
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={1}
+          selectedCategories={selectedCategories}
+          filterCategoryIds={['cat-1']}
+        />
+      );
+
+      expect(screen.getByText('Groceries')).toBeInTheDocument();
+    });
+
+    it('shows payee chips when collapsed with selected payees', () => {
+      const selectedPayees = [
+        createPayee({ id: 'payee-1', name: 'Supermarket' }),
+      ];
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={1}
+          selectedPayees={selectedPayees}
+          filterPayeeIds={['payee-1']}
+        />
+      );
+
+      expect(screen.getByText('Supermarket')).toBeInTheDocument();
+    });
+
+    it('shows date range chip with both dates when collapsed', () => {
+      const formatDate = vi.fn((d: string) => {
+        if (d === '2025-01-01') return 'Jan 1, 2025';
+        if (d === '2025-12-31') return 'Dec 31, 2025';
+        return d;
+      });
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={1}
+          filterStartDate="2025-01-01"
+          filterEndDate="2025-12-31"
+          formatDate={formatDate}
+        />
+      );
+
+      expect(screen.getByText('Jan 1, 2025 - Dec 31, 2025')).toBeInTheDocument();
+    });
+
+    it('shows "From" date chip when only start date is set', () => {
+      const formatDate = vi.fn((_d: string) => 'Mar 15, 2025');
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={1}
+          filterStartDate="2025-03-15"
+          filterEndDate=""
+          formatDate={formatDate}
+        />
+      );
+
+      expect(screen.getByText(/^From Mar 15, 2025$/)).toBeInTheDocument();
+    });
+
+    it('shows "Until" date chip when only end date is set', () => {
+      const formatDate = vi.fn((_d: string) => 'Jun 30, 2025');
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={1}
+          filterStartDate=""
+          filterEndDate="2025-06-30"
+          formatDate={formatDate}
+        />
+      );
+
+      expect(screen.getByText(/^Until Jun 30, 2025$/)).toBeInTheDocument();
+    });
+
+    it('shows search chip with quoted search text when collapsed', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={1}
+          filterSearch="groceries"
+        />
+      );
+
+      // The component renders &quot;groceries&quot; which is "groceries"
+      const chip = screen.getByText(/groceries/);
+      expect(chip).toBeInTheDocument();
+    });
+
+    it('does not show chips when filters are expanded', () => {
+      const selectedAccounts = [createAccount({ id: 'acc-1', name: 'Savings' })];
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          activeFilterCount={1}
+          selectedAccounts={selectedAccounts}
+          filterAccountIds={['acc-1']}
+        />
+      );
+
+      // The chip area (role="presentation") should not exist when expanded
+      expect(screen.queryByRole('presentation')).not.toBeInTheDocument();
+    });
+
+    it('does not show chips when no filters are active (collapsed)', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={0}
+        />
+      );
+
+      expect(screen.queryByRole('presentation')).not.toBeInTheDocument();
+    });
+
+    it('removes account chip by calling handleArrayFilterChange when dismiss is clicked', () => {
+      const selectedAccounts = [
+        createAccount({ id: 'acc-1', name: 'Savings' }),
+        createAccount({ id: 'acc-2', name: 'Chequing' }),
+      ];
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={2}
+          selectedAccounts={selectedAccounts}
+          filterAccountIds={['acc-1', 'acc-2']}
+        />
+      );
+
+      // Find the dismiss button (the X) within the Savings chip
+      const savingsChip = screen.getByText('Savings').closest('span');
+      const dismissButton = savingsChip?.querySelector('button');
+      expect(dismissButton).toBeTruthy();
+      fireEvent.click(dismissButton!);
+
+      expect(defaultProps.handleArrayFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterAccountIds,
+        ['acc-2']
+      );
+    });
+
+    it('removes category chip by calling handleArrayFilterChange when dismiss is clicked', () => {
+      const selectedCategories = [
+        createCategory({ id: 'cat-1', name: 'Groceries' }),
+        createCategory({ id: 'cat-2', name: 'Rent' }),
+      ];
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={2}
+          selectedCategories={selectedCategories}
+          filterCategoryIds={['cat-1', 'cat-2']}
+        />
+      );
+
+      const groceriesChip = screen.getByText('Groceries').closest('span');
+      const dismissButton = groceriesChip?.querySelector('button');
+      expect(dismissButton).toBeTruthy();
+      fireEvent.click(dismissButton!);
+
+      expect(defaultProps.handleArrayFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterCategoryIds,
+        ['cat-2']
+      );
+    });
+
+    it('removes payee chip by calling handleArrayFilterChange when dismiss is clicked', () => {
+      const selectedPayees = [
+        createPayee({ id: 'payee-1', name: 'Supermarket' }),
+      ];
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={1}
+          selectedPayees={selectedPayees}
+          filterPayeeIds={['payee-1']}
+        />
+      );
+
+      const payeeChip = screen.getByText('Supermarket').closest('span');
+      const dismissButton = payeeChip?.querySelector('button');
+      expect(dismissButton).toBeTruthy();
+      fireEvent.click(dismissButton!);
+
+      expect(defaultProps.handleArrayFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterPayeeIds,
+        []
+      );
+    });
+
+    it('clears date range chip by calling handleFilterChange for both dates', () => {
+      const formatDate = vi.fn((_d: string) => 'formatted');
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={1}
+          filterStartDate="2025-01-01"
+          filterEndDate="2025-12-31"
+          formatDate={formatDate}
+        />
+      );
+
+      const dateChip = screen.getByText('formatted - formatted').closest('span');
+      const dismissButton = dateChip?.querySelector('button');
+      expect(dismissButton).toBeTruthy();
+      fireEvent.click(dismissButton!);
+
+      expect(defaultProps.handleFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterStartDate,
+        ''
+      );
+      expect(defaultProps.handleFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterEndDate,
+        ''
+      );
+    });
+
+    it('clears search chip by calling handleFilterChange for search', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={1}
+          filterSearch="test query"
+        />
+      );
+
+      const searchChip = screen.getByText(/test query/).closest('span');
+      const dismissButton = searchChip?.querySelector('button');
+      expect(dismissButton).toBeTruthy();
+      fireEvent.click(dismissButton!);
+
+      expect(defaultProps.handleFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterSearch,
+        ''
+      );
+    });
+
+    it('renders category chip with color dot when category has a color', () => {
+      const selectedCategories = [
+        createCategory({ id: 'cat-1', name: 'Groceries', color: '#4CAF50' }),
+      ];
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={1}
+          selectedCategories={selectedCategories}
+          filterCategoryIds={['cat-1']}
+        />
+      );
+
+      const colorDot = screen.getByText('Groceries').closest('span')?.querySelector('[style]');
+      expect(colorDot).toBeTruthy();
+      expect(colorDot?.getAttribute('style')).toContain('background-color');
+    });
+
+    it('does not render color dot for category without a color', () => {
+      const selectedCategories = [
+        createCategory({ id: 'cat-1', name: 'Groceries', color: null }),
+      ];
+
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={1}
+          selectedCategories={selectedCategories}
+          filterCategoryIds={['cat-1']}
+        />
+      );
+
+      const chip = screen.getByText('Groceries').closest('span');
+      const colorDot = chip?.querySelector('[style]');
+      expect(colorDot).toBeNull();
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // Bulk Update toggle button
+  // ----------------------------------------------------------------
+
+  describe('bulk update toggle button', () => {
+    it('does not render the bulk update button when onToggleBulkSelectMode is not provided', () => {
+      render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      expect(screen.queryByText('Bulk Update')).not.toBeInTheDocument();
+      expect(screen.queryByText('Cancel Bulk')).not.toBeInTheDocument();
+    });
+
+    it('renders "Bulk Update" buttons when bulkSelectMode is false and filters expanded', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          bulkSelectMode={false}
+          onToggleBulkSelectMode={vi.fn()}
+        />
+      );
+
+      // Two instances: one for desktop (inline), one for mobile (full width)
+      const buttons = screen.getAllByText('Bulk Update');
+      expect(buttons.length).toBe(2);
+      expect(screen.queryByText('Cancel Bulk')).not.toBeInTheDocument();
+    });
+
+    it('renders "Cancel Bulk" buttons when bulkSelectMode is true', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          bulkSelectMode={true}
+          onToggleBulkSelectMode={vi.fn()}
+        />
+      );
+
+      const buttons = screen.getAllByText('Cancel Bulk');
+      expect(buttons.length).toBe(2);
+      expect(screen.queryByText('Bulk Update')).not.toBeInTheDocument();
+    });
+
+    it('calls onToggleBulkSelectMode when a Bulk Update button is clicked', () => {
+      const onToggle = vi.fn();
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          bulkSelectMode={false}
+          onToggleBulkSelectMode={onToggle}
+        />
+      );
+
+      // Click either instance — both should call the same handler
+      fireEvent.click(screen.getAllByText('Bulk Update')[0]);
+      expect(onToggle).toHaveBeenCalledTimes(1);
+    });
+
+    it('calls onToggleBulkSelectMode when a Cancel Bulk button is clicked', () => {
+      const onToggle = vi.fn();
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          bulkSelectMode={true}
+          onToggleBulkSelectMode={onToggle}
+        />
+      );
+
+      fireEvent.click(screen.getAllByText('Cancel Bulk')[0]);
+      expect(onToggle).toHaveBeenCalledTimes(1);
+    });
+
+    it('is inside the filter body, not the header', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          bulkSelectMode={false}
+          onToggleBulkSelectMode={vi.fn()}
+        />
+      );
+
+      // Buttons are inside the collapsible body, so they should be inside overflow-hidden when collapsed
+      const buttons = screen.queryAllByText('Bulk Update');
+      expect(buttons.length).toBeGreaterThan(0);
+      buttons.forEach(button => {
+        const overflowParent = button.closest('.overflow-hidden');
+        expect(overflowParent).toBeTruthy();
+      });
+    });
+
+    it('renders desktop button hidden on mobile and mobile button hidden on desktop', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          bulkSelectMode={false}
+          onToggleBulkSelectMode={vi.fn()}
+        />
+      );
+
+      const buttons = screen.getAllByText('Bulk Update');
+      // Desktop button: hidden on mobile (has sm:inline-flex)
+      const desktopButton = buttons.find(b => b.className.includes('sm:inline-flex'));
+      expect(desktopButton).toBeTruthy();
+      // Mobile button: hidden on desktop (has sm:hidden)
+      const mobileButton = buttons.find(b => b.className.includes('sm:hidden'));
+      expect(mobileButton).toBeTruthy();
+    });
+
+    it('uses outline variant styling when bulkSelectMode is false', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          bulkSelectMode={false}
+          onToggleBulkSelectMode={vi.fn()}
+        />
+      );
+
+      const buttons = screen.getAllByText('Bulk Update');
+      // All instances should use outline variant (border styling)
+      buttons.forEach(button => {
+        expect(button.className).toContain('border');
+      });
+    });
+
+    it('uses secondary variant styling when bulkSelectMode is true', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          bulkSelectMode={true}
+          onToggleBulkSelectMode={vi.fn()}
+        />
+      );
+
+      const buttons = screen.getAllByText('Cancel Bulk');
+      // All instances should use secondary variant (bg-gray-600)
+      buttons.forEach(button => {
+        expect(button.className).toContain('bg-gray-600');
+      });
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // Account status segmented control
+  // ----------------------------------------------------------------
+
+  describe('account status segmented control', () => {
+    it('applies selected styling to All button when filterAccountStatus is empty', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          filterAccountStatus=""
+        />
+      );
+
+      const allButton = screen.getByText('All');
+      expect(allButton.className).toContain('bg-blue-600');
+    });
+
+    it('applies selected styling to Active button when filterAccountStatus is active', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          filterAccountStatus="active"
+        />
+      );
+
+      const activeButton = screen.getByText('Active');
+      expect(activeButton.className).toContain('bg-blue-600');
+    });
+
+    it('applies selected styling to Closed button when filterAccountStatus is closed', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          filterAccountStatus="closed"
+        />
+      );
+
+      const closedButton = screen.getByText('Closed');
+      expect(closedButton.className).toContain('bg-blue-600');
+    });
+
+    it('applies unselected styling to non-active status buttons', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          filterAccountStatus="active"
+        />
+      );
+
+      const allButton = screen.getByText('All');
+      const closedButton = screen.getByText('Closed');
+      expect(allButton.className).not.toContain('bg-blue-600');
+      expect(closedButton.className).not.toContain('bg-blue-600');
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // Time Period filter
+  // ----------------------------------------------------------------
+
+  describe('time period filter', () => {
+    it('renders the Time Period select when expanded', () => {
+      render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      expect(screen.getByText('Time Period')).toBeInTheDocument();
+      expect(screen.getByLabelText('Time Period')).toBeInTheDocument();
+    });
+
+    it('displays all time period options', () => {
+      render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      const select = screen.getByLabelText('Time Period');
+      const options = select.querySelectorAll('option');
+      const labels = Array.from(options).map(o => o.textContent);
+      expect(labels).toContain('Select period...');
+      expect(labels).toContain('All Dates');
+      expect(labels).toContain('Today');
+      expect(labels).toContain('Yesterday');
+      expect(labels).toContain('This Week');
+      expect(labels).toContain('Last Week');
+      expect(labels).toContain('Last 30 Days');
+      expect(labels).toContain('Month to Date');
+      expect(labels).toContain('Last Month');
+      expect(labels).toContain('Last 365 Days');
+      expect(labels).toContain('Year to Date');
+      expect(labels).toContain('Last Year');
+      expect(labels).toContain('Custom');
+    });
+
+    it('calls setFilterTimePeriod and handleFilterChange for dates when a preset is selected', () => {
+      render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      const select = screen.getByLabelText('Time Period');
+      fireEvent.change(select, { target: { value: 'today' } });
+
+      expect(defaultProps.setFilterTimePeriod).toHaveBeenCalledWith('today');
+      // Should also set start and end dates
+      expect(defaultProps.handleFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterStartDate,
+        expect.any(String)
+      );
+      expect(defaultProps.handleFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterEndDate,
+        expect.any(String)
+      );
+    });
+
+    it('clears the start and end dates when All Dates is selected', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          filterStartDate="2025-01-01"
+          filterEndDate="2025-06-30"
+        />
+      );
+
+      const select = screen.getByLabelText('Time Period');
+      fireEvent.change(select, { target: { value: 'all_dates' } });
+
+      expect(defaultProps.setFilterTimePeriod).toHaveBeenCalledWith('all_dates');
+      // All Dates resolves to empty bounds, removing the date filters.
+      expect(defaultProps.handleFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterStartDate,
+        ''
+      );
+      expect(defaultProps.handleFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterEndDate,
+        ''
+      );
+    });
+
+    it('does not set dates when custom is selected', () => {
+      render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      const select = screen.getByLabelText('Time Period');
+      fireEvent.change(select, { target: { value: 'custom' } });
+
+      expect(defaultProps.setFilterTimePeriod).toHaveBeenCalledWith('custom');
+      // Should not call handleFilterChange for dates
+      expect(defaultProps.handleFilterChange).not.toHaveBeenCalled();
+    });
+
+    it('switches to custom when start date is manually changed', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          filterTimePeriod="this_week"
+        />
+      );
+
+      const startInput = screen.getByLabelText('Start Date');
+      fireEvent.change(startInput, { target: { value: '2025-06-01' } });
+
+      expect(defaultProps.setFilterTimePeriod).toHaveBeenCalledWith('custom');
+    });
+
+    it('switches to custom when end date is manually changed', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          filterTimePeriod="month_to_date"
+        />
+      );
+
+      const endInput = screen.getByLabelText('End Date');
+      fireEvent.change(endInput, { target: { value: '2025-06-30' } });
+
+      expect(defaultProps.setFilterTimePeriod).toHaveBeenCalledWith('custom');
+    });
+
+    it('does not switch to custom if already on custom when date changes', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          filterTimePeriod="custom"
+        />
+      );
+
+      const startInput = screen.getByLabelText('Start Date');
+      fireEvent.change(startInput, { target: { value: '2025-06-01' } });
+
+      // setFilterTimePeriod should not be called since it's already 'custom'
+      expect(defaultProps.setFilterTimePeriod).not.toHaveBeenCalled();
+    });
+
+    it('does not switch to custom when no period is selected and date changes', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          filterTimePeriod=""
+        />
+      );
+
+      const startInput = screen.getByLabelText('Start Date');
+      fireEvent.change(startInput, { target: { value: '2025-06-01' } });
+
+      // setFilterTimePeriod should not be called since no period was selected
+      expect(defaultProps.setFilterTimePeriod).not.toHaveBeenCalled();
+    });
+
+    it('displays the selected time period value', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          filterTimePeriod="this_week"
+        />
+      );
+
+      const select = screen.getByLabelText('Time Period');
+      expect(select).toHaveValue('this_week');
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // Amount filter tests
+  // ----------------------------------------------------------------
+
+  describe('amount filters', () => {
+    it('renders Amount From and Amount To inputs when expanded', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+        />
+      );
+
+      expect(screen.getByLabelText('Amount From')).toBeInTheDocument();
+      expect(screen.getByLabelText('Amount To')).toBeInTheDocument();
+    });
+
+    it('amount inputs are in overflow-hidden container when collapsed', () => {
+      const { container } = render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+        />
+      );
+
+      // The inputs are in the DOM but inside a container with overflow-hidden
+      expect(screen.getByLabelText('Amount From')).toBeInTheDocument();
+      const overflowDiv = container.querySelector('.overflow-hidden');
+      expect(overflowDiv).toBeInTheDocument();
+    });
+
+    it('displays current amount filter values', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+          filterAmountFrom="10.50"
+          filterAmountTo="99.99"
+        />
+      );
+
+      expect(screen.getByLabelText('Amount From')).toHaveValue('10.50');
+      expect(screen.getByLabelText('Amount To')).toHaveValue('99.99');
+    });
+
+    it('calls handleFilterChange with setFilterAmountFrom when Amount From changes', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+        />
+      );
+
+      const amountFromInput = screen.getByLabelText('Amount From');
+      fireEvent.change(amountFromInput, { target: { value: '25' } });
+
+      expect(defaultProps.handleFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterAmountFrom,
+        '25',
+      );
+    });
+
+    it('calls handleFilterChange with setFilterAmountTo when Amount To changes', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+        />
+      );
+
+      const amountToInput = screen.getByLabelText('Amount To');
+      fireEvent.change(amountToInput, { target: { value: '500' } });
+
+      expect(defaultProps.handleFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterAmountTo,
+        '500',
+      );
+    });
+
+    it('shows amount range chip when collapsed with both amountFrom and amountTo', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={2}
+          filterAmountFrom="10"
+          filterAmountTo="100"
+        />
+      );
+
+      expect(screen.getByText('10 - 100')).toBeInTheDocument();
+    });
+
+    it('shows "From" chip when only amountFrom is set', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={1}
+          filterAmountFrom="50"
+          filterAmountTo=""
+        />
+      );
+
+      expect(screen.getByText('From 50')).toBeInTheDocument();
+    });
+
+    it('shows "Up to" chip when only amountTo is set', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={1}
+          filterAmountFrom=""
+          filterAmountTo="200"
+        />
+      );
+
+      expect(screen.getByText('Up to 200')).toBeInTheDocument();
+    });
+
+    it('clears both amount filters when chip remove button is clicked', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={2}
+          filterAmountFrom="10"
+          filterAmountTo="100"
+        />
+      );
+
+      const removeButton = screen.getByLabelText('Remove amount filter');
+      fireEvent.click(removeButton);
+
+      expect(defaultProps.handleFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterAmountFrom,
+        '',
+      );
+      expect(defaultProps.handleFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterAmountTo,
+        '',
+      );
+    });
+
+    it('does not show amount chip when both values are empty', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={0}
+          filterAmountFrom=""
+          filterAmountTo=""
+        />
+      );
+
+      expect(screen.queryByLabelText('Remove amount filter')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Reconciliation status filter', () => {
+    it('renders the Status MultiSelect when expanded', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={true}
+        />,
+      );
+
+      expect(screen.getByText('Status')).toBeInTheDocument();
+      expect(screen.getByText('All statuses')).toBeInTheDocument();
+    });
+
+    it('shows a chip per selected status when collapsed', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={2}
+          filterStatuses={['UNRECONCILED', 'VOID'] as any}
+        />,
+      );
+
+      expect(screen.getByText('Unreconciled')).toBeInTheDocument();
+      expect(screen.getByText('Void')).toBeInTheDocument();
+      expect(screen.getByLabelText('Remove Unreconciled filter')).toBeInTheDocument();
+      expect(screen.getByLabelText('Remove Void filter')).toBeInTheDocument();
+    });
+
+    it('removes a status from filterStatuses when its chip remove button is clicked', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={2}
+          filterStatuses={['UNRECONCILED', 'CLEARED'] as any}
+        />,
+      );
+
+      fireEvent.click(screen.getByLabelText('Remove Cleared filter'));
+
+      expect(defaultProps.handleArrayFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterStatuses,
+        ['UNRECONCILED'],
+      );
+    });
+
+    it('shows a chip per selected currency when collapsed', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={2}
+          filterOriginalCurrencyCodes={['EUR', 'GBP']}
+        />,
+      );
+
+      expect(screen.getByText('EUR')).toBeInTheDocument();
+      expect(screen.getByText('GBP')).toBeInTheDocument();
+      expect(screen.getByLabelText('Remove EUR currency filter')).toBeInTheDocument();
+      expect(screen.getByLabelText('Remove GBP currency filter')).toBeInTheDocument();
+    });
+
+    it('removes a currency from filterOriginalCurrencyCodes when its chip remove button is clicked', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={2}
+          filterOriginalCurrencyCodes={['EUR', 'GBP']}
+        />,
+      );
+
+      fireEvent.click(screen.getByLabelText('Remove EUR currency filter'));
+
+      expect(defaultProps.handleArrayFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterOriginalCurrencyCodes,
+        ['GBP'],
+      );
+    });
+  });
+
+  describe('attachments filter', () => {
+    it('renders the attachments select with All/Has/None options', () => {
+      render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      const select = screen.getByLabelText('Attachments') as HTMLSelectElement;
+      expect(select).toBeInTheDocument();
+      expect(screen.getByRole('option', { name: 'Any' })).toBeInTheDocument();
+      expect(screen.getByRole('option', { name: 'Yes' })).toBeInTheDocument();
+      expect(screen.getByRole('option', { name: 'No' })).toBeInTheDocument();
+    });
+
+    it('sets the attachments filter when a value is chosen', () => {
+      render(<TransactionFilterPanel {...defaultProps} filtersExpanded={true} />);
+
+      fireEvent.change(screen.getByLabelText('Attachments'), {
+        target: { value: 'yes' },
+      });
+
+      expect(defaultProps.handleFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterHasAttachments,
+        'yes',
+      );
+    });
+
+    it('shows a chip and clears the filter from the chip when collapsed', () => {
+      render(
+        <TransactionFilterPanel
+          {...defaultProps}
+          filtersExpanded={false}
+          activeFilterCount={1}
+          filterHasAttachments={'no'}
+        />,
+      );
+
+      const removeBtn = screen.getByLabelText('Remove attachments filter');
+      // The chip (not the still-rendered collapsed <option>) shows the label.
+      expect(removeBtn.closest('span')).toHaveTextContent('No attachments');
+      fireEvent.click(removeBtn);
+      expect(defaultProps.handleFilterChange).toHaveBeenCalledWith(
+        defaultProps.setFilterHasAttachments,
+        '',
+      );
+    });
+  });
+});

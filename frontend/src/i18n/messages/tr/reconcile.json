@@ -1,0 +1,95 @@
+{
+  "title": "Hesap Mutabakatı",
+  "subtitle": "Kayıtlarınızı banka ekstreniyle eşleştirin",
+  "subtitleActive": "Mutabakat yapılıyor: {name}",
+  "setup": {
+    "title": "Mutabakatı Başlat",
+    "intro": "Kayıtlarınızın eşleştiğinden emin olmak için hesabınızı banka ekstresiyle mutabık kılın.",
+    "accountLabel": "Hesap",
+    "accountPlaceholder": "Hesap seçin...",
+    "statementDateLabel": "Ekstre Tarihi",
+    "statementBalanceLabel": "Ekstre Kapanış Bakiyesi",
+    "start": "Mutabakatı Başlat"
+  },
+  "summary": {
+    "statementBalance": "Ekstre Bakiyesi",
+    "reconciledBalance": "Mutabakat Bakiyesi",
+    "selected": "Seçili ({count})",
+    "difference": "Fark"
+  },
+  "list": {
+    "heading": "Mutabakat Sağlanmamış İşlemler ({count})",
+    "selectAll": "Tümünü Seç",
+    "selectNone": "Hiçbirini Seçme",
+    "empty": "Bu dönem için mutabakat sağlanmamış işlem bulunamadı.",
+    "colSelect": "Seç",
+    "colDate": "Tarih",
+    "colPayee": "Alacaklı",
+    "colCategory": "Kategori",
+    "colAmount": "Miktar",
+    "colStatus": "Durum",
+    "finish": "Mutabakatı Tamamla",
+    "colActions": "İşlemler",
+    "selectRow": "{payee} işlemini seç",
+    "groupByFlow": "Giren ve çıkan paraya göre grupla",
+    "groupCredits": "Giren ({count})",
+    "groupDebits": "Çıkan ({count})",
+    "groupSubtotal": "Grup ara toplamı {amount}",
+    "addTransaction": "İşlem Ekle",
+    "lockedRow": "Kilitli"
+  },
+  "status": {
+    "cleared": "Temizlendi",
+    "unreconciled": "Mutabakatsız",
+    "void": "Geçersiz",
+    "reconciled": "Mutabakat Sağlandı"
+  },
+  "complete": {
+    "title": "Mutabakat Tamamlandı",
+    "message": "Hesabınız {date} itibarıyla başarıyla mutabık kılındı.",
+    "existingPayment": "Bu hesabın zamanlanmış bir ödemesi var: <b>{name}</b>. Bir sonraki ödemeyi <b>{amount}</b> mutabakat bakiyesine güncellemek ister misiniz?",
+    "updatePayment": "Sonraki Ödemeyi Güncelle",
+    "noPayment": "Bu hesap için zamanlanmış ödeme bulunamadı. <b>{amount}</b> mutabakat bakiyesi için bir ödeme oluşturmak ister misiniz?",
+    "createPayment": "Zamanlanmış Ödeme Oluştur",
+    "backToAccounts": "Hesaplara Geri Dön",
+    "reconcileAnother": "Başka Hesap Mutabık Kıl"
+  },
+  "toasts": {
+    "loadAccountsFailed": "Hesaplar yüklenemedi",
+    "fillAllFields": "Lütfen tüm alanları doldurun",
+    "loadDataFailed": "Mutabakat verileri yüklenemedi",
+    "differenceRequired": "Mutabakatı tamamlamak için fark {amount} olmalıdır",
+    "noneSelected": "Mutabakat için işlem seçilmedi",
+    "success": "{count, plural, one {# işlem başarıyla mutabık kılındı} other {# işlem başarıyla mutabık kılındı}}",
+    "reconcileFailed": "İşlemler mutabık kılınamadı",
+    "deleted": "İşlem silindi",
+    "transferDeleted": "Transfer silindi",
+    "deleteFailed": "İşlem silinemedi",
+    "voidStatus": "Geçersiz bir işlem yalnızca işlem formundan değiştirilebilir",
+    "statusFailed": "Durum değiştirilemedi"
+  },
+  "form": {
+    "newTitle": "Yeni İşlem",
+    "editTitle": "İşlemi Düzenle"
+  },
+  "delete": {
+    "title": "İşlemi Sil",
+    "message": "Bu işlem silinsin mi? Hesaptan ve bu mutabakattan kaldırılacak.",
+    "transferTitle": "Transferi Sil",
+    "transferMessage": "Bu transfer silinsin mi? Her iki tarafı da kaldırılır, bu hesapta ve diğerinde."
+  },
+  "stale": {
+    "missedChip": "Atlanmış",
+    "missedTooltip": "Bu işlemin tarihi, mutabık kıldığınız son ekstrenin tarihinde ya da öncesinde, yani o ekstre bu işlem olmadan mutabık kılınmış.",
+    "overdueChip": "Gecikmiş",
+    "overdueTooltip": "Bu işlem bir ekstre döneminden uzun süredir mutabakat bekliyor."
+  },
+  "reminder": {
+    "title": "Mutabakat",
+    "badgeLabel": "{count, plural, one {# işlem mutabakat bekliyor} other {# işlem mutabakat bekliyor}}",
+    "accountLine": "{count, plural, one {# işlem} other {# işlem}}, en eskisi {date}",
+    "missedLine": "{count, plural, one {# tanesi mutabık kılınmış ekstrede atlanmış} other {# tanesi mutabık kılınmış ekstrelerde atlanmış}}",
+    "overdueLine": "{count, plural, one {# tanesi {days} günden eski} other {# tanesi {days} günden eski}}",
+    "reconcileAction": "Mutabakat"
+  }
+}

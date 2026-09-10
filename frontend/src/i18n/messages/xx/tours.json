@@ -1,0 +1,361 @@
+{
+  "controls": {
+    "next": "[XX-Next-XX]",
+    "back": "[XX-Back-XX]",
+    "done": "[XX-Done-XX]",
+    "endTour": "[XX-End tour-XX]",
+    "tryIt": "[XX-Try it — the tour continues once you do-XX]",
+    "skipStep": "[XX-Skip this step-XX]",
+    "move": "[XX-Move this card — drag it, or nudge it with the arrow keys-XX]",
+    "stepCounter": "[XX-{current} of {total}-XX]",
+    "skippedTitle": "[XX-Tour finished-XX]",
+    "skippedBody": "[XX-Some steps were skipped because their screen or control wasn't available. You can retake the tour anytime from Settings.-XX]"
+  },
+  "offer": {
+    "heading": "[XX-Take a quick tour-XX]",
+    "subheading": "[XX-Short walkthroughs of what's new in this release. This dialog steps aside while a tour runs and comes back when it ends.-XX]",
+    "showMe": "[XX-Show me-XX]",
+    "viewed": "[XX-Viewed-XX]",
+    "introTitle": "[XX-New here? Take the introduction tour-XX]",
+    "introSubtitle": "[XX-A quick walkthrough of the basics.-XX]"
+  },
+  "areas": {
+    "intro": "[XX-Getting started-XX]",
+    "transactions": "[XX-Transactions-XX]",
+    "accounts": "[XX-Accounts-XX]",
+    "budgets": "[XX-Budgets-XX]",
+    "reports": "[XX-Reports-XX]",
+    "investments": "[XX-Investments-XX]",
+    "settings": "[XX-Settings-XX]"
+  },
+  "gettingStarted": {
+    "takeTour": "[XX-Take the tour-XX]",
+    "retakeTour": "[XX-Retake the tour-XX]"
+  },
+  "settings": {
+    "title": "[XX-Guided tours-XX]",
+    "description": "[XX-Walk through the app's features step by step.-XX]",
+    "backLink": "[XX-Back to Settings-XX]",
+    "pageTitle": "[XX-Guided tours-XX]",
+    "pageSubtitle": "[XX-Every walkthrough Monize offers, in one place. Start one anytime — you can leave a tour with Escape and pick it up again from here.-XX]",
+    "meta": "[XX-{steps} · {status}-XX]",
+    "metaWithRelease": "[XX-{steps} · {release} · {status}-XX]",
+    "stepCount": "[XX-{count, plural, one {# step} other {# steps}}-XX]",
+    "releaseLabel": "[XX-Added in {version}-XX]",
+    "requirementsLoading": "[XX-Checking whether you can take this tour…-XX]",
+    "requires": {
+      "transactionEntry": "[XX-Add an account first — this tour walks through recording a transaction.-XX]",
+      "securitiesExist": "[XX-Add a security first — this tour opens one from your securities list.-XX]"
+    },
+    "start": "[XX-Start-XX]",
+    "restart": "[XX-Retake-XX]",
+    "statusNotViewed": "[XX-Not viewed-XX]",
+    "statusDismissed": "[XX-Left early-XX]",
+    "resetHeading": "[XX-Start over-XX]",
+    "resetDescription": "[XX-Clear every recorded tour so they are offered again from the dashboard and after an update.-XX]",
+    "reset": "[XX-Reset tour progress-XX]",
+    "resetSuccess": "[XX-Tour progress reset.-XX]",
+    "resetError": "[XX-Couldn't reset tour progress. Please try again.-XX]"
+  },
+  "intro": {
+    "basics": {
+      "title": "[XX-Introduction to Monize-XX]",
+      "steps": {
+        "welcome": {
+          "title": "[XX-Welcome to Monize-XX]",
+          "body": "[XX-This quick tour shows you around the core of the app. You can leave anytime by pressing **Escape** or **End tour**.-XX]"
+        },
+        "dashboard": {
+          "title": "[XX-Your dashboard-XX]",
+          "body": "[XX-This is your dashboard. Use the **Customize** button in the top-right to rearrange or hide widgets so the summaries you care about sit right at the top.-XX]"
+        },
+        "tools": {
+          "title": "[XX-The Tools menu-XX]",
+          "body": "[XX-The **Tools** menu is where you manage the building blocks of your finances — payees, categories, currencies, tags and more.-XX]"
+        },
+        "accounts": {
+          "title": "[XX-Your accounts-XX]",
+          "body": "[XX-Add your bank, credit card, loan, and investment accounts here with the highlighted button. Every balance and transaction belongs to an account.-XX]"
+        },
+        "openAccountDetail": {
+          "title": "[XX-Open an account's detailed view-XX]",
+          "body": "[XX-Each account has a page built for its type. Choose **Details** — the eye icon on an account row — to open it. On a phone, press and hold the account and choose **Details**.-XX]"
+        },
+        "accountDetailView": {
+          "title": "[XX-A view built for this account-XX]",
+          "body": "[XX-This page changes with the account type, so a bank account, credit card, loan, investment account, or asset each shows the figures and tools that suit it. Come back anytime with **Details** from the Accounts list.-XX]"
+        },
+        "transactions": {
+          "title": "[XX-Transactions-XX]",
+          "body": "[XX-This is your transaction register — every payment and deposit for your accounts lives here, ready to search and filter.-XX]"
+        },
+        "createTransaction": {
+          "title": "[XX-Record a transaction-XX]",
+          "body": "[XX-Add income or spending with **New Transaction**. Go ahead and open the form.-XX]"
+        },
+        "fields": {
+          "title": "[XX-Payee and category-XX]",
+          "body": "[XX-For each transaction you pick a payee and assign a category. Categories are what power your budgets and reports; the amount comes next.-XX]"
+        },
+        "splits": {
+          "title": "[XX-Split a transaction-XX]",
+          "body": "[XX-One purchase covering several categories? Use **Split** to divide a single transaction across categories — groceries and household from one shop, say.-XX]"
+        },
+        "currencyField": {
+          "title": "[XX-Amount and currency-XX]",
+          "body": "[XX-Enter what the transaction cost here. Paid in another currency? Set the entry currency beside the amount and type it as charged — Monize converts it to the account currency for you.-XX]"
+        },
+        "closeForm": {
+          "title": "[XX-Close the form to continue-XX]",
+          "body": "[XX-Close the transaction form with **Cancel**, or save it with the other button, and the tour will move on.-XX]"
+        },
+        "bills": {
+          "title": "[XX-Bills & Deposits-XX]",
+          "body": "[XX-Schedule recurring bills and deposits so upcoming payments are forecast and nothing slips through the cracks.-XX]"
+        },
+        "investments": {
+          "title": "[XX-Investments-XX]",
+          "body": "[XX-Track your holdings, prices, and returns across your investment accounts.-XX]"
+        },
+        "budgets": {
+          "title": "[XX-Plan with budgets-XX]",
+          "body": "[XX-Budgets let you set monthly targets per category and track how you're doing against them.-XX]"
+        },
+        "reports": {
+          "title": "[XX-Understand your money-XX]",
+          "body": "[XX-Reports turn your transactions into charts — spending by category, net worth over time, and more.-XX]"
+        },
+        "finish": {
+          "title": "[XX-You're all set-XX]",
+          "body": "[XX-That's the tour. You can retake it anytime from the **Guided tours** section in **Settings**.-XX]"
+        }
+      }
+    }
+  },
+  "release": {
+    "v1_13_0": {
+      "foreignCurrency": {
+        "title": "[XX-Foreign currency transactions-XX]",
+        "steps": {
+          "welcome": {
+            "title": "[XX-Track spending in other currencies-XX]",
+            "body": "[XX-Bought something abroad? This tour sets up an account's foreign-transaction fee, records a purchase in the currency you were charged, and shows where those costs turn up. Leave anytime with **Escape** or **End tour**.-XX]"
+          },
+          "openAccountEdit": {
+            "title": "[XX-Start with the account-XX]",
+            "body": "[XX-Foreign-transaction fees belong to the account. Pick the account you pay with abroad — a credit or debit card, or whatever your phone pays from — and choose **Edit** from its row actions, or long-press the row on mobile, to open its settings.-XX]"
+          },
+          "fxFeePercent": {
+            "title": "[XX-Set the conversion fee-XX]",
+            "body": "[XX-Enter the account's foreign-transaction fee here as a percentage — 2.5, say. Monize folds it into the converted amount of every foreign purchase, so the fee is captured for you.-XX]"
+          },
+          "closeAccountForm": {
+            "title": "[XX-Save and close-XX]",
+            "body": "[XX-Use these buttons to finish: **Update Account** saves the fee, **Cancel** closes without saving. Either way the tour carries on.-XX]"
+          },
+          "newTransaction": {
+            "title": "[XX-Record a foreign purchase-XX]",
+            "body": "[XX-Now log a purchase you made with that account in another currency. Open **New Transaction** and pick it as the account.-XX]"
+          },
+          "chooseAccount": {
+            "title": "[XX-Check the account and date-XX]",
+            "body": "[XX-The conversion fee belongs to the account, so make sure **Account** is the account you just set it on — change it here if not. Set **Date** to the day of the purchase too: the exchange rate is looked up for that date.-XX]"
+          },
+          "enterDetails": {
+            "title": "[XX-Enter the details-XX]",
+            "body": "[XX-Fill in the payee and category just like any other transaction. The foreign-currency part comes next.-XX]"
+          },
+          "entryCurrency": {
+            "title": "[XX-Choose the currency you paid in-XX]",
+            "body": "[XX-Open this and pick the currency you were charged in. Only your own currency in the list? Choose **Add currency...** at the bottom to add one — it's selected for you straight away.-XX]"
+          },
+          "enterAmount": {
+            "title": "[XX-Enter the amount you were charged-XX]",
+            "body": "[XX-Type the total exactly as it appears on your statement. Monize looks up the **exchange rate** for the transaction's date, shows the converted total beside it, and folds in the **foreign-transaction fee** you set on the account — the caption below spells out both. Bank rounded differently? Edit the rate or the converted total to match to the cent.-XX]"
+          },
+          "closeTransactionForm": {
+            "title": "[XX-Close the form-XX]",
+            "body": "[XX-Same here: save the transaction with the submit button, or close it with **Cancel**, and the tour continues.-XX]"
+          },
+          "openAccountDetail": {
+            "title": "[XX-Back to the account-XX]",
+            "body": "[XX-Open that account's Details page — choose **Details** from its row actions — to see how the foreign activity is summarized.-XX]"
+          },
+          "fxSection": {
+            "title": "[XX-Your foreign-currency section-XX]",
+            "body": "[XX-Accounts with foreign activity gain this section: the fees paid per currency, a chart over time, and the matching transactions, exportable to CSV and PNG. It appears once the account has a foreign purchase.-XX]",
+            "fallbackBody": "[XX-This account has no foreign-currency activity yet, so the section is not on its page. Record a purchase in another currency on it and the section appears: fees paid per currency, a chart over time, and CSV and PNG exports.-XX]"
+          },
+          "report": {
+            "title": "[XX-The Foreign-Currency Fees report-XX]",
+            "body": "[XX-This report gathers foreign purchases across all your accounts and currencies in one place, so you can see what those \"no foreign fee\" cards really cost. Open it anytime from **Reports**.-XX]",
+            "fallbackBody": "[XX-The **Foreign-Currency Fees** report gathers foreign purchases across all your accounts and currencies in one place. It is not on screen right now — a search or a category filter can hide it — but you will find it in **Reports**.-XX]"
+          },
+          "finish": {
+            "title": "[XX-That's foreign currency in Monize-XX]",
+            "body": "[XX-Set a fee once, enter purchases as charged, and the fees track themselves. You can retake this tour anytime from the **Guided tours** section in **Settings**.-XX]"
+          }
+        }
+      },
+      "settings": {
+        "title": "[XX-What's New digest-XX]",
+        "steps": {
+          "whatsNewToggle": {
+            "title": "[XX-Release highlights-XX]",
+            "body": "[XX-This toggle controls whether the What's New summary pops up automatically after an update.-XX]"
+          },
+          "appVersion": {
+            "title": "[XX-Reread the notes-XX]",
+            "body": "[XX-Click the **version label** at the bottom of **Settings** anytime to reopen the release notes.-XX]"
+          },
+          "done": {
+            "title": "[XX-That's it-XX]",
+            "body": "[XX-You can revisit these highlights whenever you like from here in Settings.-XX]"
+          }
+        }
+      }
+    },
+    "v1_14_0": {
+      "securityDetail": {
+        "title": "[XX-Security detail page-XX]",
+        "steps": {
+          "welcome": {
+            "title": "[XX-Every security on one page-XX]",
+            "body": "[XX-Securities used to be three separate dialogs. There is now a page per security that gathers the lot: what you hold, what it has done, and everything Monize knows about it. Here is the quick version.-XX]"
+          },
+          "openDetail": {
+            "title": "[XX-Open a security-XX]",
+            "body": "[XX-Click any security in the list: the whole row opens its page. A long press, or a right-click, brings up that row's own actions instead.-XX]"
+          },
+          "summary": {
+            "title": "[XX-Your position at a glance-XX]",
+            "body": "[XX-Market value, cost basis, unrealised gain, units held, and which accounts hold them. Amounts are in the security's own currency — the one its price is quoted in — and the market value says which close it was struck at.-XX]",
+            "fallbackBody": "[XX-This row normally shows your position. You no longer hold this security, so the page shows what you realised on it instead. Open one you still hold to see the figures.-XX]"
+          },
+          "chart": {
+            "title": "[XX-Three ways to read the history-XX]",
+            "body": "[XX-Switch between the **price**, the **value of your position**, and the **return** over the window. Buys and sells are marked on every series. The buttons on the right set how far back it goes, and the **arrows** beside them walk that window through earlier history at the same zoom — pick 1Y and step back a year at a time rather than switching to 5Y.-XX]"
+          },
+          "keyInfo": {
+            "title": "[XX-What the instrument is-XX]",
+            "body": "[XX-Beside the chart: security type, exchange, currency, the quote provider Monize uses, and the price it last recorded. Underneath, the **Breakdown** card shows what a fund is made of — switch between its sector, country and asset-class splits.-XX]"
+          },
+          "tabs": {
+            "title": "[XX-The detail underneath-XX]",
+            "body": "[XX-**Overview** holds the description, the security's own returns, your total return on the position, and your holdings per account. **Transactions** and **Price history** are the tables the old dialogs used to hold. **Documents** is where a factsheet or an annual report goes, and **News** carries recent headlines that mention the symbol.-XX]"
+          },
+          "finish": {
+            "title": "[XX-That is the tour-XX]",
+            "body": "[XX-Every link that pointed at the old dialogs lands here instead — the dashboard's price widgets open this page on its Price history tab. It is a real page, so you can bookmark it and come back to it.-XX]"
+          }
+        }
+      },
+      "gemStrategy": {
+        "title": "[XX-GEM: rules that pick one investment per period-XX]",
+        "steps": {
+          "welcome": {
+            "title": "[XX-Meet the GEM strategy-XX]",
+            "body": "[XX-Once a month or quarter, GEM compares how three share markets and one safe asset have moved, then names the single instrument to hold until the next check. When shares are not doing well enough, it names the safe asset instead.-XX]"
+          },
+          "findReport": {
+            "title": "[XX-Find GEM under Reports-XX]",
+            "body": "[XX-Open the **GEM Strategy** report here. It lives in the **Investment** category. The report is available even when you have no investment instruments or brokerage holdings in Monize yet.-XX]",
+            "fallbackBody": "[XX-The report card is not visible right now, usually because of a filter. Choose **Next** and the tour will open the GEM report directly. You can find it later under **Reports** in the **Investment** category.-XX]"
+          },
+          "page": {
+            "title": "[XX-One report, four questions-XX]",
+            "body": "[XX-At the top, a **scenario** means a saved set of GEM choices, not a trade, transaction, or brokerage account. The page answers four questions: What does the strategy choose now? Why? Does the portfolio in the selected accounts match? What would need to change? GEM normally points to one instrument until the next monthly or quarterly evaluation.-XX]"
+          },
+          "summary": {
+            "title": "[XX-Four cards at a glance-XX]",
+            "body": "[XX-**Current signal** is the instrument selected by the rules. **Your portfolio** compares that target with what is recorded in the strategy accounts. **To transfer** estimates the value that may need to change. **Strategy assets** shows which instrument fills each role. Missing information is shown as missing, never as zero.-XX]"
+          },
+          "action": {
+            "title": "[XX-A suggestion, not an automatic order-XX]",
+            "body": "[XX-The chart compares the assigned instruments. **What should I do?** turns the signal into a possible sell-and-buy operation and estimates tax and commission when enough data is available. Monize never sends an order to your broker. After making a real trade through your broker, record the transactions in Monize; then use **Mark as executed** only as a note that you carried out the signal.-XX]"
+          },
+          "reasoning": {
+            "title": "[XX-Why did GEM choose this?-XX]",
+            "body": "[XX-Here, “momentum” simply means how prices changed over the chosen past period. GEM first checks whether the US-share instrument beat the risk-free benchmark used as its yardstick. If it did, GEM chooses the strongest of the US, developed-markets-outside-the-US, and emerging-markets instruments. If it did not, GEM chooses the safe asset. **Why this signal?** and the signal history show the decision instead of only a final ticker.-XX]"
+          },
+          "tabs": {
+            "title": "[XX-Back to Overview to see the result-XX]",
+            "body": "[XX-Choose **Overview** to see what the configuration produces. The other tabs are worth knowing: **Signals** shows earlier decisions, **My portfolio** explains what is recorded in the selected accounts, and **Backtest** shows how the rules would have behaved on the available historical prices; it is a model, not a forecast or promise.-XX]"
+          },
+          "openSettings": {
+            "title": "[XX-Open the scenario settings-XX]",
+            "body": "[XX-Choose **Edit settings** and we will set the strategy up before reading anything off it. An empty configuration produces an empty report, so this is the useful place to start. Nothing on this screen buys an instrument or changes anything at your broker.-XX]"
+          },
+          "accounts": {
+            "title": "[XX-Choose the accounts to compare-XX]",
+            "body": "[XX-**Strategy accounts** are the investment accounts that belong to this GEM scenario. Only the holdings and cash recorded in those accounts are used for the portfolio comparison and the amount-to-transfer estimate. No investment account yet? Leave the list empty. GEM may still calculate a signal, but it cannot compare that signal with your real portfolio.-XX]"
+          },
+          "timingAndCosts": {
+            "title": "[XX-Choose how GEM looks back-XX]",
+            "body": "[XX-**Evaluation frequency** decides whether GEM makes a new decision monthly or quarterly. **Momentum window (months)** is simply the number of past months whose prices are compared; the default is 12. **Tax rate (%)** and **Commission per trade** are optional and affect only the cost estimates; they do not change the signal. Leave them blank when you do not know them.-XX]"
+          },
+          "addInstruments": {
+            "title": "[XX-No instruments yet? Start here-XX]",
+            "body": "[XX-GEM needs an instrument in each role before it can decide anything. When a role is empty, this **Roles and instruments** card offers a shortcut that adds example ETFs. First use **Listings to add** to pick the region your broker can actually trade: **Americas** or **Europe (UCITS)**. The add button creates instrument records in Monize straight away, before you save the GEM configuration; it does not buy anything. It fills only empty roles and may reuse a matching instrument already in your list. Check every symbol, exchange, and currency. These examples are not a recommendation. If the shortcut is not shown, your roles are already filled and you can review them below.-XX]",
+            "fallbackBody": "[XX-The settings form has not loaded, so the tour cannot point to the roles card. No settings were changed. Use the page's retry control, or retake the tour later from **Guided tours** in **Settings**.-XX]"
+          },
+          "roles": {
+            "title": "[XX-Five roles, one target-XX]",
+            "body": "[XX-These five pickers are what the shortcut filled in, and what you set by hand otherwise. The three equity roles represent the US (**S&P 500**), **Developed markets ex-US**, and **Emerging markets**. **Safe asset** is what GEM would hold when shares fail the safety test. **Risk-free benchmark** is only the yardstick for that test and may be left empty; then the safe asset is used for both jobs. These are five jobs in the calculation, not five investments GEM expects you to hold at once. Its target is one instrument at a time.-XX]"
+          },
+          "save": {
+            "title": "[XX-Review before saving-XX]",
+            "body": "[XX-Check the account list, each listing, and the currencies, then **Save configuration** to store the scenario and recalculate the report from the available price history. Saving is what gives the next few steps something to show. It still does not place a trade, and you do not have to save to finish this tour. If prices are missing or too old, Monize shows that the signal is unavailable instead of guessing.-XX]"
+          },
+          "finish": {
+            "title": "[XX-Come back at the next evaluation-XX]",
+            "body": "[XX-GEM makes one decision per period, and the date of the next one is at the top of the report. There is nothing to do until then. When it arrives, check whether the signal changed; if it did, place the trades through your broker and record them in Monize so the portfolio comparison keeps adding up. You can retake this tour anytime from **Guided tours** in **Settings**.-XX]"
+          }
+        }
+      }
+    },
+    "v1_16_0": {
+      "notifications": {
+        "title": "[XX-Notifications-XX]",
+        "steps": {
+          "welcome": {
+            "title": "[XX-Monize can tell you things now-XX]",
+            "body": "[XX-A bill falling due, a budget going over, a balance crossing a line you set, a backup that failed. This walkthrough covers where those arrive, and how you choose which ones reach you by email or on your phone.-XX]"
+          },
+          "bell": {
+            "title": "[XX-The bell is the record-XX]",
+            "body": "[XX-Every notification Monize raises is written here, whatever else you switch on or off. Email and push are copies sent onward; this list is the original, and the number on the bell counts what you have not read yet.-XX]"
+          },
+          "panel": {
+            "title": "[XX-What a notification carries-XX]",
+            "body": "[XX-Each one says what happened and links to the page that shows it — the bill, the budget, the account. **Mark all read** clears the count without removing anything. A notification you want to be reminded about has a **Remind me** action: once more after a delay, or repeating until you stop it, and you can stop it from the notification itself when it reaches your phone.-XX]"
+          },
+          "filters": {
+            "title": "[XX-Narrow the list, then act on it-XX]",
+            "body": "[XX-The top row filters by severity and the bottom row separates **Financial** from **System** — backups, mail delivery and other things only an administrator can act on. **Delete all** follows whatever filter is showing and reaches every match, not only the ones on screen, so you can clear a run of resolved system alerts and leave the rest.-XX]"
+          },
+          "settings": {
+            "title": "[XX-Where delivery is decided-XX]",
+            "body": "[XX-**Settings → Notifications** holds the rest of this tour. The top of the card is the email switch and the weekly budget digest; below it is the grid that decides everything else, then your push devices.-XX]"
+          },
+          "matrix": {
+            "title": "[XX-One row per kind, one column per channel-XX]",
+            "body": "[XX-Choose per notification type whether it goes out as a **report email**, an **alert email**, a **push**, or through **UnifiedPush** to a distributor you run yourself. There is no column for the bell because the bell always gets the row. **Cooldown** is the last column: skip the email and the push when something from the same group already went out inside that window — the bell entry is still written. Every switch saves the moment you flip it.-XX]"
+          },
+          "push": {
+            "title": "[XX-Your devices-XX]",
+            "body": "[XX-Register a browser here and Monize can reach it while the app is closed. It signs its own messages, so there is no Google or Apple account in the middle. Each device can be tested and removed on its own, and a device that stops being reachable says why. On an iPhone this works once Monize is added to the Home Screen; if your administrator has not switched push on for this instance, this block says so instead.-XX]"
+          },
+          "portfolio": {
+            "title": "[XX-Investment movement-XX]",
+            "body": "[XX-Once a day, when your investment accounts move by more than the amount you set here. It measures market movement and dividends — money you pay in or take out is not a move.-XX]"
+          },
+          "finish": {
+            "title": "[XX-One more place to look-XX]",
+            "body": "[XX-Balance alerts live on the account itself: edit any account and set **Notify below** or **Notify above**. They fire when the balance *crosses* the line, so you are told once rather than after every payment that keeps it there. You can retake this tour anytime from Settings.-XX]"
+          }
+        }
+      }
+    }
+  }
+}

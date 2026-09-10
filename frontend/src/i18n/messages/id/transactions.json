@@ -1,0 +1,601 @@
+{
+  "payeeWidget": {
+    "totalSpent": "Total Pengeluaran",
+    "income": "Pemasukan",
+    "net": "Bersih",
+    "transactions": "Transaksi",
+    "averageAmount": "Jumlah Rata-rata",
+    "lastTransaction": "Transaksi Terakhir",
+    "defaultCategory": "Kategori Default",
+    "nextBill": "Tagihan Berikutnya",
+    "viewBills": "Lihat di Tagihan & Setoran",
+    "topCategories": "Kategori Teratas",
+    "uncategorized": "Belum Dikategorikan",
+    "aliases": "Alias",
+    "recurring": "Berulang: {cadence} · {amount}",
+    "recurringTooltip": "Terdeteksi dari tagihan berulang selama periode yang dipilih (atau 12 bulan terakhir jika tidak ada filter tanggal).",
+    "cadence": {
+      "weekly": "Mingguan",
+      "biweekly": "Setiap 2 Minggu",
+      "monthly": "Bulanan",
+      "quarterly": "Kuartalan",
+      "yearly": "Tahunan"
+    },
+    "inactive": "Tidak Aktif",
+    "noTransactions": "Tidak ada transaksi pada periode ini",
+    "editAria": "Edit penerima",
+    "detailsAria": "Lihat detail penerima",
+    "collapseAria": "Sembunyikan info penerima",
+    "show": "Tampilkan info penerima",
+    "amountUnavailable": "Tidak ada kurs"
+  },
+  "categoryWidget": {
+    "detailsAria": "Lihat detail kategori",
+    "totalSpent": "Total Pengeluaran",
+    "totalEarned": "Total Pemasukan",
+    "income": "Pemasukan",
+    "expense": "Pengeluaran",
+    "budgetThisMonth": "Anggaran Bulan Ini",
+    "budgetProgress": "{spent} dari {budgeted}",
+    "transactions": "Transaksi",
+    "averageAmount": "Jumlah Rata-rata",
+    "monthlyAverage": "Rata-rata Bulanan",
+    "subcategories": "Subkategori",
+    "thisCategory": "Kategori ini",
+    "topPayees": "Penerima Teratas",
+    "noPayee": "Tanpa penerima",
+    "nextScheduled": "Terjadwal Berikutnya",
+    "noTransactions": "Tidak ada transaksi pada periode ini",
+    "editAria": "Edit kategori",
+    "collapseAria": "Sembunyikan info kategori",
+    "show": "Tampilkan info kategori",
+    "amountUnavailable": "Tidak ada kurs"
+  },
+  "accountWidget": {
+    "currentBalance": "Saldo Saat Ini",
+    "nextPayment": "Pembayaran Berikutnya",
+    "viewBills": "Lihat di Tagihan & Setoran",
+    "viewDetailsAria": "Lihat detail akun",
+    "type": "Tipe",
+    "accountNumber": "Nomor Akun",
+    "currency": "Mata Uang",
+    "creditLimit": "Batas Kredit",
+    "interestRate": "Suku Bunga",
+    "currentPayment": "Angsuran Saat Ini",
+    "currentPaymentTooltip": "Angsuran reguler terakhir, pokok ditambah bunga.",
+    "estPayoff": "Perkiraan Lunas",
+    "estRemainingInterest": "Perkiraan Sisa Bunga",
+    "estRemainingInterestTooltip": "Bunga yang masih harus dibayar jika angsuran dan suku bunga saat ini berlanjut.",
+    "notAvailable": "T/A",
+    "paidOff": "Lunas",
+    "statementSettlement": "Hari Penyelesaian",
+    "statementSettlementTooltip": "Hari terakhir siklus penagihan. Transaksi yang diposting pada atau sebelum hari ini muncul di laporan saat ini.",
+    "statementDue": "Jatuh Tempo Pembayaran",
+    "closed": "Ditutup",
+    "editAria": "Edit pengaturan akun",
+    "collapseAria": "Sembunyikan info akun",
+    "showAccountNumber": "Tampilkan nomor akun",
+    "hideAccountNumber": "Sembunyikan nomor akun",
+    "show": "Tampilkan info akun"
+  },
+  "page": {
+    "title": "Transaksi",
+    "subtitle": "Kelola pendapatan dan pengeluaran Anda",
+    "newButton": "+ Transaksi Baru",
+    "editModal": {
+      "editTitle": "Edit Transaksi",
+      "duplicateTitle": "Duplikat Transaksi",
+      "newTitle": "Transaksi Baru",
+      "scheduleTitle": "Jadwalkan sebagai Berulang",
+      "editPayeeTitle": "Edit Penerima",
+      "editCategoryTitle": "Edit Kategori"
+    },
+    "loading": "Memuat transaksi...",
+    "totalCount": "{count, plural, one {# transaksi} other {# transaksi}}",
+    "bulkDelete": {
+      "title": "Hapus Transaksi",
+      "message": "Apakah Anda yakin ingin menghapus {count, plural, one {# transaksi} other {# transaksi}}? Ini juga akan menghapus transaksi transfer yang terkait. Tindakan ini tidak dapat dibatalkan."
+    },
+    "toasts": {
+      "scheduledCreated": "Transaksi terjadwal dibuat",
+      "investmentLinked": "Transaksi ini terkait dengan investasi. Membuka di halaman Investasi."
+    }
+  },
+  "list": {
+    "empty": {
+      "title": "Tidak ada transaksi",
+      "body": "Mulailah dengan membuat transaksi baru."
+    },
+    "header": {
+      "date": "Tanggal",
+      "account": "Akun",
+      "payee": "Penerima",
+      "category": "Kategori",
+      "description": "Keterangan",
+      "refNumber": "Ref #",
+      "tags": "Tag",
+      "amount": "Jumlah",
+      "currency": "Mata uang",
+      "paidAmount": "Jumlah Dibayar",
+      "feePaid": "Biaya Dibayar",
+      "balance": "Saldo",
+      "attachments": "Lampiran",
+      "status": "Status",
+      "actions": "Aksi"
+    },
+    "dateDisplay": {
+      "toggleLabel": "Sembunyikan tahun",
+      "toggleTitle": "Hilangkan tahun dari tanggal agar nama penerima lebih terlihat"
+    },
+    "attachmentsCount": "{count, plural, other {# lampiran}}",
+    "today": "Hari ini",
+    "export": {
+      "button": "Ekspor",
+      "exporting": "Mengekspor...",
+      "title": "Ekspor transaksi ke CSV",
+      "success": "{count, plural, one {Diekspor # transaksi} other {Diekspor # transaksi}}",
+      "noData": "Tidak ada transaksi untuk diekspor",
+      "error": "Gagal mengekspor transaksi"
+    },
+    "delete": {
+      "transferTitle": "Hapus Transfer",
+      "transactionTitle": "Hapus Transaksi",
+      "transferMessage": "Apakah Anda yakin ingin menghapus transfer ini? Kedua transaksi yang terkait akan dihapus.",
+      "transactionMessage": "Apakah Anda yakin ingin menghapus transaksi ini? Tindakan ini tidak dapat dibatalkan.",
+      "success": "Transaksi dihapus",
+      "transferSuccess": "Transfer dihapus",
+      "error": "Gagal menghapus transaksi",
+      "reconciledWarning": "Transaksi ini telah direkonsiliasi, sehingga menghapusnya akan memengaruhi rekonsiliasi yang telah selesai."
+    },
+    "status": {
+      "voidError": "Edit transaksi untuk mengubah statusnya dari Batal",
+      "changed": "Status diubah menjadi {status}",
+      "changedLockedUndo": "Status diubah menjadi {status}. Transaksi yang direkonsiliasi terkunci; tekan lagi dalam {seconds} detik untuk membatalkan.",
+      "updateError": "Gagal memperbarui status",
+      "unreconciled": "Belum Direkonsiliasi",
+      "cleared": "Kliring",
+      "reconciled": "Rekonsiliasi",
+      "void": "Batal",
+      "clearedDense": "K",
+      "reconciledDense": "R",
+      "voidDense": "V",
+      "pendingDense": "○",
+      "pending": "Tertunda",
+      "cycleTitle": "Klik untuk mengubah status"
+    },
+    "row": {
+      "viewPayeeTitle": "Lihat detail {name}",
+      "ref": "Ref: {number}",
+      "investmentLabel": "Investasi",
+      "linkedInvestmentTitle": "Lihat di Investasi",
+      "filterByDate": "Filter berdasarkan tanggal \"{date}\"",
+      "filterByAccount": "Filter berdasarkan \"{name}\"",
+      "filterByPayee": "Filter berdasarkan \"{name}\"",
+      "filterByCategory": "Filter berdasarkan {name}",
+      "filterByTag": "Filter berdasarkan tag {name}",
+      "transfer": "Transfer",
+      "transferTitle": "Transfer {direction} {name}",
+      "split": "Terbagi",
+      "uncategorized": "Belum Dikategorikan",
+      "splitMore": "+{count} lagi",
+      "filteredAmountTitle": "Jumlah terfilter (transaksi penuh: {amount})",
+      "viewButton": "Lihat",
+      "editButton": "Edit",
+      "deleteButton": "Hapus"
+    },
+    "itemNamePlural": "transaksi"
+  },
+  "row": {
+    "copyOptions": {
+      "title": "Opsi salin",
+      "duplicateTitle": "Duplikat transaksi",
+      "copy": "Salin",
+      "duplicate": "Duplikat",
+      "scheduleRecurring": "Jadwalkan sebagai Berulang"
+    }
+  },
+  "actionSheet": {
+    "defaultTitle": "Transaksi",
+    "filterByDate": "Filter berdasarkan tanggal \"{date}\"",
+    "filterByAccount": "Filter berdasarkan \"{name}\"",
+    "filterByPayee": "Filter berdasarkan \"{name}\"",
+    "filterByCategory": "Filter berdasarkan \"{name}\"",
+    "filterByTag": "Filter berdasarkan tag \"{name}\"",
+    "edit": "Edit",
+    "duplicate": "Duplikat",
+    "scheduleRecurring": "Jadwalkan sebagai Berulang",
+    "delete": "Hapus"
+  },
+  "filter": {
+    "favourites": "Favorit:",
+    "panel": {
+      "title": "Filter",
+      "clear": "Hapus",
+      "hide": "Sembunyikan",
+      "show": "Tampilkan"
+    },
+    "accounts": {
+      "label": "Tampilkan akun:",
+      "all": "Semua",
+      "active": "Aktif",
+      "closed": "Ditutup"
+    },
+    "fields": {
+      "accounts": "Akun",
+      "payees": "Penerima",
+      "categories": "Kategori",
+      "tags": "Tag",
+      "timePeriod": "Periode Waktu",
+      "startDate": "Tanggal Mulai",
+      "endDate": "Tanggal Akhir",
+      "amountFrom": "Jumlah Dari",
+      "amountTo": "Jumlah Sampai",
+      "status": "Status",
+      "search": "Cari",
+      "tagKey": "Kunci tag",
+      "tagKeyOp": "Kondisi",
+      "tagKeyValue": "Nilai",
+      "currency": "Mata uang",
+      "hasAttachments": "Lampiran"
+    },
+    "hasAttachmentsOptions": {
+      "any": "Semua",
+      "yes": "Ya",
+      "no": "Tidak"
+    },
+    "placeholders": {
+      "accounts": "Semua akun",
+      "payees": "Semua penerima",
+      "categories": "Semua kategori",
+      "tags": "Semua tag",
+      "statuses": "Semua status",
+      "amountMin": "Min",
+      "amountMax": "Maks",
+      "search": "Cari penerima, kategori, jumlah, tag, keterangan, referensi #...",
+      "tagKeyValue": "mis. usa"
+    },
+    "tagKeyNone": "Semua (tanpa filter kunci)",
+    "tagKeyOps": {
+      "hasValue": "Memiliki nilai",
+      "noValue": "Tidak memiliki nilai",
+      "contains": "Nilai mengandung",
+      "notContains": "Nilai tidak mengandung"
+    },
+    "chips": {
+      "removeAccount": "Hapus filter {name}",
+      "removePayee": "Hapus filter {name}",
+      "removeCategory": "Hapus filter {name}",
+      "removeTag": "Hapus filter {name}",
+      "removeDate": "Hapus filter tanggal",
+      "removeAmount": "Hapus filter jumlah",
+      "removeSearch": "Hapus filter pencarian",
+      "dateFrom": "Dari {date}",
+      "dateUntil": "Hingga {date}",
+      "amountFrom": "Dari {amount}",
+      "amountUpTo": "Hingga {amount}",
+      "removeCurrency": "Hapus filter mata uang {name}",
+      "hasAttachments": "Ada lampiran",
+      "noAttachments": "Tanpa lampiran",
+      "removeAttachments": "Hapus filter lampiran"
+    },
+    "bulkUpdate": "Perbarui Massal",
+    "cancelBulk": "Batalkan Massal",
+    "statusLabels": {
+      "unreconciled": "Belum Direkonsiliasi",
+      "cleared": "Kliring",
+      "reconciled": "Rekonsiliasi",
+      "void": "Batal"
+    },
+    "periods": {
+      "select": "Pilih periode...",
+      "allDates": "Semua Tanggal",
+      "today": "Hari ini",
+      "yesterday": "Kemarin",
+      "thisWeek": "Minggu Ini",
+      "lastWeek": "Minggu Lalu",
+      "last30Days": "30 Hari Terakhir",
+      "monthToDate": "Bulan Berjalan",
+      "lastMonth": "Bulan Lalu",
+      "last365Days": "365 Hari Terakhir",
+      "yearToDate": "Tahun Berjalan",
+      "lastYear": "Tahun Lalu",
+      "custom": "Kustom"
+    }
+  },
+  "bulk": {
+    "banner": {
+      "selected": "{count, plural, one {# transaksi dipilih} other {# transaksi dipilih}}",
+      "selectAllMatching": "Pilih semua {count} transaksi yang cocok",
+      "allMatching": "(semua transaksi yang cocok)",
+      "clearSelection": "Hapus pilihan",
+      "bulkUpdate": "Perbarui Massal"
+    },
+    "modal": {
+      "title": "Perbarui Transaksi Massal",
+      "subtitle": "Perbarui {count, plural, one {# transaksi yang dipilih} other {# transaksi yang dipilih}}. Aktifkan kolom yang ingin Anda ubah.",
+      "submitLabel": "Perbarui {count, plural, one {# Transaksi} other {# Transaksi}}",
+      "payee": "Penerima",
+      "category": "Kategori",
+      "description": "Keterangan",
+      "status": "Status",
+      "tags": "Tag",
+      "payeePlaceholder": "Pilih atau ketik nama penerima...",
+      "categoryPlaceholder": "Pilih kategori...",
+      "descriptionPlaceholder": "Masukkan keterangan (kosongkan untuk menghapus)",
+      "tagsPlaceholder": "Pilih tag (kosongkan untuk menghapus semua)...",
+      "statusOptions": {
+        "pending": "Tertunda",
+        "cleared": "Kliring",
+        "void": "Batal"
+      },
+      "notes": {
+        "transfer": "Transaksi transfer akan memiliki tandingannya yang terkait diperbarui juga.",
+        "split": "Transaksi terbagi: kategori baru diterapkan ke baris pembagiannya (hanya baris yang cocok dengan filter kategori Anda saat filter aktif). Baris transfer dan investasi tidak berubah."
+      }
+    },
+    "toasts": {
+      "updated": "{count, plural, one {# transaksi diperbarui} other {# transaksi diperbarui}}",
+      "skipped": "{count, plural, one {# transaksi dilewati} other {# transaksi dilewati}}",
+      "splitLines": "{count, plural, one {# baris pembagian dikategorikan ulang} other {# baris pembagian dikategorikan ulang}}"
+    }
+  },
+  "form": {
+    "modeTransaction": "Transaksi",
+    "modeSplit": "Terbagi",
+    "modeTransfer": "Transfer",
+    "transferBadge": "Transfer",
+    "isLinkedTransfer": "Ini adalah transaksi transfer yang terkait",
+    "fields": {
+      "account": "Akun",
+      "date": "Tanggal",
+      "createDate": "Tanggal Dibuat",
+      "payee": "Penerima",
+      "category": "Kategori",
+      "amount": "Jumlah",
+      "totalAmount": "Jumlah Total",
+      "referenceNumber": "Nomor Referensi",
+      "description": "Keterangan",
+      "status": "Status",
+      "tags": "Tag",
+      "fromAccount": "Dari Akun",
+      "toAccount": "Ke Akun",
+      "transferAmount": "Jumlah Transfer",
+      "transferAmountWithCurrency": "Jumlah Transfer ({currency})",
+      "amountReceived": "Jumlah Diterima ({currency})",
+      "payeeOptional": "Penerima (Opsional)",
+      "categoryOptional": "Kategori (Opsional)"
+    },
+    "placeholders": {
+      "selectAccount": "Pilih akun...",
+      "selectDestinationAccount": "Pilih akun tujuan...",
+      "selectOrTypePayee": "Pilih atau ketik nama penerima...",
+      "selectOrCreateCategory": "Pilih atau buat kategori...",
+      "referenceNumber": "Nomor cek, nomor konfirmasi #...",
+      "optionalDescription": "Keterangan opsional...",
+      "selectTags": "Pilih tag...",
+      "createNewTag": "Buat tag baru..."
+    },
+    "splitSection": {
+      "title": "Transaksi Terbagi",
+      "cancelSplit": "Batalkan Pembagian"
+    },
+    "statusOptions": {
+      "unreconciled": "Belum Direkonsiliasi",
+      "cleared": "Kliring",
+      "reconciled": "Rekonsiliasi",
+      "void": "Batal"
+    },
+    "submitCreate": "Buat {mode}",
+    "submitCreateAndNew": "Buat {mode} dan Baru",
+    "submitCreateDescription": "Simpan dan tutup jendela ini.",
+    "submitCreateAndNewDescription": "Simpan dan mulai yang baru, dengan akun dan tanggal yang sama.",
+    "submitOptions": "Pilih apa yang terjadi setelah membuat",
+    "submitUpdate": "Perbarui {mode}",
+    "reconciledConfirm": {
+      "title": "Edit transaksi yang telah direkonsiliasi?",
+      "message": "Transaksi ini telah direkonsiliasi. Mengubahnya akan memengaruhi rekonsiliasi yang telah selesai. Apakah Anda tetap ingin menyimpan perubahan?",
+      "confirm": "Simpan perubahan"
+    },
+    "modeLabel": {
+      "transfer": "Transfer",
+      "transaction": "Transaksi"
+    },
+    "transferAmountNote": "Jumlah harus positif untuk transfer",
+    "transferCandidates": {
+      "sharedWithYou": "Dibagikan dengan Anda",
+      "yourAccounts": "Akun Anda",
+      "optionLabel": "{name} ({currency}) — {owner}"
+    },
+    "crossOwnerLockedNote": "Sisi lain dari transfer ini berada di akun yang tidak lagi dibagikan dengan Anda. Jumlah, tanggal, dan akunnya terkunci, tetapi Anda masih dapat mengedit detail transaksi ini.",
+    "transferCategoryNote": "Opsional. Transfer tetap tidak dihitung sebagai pemasukan atau pengeluaran, tetapi kategori ini membuatnya muncul dalam rincian kategori bulanan (mis. kontribusi investasi bulanan).",
+    "amountReceivedNote": "Jumlah diterima setelah konversi mata uang",
+    "splitTransaction": "Transaksi Terbagi",
+    "splitDisabledDuringTour": "Tidak tersedia selama tur berpandu",
+    "newTagTitle": "Tag Baru",
+    "toasts": {
+      "transferCreated": "Transfer dibuat",
+      "transferUpdated": "Transfer diperbarui",
+      "transactionCreated": "Transaksi dibuat",
+      "transactionUpdated": "Transaksi diperbarui",
+      "attachmentsUploadFailed": "Transaksi disimpan, tetapi {count} lampiran gagal diunggah",
+      "saveFailed": "Gagal menyimpan transaksi",
+      "loadFailed": "Gagal memuat data formulir",
+      "splitsNotEqual": "Total pembagian ({splitTotal}) harus sama dengan jumlah transaksi ({txAmount})",
+      "destinationRequired": "Silakan pilih akun tujuan",
+      "sameAccount": "Akun sumber dan tujuan harus berbeda",
+      "negativeTransfer": "Jumlah transfer tidak boleh negatif",
+      "payeeCreated": "Penerima \"{name}\" dibuat",
+      "payeeCreateFailed": "Gagal membuat penerima",
+      "payeeReactivated": "Penerima \"{name}\" diaktifkan kembali",
+      "payeeReactivateFailed": "Gagal mengaktifkan kembali penerima",
+      "categoryCreated": "Kategori \"{name}\" dibuat",
+      "categoryCreateFailed": "Gagal membuat kategori",
+      "tagCreated": "Tag \"{name}\" dibuat",
+      "fxRateRequired": "Masukkan nilai tukar atau jumlah terkonversi sebelum menyimpan transaksi mata uang asing.",
+      "jointPayeeCreateNotGranted": "Pemilik akun belum memberi Anda izin membuat penerima. Pilih salah satu penerima yang sudah ada."
+    },
+    "ariaHistory": "Tampilkan transaksi terbaru",
+    "ariaHistoryForPayee": "Tampilkan transaksi terbaru untuk penerima ini",
+    "historyTitle": "Isi cepat dari transaksi terbaru",
+    "currencyPicker": {
+      "label": "Mata uang entri",
+      "ariaLabel": "Ubah mata uang entri",
+      "title": "Masukkan jumlah dalam",
+      "accountCurrency": "Mata uang akun ({code})",
+      "addCurrency": "Tambah mata uang...",
+      "optionLabel": "{symbol} - {name} ({code})",
+      "createFailed": "Gagal menambahkan mata uang",
+      "reactivated": "{code} diaktifkan kembali"
+    },
+    "fx": {
+      "totalInCurrency": "Total dalam {currency}",
+      "rateCaption": "1 {from} = {rate} {to} ({date})",
+      "noRateWarning": "Tidak ada nilai tukar untuk {from} ke {to} pada {date}. Masukkan jumlah terkonversi secara manual.",
+      "usingLatestRateHint": "Menggunakan nilai tukar terbaru yang tersedia (bukan tertanggal {date}).",
+      "displayToggle": {
+        "account": "Akun",
+        "original": "Asli"
+      },
+      "feeCaption": "Termasuk biaya transaksi luar negeri {percent}% ({fee})."
+    },
+    "jointSplitDisabled": "Transaksi split di akun bersama hanya dapat dikelola oleh pemilik"
+  },
+  "splitEditor": {
+    "header": "Detail Pembagian",
+    "distributeProportionally": "Distribusikan Secara Proporsional",
+    "distributeProportionallyTitle": "Distribusikan jumlah yang tersisa secara proporsional berdasarkan jumlah setiap pembagian",
+    "distributeEvenly": "Distribusikan Secara Merata",
+    "addSplit": "Tambah Pembagian",
+    "removeMinimum": "Minimum 2 pembagian diperlukan",
+    "removeSplit": "Hapus pembagian",
+    "removeAndConvert": "Hapus pembagian dan ubah ke transaksi biasa",
+    "convertConfirm": {
+      "title": "Ubah ke transaksi biasa?",
+      "message": "Menghapus pembagian ini akan mengubahnya kembali menjadi transaksi biasa menggunakan kategori pembagian yang tersisa.",
+      "confirm": "Ubah"
+    },
+    "noUnassigned": "Tidak ada jumlah yang belum ditetapkan",
+    "addRemaining": "Tambahkan sisa ke pembagian ini",
+    "total": "Total",
+    "balanced": "Seimbang",
+    "remaining": "Sisa: {symbol}{amount}",
+    "needAmount": "Perlu {symbol}{amount} (sisa: {symbol}{remaining})",
+    "setTotal": "Tetapkan total ke {symbol}{amount}",
+    "currencyToggle": {
+      "title": "Ganti mata uang untuk menampilkan dan mengedit jumlah pembagian",
+      "ariaAmountsIn": "Tampilkan dan edit jumlah pembagian dalam {code}"
+    },
+    "splitLabel": "Pembagian {number}",
+    "columns": {
+      "type": "Tipe",
+      "categoryAccount": "Kategori / Akun",
+      "category": "Kategori",
+      "amount": "Jumlah",
+      "memo": "Memo",
+      "tags": "Tag"
+    },
+    "splitTypes": {
+      "category": "Kategori",
+      "transfer": "Transfer",
+      "investment": "Investasi"
+    },
+    "selectCategory": "Pilih kategori...",
+    "selectAccount": "Pilih akun...",
+    "memoPlaceholder": "Memo opsional",
+    "mobileMemoPlaceholder": "Memo",
+    "tagsPlaceholder": "Tag..."
+  },
+  "recentPopover": {
+    "recentForPayee": "Terbaru untuk {name}",
+    "recentTransactions": "Transaksi terbaru",
+    "loading": "Memuat...",
+    "noRecent": "Tidak ada transaksi terbaru.",
+    "noRecentForPayee": "Tidak ada transaksi terbaru untuk penerima ini.",
+    "noPayee": "(tidak ada penerima)",
+    "uncategorized": "(belum dikategorikan)"
+  },
+  "investmentSplit": {
+    "ariaAction": "Aksi investasi",
+    "ariaSecurity": "Keamanan dokumen",
+    "selectSecurity": "Pilih keamanan dokumen...",
+    "quantityPlaceholder": "Kuantitas",
+    "pricePlaceholder": "Harga",
+    "commissionPlaceholder": "Komisi",
+    "amountPlaceholder": "Jumlah ({currency})",
+    "ratePlaceholder": "{to} per 1 {from}",
+    "ariaRate": "Nilai tukar ({to} per 1 {from})",
+    "rateHint": "Jumlah, harga, dan komisi dalam {from}; kurs ini mengonversi dampak kas ke {to}.",
+    "rateUnresolved": "Tidak ada kurs {from} ke {to}. Masukkan satu — tanpanya dampak kas tidak dapat dihitung, dan kedua mata uang tidak sama."
+  },
+  "charts": {
+    "balanceHistory": {
+      "title": "Riwayat Saldo",
+      "noData": "Tidak ada data saldo yang tersedia",
+      "starting": "Awal",
+      "current": "Saat ini",
+      "ending": "Akhir",
+      "lowest": "Terendah",
+      "minBalance": "Saldo Minimum",
+      "projected": "Proyeksi",
+      "range": "{start} – {end}"
+    },
+    "zeroBalances": {
+      "message": "Semua akun yang dipilih memiliki saldo nol, sehingga tidak ada grafik saldo untuk ditampilkan."
+    },
+    "monthlyTotals": {
+      "title": "Total Bulanan",
+      "noData": "Tidak ada data transaksi yang tersedia",
+      "monthlyAvg": "Rata-rata Bulanan",
+      "quarterlyAvg": "Rata-rata Kuartalan",
+      "yearlyAvg": "Rata-rata Tahunan",
+      "total": "Total",
+      "transactions": "Transaksi",
+      "tooltip": "{count, plural, one {# transaksi} other {# transaksi}}",
+      "quarterLabel": "K{quarter} {year}",
+      "quarterTick": "K{quarter} {year}",
+      "granularityLabel": "Pengelompokan",
+      "granularity": {
+        "auto": "Otomatis",
+        "month": "Bulan",
+        "quarter": "Kuartal",
+        "year": "Tahun"
+      },
+      "granularityAutoTitle": "Otomatis ({granularity})",
+      "granularityTitle": "Tampilan {label}"
+    },
+    "accountBalances": {
+      "title": "Saldo Akun",
+      "noData": "Tidak ada data saldo akun yang tersedia",
+      "average": "Rata-rata",
+      "total": "Total",
+      "accounts": "Akun",
+      "scaleLabel": "Skala sumbu Y",
+      "auto": "Otomatis",
+      "linear": "Linear",
+      "log": "Log",
+      "autoTitle": "Otomatis ({scale})",
+      "scaleTitle": "Skala {label}"
+    }
+  },
+  "toasts": {
+    "payeeUpdated": "Penerima berhasil diperbarui",
+    "deleted": "{count, plural, one {# transaksi dihapus} other {# transaksi dihapus}}",
+    "noneToExport": "Tidak ada transaksi untuk diekspor",
+    "exported": "{count, plural, one {Diekspor # transaksi} other {Diekspor # transaksi}}",
+    "loadFormDataFailed": "Gagal memuat data formulir",
+    "loadFailed": "Gagal memuat transaksi",
+    "loadPayeeFailed": "Gagal memuat detail penerima",
+    "payeeUpdateFailed": "Gagal memperbarui penerima",
+    "categoryUpdated": "Kategori berhasil diperbarui",
+    "categoryUpdateFailed": "Gagal memperbarui kategori",
+    "exportFailed": "Gagal mengekspor transaksi"
+  },
+  "validation": {
+    "dateRequired": "Tanggal diperlukan"
+  },
+  "tagKeyBreakdown": {
+    "title": "Pengeluaran menurut {key}",
+    "other": "Lainnya",
+    "noData": "Tidak ada pengeluaran bertag untuk dirinci pada kunci ini."
+  }
+}

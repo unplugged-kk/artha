@@ -1,0 +1,45 @@
+import { Module, forwardRef } from "@nestjs/common";
+import { ImportController } from "./import.controller";
+import { MnyImportController } from "./mny/mny-import.controller";
+import { ImportService } from "./import.service";
+import { ImportEntityCreatorService } from "./import-entity-creator.service";
+import { ImportInvestmentProcessorService } from "./import-investment-processor.service";
+import { ImportRegularProcessorService } from "./import-regular-processor.service";
+import { MnyImportJobService } from "./mny/mny-import-job.service";
+import { MnyImportService } from "./mny/mny-import.service";
+import { ImportPostProcessingService } from "./import-post-processing.service";
+import { MnyParserService } from "./mny/mny-parser.service";
+import { MnyStagingService } from "./mny/mny-staging.service";
+import { NetWorthModule } from "../net-worth/net-worth.module";
+import { SecuritiesModule } from "../securities/securities.module";
+import { CurrenciesModule } from "../currencies/currencies.module";
+import { UsersModule } from "../users/users.module";
+
+@Module({
+  imports: [
+    forwardRef(() => NetWorthModule),
+    forwardRef(() => SecuritiesModule),
+    forwardRef(() => CurrenciesModule),
+    forwardRef(() => UsersModule),
+  ],
+  controllers: [ImportController, MnyImportController],
+  providers: [
+    ImportService,
+    ImportPostProcessingService,
+    ImportEntityCreatorService,
+    ImportInvestmentProcessorService,
+    ImportRegularProcessorService,
+    MnyStagingService,
+    MnyParserService,
+    MnyImportJobService,
+    MnyImportService,
+  ],
+  exports: [
+    ImportService,
+    MnyStagingService,
+    MnyParserService,
+    MnyImportJobService,
+    MnyImportService,
+  ],
+})
+export class ImportModule {}

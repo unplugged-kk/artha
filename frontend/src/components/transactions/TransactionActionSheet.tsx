@@ -1,0 +1,250 @@
+'use client';
+
+import { useCallback, useMemo } from 'react';
+import { useTranslations } from 'next-intl';
+import { Transaction } from '@/types/transaction';
+import { Category } from '@/types/category';
+import { Modal } from '@/components/ui/Modal';
+import { usePayeeDisplay } from '@/hooks/usePayeeDisplay';
+
+interface TransactionActionSheetProps {
+  isOpen: boolean;
+  transaction: Transaction | null;
+  formatDate: (date: string) => string;
+  onClose: () => void;
+  onEdit?: (transaction: Transaction) => void;
+  onDuplicate?: (transaction: Transaction) => void;
+  onScheduleRecurring?: (transaction: Transaction) => void;
+  onDeleteClick: (transaction: Transaction) => void;
+  onDateFilterClick?: (date: string) => void;
+  onAccountFilterClick?: (accountId: string) => void;
+  onPayeeFilterClick?: (payeeId: string) => void;
+  onCategoryClick?: (categoryId: string) => void;
+  onTagFilterClick?: (tagId: string) => void;
+  /** Maps category ID to its full "Parent: Child" label. */
+  categoryLabelMap?: Map<string, string>;
+}
+
+export function TransactionActionSheet({
+  isOpen,
+  transaction,
+  formatDate,
+  onClose,
+  onEdit,
+  onDuplicate,
+  onScheduleRecurring,
+  onDeleteClick,
+  onDateFilterClick,
+  onAccountFilterClick,
+  onPayeeFilterClick,
+  onCategoryClick,
+  onTagFilterClick,
+  categoryLabelMap,
+}: TransactionActionSheetProps) {
+  const t = useTranslations('transactions');
+  const payeeDisplay = usePayeeDisplay();
+  // The list query joins a category's own row but not its parent, so fall back
+  // to the bare name when the full-path label isn't available.
+  const categoryLabel = useCallback(
+    (category: Category): string =>
+      categoryLabelMap?.get(category.id) ?? category.name,
+    [categoryLabelMap],
+  );
+
+  const handleFilterDate = useCallback(() => {
+    if (!transaction) return;
+    onClose();
+    if (transaction.transactionDate && onDateFilterClick) {
+      onDateFilterClick(transaction.transactionDate);
+    }
+  }, [transaction, onClose, onDateFilterClick]);
+
+  const handleFilterAccount = useCallback(() => {
+    if (!transaction) return;
+    onClose();
+    if (transaction.account?.id && onAccountFilterClick) {
+      onAccountFilterClick(transaction.account.id);
+    }
+  }, [transaction, onClose, onAccountFilterClick]);
+
+  const handleFilterPayee = useCallback(() => {
+    if (!transaction) return;
+    onClose();
+    if (transaction.payeeId && onPayeeFilterClick) {
+      onPayeeFilterClick(transaction.payeeId);
+    }
+  }, [transaction, onClose, onPayeeFilterClick]);
+
+  const handleFilterCategory = useCallback(() => {
+    if (!transaction) return;
+    onClose();
+    if (transaction.category?.id && onCategoryClick) {
+      onCategoryClick(transaction.category.id);
+    }
+  }, [transaction, onClose, onCategoryClick]);
+
+  const handleFilterCategoryById = useCallback((categoryId: string) => {
+    onClose();
+    if (onCategoryClick) {
+      onCategoryClick(categoryId);
+    }
+  }, [onClose, onCategoryClick]);
+
+  // Unique categories drawn from a split transaction's category splits.
+  // Transfer and investment splits carry no regular category, so they are skipped.
+  const splitCategories = useMemo<Category[]>(() => {
+    if (!transaction?.isSplit || !transaction.splits) return [];
+    const seen = new Set<string>();
+    const result: Category[] = [];
+    for (const split of transaction.splits) {
+      if (split.category && split.categoryId && !seen.has(split.categoryId)) {
+        seen.add(split.categoryId);
+        result.push(split.category);
+      }
+    }
+    return result;
+  }, [transaction]);
+
+  const handleFilterTag = useCallback((tagId: string) => {
+    onClose();
+    if (onTagFilterClick) {
+      onTagFilterClick(tagId);
+    }
+  }, [onClose, onTagFilterClick]);
+
+  const handleDelete = useCallback(() => {
+    if (!transaction) return;
+    onClose();
+    onDeleteClick(transaction);
+  }, [transaction, onClose, onDeleteClick]);
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} maxWidth="sm" className="p-0">
+      <div className="py-2">
+        <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+          <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+            {(transaction && payeeDisplay(transaction)) ||
+              t('actionSheet.defaultTitle')}
+          </p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            {transaction && formatDate(transaction.transactionDate)}
+          </p>
+        </div>
+        {onDateFilterClick && transaction?.transactionDate && (
+          <button
+            onClick={handleFilterDate}
+            className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3"
+          >
+            <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            {t('actionSheet.filterByDate', { date: formatDate(transaction.transactionDate) })}
+          </button>
+        )}
+        {onAccountFilterClick && transaction?.account && (
+          <button
+            onClick={handleFilterAccount}
+            className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3"
+          >
+            <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+            </svg>
+            {t('actionSheet.filterByAccount', { name: transaction.account.name })}
+          </button>
+        )}
+        {onPayeeFilterClick && transaction?.payeeId && (
+          <button
+            onClick={handleFilterPayee}
+            className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3"
+          >
+            <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            {t('actionSheet.filterByPayee', { name: transaction.payeeName || '' })}
+          </button>
+        )}
+        {onCategoryClick && transaction?.category && (
+          <button
+            onClick={handleFilterCategory}
+            className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3"
+          >
+            <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+            {t('actionSheet.filterByCategory', { name: categoryLabel(transaction.category) })}
+          </button>
+        )}
+        {onCategoryClick && splitCategories.map((category) => (
+          <button
+            key={category.id}
+            onClick={() => handleFilterCategoryById(category.id)}
+            className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3"
+          >
+            <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+            {t('actionSheet.filterByCategory', { name: categoryLabel(category) })}
+          </button>
+        ))}
+        {onTagFilterClick && transaction?.tags && transaction.tags.length > 0 && (
+          transaction.tags.map((tag) => (
+            <button
+              key={tag.id}
+              onClick={() => handleFilterTag(tag.id)}
+              className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3"
+            >
+              <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+              </svg>
+              {t('actionSheet.filterByTag', { name: tag.name })}
+            </button>
+          ))
+        )}
+        {onEdit && (
+          <button
+            onClick={() => { onClose(); onEdit!(transaction!); }}
+            className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3"
+          >
+            <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            {t('actionSheet.edit')}
+          </button>
+        )}
+        {onDuplicate && !transaction?.linkedInvestmentTransactionId && (
+          <button
+            onClick={() => { onClose(); onDuplicate(transaction!); }}
+            className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3"
+          >
+            <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            {t('actionSheet.duplicate')}
+          </button>
+        )}
+        {onScheduleRecurring && !transaction?.linkedInvestmentTransactionId && (
+          <button
+            onClick={() => { onClose(); onScheduleRecurring(transaction!); }}
+            className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3"
+          >
+            <svg className="w-4 h-4 shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            {t('actionSheet.scheduleRecurring')}
+          </button>
+        )}
+        {!transaction?.linkedInvestmentTransactionId && (
+          <button
+            onClick={handleDelete}
+            className="w-full px-4 py-3 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-3"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            {t('actionSheet.delete')}
+          </button>
+        )}
+      </div>
+    </Modal>
+  );
+}

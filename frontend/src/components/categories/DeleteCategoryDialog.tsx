@@ -1,0 +1,168 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
+import { Category } from '@/types/category';
+import { Button } from '@/components/ui/Button';
+import { Modal } from '@/components/ui/Modal';
+import { categoriesApi } from '@/lib/categories';
+import { buildCategoryTree } from '@/lib/categoryUtils';
+
+interface DeleteCategoryDialogProps {
+  isOpen: boolean;
+  category: Category | null;
+  categories: Category[];
+  onConfirm: (reassignToCategoryId: string | null) => void;
+  onCancel: () => void;
+}
+
+export function DeleteCategoryDialog({
+  isOpen,
+  category,
+  categories,
+  onConfirm,
+  onCancel,
+}: DeleteCategoryDialogProps) {
+  const t = useTranslations('categories');
+  const tc = useTranslations('common');
+  const [transactionCount, setTransactionCount] = useState<number | null>(null);
+  const [reassignTo, setReassignTo] = useState<string>('');
+
+  // Reset state during render when category changes
+  const categoryId = isOpen && category ? category.id : null;
+  const [prevCategoryId, setPrevCategoryId] = useState<string | null>(null);
+  if (categoryId !== prevCategoryId) {
+    setPrevCategoryId(categoryId);
+    if (categoryId) {
+      setTransactionCount(null);
+      setReassignTo('');
+    }
+  }
+
+  const isLoading = isOpen && categoryId !== null && transactionCount === null;
+
+  useEffect(() => {
+    if (isOpen && category) {
+      categoriesApi
+        .getTransactionCount(category.id)
+        .then(setTransactionCount)
+        .catch(() => setTransactionCount(0));
+    }
+  }, [isOpen, category]);
+
+  // Get available categories to reassign to (excluding current and its children)
+  const getAvailableCategories = () => {
+    if (!category) return [];
+
+    const excludeIds = new Set<string>();
+    const collectChildren = (parentId: string) => {
+      categories.forEach((c) => {
+        if (c.parentId === parentId) {
+          excludeIds.add(c.id);
+          collectChildren(c.id);
+        }
+      });
+    };
+
+    excludeIds.add(category.id);
+    collectChildren(category.id);
+
+    return buildCategoryTree(categories, excludeIds);
+  };
+
+  const availableCategories = getAvailableCategories();
+
+  const handleConfirm = () => {
+    onConfirm(reassignTo || null);
+  };
+
+  // Don't render if no category (Modal handles isOpen check)
+  if (!category) return null;
+
+  return (
+    <Modal isOpen={isOpen} onClose={onCancel} maxWidth="md" className="p-6">
+      <div className="flex items-start">
+        <div className="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-full bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400">
+          <svg
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+        </div>
+        <div className="ml-4 flex-1">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
+            {t('deleteDialog.title', { name: category.name })}
+          </h3>
+
+          {isLoading ? (
+            <div className="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-400">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400 dark:border-gray-500 mr-2"></div>
+              {t('deleteDialog.checkingUsage')}
+            </div>
+          ) : transactionCount && transactionCount > 0 ? (
+            <div className="mt-2">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                {t('deleteDialog.usedBy', { count: transactionCount })}
+              </p>
+
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  {t('deleteDialog.reassignLabel')}
+                </label>
+                <select
+                  value={reassignTo}
+                  onChange={(e) => setReassignTo(e.target.value)}
+                  className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400 font-sans text-sm dark:bg-gray-700 dark:text-gray-100"
+                >
+                  <option value="">{t('deleteDialog.leaveUncategorized')}</option>
+                  {availableCategories.map(({ category: cat }) => {
+                    const parentCategory = cat.parentId
+                      ? categories.find(c => c.id === cat.parentId)
+                      : null;
+                    const displayName = parentCategory
+                      ? `${parentCategory.name}: ${cat.name}`
+                      : cat.name;
+                    return (
+                      <option key={cat.id} value={cat.id}>
+                        {displayName}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+            </div>
+          ) : (
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+              {t('deleteDialog.safeToDelete')}
+            </p>
+          )}
+
+          <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+            {t('deleteDialog.cannotUndo')}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-6 flex justify-end space-x-3">
+        <Button variant="outline" onClick={onCancel}>
+          {tc('cancel')}
+        </Button>
+        <button
+          onClick={handleConfirm}
+          disabled={isLoading}
+          className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 dark:bg-red-700 border border-transparent rounded-md hover:bg-red-700 dark:hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 focus:ring-red-500 disabled:opacity-50"
+        >
+          {tc('delete')}
+        </button>
+      </div>
+    </Modal>
+  );
+}

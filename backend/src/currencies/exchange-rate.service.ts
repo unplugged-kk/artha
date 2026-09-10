@@ -1,0 +1,1115 @@
+import {
+  Injectable,
+  Logger,
+  OnModuleInit,
+  Inject,
+  forwardRef,
+} from "@nestjs/common";
+import {
+  DataSource,
+  EntityManager,
+  MoreThanOrEqual,
+  LessThanOrEqual,
+  And,
+} from "typeorm";
+import { Cron } from "@nestjs/schedule";
+import { ExchangeRate } from "./entities/exchange-rate.entity";
+import { Currency } from "./entities/currency.entity";
+import { UserPreference } from "../users/entities/user-preference.entity";
+import { YahooFinanceService } from "../securities/yahoo-finance.service";
+import { mapWithConcurrency } from "../common/concurrency.util";
+import { roundFxRate } from "../common/fx-entry.util";
+import { withScopedDb } from "../common/db/scoped-db";
+import { returnedRows } from "../common/db/query-result";
+import { withSystemContext, withUserContext } from "../common/db/with-context";
+import {
+  EmptyWindowMemory,
+  monthFetchWindow,
+} from "../common/time-series/history-fill";
+import { preferredCurrency } from "../common/default-currency.util";
+
+// Cap concurrent Yahoo FX fetches so the daily refresh does not burst every
+// currency pair at once (this cron also runs alongside the security price
+// refresh, so the combined load on Yahoo needs to stay bounded).
+const FX_FETCH_CONCURRENCY = 6;
+
+/**
+ * A pair key that does not distinguish direction, because a fetch does not
+ * either: one provider call is persisted both ways, so USD->CAD and CAD->USD
+ * are one unit of work and one negative-cache entry.
+ */
+function directionlessPairKey(from: string, to: string): string {
+  return [from, to].sort().join("|");
+}
+
+export interface RateUpdateResult {
+  pair: string;
+  success: boolean;
+  rate?: number;
+  error?: string;
+}
+
+export interface RateRefreshSummary {
+  totalPairs: number;
+  updated: number;
+  failed: number;
+  results: RateUpdateResult[];
+  lastUpdated: Date;
+}
+
+export interface HistoricalRateBackfillResult {
+  pair: string;
+  success: boolean;
+  ratesLoaded: number;
+  error?: string;
+}
+
+export interface HistoricalRateBackfillSummary {
+  totalPairs: number;
+  successful: number;
+  failed: number;
+  totalRatesLoaded: number;
+  results: HistoricalRateBackfillResult[];
+}
+
+@Injectable()
+export class ExchangeRateService implements OnModuleInit {
+  private readonly logger = new Logger(ExchangeRateService.name);
+
+  /** Pair-months the provider answered with nothing. See `EmptyWindowMemory`. */
+  private readonly emptyRateWindows = new EmptyWindowMemory();
+
+  constructor(
+    private dataSource: DataSource,
+    @Inject(forwardRef(() => YahooFinanceService))
+    private yahooFinanceService: YahooFinanceService,
+  ) {}
+
+  /**
+   * On application startup, check if exchange rates exist and are recent.
+   * If not, trigger a refresh so currency conversions work immediately.
+   *
+   * RLS: a bootstrap hook has no request context, and everything this reads is
+   * cross-user (the recency probe on the global exchange_rates table, then the
+   * sweep for users holding foreign-currency accounts), so the whole body runs
+   * under `withSystemContext` -- the same shape C2 gave the crons. The per-user
+   * backfills it fans out are re-wrapped in `withUserContext` below.
+   */
+  async onModuleInit(): Promise<void> {
+    await withSystemContext(() => this.checkRatesOnStartup());
+  }
+
+  private async checkRatesOnStartup(): Promise<void> {
+    try {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      // Check for rates within the last 3 days (covers weekends — Friday rates still valid on Monday)
+      const cutoff = new Date(today);
+      cutoff.setDate(cutoff.getDate() - 3);
+
+      const recentRate = await withScopedDb(this.dataSource, (manager) =>
+        manager.getRepository(ExchangeRate).findOne({
+          where: { rateDate: MoreThanOrEqual(cutoff) },
+        }),
+      );
+
+      if (!recentRate) {
+        this.logger.log(
+          "No recent exchange rates found — fetching rates on startup",
+        );
+        const summary = await this.refreshAllRates();
+        this.logger.log(
+          `Startup rate refresh: ${summary.updated} updated, ${summary.failed} failed`,
+        );
+      } else {
+        this.logger.log("Exchange rates are up to date");
+      }
+      // Check if historical rates need backfilling for any user's accounts or securities
+      const usersWithForeignAccounts: Array<{ user_id: string }> =
+        await withScopedDb(this.dataSource, (manager) =>
+          manager.query(
+            `SELECT DISTINCT user_id FROM (
+             SELECT a.user_id
+             FROM accounts a
+             INNER JOIN user_preferences up ON up.user_id = a.user_id
+             WHERE a.is_closed = false
+               AND a.currency_code != up.default_currency
+             UNION
+             SELECT a.user_id
+             FROM securities s
+             INNER JOIN holdings h ON h.security_id = s.id
+             INNER JOIN accounts a ON a.id = h.account_id AND a.is_closed = false
+             INNER JOIN user_preferences up ON up.user_id = a.user_id
+             WHERE s.currency_code != up.default_currency
+               AND s.is_active = true
+               AND h.quantity > 0
+           ) sub`,
+          ),
+        );
+
+      for (const { user_id } of usersWithForeignAccounts) {
+        withUserContext(user_id, () =>
+          this.backfillHistoricalRates(user_id),
+        ).catch((err) =>
+          this.logger.warn(
+            `Startup historical rate backfill failed for user ${user_id}: ${err.message}`,
+          ),
+        );
+      }
+    } catch (error) {
+      this.logger.error(
+        `Failed to check/refresh exchange rates on startup: ${error.message}`,
+      );
+    }
+  }
+
+  /**
+   * Fetch exchange rate from Yahoo Finance for a currency pair.
+   * Delegates to YahooFinanceService to avoid duplicating the v8 chart API logic.
+   */
+  private async fetchYahooRate(
+    from: string,
+    to: string,
+  ): Promise<number | null> {
+    if (from === to) return 1.0;
+
+    const symbol = `${from}${to}=X`;
+    const quote = await this.yahooFinanceService.fetchQuote(symbol);
+    return quote?.regularMarketPrice ?? null;
+  }
+
+  /**
+   * Fetch historical daily exchange rates from Yahoo Finance for a currency pair.
+   * Delegates to YahooFinanceService to avoid duplicating the v8 chart API logic.
+   */
+  private async fetchYahooHistoricalRates(
+    from: string,
+    to: string,
+  ): Promise<Array<{ date: Date; rate: number }> | null> {
+    if (from === to) return [];
+
+    const symbol = `${from}${to}=X`;
+    const prices = await this.yahooFinanceService.fetchHistorical(symbol);
+    if (!prices) return null;
+
+    return prices.map((p) => ({ date: p.date, rate: p.close }));
+  }
+
+  /**
+   * Like fetchYahooHistoricalRates, but bounded to a [from, to] date window so a
+   * single-date lookup fetches a handful of bars instead of the entire history.
+   */
+  private async fetchYahooHistoricalRatesWindow(
+    from: string,
+    to: string,
+    fromDate: Date,
+    toDate: Date,
+  ): Promise<Array<{ date: Date; rate: number }> | null> {
+    if (from === to) return [];
+
+    const symbol = `${from}${to}=X`;
+    const prices = await this.yahooFinanceService.fetchHistoricalWindow(
+      symbol,
+      null,
+      fromDate,
+      toDate,
+    );
+    if (!prices) return null;
+
+    return prices.map((p) => ({ date: p.date, rate: p.close }));
+  }
+
+  /**
+   * Save or update an exchange rate for a given date,
+   * and also save the inverse rate for the reverse pair.
+   */
+  private async saveRate(
+    from: string,
+    to: string,
+    rate: number,
+    date: Date,
+  ): Promise<ExchangeRate> {
+    // Both directions in one transaction: a pair persisted only one way would
+    // make the reverse lookup fall through to a live fetch forever.
+    return withScopedDb(this.dataSource, async (manager) => {
+      const result = await this.saveOneDirection(manager, from, to, rate, date);
+
+      // Also save the inverse rate so both directions stay current. Rounded at
+      // the rate column's own precision, not money precision: 1/1.3652 rounded
+      // to 4dp is 0.7325, which converts USD->CAD back to 1.3661 -- an error a
+      // bank statement quoting six decimals would show up immediately.
+      const inverseRate = roundFxRate(1 / rate);
+      await this.saveOneDirection(manager, to, from, inverseRate, date);
+
+      return result;
+    });
+  }
+
+  private async saveOneDirection(
+    manager: EntityManager,
+    from: string,
+    to: string,
+    rate: number,
+    date: Date,
+  ): Promise<ExchangeRate> {
+    // One statement, arbitrated by `UNIQUE(from_currency, to_currency,
+    // rate_date)`. This used to be a `findOne` and then either a save of the
+    // found row or an insert -- a check-then-act, and one every replica runs:
+    // the exchange-rate cron fires everywhere at 5:05 PM ET, so two processes
+    // routinely fetch the same pair for the same day, both find no row, and both
+    // insert. The loser got a unique violation, which inside `saveRate`'s
+    // transaction also lost the inverse direction written beside it.
+    //
+    // `persistRateSeries` a few lines below already did it this way; the two are
+    // now consistent, which matters because they write the same rows.
+    const rows: unknown = await manager.query(
+      `INSERT INTO exchange_rates (from_currency, to_currency, rate_date, rate, source)
+       VALUES ($1, $2, $3::DATE, $4, 'yahoo_finance')
+       ON CONFLICT (from_currency, to_currency, rate_date) DO UPDATE SET
+         rate = EXCLUDED.rate,
+         source = EXCLUDED.source
+       RETURNING id`,
+      [from, to, date, rate],
+    );
+
+    // `DO UPDATE` always returns the row, so a read-back is only needed to hand
+    // the caller an entity. Scoped by the id just written rather than by the
+    // triple, so it cannot pick up a different row.
+    const id = returnedRows<{ id: number }>(rows)[0]?.id;
+    const saved = id
+      ? await manager.getRepository(ExchangeRate).findOne({ where: { id } })
+      : null;
+    if (!saved) {
+      // Nothing else can make an upsert return no row, so this is a real fault
+      // rather than a state to paper over with a synthesized entity.
+      throw new Error(
+        `Failed to persist exchange rate ${from}/${to} for ${date.toISOString().slice(0, 10)}`,
+      );
+    }
+    return saved;
+  }
+
+  /**
+   * Bulk-upsert a daily rate series for a pair, in both directions.
+   *
+   * A provider call returns a whole daily series for the period asked for, and
+   * costs the same whether that is one day or a hundred. Persisting only the
+   * day that was wanted threw the rest away and sent the next lookup for a
+   * neighbouring date straight back out to the provider -- which is how a user
+   * stepping a date field backwards ran into rate limits. Storing the series
+   * makes one call cover the whole window.
+   *
+   * Both directions are written for the reason `saveRate` gives: a pair
+   * persisted one way only leaves the reverse lookup falling through to a live
+   * fetch forever.
+   */
+  private async persistRateSeries(
+    from: string,
+    to: string,
+    series: Array<{ date: Date; rate: number }>,
+  ): Promise<number> {
+    // One row per day, last value wins, ignoring anything unusable.
+    const byDay = new Map<string, { date: Date; rate: number }>();
+    for (const point of series) {
+      if (!isFinite(point.rate) || point.rate <= 0) continue;
+      byDay.set(point.date.toISOString().slice(0, 10), point);
+    }
+    const points = Array.from(byDay.values());
+    if (points.length === 0) return 0;
+
+    const rows: Array<[string, string, Date, number]> = [];
+    for (const point of points) {
+      rows.push([from, to, point.date, point.rate]);
+      rows.push([to, from, point.date, roundFxRate(1 / point.rate)]);
+    }
+
+    const batchSize = 500;
+    for (let i = 0; i < rows.length; i += batchSize) {
+      const batch = rows.slice(i, i + batchSize);
+      const values = batch
+        .map((_, idx) => {
+          const offset = idx * 4;
+          return `($${offset + 1}, $${offset + 2}, $${offset + 3}::DATE, $${offset + 4}, 'yahoo_finance')`;
+        })
+        .join(", ");
+      const params: any[] = [];
+      for (const [f, t, date, rate] of batch) params.push(f, t, date, rate);
+
+      await withScopedDb(this.dataSource, (manager) =>
+        manager.query(
+          `INSERT INTO exchange_rates (from_currency, to_currency, rate_date, rate, source)
+           VALUES ${values}
+           ON CONFLICT (from_currency, to_currency, rate_date) DO UPDATE SET
+             rate = EXCLUDED.rate,
+             source = EXCLUDED.source`,
+          params,
+        ),
+      );
+    }
+
+    return points.length;
+  }
+
+  /**
+   * Refresh exchange rates for all currencies in use
+   */
+  /**
+   * Refresh every currency pair in use across the deployment.
+   *
+   * Global by definition: `exchange_rates` is shared reference data, and the pair
+   * set is assembled from every user's accounts, securities and default currency.
+   * The system context therefore belongs here, not at the call sites -- left to the
+   * caller's ambient identity, the manual endpoint spans all users at
+   * RLS_MODE=off and silently narrows to the caller's own currencies at enforce,
+   * so the same button would mean two different things. A nested system context
+   * from the cron is the same identity and joins.
+   */
+  async refreshAllRates(): Promise<RateRefreshSummary> {
+    return withSystemContext(() => this.refreshAllRatesGlobally());
+  }
+
+  private async refreshAllRatesGlobally(): Promise<RateRefreshSummary> {
+    const startTime = Date.now();
+    this.logger.log("Starting exchange rate refresh");
+
+    // Fetch all currencies in use: account currencies, security currencies for
+    // active holdings, and every user's preferred default currency. Including
+    // defaults ensures we fetch (CAD, GBP) even when the user has no GBP-
+    // denominated accounts -- otherwise their GBP totals would silently fall
+    // back to unconverted CAD values.
+    const usedCurrencies: { code: string }[] = await withScopedDb(
+      this.dataSource,
+      (manager) =>
+        manager.query(
+          `SELECT DISTINCT code FROM (
+         SELECT currency_code AS code FROM accounts WHERE is_closed = false
+         UNION
+         SELECT s.currency_code AS code
+         FROM securities s
+         INNER JOIN holdings h ON h.security_id = s.id
+         INNER JOIN accounts a ON a.id = h.account_id AND a.is_closed = false
+         WHERE s.is_active = true AND h.quantity > 0
+         UNION
+         SELECT default_currency AS code FROM user_preferences
+         WHERE default_currency IS NOT NULL
+       ) sub`,
+        ),
+    );
+
+    const codes = usedCurrencies.map((c) => c.code);
+    this.logger.log(`Currencies in use: ${codes.join(", ")}`);
+
+    if (codes.length < 2) {
+      return {
+        totalPairs: 0,
+        updated: 0,
+        failed: 0,
+        results: [],
+        lastUpdated: new Date(),
+      };
+    }
+
+    // Build all unique currency pairs from in-use currencies
+    const pairs: { from: string; to: string }[] = [];
+    for (let i = 0; i < codes.length; i++) {
+      for (let j = i + 1; j < codes.length; j++) {
+        pairs.push({
+          from: codes[i],
+          to: codes[j],
+        });
+      }
+    }
+
+    const results: RateUpdateResult[] = [];
+    let updated = 0;
+    let failed = 0;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Fetch rates with bounded concurrency
+    await mapWithConcurrency(
+      pairs,
+      FX_FETCH_CONCURRENCY,
+      async ({ from, to }) => {
+        const pairLabel = `${from}/${to}`;
+        const rate = await this.fetchYahooRate(from, to);
+
+        if (rate === null) {
+          results.push({
+            pair: pairLabel,
+            success: false,
+            error: "No rate data available",
+          });
+          failed++;
+          return;
+        }
+
+        try {
+          await this.saveRate(from, to, rate, today);
+          results.push({ pair: pairLabel, success: true, rate });
+          updated++;
+        } catch (error) {
+          results.push({
+            pair: pairLabel,
+            success: false,
+            error: error.message,
+          });
+          failed++;
+        }
+      },
+    );
+
+    const duration = Date.now() - startTime;
+    this.logger.log(
+      `Exchange rate refresh completed in ${duration}ms: ${updated} updated, ${failed} failed`,
+    );
+
+    return {
+      totalPairs: pairs.length,
+      updated,
+      failed,
+      results,
+      lastUpdated: new Date(),
+    };
+  }
+
+  /**
+   * Backfill historical exchange rates for accounts with non-default currencies.
+   * Fetches daily rates from the earliest transaction date to today.
+   *
+   * @param userId - The user whose default currency determines the conversion target
+   * @param accountIds - Optional list of account IDs to scope the backfill (e.g. post-import)
+   */
+  async backfillHistoricalRates(
+    userId: string,
+    accountIds?: string[],
+  ): Promise<HistoricalRateBackfillSummary> {
+    const startTime = Date.now();
+    this.logger.log("Starting historical exchange rate backfill");
+
+    // 1. Get user's default currency
+    const pref = await withScopedDb(this.dataSource, (manager) =>
+      manager.getRepository(UserPreference).findOne({
+        where: { userId },
+      }),
+    );
+    const defaultCurrency = preferredCurrency(pref);
+
+    // 2. Find non-default currencies and their earliest transaction dates
+    //    Includes both account currencies AND security currencies held in those accounts
+    let accountFilter = "";
+    const params: any[] = [defaultCurrency];
+
+    if (accountIds && accountIds.length > 0) {
+      accountFilter = `AND a.id = ANY($2::UUID[])`;
+      params.push(accountIds);
+    }
+
+    // Both discovery queries read from one snapshot -- they feed a single
+    // pair->earliest-date map, so a row appearing between them would skew it.
+    const [accountCurrencyRows, securityCurrencyRows] = await withScopedDb(
+      this.dataSource,
+      async (manager) => {
+        // Query 1: Account-level currencies (accounts in a non-default currency)
+        const accountRows: Array<{
+          currency_code: string;
+          earliest: string;
+        }> = await manager.query(
+          `SELECT a.currency_code,
+              LEAST(
+                (SELECT MIN(t.transaction_date) FROM transactions t WHERE t.account_id = a.id),
+                (SELECT MIN(it.transaction_date) FROM investment_transactions it WHERE it.account_id = a.id AND it.status != 'VOID')
+              )::TEXT AS earliest
+       FROM accounts a
+       WHERE a.currency_code != $1
+         AND a.is_closed = false
+         ${accountFilter}`,
+          params,
+        );
+
+        // Query 2: Security-level currencies (securities in a non-default currency held in active accounts)
+        const securityRows: Array<{
+          currency_code: string;
+          earliest: string;
+        }> = await manager.query(
+          `SELECT DISTINCT s.currency_code,
+              (SELECT MIN(it.transaction_date)::TEXT
+               FROM investment_transactions it
+               WHERE it.security_id = s.id
+                 AND it.status != 'VOID') AS earliest
+       FROM securities s
+       INNER JOIN holdings h ON h.security_id = s.id
+       INNER JOIN accounts a ON a.id = h.account_id AND a.is_closed = false
+       WHERE s.currency_code != $1
+         AND s.is_active = true
+         AND h.quantity > 0
+         ${accountFilter ? `AND h.account_id = ANY($2::UUID[])` : ""}`,
+          params,
+        );
+
+        return [accountRows, securityRows] as const;
+      },
+    );
+
+    // 3. Determine unique currency pairs and the global earliest date per pair
+    const pairEarliest = new Map<string, Date>();
+    const allRows = [...accountCurrencyRows, ...securityCurrencyRows];
+    for (const row of allRows) {
+      if (!row.earliest) continue;
+      const pairKey = `${row.currency_code}->${defaultCurrency}`;
+      const earliest = new Date(row.earliest);
+      earliest.setHours(0, 0, 0, 0);
+      const existing = pairEarliest.get(pairKey);
+      if (!existing || earliest < existing) {
+        pairEarliest.set(pairKey, earliest);
+      }
+    }
+
+    if (pairEarliest.size === 0) {
+      this.logger.log("No currency pairs require historical backfill");
+      return {
+        totalPairs: 0,
+        successful: 0,
+        failed: 0,
+        totalRatesLoaded: 0,
+        results: [],
+      };
+    }
+
+    this.logger.log(
+      `Currency pairs to backfill: ${Array.from(pairEarliest.keys()).join(", ")}`,
+    );
+
+    // 4. Fetch and store historical rates for each pair
+    const results: HistoricalRateBackfillResult[] = [];
+    let successful = 0;
+    let failed = 0;
+    let totalRatesLoaded = 0;
+
+    for (const [pairKey, cutoffDate] of pairEarliest.entries()) {
+      const [from, to] = pairKey.split("->");
+
+      // Skip if we already have historical rates for this pair
+      const existingRates = await withScopedDb(this.dataSource, (manager) =>
+        manager.query(
+          `SELECT COUNT(*)::INT AS count FROM exchange_rates
+         WHERE from_currency = $1 AND to_currency = $2`,
+          [from, to],
+        ),
+      );
+
+      if (existingRates[0]?.count > 0) {
+        results.push({ pair: `${from}/${to}`, success: true, ratesLoaded: 0 });
+        successful++;
+        continue;
+      }
+
+      const rates = await this.fetchYahooHistoricalRates(from, to);
+
+      if (!rates || rates.length === 0) {
+        results.push({
+          pair: `${from}/${to}`,
+          success: false,
+          ratesLoaded: 0,
+          error: "No historical data available",
+        });
+        failed++;
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        continue;
+      }
+
+      // Filter to only keep rates from the earliest transaction date onward
+      let filtered = rates.filter((r) => r.date >= cutoffDate);
+
+      // Deduplicate by date
+      const seen = new Set<string>();
+      filtered = filtered.filter((r) => {
+        const key = r.date.toISOString().substring(0, 10);
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        results.push({ pair: `${from}/${to}`, success: true, ratesLoaded: 0 });
+        successful++;
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        continue;
+      }
+
+      try {
+        // Same bulk upsert the single-date lookup uses, which also writes the
+        // inverse pair -- this loop used to store one direction only, so a
+        // CAD->USD lookup went out to the provider even though the USD->CAD
+        // history had just been backfilled.
+        await this.persistRateSeries(from, to, filtered);
+
+        this.logger.log(
+          `Backfilled ${filtered.length} rates for ${from}/${to} (from ${cutoffDate.toISOString().substring(0, 10)})`,
+        );
+        results.push({
+          pair: `${from}/${to}`,
+          success: true,
+          ratesLoaded: filtered.length,
+        });
+        successful++;
+        totalRatesLoaded += filtered.length;
+      } catch (error) {
+        this.logger.error(
+          `Failed to save historical rates for ${from}/${to}: ${error.message}`,
+        );
+        results.push({
+          pair: `${from}/${to}`,
+          success: false,
+          ratesLoaded: 0,
+          error: error.message,
+        });
+        failed++;
+      }
+
+      // Small delay between pairs to avoid rate limiting
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+
+    const duration = Date.now() - startTime;
+    this.logger.log(
+      `Historical rate backfill completed in ${duration}ms: ${successful} successful, ${failed} failed, ${totalRatesLoaded} total rates`,
+    );
+
+    return {
+      totalPairs: pairEarliest.size,
+      successful,
+      failed,
+      totalRatesLoaded,
+      results,
+    };
+  }
+
+  /**
+   * Make sure the stored series can answer `date` for each pair, fetching from
+   * the provider the ones it cannot.
+   *
+   * The daily refresh only ever writes today, and `backfillHistoricalRates`
+   * skips a pair the moment it has *any* row -- so a user whose USD/CAD history
+   * starts at their import has nothing at all for 2017, and a point-in-time
+   * report asked about that year cannot present a USD account in CAD or value a
+   * USD holding inside a CAD brokerage. Neither is a number to guess at: the
+   * report reports the pair as missing and the total goes null, which is what
+   * the user sees as "Total unavailable". The rates are simply not there yet,
+   * so this fetches them.
+   *
+   * **The unit is a calendar month, not a day.** One provider call returns the
+   * whole daily series for whatever period it is asked for and costs the same
+   * either way, so asking for the month around `date` -- plus
+   * `BOUNDARY_LAG_DAYS` of lead, which is the span `closeAt` may reach back
+   * over, so the first days of the month are answerable too -- makes every
+   * other date in that month a database read. A user stepping a report back
+   * through a year pays twelve calls per pair rather than three hundred.
+   *
+   * Best-effort by construction: it is called from a read path, so a provider
+   * failure is logged and the report renders with the pair still missing rather
+   * than the request failing. Callers decide which pairs are missing; this does
+   * not re-check the database, and it never invents a rate -- a pair the
+   * provider has no data for stays absent.
+   *
+   * Returns the number of daily observations persisted.
+   */
+  async ensureRatesForDate(
+    pairs: ReadonlyArray<{ from: string; to: string }>,
+    date: string,
+  ): Promise<number> {
+    // `persistRateSeries` writes both directions from one fetch, so USD->CAD
+    // and CAD->USD are the same piece of work and must not be fetched twice.
+    const wanted = new Map<string, { from: string; to: string }>();
+    for (const pair of pairs) {
+      if (!pair.from || !pair.to || pair.from === pair.to) continue;
+      const key = directionlessPairKey(pair.from, pair.to);
+      if (!wanted.has(key)) wanted.set(key, pair);
+    }
+    if (wanted.size === 0) return 0;
+
+    const month = date.slice(0, 7);
+    const due = [...wanted.entries()].filter(
+      ([key]) => !this.emptyRateWindows.has(key, month),
+    );
+    if (due.length === 0) return 0;
+
+    const [start, end] = monthFetchWindow(date);
+    this.logger.log(
+      `Fetching historical rates for ${due.map(([, p]) => `${p.from}/${p.to}`).join(", ")} over ${start} to ${end}`,
+    );
+
+    const loaded = await mapWithConcurrency(
+      due,
+      FX_FETCH_CONCURRENCY,
+      async ([key, pair]) => {
+        try {
+          const { stored, answered } = await this.fillRateWindow(
+            pair.from,
+            pair.to,
+            start,
+            end,
+          );
+          if (stored === 0 && answered) {
+            // Nothing exists for this pair in this era -- a currency that
+            // predates the provider's history, or one it does not carry. Note
+            // it, so a report reloaded on the same date does not re-ask.
+            //
+            // Only when the provider actually answered: a refusal and a
+            // transport failure produce the same zero, and this memory holds
+            // for 30 minutes -- long enough for a two-minute outage to leave
+            // every foreign-currency total in the report null well after the
+            // provider came back. The fill reports it, because it is the one
+            // that saw the response.
+            this.emptyRateWindows.remember(key, month);
+            this.logger.warn(
+              `No historical rates available for ${pair.from}/${pair.to} over ${start} to ${end}`,
+            );
+          }
+          return stored;
+        } catch (error) {
+          this.logger.warn(
+            `Historical rate fetch ${pair.from}->${pair.to} over ${start} to ${end} failed: ${
+              error instanceof Error ? error.message : String(error)
+            }`,
+          );
+          return 0;
+        }
+      },
+    );
+
+    return loaded.reduce((sum, count) => sum + count, 0);
+  }
+
+  /**
+   * One pair, one window, persisted in both directions.
+   *
+   * The reverse symbol is tried when the direct one returns nothing, because
+   * Yahoo carries some pairs under one orientation only and
+   * `persistRateSeries` writes the inverse row regardless -- so `CADUSD=X`
+   * answers a `USD->CAD` question just as well.
+   */
+  /**
+   * @returns the number of observations persisted, and whether the provider
+   *   *answered* at all -- `[]` (no rates for this pair in this window) rather
+   *   than `null` (a transport failure, or a call the breaker refused). Only an
+   *   answer may be remembered as an empty window: the two produce the same
+   *   zero, and the memory holds for 30 minutes.
+   */
+  private async fillRateWindow(
+    from: string,
+    to: string,
+    start: string,
+    end: string,
+  ): Promise<{ stored: number; answered: boolean }> {
+    const startDate = new Date(`${start}T00:00:00.000Z`);
+    const endDate = new Date(`${end}T23:59:59.999Z`);
+
+    const direct = await this.fetchYahooHistoricalRatesWindow(
+      from,
+      to,
+      startDate,
+      endDate,
+    );
+    if (direct && direct.length > 0) {
+      return {
+        stored: await this.persistRateSeries(from, to, direct),
+        answered: true,
+      };
+    }
+
+    const reverse = await this.fetchYahooHistoricalRatesWindow(
+      to,
+      from,
+      startDate,
+      endDate,
+    );
+    if (reverse && reverse.length > 0) {
+      return {
+        stored: await this.persistRateSeries(to, from, reverse),
+        answered: true,
+      };
+    }
+
+    // Both directions, not either: "this pair has no rates in this window" is
+    // only known when both symbols answered. One of them answering `[]` while
+    // the other failed or was refused is exactly the half-knowledge that used
+    // to be cached for thirty minutes.
+    return { stored: 0, answered: direct !== null && reverse !== null };
+  }
+
+  /**
+   * Get the latest exchange rates (most recent per currency pair)
+   */
+  async getLatestRates(): Promise<ExchangeRate[]> {
+    return withScopedDb(this.dataSource, (manager) =>
+      manager
+        .getRepository(ExchangeRate)
+        .createQueryBuilder("er")
+        .distinctOn(["er.from_currency", "er.to_currency"])
+        .orderBy("er.from_currency")
+        .addOrderBy("er.to_currency")
+        .addOrderBy("er.rate_date", "DESC")
+        .getMany(),
+    );
+  }
+
+  /**
+   * Get the latest rate for a specific currency pair
+   */
+  async getLatestRate(
+    from: string,
+    to: string,
+    /**
+     * Reject a stored rate older than this many days, returning null instead.
+     *
+     * Omitted, the newest rate is returned whatever its age -- which is what
+     * every caller that only needs an indicative conversion has always got. A
+     * caller whose output is a money figure the user acts on should supply a
+     * bound: a rate is a price like any other, and one from nine months ago
+     * converts a 10,000 USD holding into a confident PLN total that is off by
+     * the year's currency move, with nothing in the payload saying so
+     * (`docs/financial-calculation-contract.md` rules 3 and 4).
+     */
+    maxAgeDays?: number,
+  ): Promise<number | null> {
+    if (from === to) return 1;
+    const where: Record<string, unknown> = {
+      fromCurrency: from,
+      toCurrency: to,
+    };
+    if (maxAgeDays !== undefined) {
+      const oldest = new Date();
+      oldest.setUTCDate(oldest.getUTCDate() - maxAgeDays);
+      where.rateDate = MoreThanOrEqual(oldest.toISOString().slice(0, 10));
+    }
+    const rate = await withScopedDb(this.dataSource, (manager) =>
+      manager.getRepository(ExchangeRate).findOne({
+        where,
+        order: { rateDate: "DESC" },
+      }),
+    );
+    return rate ? Number(rate.rate) : null;
+  }
+
+  /**
+   * Get the exchange rate for a currency pair as of a specific date.
+   *
+   * Unlike getLatestRate (the once-a-day stored snapshot), this returns the
+   * rate that applied on the transaction's date -- essential for back-dated
+   * transactions, where the latest snapshot can be far from the historical
+   * rate. Precedence:
+   *   0. A date in the future has no rate and never will until it arrives, so
+   *      the target is clamped to today and the answer is today's rate. Without
+   *      the clamp a future date fell through to a Yahoo window that contains
+   *      nothing, and the lookup returned null for a scheduled transaction
+   *      posted ahead of time.
+   *   1. The stored rate on the closest date on or before the target. This is
+   *      what makes a weekend or a holiday resolve: Saturday and Sunday carry
+   *      Friday's rate forward, which is the closest day that has one.
+   *   2. A short historical daily window fetched from Yahoo around the target
+   *      date; the value on the closest day on or before the target is used and
+   *      persisted for reuse. The window (not the full "max" history) keeps the
+   *      request small and fast. When the target predates every point in the
+   *      window, the nearest point in either direction wins.
+   *   3. The latest stored rate of any date, as a last resort, so a pair that
+   *      has a rate today still resolves for a date the provider has no data
+   *      for at all.
+   * Returns null when no rate can be determined (so the caller can reject or
+   * flag the operation rather than silently assuming 1.0).
+   */
+  async getRateForDate(
+    from: string,
+    to: string,
+    date: string | Date,
+  ): Promise<number | null> {
+    if (from === to) return 1;
+
+    const requested =
+      typeof date === "string"
+        ? date.slice(0, 10)
+        : date.toISOString().slice(0, 10);
+
+    // 0. Clamp a future date to today: today's rate is the best available
+    //    estimate, and it is the same figure the bills list is showing.
+    const todayUtc = new Date().toISOString().slice(0, 10);
+    const target = requested > todayUtc ? todayUtc : requested;
+    const targetDate = new Date(`${target}T00:00:00.000Z`);
+
+    // 1. Closest stored rate on or before the target date (carry-forward over
+    //    weekends and holidays).
+    const stored = await withScopedDb(this.dataSource, (manager) =>
+      manager.getRepository(ExchangeRate).findOne({
+        where: {
+          fromCurrency: from,
+          toCurrency: to,
+          rateDate: LessThanOrEqual(targetDate),
+        },
+        order: { rateDate: "DESC" },
+      }),
+    );
+    if (stored) return Number(stored.rate);
+
+    // 2. Fetch a Yahoo window around the target (not the full "max" history)
+    //    and use the rate on the closest day on or before the target.
+    //
+    //    The window is wide because it costs nothing to be: one call returns
+    //    the whole daily series for the period, and every bar in it is
+    //    persisted below. Six weeks back and one forward means a user stepping
+    //    a date field through a month of history pays for a single fetch, and
+    //    the reverse pair is filled in at the same time. It was two weeks back
+    //    and one point kept, so neighbouring dates each went back out to the
+    //    provider and ran into its rate limits.
+    const windowStart = new Date(targetDate.getTime() - 45 * 86_400_000);
+    const windowEnd = new Date(targetDate.getTime() + 7 * 86_400_000);
+    const series = await this.fetchYahooHistoricalRatesWindow(
+      from,
+      to,
+      windowStart,
+      windowEnd,
+    );
+    if (series && series.length > 0) {
+      const targetTime = targetDate.getTime();
+      const sorted = [...series].sort(
+        (a, b) => a.date.getTime() - b.date.getTime(),
+      );
+      const onOrBefore = sorted.filter((p) => p.date.getTime() <= targetTime);
+      // Prefer the closest day on or before the target -- a Saturday takes
+      // Friday's rate. When the target predates every point in the window, take
+      // the nearest point in either direction instead: a best-effort rate from
+      // the closest day the market traded beats a silent 1.0.
+      const chosen =
+        onOrBefore.length > 0
+          ? onOrBefore[onOrBefore.length - 1]
+          : sorted.reduce((best, point) =>
+              Math.abs(point.date.getTime() - targetTime) <
+              Math.abs(best.date.getTime() - targetTime)
+                ? point
+                : best,
+            );
+      try {
+        // The whole window, not just the day that was asked for: the next
+        // lookup for any date in it is then a database read.
+        const stored = await this.persistRateSeries(from, to, series);
+        this.logger.log(
+          `Stored ${stored} daily ${from}/${to} rates around ${target} from one lookup`,
+        );
+      } catch (error) {
+        this.logger.warn(
+          `Could not persist historical rates ${from}->${to} around ${target}: ${
+            error instanceof Error ? error.message : String(error)
+          }`,
+        );
+      }
+      return chosen.rate;
+    }
+
+    // 3. Nothing for this date anywhere. A pair that has any stored rate at all
+    //    still resolves -- better a known rate from another day than refusing
+    //    the posting outright.
+    return this.getLatestRate(from, to);
+  }
+
+  /**
+   * Get the current spot rate for a currency pair, fetched live from the quote
+   * provider. Tries the direct pair, then the reverse pair (inverted), then
+   * falls back to the most recent stored daily rate when the live fetch is
+   * unavailable (rate limited, unsupported pair, offline).
+   *
+   * Use this for "as of now" valuations such as the Investments portfolio
+   * summary so they line up with the live intraday Portfolio Value Over Time
+   * chart, which fetches live FX directly from the quote provider, rather than
+   * the once-a-day stored snapshot returned by getLatestRate. Returns null when
+   * neither a live quote nor a stored rate is available, letting callers apply
+   * their own fallback (e.g. reverse lookup or treating the rate as 1).
+   */
+  async getLiveRate(from: string, to: string): Promise<number | null> {
+    if (from === to) return 1;
+    try {
+      const direct = await this.fetchYahooRate(from, to);
+      if (direct !== null && direct > 0) return direct;
+      const reverse = await this.fetchYahooRate(to, from);
+      if (reverse !== null && reverse > 0) return 1 / reverse;
+    } catch (error) {
+      this.logger.warn(
+        `Live FX fetch ${from}->${to} failed, falling back to stored rate: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
+    }
+    return this.getLatestRate(from, to);
+  }
+
+  /**
+   * Get exchange rates within a date range (for historical net worth)
+   */
+  async getRateHistory(
+    startDate?: string,
+    endDate?: string,
+  ): Promise<ExchangeRate[]> {
+    const where: any = {};
+    if (startDate) {
+      where.rateDate = MoreThanOrEqual(startDate);
+    }
+    if (endDate) {
+      where.rateDate = startDate
+        ? And(MoreThanOrEqual(startDate), LessThanOrEqual(endDate))
+        : LessThanOrEqual(endDate);
+    }
+
+    return withScopedDb(this.dataSource, (manager) =>
+      manager.getRepository(ExchangeRate).find({
+        where,
+        order: { rateDate: "ASC", fromCurrency: "ASC", toCurrency: "ASC" },
+      }),
+    );
+  }
+
+  /**
+   * Get all active currencies
+   */
+  async getCurrencies(): Promise<Currency[]> {
+    return withScopedDb(this.dataSource, (manager) =>
+      manager.getRepository(Currency).find({
+        where: { isActive: true },
+        order: { code: "ASC" },
+      }),
+    );
+  }
+
+  /**
+   * Get the last time exchange rates were updated
+   */
+  async getLastUpdateTime(): Promise<Date | null> {
+    const latest = await withScopedDb(this.dataSource, (manager) =>
+      manager.getRepository(ExchangeRate).findOne({
+        where: {},
+        order: { createdAt: "DESC" },
+      }),
+    );
+    return latest?.createdAt ?? null;
+  }
+
+  /**
+   * Scheduled job to refresh exchange rates daily at 5:05 PM EST (after market
+   * close). Runs Monday-Friday only. Staggered five minutes after the security
+   * price refresh (5:00 PM) so the two Yahoo-hitting jobs do not burst at the
+   * same instant.
+   */
+  @Cron("5 17 * * 1-5", { timeZone: "America/New_York" })
+  async scheduledRateRefresh(): Promise<void> {
+    this.logger.log("Running scheduled exchange rate refresh");
+    try {
+      // RLS (task C2): the currency-detection read spans all users' accounts,
+      // securities, holdings and preferences (writes only the global
+      // exchange_rates table), so the refresh runs under a system context.
+      await withSystemContext(() => this.refreshAllRates());
+    } catch (error) {
+      this.logger.error(
+        `Scheduled exchange rate refresh failed: ${error.message}`,
+      );
+    }
+  }
+}

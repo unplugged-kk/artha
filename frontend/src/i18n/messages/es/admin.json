@@ -1,0 +1,173 @@
+{
+  "createUserModal": {
+    "title": "Agregar usuario",
+    "description": "Crea una cuenta nueva. Puedes enviar una invitación por correo, establecer una contraseña tú mismo o generar una temporal para compartir.",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "usuario@ejemplo.com",
+    "firstNameLabel": "Nombre (opcional)",
+    "firstNamePlaceholder": "Nombre",
+    "lastNameLabel": "Apellido (opcional)",
+    "lastNamePlaceholder": "Apellido",
+    "roleLabel": "Rol",
+    "roleUser": "Usuario",
+    "roleAdmin": "Administrador",
+    "credentialsLegend": "Credenciales",
+    "inviteLabel": "Enviar invitación por correo para establecer contraseña",
+    "inviteSmtpNote": "Requiere que SMTP esté configurado.",
+    "setPasswordLabel": "Establecer una contraseña ahora",
+    "tempPasswordLabel": "Generar una contraseña temporal",
+    "tempPasswordNote": "Se muestra una vez después de la creación. El usuario debe cambiarla en el primer inicio de sesión.",
+    "passwordFieldLabel": "Contraseña",
+    "passwordPlaceholder": "Establecer una contraseña",
+    "createButton": "Crear usuario",
+    "validation": {
+      "invalidPassword": "Contraseña inválida."
+    },
+    "toasts": {
+      "createFailed": "Error al crear el usuario"
+    }
+  },
+  "resetPasswordModal": {
+    "defaultTitle": "Contraseña restablecida correctamente",
+    "defaultDescription": "Se ha establecido una contraseña temporal para {userName}.",
+    "temporaryPasswordLabel": "Contraseña temporal",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "notShownAgain": "Esta contraseña no se mostrará de nuevo.",
+    "mustChangeOnLogin": "El usuario deberá cambiar su contraseña en el próximo inicio de sesión.",
+    "toasts": {
+      "copied": "Contraseña copiada al portapapeles",
+      "copyFailed": "Error al copiar al portapapeles"
+    }
+  },
+  "userTable": {
+    "colUser": "Usuario",
+    "colRole": "Rol",
+    "colProvider": "Proveedor",
+    "colStatus": "Estado",
+    "colLastLogin": "Último inicio de sesión",
+    "colActions": "Acciones",
+    "youSuffix": "(tú)",
+    "noEmail": "Sin correo",
+    "unknown": "Desconocido",
+    "never": "Nunca",
+    "providerSso": "SSO",
+    "providerLocal": "Local",
+    "roleAdmin": "Administrador",
+    "roleUser": "Usuario",
+    "statusActive": "Activo",
+    "statusDisabled": "Desactivado",
+    "clickToDisable": "Clic para desactivar",
+    "clickToEnable": "Clic para activar",
+    "resetPassword": "Restablecer contraseña",
+    "noUsers": "No se encontraron usuarios."
+  },
+  "usersPage": {
+    "title": "Gestión de usuarios",
+    "userCount": "{count, plural, one {# usuario} other {# usuarios}}",
+    "newUser": "+ Nuevo usuario",
+    "loadingUsers": "Cargando usuarios...",
+    "toasts": {
+      "inviteSent": "Correo de invitación enviado a {email}",
+      "userCreated": "{name} ha sido creado",
+      "userUpgraded": "{name} fue promovido a cuenta completa",
+      "roleChanged": "{name} ahora es {role}",
+      "roleAdmin": "administrador",
+      "roleUser": "usuario",
+      "userEnabled": "{name} ha sido activado",
+      "userDisabled": "{name} ha sido desactivado",
+      "userDeleted": "{name} ha sido eliminado",
+      "userDowngraded": "Los datos propios de {name} fueron eliminados; su acceso como delegado se conserva.",
+      "loadFailed": "Error al cargar los usuarios",
+      "deleteFailed": "Error al eliminar el usuario",
+      "disableFailed": "Error al desactivar el usuario",
+      "resetFailed": "Error al restablecer la contraseña"
+    },
+    "dialogs": {
+      "promoteTitle": "¿Promover usuario?",
+      "demoteTitle": "¿Degradar usuario?",
+      "promoteMessage": "¿Seguro que quieres promover a {name} a {role}?",
+      "demoteMessage": "¿Seguro que quieres degradar a {name} a {role}?",
+      "promoteConfirm": "Promover a administrador",
+      "demoteConfirm": "Degradar a usuario",
+      "disableTitle": "¿Desactivar usuario?",
+      "disableMessage": "¿Seguro que quieres desactivar a {name}? No podrá iniciar sesión.",
+      "disableConfirm": "Desactivar usuario",
+      "resetTitle": "¿Restablecer contraseña?",
+      "resetMessage": "Esto generará una nueva contraseña temporal para {name}. Deberá cambiarla en el próximo inicio de sesión.",
+      "resetConfirm": "Restablecer contraseña",
+      "deleteTitle": "¿Eliminar usuario?",
+      "deleteMessage": "¿Seguro que quieres eliminar a {name}? Esto eliminará permanentemente su cuenta y todos los datos asociados. Esta acción no se puede deshacer. Si es delegado de otra cuenta, se eliminan sus datos propios pero se conserva su inicio de sesión para que la delegación siga funcionando — se convierte en usuario solo delegado.",
+      "deleteConfirm": "Eliminar usuario",
+      "tempPasswordTitleCreated": "Usuario creado",
+      "tempPasswordTitleUpgraded": "Cuenta promovida",
+      "tempPasswordDescCreated": "Se generó una contraseña temporal para {name}. Compártela con ellos para que inicien sesión.",
+      "tempPasswordDescUpgraded": "Un usuario compartido existente fue promovido a cuenta completa. Comparte esta contraseña temporal con {name}."
+    }
+  },
+  "notificationsPage": {
+    "title": "Notificaciones",
+    "subtitle": "Canales de entrega que ofrece esta instancia de Monize y la identidad push que hay detrás.",
+    "loading": "Cargando ajustes de notificaciones...",
+    "loadUnavailable": "Monize no pudo leer los ajustes de notificaciones del servidor. Recarga la página para volver a intentarlo.",
+    "channelsHeading": "Canales de entrega",
+    "identityHeading": "Identidad de Web Push",
+    "perAccountNote": "Los dispositivos, las notificaciones de prueba y las preferencias pertenecen a cada cuenta y se gestionan en Ajustes. Un administrador configura la instancia y nunca envía notificaciones a otra persona ni las ve.",
+    "channelState": {
+      "on": "Activo",
+      "off": "Inactivo",
+      "unconfigured": "No disponible",
+      "unknown": "Desconocido"
+    },
+    "channels": {
+      "inApp": {
+        "name": "Notificaciones en la app",
+        "description": "La campana de la cabecera. Siempre disponible y no se puede desactivar: es donde vive una notificación aunque fallen todos los demás canales."
+      },
+      "webPush": {
+        "name": "Push del navegador",
+        "description": "Notificaciones entregadas al teléfono o al escritorio incluso con Monize cerrado. No necesita cuenta de Firebase, Google Play ni Apple Developer.",
+        "toggleLabel": "Activar el push del navegador en esta instancia",
+        "missingKeys": "Esta instancia no tiene par de claves push. Define ENCRYPTION_KEY y reinicia: Monize generará el par en el siguiente arranque.",
+        "keyUnreadable": "Esta instancia no puede descifrar su par de claves push almacenado, así que no se entrega nada. Rota el par de claves más abajo para recuperarlo.",
+        "serverKeyMissing": "Esta instancia no tiene ENCRYPTION_KEY, por lo que no puede abrir el par de claves push que guardó. Configure ENCRYPTION_KEY en el despliegue y reinicie: rotar no sirve mientras falte la clave."
+      },
+      "email": {
+        "name": "Correo electrónico",
+        "description": "Recordatorios de facturas, resúmenes de presupuesto y alertas del sistema enviados a la dirección de cada cuenta.",
+        "missingSmtp": "No hay ningún servidor de correo configurado. Define las variables de entorno SMTP para activar el correo.",
+        "statusUnavailable": "Monize no pudo leer el estado del servidor de correo."
+      },
+      "ntfy": {
+        "name": "ntfy y UnifiedPush",
+        "description": "Las mismas notificaciones push cifradas, entregadas a un distribuidor UnifiedPush autoalojado (ntfy, NextPush) en lugar de la infraestructura de Google o Apple. Comparte el par de claves push y el interruptor de esta instancia; cada persona registra su endpoint desde su aplicación UnifiedPush y activa el canal en Ajustes.",
+        "followsWebPush": "No disponible mientras el push del navegador esté desactivado o su par de claves no pueda usarse — este canal se entrega con el mismo par de claves."
+      }
+    },
+    "identity": {
+      "fingerprintLabel": "Huella de la clave",
+      "generatedLabel": "Generada",
+      "devicesLabel": "Dispositivos registrados",
+      "deviceCounts": "{live} activos, {disabled} retirados",
+      "rotateDescription": "Rotar reemplaza el par de claves de esta instancia. Todos los dispositivos registrados dejan de ser accesibles y tendrán que volver a activar el push, así que rota solo si la clave pudo quedar expuesta.",
+      "rotateButton": "Rotar par de claves",
+      "rotatingButton": "Rotando...",
+      "missingEncryptionKey": "Esta instancia no tiene par de claves push porque ENCRYPTION_KEY no está definida y la clave privada tendría que guardarse sin cifrar. Defínela y reinicia: Monize generará el par por sí mismo.",
+      "keyUnreadable": "Esta instancia tiene un par de claves push que ya no puede descifrar, así que no se entrega nada. Ocurre cuando ENCRYPTION_KEY cambia con la base de datos en marcha, o cuando se restaura una copia en otra instancia. Rota el par de claves para recuperarlo; todos los dispositivos volverán a registrarse.",
+      "serverKeyMissing": "Esta instancia no tiene ENCRYPTION_KEY configurada, por lo que no puede abrir el par de claves push que guardó. Rotar no servirá mientras falte la clave: configure ENCRYPTION_KEY en el despliegue y reinicie, y las notificaciones push volverán a funcionar con los dispositivos existentes."
+    },
+    "dialogs": {
+      "rotateTitle": "¿Rotar el par de claves push?",
+      "rotateMessage": "{count, plural, =0 {Aún no hay ningún dispositivo registrado, así que no se pierde nada.} one {Un dispositivo registrado dejará de recibir notificaciones hasta que alguien vuelva a activar el push en ese navegador.} other {# dispositivos registrados dejarán de recibir notificaciones hasta que se vuelva a activar el push en cada navegador.}}",
+      "rotateConfirm": "Rotar"
+    },
+    "toasts": {
+      "loadFailed": "No se pudieron cargar los ajustes de notificaciones",
+      "pushEnabled": "Push del navegador activado en esta instancia",
+      "pushDisabled": "Push del navegador desactivado en esta instancia",
+      "pushToggleFailed": "No se pudo cambiar el ajuste de push del navegador",
+      "rotated": "{count, plural, =0 {Par de claves rotado} one {Par de claves rotado; 1 dispositivo debe registrarse de nuevo} other {Par de claves rotado; # dispositivos deben registrarse de nuevo}}",
+      "rotateFailed": "No se pudo rotar el par de claves"
+    }
+  }
+}

@@ -1,0 +1,494 @@
+import { Test, TestingModule } from "@nestjs/testing";
+import { DataSource } from "typeorm";
+import { createScopedDbMocks } from "../test-helpers/scoped-db-testing";
+
+jest.mock("../common/db/scoped-db", () =>
+  jest.requireActual("../test-helpers/scoped-db-testing").scopedDbMockModule(),
+);
+import { ConfigService } from "@nestjs/config";
+import { I18nService } from "nestjs-i18n";
+import { MortgageReminderService } from "./mortgage-reminder.service";
+import { Account, AccountType } from "./entities/account.entity";
+import { User } from "../users/entities/user.entity";
+import { UserPreference } from "../users/entities/user-preference.entity";
+import { EmailService } from "../notifications/email.service";
+import { NotificationPreferenceService } from "../notification-center/notification-preference.service";
+import { NotificationCategory } from "../notification-center/entities/notification.entity";
+import {
+  createJobClaimMock,
+  TEST_LEASE_TOKEN,
+  JobClaimMock,
+  jobClaimProvider,
+} from "../test-helpers/job-claim-testing";
+
+describe("MortgageReminderService", () => {
+  /** Wins every claim, matching the pre-claim behaviour these specs describe. */
+  const jobClaims: JobClaimMock = createJobClaimMock();
+  let service: MortgageReminderService;
+  let accountsRepository: Record<string, jest.Mock>;
+  let usersRepository: Record<string, jest.Mock>;
+  let preferencesRepository: Record<string, jest.Mock>;
+  let emailService: Record<string, jest.Mock>;
+  let configService: Record<string, jest.Mock>;
+  let notificationPreferences: { resolveEmail: jest.Mock };
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  function daysFromNow(days: number): Date {
+    const date = new Date(today);
+    date.setDate(date.getDate() + days);
+    return date;
+  }
+
+  const mockMortgage = {
+    id: "mort-1",
+    userId: "11111111-1111-1111-1111-111111111111",
+    name: "Home Mortgage",
+    accountType: AccountType.MORTGAGE,
+    isClosed: false,
+    termEndDate: daysFromNow(30),
+  };
+
+  const mockUser: Partial<User> = {
+    id: "11111111-1111-1111-1111-111111111111",
+    email: "user1@example.com",
+    firstName: "Alice",
+  };
+
+  const mockPrefsEmailEnabled: Partial<UserPreference> = {
+    userId: "11111111-1111-1111-1111-111111111111",
+    notificationEmail: true,
+  };
+
+  beforeEach(async () => {
+    // The claim double is shared across tests, so recorded calls and any queued
+    // `...Once` would leak forward -- invisible until a spec asserts a claim was
+    // *not* taken, and then it reads as a product bug.
+    jobClaims.claimOnce.mockReset().mockResolvedValue(true);
+    jobClaims.claimLease.mockReset().mockResolvedValue(TEST_LEASE_TOKEN);
+    jobClaims.releaseLease.mockReset().mockResolvedValue(undefined);
+    jobClaims.markDelivered.mockReset().mockResolvedValue(undefined);
+    jobClaims.wasDelivered.mockReset().mockResolvedValue(false);
+
+    accountsRepository = {
+      find: jest.fn().mockResolvedValue([]),
+    };
+
+    usersRepository = {
+      findOne: jest.fn(),
+    };
+
+    preferencesRepository = {
+      findOne: jest.fn(),
+    };
+
+    // Mirror the real resolver's master-gate: with no per-category row,
+    // resolveEmail == the user's notification_email, so the existing
+    // preferencesRepository fixtures keep controlling the email path.
+    notificationPreferences = {
+      resolveEmail: jest.fn(async (userId: string) => {
+        const prefs = await preferencesRepository.findOne({
+          where: { userId },
+        });
+        return prefs ? prefs.notificationEmail !== false : true;
+      }),
+    };
+
+    emailService = {
+      getStatus: jest.fn().mockReturnValue({ configured: true }),
+      sendMail: jest.fn().mockResolvedValue(undefined),
+    };
+
+    configService = {
+      get: jest
+        .fn()
+        .mockImplementation((_key: string, fallback: string) => fallback),
+    };
+
+    const { dataSource } = createScopedDbMocks([
+      [Account, accountsRepository],
+      [User, usersRepository],
+      [UserPreference, preferencesRepository],
+    ]);
+
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        MortgageReminderService,
+        jobClaimProvider(jobClaims),
+        { provide: DataSource, useValue: dataSource },
+        { provide: EmailService, useValue: emailService },
+        { provide: ConfigService, useValue: configService },
+        {
+          provide: I18nService,
+          useValue: {
+            translate: (key: string, opts?: { defaultValue?: string }) =>
+              opts?.defaultValue ?? key,
+          },
+        },
+        {
+          provide: NotificationPreferenceService,
+          useValue: notificationPreferences,
+        },
+      ],
+    }).compile();
+
+    service = module.get<MortgageReminderService>(MortgageReminderService);
+  });
+
+  describe("findUpcomingRenewals", () => {
+    it("returns mortgages with term ending within specified days", async () => {
+      accountsRepository.find.mockResolvedValue([mockMortgage]);
+
+      const result = await service.findUpcomingRenewals(60);
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe("mort-1");
+    });
+
+    it("filters out mortgages with term ending beyond the window", async () => {
+      accountsRepository.find.mockResolvedValue([
+        { ...mockMortgage, termEndDate: daysFromNow(90) },
+      ]);
+
+      const result = await service.findUpcomingRenewals(60);
+
+      expect(result).toHaveLength(0);
+    });
+
+    it("filters out mortgages with past term end dates", async () => {
+      accountsRepository.find.mockResolvedValue([
+        { ...mockMortgage, termEndDate: daysFromNow(-10) },
+      ]);
+
+      const result = await service.findUpcomingRenewals(60);
+
+      expect(result).toHaveLength(0);
+    });
+
+    it("includes mortgages expiring today", async () => {
+      accountsRepository.find.mockResolvedValue([
+        { ...mockMortgage, termEndDate: new Date(today) },
+      ]);
+
+      const result = await service.findUpcomingRenewals(60);
+
+      expect(result).toHaveLength(1);
+    });
+
+    it("handles null termEndDate in results", async () => {
+      accountsRepository.find.mockResolvedValue([
+        { ...mockMortgage, termEndDate: null },
+      ]);
+
+      const result = await service.findUpcomingRenewals(60);
+
+      expect(result).toHaveLength(0);
+    });
+  });
+
+  describe("checkMortgageRenewals", () => {
+    /**
+     * Coordination and delivery are two different facts (audit RV4-006). A
+     * permanent claim taken before the send was consumed by a replica killed in
+     * between, and every later run then read it as "already handled" -- the
+     * renewal notice was never sent and nothing could notice.
+     */
+    describe("the claim is a lease, and delivery is recorded separately", () => {
+      beforeEach(() => {
+        accountsRepository.find.mockResolvedValue([mockMortgage]);
+        preferencesRepository.findOne.mockResolvedValue(mockPrefsEmailEnabled);
+        usersRepository.findOne.mockResolvedValue(mockUser);
+      });
+
+      it("takes a bounded lease rather than a permanent claim", async () => {
+        await service.checkMortgageRenewals();
+
+        expect(jobClaims.claimLease).toHaveBeenCalledWith(
+          "mortgage_reminder",
+          mockUser.id,
+          expect.any(String),
+          expect.any(Number),
+        );
+        expect(jobClaims.claimOnce).not.toHaveBeenCalled();
+      });
+
+      it("records the delivery only after the send succeeds", async () => {
+        await service.checkMortgageRenewals();
+
+        expect(jobClaims.markDelivered).toHaveBeenCalledWith(
+          "mortgage_reminder",
+          mockUser.id,
+          expect.any(String),
+          // The token, so the record is written against *this* attempt's lease: a
+          // stalled worker whose lease was retaken must not stamp a delivery for
+          // the new holder's unfinished send (audit DR-RRV4-01).
+          TEST_LEASE_TOKEN,
+        );
+        expect(emailService.sendMail.mock.invocationCallOrder[0]).toBeLessThan(
+          jobClaims.markDelivered.mock.invocationCallOrder[0],
+        );
+      });
+
+      it("does not record a delivery when the send fails", async () => {
+        emailService.sendMail.mockRejectedValue(new Error("smtp down"));
+
+        await service.checkMortgageRenewals();
+
+        expect(jobClaims.markDelivered).not.toHaveBeenCalled();
+        expect(jobClaims.releaseLease).toHaveBeenCalled();
+      });
+
+      it("stands down when the work is already recorded as delivered", async () => {
+        jobClaims.wasDelivered.mockResolvedValue(true);
+
+        await service.checkMortgageRenewals();
+
+        expect(emailService.sendMail).not.toHaveBeenCalled();
+        expect(jobClaims.releaseLease).toHaveBeenCalled();
+      });
+
+      it("sends when another holder's lease expired without delivering", async () => {
+        jobClaims.claimLease.mockResolvedValue(TEST_LEASE_TOKEN);
+        jobClaims.wasDelivered.mockResolvedValue(false);
+
+        await service.checkMortgageRenewals();
+
+        expect(emailService.sendMail).toHaveBeenCalledTimes(1);
+      });
+
+      it("does not send while another replica holds the lease", async () => {
+        jobClaims.claimLease.mockResolvedValue(null);
+
+        await service.checkMortgageRenewals();
+
+        expect(emailService.sendMail).not.toHaveBeenCalled();
+      });
+    });
+
+    it("runs without error when no renewals found", async () => {
+      accountsRepository.find.mockResolvedValue([]);
+
+      await expect(service.checkMortgageRenewals()).resolves.not.toThrow();
+      expect(emailService.sendMail).not.toHaveBeenCalled();
+    });
+
+    it("processes upcoming renewals", async () => {
+      accountsRepository.find.mockResolvedValue([mockMortgage]);
+      preferencesRepository.findOne.mockResolvedValue(mockPrefsEmailEnabled);
+      usersRepository.findOne.mockResolvedValue(mockUser);
+
+      await expect(service.checkMortgageRenewals()).resolves.not.toThrow();
+    });
+
+    it("skips sending emails when SMTP is not configured", async () => {
+      emailService.getStatus.mockReturnValue({ configured: false });
+      accountsRepository.find.mockResolvedValue([mockMortgage]);
+
+      await service.checkMortgageRenewals();
+
+      expect(preferencesRepository.findOne).not.toHaveBeenCalled();
+      expect(emailService.sendMail).not.toHaveBeenCalled();
+    });
+
+    it("sends an email when a user has a renewal and email notifications enabled", async () => {
+      accountsRepository.find.mockResolvedValue([mockMortgage]);
+      preferencesRepository.findOne.mockResolvedValue(mockPrefsEmailEnabled);
+      usersRepository.findOne.mockResolvedValue(mockUser);
+
+      await service.checkMortgageRenewals();
+
+      expect(emailService.sendMail).toHaveBeenCalledTimes(1);
+      const [to, subject, html] = emailService.sendMail.mock.calls[0];
+      expect(to).toBe("user1@example.com");
+      expect(subject).toBe("Monize: 1 upcoming mortgage renewal");
+      expect(html).toContain("Home Mortgage");
+      expect(html).toContain("Hi Alice,");
+    });
+
+    it("uses plural subject for multiple mortgages", async () => {
+      const secondMortgage = {
+        ...mockMortgage,
+        id: "mort-2",
+        name: "Cottage Mortgage",
+        termEndDate: daysFromNow(45),
+      };
+      accountsRepository.find.mockResolvedValue([mockMortgage, secondMortgage]);
+      preferencesRepository.findOne.mockResolvedValue(mockPrefsEmailEnabled);
+      usersRepository.findOne.mockResolvedValue(mockUser);
+
+      await service.checkMortgageRenewals();
+
+      expect(emailService.sendMail).toHaveBeenCalledTimes(1);
+      const [, subject, html] = emailService.sendMail.mock.calls[0];
+      expect(subject).toBe("Monize: 2 upcoming mortgage renewals");
+      expect(html).toContain("Home Mortgage");
+      expect(html).toContain("Cottage Mortgage");
+    });
+
+    it("groups mortgages by user into a single email", async () => {
+      const mortgageUser1A = mockMortgage;
+      const mortgageUser1B = {
+        ...mockMortgage,
+        id: "mort-1b",
+        name: "Cottage Mortgage",
+      };
+      const mortgageUser2 = {
+        ...mockMortgage,
+        id: "mort-2",
+        userId: "22222222-2222-2222-2222-222222222222",
+        name: "Investment Mortgage",
+      };
+      accountsRepository.find.mockResolvedValue([
+        mortgageUser1A,
+        mortgageUser1B,
+        mortgageUser2,
+      ]);
+      preferencesRepository.findOne.mockResolvedValue(mockPrefsEmailEnabled);
+      usersRepository.findOne.mockImplementation((query) => {
+        const id = query.where.id;
+        if (id === "11111111-1111-1111-1111-111111111111")
+          return Promise.resolve(mockUser);
+        if (id === "22222222-2222-2222-2222-222222222222")
+          return Promise.resolve({
+            id: "22222222-2222-2222-2222-222222222222",
+            email: "user2@example.com",
+            firstName: "Bob",
+          });
+        return Promise.resolve(null);
+      });
+
+      await service.checkMortgageRenewals();
+
+      expect(emailService.sendMail).toHaveBeenCalledTimes(2);
+      const recipients = emailService.sendMail.mock.calls
+        .map((c) => c[0])
+        .sort();
+      expect(recipients).toEqual(["user1@example.com", "user2@example.com"]);
+    });
+
+    it("skips user when notificationEmail preference is disabled", async () => {
+      accountsRepository.find.mockResolvedValue([mockMortgage]);
+      preferencesRepository.findOne.mockResolvedValue({
+        userId: "11111111-1111-1111-1111-111111111111",
+        notificationEmail: false,
+      });
+
+      await service.checkMortgageRenewals();
+
+      expect(usersRepository.findOne).not.toHaveBeenCalled();
+      expect(emailService.sendMail).not.toHaveBeenCalled();
+    });
+
+    it("skips user whose PAYMENTS email channel is off, master on", async () => {
+      // A mortgage renewal reminder is a PAYMENTS email: a per-category off
+      // must suppress it even while the global master switch is on (audit
+      // Finding 1 -- it used to gate on the master only).
+      accountsRepository.find.mockResolvedValue([mockMortgage]);
+      preferencesRepository.findOne.mockResolvedValue({
+        userId: "11111111-1111-1111-1111-111111111111",
+        notificationEmail: true,
+      });
+      notificationPreferences.resolveEmail.mockResolvedValue(false);
+
+      await service.checkMortgageRenewals();
+
+      expect(notificationPreferences.resolveEmail).toHaveBeenCalledWith(
+        "11111111-1111-1111-1111-111111111111",
+        NotificationCategory.PAYMENTS,
+      );
+      expect(usersRepository.findOne).not.toHaveBeenCalled();
+      expect(emailService.sendMail).not.toHaveBeenCalled();
+    });
+
+    it("sends when preferences row is missing (default on)", async () => {
+      accountsRepository.find.mockResolvedValue([mockMortgage]);
+      preferencesRepository.findOne.mockResolvedValue(null);
+      usersRepository.findOne.mockResolvedValue(mockUser);
+
+      await service.checkMortgageRenewals();
+
+      expect(emailService.sendMail).toHaveBeenCalledTimes(1);
+    });
+
+    it("skips user when no user record is found", async () => {
+      accountsRepository.find.mockResolvedValue([mockMortgage]);
+      preferencesRepository.findOne.mockResolvedValue(mockPrefsEmailEnabled);
+      usersRepository.findOne.mockResolvedValue(null);
+
+      await service.checkMortgageRenewals();
+
+      expect(emailService.sendMail).not.toHaveBeenCalled();
+    });
+
+    it("skips user when user has no email address", async () => {
+      accountsRepository.find.mockResolvedValue([mockMortgage]);
+      preferencesRepository.findOne.mockResolvedValue(mockPrefsEmailEnabled);
+      usersRepository.findOne.mockResolvedValue({
+        id: "11111111-1111-1111-1111-111111111111",
+        email: null,
+        firstName: "Alice",
+      });
+
+      await service.checkMortgageRenewals();
+
+      expect(emailService.sendMail).not.toHaveBeenCalled();
+    });
+
+    it("continues processing remaining users when one send fails", async () => {
+      const mortgageUser2 = {
+        ...mockMortgage,
+        id: "mort-2",
+        userId: "22222222-2222-2222-2222-222222222222",
+        name: "Investment Mortgage",
+      };
+      accountsRepository.find.mockResolvedValue([mockMortgage, mortgageUser2]);
+      preferencesRepository.findOne.mockResolvedValue(mockPrefsEmailEnabled);
+      usersRepository.findOne.mockImplementation((query) => {
+        const id = query.where.id;
+        if (id === "11111111-1111-1111-1111-111111111111")
+          return Promise.resolve(mockUser);
+        if (id === "22222222-2222-2222-2222-222222222222")
+          return Promise.resolve({
+            id: "22222222-2222-2222-2222-222222222222",
+            email: "user2@example.com",
+            firstName: "Bob",
+          });
+        return Promise.resolve(null);
+      });
+      emailService.sendMail
+        .mockRejectedValueOnce(new Error("SMTP send failed"))
+        .mockResolvedValueOnce(undefined);
+
+      await expect(service.checkMortgageRenewals()).resolves.not.toThrow();
+      expect(emailService.sendMail).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe("triggerRenewalCheck", () => {
+    it("returns count and mortgage details", async () => {
+      accountsRepository.find.mockResolvedValue([mockMortgage]);
+
+      const result = await service.triggerRenewalCheck();
+
+      expect(result.count).toBe(1);
+      expect(result.mortgages).toHaveLength(1);
+      expect(result.mortgages[0]).toEqual(
+        expect.objectContaining({
+          id: "mort-1",
+          name: "Home Mortgage",
+        }),
+      );
+      expect(result.mortgages[0].daysUntilRenewal).toBeGreaterThan(0);
+    });
+
+    it("returns empty result when no upcoming renewals", async () => {
+      accountsRepository.find.mockResolvedValue([]);
+
+      const result = await service.triggerRenewalCheck();
+
+      expect(result.count).toBe(0);
+      expect(result.mortgages).toHaveLength(0);
+    });
+  });
+});

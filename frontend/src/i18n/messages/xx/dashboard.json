@@ -1,0 +1,253 @@
+{
+  "page": {
+    "welcomePrefix": "[XX-Welcome-XX]",
+    "welcomeWithName": "[XX-Welcome, {name}!-XX]",
+    "subtitle": "[XX-Here's your financial overview-XX]"
+  },
+  "favouriteAccounts": {
+    "title": "[XX-Favourite Accounts-XX]",
+    "empty": "[XX-No favourite accounts yet. Mark accounts as favourites to see them here.-XX]",
+    "reorder": "[XX-Reorder-XX]",
+    "dragToReorder": "[XX-Drag accounts to reorder them, or use the arrow buttons.-XX]",
+    "done": "[XX-Done-XX]",
+    "moveUp": "[XX-Move up-XX]",
+    "moveDown": "[XX-Move down-XX]",
+    "marketValue": "[XX-Market value-XX]",
+    "due": "[XX-Due: {ordinal}-XX]",
+    "dueTooltip": "[XX-The day of each month when your credit card payment is due-XX]",
+    "settlement": "[XX-Settlement: {ordinal}-XX]",
+    "settlementTooltip": "[XX-The last day of the billing cycle. Transactions posted on or before this day appear on the current statement.-XX]"
+  },
+  "upcomingBills": {
+    "title": "[XX-Upcoming Bills & Deposits-XX]",
+    "empty": "[XX-No overdue or upcoming bills, deposits, or transfers within their reminder windows.-XX]",
+    "perReminderSettings": "[XX-Per reminder settings-XX]",
+    "postTransaction": "[XX-Post this transaction-XX]",
+    "manual": "[XX-Manual-XX]",
+    "manualTitle": "[XX-Requires manual posting-XX]",
+    "negativeBalanceWarning": "[XX-This transaction will cause the account balance to go below zero-XX]",
+    "viewAll": "[XX-View all bills & deposits-XX]",
+    "moreItems": "[XX-+{count} more-XX]",
+    "overdue": "[XX-Overdue-XX]",
+    "today": "[XX-Today-XX]",
+    "tomorrow": "[XX-Tomorrow-XX]",
+    "daysUntil": "[XX-{count} days-XX]",
+    "typeBadge": {
+      "bill": "[XX-Bill-XX]",
+      "deposit": "[XX-Deposit-XX]",
+      "transfer": "[XX-Transfer-XX]",
+      "reminder": "[XX-Reminder-XX]",
+      "unknown": "[XX-Unknown-XX]"
+    }
+  },
+  "gettingStarted": {
+    "title": "[XX-Getting Started-XX]",
+    "subtitle": "[XX-Set up your account in a few quick steps-XX]",
+    "dismiss": "[XX-Dismiss-XX]",
+    "steps": {
+      "settings": {
+        "title": "[XX-Review your settings-XX]",
+        "description": "[XX-Set your currency, date format, and theme-XX]"
+      },
+      "categories": {
+        "title": "[XX-Set up categories-XX]",
+        "description": "[XX-Create categories or import a default set-XX]"
+      },
+      "account": {
+        "title": "[XX-Add your first account-XX]",
+        "description": "[XX-Create a bank account to start tracking-XX]"
+      },
+      "import": {
+        "title": "[XX-Import from QIF-XX]",
+        "description": "[XX-Import accounts and transactions from QIF files-XX]"
+      }
+    }
+  },
+  "budgetStatus": {
+    "title": "[XX-Budget Status-XX]",
+    "noBudget": "[XX-No active budget found. Create a budget to track your spending.-XX]",
+    "createBudget": "[XX-Create Budget-XX]",
+    "viewFullBudget": "[XX-View full budget-XX]",
+    "daysLeft": "[XX-{count} days left-XX]",
+    "safeToSpend": "[XX-Safe to spend today-XX]",
+    "topCategories": "[XX-Top Categories-XX]"
+  },
+  "insights": {
+    "title": "[XX-Spending Insights-XX]",
+    "empty": "[XX-No insights available. Visit the Insights page to generate your first analysis.-XX]",
+    "goToInsights": "[XX-Go to Insights-XX]",
+    "viewAll": "[XX-View all insights-XX]",
+    "activeCount": "[XX-{count} active-XX]"
+  },
+  "topMovers": {
+    "title": "[XX-Top Movers-XX]",
+    "empty": {
+      "noInvestments": "[XX-Add investment accounts to track daily movers.-XX]",
+      "noPrices": "[XX-No price changes available yet.-XX]",
+      "noGainers": "[XX-No gainers today.-XX]",
+      "noLosers": "[XX-No losers today.-XX]"
+    },
+    "dailyChange": "[XX-Daily change-XX]",
+    "openPriceHistory": "[XX-Price history for {symbol}-XX]",
+    "refreshPrices": "[XX-Refresh prices-XX]",
+    "viewPortfolio": "[XX-View portfolio-XX]",
+    "filter": {
+      "all": "[XX-All-XX]",
+      "gainers": "[XX-Gainers-XX]",
+      "losers": "[XX-Losers-XX]"
+    }
+  },
+  "favouriteSecurities": {
+    "title": "[XX-Favourite Securities-XX]",
+    "empty": "[XX-No favourite securities yet. Visit the <securitiesLink>Securities page</securitiesLink> and star the securities you want to track here.-XX]",
+    "noPriceYet": "[XX-No price yet-XX]",
+    "dailyChange": "[XX-Daily change-XX]",
+    "openPriceHistory": "[XX-Price history for {symbol}-XX]",
+    "refreshPrices": "[XX-Refresh prices-XX]",
+    "manage": "[XX-Manage securities-XX]"
+  },
+  "netWorth": {
+    "title": "[XX-Net Worth-XX]",
+    "empty": "[XX-No net worth data available yet.-XX]",
+    "past12Months": "[XX-Past 12 months-XX]",
+    "viewReport": "[XX-View full report-XX]"
+  },
+  "assetsVsLiabilities": {
+    "title": "[XX-Assets vs Liabilities-XX]",
+    "empty": "[XX-No net worth data available yet.-XX]",
+    "current": "[XX-Current-XX]",
+    "netWorthLabel": "[XX-Net Worth-XX]",
+    "assets": "[XX-Assets-XX]",
+    "liabilities": "[XX-Liabilities-XX]"
+  },
+  "expensesPieChart": {
+    "title": "[XX-Expenses by Category-XX]",
+    "empty": "[XX-No expense data for this period.-XX]",
+    "total": "[XX-Total-XX]",
+    "uncategorized": "[XX-Uncategorized-XX]",
+    "other": "[XX-Other-XX]"
+  },
+  "incomeExpenses": {
+    "title": "[XX-Income vs Expenses-XX]",
+    "income": "[XX-Income-XX]",
+    "expenses": "[XX-Expenses-XX]",
+    "net": "[XX-Net-XX]"
+  },
+  "customize": {
+    "button": "[XX-Customize-XX]",
+    "title": "[XX-Customize dashboard-XX]",
+    "description": "[XX-The layout below mirrors your dashboard: widgets flow left to right, two per row on large screens.-XX]",
+    "moveEarlier": "[XX-Move {name} earlier-XX]",
+    "moveLater": "[XX-Move {name} later-XX]",
+    "dragToReorder": "[XX-Drag widgets to rearrange them, or use the arrow buttons.-XX]",
+    "hiddenWidgets": "[XX-Hidden widgets-XX]",
+    "hide": "[XX-Hide {name}-XX]",
+    "show": "[XX-Show {name}-XX]",
+    "atLeastOne": "[XX-Select at least one widget to show on the dashboard.-XX]",
+    "reset": "[XX-Reset to default-XX]",
+    "toasts": {
+      "saveFailed": "[XX-Failed to save dashboard layout-XX]"
+    }
+  },
+  "favouriteReports": {
+    "title": "[XX-Favourite Reports-XX]",
+    "empty": "[XX-No favourite reports yet. Star reports on the Reports page to see them here.-XX]",
+    "browseReports": "[XX-Browse reports-XX]"
+  },
+  "widgets": {
+    "configure": "[XX-Configure {name}-XX]",
+    "done": "[XX-Done-XX]",
+    "configSaveFailed": "[XX-Couldn't save widget settings. Please try again.-XX]",
+    "timeframe": "[XX-Timeframe-XX]",
+    "accounts": "[XX-Accounts-XX]",
+    "chartType": "[XX-Chart type-XX]",
+    "view": "[XX-View-XX]",
+    "displayName": "[XX-Display name-XX]",
+    "description": "[XX-Description-XX]",
+    "descriptionPlaceholder": "[XX-Add an optional description-XX]",
+    "rangeLabels": {
+      "1m": "[XX-1M-XX]",
+      "3m": "[XX-3M-XX]",
+      "6m": "[XX-6M-XX]",
+      "1y": "[XX-1Y-XX]",
+      "2y": "[XX-2Y-XX]",
+      "5y": "[XX-5Y-XX]",
+      "ytd": "[XX-YTD-XX]",
+      "all": "[XX-All-XX]"
+    }
+  },
+  "portfolioValue": {
+    "title": "[XX-Portfolio Value over Time-XX]",
+    "empty": "[XX-No investment history to show yet.-XX]",
+    "refresh": "[XX-Refresh current value-XX]"
+  },
+  "spendingByPayee": {
+    "title": "[XX-Spending by Payee-XX]",
+    "empty": "[XX-No spending in this period.-XX]",
+    "totalLabel": "[XX-Total-XX]"
+  },
+  "monthlySpendingTrend": {
+    "title": "[XX-Monthly Spending Trend-XX]",
+    "empty": "[XX-No data for this period.-XX]",
+    "expenses": "[XX-Expenses-XX]",
+    "income": "[XX-Income-XX]"
+  },
+  "incomeBySource": {
+    "title": "[XX-Income by Source-XX]",
+    "empty": "[XX-No income in this period.-XX]",
+    "totalLabel": "[XX-Total income-XX]"
+  },
+  "creditUtilizationAccounts": {
+    "title": "[XX-Credit Utilization by Account-XX]",
+    "empty": "[XX-No credit accounts with a limit set.-XX]",
+    "utilization": "[XX-Utilization-XX]",
+    "used": "[XX-Used-XX]",
+    "noRate": "[XX-unavailable (no {currency} rate)-XX]"
+  },
+  "creditUtilizationTotal": {
+    "title": "[XX-Total Credit Utilization-XX]",
+    "empty": "[XX-No credit accounts with a limit set.-XX]",
+    "used": "[XX-Used-XX]",
+    "available": "[XX-Available-XX]"
+  },
+  "sectorWeightings": {
+    "title": "[XX-Sector Allocation-XX]",
+    "empty": "[XX-No sector data available.-XX]",
+    "direct": "[XX-Direct-XX]",
+    "etf": "[XX-ETF-XX]"
+  },
+  "securityTypeAllocation": {
+    "title": "[XX-Security Type Allocation-XX]",
+    "empty": "[XX-No holdings to show.-XX]",
+    "types": {
+      "STOCK": "[XX-Stocks-XX]",
+      "ETF": "[XX-ETFs-XX]",
+      "MUTUAL_FUND": "[XX-Mutual Funds-XX]",
+      "BOND": "[XX-Bonds-XX]",
+      "CASH": "[XX-Cash-XX]"
+    }
+  },
+  "geographicAllocation": {
+    "title": "[XX-Geographic Allocation-XX]",
+    "empty": "[XX-No holdings to show.-XX]",
+    "viewRegion": "[XX-Region-XX]",
+    "viewExchange": "[XX-Exchange-XX]",
+    "viewCountry": "[XX-Country-XX]"
+  },
+  "recurringExpenses": {
+    "title": "[XX-Top Recurring Expenses-XX]",
+    "empty": "[XX-No recurring expenses found.-XX]",
+    "minOccurrences": "[XX-Minimum occurrences-XX]",
+    "minOccurrencesOption": "[XX-{count} or more-XX]",
+    "occurrences": "[XX-{count} occurrences-XX]",
+    "monthlyEstimate": "[XX-Monthly estimate-XX]"
+  },
+  "weekendVsWeekday": {
+    "title": "[XX-Weekend vs Weekday Spending-XX]",
+    "empty": "[XX-No spending in this period.-XX]",
+    "weekendLabel": "[XX-Weekend-XX]",
+    "weekdayLabel": "[XX-Weekday-XX]",
+    "viewOverview": "[XX-Overview-XX]",
+    "viewByDay": "[XX-By day-XX]"
+  }
+}

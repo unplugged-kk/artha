@@ -1,0 +1,294 @@
+{
+  "test": {
+    "subject": "Monize testmail",
+    "heading": "Monize testmail",
+    "greeting": "Hoi {{ name }},",
+    "body": "Dit is een testmail van Monize. Als je dit hebt ontvangen, werken je e-mailmeldingen correct."
+  },
+  "billReminder": {
+    "subjectOne": "Monize: 1 aankomende rekening vereist aandacht",
+    "subjectMany": "Monize: {{ count }} aankomende rekeningen vereisen aandacht",
+    "heading": "Herinnering aankomende rekening",
+    "greeting": "Hoi {{ name }},",
+    "introOne": "Je hebt 1 aankomende rekening die aandacht vereist:",
+    "introMany": "Je hebt {{ count }} aankomende rekeningen die aandacht vereisen:",
+    "colPayee": "Begunstigde",
+    "colDueDate": "Vervaldatum",
+    "colType": "Type",
+    "colAmount": "Bedrag",
+    "typeIncome": "Inkomsten",
+    "typeExpense": "Uitgaven",
+    "typeUnknown": "Richting onbekend",
+    "amountUnavailable": "Bedrag niet beschikbaar",
+    "button": "Facturen &amp; Stortingen bekijken"
+  },
+  "mortgageReminder": {
+    "subject": "Monize: 1 aankomende hypotheekverlenging",
+    "subjectPlural": "Monize: {{ count }} aankomende hypotheekverlengingen",
+    "heading": "Herinnering hypotheekverlenging",
+    "greeting": "Hoi {{ name }},",
+    "introOne": "Je hebt 1 hypotheek met een aankomende termijnverlenging. Neem contact op met je geldverstrekker om verlengingsopties te bespreken voordat de termijn afloopt:",
+    "introMany": "Je hebt {{ count }} hypotheken met een aankomende termijnverlenging. Neem contact op met je geldverstrekker om verlengingsopties te bespreken voordat de termijn afloopt:",
+    "colMortgage": "Hypotheek",
+    "colTermEndDate": "Einddatum looptijd",
+    "colTimeRemaining": "Resterende tijd",
+    "daysRemainingOne": "1 dag",
+    "daysRemainingMany": "{{ count }} dagen",
+    "button": "Rekeningen bekijken"
+  },
+  "severity": {
+    "critical": "Kritiek",
+    "warning": "Waarschuwing",
+    "success": "Goed nieuws",
+    "info": "Info"
+  },
+  "budgetAlertImmediate": {
+    "subject": "Monize: Melding - {{ title }}",
+    "subjectPlural": "Monize: {{ count }} meldingen vereisen aandacht",
+    "heading": "Melding",
+    "greeting": "Hoi {{ name }},",
+    "intro": "Je budget vereist aandacht:",
+    "colSeverity": "Ernst",
+    "colAlert": "Melding",
+    "colDetails": "Details",
+    "button": "Budget bekijken"
+  },
+  "budgetWeeklyDigest": {
+    "subject": "Monize: Je wekelijkse budgetoverzicht",
+    "heading": "Wekelijks budgetoverzicht",
+    "greeting": "Hoi {{ name }},",
+    "intro": "Hier is je wekelijkse budgetoverzicht voor: <strong>{{ budgets }}</strong>",
+    "criticalOne": "kritiek",
+    "criticalMany": "kritiek",
+    "warningOne": "waarschuwing",
+    "warningMany": "waarschuwingen",
+    "positiveOne": "positief",
+    "positiveMany": "positief",
+    "thisWeek": "Deze week:",
+    "noAlerts": "Geen meldingen",
+    "totalAlerts": "Totaal meldingen: {{ count }}",
+    "topAlertsHeading": "Topmeldingen",
+    "andMore": "...en {{ count }} meer",
+    "button": "Budget-dashboard bekijken"
+  },
+  "budgetMonthlySummary": {
+    "subject": "Monize: Maandelijks budgetoverzicht - {{ period }}",
+    "subjectPlural": "Monize: Maandelijks budgetoverzicht voor {{ count }} budgetten",
+    "heading": "Maandelijks budgetoverzicht",
+    "greeting": "Hoi {{ name }},",
+    "intro": "Hier is je maandelijks budgetoverzicht voor de zojuist afgesloten periode:",
+    "overBudget": "Over budget",
+    "healthScore": "Gezondheidsscore:",
+    "labelBudgeted": "Gebudgetteerd",
+    "labelSpent": "Uitgegeven",
+    "labelRemaining": "Resterend",
+    "percentUsed": "{{ percent }}% gebruikt",
+    "topCategories": "Topcategorieën",
+    "button": "Budget-dashboard bekijken"
+  },
+  "oidcLink": {
+    "subject": "Monize: Bevestig SSO-accountkoppeling",
+    "heading": "Koppel je SSO-account",
+    "greeting": "Hoi {{ name }},",
+    "intro": "Iemand heeft geprobeerd in te loggen via SSO met een e-mailadres dat overeenkomt met je bestaande Monize-account. Klik op de onderstaande knop om je SSO-identiteit aan dit account te koppelen:",
+    "button": "Accountkoppeling bevestigen",
+    "disclaimer": "Als je dit verzoek niet hebt geïnitieerd, kun je deze e-mail veilig negeren. De koppeling verloopt over 1 uur."
+  },
+  "accountLocked": {
+    "subject": "Account tijdelijk vergrendeld",
+    "heading": "Account tijdelijk vergrendeld",
+    "greeting": "Hoi {{ name }},",
+    "body1": "Je Monize-account is tijdelijk vergrendeld vanwege meerdere mislukte inlogpogingen. Dit is een beveiligingsmaatregel om je account te beschermen.",
+    "body2": "De vergrendeling verloopt automatisch. Als jij niet hebt geprobeerd in te loggen, raden we aan je wachtwoord onmiddellijk opnieuw in te stellen."
+  },
+  "passwordReset": {
+    "subject": "Monize wachtwoordherstel",
+    "heading": "Verzoek tot wachtwoordherstel",
+    "greeting": "Hoi {{ name }},",
+    "intro": "We hebben een verzoek ontvangen om je wachtwoord opnieuw in te stellen. Klik op de onderstaande knop om een nieuw wachtwoord in te stellen:",
+    "button": "Wachtwoord herstellen",
+    "disclaimer": "Deze koppeling verloopt over 1 uur. Als je geen wachtwoordherstel hebt aangevraagd, kun je deze e-mail veilig negeren."
+  },
+  "emailVerification": {
+    "subject": "Bevestig je Monize-e-mailadres",
+    "heading": "Bevestig je e-mailadres",
+    "greeting": "Hoi {{ name }},",
+    "intro": "Bedankt voor je registratie bij Monize. Bevestig je e-mailadres om je account te activeren en in te loggen:",
+    "button": "E-mail bevestigen",
+    "disclaimer": "Deze koppeling verloopt over 24 uur. Als je geen Monize-account hebt aangemaakt, kun je deze e-mail veilig negeren."
+  },
+  "accountInvite": {
+    "subject": "Je Monize-account is klaar",
+    "heading": "Je Monize-account is klaar",
+    "greeting": "Hoi {{ name }},",
+    "intro": "Een beheerder heeft een Monize-account voor je aangemaakt. Klik op de onderstaande knop om je wachtwoord in te stellen en in te loggen:",
+    "button": "Stel je wachtwoord in",
+    "disclaimer": "Deze koppeling verloopt over 24 uur. Als je dit niet verwachtte, kun je deze e-mail veilig negeren."
+  },
+  "delegateInvite": {
+    "subject": "Je bent uitgenodigd voor Monize",
+    "heading": "Je bent uitgenodigd voor Monize",
+    "greeting": "Hoi {{ name }},",
+    "intro": "{{ owner }} heeft je uitgenodigd om toegang te krijgen tot hun Monize-account als gedelegeerde. Klik op de onderstaande knop om je wachtwoord in te stellen en aan de slag te gaan:",
+    "button": "Stel je wachtwoord in",
+    "disclaimer": "Deze koppeling verloopt over 24 uur. Als je deze uitnodiging niet verwachtte, kun je deze e-mail veilig negeren."
+  },
+  "emergencyAccessReminder": {
+    "subjectOne": "Monize: je account is 1 dag inactief",
+    "subjectMany": "Monize: je account is {{ daysSinceLogin }} dagen inactief",
+    "heading": "Monize noodtoegangherinnering",
+    "greeting": "Hoi {{ name }},",
+    "grantPhraseToday": "vandaag",
+    "grantPhraseFutureOne": "over 1 dag",
+    "grantPhraseFutureMany": "over {{ count }} dagen",
+    "bodyOne": "Je hebt je <strong>1 dag</strong> niet aangemeld bij Monize. Als je inactief blijft, krijgen je aangewezen noodcontacten volledige toegang tot je account {{ grantPhrase }}.",
+    "bodyMany": "Je hebt je <strong>{{ daysSinceLogin }} dagen</strong> niet aangemeld bij Monize. Als je inactief blijft, krijgen je aangewezen noodcontacten volledige toegang tot je account {{ grantPhrase }}.",
+    "contactsLabel": "Aangewezen contacten:",
+    "button": "Nu inloggen",
+    "footer": "Inloggen stelt de timer opnieuw in. Als je deze functie niet meer wilt gebruiken, kun je deze uitschakelen via Instellingen → Noodtoegang."
+  },
+  "emergencyAccessGrant": {
+    "subject": "Je hebt noodtoegang gekregen tot het Monize-account van {{ owner }}",
+    "heading": "Noodtoegang verleend",
+    "greeting": "Hoi {{ name }},",
+    "body": "<strong>{{ owner }}</strong> heeft je eerder aangewezen als noodcontact op hun Monize-account. Omdat ze zich gedurende een langere periode niet hebben aangemeld, wordt je nu volledige toegang verleend om het account over te nemen.",
+    "claimIntro": "Klik op de onderstaande koppeling om toegang te claimen en stel een nieuw wachtwoord in. Je wordt ingelogd als de rekeninghouder.",
+    "button": "Noodtoegang claimen",
+    "expiry": "Deze koppeling is geldig tot <strong>{{ expiry }}</strong> en kan slechts één keer worden gebruikt. Als meerdere contacten deze e-mail hebben ontvangen, neemt degene die als eerste claimt het account over."
+  },
+  "emergencyAccessGrantRevoked": {
+    "subject": "Monize: noodtoegang is verleend terwijl je afwezig was",
+    "heading": "Noodtoegang is verleend terwijl je afwezig was",
+    "greeting": "Hoi {{ name }},",
+    "body1": "Omdat je account inactief was, zijn je aangewezen noodcontacten links gestuurd om je account over te nemen. Je hebt je nu weer aangemeld, dus <strong>die links zijn ingetrokken</strong> en de beveiliging is opnieuw geactiveerd.",
+    "body2": "Als dit verwacht was, hoef je niets te doen. Als je dit niet verwachtte, controleer dan je aanmeldingsactiviteit en je noodtoeganginstellingen.",
+    "button": "Noodtoegang bekijken"
+  },
+  "providerOutage": {
+    "subject": "Monize: {{ provider }} reageert niet",
+    "heading": "Marktdataprovider niet beschikbaar",
+    "greeting": "Hoi {{ name }},",
+    "intro": "Monize kan <strong>{{ provider }}</strong> sinds {{ since }} ({{ duration }}) niet bereiken. Aanvragen naar deze provider zijn voorlopig opgeschort en worden met steeds langere tussenpozen opnieuw geprobeerd.",
+    "labelFailures": "Mislukte pogingen",
+    "labelLastError": "Laatste fout",
+    "labelLastSuccess": "Laatste geslaagde reactie",
+    "valueNever": "nooit",
+    "valueUnknown": "onbekend",
+    "impact": "Koersen, grafieken en indexvergelijkingen die van deze provider afhangen kunnen ontbreken of verouderd zijn totdat hij weer reageert. Niets van wat in Monize is vastgelegd, is verloren.",
+    "whatToCheck": "Als de provider zelf werkt, controleer dan de uitgaande netwerktoegang en DNS van deze server -- een container die de provider niet kan opzoeken of bereiken, faalt precies op deze manier.",
+    "throttleNote": "Je krijgt nog één e-mail zodra hij weer werkt. Meldingen over dezelfde provider worden maximaal één keer per {{ hours }} uur verstuurd, zodat een instabiele provider je inbox niet kan vullen.",
+    "durationMinutes": "{{ minutes }} min",
+    "durationHoursMinutes": "{{ hours }} u {{ minutes }} min"
+  },
+  "providerRecovery": {
+    "subject": "Monize: {{ provider }} reageert weer",
+    "heading": "Marktdataprovider reageert weer",
+    "greeting": "Hoi {{ name }},",
+    "intro": "<strong>{{ provider }}</strong> reageerde weer om {{ restoredAt }}. De storing duurde {{ duration }}.",
+    "backfill": "Koersen en indexhistorie die tijdens de storing zijn gemist, worden bij de volgende geplande verversing opgehaald; je hoeft niets te doen."
+  },
+  "systemAlert": {
+    "subject": "Monize: {{ title }}",
+    "heading": "Systeemwaarschuwing",
+    "greeting": "Hoi {{ name }},",
+    "intro": "Een probleem in je Monize-installatie vraagt om de aandacht van een beheerder.",
+    "footer": "Deze waarschuwing wordt ook getoond in de notificatiebel van de app. Ze wordt hoogstens één keer per voorval aangemaakt, ongeacht het aantal serverreplica's dat het opmerkte."
+  },
+  "notificationImmediate": {
+    "subject": "U hebt een nieuwe Monize-melding",
+    "eyebrow": "Monize-melding",
+    "button": "Openen in Monize",
+    "footer": "U ontvangt dit omdat directe e-mail aan staat voor dit meldingstype. Wijzig dit in Instellingen, Meldingen."
+  },
+  "notificationCopy": {
+    "billDue": {
+      "titleOverdue": "{{ payee }} achterstallig",
+      "titleToday": "{{ payee }} vandaag verschuldigd",
+      "titleTomorrow": "{{ payee }} morgen verschuldigd",
+      "titleInDays": "{{ payee }} over {{ days }} dagen verschuldigd",
+      "amountDue": "{{ amount }} te betalen op {{ date }}",
+      "amountUnavailable": "Bedrag niet beschikbaar (geen actuele wisselkoers), te betalen op {{ date }}"
+    },
+    "gemSignal": {
+      "riskTitle": "{{ strategy }} overgeschakeld naar {{ state }}",
+      "riskMessage": "Uw GEM-strategie \"{{ strategy }}\" is gewijzigd van {{ fromState }} naar {{ toState }}. Open om de aanbeveling te bekijken.",
+      "allocationTitle": "{{ strategy }} heeft het doel gewijzigd",
+      "allocationMessage": "Uw GEM-strategie \"{{ strategy }}\" richt zich nu op {{ target }}. Open om de aanbeveling te bekijken.",
+      "riskOn": "risk-on",
+      "riskOff": "risk-off",
+      "roles": {
+        "US_EQUITY": "S&P 500",
+        "EX_US_EQUITY": "Ontwikkelde markten ex-VS",
+        "EM_EQUITY": "Opkomende markten",
+        "SAFE": "Veilige belegging",
+        "RISK_FREE": "Risicovrije maatstaf"
+      },
+      "allocationMessageUnknown": "Je GEM-strategie ‘{{ strategy }}’ heeft het doel gewijzigd. Open deze om de aanbeveling te bekijken."
+    },
+    "portfolioMovement": {
+      "titleUp": "Beleggingen {{ percent }}% hoger",
+      "titleDown": "Beleggingen {{ percent }}% lager",
+      "messageUp": "Uw beleggingen staan vandaag {{ percent }}% hoger, exclusief stortingen en opnames. Open om te bekijken.",
+      "messageDown": "Uw beleggingen staan vandaag {{ percent }}% lager, exclusief stortingen en opnames. Open om te bekijken."
+    },
+    "balanceThreshold": {
+      "titleLow": "{{ account }} ligt onder uw drempel",
+      "titleHigh": "{{ account }} ligt boven uw drempel",
+      "messageLow": "{{ account }} is gedaald naar {{ balance }}, onder uw drempel van {{ threshold }}.",
+      "messageHigh": "{{ account }} is gestegen naar {{ balance }}, boven uw drempel van {{ threshold }}."
+    },
+    "system": {
+      "backupFailed": {
+        "title": "Automatische back-up mislukt",
+        "message": "De automatische back-up voor {{ user }} is mislukt: {{ error }}"
+      },
+      "backupPartial": {
+        "title": "Automatische back-up onvolledig",
+        "messageAttachments": "De back-up voor {{ user }} is weggeschreven, maar {{ missing }} van {{ expected }} bijlagen konden niet worden opgenomen en {{ inconsistent }} kwamen niet overeen met hun metagegevens. Volledige back-ups zijn bewaard.",
+        "messagePromotion": "De dagelijkse back-up voor {{ user }} is gelukt, maar de wekelijkse of maandelijkse kopie kon niet worden weggeschreven: {{ error }}",
+        "messageRetention": "De back-up voor {{ user }} is gelukt, maar oude back-upbestanden konden niet worden opgeruimd: {{ error }}"
+      },
+      "encryptionKeyMissing": {
+        "title": "Encryptiesleutel niet geconfigureerd",
+        "message": "ENCRYPTION_KEY is niet ingesteld, dus back-ups worden onversleuteld weggeschreven en geheimen kunnen niet worden opgeslagen. Een toekomstige versie start niet meer zonder deze sleutel."
+      },
+      "smtpFailure": {
+        "title": "E-mailbezorging mislukt",
+        "message": "Monize kon geen e-mail verzenden: {{ error }}. Meldingen en herinneringen worden niet bezorgd."
+      },
+      "providerOutage": {
+        "title": "{{ provider }} reageert niet",
+        "message": "Marktgegevens van {{ provider }} zijn niet beschikbaar. Koersen en indexgegevens kunnen verouderd zijn totdat de provider weer reageert."
+      },
+      "providerRecovered": {
+        "title": "{{ provider }} reageert weer",
+        "message": "De storing is voorbij en marktgegevens van {{ provider }} worden weer bijgewerkt."
+      },
+      "scheduledPostFailed": {
+        "title": "{{ name }} kon niet worden geboekt",
+        "message": "Je geplande transactie met vervaldatum {{ date }} is niet automatisch geboekt: {{ error }}. Je kunt deze handmatig boeken via Facturen & stortingen."
+      }
+    },
+    "budget": {
+      "overTitle": "{{ category }} overschrijdt het budget",
+      "overMessage": "Je hebt {{ amount }} van je budget van {{ limit }} voor {{ category }} uitgegeven ({{ percent }}%).",
+      "criticalTitle": "{{ category }} nadert de limiet",
+      "warningTitle": "{{ category }} bereikt de budgetlimiet",
+      "thresholdMessage": "Je hebt {{ percent }}% van je budget voor {{ category }} gebruikt ({{ amount }} van {{ limit }}).",
+      "projectedTitle": "{{ category }} zal naar verwachting het budget overschrijden",
+      "projectedMessage": "In je huidige tempo zullen de uitgaven voor {{ category }} aan het einde van de periode naar verwachting {{ projected }} bedragen (budget: {{ budgeted }}).",
+      "flexTitle": "Flexgroep ‘{{ group }}’ op {{ percent }}%",
+      "flexMessage": "De flexgroep ‘{{ group }}’ heeft {{ spent }} van het gezamenlijke budget van {{ budgeted }} gebruikt ({{ percent }}%).",
+      "incomeTitle": "Inkomen lager dan verwacht",
+      "incomeMessage": "Je werkelijke inkomen ({{ actual }}) bedraagt {{ ratio }}% van het verwachte inkomen ({{ expected }}) op dit moment in de periode.",
+      "milestoneTitle": "Budget op schema",
+      "milestoneMessage": "{{ progress }}% van de periode is verstreken en je hebt pas {{ percent }}% van je totale budget gebruikt. Ga zo door!",
+      "seasonalTitle": "Seizoenspiek verwacht voor {{ category }}",
+      "seasonalMessage": "Afgelopen {{ month }} gaf je {{ increase }} keer zoveel als gebruikelijk uit aan {{ category }}. Overweeg je budget aan te passen."
+    },
+    "priceMovement": {
+      "title": "Melding bij koerswijziging: {{ symbol }} ({{ percent }}%)",
+      "message": "{{ symbol }}: {{ percent }}% ten opzichte van de vorige beschikbare sessie."
+    }
+  }
+}

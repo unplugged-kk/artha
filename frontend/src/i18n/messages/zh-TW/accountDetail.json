@@ -1,0 +1,49 @@
+{
+  "header": {
+    "viewTransactions": "查看交易",
+    "reconcile": "對帳",
+    "edit": "編輯科目",
+    "back": "返回科目",
+    "switchAccount": "切換到其他帳戶",
+    "switchFavourites": "我的最愛",
+    "switchOtherAccounts": "其他帳戶",
+    "switchPlaceholder": "篩選帳戶...",
+    "switchNoMatches": "沒有符合的帳戶",
+    "jointBadge": "聯名",
+    "jointSharedBy": "由 {owner} 共享",
+    "jointSharedWith": "已與 {count, plural, other {# 人}}共享"
+  },
+  "loading": "載入科目詳情中...",
+  "error": {
+    "retry": "重試"
+  },
+  "recurring": {
+    "title": "定期費用",
+    "subtitle": "此科目上的排程帳單，以及在其交易中發現的可能訂閱",
+    "empty": "此科目未偵測到定期費用",
+    "scheduledTitle": "已排程",
+    "detectedTitle": "可能的定期費用",
+    "detectedSubtitle": "在您的交易記錄中發現，但尚未排程",
+    "nextDue": "下次到期 {date}",
+    "createBill": "建立帳單",
+    "createBillAria": "為 {payee} 建立排程帳單",
+    "createTitle": "新增排程帳單",
+    "frequency": {
+      "weekly": "每週",
+      "biweekly": "每兩週",
+      "monthly": "每月",
+      "quarterly": "每季",
+      "yearly": "每年",
+      "irregular": "不定期"
+    }
+  },
+  "forecastUnavailable": {
+    "intro": "未顯示預計餘額，因為至少有一筆即將到來的排程項目暫時無法確定金額。預測會把每一天的餘額結轉到下一天，所以只要有一筆金額未知，之後每一天都會出錯。",
+    "requestFailed": "無法載入預計餘額。請重新載入頁面後再試。",
+    "reasonUnavailable": "未回報原因。請檢查以外幣計價的排程項目的匯率。",
+    "missingRatePair": "{name}：找不到 {from} 兌 {to} 的匯率，因此這筆到期項目將記錄的金額未知。",
+    "missingRate": "{name}：找不到這筆到期項目的結算匯率，因此金額未知。",
+    "crossCurrencyTransfer": "{name}：本帳戶為 {to}，而這是一筆來自 {from} 帳戶的轉帳。入帳金額在轉帳記帳時才確定，因此無法提前預測。",
+    "howToFix": "缺少匯率時的處理：開啟「貨幣」頁面重新整理匯率，或檢查該證券及其結算帳戶的幣別是否符合預期。"
+  }
+}

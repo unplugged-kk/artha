@@ -1,0 +1,193 @@
+export type QuoteProviderName = "yahoo" | "msn";
+
+export interface QuoteResult {
+  symbol: string;
+  regularMarketPrice?: number;
+  regularMarketOpen?: number;
+  regularMarketDayHigh?: number;
+  regularMarketDayLow?: number;
+  regularMarketVolume?: number;
+  regularMarketTime?: number;
+  /**
+   * IANA zone the instrument trades in, when the provider reports one. Read
+   * from the instrument itself rather than mapped from the exchange code,
+   * which can be an alias, a provider display name, or free text from an
+   * import.
+   */
+  exchangeTimezone?: string | null;
+  /**
+   * The regular trading session for the day this quote came from, as epoch
+   * seconds. Providers give the actual window, so a holiday or a half day is
+   * reflected rather than assumed away.
+   */
+  regularSession?: { start: number; end: number } | null;
+  provider?: QuoteProviderName;
+  /**
+   * The instrument's actual trading currency as reported by the provider
+   * (GBX/GBp normalized to GBP). Authoritative — unlike a currency guessed from
+   * the exchange, this is correct for non-local-currency listings (e.g. a
+   * USD-denominated ETF on the LSE). May be absent if the provider doesn't
+   * report it.
+   */
+  currencyCode?: string | null;
+  /**
+   * For MSN, the SecId actually used to fetch this quote. May differ from
+   * the security's stored msnInstrumentId when the stored value was in the
+   * legacy FullInstrument form and we re-resolved on the fly. Lets the
+   * caller persist the upgraded ID back to the Security row.
+   */
+  msnResolvedInstrumentId?: string;
+}
+
+export type IntradayInterval =
+  | "1m"
+  | "2m"
+  | "5m"
+  | "15m"
+  | "30m"
+  | "60m"
+  | "90m";
+export type IntradayRange = "1d" | "5d" | "1mo";
+
+export interface IntradayPoint {
+  /** Timestamp of the bar (UTC). */
+  timestamp: Date;
+  /**
+   * Open price at the bar (in the security's currency, GBX-converted to GBP).
+   * Optional / null when the provider doesn't expose per-bar opens. Consumers
+   * use this for the first bar of the day so the chart's starting value
+   * matches the day's official opening price rather than the first bar's
+   * close.
+   */
+  open?: number | null;
+  /** Close price at the bar (in the security's currency, GBX-converted to GBP). */
+  close: number;
+}
+
+export interface HistoricalPrice {
+  date: Date;
+  open: number | null;
+  high: number | null;
+  low: number | null;
+  close: number;
+  /**
+   * Total-return adjusted close (split + dividend adjusted) when the
+   * provider exposes one. null when the provider only returns raw closes.
+   */
+  adjClose: number | null;
+  volume: number | null;
+}
+
+export interface SecurityLookupResult {
+  symbol: string;
+  name: string;
+  exchange: string | null;
+  securityType: string | null;
+  currencyCode: string | null;
+  /** Provider that produced this result, if known. */
+  provider?: QuoteProviderName;
+  /** MSN Financial Instrument ID, when the result came from MSN. */
+  msnInstrumentId?: string | null;
+}
+
+export interface StockSectorInfo {
+  sector: string | null;
+  industry: string | null;
+}
+
+export interface EtfSectorWeighting {
+  sector: string;
+  weight: number;
+}
+
+export interface QuoteProviderOptions {
+  instrumentId?: string;
+  currencyCode?: string | null;
+  /** User's top-N preferred exchanges, in priority order. Used for ambiguous lookups. */
+  preferredExchanges?: string[];
+}
+
+export interface QuoteProvider {
+  readonly name: QuoteProviderName;
+
+  fetchQuote(
+    symbol: string,
+    exchange: string | null,
+    opts?: QuoteProviderOptions,
+  ): Promise<QuoteResult | null>;
+
+  fetchHistorical(
+    symbol: string,
+    exchange: string | null,
+    range?: string,
+    opts?: QuoteProviderOptions,
+  ): Promise<HistoricalPrice[] | null>;
+
+  /**
+   * Optional: fetch daily bars for an explicit date window rather than one of
+   * the provider's named ranges.
+   *
+   * A named range is always anchored at *today*, so reaching a date years back
+   * means downloading everything since. A window asks for the days that are
+   * actually wanted, which is what lets a point-in-time report fill one month
+   * of history for a security it could not price -- the same call shape the FX
+   * fill uses. Providers whose chart API only accepts a named timeframe (MSN)
+   * omit this, and callers fall back to the narrowest range that reaches the
+   * date.
+   */
+  fetchHistoricalWindow?(
+    symbol: string,
+    exchange: string | null,
+    fromDate: Date,
+    toDate: Date,
+    opts?: QuoteProviderOptions,
+  ): Promise<HistoricalPrice[] | null>;
+
+  /**
+   * Optional: fetch intraday price bars for a symbol. Used by the
+   * "Portfolio Value Over Time" intraday view (1D / 1W / 1M ranges).
+   * Providers that don't support intraday data may omit this method.
+   */
+  fetchIntradaySeries?(
+    symbol: string,
+    exchange: string | null,
+    opts: { interval: IntradayInterval; range: IntradayRange },
+    providerOpts?: QuoteProviderOptions,
+  ): Promise<IntradayPoint[] | null>;
+
+  lookupSecurity(
+    query: string,
+    preferredExchanges?: string[],
+  ): Promise<SecurityLookupResult | null>;
+
+  /**
+   * Return every plausible match for the query, best first. Lets the UI show
+   * a picker when multiple candidates share the ticker or when the query is
+   * a name that matches several funds/securities.
+   */
+  lookupSecurityMany?(
+    query: string,
+    preferredExchanges?: string[],
+  ): Promise<SecurityLookupResult[]>;
+
+  fetchStockSectorInfo(
+    symbol: string,
+    exchange: string | null,
+    opts?: QuoteProviderOptions,
+  ): Promise<StockSectorInfo | null>;
+
+  fetchEtfSectorWeightings(
+    symbol: string,
+    exchange: string | null,
+    opts?: QuoteProviderOptions,
+  ): Promise<EtfSectorWeighting[] | null>;
+
+  getTradingDate(quote: QuoteResult): Date;
+
+  /** MSN-specific; Yahoo returns null. Resolves the ticker to the provider's internal ID. */
+  resolveInstrumentId?(
+    symbol: string,
+    exchange: string | null,
+    preferredExchanges?: string[],
+  ): Promise<string | null>;
+}

@@ -1,0 +1,253 @@
+{
+  "chartFlag": {
+    "dismiss": "Hide this value"
+  },
+  "appVersion": {
+    "releaseNotes": "View release notes for v{version}"
+  },
+  "whatsNew": {
+    "title": "What's New",
+    "versionLabel": "Version {version}",
+    "expandAll": "Expand all",
+    "collapseAll": "Collapse all",
+    "viewFullNotes": "View full release notes",
+    "dontShowAgain": "Don't show this again",
+    "showNextLogin": "Show at next login",
+    "close": "Close",
+    "unavailable": "Release notes for this version aren't available.",
+    "englishOnly": "The release notes below are in English only. Monize itself, including the guided tours, follows your language setting."
+  },
+  "transferPayee": "{direction, select, to {Transfer to {name}} other {Transfer from {name}}}",
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "edit": "Edit",
+  "close": "Close",
+  "actions": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View",
+    "duplicate": "Duplicate",
+    "merge": "Merge",
+    "reactivate": "Reactivate",
+    "reconcile": "Reconcile",
+    "post": "Post",
+    "skip": "Skip",
+    "close": "Close",
+    "reopen": "Reopen",
+    "scheduleRecurring": "Make recurring",
+    "more": "More actions"
+  },
+  "loading": "Loading...",
+  "pagination": {
+    "showing": "Showing",
+    "of": "of",
+    "firstPage": "First page",
+    "lastPage": "Last page",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "back10Pages": "Back 10 pages",
+    "forward10Pages": "Forward 10 pages",
+    "enterPageNumber": "Enter page number"
+  },
+  "confirmDialog": {
+    "confirm": "Confirm"
+  },
+  "unsavedChanges": {
+    "title": "Unsaved Changes",
+    "message": "You have unsaved changes. What would you like to do?",
+    "discard": "Discard"
+  },
+  "exportDropdown": {
+    "export": "Export",
+    "exporting": "Exporting...",
+    "exportPdf": "Export PDF",
+    "exportReport": "Export report",
+    "failedPdf": "Failed to export PDF. Please try again."
+  },
+  "dateRange": {
+    "custom": "Custom",
+    "startDate": "Start Date",
+    "endDate": "End Date"
+  },
+  "colorPicker": {
+    "custom": "Custom:",
+    "apply": "Apply"
+  },
+  "chartDownload": {
+    "downloadAsPng": "Download {filename} as PNG",
+    "unableToCapture": "Unable to capture chart image",
+    "failedToDownload": "Failed to download chart"
+  },
+  "csvDownload": {
+    "downloadAsCsv": "Download {filename} as CSV"
+  },
+  "chartViewToggle": {
+    "pieChart": "Pie Chart",
+    "barChart": "Bar Chart",
+    "stackedChart": "100% Stacked Bar",
+    "lineChart": "Line Chart",
+    "areaChart": "Area Chart",
+    "table": "Table"
+  },
+  "formActions": {
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "themeToggle": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "title": "Theme: {label}. Click to change."
+  },
+  "errorPage": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred. Please try again or contact support if the problem persists.",
+    "errorId": "Error ID: {digest}",
+    "tryAgain": "Try again",
+    "goToDashboard": "Go to Dashboard"
+  },
+  "errorBoundary": {
+    "defaultMessage": "Something went wrong rendering this component."
+  },
+  "calendar": {
+    "clear": "Clear",
+    "today": "Today"
+  },
+  "multiSelect": {
+    "search": "Search...",
+    "selectAll": "Select All",
+    "clear": "Clear",
+    "noOptions": "No options found",
+    "selectedCount": "{count} selected"
+  },
+  "combobox": {
+    "createOption": "Create \"{value}\"",
+    "deleteOption": "Delete \"{value}\""
+  },
+  "passwordInput": {
+    "show": "Show input",
+    "hide": "Hide input"
+  },
+  "currencyInput": {
+    "openCalculator": "Open calculator",
+    "calculator": "Calculator",
+    "toggleSign": "Change sign",
+    "apply": "Apply"
+  },
+  "dateInput": {
+    "shortcutsTitle": "Keyboard shortcuts",
+    "today": "Today",
+    "firstDayOfYear": "First day of year",
+    "lastDayOfYear": "Last day of year",
+    "firstDayOfMonth": "First day of month",
+    "lastDayOfMonth": "Last day of month",
+    "nextDay": "Next day",
+    "previousDay": "Previous day",
+    "nextMonth": "Next month",
+    "previousMonth": "Previous month",
+    "partialDateHint": "Type part of a date and the rest is filled in: a day and month take the current year."
+  },
+  "accountTypes": {
+    "CHEQUING": "Chequing",
+    "SAVINGS": "Savings",
+    "CREDIT_CARD": "Credit Card",
+    "INVESTMENT": "Investment",
+    "LOAN": "Loan",
+    "MORTGAGE": "Mortgage",
+    "CASH": "Cash",
+    "LINE_OF_CREDIT": "Line of Credit",
+    "ASSET": "Asset",
+    "OTHER": "Other"
+  },
+  "accountFilter": {
+    "allAccounts": "All Accounts",
+    "allBut": "All but {names}"
+  },
+  "passwordRequirements": "Password must be at least 12 characters and contain an uppercase letter, a lowercase letter, a number, and a special character.",
+  "passwordValidation": {
+    "min": "Password must be at least 12 characters",
+    "max": "Password must be 100 characters or less",
+    "lowercase": "Must contain a lowercase letter",
+    "uppercase": "Must contain an uppercase letter",
+    "number": "Must contain a number",
+    "special": "Must contain a special character"
+  },
+  "codeValidation": {
+    "length": "Code must be exactly 6 digits",
+    "digits": "Code must be 6 digits"
+  },
+  "monthsShort": [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ],
+  "weekdaysShort": [
+    "Sun",
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat"
+  ],
+  "weekdaysMin": [
+    "Su",
+    "Mo",
+    "Tu",
+    "We",
+    "Th",
+    "Fr",
+    "Sa"
+  ],
+  "weekdaysNarrow": [
+    "S",
+    "M",
+    "T",
+    "W",
+    "T",
+    "F",
+    "S"
+  ],
+  "dateFormat": {
+    "browserAuto": "Use browser locale (auto-detected as {sample})",
+    "custom": "Custom..."
+  },
+  "emailInvalid": "Please enter a valid email address",
+  "noSectionAccess": "You don't have access to that section.",
+  "undoRedo": {
+    "nothingToUndo": "Nothing to undo",
+    "cannotUndo": "Cannot undo this action",
+    "undoFailed": "Undo failed",
+    "nothingToRedo": "Nothing to redo",
+    "cannotRedo": "Cannot redo this action",
+    "redoFailed": "Redo failed"
+  },
+  "partialTotal": {
+    "srSuffix": "(partial total)",
+    "explanation": "Partial total: {count, plural, one {# amount} other {# amounts}} could not be included, so the figure shown excludes them. No rate to {displayCurrency} is available for {currencies}.",
+    "explanationExcluded": "Partial total: {count, plural, one {# amount} other {# amounts}} could not be worked out, so the figure shown excludes them."
+  },
+  "unknownAmount": {
+    "marker": "\u2014",
+    "srLabel": "Amount not available",
+    "scheduledFx": "The current amount cannot be worked out: no exchange rate is available for this scheduled item's settlement currency pair. The stored amount was calculated at an older rate, so it is not shown.",
+    "displayFx": "This figure cannot be shown here: the amount is known, but no exchange rate is available to convert it into the currency this total is reported in. Refresh your rates on the Currencies page.",
+    "noPrice": "This value cannot be worked out: the shares held are known, but the security has no price to value them at. Refresh prices, or add one by hand on the security's Price history."
+  },
+  "density": {
+    "title": "Toggle row density",
+    "normal": "Normal",
+    "compact": "Compact",
+    "dense": "Dense"
+  }
+}

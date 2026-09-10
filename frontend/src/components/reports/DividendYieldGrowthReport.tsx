@@ -1,0 +1,823 @@
+'use client';
+
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { Skeleton } from '@/components/ui/LoadingSkeleton';
+import { useReportData } from '@/hooks/useReportData';
+import { usePersistedAccountFilter } from '@/hooks/usePersistedAccountFilter';
+import { ReportError } from '@/components/reports/ReportError';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts';
+import { subYears } from 'date-fns';
+import { investmentsApi } from '@/lib/investments';
+import { InvestmentTransaction, HoldingWithMarketValue } from '@/types/investment';
+import { Account } from '@/types/account';
+import { parseLocalDate } from '@/lib/utils';
+import { useNumberFormat } from '@/hooks/useNumberFormat';
+import { gainLossColor } from '@/lib/format';
+import { useExchangeRates } from '@/hooks/useExchangeRates';
+import { ExportDropdown } from '@/components/ui/ExportDropdown';
+import { ReportAccountMultiSelect } from '@/components/reports/ReportAccountMultiSelect';
+import { RefreshPricesButton } from '@/components/reports/RefreshPricesButton';
+import { SortableHeader } from '@/components/ui/SortableHeader';
+import { PartialTotal } from '@/components/ui/PartialTotal';
+import { useSortableTable, compareValues } from '@/hooks/useSortableTable';
+import { createLogger } from '@/lib/logger';
+import { chartColors, CHART_SERIES } from '@/lib/chart-colors';
+import { useTranslations } from 'next-intl';
+
+const logger = createLogger('DividendYieldGrowthReport');
+
+type YieldSortField = 'symbol' | 'dividends' | 'marketValue' | 'yield' | 'frequency';
+type GrowthSortField = 'year' | 'amount' | 'growth';
+type FrequencySortField = 'frequency' | 'count' | 'totalDividends';
+
+const MAX_PAGES = 50;
+
+interface SecurityYield {
+  symbol: string;
+  name: string;
+  trailing12mDividends: number;
+  marketValue: number;
+  yield: number;
+  frequency: string;
+}
+
+interface AnnualDividend {
+  year: string;
+  amount: number;
+  growth: number | null;
+}
+
+interface FrequencyBucket {
+  frequency: string;
+  count: number;
+  totalDividends: number;
+}
+
+const ACCOUNTS_STORAGE_KEY = 'monize-reports-dividend-yield-growth-accounts';
+
+export function DividendYieldGrowthReport() {
+  const t = useTranslations('reports');
+  const { formatCurrency: formatCurrencyFull, formatCurrencyAxis, formatSignedPercent, formatPercent } = useNumberFormat();
+  const { defaultCurrency, convertToDefault } = useExchangeRates();
+  const chartRef = useRef<HTMLDivElement>(null);
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  // Persisted so the report opens on the accounts the user last chose.
+  const [selectedAccountIds, setSelectedAccountIds] = usePersistedAccountFilter(
+    ACCOUNTS_STORAGE_KEY,
+    accounts,
+  );
+  const [viewType, setViewType] = useState<'yield' | 'growth' | 'frequency'>('yield');
+  const isSingleAccount = selectedAccountIds.length === 1;
+  const yieldSort = useSortableTable<YieldSortField>(
+    'reports.dividend-yield-growth.yield.sort',
+    { field: 'yield', direction: 'desc' },
+  );
+  const growthSort = useSortableTable<GrowthSortField>(
+    'reports.dividend-yield-growth.growth.sort',
+    { field: 'year', direction: 'asc' },
+  );
+  const frequencySort = useSortableTable<FrequencySortField>(
+    'reports.dividend-yield-growth.frequency.sort',
+    { field: 'totalDividends', direction: 'desc' },
+  );
+
+  const accountCurrencyMap = useMemo(() => {
+    const map = new Map<string, string>();
+    accounts.forEach((a) => map.set(a.id, a.currencyCode));
+    return map;
+  }, [accounts]);
+
+  const selectedAccount = isSingleAccount
+    ? accounts.find((a) => a.id === selectedAccountIds[0])
+    : undefined;
+  const displayCurrency = selectedAccount?.currencyCode || defaultCurrency;
+
+  /**
+   * A transaction's amount in the display currency, or `null` when the pair has
+   * no rate. Yield is income over value, so an amount that cannot be converted
+   * has to leave both sides of the ratio rather than being added at face value.
+   */
+  const getTxAmount = useCallback((tx: InvestmentTransaction): number | null => {
+    const amount = Math.abs(tx.totalAmount);
+    if (isSingleAccount) return amount;
+    const txCurrency = accountCurrencyMap.get(tx.accountId) || defaultCurrency;
+    return convertToDefault(amount, txCurrency);
+  }, [isSingleAccount, accountCurrencyMap, defaultCurrency, convertToDefault]);
+
+  const fmtValue = useCallback((value: number): string => {
+    const isForeign = displayCurrency !== defaultCurrency;
+    if (isForeign) return `${formatCurrencyFull(value, displayCurrency)} ${displayCurrency}`;
+    return formatCurrencyFull(value);
+  }, [displayCurrency, defaultCurrency, formatCurrencyFull]);
+
+  const detectFrequency = useCallback((dates: Date[]): string => {
+    if (dates.length < 2) return t('dividendYieldGrowth.freqUnknown');
+    const sorted = [...dates].sort((a, b) => a.getTime() - b.getTime());
+    const gaps: number[] = [];
+    for (let i = 1; i < sorted.length; i++) {
+      gaps.push((sorted[i].getTime() - sorted[i - 1].getTime()) / (1000 * 60 * 60 * 24));
+    }
+    const avgGap = gaps.reduce((s, g) => s + g, 0) / gaps.length;
+    if (avgGap <= 45) return t('dividendYieldGrowth.freqMonthly');
+    if (avgGap <= 120) return t('dividendYieldGrowth.freqQuarterly');
+    if (avgGap <= 210) return t('dividendYieldGrowth.freqSemiAnnual');
+    return t('dividendYieldGrowth.freqAnnual');
+     
+  }, [t]);
+
+  // Fetch accounts once on mount (they don't change with filters)
+  useEffect(() => {
+    investmentsApi.getInvestmentAccounts()
+      .then(setAccounts)
+      .catch((error) => logger.error('Failed to load accounts:', error));
+  }, []);
+
+  // `reload` (a stable callback) is wired to the RefreshPricesButton so a
+  // manual price refresh re-fetches the dividend data.
+  const { data: response, isLoading, error, reload } = useReportData(
+    async () => {
+      const accountIds = selectedAccountIds.length > 0 ? selectedAccountIds.join(',') : undefined;
+
+      const fetchAllPages = async (action: string): Promise<InvestmentTransaction[]> => {
+        const results: InvestmentTransaction[] = [];
+        let page = 1;
+        let hasMore = true;
+        while (hasMore && page <= MAX_PAGES) {
+          const result = await investmentsApi.getTransactions({
+            accountIds,
+            action,
+            limit: 200,
+            page,
+          });
+          results.push(...result.data);
+          hasMore = result.pagination.hasMore;
+          page++;
+        }
+        return results;
+      };
+
+      const [summaryData, dividendTx, reinvestTx] = await Promise.all([
+        investmentsApi.getPortfolioSummary(
+          selectedAccountIds.length > 0 ? selectedAccountIds : undefined,
+        ),
+        fetchAllPages('DIVIDEND'),
+        fetchAllPages('REINVEST'),
+      ]);
+
+      return {
+        transactions: [...dividendTx, ...reinvestTx],
+        holdings: summaryData.holdings,
+      };
+    },
+    [selectedAccountIds],
+  );
+
+  const transactions = useMemo<InvestmentTransaction[]>(
+    () => response?.transactions ?? [],
+    [response],
+  );
+  const holdings = useMemo<HoldingWithMarketValue[]>(
+    () => response?.holdings ?? [],
+    [response],
+  );
+
+  // Trailing 12-month portfolio yield
+  const trailing12mTotal = useMemo(() => {
+    const cutoff = subYears(new Date(), 1);
+    return transactions
+      .filter((tx) => parseLocalDate(tx.transactionDate) >= cutoff)
+      .reduce((sum, tx) => {
+        const amount = getTxAmount(tx);
+        return amount === null ? sum : sum + amount;
+      }, 0);
+  }, [transactions, getTxAmount]);
+
+  const totalPortfolioValue = useMemo(
+    () =>
+      holdings.reduce((sum, h) => {
+        // An unpriced holding and an unconvertible one both leave the
+        // denominator: `?? 0` would shrink it and inflate the yield.
+        if (h.marketValue === null || h.marketValue === undefined) return sum;
+        const converted = convertToDefault(h.marketValue, h.currencyCode);
+        return converted === null ? sum : sum + converted;
+      }, 0),
+    [holdings, convertToDefault],
+  );
+
+  const portfolioYield = totalPortfolioValue > 0 ? (trailing12mTotal / totalPortfolioValue) * 100 : 0;
+
+  // Components the yield's two inputs had to drop (mirrors their exclusion
+  // rules): an unpriced or unconvertible holding out of the value, and an
+  // unconvertible dividend out of the trailing total. Non-empty means the value,
+  // the trailing dividends and the yield derived from them are all subtotals.
+  const valuationGaps = useMemo(() => {
+    const missing = new Set<string>();
+    let excludedCount = 0;
+    for (const h of holdings) {
+      if (h.marketValue === null || h.marketValue === undefined) {
+        excludedCount += 1;
+        continue;
+      }
+      if (convertToDefault(h.marketValue, h.currencyCode) === null) {
+        missing.add(h.currencyCode);
+        excludedCount += 1;
+      }
+    }
+    const cutoff = subYears(new Date(), 1);
+    for (const tx of transactions) {
+      if (parseLocalDate(tx.transactionDate) < cutoff) continue;
+      if (getTxAmount(tx) === null) {
+        missing.add(accountCurrencyMap.get(tx.accountId) || defaultCurrency);
+        excludedCount += 1;
+      }
+    }
+    return { missingCurrencies: [...missing], excludedCount };
+  }, [holdings, transactions, getTxAmount, convertToDefault, accountCurrencyMap, defaultCurrency]);
+
+  // Per-security yield
+  const securityYields = useMemo((): SecurityYield[] => {
+    const cutoff = subYears(new Date(), 1);
+    const recentTx = transactions.filter((tx) => parseLocalDate(tx.transactionDate) >= cutoff);
+
+    // Aggregate dividends by security (skip transactions without a security)
+    const dividendMap = new Map<string, { total: number; dates: Date[] }>();
+    recentTx.forEach((tx) => {
+      if (!tx.securityId) return;
+      let existing = dividendMap.get(tx.securityId);
+      if (!existing) {
+        existing = { total: 0, dates: [] };
+        dividendMap.set(tx.securityId, existing);
+      }
+      const amount = getTxAmount(tx);
+      if (amount === null) return;
+      existing.total += amount;
+      existing.dates.push(parseLocalDate(tx.transactionDate));
+    });
+
+    // Aggregate market value across all accounts holding each security
+    const holdingMap = new Map<string, { symbol: string; name: string; marketValue: number }>();
+    holdings.forEach((h) => {
+      if (h.marketValue === null || h.marketValue === undefined) return;
+      const mv = convertToDefault(h.marketValue, h.currencyCode);
+      if (mv === null) return;
+      const existing = holdingMap.get(h.securityId);
+      if (existing) {
+        existing.marketValue += mv;
+      } else {
+        holdingMap.set(h.securityId, { symbol: h.symbol, name: h.name, marketValue: mv });
+      }
+    });
+
+    const results: SecurityYield[] = [];
+    dividendMap.forEach((data, secId) => {
+      const holding = holdingMap.get(secId);
+      if (!holding) return;
+      results.push({
+        symbol: holding.symbol,
+        name: holding.name,
+        trailing12mDividends: data.total,
+        marketValue: holding.marketValue,
+        yield: holding.marketValue > 0 ? (data.total / holding.marketValue) * 100 : 0,
+        frequency: detectFrequency(data.dates),
+      });
+    });
+
+    return results;
+     
+  }, [transactions, holdings, getTxAmount, convertToDefault, detectFrequency]);
+
+  const sortedSecurityYields = useMemo(() => {
+    const sorted = [...securityYields];
+    sorted.sort((a, b) => {
+      let comparison = 0;
+      switch (yieldSort.sortField) {
+        case 'symbol':
+          comparison = compareValues(a.symbol, b.symbol);
+          break;
+        case 'dividends':
+          comparison = compareValues(a.trailing12mDividends, b.trailing12mDividends);
+          break;
+        case 'marketValue':
+          comparison = compareValues(a.marketValue, b.marketValue);
+          break;
+        case 'yield':
+          comparison = compareValues(a.yield, b.yield);
+          break;
+        case 'frequency':
+          comparison = compareValues(a.frequency, b.frequency);
+          break;
+      }
+      return yieldSort.sortDirection === 'asc' ? comparison : -comparison;
+    });
+    return sorted;
+  }, [securityYields, yieldSort.sortField, yieldSort.sortDirection]);
+
+  // Year-over-year growth
+  const annualData = useMemo((): AnnualDividend[] => {
+    const yearMap = new Map<string, number>();
+    transactions.forEach((tx) => {
+      const year = tx.transactionDate.substring(0, 4);
+      const amount = getTxAmount(tx);
+      // An unconvertible amount is not a zero contribution to the year; it is
+      // simply not part of the comparable series.
+      if (amount === null) return;
+      yearMap.set(year, (yearMap.get(year) || 0) + amount);
+    });
+
+    const years = Array.from(yearMap.keys()).sort();
+    return years.map((year, idx) => {
+      const amount = yearMap.get(year) || 0;
+      const prevAmount = idx > 0 ? yearMap.get(years[idx - 1]) || 0 : null;
+      const growth = prevAmount !== null && prevAmount > 0
+        ? ((amount - prevAmount) / prevAmount) * 100
+        : null;
+      return { year, amount, growth };
+    });
+  }, [transactions, getTxAmount]);
+
+  // Frequency analysis
+  const frequencyData = useMemo((): FrequencyBucket[] => {
+    const freqMap = new Map<string, { count: number; total: number }>();
+    securityYields.forEach((sy) => {
+      const existing = freqMap.get(sy.frequency) || { count: 0, total: 0 };
+      freqMap.set(sy.frequency, {
+        count: existing.count + 1,
+        total: existing.total + sy.trailing12mDividends,
+      });
+    });
+    return Array.from(freqMap.entries())
+      .map(([frequency, data]) => ({
+        frequency,
+        count: data.count,
+        totalDividends: data.total,
+      }))
+      ;
+  }, [securityYields]);
+
+  const sortedAnnualData = useMemo(() => {
+    const sorted = [...annualData];
+    sorted.sort((a, b) => {
+      let comparison = 0;
+      switch (growthSort.sortField) {
+        case 'year':
+          comparison = compareValues(a.year, b.year);
+          break;
+        case 'amount':
+          comparison = compareValues(a.amount, b.amount);
+          break;
+        case 'growth':
+          comparison = compareValues(a.growth, b.growth);
+          break;
+      }
+      return growthSort.sortDirection === 'asc' ? comparison : -comparison;
+    });
+    return sorted;
+  }, [annualData, growthSort.sortField, growthSort.sortDirection]);
+
+  const sortedFrequencyData = useMemo(() => {
+    const sorted = [...frequencyData];
+    sorted.sort((a, b) => {
+      let comparison = 0;
+      switch (frequencySort.sortField) {
+        case 'frequency':
+          comparison = compareValues(a.frequency, b.frequency);
+          break;
+        case 'count':
+          comparison = compareValues(a.count, b.count);
+          break;
+        case 'totalDividends':
+          comparison = compareValues(a.totalDividends, b.totalDividends);
+          break;
+      }
+      return frequencySort.sortDirection === 'asc' ? comparison : -comparison;
+    });
+    return sorted;
+  }, [frequencyData, frequencySort.sortField, frequencySort.sortDirection]);
+
+  const handleExportPdf = async () => {
+    const { exportToPdf } = await import('@/lib/pdf-export');
+
+    let tableData: { headers: string[]; rows: (string | number)[][] } | undefined;
+    let chartContainer: HTMLElement | null = null;
+
+    if (viewType === 'yield') {
+      tableData = {
+        headers: [t('dividendYieldGrowth.colSecurity'), t('dividendYieldGrowth.col12mDividends'), t('dividendYieldGrowth.colMarketValue'), t('dividendYieldGrowth.colYield'), t('dividendYieldGrowth.colFrequency')],
+        rows: securityYields.map((sy) => [
+          `${sy.symbol} - ${sy.name}`,
+          fmtValue(sy.trailing12mDividends),
+          fmtValue(sy.marketValue),
+          formatPercent(sy.yield, 2),
+          sy.frequency,
+        ]),
+      };
+    } else if (viewType === 'growth') {
+      chartContainer = chartRef.current;
+      tableData = {
+        headers: [t('dividendYieldGrowth.colYear'), t('dividendYieldGrowth.colDividendIncome'), t('dividendYieldGrowth.colYoYGrowth')],
+        rows: annualData.map((row) => [
+          row.year,
+          fmtValue(row.amount),
+          row.growth !== null ? formatSignedPercent(row.growth, 1) : '-',
+        ]),
+      };
+    } else {
+      chartContainer = chartRef.current;
+      tableData = {
+        headers: [t('dividendYieldGrowth.colFrequencyLabel'), t('dividendYieldGrowth.colSecurities'), t('dividendYieldGrowth.colTotalDividends')],
+        rows: frequencyData.map((row) => [
+          row.frequency,
+          String(row.count),
+          fmtValue(row.totalDividends),
+        ]),
+      };
+    }
+
+    const viewLabel = viewType === 'yield' ? t('dividendYieldGrowth.pdfSubtitleYield') : viewType === 'growth' ? t('dividendYieldGrowth.pdfSubtitleGrowth') : t('dividendYieldGrowth.pdfSubtitleFrequency');
+    await exportToPdf({
+      title: t('dividendYieldGrowth.pdfTitle'),
+      subtitle: viewLabel,
+      summaryCards: [
+        { label: t('dividendYieldGrowth.portfolioYield'), value: formatPercent(portfolioYield, 2), color: '#16a34a' },
+        { label: t('dividendYieldGrowth.trailing12mDividends'), value: fmtValue(trailing12mTotal), color: '#2563eb' },
+        { label: t('dividendYieldGrowth.portfolioValue'), value: fmtValue(totalPortfolioValue), color: '#9333ea' },
+        { label: t('dividendYieldGrowth.dividendPayers'), value: String(securityYields.length), color: '#111827' },
+      ],
+      chartContainer,
+      tableData,
+      filename: 'dividend-yield-growth',
+    });
+  };
+
+  if (error) {
+    return <ReportError onRetry={reload} />;
+  }
+
+  if (isLoading && !response) {
+    return (
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/50 p-6">
+        <div className="space-y-4">
+          <Skeleton className="h-8 w-1/3" />
+          <Skeleton className="h-64 w-full" />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Summary Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
+          <div className="text-sm text-green-600 dark:text-green-400">{t('dividendYieldGrowth.portfolioYield')}</div>
+          <div className="text-xl font-bold text-green-700 dark:text-green-300">
+            {formatPercent(portfolioYield, 2)}
+            {valuationGaps.excludedCount > 0 && (
+              <span className="text-amber-600 dark:text-amber-400" aria-hidden="true"> *</span>
+            )}
+          </div>
+        </div>
+        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
+          <div className="text-sm text-blue-600 dark:text-blue-400">{t('dividendYieldGrowth.trailing12mDividends')}</div>
+          <div className="text-xl font-bold text-blue-700 dark:text-blue-300">
+            <PartialTotal total={{ value: trailing12mTotal, ...valuationGaps }} displayCurrency={displayCurrency}>
+              {fmtValue(trailing12mTotal)}
+            </PartialTotal>
+          </div>
+        </div>
+        <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4">
+          <div className="text-sm text-purple-600 dark:text-purple-400">{t('dividendYieldGrowth.portfolioValue')}</div>
+          <div className="text-xl font-bold text-purple-700 dark:text-purple-300">
+            <PartialTotal total={{ value: totalPortfolioValue, ...valuationGaps }} displayCurrency={displayCurrency}>
+              {fmtValue(totalPortfolioValue)}
+            </PartialTotal>
+          </div>
+        </div>
+        <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
+          <div className="text-sm text-gray-600 dark:text-gray-400">{t('dividendYieldGrowth.dividendPayers')}</div>
+          <div className="text-xl font-bold text-gray-900 dark:text-gray-100">
+            {securityYields.length}
+          </div>
+        </div>
+      </div>
+
+      {/* Controls */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/50 p-4">
+        <div className="flex flex-wrap gap-4 items-center justify-between">
+          <ReportAccountMultiSelect
+            accounts={accounts}
+            value={selectedAccountIds}
+            onChange={setSelectedAccountIds}
+          />
+          <div className="flex gap-2 items-center">
+            <button
+              onClick={() => setViewType('yield')}
+              className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                viewType === 'yield' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+              }`}
+            >
+              {t('dividendYieldGrowth.viewPerSecurity')}
+            </button>
+            <button
+              onClick={() => setViewType('growth')}
+              className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                viewType === 'growth' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+              }`}
+            >
+              {t('dividendYieldGrowth.viewYearOverYear')}
+            </button>
+            <button
+              onClick={() => setViewType('frequency')}
+              className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                viewType === 'frequency' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+              }`}
+            >
+              {t('dividendYieldGrowth.viewFrequency')}
+            </button>
+          </div>
+          <div className="ml-auto flex gap-2 items-center">
+            <RefreshPricesButton onRefreshComplete={reload} />
+            <ExportDropdown onExportPdf={handleExportPdf} />
+          </div>
+        </div>
+      </div>
+
+      {transactions.length === 0 ? (
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/50 p-6">
+          <p className="text-gray-500 dark:text-gray-400 text-center py-8">
+            {t('dividendYieldGrowth.empty')}
+          </p>
+        </div>
+      ) : viewType === 'yield' ? (
+        /* Per-Security Yield Table */
+        <div ref={chartRef} className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/50 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              {t('dividendYieldGrowth.perSecurityTitle')}
+            </h3>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead className="bg-gray-50 dark:bg-gray-900/50">
+                <tr>
+                  <SortableHeader<YieldSortField>
+                    field="symbol"
+                    sortField={yieldSort.sortField}
+                    sortDirection={yieldSort.sortDirection}
+                    onSort={yieldSort.handleSort}
+                    className="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase"
+                  >
+                    {t('dividendYieldGrowth.colSecurity')}
+                  </SortableHeader>
+                  <SortableHeader<YieldSortField>
+                    field="dividends"
+                    sortField={yieldSort.sortField}
+                    sortDirection={yieldSort.sortDirection}
+                    onSort={yieldSort.handleSort}
+                    align="right"
+                    className="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase"
+                  >
+                    {t('dividendYieldGrowth.col12mDividends')}
+                  </SortableHeader>
+                  <SortableHeader<YieldSortField>
+                    field="marketValue"
+                    sortField={yieldSort.sortField}
+                    sortDirection={yieldSort.sortDirection}
+                    onSort={yieldSort.handleSort}
+                    align="right"
+                    className="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase"
+                  >
+                    {t('dividendYieldGrowth.colMarketValue')}
+                  </SortableHeader>
+                  <SortableHeader<YieldSortField>
+                    field="yield"
+                    sortField={yieldSort.sortField}
+                    sortDirection={yieldSort.sortDirection}
+                    onSort={yieldSort.handleSort}
+                    align="right"
+                    className="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase"
+                  >
+                    {t('dividendYieldGrowth.colYield')}
+                  </SortableHeader>
+                  <SortableHeader<YieldSortField>
+                    field="frequency"
+                    sortField={yieldSort.sortField}
+                    sortDirection={yieldSort.sortDirection}
+                    onSort={yieldSort.handleSort}
+                    align="right"
+                    className="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase"
+                  >
+                    {t('dividendYieldGrowth.colFrequency')}
+                  </SortableHeader>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                {sortedSecurityYields.map((sy) => (
+                  <tr key={sy.symbol} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                    <td className="px-4 py-3">
+                      <div className="font-medium text-gray-900 dark:text-gray-100">{sy.symbol}</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">{sy.name}</div>
+                    </td>
+                    <td className="px-4 py-3 text-right text-sm text-green-600 dark:text-green-400">
+                      {fmtValue(sy.trailing12mDividends)}
+                    </td>
+                    <td className="px-4 py-3 text-right text-sm text-gray-600 dark:text-gray-400">
+                      {fmtValue(sy.marketValue)}
+                    </td>
+                    <td className="px-4 py-3 text-right text-sm font-medium text-gray-900 dark:text-gray-100">
+                      {formatPercent(sy.yield, 2)}
+                    </td>
+                    <td className="px-4 py-3 text-right text-sm text-gray-500 dark:text-gray-400">
+                      {sy.frequency}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : viewType === 'growth' ? (
+        /* Year-over-Year Growth */
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/50 px-2 py-4 sm:p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+            {t('dividendYieldGrowth.annualIncomeTitle')}
+          </h3>
+          {annualData.length > 0 ? (
+            <>
+              <div className="h-80">
+                <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+                  <BarChart data={annualData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
+                    <XAxis dataKey="year" tick={{ fontSize: 11 }} />
+                    <YAxis tickFormatter={formatCurrencyAxis} />
+                    <Tooltip
+                      content={({ active, payload, label }) => {
+                        if (!active || !payload?.length) return null;
+                        const d = payload[0].payload as AnnualDividend;
+                        return (
+                          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3">
+                            <p className="font-medium text-gray-900 dark:text-gray-100">{label}</p>
+                            <p className="text-sm text-green-600 dark:text-green-400">
+                              {t('dividendYieldGrowth.tooltipDividends')} {fmtValue(d.amount)}
+                            </p>
+                            {d.growth !== null && (
+                              <p className={`text-sm ${gainLossColor(d.growth)}`}>
+                                {t('dividendYieldGrowth.tooltipGrowth')} {formatSignedPercent(d.growth, 1)}
+                              </p>
+                            )}
+                          </div>
+                        );
+                      }}
+                    />
+                    <Bar dataKey="amount" fill={chartColors.income} name={t('dividendYieldGrowth.barDividends')} radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              {/* Growth Table */}
+              <div className="mt-6 overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                  <thead className="bg-gray-50 dark:bg-gray-900/50">
+                    <tr>
+                      <SortableHeader<GrowthSortField>
+                        field="year"
+                        sortField={growthSort.sortField}
+                        sortDirection={growthSort.sortDirection}
+                        onSort={growthSort.handleSort}
+                        className="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase"
+                      >
+                        {t('dividendYieldGrowth.colYear')}
+                      </SortableHeader>
+                      <SortableHeader<GrowthSortField>
+                        field="amount"
+                        sortField={growthSort.sortField}
+                        sortDirection={growthSort.sortDirection}
+                        onSort={growthSort.handleSort}
+                        align="right"
+                        className="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase"
+                      >
+                        {t('dividendYieldGrowth.colDividendIncome')}
+                      </SortableHeader>
+                      <SortableHeader<GrowthSortField>
+                        field="growth"
+                        sortField={growthSort.sortField}
+                        sortDirection={growthSort.sortDirection}
+                        onSort={growthSort.handleSort}
+                        align="right"
+                        className="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase"
+                      >
+                        {t('dividendYieldGrowth.colYoYGrowth')}
+                      </SortableHeader>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                    {sortedAnnualData.map((row) => (
+                      <tr key={row.year} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                        <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-gray-100">{row.year}</td>
+                        <td className="px-4 py-3 text-sm text-right text-green-600 dark:text-green-400">{fmtValue(row.amount)}</td>
+                        <td className={`px-4 py-3 text-sm text-right ${row.growth !== null ? (gainLossColor(row.growth)) : 'text-gray-400'}`}>
+                          {row.growth !== null ? formatSignedPercent(row.growth, 1) : '-'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          ) : (
+            <p className="text-gray-500 dark:text-gray-400 text-center py-8">{t('dividendYieldGrowth.noAnnualData')}</p>
+          )}
+        </div>
+      ) : (
+        /* Frequency Analysis */
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/50 px-2 py-4 sm:p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+            {t('dividendYieldGrowth.frequencyTitle')}
+          </h3>
+          {frequencyData.length > 0 ? (
+            <>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+                  <BarChart data={frequencyData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
+                    <XAxis dataKey="frequency" tick={{ fontSize: 11 }} />
+                    <YAxis tickFormatter={formatCurrencyAxis} />
+                    <Tooltip
+                      content={({ active, payload, label }) => {
+                        if (!active || !payload?.length) return null;
+                        const d = payload[0].payload as FrequencyBucket;
+                        return (
+                          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3">
+                            <p className="font-medium text-gray-900 dark:text-gray-100">{label}</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">{t('dividendYieldGrowth.tooltipSecurities', { count: d.count })}</p>
+                            <p className="text-sm text-green-600 dark:text-green-400">{t('dividendYieldGrowth.tooltipTotal')} {fmtValue(d.totalDividends)}</p>
+                          </div>
+                        );
+                      }}
+                    />
+                    <Bar dataKey="totalDividends" fill={CHART_SERIES[4]} name={t('dividendYieldGrowth.barTotalDividends')} radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="mt-6 overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                  <thead className="bg-gray-50 dark:bg-gray-900/50">
+                    <tr>
+                      <SortableHeader<FrequencySortField>
+                        field="frequency"
+                        sortField={frequencySort.sortField}
+                        sortDirection={frequencySort.sortDirection}
+                        onSort={frequencySort.handleSort}
+                        className="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase"
+                      >
+                        {t('dividendYieldGrowth.colFrequencyLabel')}
+                      </SortableHeader>
+                      <SortableHeader<FrequencySortField>
+                        field="count"
+                        sortField={frequencySort.sortField}
+                        sortDirection={frequencySort.sortDirection}
+                        onSort={frequencySort.handleSort}
+                        align="right"
+                        className="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase"
+                      >
+                        {t('dividendYieldGrowth.colSecurities')}
+                      </SortableHeader>
+                      <SortableHeader<FrequencySortField>
+                        field="totalDividends"
+                        sortField={frequencySort.sortField}
+                        sortDirection={frequencySort.sortDirection}
+                        onSort={frequencySort.handleSort}
+                        align="right"
+                        className="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase"
+                      >
+                        {t('dividendYieldGrowth.colTotalDividends')}
+                      </SortableHeader>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                    {sortedFrequencyData.map((row) => (
+                      <tr key={row.frequency} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                        <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-gray-100">{row.frequency}</td>
+                        <td className="px-4 py-3 text-sm text-right text-gray-600 dark:text-gray-400">{row.count}</td>
+                        <td className="px-4 py-3 text-sm text-right text-green-600 dark:text-green-400">{fmtValue(row.totalDividends)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          ) : (
+            <p className="text-gray-500 dark:text-gray-400 text-center py-8">{t('dividendYieldGrowth.noFrequencyData')}</p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

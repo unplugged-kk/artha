@@ -1,0 +1,49 @@
+{
+  "header": {
+    "viewTransactions": "Pokaż transakcje",
+    "reconcile": "Uzgodnij",
+    "edit": "Edytuj konto",
+    "back": "Powrót do kont",
+    "switchAccount": "Przejdź do innego konta",
+    "switchFavourites": "Ulubione",
+    "switchOtherAccounts": "Pozostałe konta",
+    "switchPlaceholder": "Filtruj konta...",
+    "switchNoMatches": "Brak dopasowanych kont",
+    "jointBadge": "Wspólne",
+    "jointSharedBy": "Udostępnione przez {owner}",
+    "jointSharedWith": "Udostępnione {count, plural, one {# osobie} few {# osobom} many {# osobom} other {# osobom}}"
+  },
+  "loading": "Ładowanie szczegółów konta...",
+  "error": {
+    "retry": "Ponów"
+  },
+  "recurring": {
+    "title": "Płatności cykliczne",
+    "subtitle": "Zaplanowane rachunki na tym koncie oraz możliwe subskrypcje wykryte w jego transakcjach",
+    "empty": "Nie wykryto płatności cyklicznych na tym koncie",
+    "scheduledTitle": "Zaplanowane",
+    "detectedTitle": "Możliwe płatności cykliczne",
+    "detectedSubtitle": "Wykryte w historii transakcji, ale jeszcze niezaplanowane",
+    "nextDue": "Następny termin {date}",
+    "createBill": "Utwórz rachunek",
+    "createBillAria": "Utwórz zaplanowany rachunek dla {payee}",
+    "createTitle": "Nowy zaplanowany rachunek",
+    "frequency": {
+      "weekly": "Co tydzień",
+      "biweekly": "Co 2 tygodnie",
+      "monthly": "Co miesiąc",
+      "quarterly": "Co kwartał",
+      "yearly": "Co rok",
+      "irregular": "Nieregularnie"
+    }
+  },
+  "forecastUnavailable": {
+    "intro": "Prognozowane saldo nie jest pokazywane, ponieważ dla co najmniej jednej nadchodzącej zaplanowanej pozycji nie da się jeszcze ustalić kwoty. Prognoza przenosi każdy dzień na następny, więc jedna nieznana kwota zafałszowałaby każdy kolejny dzień.",
+    "requestFailed": "Nie udało się wczytać prognozowanego salda. Odśwież stronę, aby spróbować ponownie.",
+    "reasonUnavailable": "Nie podano przyczyny. Sprawdź kursy wymiany dla zaplanowanych pozycji w obcej walucie.",
+    "missingRatePair": "{name}: brak kursu wymiany z {from} na {to}, więc kwota, jaką zaksięguje ta pozycja, jest nieznana.",
+    "missingRate": "{name}: kurs wymiany, po jakim rozliczy się ta pozycja, jest niedostępny, więc kwota jest nieznana.",
+    "crossCurrencyTransfer": "{name}: transfer przychodzący z konta w {from}, gdy to konto jest w {to}. Kwota, która tu wpłynie, ustalana jest przy księgowaniu, więc nie da się jej z góry prognozować.",
+    "howToFix": "Jak naprawić brakujący kurs: otwórz Waluty i odśwież kursy albo sprawdź, czy papier wartościowy i jego konto rozliczeniowe mają oczekiwane waluty."
+  }
+}

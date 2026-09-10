@@ -1,0 +1,1276 @@
+'use client';
+
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import toast from 'react-hot-toast';
+import {
+  importApi,
+  CategoryMapping,
+  AccountMapping,
+  SecurityMapping,
+  ImportResult,
+  DateFormat,
+  CsvColumnMappingConfig,
+  CsvTransferRule,
+  SavedColumnMapping,
+  ParsedQifMultiAccountResponse,
+  autoMatchCsvColumns,
+  autoMatchInvestmentColumns,
+  looksLikeInvestmentCsv,
+} from '@/lib/import';
+import { accountsApi } from '@/lib/accounts';
+import { categoriesApi } from '@/lib/categories';
+import { investmentsApi } from '@/lib/investments';
+import { exchangeRatesApi, CurrencyInfo } from '@/lib/exchange-rates';
+import { buildCategoryTree } from '@/lib/categoryUtils';
+import { getErrorMessage } from '@/lib/errors';
+import { Account, AccountType } from '@/types/account';
+import { Category } from '@/types/category';
+import { Security } from '@/types/investment';
+import { LookupCandidate } from '@/components/securities/SecurityLookupPicker';
+import { usePreferencesStore } from '@/store/preferencesStore';
+import { createLogger } from '@/lib/logger';
+import {
+  ImportStep,
+  ImportFileType,
+  MatchConfidence,
+  ImportFileData,
+  BulkImportResult,
+  formatAccountType,
+  isInvestmentBrokerageAccount,
+  ACCOUNT_TYPE_OPTIONS,
+  SECURITY_TYPE_OPTIONS,
+  getCurrencyFromExchange,
+} from '@/app/import/import-utils';
+import { useMnyImport } from '@/hooks/useMnyImport';
+import {
+  matchFilenameToAccount,
+  buildCategoryMappings,
+  buildAccountMappings,
+  buildSecurityMappings,
+  findMatchingSecurityBySymbol,
+} from '@/app/import/import-matching';
+import { preferredCurrency } from '@/lib/default-currency';
+
+const logger = createLogger('Import');
+
+function detectFileType(fileName: string): ImportFileType {
+  const ext = fileName.toLowerCase().split('.').pop() || '';
+  if (ext === 'ofx' || ext === 'qfx') return 'ofx';
+  if (ext === 'csv') return 'csv';
+  // Checked before anything reads the file: a .mny is a Jet database, and the
+  // QIF fallback would hand its bytes to File.text().
+  if (ext === 'mny') return 'mny';
+  return 'qif';
+}
+
+const DEFAULT_CSV_COLUMN_MAPPING: CsvColumnMappingConfig = {
+  date: 0,
+  amount: 1,
+  payee: undefined,
+  category: undefined,
+  memo: undefined,
+  referenceNumber: undefined,
+  tags: undefined,
+  reconciliationStatus: undefined,
+  dateFormat: 'MM/DD/YYYY',
+  hasHeader: true,
+  delimiter: ',',
+};
+
+export function useImportWizard() {
+  const t = useTranslations('import');
+  const tc = useTranslations('common');
+  const searchParams = useSearchParams();
+  const preselectedAccountId = searchParams.get('accountId');
+  const defaultCurrency = preferredCurrency(
+    usePreferencesStore((s) => s.preferences?.defaultCurrency),
+  );
+  const rawPreferredExchanges = usePreferencesStore((s) => s.preferences?.preferredExchanges);
+  const preferredExchanges = useMemo(() => rawPreferredExchanges || [], [rawPreferredExchanges]);
+
+  const [step, setStep] = useState<ImportStep>('upload');
+  // Microsoft Money imports run on their own state machine: no account
+  // selection, no category mapping, but a password prompt and a polled job.
+  const mny = useMnyImport();
+  // Destructured because the hook returns a fresh object each render while its
+  // callbacks are stable; depending on `mny` itself would defeat every
+  // useCallback below it.
+  const {
+    upload: uploadMny,
+    retryWithPassword: retryMnyWithPassword,
+    start: startMny,
+    reset: resetMny,
+    options: mnyOptions,
+  } = mny;
+  const [mnyFileName, setMnyFileName] = useState('');
+  const [showMnyWipeConfirm, setShowMnyWipeConfirm] = useState(false);
+  const [importFiles, setImportFiles] = useState<ImportFileData[]>([]);
+  const fileContent = importFiles[0]?.fileContent || '';
+  const fileName = importFiles[0]?.fileName || '';
+  const parsedData = importFiles[0]?.parsedData || null;
+  const selectedAccountId = importFiles[0]?.selectedAccountId || '';
+
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [currencies, setCurrencies] = useState<CurrencyInfo[]>([]);
+  const [categoryMappings, setCategoryMappings] = useState<CategoryMapping[]>([]);
+  const [accountMappings, setAccountMappings] = useState<AccountMapping[]>([]);
+  const [securityMappings, setSecurityMappings] = useState<SecurityMapping[]>([]);
+  const [securities, setSecurities] = useState<Security[]>([]);
+  const [dateFormat, setDateFormat] = useState<DateFormat>('MM/DD/YYYY');
+  const [isLoading, setIsLoading] = useState(false);
+  const [importResult, setImportResult] = useState<ImportResult | null>(null);
+  const [bulkImportResult, setBulkImportResult] = useState<BulkImportResult | null>(null);
+  const [lookupLoadingIndex, setLookupLoadingIndex] = useState<number | null>(null);
+  const [initialLookupDone, setInitialLookupDone] = useState(false);
+  const [bulkLookupInProgress, setBulkLookupInProgress] = useState(false);
+  const [lookupPickerRowIndex, setLookupPickerRowIndex] = useState<number | null>(null);
+  const [lookupPickerQuery, setLookupPickerQuery] = useState<string>('');
+  const [lookupPickerCandidates, setLookupPickerCandidates] = useState<LookupCandidate[]>([]);
+  const [showCreateAccount, setShowCreateAccount] = useState(false);
+  const [newAccountName, setNewAccountName] = useState('');
+  const [newAccountType, setNewAccountType] = useState<string>('CHEQUING');
+  const [newAccountCurrency, setNewAccountCurrency] = useState(defaultCurrency);
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
+  const [creatingForFileIndex, setCreatingForFileIndex] = useState(-1);
+
+  // Multi-account QIF state
+  const [multiAccountData, setMultiAccountData] = useState<ParsedQifMultiAccountResponse | null>(null);
+  const [multiAccountContent, setMultiAccountContent] = useState<string>('');
+  const [multiAccountCurrency, setMultiAccountCurrency] = useState(defaultCurrency);
+
+  // CSV-specific state
+  const [fileType, setFileType] = useState<ImportFileType>('qif');
+  const [csvHeaders, setCsvHeaders] = useState<string[]>([]);
+  const [csvSampleRows, setCsvSampleRows] = useState<string[][]>([]);
+  const [csvColumnMapping, setCsvColumnMapping] = useState<CsvColumnMappingConfig>(DEFAULT_CSV_COLUMN_MAPPING);
+  const [csvTransferRules, setCsvTransferRules] = useState<CsvTransferRule[]>([]);
+  const [savedColumnMappings, setSavedColumnMappings] = useState<SavedColumnMapping[]>([]);
+  /**
+   * True once accounts, categories, securities and currencies are all in.
+   *
+   * The wizard matches a file's categories against the user's categories, its
+   * symbols against their securities and its filename against their accounts,
+   * so those lists are a PREREQUISITE for `handleFiles`, not merely data that
+   * arrives eventually: run against empty lists, every match fails, and a
+   * failed category match is an offer to CREATE a category the user already
+   * has. A human picking a file cannot realistically get ahead of this load;
+   * the Web Share Target's automatic hand-off can and does, so it waits on it.
+   *
+   * Stays false if the load failed: the shared files are then left in the stash
+   * for a retry rather than handed to a wizard that knows nothing.
+   */
+  const [dataLoaded, setDataLoaded] = useState(false);
+
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isBulkImport = importFiles.length > 1;
+
+  // Determine the next step after account selection, based on what mappings exist
+  const getStepAfterAccountSelection = (
+    catMappings: CategoryMapping[],
+    secMappings: SecurityMapping[],
+    accMappings: AccountMapping[],
+    isInvestment: boolean,
+  ): ImportStep => {
+    const showMapAccounts = accMappings.length > 0 && !isInvestment;
+    if (catMappings.length > 0) return 'mapCategories';
+    if (secMappings.length > 0) return 'mapSecurities';
+    if (showMapAccounts) return 'mapAccounts';
+    return 'review';
+  };
+
+  const setFileAccountId = useCallback((fileIndex: number, accountId: string, confidence: MatchConfidence = 'exact') => {
+    setImportFiles(prev => prev.map((f, i) =>
+      i === fileIndex ? { ...f, selectedAccountId: accountId, matchConfidence: confidence } : f
+    ));
+  }, []);
+
+  const setSelectedAccountId = useCallback((accountId: string, confidence: MatchConfidence = 'exact') => setFileAccountId(0, accountId, confidence), [setFileAccountId]);
+
+  const handleCreateAccount = async (fileIndex: number) => {
+    if (!newAccountName.trim()) {
+      toast.error(t('toasts.accountNameRequired'));
+      return;
+    }
+    setIsCreatingAccount(true);
+    try {
+      const accountData = {
+        name: newAccountName.trim(),
+        accountType: newAccountType as AccountType,
+        currencyCode: newAccountCurrency,
+        openingBalance: 0,
+      };
+
+      if (newAccountType === 'INVESTMENT') {
+        const pair = await accountsApi.createInvestmentPair(accountData);
+        setAccounts(prev => [...prev, pair.cashAccount, pair.brokerageAccount]);
+        // Investment files go to brokerage account; regular banking files go to cash account
+        const isFileInvestment = importFiles[fileIndex]?.parsedData?.accountType === 'INVESTMENT';
+        setFileAccountId(fileIndex, isFileInvestment ? pair.brokerageAccount.id : pair.cashAccount.id);
+        toast.success(t('toasts.accountsCreatedPair', { cash: pair.cashAccount.name, brokerage: pair.brokerageAccount.name }));
+      } else {
+        const created = await accountsApi.create(accountData);
+        setAccounts(prev => [...prev, created]);
+        setFileAccountId(fileIndex, created.id);
+        toast.success(t('toasts.accountCreated', { name: created.name }));
+      }
+
+      setShowCreateAccount(false);
+      setCreatingForFileIndex(-1);
+      setNewAccountName('');
+    } catch (error) {
+      toast.error(getErrorMessage(error, t('toasts.createAccountFailed')));
+    } finally {
+      setIsCreatingAccount(false);
+    }
+  };
+
+  // Load accounts, categories, securities, and saved column mappings
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [accountsData, categoriesData, securitiesData, currenciesData, columnMappingsData] = await Promise.all([
+          accountsApi.getAll(),
+          categoriesApi.getAll(),
+          investmentsApi.getSecurities(true),
+          exchangeRatesApi.getCurrencies(),
+          importApi.getColumnMappings().catch(() => [] as SavedColumnMapping[]),
+        ]);
+        setAccounts(accountsData);
+        setCategories(categoriesData);
+        setSecurities(securitiesData);
+        setCurrencies(currenciesData);
+        setSavedColumnMappings(columnMappingsData);
+        setDataLoaded(true);
+
+        if (preselectedAccountId) {
+          const accountExists = accountsData.some((a) => a.id === preselectedAccountId);
+          if (accountExists) {
+            setSelectedAccountId(preselectedAccountId);
+          }
+        }
+      } catch (error) {
+        toast.error(getErrorMessage(error, t('toasts.loadDataFailed')));
+      }
+    };
+    loadData();
+  }, [preselectedAccountId, setSelectedAccountId, t]);
+
+  // Scroll to top whenever the step changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+  }, [step]);
+
+  // Auto-select best matching account when on selectAccount step with no selection
+  useEffect(() => {
+    if (step !== 'selectAccount' || selectedAccountId || accounts.length === 0) return;
+
+    const qifType = parsedData?.accountType;
+    const isQifInvestment = qifType === 'INVESTMENT';
+    const compatibleAccounts = accounts.filter((a) => {
+      if (isQifInvestment) return isInvestmentBrokerageAccount(a);
+      return !isInvestmentBrokerageAccount(a);
+    });
+
+    if (compatibleAccounts.length > 0) {
+      const typeMatch = qifType
+        ? compatibleAccounts.find((a) => a.accountType === qifType)
+        : undefined;
+      if (typeMatch) {
+        setSelectedAccountId(typeMatch.id, 'type');
+      } else {
+        setSelectedAccountId(compatibleAccounts[0].id, 'none');
+      }
+    }
+  }, [step, selectedAccountId, accounts, parsedData, setSelectedAccountId]);
+
+  // Re-match account mappings when entering mapAccounts step
+  useEffect(() => {
+    if (step !== 'mapAccounts' || accountMappings.length === 0) return;
+
+    setAccountMappings(prev => prev.map(mapping => {
+      if (mapping.accountId) return mapping;
+
+      const accLower = mapping.originalName.toLowerCase();
+      const accWithSlash = accLower.replace(/-/g, '/');
+      const existingAcc = accounts.find((a) => {
+        const aName = a.name.toLowerCase();
+        return aName === accLower || aName === accWithSlash;
+      });
+      if (existingAcc) {
+        const targetId = existingAcc.accountSubType === 'INVESTMENT_BROKERAGE' && existingAcc.linkedAccountId
+          ? existingAcc.linkedAccountId
+          : existingAcc.id;
+        return { originalName: mapping.originalName, accountId: targetId };
+      }
+      const investmentCashAcc = accounts.find((a) => {
+        const aName = a.name.toLowerCase();
+        return (aName === `${accLower} - cash` || aName === `${accWithSlash} - cash`)
+          && a.accountSubType === 'INVESTMENT_CASH';
+      });
+      if (investmentCashAcc) {
+        return { originalName: mapping.originalName, accountId: investmentCashAcc.id };
+      }
+      return mapping;
+    }));
+  }, [step, accounts]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Run bulk security lookup when entering mapSecurities step
+  useEffect(() => {
+    if (step !== 'mapSecurities' || initialLookupDone || securityMappings.length === 0) return;
+
+    const runBulkLookup = async () => {
+      setBulkLookupInProgress(true);
+      setInitialLookupDone(true);
+
+      const unmappedIndices = securityMappings
+        .map((m, i) => (!m.securityId ? i : -1))
+        .filter((i) => i !== -1);
+
+      for (const index of unmappedIndices) {
+        const mapping = securityMappings[index];
+        const query = mapping.originalName;
+        if (!query || query.length < 2) continue;
+
+        try {
+          const result = await investmentsApi.lookupSecurity(
+            query,
+            preferredExchanges.length > 0 ? preferredExchanges : undefined,
+          );
+          if (result && result.symbol.length <= 6) {
+            setSecurityMappings((prev) => {
+              const updated = [...prev];
+              const current = updated[index];
+              if (!current.createNew && !current.securityName) {
+                const resolvedCurrency =
+                  result.currencyCode ||
+                  getCurrencyFromExchange(result.exchange) ||
+                  defaultCurrency;
+                updated[index] = {
+                  ...current,
+                  securityId: undefined,
+                  createNew: result.symbol,
+                  securityName: result.name,
+                  securityType: result.securityType || 'STOCK',
+                  exchange: result.exchange || undefined,
+                  currencyCode: resolvedCurrency,
+                };
+              }
+              return updated;
+            });
+          }
+        } catch (error) {
+          logger.error(`Bulk lookup failed for ${query}:`, error);
+        }
+      }
+
+      setBulkLookupInProgress(false);
+    };
+
+    runBulkLookup();
+  }, [step, initialLookupDone, securityMappings, preferredExchanges, defaultCurrency]);
+
+  /**
+   * Take a set of files and drive the wizard from them.
+   *
+   * Split out from the change handler so the Web Share Target's review screen
+   * can hand over files the OS provided: they arrive as `File` objects with no
+   * input element behind them, and everything from here on is identical to a
+   * file the user picked.
+   */
+  const handleFiles = useCallback(async (fileArray: File[]) => {
+    if (fileArray.length === 0) return;
+
+    setIsLoading(true);
+    setInitialLookupDone(false);
+
+    try {
+
+      // Detect file types and enforce same type
+      const detectedTypes = fileArray.map((f) => detectFileType(f.name));
+      const uniqueTypes = [...new Set(detectedTypes)];
+      if (uniqueTypes.length > 1) {
+        toast.error(t('toasts.mixedFileTypes'));
+        setIsLoading(false);
+        return;
+      }
+
+      const detectedFileType = uniqueTypes[0];
+      setFileType(detectedFileType);
+
+      if (detectedFileType === 'mny') {
+        // One file only: a Money file is a whole profile, not a statement.
+        if (fileArray.length > 1) {
+          toast.error(t('toasts.mnySingleFileOnly'));
+          setIsLoading(false);
+          return;
+        }
+        const file = fileArray[0];
+        setMnyFileName(file.name);
+        // The File goes up as multipart. Nothing reads it as text.
+        if (await uploadMny(file)) {
+          setStep('mnyReview');
+        }
+        setIsLoading(false);
+        return;
+      }
+
+      if (detectedFileType === 'csv') {
+        // For CSV, read the first file and get headers
+        const firstFile = fileArray[0];
+        const content = await firstFile.text();
+
+        const headersResponse = await importApi.parseCsvHeaders(content);
+        setCsvHeaders(headersResponse.headers);
+        setCsvSampleRows(headersResponse.sampleRows);
+
+        // Store all file contents
+        const fileDataArray: ImportFileData[] = [];
+        for (const file of fileArray) {
+          const fileContent = file === firstFile ? content : await file.text();
+          fileDataArray.push({
+            fileName: file.name,
+            fileContent,
+            fileType: 'csv',
+            parsedData: null as unknown as ImportFileData['parsedData'],
+            selectedAccountId: preselectedAccountId || '',
+            matchConfidence: preselectedAccountId ? 'exact' : 'none',
+          });
+        }
+        setImportFiles(fileDataArray);
+        const autoMatched = autoMatchCsvColumns(headersResponse.headers);
+        // Pre-enable investment mode when the headers look like a brokerage
+        // export; the toggle in the mapping step keeps the final say.
+        const investmentDetected = looksLikeInvestmentCsv(headersResponse.headers);
+        setCsvColumnMapping({
+          ...DEFAULT_CSV_COLUMN_MAPPING,
+          ...autoMatched,
+          ...(investmentDetected
+            ? { investmentMode: true, ...autoMatchInvestmentColumns(headersResponse.headers) }
+            : {}),
+        });
+        setCsvTransferRules([]);
+        setStep('csvColumnMapping');
+
+        if (fileArray.length > 1) {
+          toast.success(t('toasts.loadedCsvFiles', { count: fileArray.length }));
+        }
+      } else {
+        // QIF or OFX: parse all files
+
+        // For a single QIF file, check if it's a multi-account export
+        if (detectedFileType === 'qif' && fileArray.length === 1) {
+          const content = await fileArray[0].text();
+
+          // Quick check: does this file contain multiple !Account sections or !Type:Cat?
+          const accountMatches = content.match(/^!Account$/gm);
+          const hasCatSection = /^!Type:Cat\s*$/im.test(content);
+
+          if ((accountMatches && accountMatches.length > 1) || hasCatSection) {
+            // Multi-account QIF detected
+            const multiResult = await importApi.parseQifMultiAccount(content);
+
+            if (multiResult.isMultiAccount) {
+              setMultiAccountData(multiResult);
+              setMultiAccountContent(content);
+              setMultiAccountCurrency(defaultCurrency);
+              if (multiResult.detectedDateFormat) {
+                setDateFormat(multiResult.detectedDateFormat);
+              }
+              // Build security mappings if the file contains investment securities
+              if (multiResult.securities && multiResult.securities.length > 0) {
+                const newSecMappings = buildSecurityMappings(
+                  new Set(multiResult.securities),
+                  securities,
+                  defaultCurrency,
+                );
+                setSecurityMappings(newSecMappings);
+              } else {
+                setSecurityMappings([]);
+              }
+              setStep('multiAccountReview');
+              setIsLoading(false);
+              return;
+            }
+          }
+        }
+
+        const fileDataArray: ImportFileData[] = [];
+        const allCats: Set<string> = new Set();
+        const allTransferAccounts: Set<string> = new Set();
+        const allSecs: Set<string> = new Set();
+        let detectedFormat: DateFormat | null = null;
+
+        for (const file of fileArray) {
+          const content = await file.text();
+          const parsed = detectedFileType === 'ofx'
+            ? await importApi.parseOfx(content)
+            : await importApi.parseQif(content);
+
+          if (!detectedFormat && parsed.detectedDateFormat) {
+            detectedFormat = parsed.detectedDateFormat;
+          }
+
+          parsed.categories.forEach((cat) => allCats.add(cat));
+          parsed.transferAccounts.forEach((acc) => allTransferAccounts.add(acc));
+          (parsed.securities || []).forEach((sec) => allSecs.add(sec));
+
+          const isInvestmentType = parsed.accountType === 'INVESTMENT';
+          const match = matchFilenameToAccount(file.name, isInvestmentType, accounts, parsed.accountType);
+          const accountId = preselectedAccountId || match.id;
+          const confidence: MatchConfidence = preselectedAccountId ? 'exact' : match.confidence;
+
+          fileDataArray.push({
+            fileName: file.name,
+            fileContent: content,
+            fileType: detectedFileType,
+            parsedData: parsed,
+            selectedAccountId: accountId,
+            matchConfidence: confidence,
+          });
+        }
+
+        if (detectedFormat) setDateFormat(detectedFormat);
+        const newCatMappings = buildCategoryMappings(allCats, categories, accounts);
+        const newAccMappings = buildAccountMappings(allTransferAccounts, accounts, defaultCurrency);
+        const newSecMappings = buildSecurityMappings(allSecs, securities, defaultCurrency);
+        setImportFiles(fileDataArray);
+        setCategoryMappings(newCatMappings);
+        setAccountMappings(newAccMappings);
+        setSecurityMappings(newSecMappings);
+
+        // Skip account selection when a single file is imported with a preselected account
+        if (preselectedAccountId && fileDataArray.length === 1) {
+          const isInvestment = fileDataArray[0].parsedData?.accountType === 'INVESTMENT';
+          setStep(getStepAfterAccountSelection(newCatMappings, newSecMappings, newAccMappings, isInvestment));
+        } else {
+          setStep('selectAccount');
+        }
+
+        if (fileDataArray.length > 1) {
+          toast.success(t('toasts.loadedFiles', { count: fileDataArray.length }));
+        }
+      }
+    } catch (error) {
+      toast.error(getErrorMessage(error, t('toasts.parseFilesFailed')));
+    } finally {
+      setIsLoading(false);
+    }
+  }, [accounts, categories, securities, defaultCurrency, preselectedAccountId, t, uploadMny]);
+
+  /** The file input's change event, reduced to the files it carries. */
+  const handleFileSelect = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const files = e.target.files;
+      if (!files || files.length === 0) return;
+      await handleFiles(Array.from(files));
+    },
+    [handleFiles],
+  );
+
+  // CSV column mapping handlers
+  const handleCsvColumnMappingChange = useCallback((mapping: CsvColumnMappingConfig) => {
+    setCsvColumnMapping(mapping);
+  }, []);
+
+  const handleCsvInvestmentModeChange = useCallback((enabled: boolean) => {
+    setCsvColumnMapping(prev => {
+      if (enabled) {
+        // The sign/type-column machinery and transfer rules are inert in
+        // investment mode; clear them so a saved preset round-trips cleanly.
+        return {
+          ...prev,
+          ...autoMatchInvestmentColumns(csvHeaders),
+          investmentMode: true,
+          amountTypeColumn: undefined,
+          incomeValues: undefined,
+          expenseValues: undefined,
+          transferOutValues: undefined,
+          transferInValues: undefined,
+          transferAccountColumn: undefined,
+          reverseSign: undefined,
+        };
+      }
+      return {
+        ...prev,
+        investmentMode: false,
+        actionColumn: undefined,
+        securityColumn: undefined,
+        quantityColumn: undefined,
+        priceColumn: undefined,
+        commissionColumn: undefined,
+        actionKeywords: undefined,
+      };
+    });
+    if (enabled) {
+      setCsvTransferRules([]);
+    }
+  }, [csvHeaders]);
+
+  const handleCsvTransferRulesChange = useCallback((rules: CsvTransferRule[]) => {
+    setCsvTransferRules(rules);
+  }, []);
+
+  const handleCsvDelimiterChange = useCallback(async (delimiter: string) => {
+    if (importFiles.length === 0) return;
+    setIsLoading(true);
+    try {
+      const headersResponse = await importApi.parseCsvHeaders(importFiles[0].fileContent, delimiter);
+      setCsvHeaders(headersResponse.headers);
+      setCsvSampleRows(headersResponse.sampleRows);
+      setCsvColumnMapping(prev => ({ ...prev, delimiter }));
+    } catch (error) {
+      toast.error(getErrorMessage(error, t('toasts.parseCsvDelimiterFailed')));
+    } finally {
+      setIsLoading(false);
+    }
+  }, [importFiles, t]);
+
+  const handleCsvHasHeaderChange = useCallback(async (hasHeader: boolean) => {
+    if (importFiles.length === 0) return;
+    setCsvColumnMapping(prev => ({ ...prev, hasHeader }));
+    // Re-fetch headers to update sample rows display
+    setIsLoading(true);
+    try {
+      const headersResponse = await importApi.parseCsvHeaders(importFiles[0].fileContent, csvColumnMapping.delimiter);
+      setCsvHeaders(headersResponse.headers);
+      setCsvSampleRows(headersResponse.sampleRows);
+    } catch (error) {
+      toast.error(getErrorMessage(error, t('toasts.updateCsvPreviewFailed')));
+    } finally {
+      setIsLoading(false);
+    }
+  }, [importFiles, csvColumnMapping.delimiter, t]);
+
+  const handleCsvMappingComplete = useCallback(async () => {
+    if (importFiles.length === 0) return;
+
+    setIsLoading(true);
+    try {
+      // Parse all CSV files using the column mapping
+      const fileDataArray: ImportFileData[] = [];
+      const allCats: Set<string> = new Set();
+      const allTransferAccounts: Set<string> = new Set();
+      const allSecs: Set<string> = new Set();
+      let detectedFormat: DateFormat | null = null;
+
+      // For bulk CSV, check if subsequent files have matching headers
+      let currentMapping = csvColumnMapping;
+      let currentRules = csvTransferRules;
+
+      for (let i = 0; i < importFiles.length; i++) {
+        const fileData = importFiles[i];
+
+        // For bulk CSV (file index > 0), check if headers match the first file
+        if (i > 0) {
+          const headersResponse = await importApi.parseCsvHeaders(fileData.fileContent, currentMapping.delimiter);
+          const headersMatch = headersResponse.headers.length === csvHeaders.length &&
+            headersResponse.headers.every((h, idx) => h === csvHeaders[idx]);
+
+          if (!headersMatch) {
+            // Headers differ - stop here and prompt user for new mapping
+            // For now, we'll use the same mapping and let the backend handle any issues
+            logger.warn(`CSV file "${fileData.fileName}" has different headers than the first file`);
+          }
+        }
+
+        const parsed = await importApi.parseCsv(fileData.fileContent, currentMapping, currentRules);
+
+        if (!detectedFormat && parsed.detectedDateFormat) {
+          detectedFormat = parsed.detectedDateFormat;
+        }
+
+        parsed.categories.forEach((cat) => allCats.add(cat));
+        parsed.transferAccounts.forEach((acc) => allTransferAccounts.add(acc));
+        (parsed.securities || []).forEach((sec) => allSecs.add(sec));
+
+        const isFileInvestment = parsed.accountType === 'INVESTMENT';
+        const match = matchFilenameToAccount(fileData.fileName, isFileInvestment, accounts, parsed.accountType);
+
+        fileDataArray.push({
+          fileName: fileData.fileName,
+          fileContent: fileData.fileContent,
+          fileType: 'csv',
+          parsedData: parsed,
+          selectedAccountId: match.id,
+          matchConfidence: match.confidence,
+        });
+      }
+
+      const isInvestment = fileDataArray.some((f) => f.parsedData?.accountType === 'INVESTMENT');
+
+      if (detectedFormat) setDateFormat(detectedFormat);
+      const newCatMappings = buildCategoryMappings(allCats, categories, accounts);
+      const newAccMappings = buildAccountMappings(allTransferAccounts, accounts, defaultCurrency);
+      const newSecMappings = isInvestment
+        ? buildSecurityMappings(allSecs, securities, defaultCurrency)
+        : [];
+      setImportFiles(fileDataArray);
+      setCategoryMappings(newCatMappings);
+      setAccountMappings(newAccMappings);
+      setSecurityMappings(newSecMappings);
+
+      // Skip account selection when a single file is imported with a
+      // preselected account of a compatible type: an investment file needs a
+      // brokerage account and a regular file must not target one, or the
+      // backend rejects the import after every mapping step is done.
+      const preselected = accounts.find((a) => a.id === preselectedAccountId);
+      const preselectionMatchesMode =
+        !!preselected && isInvestmentBrokerageAccount(preselected) === isInvestment;
+      if (preselectedAccountId && fileDataArray.length === 1 && preselectionMatchesMode) {
+        setFileAccountId(0, preselectedAccountId);
+        setStep(getStepAfterAccountSelection(newCatMappings, newSecMappings, newAccMappings, isInvestment));
+      } else {
+        setStep('selectAccount');
+      }
+    } catch (error) {
+      toast.error(getErrorMessage(error, t('toasts.parseCsvFilesFailed')));
+    } finally {
+      setIsLoading(false);
+    }
+  }, [importFiles, csvColumnMapping, csvTransferRules, csvHeaders, accounts, categories, securities, defaultCurrency, preselectedAccountId, setFileAccountId, t]);
+
+  const handleSaveColumnMapping = useCallback(async (name: string) => {
+    try {
+      const saved = await importApi.createColumnMapping({
+        name,
+        columnMappings: csvColumnMapping,
+        transferRules: csvTransferRules,
+      });
+      setSavedColumnMappings(prev => {
+        const existingIndex = prev.findIndex(m => m.id === saved.id);
+        if (existingIndex >= 0) {
+          const updated = [...prev];
+          updated[existingIndex] = saved;
+          return updated;
+        }
+        return [...prev, saved];
+      });
+      toast.success(t('toasts.mappingSaved', { name }));
+    } catch (error) {
+      toast.error(getErrorMessage(error, t('toasts.saveMappingFailed')));
+    }
+  }, [csvColumnMapping, csvTransferRules, t]);
+
+  const handleLoadColumnMapping = useCallback((mapping: SavedColumnMapping) => {
+    setCsvColumnMapping(mapping.columnMappings as unknown as CsvColumnMappingConfig);
+    setCsvTransferRules((mapping.transferRules || []) as unknown as CsvTransferRule[]);
+    toast.success(t('toasts.mappingLoaded', { name: mapping.name }));
+  }, [t]);
+
+  const handleDeleteColumnMapping = useCallback(async (id: string) => {
+    try {
+      await importApi.deleteColumnMapping(id);
+      setSavedColumnMappings(prev => prev.filter(m => m.id !== id));
+      toast.success(t('toasts.mappingDeleted'));
+    } catch (error) {
+      toast.error(getErrorMessage(error, t('toasts.deleteMappingFailed')));
+    }
+  }, [t]);
+
+  const handleAccountMappingChange = (index: number, field: keyof AccountMapping, value: string) => {
+    setAccountMappings((prev) => {
+      const updated = [...prev];
+      if (field === 'accountId') {
+        updated[index] = { ...updated[index], accountId: value || undefined, createNew: undefined, accountType: undefined, currencyCode: undefined };
+      } else if (field === 'createNew') {
+        updated[index] = { ...updated[index], accountId: undefined, createNew: value || undefined };
+      } else if (field === 'accountType') {
+        updated[index] = { ...updated[index], accountType: value || undefined };
+      } else if (field === 'currencyCode') {
+        updated[index] = { ...updated[index], currencyCode: value || undefined };
+      }
+      return updated;
+    });
+  };
+
+  const handleSecurityMappingChange = (index: number, field: keyof SecurityMapping, value: string) => {
+    setSecurityMappings((prev) => {
+      const updated = [...prev];
+      if (field === 'securityId') {
+        updated[index] = { ...updated[index], securityId: value || undefined, createNew: undefined, securityName: undefined, securityType: undefined, exchange: undefined };
+      } else if (field === 'createNew') {
+        const matchingSecurity = findMatchingSecurityBySymbol(value, securities);
+        if (matchingSecurity) {
+          updated[index] = { ...updated[index], securityId: matchingSecurity.id, createNew: undefined, securityName: undefined, securityType: undefined, exchange: undefined };
+          toast.success(t('toasts.foundExistingSecurity', { symbol: matchingSecurity.symbol, name: matchingSecurity.name }));
+        } else {
+          updated[index] = { ...updated[index], securityId: undefined, createNew: value || undefined };
+        }
+      } else if (field === 'securityName') {
+        updated[index] = { ...updated[index], securityName: value || undefined };
+      } else if (field === 'securityType') {
+        updated[index] = { ...updated[index], securityType: value || undefined };
+      } else if (field === 'exchange') {
+        // Derive currency from the new exchange so the user sees the correct
+        // default; fall back to defaultCurrency if exchange is unknown.
+        const derivedCurrency = getCurrencyFromExchange(value) || defaultCurrency;
+        updated[index] = { ...updated[index], exchange: value || undefined, currencyCode: derivedCurrency };
+      } else if (field === 'currencyCode') {
+        updated[index] = { ...updated[index], currencyCode: value || undefined };
+      }
+      return updated;
+    });
+  };
+
+  const applyLookupResultToMapping = useCallback(
+    (index: number, result: LookupCandidate) => {
+      const existingSecurity = findMatchingSecurityBySymbol(result.symbol, securities);
+      const resolvedCurrency =
+        result.currencyCode ||
+        getCurrencyFromExchange(result.exchange) ||
+        defaultCurrency;
+      setSecurityMappings((prev) => {
+        const updated = [...prev];
+        updated[index] = {
+          ...updated[index],
+          securityId: undefined,
+          createNew: result.symbol,
+          securityName: result.name,
+          securityType: result.securityType || 'STOCK',
+          exchange: result.exchange || undefined,
+          currencyCode: resolvedCurrency,
+        };
+        return updated;
+      });
+
+      const details = [`Symbol: ${result.symbol}`, `Name: ${result.name}`];
+      if (result.exchange) details.push(`Exchange: ${result.exchange}`);
+      details.push(`Currency: ${resolvedCurrency}`);
+      if (existingSecurity) {
+        toast.success(t('toasts.foundInDatabase', { details: details.join(', ') }));
+      } else {
+        toast.success(t('toasts.found', { details: details.join(', ') }));
+      }
+    },
+    [securities, defaultCurrency, t],
+  );
+
+  const handleSecurityLookup = async (index: number, query: string, exchange?: string) => {
+    if (!query || query.length < 2) {
+      toast.error(t('toasts.lookupMinChars'));
+      return;
+    }
+
+    // Merge per-mapping exchange (highest priority) with user's preferred exchanges
+    const exchanges = exchange
+      ? [exchange, ...preferredExchanges.filter((e) => e !== exchange)]
+      : preferredExchanges.length > 0
+        ? preferredExchanges
+        : undefined;
+
+    setLookupLoadingIndex(index);
+    try {
+      const candidates = await investmentsApi.lookupSecurityCandidates(query, exchanges);
+      if (candidates.length === 0) {
+        toast.error(t('toasts.noSecurityFound', { query }));
+      } else if (candidates.length === 1) {
+        applyLookupResultToMapping(index, candidates[0]);
+      } else {
+        setLookupPickerRowIndex(index);
+        setLookupPickerQuery(query);
+        setLookupPickerCandidates(candidates);
+      }
+    } catch (error) {
+      logger.error('Security lookup failed:', error);
+      toast.error(t('toasts.lookupFailed'));
+    } finally {
+      setLookupLoadingIndex(null);
+    }
+  };
+
+  const handleLookupPickerPick = useCallback(
+    (candidate: LookupCandidate) => {
+      if (lookupPickerRowIndex !== null) {
+        applyLookupResultToMapping(lookupPickerRowIndex, candidate);
+      }
+      setLookupPickerRowIndex(null);
+      setLookupPickerQuery('');
+      setLookupPickerCandidates([]);
+    },
+    [lookupPickerRowIndex, applyLookupResultToMapping],
+  );
+
+  const handleLookupPickerCancel = useCallback(() => {
+    setLookupPickerRowIndex(null);
+    setLookupPickerQuery('');
+    setLookupPickerCandidates([]);
+  }, []);
+
+  const handleMultiAccountImport = async () => {
+    if (!multiAccountContent || !multiAccountData) return;
+
+    setIsLoading(true);
+    try {
+      const result = await importApi.importQifMultiAccount({
+        content: multiAccountContent,
+        currencyCode: multiAccountCurrency,
+        dateFormat,
+        securityMappings: securityMappings.length > 0 ? securityMappings : undefined,
+      });
+
+      setImportResult(result);
+      setStep('complete');
+
+      if (result.errors === 0) {
+        toast.success(t('toasts.importedMultiAccount', { imported: result.imported, accounts: multiAccountData.accounts.length }));
+      } else {
+        toast.success(t('toasts.importedWithErrors', { imported: result.imported, errors: result.errors }));
+      }
+    } catch (error) {
+      toast.error(getErrorMessage(error, t('toasts.multiAccountImportFailed')));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleImport = async () => {
+    if (importFiles.length === 0) return;
+
+    const allFilesValid = importFiles.every((f) => f.selectedAccountId);
+    if (!allFilesValid) {
+      toast.error(t('toasts.selectAccountForAllFiles'));
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const importFn = (fileData: ImportFileData, catMappings: CategoryMapping[], accMappings: AccountMapping[], secMappings: SecurityMapping[]) => {
+        if (fileType === 'csv') {
+          return importApi.importCsv({
+            content: fileData.fileContent,
+            accountId: fileData.selectedAccountId,
+            columnMapping: csvColumnMapping,
+            transferRules: csvTransferRules,
+            categoryMappings: catMappings,
+            accountMappings: accMappings,
+            securityMappings: secMappings.length > 0 ? secMappings : undefined,
+            dateFormat,
+          });
+        } else if (fileType === 'ofx') {
+          return importApi.importOfx({
+            content: fileData.fileContent,
+            accountId: fileData.selectedAccountId,
+            categoryMappings: catMappings,
+            accountMappings: accMappings,
+            dateFormat,
+          });
+        } else {
+          return importApi.importQif({
+            content: fileData.fileContent,
+            accountId: fileData.selectedAccountId,
+            categoryMappings: catMappings,
+            accountMappings: accMappings,
+            securityMappings: secMappings,
+            dateFormat,
+          });
+        }
+      };
+
+      if (isBulkImport) {
+        const fileResults: BulkImportResult['fileResults'] = [];
+        let totalImported = 0;
+        let totalSkipped = 0;
+        let totalErrors = 0;
+        let categoriesCreated = 0;
+        let accountsCreated = 0;
+        let payeesCreated = 0;
+        let securitiesCreated = 0;
+
+        let currentCatMappings = [...categoryMappings];
+        let currentAccMappings = [...accountMappings];
+        let currentSecMappings = [...securityMappings];
+
+        for (const fileData of importFiles) {
+          try {
+            const result = await importFn(fileData, currentCatMappings, currentAccMappings, currentSecMappings);
+
+            const targetAccount = accounts.find((a) => a.id === fileData.selectedAccountId);
+            fileResults.push({
+              fileName: fileData.fileName,
+              accountName: targetAccount?.name || 'Unknown',
+              imported: result.imported,
+              skipped: result.skipped,
+              errors: result.errors,
+              errorMessages: result.errorMessages,
+              loanAccountsNeedingSetup: result.loanAccountsNeedingSetup,
+            });
+
+            totalImported += result.imported;
+            totalSkipped += result.skipped;
+            totalErrors += result.errors;
+            if (fileResults.length === 1) {
+              categoriesCreated = result.categoriesCreated;
+              accountsCreated = result.accountsCreated;
+              payeesCreated = result.payeesCreated;
+              securitiesCreated = result.securitiesCreated;
+            }
+
+            if (result.createdMappings) {
+              const { categories: cats, accounts: accts, loans, securities: secs } = result.createdMappings;
+
+              if (Object.keys(cats).length > 0 || Object.keys(loans).length > 0) {
+                currentCatMappings = currentCatMappings.map((m) => {
+                  if (m.createNew && cats[m.originalName]) {
+                    return { originalName: m.originalName, categoryId: cats[m.originalName] };
+                  }
+                  if (m.createNewLoan && loans[m.originalName]) {
+                    return { originalName: m.originalName, isLoanCategory: true, loanAccountId: loans[m.originalName] };
+                  }
+                  return m;
+                });
+              }
+
+              if (Object.keys(accts).length > 0) {
+                currentAccMappings = currentAccMappings.map((m) => {
+                  if (m.createNew && accts[m.originalName]) {
+                    return { originalName: m.originalName, accountId: accts[m.originalName] };
+                  }
+                  return m;
+                });
+              }
+
+              if (Object.keys(secs).length > 0) {
+                currentSecMappings = currentSecMappings.map((m) => {
+                  if (m.createNew && secs[m.originalName]) {
+                    return { originalName: m.originalName, securityId: secs[m.originalName] };
+                  }
+                  return m;
+                });
+              }
+            }
+          } catch (error) {
+            const targetAccount = accounts.find((a) => a.id === fileData.selectedAccountId);
+            fileResults.push({
+              fileName: fileData.fileName,
+              accountName: targetAccount?.name || 'Unknown',
+              imported: 0, skipped: 0, errors: 1,
+              errorMessages: [getErrorMessage(error, t('toasts.importFailed'))],
+            });
+            totalErrors += 1;
+          }
+        }
+
+        // Aggregate loan accounts needing setup across all file results
+        const seenLoanIds = new Set<string>();
+        const allLoanAccountsNeedingSetup: Array<{ accountId: string; accountName: string; accountType: string }> = [];
+        for (const fr of fileResults) {
+          if (fr.loanAccountsNeedingSetup) {
+            for (const la of fr.loanAccountsNeedingSetup) {
+              if (!seenLoanIds.has(la.accountId)) {
+                seenLoanIds.add(la.accountId);
+                allLoanAccountsNeedingSetup.push(la);
+              }
+            }
+          }
+        }
+
+        setBulkImportResult({
+          totalImported, totalSkipped, totalErrors, categoriesCreated, accountsCreated, payeesCreated, securitiesCreated, fileResults,
+          loanAccountsNeedingSetup: allLoanAccountsNeedingSetup.length > 0 ? allLoanAccountsNeedingSetup : undefined,
+        });
+        setStep('complete');
+
+        if (totalErrors === 0) {
+          toast.success(t('toasts.importedFromFiles', { imported: totalImported, files: importFiles.length }));
+        } else {
+          toast.success(t('toasts.importedWithErrors', { imported: totalImported, errors: totalErrors }));
+        }
+      } else {
+        const result = await importFn(importFiles[0], categoryMappings, accountMappings, securityMappings);
+
+        setImportResult(result);
+        setStep('complete');
+
+        if (result.errors === 0) {
+          toast.success(t('toasts.imported', { imported: result.imported }));
+        } else {
+          toast.success(t('toasts.importedWithErrors', { imported: result.imported, errors: result.errors }));
+        }
+      }
+    } catch (error) {
+      toast.error(getErrorMessage(error, t('toasts.importFailed')));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const categoryOptions = useMemo(() => {
+    const options = [{ value: '', label: 'Skip (no category)' }];
+    const tree = buildCategoryTree(categories);
+    tree.forEach(({ category }) => {
+      const parentCategory = category.parentId
+        ? categories.find((c) => c.id === category.parentId) : null;
+      options.push({
+        value: category.id,
+        label: parentCategory ? `${parentCategory.name}: ${category.name}` : category.name,
+      });
+    });
+    return options;
+  }, [categories]);
+
+  const parentCategoryOptions = useMemo(() => {
+    const options = [{ value: '', label: 'No parent (top-level)' }];
+    categories.filter((c) => !c.parentId).forEach((c) => {
+      options.push({ value: c.id, label: c.name });
+    });
+    return options;
+  }, [categories]);
+
+  const getAccountOptions = () => {
+    const transferableAccounts = accounts.filter(
+      (a) => a.accountType !== 'LOAN' && a.accountType !== 'MORTGAGE' && !isInvestmentBrokerageAccount(a)
+    );
+    return [
+      { value: '', label: 'Skip (no transfer)' },
+      ...transferableAccounts
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map((a) => ({ value: a.id, label: `${a.name} (${formatAccountType(a.accountType, tc)})` })),
+    ];
+  };
+
+  const accountTypeOptions = useMemo(
+    () => ACCOUNT_TYPE_OPTIONS.map((option) => ({
+      ...option,
+      label: tc(`accountTypes.${option.value}` as Parameters<typeof tc>[0]),
+    })),
+    [tc],
+  );
+
+  const isInvestmentImport = parsedData?.accountType === 'INVESTMENT' ||
+    (isBulkImport && importFiles.some((f) => f.parsedData?.accountType === 'INVESTMENT'));
+  const shouldShowMapAccounts = accountMappings.length > 0 && !isInvestmentImport;
+
+  const currencyOptions = useMemo(() => {
+    const sorted = [...currencies].sort((a, b) => {
+      if (a.code === defaultCurrency) return -1;
+      if (b.code === defaultCurrency) return 1;
+      return a.code.localeCompare(b.code);
+    });
+    return sorted.map((c) => ({ value: c.code, label: `${c.code} - ${c.name}` }));
+  }, [currencies, defaultCurrency]);
+
+  const getSecurityOptions = () => [
+    { value: '', label: 'Skip (no security)' },
+    ...securities.map((s) => ({ value: s.id, label: `${s.symbol} - ${s.name}` })),
+  ];
+
+  const preselectedAccount = accounts.find((a) => a.id === preselectedAccountId);
+
+  const handleImportMore = () => {
+    setStep('upload');
+    setImportFiles([]);
+    setImportResult(null);
+    setBulkImportResult(null);
+    setCategoryMappings([]);
+    setAccountMappings([]);
+    setSecurityMappings([]);
+    setInitialLookupDone(false);
+    setLookupPickerRowIndex(null);
+    setLookupPickerQuery('');
+    setLookupPickerCandidates([]);
+    setFileType('qif');
+    setMultiAccountData(null);
+    setMultiAccountContent('');
+    setMultiAccountCurrency(defaultCurrency);
+    setCsvHeaders([]);
+    setCsvSampleRows([]);
+    setCsvColumnMapping(DEFAULT_CSV_COLUMN_MAPPING);
+    setCsvTransferRules([]);
+  };
+
+  /** Retries the upload with the password the dialog collected. */
+  const handleMnyPasswordSubmit = useCallback(
+    async (password: string) => {
+      setIsLoading(true);
+      if (await retryMnyWithPassword(password)) {
+        setStep('mnyReview');
+      }
+      setIsLoading(false);
+    },
+    [retryMnyWithPassword],
+  );
+
+  const handleMnyStart = useCallback(
+    async (wipePassword?: string) => {
+      // Move to the progress step first: the job is already running server-side
+      // and the wizard's job is to show it.
+      if (await startMny(wipePassword)) {
+        setStep('mnyImporting');
+      }
+    },
+    [startMny],
+  );
+
+  /**
+   * The review step's Import button. Ticking "start fresh" only arms the
+   * confirmation: the wipe runs the same delete-my-data operation as Settings
+   * and needs the typed keyword plus the account password, so an import that
+   * would delete existing data can never begin from one click.
+   */
+  const handleMnyImportClick = useCallback(() => {
+    if (mnyOptions.wipeExistingData) {
+      setShowMnyWipeConfirm(true);
+      return;
+    }
+    void handleMnyStart();
+  }, [mnyOptions.wipeExistingData, handleMnyStart]);
+
+  const handleMnyWipeConfirm = useCallback(
+    async (password: string) => {
+      setShowMnyWipeConfirm(false);
+      await handleMnyStart(password || undefined);
+    },
+    [handleMnyStart],
+  );
+
+  const handleMnyDone = useCallback(() => {
+    resetMny();
+    setMnyFileName('');
+    setShowMnyWipeConfirm(false);
+    setImportFiles([]);
+    setStep('upload');
+  }, [resetMny]);
+
+  return {
+    step, setStep,
+    importFiles, isBulkImport, fileName, parsedData, selectedAccountId, setSelectedAccountId, setFileAccountId, fileContent,
+    accounts, categories, securities,
+    categoryMappings, setCategoryMappings, accountMappings, securityMappings,
+    handleAccountMappingChange, handleSecurityMappingChange, handleSecurityLookup,
+    isLoading, dataLoaded, importResult, bulkImportResult, handleImport, handleFileSelect, handleFiles, handleImportMore,
+    lookupLoadingIndex, bulkLookupInProgress,
+    lookupPickerQuery, lookupPickerCandidates, handleLookupPickerPick, handleLookupPickerCancel,
+    showCreateAccount, setShowCreateAccount, creatingForFileIndex, setCreatingForFileIndex,
+    newAccountName, setNewAccountName, newAccountType, setNewAccountType, newAccountCurrency, setNewAccountCurrency,
+    isCreatingAccount, handleCreateAccount,
+    categoryOptions, parentCategoryOptions, getAccountOptions,
+    accountTypeOptions, currencyOptions, getSecurityOptions, securityTypeOptions: SECURITY_TYPE_OPTIONS,
+    shouldShowMapAccounts, preselectedAccount,
+    scrollContainerRef, dateFormat, setDateFormat, defaultCurrency,
+    // Multi-account QIF
+    multiAccountData, multiAccountCurrency, setMultiAccountCurrency, handleMultiAccountImport,
+    // CSV-specific exports
+    fileType,
+    csvHeaders, csvSampleRows,
+    csvColumnMapping, handleCsvColumnMappingChange,
+    handleCsvInvestmentModeChange,
+    csvTransferRules, handleCsvTransferRulesChange,
+    savedColumnMappings,
+    handleCsvMappingComplete,
+    handleCsvDelimiterChange,
+    handleCsvHasHeaderChange,
+    handleSaveColumnMapping,
+    handleLoadColumnMapping,
+    handleDeleteColumnMapping,
+    // Microsoft Money (.mny)
+    mny, mnyFileName, handleMnyPasswordSubmit, handleMnyStart, handleMnyDone,
+    showMnyWipeConfirm, handleMnyImportClick, handleMnyWipeConfirm,
+    cancelMnyWipeConfirm: () => setShowMnyWipeConfirm(false),
+  };
+}

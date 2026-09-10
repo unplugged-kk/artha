@@ -1,0 +1,601 @@
+{
+  "payeeWidget": {
+    "totalSpent": "[XX-Total Spent-XX]",
+    "income": "[XX-Income-XX]",
+    "net": "[XX-Net-XX]",
+    "transactions": "[XX-Transactions-XX]",
+    "averageAmount": "[XX-Average Amount-XX]",
+    "lastTransaction": "[XX-Last Transaction-XX]",
+    "defaultCategory": "[XX-Default Category-XX]",
+    "nextBill": "[XX-Next Bill-XX]",
+    "viewBills": "[XX-View in Bills & Deposits-XX]",
+    "topCategories": "[XX-Top Categories-XX]",
+    "uncategorized": "[XX-Uncategorized-XX]",
+    "aliases": "[XX-Aliases-XX]",
+    "recurring": "[XX-Recurring: {cadence} · {amount}-XX]",
+    "recurringTooltip": "[XX-Detected from repeated charges over the selected period (or the last 12 months when no date filter is set).-XX]",
+    "cadence": {
+      "weekly": "[XX-Weekly-XX]",
+      "biweekly": "[XX-Every 2 Weeks-XX]",
+      "monthly": "[XX-Monthly-XX]",
+      "quarterly": "[XX-Quarterly-XX]",
+      "yearly": "[XX-Yearly-XX]"
+    },
+    "inactive": "[XX-Inactive-XX]",
+    "noTransactions": "[XX-No transactions in this period-XX]",
+    "editAria": "[XX-Edit payee-XX]",
+    "detailsAria": "[XX-View payee details-XX]",
+    "collapseAria": "[XX-Hide payee info-XX]",
+    "show": "[XX-Show payee info-XX]",
+    "amountUnavailable": "[XX-No rate-XX]"
+  },
+  "categoryWidget": {
+    "detailsAria": "[XX-View category details-XX]",
+    "totalSpent": "[XX-Total Spent-XX]",
+    "totalEarned": "[XX-Total Earned-XX]",
+    "income": "[XX-Income-XX]",
+    "expense": "[XX-Expense-XX]",
+    "budgetThisMonth": "[XX-This Month's Budget-XX]",
+    "budgetProgress": "[XX-{spent} of {budgeted}-XX]",
+    "transactions": "[XX-Transactions-XX]",
+    "averageAmount": "[XX-Average Amount-XX]",
+    "monthlyAverage": "[XX-Monthly Average-XX]",
+    "subcategories": "[XX-Subcategories-XX]",
+    "thisCategory": "[XX-This category-XX]",
+    "topPayees": "[XX-Top Payees-XX]",
+    "noPayee": "[XX-No payee-XX]",
+    "nextScheduled": "[XX-Next Scheduled-XX]",
+    "noTransactions": "[XX-No transactions in this period-XX]",
+    "editAria": "[XX-Edit category-XX]",
+    "collapseAria": "[XX-Hide category info-XX]",
+    "show": "[XX-Show category info-XX]",
+    "amountUnavailable": "[XX-No rate-XX]"
+  },
+  "accountWidget": {
+    "currentBalance": "[XX-Current Balance-XX]",
+    "nextPayment": "[XX-Next Payment-XX]",
+    "viewBills": "[XX-View in Bills & Deposits-XX]",
+    "viewDetailsAria": "[XX-View account details-XX]",
+    "type": "[XX-Type-XX]",
+    "accountNumber": "[XX-Account Number-XX]",
+    "currency": "[XX-Currency-XX]",
+    "creditLimit": "[XX-Credit Limit-XX]",
+    "interestRate": "[XX-Interest Rate-XX]",
+    "currentPayment": "[XX-Current Payment-XX]",
+    "currentPaymentTooltip": "[XX-The most recent regular installment, principal plus interest.-XX]",
+    "estPayoff": "[XX-Est. Payoff-XX]",
+    "estRemainingInterest": "[XX-Est. Remaining Interest-XX]",
+    "estRemainingInterestTooltip": "[XX-Interest still to be paid if the current payment and rate continue.-XX]",
+    "notAvailable": "[XX-N/A-XX]",
+    "paidOff": "[XX-Paid off-XX]",
+    "statementSettlement": "[XX-Settlement Day-XX]",
+    "statementSettlementTooltip": "[XX-The last day of the billing cycle. Transactions posted on or before this day appear on the current statement.-XX]",
+    "statementDue": "[XX-Payment Due-XX]",
+    "closed": "[XX-Closed-XX]",
+    "editAria": "[XX-Edit account settings-XX]",
+    "collapseAria": "[XX-Hide account info-XX]",
+    "showAccountNumber": "[XX-Show account number-XX]",
+    "hideAccountNumber": "[XX-Hide account number-XX]",
+    "show": "[XX-Show account info-XX]"
+  },
+  "page": {
+    "title": "[XX-Transactions-XX]",
+    "subtitle": "[XX-Manage your income and expenses-XX]",
+    "newButton": "[XX-+ New Transaction-XX]",
+    "editModal": {
+      "editTitle": "[XX-Edit Transaction-XX]",
+      "duplicateTitle": "[XX-Duplicate Transaction-XX]",
+      "newTitle": "[XX-New Transaction-XX]",
+      "scheduleTitle": "[XX-Schedule as Recurring-XX]",
+      "editPayeeTitle": "[XX-Edit Payee-XX]",
+      "editCategoryTitle": "[XX-Edit Category-XX]"
+    },
+    "loading": "[XX-Loading transactions...-XX]",
+    "totalCount": "[XX-{count, plural, one {# transaction} other {# transactions}}-XX]",
+    "bulkDelete": {
+      "title": "[XX-Delete Transactions-XX]",
+      "message": "[XX-Are you sure you want to delete {count, plural, one {# transaction} other {# transactions}}? This will also delete any linked transfer counterparts. This action cannot be undone.-XX]"
+    },
+    "toasts": {
+      "scheduledCreated": "[XX-Scheduled transaction created-XX]",
+      "investmentLinked": "[XX-This transaction is linked to an investment. Opening in Investments page.-XX]"
+    }
+  },
+  "list": {
+    "empty": {
+      "title": "[XX-No transactions-XX]",
+      "body": "[XX-Get started by creating a new transaction.-XX]"
+    },
+    "header": {
+      "date": "[XX-Date-XX]",
+      "account": "[XX-Account-XX]",
+      "payee": "[XX-Payee-XX]",
+      "category": "[XX-Category-XX]",
+      "description": "[XX-Description-XX]",
+      "refNumber": "[XX-Ref #-XX]",
+      "tags": "[XX-Tags-XX]",
+      "amount": "[XX-Amount-XX]",
+      "currency": "[XX-Currency-XX]",
+      "paidAmount": "[XX-Paid Amount-XX]",
+      "feePaid": "[XX-Fee Paid-XX]",
+      "balance": "[XX-Balance-XX]",
+      "attachments": "[XX-Attachments-XX]",
+      "status": "[XX-Status-XX]",
+      "actions": "[XX-Actions-XX]"
+    },
+    "dateDisplay": {
+      "toggleLabel": "[XX-Hide the year-XX]",
+      "toggleTitle": "[XX-Drop the year from dates so more of the payee fits-XX]"
+    },
+    "attachmentsCount": "[XX-{count, plural, one {# attachment} other {# attachments}}-XX]",
+    "today": "[XX-Today-XX]",
+    "export": {
+      "button": "[XX-Export-XX]",
+      "exporting": "[XX-Exporting...-XX]",
+      "title": "[XX-Export transactions to CSV-XX]",
+      "success": "[XX-{count, plural, one {Exported # transaction} other {Exported # transactions}}-XX]",
+      "noData": "[XX-No transactions to export-XX]",
+      "error": "[XX-Failed to export transactions-XX]"
+    },
+    "delete": {
+      "transferTitle": "[XX-Delete Transfer-XX]",
+      "transactionTitle": "[XX-Delete Transaction-XX]",
+      "transferMessage": "[XX-Are you sure you want to delete this transfer? Both linked transactions will be deleted.-XX]",
+      "transactionMessage": "[XX-Are you sure you want to delete this transaction? This action cannot be undone.-XX]",
+      "success": "[XX-Transaction deleted-XX]",
+      "transferSuccess": "[XX-Transfer deleted-XX]",
+      "error": "[XX-Failed to delete transaction-XX]",
+      "reconciledWarning": "[XX-This transaction is reconciled, so deleting it will affect a completed reconciliation.-XX]"
+    },
+    "status": {
+      "voidError": "[XX-Edit the transaction to change its status from Void-XX]",
+      "changed": "[XX-Status changed to {status}-XX]",
+      "changedLockedUndo": "[XX-Status changed to {status}. Reconciled transactions are locked; press again within {seconds} seconds to undo.-XX]",
+      "updateError": "[XX-Failed to update status-XX]",
+      "unreconciled": "[XX-Unreconciled-XX]",
+      "cleared": "[XX-Cleared-XX]",
+      "reconciled": "[XX-Reconciled-XX]",
+      "void": "[XX-Void-XX]",
+      "clearedDense": "[XX-C-XX]",
+      "reconciledDense": "[XX-R-XX]",
+      "voidDense": "[XX-V-XX]",
+      "pendingDense": "[XX-○-XX]",
+      "pending": "[XX-Pending-XX]",
+      "cycleTitle": "[XX-Click to cycle status-XX]"
+    },
+    "row": {
+      "viewPayeeTitle": "[XX-View {name} details-XX]",
+      "ref": "[XX-Ref: {number}-XX]",
+      "investmentLabel": "[XX-Investment-XX]",
+      "linkedInvestmentTitle": "[XX-View in Investments-XX]",
+      "filterByDate": "[XX-Filter by date \"{date}\"-XX]",
+      "filterByAccount": "[XX-Filter by \"{name}\"-XX]",
+      "filterByPayee": "[XX-Filter by \"{name}\"-XX]",
+      "filterByCategory": "[XX-Filter by {name}-XX]",
+      "filterByTag": "[XX-Filter by tag {name}-XX]",
+      "transfer": "[XX-Transfer-XX]",
+      "transferTitle": "[XX-Transfer {direction} {name}-XX]",
+      "split": "[XX-Split-XX]",
+      "uncategorized": "[XX-Uncategorized-XX]",
+      "splitMore": "[XX-+{count} more-XX]",
+      "filteredAmountTitle": "[XX-Filtered amount (full transaction: {amount})-XX]",
+      "viewButton": "[XX-View-XX]",
+      "editButton": "[XX-Edit-XX]",
+      "deleteButton": "[XX-Delete-XX]"
+    },
+    "itemNamePlural": "[XX-transactions-XX]"
+  },
+  "row": {
+    "copyOptions": {
+      "title": "[XX-Copy options-XX]",
+      "duplicateTitle": "[XX-Duplicate transaction-XX]",
+      "copy": "[XX-Copy-XX]",
+      "duplicate": "[XX-Duplicate-XX]",
+      "scheduleRecurring": "[XX-Schedule as Recurring-XX]"
+    }
+  },
+  "actionSheet": {
+    "defaultTitle": "[XX-Transaction-XX]",
+    "filterByDate": "[XX-Filter by date \"{date}\"-XX]",
+    "filterByAccount": "[XX-Filter by \"{name}\"-XX]",
+    "filterByPayee": "[XX-Filter by \"{name}\"-XX]",
+    "filterByCategory": "[XX-Filter by \"{name}\"-XX]",
+    "filterByTag": "[XX-Filter by tag \"{name}\"-XX]",
+    "edit": "[XX-Edit-XX]",
+    "duplicate": "[XX-Duplicate-XX]",
+    "scheduleRecurring": "[XX-Schedule as Recurring-XX]",
+    "delete": "[XX-Delete-XX]"
+  },
+  "filter": {
+    "favourites": "[XX-Favourites:-XX]",
+    "panel": {
+      "title": "[XX-Filters-XX]",
+      "clear": "[XX-Clear-XX]",
+      "hide": "[XX-Hide-XX]",
+      "show": "[XX-Show-XX]"
+    },
+    "accounts": {
+      "label": "[XX-Show accounts:-XX]",
+      "all": "[XX-All-XX]",
+      "active": "[XX-Active-XX]",
+      "closed": "[XX-Closed-XX]"
+    },
+    "fields": {
+      "accounts": "[XX-Accounts-XX]",
+      "payees": "[XX-Payees-XX]",
+      "categories": "[XX-Categories-XX]",
+      "tags": "[XX-Tags-XX]",
+      "timePeriod": "[XX-Time Period-XX]",
+      "startDate": "[XX-Start Date-XX]",
+      "endDate": "[XX-End Date-XX]",
+      "amountFrom": "[XX-Amount From-XX]",
+      "amountTo": "[XX-Amount To-XX]",
+      "status": "[XX-Status-XX]",
+      "search": "[XX-Search-XX]",
+      "tagKey": "[XX-Tag key-XX]",
+      "tagKeyOp": "[XX-Condition-XX]",
+      "tagKeyValue": "[XX-Value-XX]",
+      "currency": "[XX-Currency-XX]",
+      "hasAttachments": "[XX-Attachments-XX]"
+    },
+    "hasAttachmentsOptions": {
+      "any": "[XX-Any-XX]",
+      "yes": "[XX-Yes-XX]",
+      "no": "[XX-No-XX]"
+    },
+    "placeholders": {
+      "accounts": "[XX-All accounts-XX]",
+      "payees": "[XX-All payees-XX]",
+      "categories": "[XX-All categories-XX]",
+      "tags": "[XX-All tags-XX]",
+      "statuses": "[XX-All statuses-XX]",
+      "amountMin": "[XX-Min-XX]",
+      "amountMax": "[XX-Max-XX]",
+      "search": "[XX-Search payee, category, amount, tag, description, reference #...-XX]",
+      "tagKeyValue": "[XX-e.g. usa-XX]"
+    },
+    "tagKeyNone": "[XX-Any (no key filter)-XX]",
+    "tagKeyOps": {
+      "hasValue": "[XX-Has a value-XX]",
+      "noValue": "[XX-Has no value-XX]",
+      "contains": "[XX-Value contains-XX]",
+      "notContains": "[XX-Value does not contain-XX]"
+    },
+    "chips": {
+      "removeAccount": "[XX-Remove {name} filter-XX]",
+      "removePayee": "[XX-Remove {name} filter-XX]",
+      "removeCategory": "[XX-Remove {name} filter-XX]",
+      "removeTag": "[XX-Remove {name} filter-XX]",
+      "removeDate": "[XX-Remove date filter-XX]",
+      "removeAmount": "[XX-Remove amount filter-XX]",
+      "removeSearch": "[XX-Remove search filter-XX]",
+      "dateFrom": "[XX-From {date}-XX]",
+      "dateUntil": "[XX-Until {date}-XX]",
+      "amountFrom": "[XX-From {amount}-XX]",
+      "amountUpTo": "[XX-Up to {amount}-XX]",
+      "removeCurrency": "[XX-Remove {name} currency filter-XX]",
+      "hasAttachments": "[XX-Has attachments-XX]",
+      "noAttachments": "[XX-No attachments-XX]",
+      "removeAttachments": "[XX-Remove attachments filter-XX]"
+    },
+    "bulkUpdate": "[XX-Bulk Update-XX]",
+    "cancelBulk": "[XX-Cancel Bulk-XX]",
+    "statusLabels": {
+      "unreconciled": "[XX-Unreconciled-XX]",
+      "cleared": "[XX-Cleared-XX]",
+      "reconciled": "[XX-Reconciled-XX]",
+      "void": "[XX-Void-XX]"
+    },
+    "periods": {
+      "select": "[XX-Select period...-XX]",
+      "allDates": "[XX-All Dates-XX]",
+      "today": "[XX-Today-XX]",
+      "yesterday": "[XX-Yesterday-XX]",
+      "thisWeek": "[XX-This Week-XX]",
+      "lastWeek": "[XX-Last Week-XX]",
+      "last30Days": "[XX-Last 30 Days-XX]",
+      "monthToDate": "[XX-Month to Date-XX]",
+      "lastMonth": "[XX-Last Month-XX]",
+      "last365Days": "[XX-Last 365 Days-XX]",
+      "yearToDate": "[XX-Year to Date-XX]",
+      "lastYear": "[XX-Last Year-XX]",
+      "custom": "[XX-Custom-XX]"
+    }
+  },
+  "bulk": {
+    "banner": {
+      "selected": "[XX-{count, plural, one {# transaction selected} other {# transactions selected}}-XX]",
+      "selectAllMatching": "[XX-Select all {count} matching transactions-XX]",
+      "allMatching": "[XX-(all matching transactions)-XX]",
+      "clearSelection": "[XX-Clear selection-XX]",
+      "bulkUpdate": "[XX-Bulk Update-XX]"
+    },
+    "modal": {
+      "title": "[XX-Bulk Update Transactions-XX]",
+      "subtitle": "[XX-Update {count, plural, one {# selected transaction} other {# selected transactions}}. Toggle the fields you want to change.-XX]",
+      "submitLabel": "[XX-Update {count, plural, one {# Transaction} other {# Transactions}}-XX]",
+      "payee": "[XX-Payee-XX]",
+      "category": "[XX-Category-XX]",
+      "description": "[XX-Description-XX]",
+      "status": "[XX-Status-XX]",
+      "tags": "[XX-Tags-XX]",
+      "payeePlaceholder": "[XX-Select or type payee name...-XX]",
+      "categoryPlaceholder": "[XX-Select category...-XX]",
+      "descriptionPlaceholder": "[XX-Enter description (leave empty to clear)-XX]",
+      "tagsPlaceholder": "[XX-Select tags (leave empty to clear all)...-XX]",
+      "statusOptions": {
+        "pending": "[XX-Pending-XX]",
+        "cleared": "[XX-Cleared-XX]",
+        "void": "[XX-Void-XX]"
+      },
+      "notes": {
+        "transfer": "[XX-Transfer transactions will have their linked counterpart updated as well.-XX]",
+        "split": "[XX-Split transactions: the new category is applied to their split lines (only lines matching your category filter when one is active). Transfer and investment lines are unchanged.-XX]"
+      }
+    },
+    "toasts": {
+      "updated": "[XX-{count, plural, one {# transaction updated} other {# transactions updated}}-XX]",
+      "skipped": "[XX-{count, plural, one {# transaction skipped} other {# transactions skipped}}-XX]",
+      "splitLines": "[XX-{count, plural, one {# split line recategorized} other {# split lines recategorized}}-XX]"
+    }
+  },
+  "form": {
+    "modeTransaction": "[XX-Transaction-XX]",
+    "modeSplit": "[XX-Split-XX]",
+    "modeTransfer": "[XX-Transfer-XX]",
+    "transferBadge": "[XX-Transfer-XX]",
+    "isLinkedTransfer": "[XX-This is a linked transfer transaction-XX]",
+    "fields": {
+      "account": "[XX-Account-XX]",
+      "date": "[XX-Date-XX]",
+      "createDate": "[XX-Create Date-XX]",
+      "payee": "[XX-Payee-XX]",
+      "category": "[XX-Category-XX]",
+      "amount": "[XX-Amount-XX]",
+      "totalAmount": "[XX-Total Amount-XX]",
+      "referenceNumber": "[XX-Reference Number-XX]",
+      "description": "[XX-Description-XX]",
+      "status": "[XX-Status-XX]",
+      "tags": "[XX-Tags-XX]",
+      "fromAccount": "[XX-From Account-XX]",
+      "toAccount": "[XX-To Account-XX]",
+      "transferAmount": "[XX-Transfer Amount-XX]",
+      "transferAmountWithCurrency": "[XX-Transfer Amount ({currency})-XX]",
+      "amountReceived": "[XX-Amount Received ({currency})-XX]",
+      "payeeOptional": "[XX-Payee (Optional)-XX]",
+      "categoryOptional": "[XX-Category (Optional)-XX]"
+    },
+    "placeholders": {
+      "selectAccount": "[XX-Select account...-XX]",
+      "selectDestinationAccount": "[XX-Select destination account...-XX]",
+      "selectOrTypePayee": "[XX-Select or type payee name...-XX]",
+      "selectOrCreateCategory": "[XX-Select or create category...-XX]",
+      "referenceNumber": "[XX-Cheque #, confirmation #...-XX]",
+      "optionalDescription": "[XX-Optional description...-XX]",
+      "selectTags": "[XX-Select tags...-XX]",
+      "createNewTag": "[XX-Create new tag...-XX]"
+    },
+    "splitSection": {
+      "title": "[XX-Split Transaction-XX]",
+      "cancelSplit": "[XX-Cancel Split-XX]"
+    },
+    "statusOptions": {
+      "unreconciled": "[XX-Unreconciled-XX]",
+      "cleared": "[XX-Cleared-XX]",
+      "reconciled": "[XX-Reconciled-XX]",
+      "void": "[XX-Void-XX]"
+    },
+    "submitCreate": "[XX-Create {mode}-XX]",
+    "submitCreateAndNew": "[XX-Create {mode} & New-XX]",
+    "submitCreateDescription": "[XX-Save it and close this window.-XX]",
+    "submitCreateAndNewDescription": "[XX-Save it and start another, keeping the account and date.-XX]",
+    "submitOptions": "[XX-Choose what happens after creating-XX]",
+    "submitUpdate": "[XX-Update {mode}-XX]",
+    "reconciledConfirm": {
+      "title": "[XX-Edit reconciled transaction?-XX]",
+      "message": "[XX-This transaction is reconciled. Changing its date or amount will affect a completed reconciliation. Do you want to save your changes anyway?-XX]",
+      "confirm": "[XX-Save changes-XX]"
+    },
+    "modeLabel": {
+      "transfer": "[XX-Transfer-XX]",
+      "transaction": "[XX-Transaction-XX]"
+    },
+    "transferAmountNote": "[XX-Amount must be positive for transfers-XX]",
+    "transferCandidates": {
+      "sharedWithYou": "[XX-Shared with you-XX]",
+      "yourAccounts": "[XX-Your accounts-XX]",
+      "optionLabel": "[XX-{name} ({currency}) — {owner}-XX]"
+    },
+    "crossOwnerLockedNote": "[XX-The other side of this transfer is in an account that's no longer shared with you. Its amount, date, and accounts are locked, but you can still edit this transaction's own details.-XX]",
+    "transferCategoryNote": "[XX-Optional. The transfer still won't count as income or expense, but this category lets it appear in the monthly category breakdown (e.g. monthly investment contributions).-XX]",
+    "amountReceivedNote": "[XX-Amount received after currency conversion-XX]",
+    "splitTransaction": "[XX-Split Transaction-XX]",
+    "splitDisabledDuringTour": "[XX-Not available during the guided tour-XX]",
+    "newTagTitle": "[XX-New Tag-XX]",
+    "toasts": {
+      "transferCreated": "[XX-Transfer created-XX]",
+      "transferUpdated": "[XX-Transfer updated-XX]",
+      "transactionCreated": "[XX-Transaction created-XX]",
+      "transactionUpdated": "[XX-Transaction updated-XX]",
+      "attachmentsUploadFailed": "[XX-Transaction saved, but {count} attachment(s) failed to upload-XX]",
+      "saveFailed": "[XX-Failed to save transaction-XX]",
+      "loadFailed": "[XX-Failed to load form data-XX]",
+      "splitsNotEqual": "[XX-Splits total ({splitTotal}) must equal transaction amount ({txAmount})-XX]",
+      "destinationRequired": "[XX-Please select a destination account-XX]",
+      "sameAccount": "[XX-Source and destination accounts must be different-XX]",
+      "negativeTransfer": "[XX-Transfer amount must not be negative-XX]",
+      "payeeCreated": "[XX-Payee \"{name}\" created-XX]",
+      "payeeCreateFailed": "[XX-Failed to create payee-XX]",
+      "payeeReactivated": "[XX-Payee \"{name}\" reactivated-XX]",
+      "payeeReactivateFailed": "[XX-Failed to reactivate payee-XX]",
+      "categoryCreated": "[XX-Category \"{name}\" created-XX]",
+      "categoryCreateFailed": "[XX-Failed to create category-XX]",
+      "tagCreated": "[XX-Tag \"{name}\" created-XX]",
+      "fxRateRequired": "[XX-Enter an exchange rate or the converted amount before saving a foreign-currency transaction.-XX]",
+      "jointPayeeCreateNotGranted": "[XX-The account owner has not granted you permission to create payees. Pick one of their existing payees instead.-XX]"
+    },
+    "ariaHistory": "[XX-Show recent transactions-XX]",
+    "ariaHistoryForPayee": "[XX-Show recent transactions for this payee-XX]",
+    "historyTitle": "[XX-Quick fill from a recent transaction-XX]",
+    "currencyPicker": {
+      "label": "[XX-Entry currency-XX]",
+      "ariaLabel": "[XX-Change entry currency-XX]",
+      "title": "[XX-Enter amount in-XX]",
+      "accountCurrency": "[XX-Account currency ({code})-XX]",
+      "addCurrency": "[XX-Add currency...-XX]",
+      "optionLabel": "[XX-{symbol} - {name} ({code})-XX]",
+      "createFailed": "[XX-Failed to add currency-XX]",
+      "reactivated": "[XX-Reactivated {code}-XX]"
+    },
+    "fx": {
+      "totalInCurrency": "[XX-Total in {currency}-XX]",
+      "rateCaption": "[XX-1 {from} = {rate} {to} ({date})-XX]",
+      "noRateWarning": "[XX-No exchange rate found for {from} to {to} on {date}. Enter the converted amount manually.-XX]",
+      "usingLatestRateHint": "[XX-Using the latest available rate (not dated {date}).-XX]",
+      "displayToggle": {
+        "account": "[XX-Account-XX]",
+        "original": "[XX-Original-XX]"
+      },
+      "feeCaption": "[XX-Includes a {percent}% foreign transaction fee ({fee}).-XX]"
+    },
+    "jointSplitDisabled": "[XX-Split transactions in a shared account can only be managed by the owner-XX]"
+  },
+  "splitEditor": {
+    "header": "[XX-Split Details-XX]",
+    "distributeProportionally": "[XX-Distribute Proportionally-XX]",
+    "distributeProportionallyTitle": "[XX-Distribute the remaining amount proportionally based on each split's amount-XX]",
+    "distributeEvenly": "[XX-Distribute Evenly-XX]",
+    "addSplit": "[XX-Add Split-XX]",
+    "removeMinimum": "[XX-Minimum 2 splits required-XX]",
+    "removeSplit": "[XX-Remove split-XX]",
+    "removeAndConvert": "[XX-Remove split and convert to a regular transaction-XX]",
+    "convertConfirm": {
+      "title": "[XX-Convert to a regular transaction?-XX]",
+      "message": "[XX-Removing this split will convert this back into a regular transaction using the remaining split's category.-XX]",
+      "confirm": "[XX-Convert-XX]"
+    },
+    "noUnassigned": "[XX-No unassigned amount-XX]",
+    "addRemaining": "[XX-Add remaining to this split-XX]",
+    "total": "[XX-Total-XX]",
+    "balanced": "[XX-Balanced-XX]",
+    "remaining": "[XX-Remaining: {symbol}{amount}-XX]",
+    "needAmount": "[XX-Need {symbol}{amount} (remaining: {symbol}{remaining})-XX]",
+    "setTotal": "[XX-Set total to {symbol}{amount}-XX]",
+    "currencyToggle": {
+      "title": "[XX-Switch the currency the split amounts are shown and edited in-XX]",
+      "ariaAmountsIn": "[XX-Show and edit split amounts in {code}-XX]"
+    },
+    "splitLabel": "[XX-Split {number}-XX]",
+    "columns": {
+      "type": "[XX-Type-XX]",
+      "categoryAccount": "[XX-Category / Account-XX]",
+      "category": "[XX-Category-XX]",
+      "amount": "[XX-Amount-XX]",
+      "memo": "[XX-Memo-XX]",
+      "tags": "[XX-Tags-XX]"
+    },
+    "splitTypes": {
+      "category": "[XX-Category-XX]",
+      "transfer": "[XX-Transfer-XX]",
+      "investment": "[XX-Investment-XX]"
+    },
+    "selectCategory": "[XX-Select category...-XX]",
+    "selectAccount": "[XX-Select account...-XX]",
+    "memoPlaceholder": "[XX-Optional memo-XX]",
+    "mobileMemoPlaceholder": "[XX-Memo-XX]",
+    "tagsPlaceholder": "[XX-Tags...-XX]"
+  },
+  "recentPopover": {
+    "recentForPayee": "[XX-Recent for {name}-XX]",
+    "recentTransactions": "[XX-Recent transactions-XX]",
+    "loading": "[XX-Loading...-XX]",
+    "noRecent": "[XX-No recent transactions.-XX]",
+    "noRecentForPayee": "[XX-No recent transactions for this payee.-XX]",
+    "noPayee": "[XX-(no payee)-XX]",
+    "uncategorized": "[XX-(uncategorized)-XX]"
+  },
+  "investmentSplit": {
+    "ariaAction": "[XX-Investment action-XX]",
+    "ariaSecurity": "[XX-Security-XX]",
+    "selectSecurity": "[XX-Select security...-XX]",
+    "quantityPlaceholder": "[XX-Quantity-XX]",
+    "pricePlaceholder": "[XX-Price-XX]",
+    "commissionPlaceholder": "[XX-Commission-XX]",
+    "amountPlaceholder": "[XX-Amount ({currency})-XX]",
+    "ratePlaceholder": "[XX-{to} per 1 {from}-XX]",
+    "ariaRate": "[XX-Exchange rate ({to} per 1 {from})-XX]",
+    "rateHint": "[XX-Quantity, price and commission are in {from}; this rate converts the cash impact into {to}.-XX]",
+    "rateUnresolved": "[XX-No {from} to {to} rate is available. Enter one — the cash impact cannot be worked out without it, and the two currencies are not equal.-XX]"
+  },
+  "charts": {
+    "balanceHistory": {
+      "title": "[XX-Balance History-XX]",
+      "noData": "[XX-No balance data available-XX]",
+      "starting": "[XX-Starting-XX]",
+      "current": "[XX-Current-XX]",
+      "ending": "[XX-Ending-XX]",
+      "lowest": "[XX-Lowest-XX]",
+      "minBalance": "[XX-Min Balance-XX]",
+      "projected": "[XX-Projected-XX]",
+      "range": "[XX-{start} – {end}-XX]"
+    },
+    "zeroBalances": {
+      "message": "[XX-All selected accounts have a zero balance, so there's no balance chart to show.-XX]"
+    },
+    "monthlyTotals": {
+      "title": "[XX-Monthly Totals-XX]",
+      "noData": "[XX-No transaction data available-XX]",
+      "monthlyAvg": "[XX-Monthly Avg-XX]",
+      "quarterlyAvg": "[XX-Quarterly Avg-XX]",
+      "yearlyAvg": "[XX-Yearly Avg-XX]",
+      "total": "[XX-Total-XX]",
+      "transactions": "[XX-Transactions-XX]",
+      "tooltip": "[XX-{count, plural, one {# transaction} other {# transactions}}-XX]",
+      "quarterLabel": "[XX-Q{quarter} {year}-XX]",
+      "quarterTick": "[XX-Q{quarter} {year}-XX]",
+      "granularityLabel": "[XX-Bucket size-XX]",
+      "granularity": {
+        "auto": "[XX-Auto-XX]",
+        "month": "[XX-Month-XX]",
+        "quarter": "[XX-Quarter-XX]",
+        "year": "[XX-Year-XX]"
+      },
+      "granularityAutoTitle": "[XX-Auto ({granularity})-XX]",
+      "granularityTitle": "[XX-{label} view-XX]"
+    },
+    "accountBalances": {
+      "title": "[XX-Account Balances-XX]",
+      "noData": "[XX-No account balance data available-XX]",
+      "average": "[XX-Average-XX]",
+      "total": "[XX-Total-XX]",
+      "accounts": "[XX-Accounts-XX]",
+      "scaleLabel": "[XX-Y-axis scale-XX]",
+      "auto": "[XX-Auto-XX]",
+      "linear": "[XX-Linear-XX]",
+      "log": "[XX-Log-XX]",
+      "autoTitle": "[XX-Auto ({scale})-XX]",
+      "scaleTitle": "[XX-{label} scale-XX]"
+    }
+  },
+  "toasts": {
+    "payeeUpdated": "[XX-Payee updated successfully-XX]",
+    "deleted": "[XX-{count, plural, one {# transaction deleted} other {# transactions deleted}}-XX]",
+    "noneToExport": "[XX-No transactions to export-XX]",
+    "exported": "[XX-{count, plural, one {Exported # transaction} other {Exported # transactions}}-XX]",
+    "loadFormDataFailed": "[XX-Failed to load form data-XX]",
+    "loadFailed": "[XX-Failed to load transactions-XX]",
+    "loadPayeeFailed": "[XX-Failed to load payee details-XX]",
+    "payeeUpdateFailed": "[XX-Failed to update payee-XX]",
+    "categoryUpdated": "[XX-Category updated successfully-XX]",
+    "categoryUpdateFailed": "[XX-Failed to update category-XX]",
+    "exportFailed": "[XX-Failed to export transactions-XX]"
+  },
+  "validation": {
+    "dateRequired": "[XX-Date is required-XX]"
+  },
+  "tagKeyBreakdown": {
+    "title": "[XX-Spending by {key}-XX]",
+    "other": "[XX-Other-XX]",
+    "noData": "[XX-No tagged spending to break down for this key.-XX]"
+  }
+}

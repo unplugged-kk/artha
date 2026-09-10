@@ -1,0 +1,601 @@
+{
+  "payeeWidget": {
+    "totalSpent": "Totaal uitgegeven",
+    "income": "Inkomsten",
+    "net": "Netto",
+    "transactions": "Transacties",
+    "averageAmount": "Gemiddeld bedrag",
+    "lastTransaction": "Laatste transactie",
+    "defaultCategory": "Standaardcategorie",
+    "nextBill": "Volgende rekening",
+    "viewBills": "Bekijk in rekeningen & stortingen",
+    "topCategories": "Topcategorieën",
+    "uncategorized": "Zonder categorie",
+    "aliases": "Aliassen",
+    "recurring": "Terugkerend: {cadence} · {amount}",
+    "recurringTooltip": "Gedetecteerd op basis van herhaalde afschrijvingen in de geselecteerde periode (of de laatste 12 maanden zonder datumfilter).",
+    "cadence": {
+      "weekly": "Wekelijks",
+      "biweekly": "Elke 2 weken",
+      "monthly": "Maandelijks",
+      "quarterly": "Elk kwartaal",
+      "yearly": "Jaarlijks"
+    },
+    "inactive": "Inactief",
+    "noTransactions": "Geen transacties in deze periode",
+    "editAria": "Begunstigde bewerken",
+    "detailsAria": "Begunstigde-details bekijken",
+    "collapseAria": "Begunstigde-info verbergen",
+    "show": "Begunstigde-info tonen",
+    "amountUnavailable": "Geen koers"
+  },
+  "categoryWidget": {
+    "detailsAria": "Categorie-details bekijken",
+    "totalSpent": "Totaal uitgegeven",
+    "totalEarned": "Totaal ontvangen",
+    "income": "Inkomsten",
+    "expense": "Uitgaven",
+    "budgetThisMonth": "Budget deze maand",
+    "budgetProgress": "{spent} van {budgeted}",
+    "transactions": "Transacties",
+    "averageAmount": "Gemiddeld bedrag",
+    "monthlyAverage": "Maandgemiddelde",
+    "subcategories": "Subcategorieën",
+    "thisCategory": "Deze categorie",
+    "topPayees": "Topbegunstigden",
+    "noPayee": "Geen begunstigde",
+    "nextScheduled": "Volgende gepland",
+    "noTransactions": "Geen transacties in deze periode",
+    "editAria": "Categorie bewerken",
+    "collapseAria": "Categorie-info verbergen",
+    "show": "Categorie-info tonen",
+    "amountUnavailable": "Geen koers"
+  },
+  "accountWidget": {
+    "currentBalance": "Huidig saldo",
+    "nextPayment": "Volgende betaling",
+    "viewBills": "Bekijk in rekeningen & stortingen",
+    "viewDetailsAria": "Rekeninggegevens bekijken",
+    "type": "Type",
+    "accountNumber": "Rekeningnummer",
+    "currency": "Valuta",
+    "creditLimit": "Kredietlimiet",
+    "interestRate": "Rentepercentage",
+    "currentPayment": "Huidige betaling",
+    "currentPaymentTooltip": "De meest recente reguliere termijn, aflossing plus rente.",
+    "estPayoff": "Gesch. aflossing",
+    "estRemainingInterest": "Gesch. resterende rente",
+    "estRemainingInterestTooltip": "Nog te betalen rente als de huidige betaling en rente ongewijzigd blijven.",
+    "notAvailable": "N.v.t.",
+    "paidOff": "Afgelost",
+    "statementSettlement": "Afsluitdag",
+    "statementSettlementTooltip": "De laatste dag van de factuurperiode. Transacties geboekt op of vóór deze dag verschijnen op het huidige overzicht.",
+    "statementDue": "Betaling vervalt",
+    "closed": "Gesloten",
+    "editAria": "Rekeninginstellingen bewerken",
+    "collapseAria": "Rekeninginfo verbergen",
+    "showAccountNumber": "Rekeningnummer tonen",
+    "hideAccountNumber": "Rekeningnummer verbergen",
+    "show": "Rekeninginfo tonen"
+  },
+  "page": {
+    "title": "Transacties",
+    "subtitle": "Beheer jouw inkomsten en uitgaven",
+    "newButton": "+ Nieuwe transactie",
+    "editModal": {
+      "editTitle": "Transactie bewerken",
+      "duplicateTitle": "Transactie dupliceren",
+      "newTitle": "Nieuwe transactie",
+      "scheduleTitle": "Plannen als terugkerend",
+      "editPayeeTitle": "Begunstigde bewerken",
+      "editCategoryTitle": "Categorie bewerken"
+    },
+    "loading": "Transacties laden...",
+    "totalCount": "{count, plural, one {# transactie} other {# transacties}}",
+    "bulkDelete": {
+      "title": "Transacties verwijderen",
+      "message": "Weet je zeker dat je {count, plural, one {# transactie} other {# transacties}} wilt verwijderen? Gekoppelde overboekingspartijen worden ook verwijderd. Deze actie kan niet ongedaan worden gemaakt."
+    },
+    "toasts": {
+      "scheduledCreated": "Geplande transactie aangemaakt",
+      "investmentLinked": "Deze transactie is gekoppeld aan een belegging. Openen op de pagina Beleggingen."
+    }
+  },
+  "list": {
+    "empty": {
+      "title": "Geen transacties",
+      "body": "Maak een nieuwe transactie aan om te beginnen."
+    },
+    "header": {
+      "date": "Datum",
+      "account": "Rekening",
+      "payee": "Begunstigde",
+      "category": "Categorie",
+      "description": "Omschrijving",
+      "refNumber": "Ref #",
+      "tags": "Labels",
+      "amount": "Bedrag",
+      "currency": "Valuta",
+      "paidAmount": "Betaald bedrag",
+      "feePaid": "Betaalde kosten",
+      "balance": "Saldo",
+      "attachments": "Bijlagen",
+      "status": "Status",
+      "actions": "Acties"
+    },
+    "dateDisplay": {
+      "toggleLabel": "Jaar verbergen",
+      "toggleTitle": "Het jaar uit de datums weglaten zodat er meer van de begunstigde past"
+    },
+    "attachmentsCount": "{count, plural, one {# bijlage} other {# bijlagen}}",
+    "today": "Vandaag",
+    "export": {
+      "button": "Exporteren",
+      "exporting": "Exporteren...",
+      "title": "Transacties exporteren naar CSV",
+      "success": "{count, plural, one {# transactie geëxporteerd} other {# transacties geëxporteerd}}",
+      "noData": "Geen transacties om te exporteren",
+      "error": "Exporteren van transacties mislukt"
+    },
+    "delete": {
+      "transferTitle": "Overboeking verwijderen",
+      "transactionTitle": "Transactie verwijderen",
+      "transferMessage": "Weet je zeker dat je deze overboeking wilt verwijderen? Beide gekoppelde transacties worden verwijderd.",
+      "transactionMessage": "Weet je zeker dat je deze transactie wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+      "success": "Transactie verwijderd",
+      "transferSuccess": "Overboeking verwijderd",
+      "error": "Verwijderen van transactie mislukt",
+      "reconciledWarning": "Deze transactie is afgestemd, dus het verwijderen ervan heeft invloed op een voltooide afstemming."
+    },
+    "status": {
+      "voidError": "Bewerk de transactie om de status te wijzigen van Ongeldig",
+      "changed": "Status gewijzigd naar {status}",
+      "changedLockedUndo": "Status gewijzigd naar {status}. Afgestemde transacties zijn vergrendeld; druk binnen {seconds} seconden opnieuw om dit ongedaan te maken.",
+      "updateError": "Bijwerken van status mislukt",
+      "unreconciled": "Niet afgestemd",
+      "cleared": "Bevestigd",
+      "reconciled": "Afgestemd",
+      "void": "Ongeldig",
+      "clearedDense": "B",
+      "reconciledDense": "A",
+      "voidDense": "O",
+      "pendingDense": "○",
+      "pending": "In behandeling",
+      "cycleTitle": "Klik om door statussen te wisselen"
+    },
+    "row": {
+      "viewPayeeTitle": "Details van {name} bekijken",
+      "ref": "Ref: {number}",
+      "investmentLabel": "Belegging",
+      "linkedInvestmentTitle": "Bekijk in Beleggingen",
+      "filterByDate": "Filteren op datum \"{date}\"",
+      "filterByAccount": "Filteren op \"{name}\"",
+      "filterByPayee": "Filteren op \"{name}\"",
+      "filterByCategory": "Filteren op {name}",
+      "filterByTag": "Filteren op label {name}",
+      "transfer": "Overboeking",
+      "transferTitle": "Overboeking {direction} {name}",
+      "split": "Splitsing",
+      "uncategorized": "Zonder categorie",
+      "splitMore": "+{count} meer",
+      "filteredAmountTitle": "Gefilterd bedrag (volledige transactie: {amount})",
+      "viewButton": "Bekijken",
+      "editButton": "Bewerken",
+      "deleteButton": "Verwijderen"
+    },
+    "itemNamePlural": "transacties"
+  },
+  "row": {
+    "copyOptions": {
+      "title": "Kopieeropties",
+      "duplicateTitle": "Transactie dupliceren",
+      "copy": "Kopiëren",
+      "duplicate": "Dupliceren",
+      "scheduleRecurring": "Plannen als terugkerend"
+    }
+  },
+  "actionSheet": {
+    "defaultTitle": "Transactie",
+    "filterByDate": "Filteren op datum \"{date}\"",
+    "filterByAccount": "Filteren op \"{name}\"",
+    "filterByPayee": "Filteren op \"{name}\"",
+    "filterByCategory": "Filteren op \"{name}\"",
+    "filterByTag": "Filteren op label \"{name}\"",
+    "edit": "Bewerken",
+    "duplicate": "Dupliceren",
+    "scheduleRecurring": "Plannen als terugkerend",
+    "delete": "Verwijderen"
+  },
+  "filter": {
+    "favourites": "Favorieten:",
+    "panel": {
+      "title": "Filters",
+      "clear": "Wissen",
+      "hide": "Verbergen",
+      "show": "Tonen"
+    },
+    "accounts": {
+      "label": "Rekeningen tonen:",
+      "all": "Alle",
+      "active": "Actief",
+      "closed": "Gesloten"
+    },
+    "fields": {
+      "accounts": "Rekeningen",
+      "payees": "Begunstigden",
+      "categories": "Categorieën",
+      "tags": "Labels",
+      "timePeriod": "Tijdperiode",
+      "startDate": "Begindatum",
+      "endDate": "Einddatum",
+      "amountFrom": "Bedrag vanaf",
+      "amountTo": "Bedrag tot",
+      "status": "Status",
+      "search": "Zoeken",
+      "tagKey": "Tagsleutel",
+      "tagKeyOp": "Voorwaarde",
+      "tagKeyValue": "Waarde",
+      "currency": "Valuta",
+      "hasAttachments": "Bijlagen"
+    },
+    "hasAttachmentsOptions": {
+      "any": "Alle",
+      "yes": "Ja",
+      "no": "Nee"
+    },
+    "placeholders": {
+      "accounts": "Alle rekeningen",
+      "payees": "Alle begunstigden",
+      "categories": "Alle categorieën",
+      "tags": "Alle labels",
+      "statuses": "Alle statussen",
+      "amountMin": "Min",
+      "amountMax": "Max",
+      "search": "Zoek op begunstigde, categorie, bedrag, label, omschrijving, referentie #...",
+      "tagKeyValue": "bijv. usa"
+    },
+    "tagKeyNone": "Alle (geen sleutelfilter)",
+    "tagKeyOps": {
+      "hasValue": "Heeft een waarde",
+      "noValue": "Heeft geen waarde",
+      "contains": "Waarde bevat",
+      "notContains": "Waarde bevat niet"
+    },
+    "chips": {
+      "removeAccount": "Filter {name} verwijderen",
+      "removePayee": "Filter {name} verwijderen",
+      "removeCategory": "Filter {name} verwijderen",
+      "removeTag": "Filter {name} verwijderen",
+      "removeDate": "Datumfilter verwijderen",
+      "removeAmount": "Bedragfilter verwijderen",
+      "removeSearch": "Zoekfilter verwijderen",
+      "dateFrom": "Vanaf {date}",
+      "dateUntil": "Tot {date}",
+      "amountFrom": "Vanaf {amount}",
+      "amountUpTo": "Tot {amount}",
+      "removeCurrency": "Valutafilter {name} verwijderen",
+      "hasAttachments": "Met bijlagen",
+      "noAttachments": "Zonder bijlagen",
+      "removeAttachments": "Bijlagenfilter verwijderen"
+    },
+    "bulkUpdate": "Bulk bijwerken",
+    "cancelBulk": "Bulk annuleren",
+    "statusLabels": {
+      "unreconciled": "Niet afgestemd",
+      "cleared": "Bevestigd",
+      "reconciled": "Afgestemd",
+      "void": "Ongeldig"
+    },
+    "periods": {
+      "select": "Selecteer periode...",
+      "allDates": "Alle datums",
+      "today": "Vandaag",
+      "yesterday": "Gisteren",
+      "thisWeek": "Deze week",
+      "lastWeek": "Vorige week",
+      "last30Days": "Laatste 30 dagen",
+      "monthToDate": "Maand tot nu toe",
+      "lastMonth": "Vorige maand",
+      "last365Days": "Laatste 365 dagen",
+      "yearToDate": "Jaar tot nu toe",
+      "lastYear": "Vorig jaar",
+      "custom": "Aangepast"
+    }
+  },
+  "bulk": {
+    "banner": {
+      "selected": "{count, plural, one {# transactie geselecteerd} other {# transacties geselecteerd}}",
+      "selectAllMatching": "Alle {count} overeenkomende transacties selecteren",
+      "allMatching": "(alle overeenkomende transacties)",
+      "clearSelection": "Selectie wissen",
+      "bulkUpdate": "Bulk bijwerken"
+    },
+    "modal": {
+      "title": "Transacties bulk bijwerken",
+      "subtitle": "Werk {count, plural, one {# geselecteerde transactie} other {# geselecteerde transacties}} bij. Schakel de velden in die je wilt wijzigen.",
+      "submitLabel": "Werk {count, plural, one {# transactie} other {# transacties}} bij",
+      "payee": "Begunstigde",
+      "category": "Categorie",
+      "description": "Omschrijving",
+      "status": "Status",
+      "tags": "Labels",
+      "payeePlaceholder": "Selecteer of typ naam begunstigde...",
+      "categoryPlaceholder": "Selecteer categorie...",
+      "descriptionPlaceholder": "Voer omschrijving in (leeg laten om te wissen)",
+      "tagsPlaceholder": "Selecteer labels (leeg laten om alle te wissen)...",
+      "statusOptions": {
+        "pending": "In behandeling",
+        "cleared": "Bevestigd",
+        "void": "Ongeldig"
+      },
+      "notes": {
+        "transfer": "Overboekingstransacties worden samen met hun gekoppelde partij bijgewerkt.",
+        "split": "Gesplitste transacties: de nieuwe categorie wordt toegepast op hun splitsingen (alleen splitsingen die overeenkomen met je categoriefilter wanneer er een actief is). Overboekings- en beleggingssplitsingen blijven ongewijzigd."
+      }
+    },
+    "toasts": {
+      "updated": "{count, plural, one {# transactie bijgewerkt} other {# transacties bijgewerkt}}",
+      "skipped": "{count, plural, one {# transactie overgeslagen} other {# transacties overgeslagen}}",
+      "splitLines": "{count, plural, one {# splitsing opnieuw gecategoriseerd} other {# splitsingen opnieuw gecategoriseerd}}"
+    }
+  },
+  "form": {
+    "modeTransaction": "Transactie",
+    "modeSplit": "Splitsing",
+    "modeTransfer": "Overboeking",
+    "transferBadge": "Overboeking",
+    "isLinkedTransfer": "Dit is een gekoppelde overboekingstransactie",
+    "fields": {
+      "account": "Rekening",
+      "date": "Datum",
+      "createDate": "Aanmaakdatum",
+      "payee": "Begunstigde",
+      "category": "Categorie",
+      "amount": "Bedrag",
+      "totalAmount": "Totaalbedrag",
+      "referenceNumber": "Referentienummer",
+      "description": "Omschrijving",
+      "status": "Status",
+      "tags": "Labels",
+      "fromAccount": "Van rekening",
+      "toAccount": "Naar rekening",
+      "transferAmount": "Overboekingsbedrag",
+      "transferAmountWithCurrency": "Overboekingsbedrag ({currency})",
+      "amountReceived": "Ontvangen bedrag ({currency})",
+      "payeeOptional": "Begunstigde (optioneel)",
+      "categoryOptional": "Categorie (optioneel)"
+    },
+    "placeholders": {
+      "selectAccount": "Selecteer rekening...",
+      "selectDestinationAccount": "Selecteer doelrekening...",
+      "selectOrTypePayee": "Selecteer of typ naam begunstigde...",
+      "selectOrCreateCategory": "Selecteer of maak categorie aan...",
+      "referenceNumber": "Chequenummer, bevestigingsnummer...",
+      "optionalDescription": "Optionele omschrijving...",
+      "selectTags": "Selecteer labels...",
+      "createNewTag": "Nieuw label aanmaken..."
+    },
+    "splitSection": {
+      "title": "Transactie splitsen",
+      "cancelSplit": "Splitsing annuleren"
+    },
+    "statusOptions": {
+      "unreconciled": "Niet afgestemd",
+      "cleared": "Bevestigd",
+      "reconciled": "Afgestemd",
+      "void": "Ongeldig"
+    },
+    "submitCreate": "{mode} aanmaken",
+    "submitCreateAndNew": "{mode} aanmaken en nieuwe",
+    "submitCreateDescription": "Opslaan en dit venster sluiten.",
+    "submitCreateAndNewDescription": "Opslaan en een nieuwe beginnen, met dezelfde rekening en datum.",
+    "submitOptions": "Kiezen wat er na het aanmaken gebeurt",
+    "submitUpdate": "{mode} bijwerken",
+    "reconciledConfirm": {
+      "title": "Afgestemde transactie bewerken?",
+      "message": "Deze transactie is afgestemd. Het wijzigen ervan heeft invloed op een voltooide afstemming. Wilt u uw wijzigingen toch opslaan?",
+      "confirm": "Wijzigingen opslaan"
+    },
+    "modeLabel": {
+      "transfer": "Overboeking",
+      "transaction": "Transactie"
+    },
+    "transferAmountNote": "Bedrag moet positief zijn voor overboekingen",
+    "transferCandidates": {
+      "sharedWithYou": "Met je gedeeld",
+      "yourAccounts": "Je rekeningen",
+      "optionLabel": "{name} ({currency}) — {owner}"
+    },
+    "crossOwnerLockedNote": "De andere kant van deze overboeking staat op een rekening die niet meer met je wordt gedeeld. Het bedrag, de datum en de rekeningen zijn vergrendeld, maar je kunt de details van deze transactie nog steeds bewerken.",
+    "transferCategoryNote": "Optioneel. De overboeking telt nog steeds niet mee als inkomsten of uitgaven, maar met deze categorie verschijnt hij wel in het maandelijkse categorieoverzicht (bijv. maandelijkse beleggingsinleg).",
+    "amountReceivedNote": "Ontvangen bedrag na valutaomrekening",
+    "splitTransaction": "Transactie splitsen",
+    "splitDisabledDuringTour": "Niet beschikbaar tijdens de begeleide rondleiding",
+    "newTagTitle": "Nieuw label",
+    "toasts": {
+      "transferCreated": "Overboeking aangemaakt",
+      "transferUpdated": "Overboeking bijgewerkt",
+      "transactionCreated": "Transactie aangemaakt",
+      "transactionUpdated": "Transactie bijgewerkt",
+      "attachmentsUploadFailed": "Transactie opgeslagen, maar {count} bijlage(n) konden niet worden geüpload",
+      "saveFailed": "Opslaan van transactie mislukt",
+      "loadFailed": "Laden van formuliergegevens mislukt",
+      "splitsNotEqual": "Totaal splitsingen ({splitTotal}) moet gelijk zijn aan transactiebedrag ({txAmount})",
+      "destinationRequired": "Selecteer een doelrekening",
+      "sameAccount": "Bron- en doelrekening moeten verschillend zijn",
+      "negativeTransfer": "Overboekingsbedrag mag niet negatief zijn",
+      "payeeCreated": "Begunstigde \"{name}\" aangemaakt",
+      "payeeCreateFailed": "Aanmaken van begunstigde mislukt",
+      "payeeReactivated": "Begunstigde \"{name}\" opnieuw geactiveerd",
+      "payeeReactivateFailed": "Opnieuw activeren van begunstigde mislukt",
+      "categoryCreated": "Categorie \"{name}\" aangemaakt",
+      "categoryCreateFailed": "Aanmaken van categorie mislukt",
+      "tagCreated": "Label \"{name}\" aangemaakt",
+      "fxRateRequired": "Voer een wisselkoers of het omgerekende bedrag in voordat je een transactie in vreemde valuta opslaat.",
+      "jointPayeeCreateNotGranted": "De eigenaar van de rekening heeft u geen toestemming gegeven om begunstigden aan te maken. Kies in plaats daarvan een bestaande begunstigde."
+    },
+    "ariaHistory": "Recente transacties tonen",
+    "ariaHistoryForPayee": "Recente transacties voor deze begunstigde tonen",
+    "historyTitle": "Snel invullen vanuit een recente transactie",
+    "currencyPicker": {
+      "label": "Invoervaluta",
+      "ariaLabel": "Invoervaluta wijzigen",
+      "title": "Bedrag invoeren in",
+      "accountCurrency": "Rekeningvaluta ({code})",
+      "addCurrency": "Valuta toevoegen...",
+      "optionLabel": "{symbol} - {name} ({code})",
+      "createFailed": "Kan valuta niet toevoegen",
+      "reactivated": "{code} opnieuw geactiveerd"
+    },
+    "fx": {
+      "totalInCurrency": "Totaal in {currency}",
+      "rateCaption": "1 {from} = {rate} {to} ({date})",
+      "noRateWarning": "Geen wisselkoers gevonden voor {from} naar {to} op {date}. Voer het omgerekende bedrag handmatig in.",
+      "usingLatestRateHint": "De laatst beschikbare koers wordt gebruikt (niet van {date}).",
+      "displayToggle": {
+        "account": "Rekening",
+        "original": "Origineel"
+      },
+      "feeCaption": "Inclusief {percent}% kosten voor buitenlandse transactie ({fee})."
+    },
+    "jointSplitDisabled": "Gesplitste transacties in een gedeelde rekening kunnen alleen door de eigenaar worden beheerd"
+  },
+  "splitEditor": {
+    "header": "Splitsingsdetails",
+    "distributeProportionally": "Proportioneel verdelen",
+    "distributeProportionallyTitle": "Verdeel het resterende bedrag proportioneel op basis van het bedrag van elke splitsing",
+    "distributeEvenly": "Gelijk verdelen",
+    "addSplit": "Splitsing toevoegen",
+    "removeMinimum": "Minimaal 2 splitsingen vereist",
+    "removeSplit": "Splitsing verwijderen",
+    "removeAndConvert": "Splitsing verwijderen en omzetten naar een gewone transactie",
+    "convertConfirm": {
+      "title": "Omzetten naar een gewone transactie?",
+      "message": "Als u deze splitsing verwijdert, wordt dit weer een gewone transactie met de categorie van de resterende splitsing.",
+      "confirm": "Omzetten"
+    },
+    "noUnassigned": "Geen niet-toegewezen bedrag",
+    "addRemaining": "Restbedrag aan deze splitsing toevoegen",
+    "total": "Totaal",
+    "balanced": "In evenwicht",
+    "remaining": "Resterend: {symbol}{amount}",
+    "needAmount": "Nodig {symbol}{amount} (resterend: {symbol}{remaining})",
+    "setTotal": "Totaal instellen op {symbol}{amount}",
+    "currencyToggle": {
+      "title": "Wissel de valuta waarin de splitsbedragen worden getoond en bewerkt",
+      "ariaAmountsIn": "Splitsbedragen tonen en bewerken in {code}"
+    },
+    "splitLabel": "Splitsing {number}",
+    "columns": {
+      "type": "Type",
+      "categoryAccount": "Categorie / rekening",
+      "category": "Categorie",
+      "amount": "Bedrag",
+      "memo": "Memo",
+      "tags": "Labels"
+    },
+    "splitTypes": {
+      "category": "Categorie",
+      "transfer": "Overboeking",
+      "investment": "Belegging"
+    },
+    "selectCategory": "Selecteer categorie...",
+    "selectAccount": "Selecteer rekening...",
+    "memoPlaceholder": "Optionele memo",
+    "mobileMemoPlaceholder": "Memo",
+    "tagsPlaceholder": "Labels..."
+  },
+  "recentPopover": {
+    "recentForPayee": "Recent voor {name}",
+    "recentTransactions": "Recente transacties",
+    "loading": "Laden...",
+    "noRecent": "Geen recente transacties.",
+    "noRecentForPayee": "Geen recente transacties voor deze begunstigde.",
+    "noPayee": "(geen begunstigde)",
+    "uncategorized": "(zonder categorie)"
+  },
+  "investmentSplit": {
+    "ariaAction": "Beleggingsactie",
+    "ariaSecurity": "Waardepapier",
+    "selectSecurity": "Selecteer waardepapier...",
+    "quantityPlaceholder": "Aantal",
+    "pricePlaceholder": "Koers",
+    "commissionPlaceholder": "Commissie",
+    "amountPlaceholder": "Bedrag ({currency})",
+    "ratePlaceholder": "{to} per 1 {from}",
+    "ariaRate": "Wisselkoers ({to} per 1 {from})",
+    "rateHint": "Aantal, prijs en commissie zijn in {from}; deze koers rekent het kaseffect om naar {to}.",
+    "rateUnresolved": "Geen koers van {from} naar {to} beschikbaar. Voer er een in — zonder is het kaseffect niet te bepalen, en de twee valuta's zijn niet gelijk."
+  },
+  "charts": {
+    "balanceHistory": {
+      "title": "Saldobeloop",
+      "noData": "Geen saldogegevens beschikbaar",
+      "starting": "Begin",
+      "current": "Huidig",
+      "ending": "Eind",
+      "lowest": "Laagste",
+      "minBalance": "Minimumsaldo",
+      "projected": "Geprojecteerd",
+      "range": "{start} – {end}"
+    },
+    "zeroBalances": {
+      "message": "Alle geselecteerde rekeningen hebben een saldo van nul, dus er is geen saldografiek om weer te geven."
+    },
+    "monthlyTotals": {
+      "title": "Maandtotalen",
+      "noData": "Geen transactiegegevens beschikbaar",
+      "monthlyAvg": "Maandgemiddelde",
+      "quarterlyAvg": "Kwartaalgemiddelde",
+      "yearlyAvg": "Jaargemiddelde",
+      "total": "Totaal",
+      "transactions": "Transacties",
+      "tooltip": "{count, plural, one {# transactie} other {# transacties}}",
+      "quarterLabel": "K{quarter} {year}",
+      "quarterTick": "K{quarter} {year}",
+      "granularityLabel": "Groepering",
+      "granularity": {
+        "auto": "Auto",
+        "month": "Maand",
+        "quarter": "Kwartaal",
+        "year": "Jaar"
+      },
+      "granularityAutoTitle": "Auto ({granularity})",
+      "granularityTitle": "Weergave per {label}"
+    },
+    "accountBalances": {
+      "title": "Rekeningsaldi",
+      "noData": "Geen rekeningsaldogegevens beschikbaar",
+      "average": "Gemiddelde",
+      "total": "Totaal",
+      "accounts": "Rekeningen",
+      "scaleLabel": "Y-as schaal",
+      "auto": "Auto",
+      "linear": "Lineair",
+      "log": "Log",
+      "autoTitle": "Auto ({scale})",
+      "scaleTitle": "{label} schaal"
+    }
+  },
+  "toasts": {
+    "payeeUpdated": "Begunstigde succesvol bijgewerkt",
+    "deleted": "{count, plural, one {# transactie verwijderd} other {# transacties verwijderd}}",
+    "noneToExport": "Geen transacties om te exporteren",
+    "exported": "{count, plural, one {# transactie geëxporteerd} other {# transacties geëxporteerd}}",
+    "loadFormDataFailed": "Laden van formuliergegevens mislukt",
+    "loadFailed": "Laden van transacties mislukt",
+    "loadPayeeFailed": "Laden van gegevens van begunstigde mislukt",
+    "payeeUpdateFailed": "Bijwerken van begunstigde mislukt",
+    "categoryUpdated": "Categorie succesvol bijgewerkt",
+    "categoryUpdateFailed": "Bijwerken van categorie mislukt",
+    "exportFailed": "Exporteren van transacties mislukt"
+  },
+  "validation": {
+    "dateRequired": "Datum is vereist"
+  },
+  "tagKeyBreakdown": {
+    "title": "Uitgaven per {key}",
+    "other": "Overige",
+    "noData": "Geen getagde uitgaven om te verdelen voor deze sleutel."
+  }
+}

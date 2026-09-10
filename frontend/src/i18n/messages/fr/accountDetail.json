@@ -1,0 +1,49 @@
+{
+  "header": {
+    "viewTransactions": "Voir les transactions",
+    "reconcile": "Rapprocher",
+    "edit": "Modifier le compte",
+    "back": "Retour aux comptes",
+    "switchAccount": "Passer à un autre compte",
+    "switchFavourites": "Favoris",
+    "switchOtherAccounts": "Autres comptes",
+    "switchPlaceholder": "Filtrer les comptes...",
+    "switchNoMatches": "Aucun compte ne correspond",
+    "jointBadge": "Joint",
+    "jointSharedBy": "Partagé par {owner}",
+    "jointSharedWith": "Partagé avec {count, plural, one {# personne} other {# personnes}}"
+  },
+  "loading": "Chargement des détails du compte…",
+  "error": {
+    "retry": "Réessayer"
+  },
+  "recurring": {
+    "title": "Frais récurrents",
+    "subtitle": "Factures planifiées sur ce compte, ainsi que d'éventuels abonnements détectés dans ses transactions",
+    "empty": "Aucun frais récurrent détecté sur ce compte",
+    "scheduledTitle": "Planifiés",
+    "detectedTitle": "Frais récurrents possibles",
+    "detectedSubtitle": "Trouvés dans votre historique de transactions mais pas encore planifiés",
+    "nextDue": "Prochaine échéance {date}",
+    "createBill": "Créer une facture",
+    "createBillAria": "Créer une facture planifiée pour {payee}",
+    "createTitle": "Nouvelle facture planifiée",
+    "frequency": {
+      "weekly": "Hebdomadaire",
+      "biweekly": "Toutes les 2 semaines",
+      "monthly": "Mensuel",
+      "quarterly": "Trimestriel",
+      "yearly": "Annuel",
+      "irregular": "Irrégulier"
+    }
+  },
+  "forecastUnavailable": {
+    "intro": "Le solde prévisionnel n'est pas affiché car au moins une échéance planifiée ne peut pas encore être valorisée. Une projection reporte chaque jour sur le suivant : un seul montant inconnu rendrait faux tous les jours suivants.",
+    "requestFailed": "Le solde prévisionnel n'a pas pu être chargé. Rechargez la page pour réessayer.",
+    "reasonUnavailable": "La raison n'a pas été communiquée. Vérifiez les taux de change des éléments planifiés en devise étrangère.",
+    "missingRatePair": "{name} : aucun taux de change n'est disponible de {from} vers {to}, le montant que cette échéance enregistrera est donc inconnu.",
+    "missingRate": "{name} : le taux de change de règlement de cette échéance n'est pas disponible, le montant est donc inconnu.",
+    "crossCurrencyTransfer": "{name} : un virement arrivant d'un compte en {from} alors que ce compte est en {to}. Le montant reçu ici est fixé lors de l'enregistrement du virement et ne peut donc pas être projeté à l'avance.",
+    "howToFix": "Pour corriger un taux manquant : ouvrez Devises et actualisez les taux, ou vérifiez que le titre et son compte de règlement portent bien les devises attendues."
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "title": "[XX-Reconcile Account-XX]",
+  "subtitle": "[XX-Match your records against your bank statement-XX]",
+  "subtitleActive": "[XX-Reconciling: {name}-XX]",
+  "setup": {
+    "title": "[XX-Start Reconciliation-XX]",
+    "intro": "[XX-Reconcile your account against a bank statement to ensure your records match.-XX]",
+    "accountLabel": "[XX-Account-XX]",
+    "accountPlaceholder": "[XX-Select account...-XX]",
+    "statementDateLabel": "[XX-Statement Date-XX]",
+    "statementBalanceLabel": "[XX-Statement Ending Balance-XX]",
+    "start": "[XX-Start Reconciliation-XX]"
+  },
+  "summary": {
+    "statementBalance": "[XX-Statement Balance-XX]",
+    "reconciledBalance": "[XX-Reconciled Balance-XX]",
+    "selected": "[XX-Selected ({count})-XX]",
+    "difference": "[XX-Difference-XX]"
+  },
+  "list": {
+    "heading": "[XX-Unreconciled Transactions ({count})-XX]",
+    "selectAll": "[XX-Select All-XX]",
+    "selectNone": "[XX-Select None-XX]",
+    "empty": "[XX-No unreconciled transactions found for this period.-XX]",
+    "colSelect": "[XX-Select-XX]",
+    "colDate": "[XX-Date-XX]",
+    "colPayee": "[XX-Payee-XX]",
+    "colCategory": "[XX-Category-XX]",
+    "colAmount": "[XX-Amount-XX]",
+    "colStatus": "[XX-Status-XX]",
+    "finish": "[XX-Finish Reconciliation-XX]",
+    "colActions": "[XX-Actions-XX]",
+    "selectRow": "[XX-Select the transaction for {payee}-XX]",
+    "groupByFlow": "[XX-Group by money in and out-XX]",
+    "groupCredits": "[XX-Money in ({count})-XX]",
+    "groupDebits": "[XX-Money out ({count})-XX]",
+    "groupSubtotal": "[XX-Group subtotal {amount}-XX]",
+    "addTransaction": "[XX-Add Transaction-XX]",
+    "lockedRow": "[XX-Locked-XX]"
+  },
+  "status": {
+    "cleared": "[XX-Cleared-XX]",
+    "unreconciled": "[XX-Unreconciled-XX]",
+    "void": "[XX-Void-XX]",
+    "reconciled": "[XX-Reconciled-XX]"
+  },
+  "complete": {
+    "title": "[XX-Reconciliation Complete-XX]",
+    "message": "[XX-Your account has been successfully reconciled as of {date}.-XX]",
+    "existingPayment": "[XX-This account has a scheduled payment, <b>{name}</b>. Would you like to update its next instance to the reconciled balance of <b>{amount}</b>?-XX]",
+    "updatePayment": "[XX-Update Next Payment-XX]",
+    "noPayment": "[XX-No scheduled payment was found for this account. Would you like to create one for the reconciled balance of <b>{amount}</b>?-XX]",
+    "createPayment": "[XX-Create Scheduled Payment-XX]",
+    "backToAccounts": "[XX-Back to Accounts-XX]",
+    "reconcileAnother": "[XX-Reconcile Another Account-XX]"
+  },
+  "toasts": {
+    "loadAccountsFailed": "[XX-Failed to load accounts-XX]",
+    "fillAllFields": "[XX-Please fill in all fields-XX]",
+    "loadDataFailed": "[XX-Failed to load reconciliation data-XX]",
+    "differenceRequired": "[XX-The difference must be {amount} to finish reconciliation-XX]",
+    "noneSelected": "[XX-No transactions selected for reconciliation-XX]",
+    "success": "[XX-{count, plural, one {Successfully reconciled # transaction} other {Successfully reconciled # transactions}}-XX]",
+    "reconcileFailed": "[XX-Failed to reconcile transactions-XX]",
+    "deleted": "[XX-Transaction deleted-XX]",
+    "transferDeleted": "[XX-Transfer deleted-XX]",
+    "deleteFailed": "[XX-Failed to delete the transaction-XX]",
+    "voidStatus": "[XX-A void transaction can only be changed from the transaction form-XX]",
+    "statusFailed": "[XX-Failed to change the status-XX]"
+  },
+  "form": {
+    "newTitle": "[XX-New Transaction-XX]",
+    "editTitle": "[XX-Edit Transaction-XX]"
+  },
+  "delete": {
+    "title": "[XX-Delete Transaction-XX]",
+    "message": "[XX-Delete this transaction? It will be removed from the account and from this reconciliation.-XX]",
+    "transferTitle": "[XX-Delete Transfer-XX]",
+    "transferMessage": "[XX-Delete this transfer? Both sides of it are removed, in this account and in the other one.-XX]"
+  },
+  "stale": {
+    "missedChip": "[XX-Missed-XX]",
+    "missedTooltip": "[XX-This transaction is dated on or before the last statement you reconciled, so that statement was reconciled without it.-XX]",
+    "overdueChip": "[XX-Overdue-XX]",
+    "overdueTooltip": "[XX-This transaction has been waiting to be reconciled for longer than a statement cycle.-XX]"
+  },
+  "reminder": {
+    "title": "[XX-Reconciliation-XX]",
+    "badgeLabel": "[XX-{count, plural, one {# transaction waiting to be reconciled} other {# transactions waiting to be reconciled}}-XX]",
+    "accountLine": "[XX-{count, plural, one {# transaction} other {# transactions}}, oldest {date}-XX]",
+    "missedLine": "[XX-{count, plural, one {# left out of a reconciled statement} other {# left out of reconciled statements}}-XX]",
+    "overdueLine": "[XX-{count, plural, one {# older than {days} days} other {# older than {days} days}}-XX]",
+    "reconcileAction": "[XX-Reconcile-XX]"
+  }
+}

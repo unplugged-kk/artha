@@ -1,0 +1,294 @@
+{
+  "test": {
+    "subject": "Surel Uji Monize",
+    "heading": "Surel Uji Monize",
+    "greeting": "Hai {{ name }},",
+    "body": "Ini adalah surel uji dari Monize. Jika Anda menerimanya, notifikasi surel Anda berfungsi dengan benar."
+  },
+  "billReminder": {
+    "subjectOne": "Monize: 1 tagihan yang akan datang memerlukan perhatian",
+    "subjectMany": "Monize: {{ count }} tagihan yang akan datang memerlukan perhatian",
+    "heading": "Pengingat Tagihan yang Akan Datang",
+    "greeting": "Hai {{ name }},",
+    "introOne": "Anda memiliki 1 tagihan yang akan datang yang memerlukan perhatian:",
+    "introMany": "Anda memiliki {{ count }} tagihan yang akan datang yang memerlukan perhatian:",
+    "colPayee": "Penerima",
+    "colDueDate": "Tanggal Jatuh Tempo",
+    "colType": "Tipe",
+    "colAmount": "Jumlah",
+    "typeIncome": "Pendapatan",
+    "typeExpense": "Pengeluaran",
+    "typeUnknown": "Arah tidak diketahui",
+    "amountUnavailable": "Jumlah tidak tersedia",
+    "button": "Lihat Tagihan &amp; Setoran"
+  },
+  "mortgageReminder": {
+    "subject": "Monize: 1 perpanjangan hipotek yang akan datang",
+    "subjectPlural": "Monize: {{ count }} perpanjangan hipotek yang akan datang",
+    "heading": "Pengingat Perpanjangan Hipotek",
+    "greeting": "Hai {{ name }},",
+    "introOne": "Anda memiliki 1 hipotek dengan perpanjangan jangka yang akan datang. Hubungi pemberi pinjaman Anda untuk mendiskusikan opsi perpanjangan sebelum jangka berakhir:",
+    "introMany": "Anda memiliki {{ count }} hipotek dengan perpanjangan jangka yang akan datang. Hubungi pemberi pinjaman Anda untuk mendiskusikan opsi perpanjangan sebelum jangka berakhir:",
+    "colMortgage": "Hipotek",
+    "colTermEndDate": "Tanggal Akhir Jangka",
+    "colTimeRemaining": "Waktu Tersisa",
+    "daysRemainingOne": "1 hari",
+    "daysRemainingMany": "{{ count }} hari",
+    "button": "Lihat Akun"
+  },
+  "severity": {
+    "critical": "Kritis",
+    "warning": "Peringatan",
+    "success": "Kabar Baik",
+    "info": "Info"
+  },
+  "budgetAlertImmediate": {
+    "subject": "Monize: Peringatan - {{ title }}",
+    "subjectPlural": "Monize: {{ count }} peringatan memerlukan perhatian",
+    "heading": "Peringatan",
+    "greeting": "Hai {{ name }},",
+    "intro": "Anggaran Anda memerlukan perhatian:",
+    "colSeverity": "Tingkat Keparahan",
+    "colAlert": "Peringatan",
+    "colDetails": "Detail",
+    "button": "Lihat Anggaran"
+  },
+  "budgetWeeklyDigest": {
+    "subject": "Monize: Ringkasan anggaran mingguan Anda",
+    "heading": "Ringkasan Anggaran Mingguan",
+    "greeting": "Hai {{ name }},",
+    "intro": "Berikut ringkasan anggaran mingguan Anda untuk: <strong>{{ budgets }}</strong>",
+    "criticalOne": "kritis",
+    "criticalMany": "kritis",
+    "warningOne": "peringatan",
+    "warningMany": "peringatan",
+    "positiveOne": "positif",
+    "positiveMany": "positif",
+    "thisWeek": "Minggu Ini:",
+    "noAlerts": "Tidak ada peringatan",
+    "totalAlerts": "Total peringatan: {{ count }}",
+    "topAlertsHeading": "Peringatan Teratas",
+    "andMore": "...dan {{ count }} lagi",
+    "button": "Lihat Dasbor Anggaran"
+  },
+  "budgetMonthlySummary": {
+    "subject": "Monize: Ringkasan anggaran bulanan - {{ period }}",
+    "subjectPlural": "Monize: Ringkasan anggaran bulanan untuk {{ count }} anggaran",
+    "heading": "Ringkasan Anggaran Bulanan",
+    "greeting": "Hai {{ name }},",
+    "intro": "Berikut ringkasan anggaran bulanan Anda untuk periode yang baru saja berakhir:",
+    "overBudget": "Melebihi Anggaran",
+    "healthScore": "Skor Kesehatan:",
+    "labelBudgeted": "Dianggarkan",
+    "labelSpent": "Dibelanjakan",
+    "labelRemaining": "Sisa",
+    "percentUsed": "{{ percent }}% digunakan",
+    "topCategories": "Kategori Teratas",
+    "button": "Lihat Dasbor Anggaran"
+  },
+  "oidcLink": {
+    "subject": "Monize: Konfirmasi Tautan Akun SSO",
+    "heading": "Tautkan Akun SSO Anda",
+    "greeting": "Hai {{ name }},",
+    "intro": "Seseorang mencoba masuk melalui SSO dengan surel yang cocok dengan akun Monize Anda yang sudah ada. Untuk menautkan identitas SSO Anda ke akun ini, klik tombol di bawah ini:",
+    "button": "Konfirmasi Tautan Akun",
+    "disclaimer": "Jika Anda tidak memulai permintaan ini, Anda dapat mengabaikan surel ini dengan aman. Tautan ini kedaluwarsa dalam 1 jam."
+  },
+  "accountLocked": {
+    "subject": "Akun Terkunci Sementara",
+    "heading": "Akun Terkunci Sementara",
+    "greeting": "Hai {{ name }},",
+    "body1": "Akun Monize Anda telah dikunci sementara karena beberapa percobaan login yang gagal. Ini adalah langkah keamanan untuk melindungi akun Anda.",
+    "body2": "Kunci akan kedaluwarsa secara otomatis. Jika Anda tidak mencoba login, kami menyarankan untuk mengatur ulang kata sandi Anda segera."
+  },
+  "passwordReset": {
+    "subject": "Pengaturan Ulang Kata Sandi Monize",
+    "heading": "Permintaan Pengaturan Ulang Kata Sandi",
+    "greeting": "Hai {{ name }},",
+    "intro": "Kami menerima permintaan untuk mengatur ulang kata sandi Anda. Klik tombol di bawah ini untuk menetapkan kata sandi baru:",
+    "button": "Atur Ulang Kata Sandi",
+    "disclaimer": "Tautan ini akan kedaluwarsa dalam 1 jam. Jika Anda tidak meminta pengaturan ulang kata sandi, Anda dapat mengabaikan surel ini dengan aman."
+  },
+  "emailVerification": {
+    "subject": "Verifikasi surel Monize Anda",
+    "heading": "Verifikasi alamat surel Anda",
+    "greeting": "Hai {{ name }},",
+    "intro": "Terima kasih telah mendaftar untuk Monize. Silakan konfirmasi alamat surel Anda untuk mengaktifkan akun dan masuk:",
+    "button": "Verifikasi Surel",
+    "disclaimer": "Tautan ini akan kedaluwarsa dalam 24 jam. Jika Anda tidak membuat akun Monize, Anda dapat mengabaikan surel ini dengan aman."
+  },
+  "accountInvite": {
+    "subject": "Akun Monize Anda siap",
+    "heading": "Akun Monize Anda siap",
+    "greeting": "Hai {{ name }},",
+    "intro": "Administrator telah membuat akun Monize untuk Anda. Klik tombol di bawah ini untuk menetapkan kata sandi dan masuk:",
+    "button": "Tetapkan Kata Sandi Anda",
+    "disclaimer": "Tautan ini akan kedaluwarsa dalam 24 jam. Jika Anda tidak mengharapkan ini, Anda dapat mengabaikan surel ini dengan aman."
+  },
+  "delegateInvite": {
+    "subject": "Anda diundang ke Monize",
+    "heading": "Anda diundang ke Monize",
+    "greeting": "Hai {{ name }},",
+    "intro": "{{ owner }} telah mengundang Anda untuk mengakses akun Monize mereka sebagai delegasi. Klik tombol di bawah ini untuk menetapkan kata sandi dan memulai:",
+    "button": "Tetapkan Kata Sandi Anda",
+    "disclaimer": "Tautan ini akan kedaluwarsa dalam 24 jam. Jika Anda tidak mengharapkan undangan ini, Anda dapat mengabaikan surel ini dengan aman."
+  },
+  "emergencyAccessReminder": {
+    "subjectOne": "Monize: akun Anda tidak aktif selama 1 hari",
+    "subjectMany": "Monize: akun Anda tidak aktif selama {{ daysSinceLogin }} hari",
+    "heading": "Pengingat Akses Darurat Monize",
+    "greeting": "Hai {{ name }},",
+    "grantPhraseToday": "hari ini",
+    "grantPhraseFutureOne": "dalam 1 hari",
+    "grantPhraseFutureMany": "dalam {{ count }} hari",
+    "bodyOne": "Anda tidak masuk ke Monize selama <strong>1 hari</strong>. Jika Anda tetap tidak aktif, kontak darurat yang Anda tentukan akan diberikan akses penuh ke akun Anda {{ grantPhrase }}.",
+    "bodyMany": "Anda tidak masuk ke Monize selama <strong>{{ daysSinceLogin }} hari</strong>. Jika Anda tetap tidak aktif, kontak darurat yang Anda tentukan akan diberikan akses penuh ke akun Anda {{ grantPhrase }}.",
+    "contactsLabel": "Kontak yang ditentukan:",
+    "button": "Masuk sekarang",
+    "footer": "Masuk mengatur ulang penghitung waktu. Jika Anda tidak lagi ingin fitur ini diaktifkan, Anda dapat menonaktifkannya dari Pengaturan → Akses Darurat."
+  },
+  "emergencyAccessGrant": {
+    "subject": "Anda telah diberikan akses darurat ke akun Monize {{ owner }}",
+    "heading": "Akses Darurat Diberikan",
+    "greeting": "Hai {{ name }},",
+    "body": "<strong>{{ owner }}</strong> sebelumnya menunjuk Anda sebagai kontak darurat di akun Monize mereka. Karena mereka tidak masuk dalam jangka waktu yang lama, Anda sekarang diberikan akses penuh untuk mengambil alih akun.",
+    "claimIntro": "Untuk mengklaim akses, klik tautan di bawah ini dan tetapkan kata sandi baru. Anda akan masuk sebagai pemegang akun.",
+    "button": "Klaim Akses Darurat",
+    "expiry": "Tautan ini berlaku hingga <strong>{{ expiry }}</strong> dan hanya dapat digunakan sekali. Jika beberapa kontak menerima surel ini, yang pertama mengklaim akan mengambil alih akun."
+  },
+  "emergencyAccessGrantRevoked": {
+    "subject": "Monize: akses darurat diberikan saat Anda tidak ada",
+    "heading": "Akses Darurat Diberikan Saat Anda Tidak Ada",
+    "greeting": "Hai {{ name }},",
+    "body1": "Karena akun Anda tidak aktif, kontak darurat yang Anda tentukan dikirim tautan untuk mengambil alih akun Anda. Anda sekarang telah masuk kembali, jadi <strong>tautan-tautan tersebut telah dicabut</strong> dan perlindungan telah dipasang kembali.",
+    "body2": "Jika ini diharapkan, tidak diperlukan tindakan. Jika Anda tidak mengharapkan ini, tinjau aktivitas masuk Anda dan pengaturan akses darurat Anda.",
+    "button": "Tinjau Akses Darurat"
+  },
+  "providerOutage": {
+    "subject": "Monize: {{ provider }} tidak merespons",
+    "heading": "Penyedia data pasar tidak tersedia",
+    "greeting": "Hai {{ name }},",
+    "intro": "Monize tidak dapat menghubungi <strong>{{ provider }}</strong> sejak {{ since }} ({{ duration }}). Permintaan ke penyedia ini dihentikan sementara dan dicoba ulang dengan jeda yang makin panjang.",
+    "labelFailures": "Percobaan gagal",
+    "labelLastError": "Kesalahan terakhir",
+    "labelLastSuccess": "Respons berhasil terakhir",
+    "valueNever": "belum pernah",
+    "valueUnknown": "tidak diketahui",
+    "impact": "Harga, grafik, dan perbandingan indeks yang bergantung pada penyedia ini mungkin hilang atau kedaluwarsa hingga penyedia merespons kembali. Tidak ada data yang tercatat di Monize yang hilang.",
+    "whatToCheck": "Jika penyedia sendiri berjalan normal, periksa akses jaringan keluar dan DNS server ini -- kontainer yang tidak bisa meresolusi atau menjangkau penyedia gagal dengan cara seperti ini.",
+    "throttleNote": "Anda akan menerima satu email lagi saat penyedia pulih. Peringatan tentang penyedia yang sama dikirim maksimal sekali setiap {{ hours }} jam, sehingga penyedia yang tidak stabil tidak memenuhi kotak masuk Anda.",
+    "durationMinutes": "{{ minutes }} mnt",
+    "durationHoursMinutes": "{{ hours }} jam {{ minutes }} mnt"
+  },
+  "providerRecovery": {
+    "subject": "Monize: {{ provider }} merespons kembali",
+    "heading": "Penyedia data pasar merespons kembali",
+    "greeting": "Hai {{ name }},",
+    "intro": "<strong>{{ provider }}</strong> merespons kembali pada {{ restoredAt }}. Gangguan berlangsung {{ duration }}.",
+    "backfill": "Harga dan riwayat indeks yang terlewat selama gangguan akan diambil pada penyegaran terjadwal berikutnya; tidak ada tindakan yang diperlukan."
+  },
+  "systemAlert": {
+    "subject": "Monize: {{ title }}",
+    "heading": "Peringatan sistem",
+    "greeting": "Hai {{ name }},",
+    "intro": "Sebuah masalah pada instalasi Monize Anda memerlukan perhatian administrator.",
+    "footer": "Peringatan ini juga ditampilkan pada lonceng notifikasi aplikasi. Peringatan hanya dibuat paling banyak satu kali per kejadian, berapa pun jumlah replika server yang mendeteksinya."
+  },
+  "notificationImmediate": {
+    "subject": "Anda memiliki notifikasi Monize baru",
+    "eyebrow": "Notifikasi Monize",
+    "button": "Buka di Monize",
+    "footer": "Anda menerima ini karena email langsung aktif untuk jenis notifikasi ini. Ubah di Pengaturan, Notifikasi."
+  },
+  "notificationCopy": {
+    "billDue": {
+      "titleOverdue": "{{ payee }} terlambat",
+      "titleToday": "{{ payee }} jatuh tempo hari ini",
+      "titleTomorrow": "{{ payee }} jatuh tempo besok",
+      "titleInDays": "{{ payee }} jatuh tempo dalam {{ days }} hari",
+      "amountDue": "{{ amount }} jatuh tempo pada {{ date }}",
+      "amountUnavailable": "Jumlah tidak tersedia (tidak ada kurs saat ini), jatuh tempo pada {{ date }}"
+    },
+    "gemSignal": {
+      "riskTitle": "{{ strategy }} beralih ke {{ state }}",
+      "riskMessage": "Strategi GEM Anda \"{{ strategy }}\" berubah dari {{ fromState }} ke {{ toState }}. Buka untuk meninjau rekomendasinya.",
+      "allocationTitle": "{{ strategy }} mengubah targetnya",
+      "allocationMessage": "Strategi GEM Anda \"{{ strategy }}\" kini menargetkan {{ target }}. Buka untuk meninjau rekomendasinya.",
+      "riskOn": "risk-on",
+      "riskOff": "risk-off",
+      "roles": {
+        "US_EQUITY": "S&P 500",
+        "EX_US_EQUITY": "Pasar maju di luar AS",
+        "EM_EQUITY": "Pasar berkembang",
+        "SAFE": "Aset aman",
+        "RISK_FREE": "Tolok ukur bebas risiko"
+      },
+      "allocationMessageUnknown": "Strategi GEM “{{ strategy }}” Anda telah mengubah targetnya. Buka untuk meninjau rekomendasi."
+    },
+    "portfolioMovement": {
+      "titleUp": "Investasi naik {{ percent }}%",
+      "titleDown": "Investasi turun {{ percent }}%",
+      "messageUp": "Investasi Anda naik {{ percent }}% hari ini, tidak termasuk setoran dan penarikan. Buka untuk meninjau.",
+      "messageDown": "Investasi Anda turun {{ percent }}% hari ini, tidak termasuk setoran dan penarikan. Buka untuk meninjau."
+    },
+    "balanceThreshold": {
+      "titleLow": "{{ account }} di bawah ambang batas Anda",
+      "titleHigh": "{{ account }} di atas ambang batas Anda",
+      "messageLow": "{{ account }} turun menjadi {{ balance }}, di bawah ambang batas {{ threshold }} Anda.",
+      "messageHigh": "{{ account }} naik menjadi {{ balance }}, di atas ambang batas {{ threshold }} Anda."
+    },
+    "system": {
+      "backupFailed": {
+        "title": "Pencadangan otomatis gagal",
+        "message": "Pencadangan otomatis untuk {{ user }} gagal: {{ error }}"
+      },
+      "backupPartial": {
+        "title": "Pencadangan otomatis tidak lengkap",
+        "messageAttachments": "Cadangan untuk {{ user }} berhasil ditulis, tetapi {{ missing }} dari {{ expected }} lampiran tidak dapat disertakan dan {{ inconsistent }} tidak cocok dengan metadatanya. Cadangan lengkap tetap dipertahankan.",
+        "messagePromotion": "Cadangan harian untuk {{ user }} berhasil, tetapi salinan mingguan atau bulanannya tidak dapat ditulis: {{ error }}",
+        "messageRetention": "Cadangan untuk {{ user }} berhasil, tetapi berkas cadangan lama tidak dapat dibersihkan: {{ error }}"
+      },
+      "encryptionKeyMissing": {
+        "title": "Kunci enkripsi belum dikonfigurasi",
+        "message": "ENCRYPTION_KEY belum disetel, sehingga cadangan ditulis tanpa enkripsi dan rahasia tidak dapat disimpan. Versi mendatang tidak akan dapat dijalankan tanpanya."
+      },
+      "smtpFailure": {
+        "title": "Pengiriman email gagal",
+        "message": "Monize tidak dapat mengirim email: {{ error }}. Notifikasi dan pengingat tidak terkirim."
+      },
+      "providerOutage": {
+        "title": "{{ provider }} tidak merespons",
+        "message": "Data pasar dari {{ provider }} tidak tersedia. Harga dan data indeks mungkin usang sampai penyedia merespons kembali."
+      },
+      "providerRecovered": {
+        "title": "{{ provider }} merespons kembali",
+        "message": "Gangguan telah berakhir dan data pasar dari {{ provider }} diperbarui kembali."
+      },
+      "scheduledPostFailed": {
+        "title": "{{ name }} tidak dapat diposting",
+        "message": "Transaksi terjadwal Anda yang jatuh tempo {{ date }} tidak terposting secara otomatis: {{ error }}. Anda dapat mempostingnya secara manual dari Tagihan & Setoran."
+      }
+    },
+    "budget": {
+      "overTitle": "{{ category }} melebihi anggaran",
+      "overMessage": "Anda telah membelanjakan {{ amount }} dari anggaran {{ limit }} untuk {{ category }} ({{ percent }}%).",
+      "criticalTitle": "{{ category }} mendekati batas",
+      "warningTitle": "{{ category }} mencapai batas anggaran",
+      "thresholdMessage": "Anda telah menggunakan {{ percent }}% anggaran {{ category }} ({{ amount }} dari {{ limit }}).",
+      "projectedTitle": "{{ category }} diperkirakan melebihi anggaran",
+      "projectedMessage": "Dengan laju saat ini, pengeluaran {{ category }} diperkirakan mencapai {{ projected }} pada akhir periode (anggaran: {{ budgeted }}).",
+      "flexTitle": "Grup fleksibel “{{ group }}” mencapai {{ percent }}%",
+      "flexMessage": "Grup fleksibel “{{ group }}” telah menggunakan {{ spent }} dari anggaran gabungan {{ budgeted }} ({{ percent }}%).",
+      "incomeTitle": "Pendapatan di bawah perkiraan",
+      "incomeMessage": "Pendapatan aktual Anda ({{ actual }}) adalah {{ ratio }}% dari pendapatan yang diharapkan ({{ expected }}) pada tahap periode ini.",
+      "milestoneTitle": "Anggaran sesuai rencana",
+      "milestoneMessage": "{{ progress }}% periode telah berlalu dan Anda baru menggunakan {{ percent }}% dari total anggaran. Pertahankan!",
+      "seasonalTitle": "Lonjakan musiman diperkirakan untuk {{ category }}",
+      "seasonalMessage": "Pada bulan {{ month }} yang lalu, pengeluaran Anda untuk {{ category }} adalah {{ increase }} kali dari biasanya. Pertimbangkan untuk menyesuaikan anggaran."
+    },
+    "priceMovement": {
+      "title": "Peringatan perubahan harga: {{ symbol }} ({{ percent }}%)",
+      "message": "{{ symbol }}: {{ percent }}% dibandingkan sesi sebelumnya yang tersedia."
+    }
+  }
+}

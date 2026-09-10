@@ -1,0 +1,361 @@
+{
+  "controls": {
+    "next": "Weiter",
+    "back": "Zurück",
+    "done": "Fertig",
+    "endTour": "Tour beenden",
+    "tryIt": "Probieren Sie es aus — die Tour geht danach weiter",
+    "skipStep": "Diesen Schritt überspringen",
+    "stepCounter": "{current} von {total}",
+    "skippedTitle": "Tour beendet",
+    "skippedBody": "Einige Schritte wurden übersprungen, weil ihr Bildschirm oder Element nicht verfügbar war. Sie können die Tour jederzeit über die Einstellungen erneut starten.",
+    "move": "Diese Karte verschieben — ziehen Sie sie oder bewegen Sie sie mit den Pfeiltasten"
+  },
+  "offer": {
+    "heading": "Machen Sie eine kurze Tour",
+    "subheading": "Kurze Einführungen zu den Neuerungen dieser Version. Dieses Fenster tritt während einer Tour zur Seite und kommt zurück, wenn sie endet.",
+    "showMe": "Zeigen",
+    "viewed": "Angesehen",
+    "introTitle": "Neu hier? Starten Sie die Einführungstour",
+    "introSubtitle": "Ein kurzer Rundgang durch die Grundlagen."
+  },
+  "areas": {
+    "intro": "Erste Schritte",
+    "transactions": "Buchungen",
+    "accounts": "Konten",
+    "budgets": "Budgets",
+    "reports": "Berichte",
+    "investments": "Investitionen",
+    "settings": "Einstellungen"
+  },
+  "gettingStarted": {
+    "takeTour": "Tour starten",
+    "retakeTour": "Tour erneut starten"
+  },
+  "settings": {
+    "title": "Geführte Touren",
+    "description": "Gehen Sie die Funktionen der App Schritt für Schritt durch.",
+    "backLink": "Zurück zu den Einstellungen",
+    "pageTitle": "Geführte Touren",
+    "pageSubtitle": "Alle Rundgänge, die Monize bietet, an einem Ort. Starten Sie jederzeit einen — eine Tour lässt sich mit Escape verlassen und von hier aus wieder aufnehmen.",
+    "meta": "{steps} · {status}",
+    "metaWithRelease": "{steps} · {release} · {status}",
+    "stepCount": "{count, plural, one {# Schritt} other {# Schritte}}",
+    "releaseLabel": "Neu in {version}",
+    "requirementsLoading": "Es wird geprüft, ob Sie diese Tour starten können …",
+    "requires": {
+      "transactionEntry": "Legen Sie zuerst ein Konto an — diese Tour führt durch das Erfassen einer Transaktion.",
+      "securitiesExist": "Legen Sie zuerst ein Wertpapier an — diese Tour öffnet eines aus Ihrer Wertpapierliste."
+    },
+    "start": "Starten",
+    "restart": "Wiederholen",
+    "statusNotViewed": "Nicht angesehen",
+    "statusDismissed": "Vorzeitig beendet",
+    "resetHeading": "Von vorn beginnen",
+    "resetDescription": "Alle aufgezeichneten Touren löschen, sodass sie wieder über das Dashboard und nach einem Update angeboten werden.",
+    "reset": "Tour-Fortschritt zurücksetzen",
+    "resetSuccess": "Tour-Fortschritt wurde zurückgesetzt.",
+    "resetError": "Der Tour-Fortschritt konnte nicht zurückgesetzt werden. Bitte versuchen Sie es erneut."
+  },
+  "intro": {
+    "basics": {
+      "title": "Einführung in Monize",
+      "steps": {
+        "welcome": {
+          "title": "Willkommen bei Monize",
+          "body": "Diese kurze Tour zeigt Ihnen die wichtigsten Bereiche der App. Sie können jederzeit über **Escape** oder **Tour beenden** aussteigen."
+        },
+        "dashboard": {
+          "title": "Ihr Dashboard",
+          "body": "Das ist Ihr Dashboard. Nutzen Sie die Schaltfläche **Anpassen** oben rechts, um Widgets neu anzuordnen oder auszublenden, damit die für Sie wichtigen Übersichten ganz oben stehen."
+        },
+        "tools": {
+          "title": "Das Menü Tools",
+          "body": "Im Menü **Tools** verwalten Sie die Bausteine Ihrer Finanzen — Zahlungsempfänger, Kategorien, Währungen, Tags und mehr."
+        },
+        "accounts": {
+          "title": "Ihre Konten",
+          "body": "Fügen Sie hier über die hervorgehobene Schaltfläche Ihre Bank-, Kreditkarten-, Kredit- und Anlagekonten hinzu. Jeder Saldo und jede Buchung gehört zu einem Konto."
+        },
+        "openAccountDetail": {
+          "title": "Detailansicht eines Kontos öffnen",
+          "body": "Jedes Konto hat eine auf seinen Typ zugeschnittene Seite. Wählen Sie **Details** — das Augensymbol in einer Kontozeile — um sie zu öffnen. Auf dem Handy halten Sie das Konto gedrückt und wählen **Details**."
+        },
+        "accountDetailView": {
+          "title": "Eine auf dieses Konto zugeschnittene Ansicht",
+          "body": "Diese Seite richtet sich nach dem Kontotyp: Ein Bankkonto, eine Kreditkarte, ein Kredit, ein Anlagekonto oder ein Vermögenswert zeigt jeweils die Zahlen und Werkzeuge, die dazu passen. Über **Details** in der Kontoliste kommen Sie jederzeit hierher zurück."
+        },
+        "transactions": {
+          "title": "Buchungen",
+          "body": "Das ist Ihr Buchungsregister — jede Zahlung und Einzahlung Ihrer Konten befindet sich hier und kann durchsucht und gefiltert werden."
+        },
+        "createTransaction": {
+          "title": "Eine Buchung erfassen",
+          "body": "Fügen Sie Einnahmen oder Ausgaben über **Neue Buchung** hinzu. Öffnen Sie ruhig das Formular."
+        },
+        "fields": {
+          "title": "Zahlungsempfänger und Kategorie",
+          "body": "Bei jeder Buchung wählen Sie einen Zahlungsempfänger und weisen eine Kategorie zu. Kategorien sind die Grundlage für Ihre Budgets und Berichte; der Betrag kommt im nächsten Schritt."
+        },
+        "splits": {
+          "title": "Eine Buchung aufteilen",
+          "body": "Ein Einkauf, der mehrere Kategorien betrifft? Nutzen Sie **Buchung aufteilen**, um eine einzelne Buchung auf mehrere Kategorien aufzuteilen — zum Beispiel Lebensmittel und Haushaltswaren aus einem Einkauf."
+        },
+        "currencyField": {
+          "title": "Betrag und Währung",
+          "body": "Hier geben Sie den Betrag der Buchung ein. In einer anderen Währung bezahlt? Legen Sie neben dem Betrag die Währung fest und geben Sie ihn wie belastet ein — Monize rechnet ihn für Sie in die Kontowährung um."
+        },
+        "closeForm": {
+          "title": "Schließen Sie das Formular, um fortzufahren",
+          "body": "Schließen Sie das Buchungsformular mit **Abbrechen** oder speichern Sie die Buchung mit der anderen Schaltfläche, und die Tour geht weiter."
+        },
+        "bills": {
+          "title": "Rechnungen & Einzahlungen",
+          "body": "Planen Sie wiederkehrende Rechnungen und Einzahlungen, damit anstehende Zahlungen vorhergesagt werden und nichts übersehen wird."
+        },
+        "investments": {
+          "title": "Investitionen",
+          "body": "Behalten Sie Bestände, Kurse und Renditen Ihrer Anlagekonten im Blick."
+        },
+        "budgets": {
+          "title": "Mit Budgets planen",
+          "body": "Mit Budgets legen Sie monatliche Ziele je Kategorie fest und verfolgen, wie gut Sie diese einhalten."
+        },
+        "reports": {
+          "title": "Ihre Finanzen verstehen",
+          "body": "Berichte verwandeln Ihre Buchungen in Diagramme — Ausgaben nach Kategorie, Vermögensentwicklung über die Zeit und mehr."
+        },
+        "finish": {
+          "title": "Sie sind startklar",
+          "body": "Das war die Tour. Sie können sie jederzeit über den Bereich **Geführte Touren** in den **Einstellungen** erneut starten."
+        }
+      }
+    }
+  },
+  "release": {
+    "v1_13_0": {
+      "foreignCurrency": {
+        "title": "Fremdwährungsbuchungen",
+        "steps": {
+          "welcome": {
+            "title": "Ausgaben in anderen Währungen verfolgen",
+            "body": "Im Ausland eingekauft? Diese Tour richtet die Fremdwährungsgebühr eines Kontos ein, erfasst einen Einkauf in der belasteten Währung und zeigt, wo diese Kosten auftauchen. Sie können jederzeit mit **Esc** oder **Tour beenden** aussteigen."
+          },
+          "openAccountEdit": {
+            "title": "Beginnen Sie beim Konto",
+            "body": "Fremdwährungsgebühren gehören zum Konto. Wählen Sie das Konto, mit dem Sie im Ausland bezahlen — eine Kredit- oder Debitkarte oder das Konto hinter Ihren Handyzahlungen — und klicken Sie in seiner Zeile auf **Bearbeiten**; auf dem Handy tippen Sie lange auf die Zeile, um die Einstellungen zu öffnen."
+          },
+          "fxFeePercent": {
+            "title": "Umrechnungsgebühr festlegen",
+            "body": "Geben Sie hier die Fremdwährungsgebühr des Kontos als Prozentsatz ein — etwa 2,5. Monize rechnet sie in den umgerechneten Betrag jeder Fremdwährungsbuchung ein, sodass die Gebühr automatisch erfasst wird."
+          },
+          "closeAccountForm": {
+            "title": "Speichern und schließen",
+            "body": "Zum Abschluss diese Schaltflächen: **Konto aktualisieren** speichert die Gebühr, **Abbrechen** schließt ohne zu speichern. In beiden Fällen geht die Tour weiter."
+          },
+          "newTransaction": {
+            "title": "Einen Auslandseinkauf erfassen",
+            "body": "Erfassen Sie nun einen Einkauf, den Sie mit diesem Konto in einer anderen Währung getätigt haben. Öffnen Sie **Neue Buchung** und wählen Sie dieses Konto aus."
+          },
+          "chooseAccount": {
+            "title": "Konto und Datum prüfen",
+            "body": "Die Umrechnungsgebühr gehört zum Konto — achten Sie also darauf, dass unter **Konto** das Konto steht, für das Sie die Gebühr gerade festgelegt haben, und ändern Sie es hier gegebenenfalls. Setzen Sie auch das **Datum** auf den Tag des Einkaufs: Der Wechselkurs wird für dieses Datum abgerufen."
+          },
+          "enterDetails": {
+            "title": "Angaben eintragen",
+            "body": "Tragen Sie Zahlungsempfänger und Kategorie wie bei jeder anderen Buchung ein. Der Fremdwährungsteil kommt als Nächstes."
+          },
+          "entryCurrency": {
+            "title": "Wählen Sie die Währung, in der Sie bezahlt haben",
+            "body": "Öffnen Sie dies und wählen Sie die Währung, die Ihnen belastet wurde. Steht nur Ihre eigene Währung in der Liste? Wählen Sie unten **Währung hinzufügen...**, um eine anzulegen — sie wird sofort für Sie ausgewählt."
+          },
+          "enterAmount": {
+            "title": "Geben Sie den belasteten Betrag ein",
+            "body": "Tippen Sie den Gesamtbetrag genau so ein, wie er auf Ihrer Abrechnung steht. Monize ruft den **Wechselkurs** für das Datum der Buchung ab, zeigt daneben den umgerechneten Gesamtbetrag und rechnet die **Fremdwährungsgebühr** ein, die Sie für das Konto festgelegt haben — die Bildunterschrift darunter führt beides auf. Hat Ihre Bank anders gerundet? Passen Sie den Kurs oder den umgerechneten Betrag centgenau an."
+          },
+          "closeTransactionForm": {
+            "title": "Formular schließen",
+            "body": "Auch hier: Speichern Sie die Buchung über die Schaltfläche zum Speichern oder schließen Sie sie mit **Abbrechen** — und die Tour geht weiter."
+          },
+          "openAccountDetail": {
+            "title": "Zurück zum Konto",
+            "body": "Öffnen Sie die Detailseite dieses Kontos — wählen Sie **Details** in ihrer Zeile — um zu sehen, wie die Fremdwährungsaktivität zusammengefasst wird."
+          },
+          "fxSection": {
+            "title": "Ihr Fremdwährungsbereich",
+            "body": "Konten mit Fremdwährungsaktivität erhalten diesen Bereich: die gezahlten Gebühren je Währung, ein Diagramm über die Zeit und die zugehörigen Buchungen, exportierbar als CSV und PNG. Er erscheint, sobald das Konto einen Auslandseinkauf hat.",
+            "fallbackBody": "Dieses Konto hat noch keine Fremdwährungsaktivität, daher fehlt der Abschnitt auf seiner Seite. Erfassen Sie darauf einen Einkauf in einer anderen Währung, und der Abschnitt erscheint: Gebühren je Währung, ein Verlaufsdiagramm sowie CSV- und PNG-Export."
+          },
+          "report": {
+            "title": "Der Bericht \"Fremdwährungs-Transaktionsgebühren\"",
+            "body": "Dieser Bericht führt Auslandseinkäufe über alle Ihre Konten und Währungen an einer Stelle zusammen, sodass Sie sehen, was Karten \"ohne Auslandsgebühr\" wirklich kosten. Sie können ihn jederzeit über **Berichte** öffnen.",
+            "fallbackBody": "Der Bericht **Fremdwährungsgebühren** fasst Fremdwährungseinkäufe über alle Konten und Währungen hinweg zusammen. Gerade ist er nicht zu sehen — eine Suche oder ein Kategoriefilter kann ihn ausblenden — Sie finden ihn unter **Berichte**."
+          },
+          "finish": {
+            "title": "Das war Fremdwährung in Monize",
+            "body": "Einmal eine Gebühr festlegen, Einkäufe wie belastet erfassen — und die Gebühren führen sich von selbst. Sie können diese Tour jederzeit im Bereich **Geführte Touren** in den **Einstellungen** wiederholen."
+          }
+        }
+      },
+      "settings": {
+        "title": "Neuigkeiten-Übersicht",
+        "steps": {
+          "whatsNewToggle": {
+            "title": "Highlights dieser Version",
+            "body": "Dieser Schalter legt fest, ob die Neuigkeiten-Übersicht nach einem Update automatisch angezeigt wird."
+          },
+          "appVersion": {
+            "title": "Hinweise erneut lesen",
+            "body": "Klicken Sie jederzeit auf die Versionsangabe unten in den **Einstellungen**, um die Versionshinweise erneut zu öffnen."
+          },
+          "done": {
+            "title": "Das war's",
+            "body": "Sie können diese Highlights jederzeit hier in den Einstellungen erneut ansehen."
+          }
+        }
+      }
+    },
+    "v1_14_0": {
+      "securityDetail": {
+        "title": "Wertpapier-Detailseite",
+        "steps": {
+          "welcome": {
+            "title": "Jedes Wertpapier auf einer Seite",
+            "body": "Wertpapiere waren früher drei getrennte Dialoge. Jetzt hat jedes eine eigene Seite, die alles zusammenführt: was du hältst, wie es sich entwickelt hat und alles, was Monize darüber weiß. Hier die Kurzfassung."
+          },
+          "openDetail": {
+            "title": "Ein Wertpapier öffnen",
+            "body": "Klicke ein beliebiges Wertpapier in der Liste an: die ganze Zeile öffnet seine Seite. Ein langer Druck oder ein Rechtsklick zeigt stattdessen die übrigen Aktionen der Zeile."
+          },
+          "summary": {
+            "title": "Deine Position auf einen Blick",
+            "body": "Marktwert, Einstandswert, nicht realisierter Gewinn, gehaltene Anteile und in welchen Konten sie liegen. Die Beträge stehen in der Währung des Wertpapiers selbst — der, in der sein Kurs notiert wird — und beim Marktwert steht, aus welchem Schlusskurs er stammt.",
+            "fallbackBody": "Diese Reihe zeigt normalerweise deine Position. Du hältst dieses Wertpapier nicht mehr, deshalb zeigt die Seite stattdessen, was du damit realisiert hast. Öffne eines, das du noch hältst, um die Zahlen zu sehen."
+          },
+          "chart": {
+            "title": "Drei Wege, die Historie zu lesen",
+            "body": "Wechsle zwischen **Kurs**, **Wert deiner Position** und **Rendite** im Zeitfenster. Käufe und Verkäufe sind auf jeder Reihe markiert. Die Schaltflächen rechts legen fest, wie weit zurück es geht, und die **Pfeile** daneben schieben dieses Fenster bei gleichem Zoom durch die frühere Historie — wähle 1J und gehe Jahr für Jahr zurück, statt auf 5J umzuschalten."
+          },
+          "keyInfo": {
+            "title": "Was das Instrument ist",
+            "body": "Neben dem Diagramm: Wertpapierart, Börse, Währung, der Kursanbieter, den Monize nutzt, und der letzte erfasste Kurs. Darunter zeigt die Karte **Aufteilung**, woraus ein Fonds besteht — wechsle zwischen Sektor-, Länder- und Anlageklassenaufteilung."
+          },
+          "tabs": {
+            "title": "Die Details darunter",
+            "body": "**Überblick** enthält die Beschreibung, die Renditen des Wertpapiers selbst, deine Gesamtrendite auf die Position und deine Bestände je Konto. **Transaktionen** und **Kurshistorie** sind dieselben Tabellen wie in den alten Dialogen. **Dokumente** ist der Platz für ein Factsheet oder einen Jahresbericht, und **Nachrichten** bringt aktuelle Schlagzeilen, die das Symbol erwähnen."
+          },
+          "finish": {
+            "title": "Das war die Tour",
+            "body": "Jeder Link, der auf die alten Dialoge zeigte, landet jetzt hier — die Kurs-Widgets im Dashboard öffnen diese Seite direkt auf dem Tab Kurshistorie. Es ist eine echte Seite, du kannst sie also als Lesezeichen speichern und wiederkommen."
+          }
+        }
+      },
+      "gemStrategy": {
+        "title": "GEM: Regeln, die je Zeitraum ein Instrument wählen",
+        "steps": {
+          "welcome": {
+            "title": "Die GEM-Strategie kennenlernen",
+            "body": "Einmal im Monat oder im Quartal vergleicht GEM, wie sich drei Aktienmärkte und ein sicheres Anlagegut entwickelt haben, und nennt dann das einzige Instrument, das bis zur nächsten Prüfung zu halten wäre. Laufen Aktien zu schwach, nennt GEM stattdessen das sichere Anlagegut."
+          },
+          "findReport": {
+            "title": "GEM unter Berichte finden",
+            "body": "Öffnen Sie hier den Bericht **GEM-Strategie**. Er liegt in der Kategorie **Investitionen**. Der Bericht steht auch dann zur Verfügung, wenn Sie noch keine Anlageinstrumente oder Depotbestände in Monize erfasst haben.",
+            "fallbackBody": "Die Berichtskarte ist gerade nicht sichtbar, meist wegen eines Filters. Wählen Sie **Weiter**, dann öffnet die Tour den GEM-Bericht direkt. Später finden Sie ihn unter **Berichte** in der Kategorie **Investitionen**."
+          },
+          "page": {
+            "title": "Ein Bericht, vier Fragen",
+            "body": "Ein **Szenario** oben bezeichnet einen gespeicherten Satz von GEM-Vorgaben, keine Order, keine Buchung und kein Depot. Die Seite beantwortet vier Fragen: Was wählt die Strategie jetzt? Warum? Passt das Portfolio auf den ausgewählten Konten dazu? Was müsste sich ändern? GEM verweist normalerweise auf ein einziges Instrument bis zur nächsten monatlichen oder vierteljährlichen Auswertung."
+          },
+          "summary": {
+            "title": "Vier Karten im Überblick",
+            "body": "**Aktuelles Signal** ist das von den Regeln ausgewählte Instrument. **Ihr Portfolio** vergleicht dieses Ziel mit dem, was auf den Strategiekonten erfasst ist. **Zu übertragen** schätzt den Wert, der sich ändern müsste. **Strategie-Anlagegüter** zeigt, welches Instrument welche Rolle ausfüllt. Fehlende Angaben werden als fehlend dargestellt, niemals als Null."
+          },
+          "action": {
+            "title": "Ein Hinweis, keine automatische Order",
+            "body": "Das Diagramm vergleicht die zugewiesenen Instrumente. **Was soll ich tun?** übersetzt das Signal in einen möglichen Verkauf mit anschließendem Kauf und schätzt Steuer und Gebühr, sofern genügend Daten vorliegen. Monize sendet niemals eine Order an Ihre Bank oder Ihren Broker. Nachdem Sie über Ihren Broker tatsächlich gehandelt haben, erfassen Sie die Buchungen in Monize; **Als ausgeführt markieren** dient danach nur als Notiz, dass Sie das Signal umgesetzt haben."
+          },
+          "reasoning": {
+            "title": "Warum hat GEM das gewählt?",
+            "body": "„Momentum“ meint hier lediglich, wie sich Kurse über den gewählten vergangenen Zeitraum verändert haben. GEM prüft zuerst, ob das Instrument für US-Aktien besser lief als der risikofreie Vergleichsmaßstab. War das der Fall, wählt GEM das stärkste der Instrumente für die USA, für entwickelte Märkte ohne die USA und für Schwellenmärkte. War es nicht der Fall, wählt GEM das sichere Anlagegut. **Warum dieses Signal?** und die Signalhistorie zeigen die ganze Entscheidung statt nur ein Endkürzel."
+          },
+          "tabs": {
+            "title": "Zurück zur Übersicht, um das Ergebnis zu sehen",
+            "body": "Wählen Sie **Übersicht**, um zu sehen, was die Konfiguration hergibt. Die übrigen Reiter sind ebenfalls gut zu kennen: **Signale** zeigt frühere Entscheidungen, **Mein Portfolio** erläutert, was auf den ausgewählten Konten erfasst ist, und **Backtest** zeigt, wie sich die Regeln auf den verfügbaren historischen Kursen verhalten hätten; das ist ein Modell, keine Prognose und kein Versprechen."
+          },
+          "openSettings": {
+            "title": "Die Szenario-Einstellungen öffnen",
+            "body": "Wählen Sie **Einstellungen bearbeiten** — wir richten die Strategie erst ein und lesen danach etwas aus ihr ab. Eine leere Konfiguration ergibt einen leeren Bericht, hier lohnt sich der Anfang also. Nichts auf diesem Bildschirm kauft ein Instrument oder ändert etwas bei Ihrem Broker."
+          },
+          "accounts": {
+            "title": "Die Konten für den Vergleich wählen",
+            "body": "**Strategiekonten** sind die Anlagekonten, die zu diesem GEM-Szenario gehören. Nur die auf diesen Konten erfassten Bestände und Barmittel gehen in den Portfoliovergleich und in die Schätzung des zu übertragenden Betrags ein. Noch kein Anlagekonto? Lassen Sie die Liste leer. GEM kann weiterhin ein Signal berechnen, es aber nicht mit Ihrem echten Portfolio vergleichen."
+          },
+          "timingAndCosts": {
+            "title": "Festlegen, wie weit GEM zurückblickt",
+            "body": "**Auswertungsintervall** entscheidet, ob GEM monatlich oder vierteljährlich neu entscheidet. **Momentum-Zeitraum (Monate)** ist einfach die Anzahl vergangener Monate, deren Kurse verglichen werden; voreingestellt sind 12. **Steuersatz (%)** und **Gebühr je Order** sind optional und beeinflussen nur die Kostenschätzungen; sie ändern das Signal nicht. Lassen Sie sie leer, wenn Sie sie nicht kennen."
+          },
+          "addInstruments": {
+            "title": "Noch keine Instrumente? Hier anfangen",
+            "body": "GEM braucht in jeder Rolle ein Instrument, um überhaupt entscheiden zu können. Ist eine Rolle leer, bietet die Karte **Rollen und Instrumente** eine Abkürzung, die beispielhafte ETFs anlegt. Wählen Sie zuerst unter **Hinzuzufügende Notierungen** die Region, an der Ihr Broker tatsächlich handeln kann: **Amerika** oder **Europa (UCITS)**. Die Schaltfläche legt die Instrumenten-Einträge sofort in Monize an, noch bevor Sie die GEM-Konfiguration speichern; gekauft wird dabei nichts. Es werden nur leere Rollen gefüllt, und ein passendes Instrument aus Ihrer Liste kann wiederverwendet werden. Prüfen Sie jedes Kürzel, jede Börse und jede Währung. Diese Beispiele sind keine Empfehlung. Fehlt die Abkürzung, sind Ihre Rollen bereits gefüllt und Sie können sie unten durchsehen.",
+            "fallbackBody": "Das Einstellungsformular wurde nicht geladen, daher kann die Tour nicht auf die Rollenkarte zeigen. Es wurde keine Einstellung geändert. Nutzen Sie die Wiederholen-Option auf der Seite, oder starten Sie die Tour später über **Geführte Touren** in den **Einstellungen**."
+          },
+          "roles": {
+            "title": "Fünf Rollen, ein Ziel",
+            "body": "Diese fünf Felder sind das, was die Abkürzung gefüllt hat, und das, was Sie andernfalls selbst setzen. Die drei Aktienrollen stehen für die USA (**S&P 500**), **Entwickelte Märkte ohne USA** und **Schwellenmärkte**. **Sicheres Anlagegut** ist das, was GEM halten würde, wenn Aktien den Sicherheitstest nicht bestehen. **Risikofreier Vergleichsmaßstab** ist ausschließlich die Messlatte für diesen Test und darf leer bleiben; dann übernimmt das sichere Anlagegut beide Aufgaben. Das sind fünf Aufgaben in der Berechnung, nicht fünf Anlagen, die GEM gleichzeitig von Ihnen erwartet. Sein Ziel ist immer ein Instrument zur Zeit."
+          },
+          "save": {
+            "title": "Vor dem Speichern prüfen",
+            "body": "Prüfen Sie die Kontenliste, jede Notierung und die Währungen, dann **Konfiguration speichern**, um das Szenario abzulegen und den Bericht aus der verfügbaren Kurshistorie neu zu berechnen. Erst das Speichern gibt den nächsten Schritten etwas zu zeigen. Eine Order wird dadurch weiterhin nicht erteilt, und Sie müssen nicht speichern, um diese Tour zu beenden. Fehlen Kurse oder sind sie zu alt, zeigt Monize an, dass das Signal nicht verfügbar ist, statt zu raten."
+          },
+          "finish": {
+            "title": "Kommen Sie zur nächsten Auswertung wieder",
+            "body": "GEM trifft eine Entscheidung pro Zeitraum, und das Datum der nächsten steht oben im Bericht. Bis dahin ist nichts zu tun. Wenn sie ansteht, prüfen Sie, ob sich das Signal geändert hat; wenn ja, handeln Sie über Ihren Broker und erfassen Sie die Buchungen in Monize, damit der Portfoliovergleich weiter aufgeht. Diese Tour können Sie jederzeit über **Geführte Touren** in den **Einstellungen** erneut starten."
+          }
+        }
+      }
+    },
+    "v1_16_0": {
+      "notifications": {
+        "title": "Benachrichtigungen",
+        "steps": {
+          "welcome": {
+            "title": "Monize kann Ihnen jetzt Bescheid geben",
+            "body": "Eine fällige Rechnung, ein überschrittenes Budget, ein Kontostand, der eine von Ihnen gesetzte Grenze kreuzt, eine fehlgeschlagene Sicherung. Diese Führung zeigt, wo das ankommt und wie Sie festlegen, was Sie per E-Mail oder auf dem Handy erreicht."
+          },
+          "bell": {
+            "title": "Die Glocke ist das Original",
+            "body": "Jede Benachrichtigung, die Monize auslöst, wird hier festgehalten — unabhängig davon, was Sie sonst ein- oder ausschalten. E-Mail und Push sind Kopien, die weitergeschickt werden; diese Liste ist das Original, und die Zahl an der Glocke zählt, was Sie noch nicht gelesen haben."
+          },
+          "panel": {
+            "title": "Was eine Benachrichtigung mitbringt",
+            "body": "Jede sagt, was passiert ist, und verlinkt auf die Seite, die es zeigt — die Rechnung, das Budget, das Konto. **Alle als gelesen markieren** setzt die Zahl zurück, ohne etwas zu entfernen. Wo Sie erinnert werden möchten, gibt es **Erinnere mich**: einmal später oder wiederholt, bis Sie es beenden — und beenden können Sie es auch direkt aus der Benachrichtigung auf dem Handy."
+          },
+          "filters": {
+            "title": "Erst die Liste eingrenzen, dann handeln",
+            "body": "Die obere Reihe filtert nach Dringlichkeit, die untere trennt **Finanziell** von **System** — Sicherungen, Mailversand und anderes, um das sich nur eine Administratorin oder ein Administrator kümmern kann. **Alle löschen** folgt dem gesetzten Filter und erfasst jeden Treffer, nicht nur die sichtbaren, sodass Sie erledigte Systemmeldungen abräumen und den Rest behalten können."
+          },
+          "settings": {
+            "title": "Wo die Zustellung entschieden wird",
+            "body": "**Einstellungen → Benachrichtigungen** trägt den Rest dieser Führung. Oben in der Karte stehen der E-Mail-Schalter und die wöchentliche Budget-Übersicht, darunter das Raster für alles Weitere und dann Ihre Push-Geräte."
+          },
+          "matrix": {
+            "title": "Eine Zeile je Art, eine Spalte je Kanal",
+            "body": "Legen Sie pro Benachrichtigungsart fest, ob sie als **E-Mail (Bericht)**, **E-Mail (Warnung)**, **Push** oder über **UnifiedPush** an einen selbst betriebenen Verteiler geht. Für die Glocke gibt es keine Spalte, weil die Glocke die Zeile immer bekommt. **Sperrzeit** ist die letzte Spalte: E-Mail und Push entfallen, wenn aus derselben Gruppe innerhalb dieses Zeitfensters schon etwas hinausging — der Eintrag in der Glocke wird trotzdem geschrieben. Jeder Schalter speichert sofort."
+          },
+          "push": {
+            "title": "Ihre Geräte",
+            "body": "Melden Sie hier einen Browser an, dann erreicht Monize ihn auch bei geschlossener App. Monize signiert seine Nachrichten selbst, es steht also kein Google- oder Apple-Konto dazwischen. Jedes Gerät lässt sich einzeln testen und entfernen, und ein Gerät, das nicht mehr erreichbar ist, nennt den Grund. Auf dem iPhone funktioniert das, sobald Monize zum Home-Bildschirm hinzugefügt wurde; hat Ihre Administration Push für diese Instanz nicht freigeschaltet, steht das hier stattdessen."
+          },
+          "portfolio": {
+            "title": "Wertentwicklung der Anlagen",
+            "body": "Einmal täglich, wenn sich Ihre Anlagekonten um mehr als den hier gesetzten Betrag bewegen. Gemessen werden Kursbewegungen und Dividenden — Ein- und Auszahlungen zählen nicht als Bewegung."
+          },
+          "finish": {
+            "title": "Noch eine Stelle",
+            "body": "Kontostandsgrenzen liegen am Konto selbst: Bearbeiten Sie ein Konto und setzen Sie **Benachrichtigen unter** oder **Benachrichtigen über**. Sie lösen aus, wenn der Saldo die Grenze *überschreitet* — Sie hören also einmal davon und nicht nach jeder weiteren Buchung. Diese Führung können Sie jederzeit in den Einstellungen wiederholen."
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,253 @@
+{
+  "page": {
+    "welcomePrefix": "Welcome",
+    "welcomeWithName": "Welcome, {name}!",
+    "subtitle": "Here's your financial overview"
+  },
+  "favouriteAccounts": {
+    "title": "Favourite Accounts",
+    "empty": "No favourite accounts yet. Mark accounts as favourites to see them here.",
+    "reorder": "Reorder",
+    "dragToReorder": "Drag accounts to reorder them, or use the arrow buttons.",
+    "done": "Done",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "marketValue": "Market value",
+    "due": "Due: {ordinal}",
+    "dueTooltip": "The day of each month when your credit card payment is due",
+    "settlement": "Settlement: {ordinal}",
+    "settlementTooltip": "The last day of the billing cycle. Transactions posted on or before this day appear on the current statement."
+  },
+  "upcomingBills": {
+    "title": "Upcoming Bills & Deposits",
+    "empty": "No overdue or upcoming bills, deposits, or transfers within their reminder windows.",
+    "perReminderSettings": "Per reminder settings",
+    "postTransaction": "Post this transaction",
+    "manual": "Manual",
+    "manualTitle": "Requires manual posting",
+    "negativeBalanceWarning": "This transaction will cause the account balance to go below zero",
+    "viewAll": "View all bills & deposits",
+    "moreItems": "+{count} more",
+    "overdue": "Overdue",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "daysUntil": "{count} days",
+    "typeBadge": {
+      "bill": "Bill",
+      "deposit": "Deposit",
+      "transfer": "Transfer",
+      "reminder": "Reminder",
+      "unknown": "Unknown"
+    }
+  },
+  "gettingStarted": {
+    "title": "Getting Started",
+    "subtitle": "Set up your account in a few quick steps",
+    "dismiss": "Dismiss",
+    "steps": {
+      "settings": {
+        "title": "Review your settings",
+        "description": "Set your currency, date format, and theme"
+      },
+      "categories": {
+        "title": "Set up categories",
+        "description": "Create categories or import a default set"
+      },
+      "account": {
+        "title": "Add your first account",
+        "description": "Create a bank account to start tracking"
+      },
+      "import": {
+        "title": "Import from QIF",
+        "description": "Import accounts and transactions from QIF files"
+      }
+    }
+  },
+  "budgetStatus": {
+    "title": "Budget Status",
+    "noBudget": "No active budget found. Create a budget to track your spending.",
+    "createBudget": "Create Budget",
+    "viewFullBudget": "View full budget",
+    "daysLeft": "{count} days left",
+    "safeToSpend": "Safe to spend today",
+    "topCategories": "Top Categories"
+  },
+  "insights": {
+    "title": "Spending Insights",
+    "empty": "No insights available. Visit the Insights page to generate your first analysis.",
+    "goToInsights": "Go to Insights",
+    "viewAll": "View all insights",
+    "activeCount": "{count} active"
+  },
+  "topMovers": {
+    "title": "Top Movers",
+    "empty": {
+      "noInvestments": "Add investment accounts to track daily movers.",
+      "noPrices": "No price changes available yet.",
+      "noGainers": "No gainers today.",
+      "noLosers": "No losers today."
+    },
+    "dailyChange": "Daily change",
+    "openPriceHistory": "Price history for {symbol}",
+    "refreshPrices": "Refresh prices",
+    "viewPortfolio": "View portfolio",
+    "filter": {
+      "all": "All",
+      "gainers": "Gainers",
+      "losers": "Losers"
+    }
+  },
+  "favouriteSecurities": {
+    "title": "Favourite Securities",
+    "empty": "No favourite securities yet. Visit the <securitiesLink>Securities page</securitiesLink> and star the securities you want to track here.",
+    "noPriceYet": "No price yet",
+    "dailyChange": "Daily change",
+    "openPriceHistory": "Price history for {symbol}",
+    "refreshPrices": "Refresh prices",
+    "manage": "Manage securities"
+  },
+  "netWorth": {
+    "title": "Net Worth",
+    "empty": "No net worth data available yet.",
+    "past12Months": "Past 12 months",
+    "viewReport": "View full report"
+  },
+  "assetsVsLiabilities": {
+    "title": "Assets vs Liabilities",
+    "empty": "No net worth data available yet.",
+    "current": "Current",
+    "netWorthLabel": "Net Worth",
+    "assets": "Assets",
+    "liabilities": "Liabilities"
+  },
+  "expensesPieChart": {
+    "title": "Expenses by Category",
+    "empty": "No expense data for this period.",
+    "total": "Total",
+    "uncategorized": "Uncategorized",
+    "other": "Other"
+  },
+  "incomeExpenses": {
+    "title": "Income vs Expenses",
+    "income": "Income",
+    "expenses": "Expenses",
+    "net": "Net"
+  },
+  "customize": {
+    "button": "Customize",
+    "title": "Customize dashboard",
+    "description": "The layout below mirrors your dashboard: widgets flow left to right, two per row on large screens.",
+    "moveEarlier": "Move {name} earlier",
+    "moveLater": "Move {name} later",
+    "dragToReorder": "Drag widgets to rearrange them, or use the arrow buttons.",
+    "hiddenWidgets": "Hidden widgets",
+    "hide": "Hide {name}",
+    "show": "Show {name}",
+    "atLeastOne": "Select at least one widget to show on the dashboard.",
+    "reset": "Reset to default",
+    "toasts": {
+      "saveFailed": "Failed to save dashboard layout"
+    }
+  },
+  "favouriteReports": {
+    "title": "Favourite Reports",
+    "empty": "No favourite reports yet. Star reports on the Reports page to see them here.",
+    "browseReports": "Browse reports"
+  },
+  "widgets": {
+    "configure": "Configure {name}",
+    "done": "Done",
+    "configSaveFailed": "Couldn't save widget settings. Please try again.",
+    "timeframe": "Timeframe",
+    "accounts": "Accounts",
+    "chartType": "Chart type",
+    "view": "View",
+    "displayName": "Display name",
+    "description": "Description",
+    "descriptionPlaceholder": "Add an optional description",
+    "rangeLabels": {
+      "1m": "1M",
+      "3m": "3M",
+      "6m": "6M",
+      "1y": "1Y",
+      "2y": "2Y",
+      "5y": "5Y",
+      "ytd": "YTD",
+      "all": "All"
+    }
+  },
+  "portfolioValue": {
+    "title": "Portfolio Value over Time",
+    "empty": "No investment history to show yet.",
+    "refresh": "Refresh current value"
+  },
+  "spendingByPayee": {
+    "title": "Spending by Payee",
+    "empty": "No spending in this period.",
+    "totalLabel": "Total"
+  },
+  "monthlySpendingTrend": {
+    "title": "Monthly Spending Trend",
+    "empty": "No data for this period.",
+    "expenses": "Expenses",
+    "income": "Income"
+  },
+  "incomeBySource": {
+    "title": "Income by Source",
+    "empty": "No income in this period.",
+    "totalLabel": "Total income"
+  },
+  "creditUtilizationAccounts": {
+    "title": "Credit Utilization by Account",
+    "empty": "No credit accounts with a limit set.",
+    "utilization": "Utilization",
+    "used": "Used",
+    "noRate": "unavailable (no {currency} rate)"
+  },
+  "creditUtilizationTotal": {
+    "title": "Total Credit Utilization",
+    "empty": "No credit accounts with a limit set.",
+    "used": "Used",
+    "available": "Available"
+  },
+  "sectorWeightings": {
+    "title": "Sector Allocation",
+    "empty": "No sector data available.",
+    "direct": "Direct",
+    "etf": "ETF"
+  },
+  "securityTypeAllocation": {
+    "title": "Security Type Allocation",
+    "empty": "No holdings to show.",
+    "types": {
+      "STOCK": "Stocks",
+      "ETF": "ETFs",
+      "MUTUAL_FUND": "Mutual Funds",
+      "BOND": "Bonds",
+      "CASH": "Cash"
+    }
+  },
+  "geographicAllocation": {
+    "title": "Geographic Allocation",
+    "empty": "No holdings to show.",
+    "viewRegion": "Region",
+    "viewExchange": "Exchange",
+    "viewCountry": "Country"
+  },
+  "recurringExpenses": {
+    "title": "Top Recurring Expenses",
+    "empty": "No recurring expenses found.",
+    "minOccurrences": "Minimum occurrences",
+    "minOccurrencesOption": "{count} or more",
+    "occurrences": "{count} occurrences",
+    "monthlyEstimate": "Monthly estimate"
+  },
+  "weekendVsWeekday": {
+    "title": "Weekend vs Weekday Spending",
+    "empty": "No spending in this period.",
+    "weekendLabel": "Weekend",
+    "weekdayLabel": "Weekday",
+    "viewOverview": "Overview",
+    "viewByDay": "By day"
+  }
+}

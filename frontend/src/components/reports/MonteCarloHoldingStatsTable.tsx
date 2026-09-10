@@ -1,0 +1,114 @@
+'use client';
+
+import { AccountHoldingStats } from '@/lib/monte-carlo';
+import { useTranslations } from 'next-intl';
+import type { NumberFormatters } from '@/hooks/useNumberFormat';
+
+export function HoldingStatsTable({
+  data,
+  loading,
+  formatters,
+}: {
+  data: AccountHoldingStats[] | null;
+  loading: boolean;
+  // `formatCurrency` takes the value's own currency code. The market value is in
+  // the security's native currency, and formatting it with the default-currency
+  // symbol printed a USD holding as "1,000 PLN" -- a money value and its
+  // currency are one tuple (recheck RR5-004). The percentages travel with it
+  // because they are read by the same person in the same number locale.
+  formatters: NumberFormatters;
+}) {
+  const t = useTranslations('reports');
+  const { formatCurrency, formatPercent } = formatters;
+
+  if (loading) {
+    return (
+      <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+        {t('monteCarloHoldingStats.loading')}
+      </p>
+    );
+  }
+  if (!data || data.length === 0) {
+    return (
+      <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+        {t('monteCarloHoldingStats.selectAccounts')}
+      </p>
+    );
+  }
+
+  const fmtPct = (v: number | null) =>
+    v == null ? '—' : formatPercent(v * 100, 2);
+
+  // A missing current price is unknown, not zero. Formatting `null` as currency
+  // would print the locale's zero and claim the position is worthless. A present
+  // value is formatted in the holding's OWN currency (recheck RR5-004).
+  const fmtValue = (v: number | null, currencyCode: string) =>
+    v == null ? '—' : formatCurrency(v, currencyCode);
+
+  return (
+    <div className="space-y-3 mb-3">
+      {data.map((acct) => (
+        <div
+          key={acct.accountId}
+          className="border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden"
+        >
+          <div className="bg-gray-50 dark:bg-gray-900/50 px-3 py-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+            {acct.accountName}{' '}
+            <span className="text-xs font-normal text-gray-500 dark:text-gray-400">
+              ({acct.currencyCode})
+            </span>
+          </div>
+          {acct.holdings.length === 0 ? (
+            <div className="px-3 py-2 text-xs text-gray-500 dark:text-gray-400">
+              {t('monteCarloHoldingStats.noHoldings')}
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-xs">
+                <thead className="bg-gray-50 dark:bg-gray-900/30 text-gray-500 dark:text-gray-400">
+                  <tr>
+                    <th className="px-3 py-1.5 text-left font-medium">{t('monteCarloHoldingStats.colSymbol')}</th>
+                    {/* Name is decorative; hide on small screens so the
+                        numeric columns fit on a phone without horizontal
+                        scroll. */}
+                    <th className="px-3 py-1.5 text-left font-medium hidden sm:table-cell">
+                      {t('monteCarloHoldingStats.colName')}
+                    </th>
+                    <th className="px-3 py-1.5 text-right font-medium">{t('monteCarloHoldingStats.colValue')}</th>
+                    <th className="px-3 py-1.5 text-right font-medium whitespace-nowrap">
+                      {t('monteCarloHoldingStats.colMean')}
+                    </th>
+                    <th className="px-3 py-1.5 text-right font-medium">
+                      {t('monteCarloHoldingStats.colVolatility')}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                  {acct.holdings.map((h) => (
+                    <tr key={`${acct.accountId}-${h.symbol}`}>
+                      <td className="px-3 py-1.5 font-mono text-gray-900 dark:text-gray-100 whitespace-nowrap">
+                        {h.symbol}
+                      </td>
+                      <td className="px-3 py-1.5 text-gray-700 dark:text-gray-300 truncate max-w-[200px] hidden sm:table-cell">
+                        {h.name}
+                      </td>
+                      <td className="px-3 py-1.5 text-right text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                        {fmtValue(h.marketValue, h.currencyCode)}
+                      </td>
+                      <td className="px-3 py-1.5 text-right text-gray-900 dark:text-gray-100 whitespace-nowrap">
+                        {fmtPct(h.meanReturn)}
+                      </td>
+                      <td className="px-3 py-1.5 text-right text-gray-900 dark:text-gray-100 whitespace-nowrap">
+                        {fmtPct(h.volatility)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}

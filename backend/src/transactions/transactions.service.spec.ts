@@ -1,0 +1,7922 @@
+import { Test, TestingModule } from "@nestjs/testing";
+import { NotFoundException, BadRequestException } from "@nestjs/common";
+import { Brackets, DataSource } from "typeorm";
+import { TransactionsService } from "./transactions.service";
+import { primaryAttachmentSql } from "../attachments/primary-attachment.util";
+import { Transaction, TransactionStatus } from "./entities/transaction.entity";
+import { TransactionSplit } from "./entities/transaction-split.entity";
+import { Category } from "../categories/entities/category.entity";
+import { InvestmentTransaction } from "../securities/entities/investment-transaction.entity";
+import { Payee } from "../payees/entities/payee.entity";
+import { UserPreference } from "../users/entities/user-preference.entity";
+import { AccountsService } from "../accounts/accounts.service";
+import { PayeesService } from "../payees/payees.service";
+import { NetWorthService } from "../net-worth/net-worth.service";
+import { TransactionSplitService } from "./transaction-split.service";
+import { TransactionTransferService } from "./transaction-transfer.service";
+import { ExchangeRateService } from "../currencies/exchange-rate.service";
+import { TransactionReconciliationService } from "./transaction-reconciliation.service";
+import { TransactionAnalyticsService } from "./transaction-analytics.service";
+import { TransactionBulkUpdateService } from "./transaction-bulk-update.service";
+import { TagsService } from "../tags/tags.service";
+import { ActionHistoryService } from "../action-history/action-history.service";
+import { isTransactionInFuture } from "../common/date-utils";
+import { buildTransactionSearchClause } from "./transaction-search.util";
+import { TransactionAttachment } from "../attachments/entities/transaction-attachment.entity";
+import { lockTransactionRow, lockTransactionRows } from "../common/db/locks";
+import { lockedTransactionRow } from "../test-helpers/locks-testing";
+import {
+  createScopedDbMocks,
+  DataSourceMock,
+} from "../test-helpers/scoped-db-testing";
+
+jest.mock("../common/db/scoped-db", () =>
+  jest.requireActual("../test-helpers/scoped-db-testing").scopedDbMockModule(),
+);
+
+// `update` and `remove` read the values a balance delta reverses under a row
+// lock inside the write transaction, not from the snapshot `findOne` returned
+// (audit P4-003). The double below derives the locked row from whatever the
+// transactions repository is currently returning, so every existing scenario
+// keeps describing the same committed state.
+jest.mock("../common/db/locks", () =>
+  jest.requireActual("../test-helpers/locks-testing").locksMockModule(),
+);
+
+jest.mock("../common/date-utils", () => ({
+  ...jest.requireActual("../common/date-utils"),
+  isTransactionInFuture: jest.fn().mockReturnValue(false),
+  todayYMD: jest.fn().mockReturnValue("2026-01-01"),
+}));
+
+const mockedIsTransactionInFuture =
+  isTransactionInFuture as jest.MockedFunction<typeof isTransactionInFuture>;
+
+describe("TransactionsService", () => {
+  let service: TransactionsService;
+  let splitService: TransactionSplitService;
+  let transactionsRepository: Record<string, jest.Mock>;
+  let splitsRepository: Record<string, jest.Mock>;
+  let categoriesRepository: Record<string, jest.Mock>;
+  let investmentTxRepository: Record<string, jest.Mock>;
+  let userPreferenceRepository: Record<string, jest.Mock>;
+  let attachmentsRepository: Record<string, jest.Mock>;
+  let accountsService: Record<string, jest.Mock>;
+  let payeesService: Record<string, jest.Mock>;
+  let netWorthService: Record<string, jest.Mock>;
+  let tagsService: Record<string, jest.Mock>;
+  // The withScopedDb EntityManager, under the legacy `mockQueryRunner.manager`
+  // shape so the pre-RLS manager assertions still read naturally.
+  let mockQueryRunner: Record<string, any>;
+  let mockDataSource: DataSourceMock;
+  /**
+   * Override for the committed row the write transaction locks. `undefined` means
+   * "whatever the repository mock has returned"; see beforeEach.
+   */
+  let lockedRow: Record<string, unknown> | null | undefined;
+
+  const mockAccount = {
+    id: "account-1",
+    userId: "user-1",
+    name: "Checking",
+    accountType: "CHEQUING",
+    currencyCode: "USD",
+    currentBalance: 1000,
+    isClosed: false,
+  };
+
+  beforeEach(async () => {
+    transactionsRepository = {
+      create: jest.fn().mockImplementation((data) => ({ ...data, id: "tx-1" })),
+      save: jest
+        .fn()
+        .mockImplementation((data) => ({ ...data, id: data.id || "tx-1" })),
+      findOne: jest.fn(),
+      find: jest.fn().mockResolvedValue([]),
+      remove: jest.fn(),
+      update: jest.fn(),
+      count: jest.fn(),
+      createQueryBuilder: jest.fn(),
+    };
+
+    splitsRepository = {
+      create: jest.fn().mockImplementation((data) => data),
+      save: jest.fn().mockImplementation((data) => {
+        if (Array.isArray(data)) {
+          return data.map((d: any, i: number) => ({
+            ...d,
+            id: d.id || `split-${i + 1}`,
+          }));
+        }
+        return { ...data, id: data.id || "split-1" };
+      }),
+      findOne: jest.fn().mockResolvedValue(null),
+      find: jest.fn().mockResolvedValue([]),
+      update: jest.fn(),
+      delete: jest.fn(),
+      remove: jest.fn(),
+    };
+
+    categoriesRepository = {
+      find: jest.fn().mockResolvedValue([]),
+      findOne: jest.fn().mockResolvedValue({ id: "cat-1", userId: "user-1" }),
+    };
+
+    investmentTxRepository = {
+      find: jest.fn().mockResolvedValue([]),
+    };
+
+    userPreferenceRepository = {
+      findOne: jest.fn().mockResolvedValue(null),
+    };
+
+    // The attachment-count enrichment issues one grouped query builder; default
+    // it to no rows so every existing findAll test yields attachmentCount 0.
+    attachmentsRepository = {
+      createQueryBuilder: jest.fn().mockReturnValue({
+        select: jest.fn().mockReturnThis(),
+        addSelect: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        // The count is restricted to primaries -- a scan pair is one
+        // attachment, so its hidden original must not reach the paperclip.
+        andWhere: jest.fn().mockReturnThis(),
+        groupBy: jest.fn().mockReturnThis(),
+        getRawMany: jest.fn().mockResolvedValue([]),
+      }),
+    };
+
+    accountsService = {
+      findOne: jest.fn().mockResolvedValue(mockAccount),
+      updateBalance: jest.fn().mockResolvedValue(mockAccount),
+      recalculateCurrentBalance: jest.fn().mockResolvedValue(mockAccount),
+      touchAccount: jest.fn().mockResolvedValue(undefined),
+      getProjectedBalance: jest.fn().mockResolvedValue(0),
+    };
+
+    payeesService = {
+      findOne: jest.fn(),
+      resolveByName: jest.fn().mockResolvedValue(null),
+      findOrCreate: jest.fn(),
+    };
+
+    netWorthService = {
+      recalculateAccount: jest.fn().mockResolvedValue(undefined),
+      triggerDebouncedRecalc: jest.fn(),
+    };
+
+    const payeesRepository = { findOne: jest.fn().mockResolvedValue(null) };
+    const tenantMocks = createScopedDbMocks([
+      [TransactionSplit, splitsRepository],
+      [Category, categoriesRepository],
+      [InvestmentTransaction, investmentTxRepository],
+      [UserPreference, userPreferenceRepository],
+      [Payee, payeesRepository],
+      // findAll reads attachment counts through the transaction manager.
+      [TransactionAttachment, attachmentsRepository],
+    ]);
+    mockDataSource = tenantMocks.dataSource;
+
+    /**
+     * Serve the locked readers from the rows this spec has already made
+     * `transactionsRepository.findOne` return.
+     *
+     * `update` and `remove` read the values a balance delta reverses under a row
+     * lock inside the write transaction rather than from the snapshot `findOne`
+     * returned: two concurrent updates each held that snapshot, and the second
+     * reversed an amount the first had already replaced (audit P4-003).
+     *
+     * A spec should not have to state the same committed row twice, so this reads
+     * the mock's recorded *results* -- which consumes nothing, unlike calling
+     * `findOne` again and eating a queued `mockResolvedValueOnce`. The
+     * interesting concurrency cases, where the caller's view and the committed
+     * row disagree, override `lockedRow` instead.
+     */
+    lockedRow = undefined;
+    const toLocked = (row: Record<string, unknown>) =>
+      lockedTransactionRow({
+        id: String(row.id ?? "tx-1"),
+        accountId: String(row.accountId ?? "account-1"),
+        amount: Number(row.amount ?? 0),
+        // Passed through, not defaulted: a fixture without a date must produce a
+        // locked row without one, or the transfer CAS would see a difference the
+        // test never described.
+        transactionDate: row.transactionDate as string,
+        status: (row.status as string | null) ?? null,
+        isSplit: Boolean(row.isSplit),
+        linkedTransactionId: (row.linkedTransactionId as string | null) ?? null,
+        parentTransactionId: (row.parentTransactionId as string | null) ?? null,
+        // A split's counterpart and embedded investment rows are built from the
+        // parent's payee too, so the committed row has to carry it (FV4-002).
+        payeeId: (row.payeeId as string | null) ?? null,
+        payeeName: (row.payeeName as string | null) ?? null,
+      });
+
+    /**
+     * Every transaction-shaped row the repository has returned so far, by id --
+     * from `findOne` and from `find`, because a batch of transfer legs arrives
+     * through the latter.
+     */
+    const resolvedRows = async (): Promise<
+      Map<string, Record<string, unknown>>
+    > => {
+      const byId = new Map<string, Record<string, unknown>>();
+      const record = (row: unknown) => {
+        const candidate = row as Record<string, unknown> | null;
+        if (candidate?.id) byId.set(String(candidate.id), candidate);
+      };
+      for (const mock of [
+        transactionsRepository.findOne.mock,
+        transactionsRepository.find.mock,
+      ]) {
+        for (const result of mock.results) {
+          if (result.type !== "return") continue;
+          try {
+            const value = await result.value;
+            if (Array.isArray(value)) value.forEach(record);
+            else record(value);
+          } catch {
+            continue;
+          }
+        }
+      }
+      return byId;
+    };
+
+    (lockTransactionRow as jest.Mock).mockImplementation(
+      async (_m: unknown, id: string) => {
+        if (lockedRow !== undefined) {
+          return lockedRow ? toLocked(lockedRow) : null;
+        }
+        const rows = await resolvedRows();
+        if (!rows.has(id)) {
+          // This row has not been read yet -- a path that locks before it reads
+          // anything (a status transition), or one where the lock replaced the
+          // read entirely (the split parent). Consulting the mock now is exactly
+          // right: whatever the spec queued next IS what the committed row is.
+          const row = (await transactionsRepository.findOne({
+            where: { id },
+          })) as Record<string, unknown> | null;
+          return row ? toLocked(row) : null;
+        }
+        const row = rows.get(id);
+        return row ? toLocked(row) : null;
+      },
+    );
+    (lockTransactionRows as jest.Mock).mockImplementation(
+      async (_m: unknown, ids: readonly string[]) => {
+        const rows = await resolvedRows();
+        // The lock replaced a batch `find`, so on paths that used to read the
+        // legs first there is nothing recorded yet. Consult the mock directly for
+        // the ids still missing -- safe for a `mockResolvedValue`, and a queued
+        // chain would already have been drawn from by an earlier read.
+        if (ids.some((id) => !rows.has(id))) {
+          const batch = await transactionsRepository.find({});
+          if (Array.isArray(batch)) {
+            for (const row of batch as Record<string, unknown>[]) {
+              if (row?.id) rows.set(String(row.id), row);
+            }
+          }
+        }
+        const found = new Map();
+        for (const id of ids) {
+          const row = rows.get(id);
+          if (row) found.set(id, toLocked(row));
+        }
+        return found;
+      },
+    );
+
+    const manager = tenantMocks.manager;
+    // Entities without a dedicated mock fall back to the transactions repo,
+    // matching the pre-RLS manager routing.
+    const routedGetRepository = manager.getRepository;
+    manager.getRepository = jest.fn().mockImplementation((entity: any) => {
+      try {
+        return routedGetRepository(entity);
+      } catch {
+        return transactionsRepository;
+      }
+    });
+    manager.create.mockImplementation((_Entity: any, data: any) => {
+      if (_Entity === TransactionSplit) return splitsRepository.create(data);
+      return transactionsRepository.create(data);
+    });
+    manager.save.mockImplementation((data: any) => {
+      if (Array.isArray(data)) return splitsRepository.save(data);
+      if ("userId" in data) return transactionsRepository.save(data);
+      return splitsRepository.save(data);
+    });
+    manager.update.mockImplementation((_Entity: any, id: any, data: any) => {
+      if (_Entity === TransactionSplit)
+        return splitsRepository.update(id, data);
+      return transactionsRepository.update(id, data);
+    });
+    manager.delete.mockImplementation((_Entity: any, criteria: any) => {
+      // Deletes are conditional now and the reversal is gated on what the
+      // database actually removed, so the double has to report an affected count
+      // (audit P4-003: two deletes each reversing one row's amount).
+      if (_Entity === Transaction) {
+        return Promise.resolve({ affected: 1 });
+      }
+      if (_Entity === TransactionSplit)
+        return splitsRepository.delete(criteria);
+      return Promise.resolve(undefined);
+    });
+    manager.findOne.mockImplementation((_Entity: any, opts: any) => {
+      if (_Entity === TransactionSplit) return splitsRepository.findOne(opts);
+      return transactionsRepository.findOne(opts);
+    });
+    manager.find.mockImplementation((_Entity: any, opts: any) => {
+      if (_Entity === Category) {
+        return Promise.resolve([
+          { id: "cat-1" },
+          { id: "cat-2" },
+          { id: "cat-3" },
+        ]);
+      }
+      if (_Entity === TransactionSplit) return splitsRepository.find(opts);
+      return transactionsRepository.find(opts);
+    });
+    manager.remove.mockImplementation((data: any) => {
+      const item = Array.isArray(data) ? data[0] : data;
+      if (item && "transactionId" in item && !("accountId" in item)) {
+        return splitsRepository.remove(data);
+      }
+      return transactionsRepository.remove(data);
+    });
+    manager.query.mockResolvedValue([]);
+
+    mockQueryRunner = { manager };
+
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        TransactionsService,
+        { provide: AccountsService, useValue: accountsService },
+        { provide: PayeesService, useValue: payeesService },
+        {
+          provide: TagsService,
+          useValue: {
+            findByIds: jest.fn().mockResolvedValue([]),
+            setTransactionTags: jest.fn().mockResolvedValue(undefined),
+            setSplitTags: jest.fn().mockResolvedValue(undefined),
+          },
+        },
+        { provide: NetWorthService, useValue: netWorthService },
+        { provide: DataSource, useValue: mockDataSource },
+        {
+          provide: ActionHistoryService,
+          useValue: { record: jest.fn().mockResolvedValue(null) },
+        },
+        {
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
+          provide: require("../securities/investment-transactions.service")
+            .InvestmentTransactionsService,
+          useValue: {
+            createEmbeddedForSplit: jest.fn().mockResolvedValue({}),
+            reverseAndRemoveEmbedded: jest.fn().mockResolvedValue(undefined),
+          },
+        },
+        {
+          // Same-owner default: every account resolves as owned by the caller,
+          // mirroring the pre-cross-owner owner-scoped findOne.
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
+          provide: require("../delegation/cross-owner-access.service")
+            .CrossOwnerAccessService,
+          useValue: {
+            accountAccessFor: jest
+              .fn()
+              .mockImplementation(
+                async (realUserId: string, accountId: string) => ({
+                  account: {
+                    userId: realUserId,
+                    ...(await accountsService.findOne(realUserId, accountId)),
+                  },
+                  ownerUserId: realUserId,
+                  via: "own",
+                }),
+              ),
+            readableAccountIdSetFor: jest
+              .fn()
+              .mockImplementation(async () => new Set<string>()),
+          },
+        },
+        TransactionSplitService,
+        TransactionTransferService,
+        {
+          // Transfers resolve a cross-currency rate server-side (audit P5-002).
+          // Nothing in this spec creates a cross-currency transfer, so no rate
+          // needs to be available.
+          provide: ExchangeRateService,
+          useValue: {
+            getRateForDate: jest.fn().mockResolvedValue(null),
+            getLatestRate: jest.fn().mockResolvedValue(null),
+          },
+        },
+        TransactionReconciliationService,
+        TransactionAnalyticsService,
+        TransactionBulkUpdateService,
+      ],
+    }).compile();
+
+    service = module.get<TransactionsService>(TransactionsService);
+    splitService = module.get<TransactionSplitService>(TransactionSplitService);
+    tagsService = module.get(TagsService);
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+    jest.clearAllTimers();
+  });
+
+  describe("validateSplits (via create)", () => {
+    it("rejects splits with fewer than 2 entries (non-transfer)", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        splits: [],
+      });
+
+      await expect(
+        service.create("user-1", {
+          accountId: "account-1",
+          transactionDate: "2026-01-15",
+          amount: -100,
+          currencyCode: "USD",
+          splits: [{ amount: -100, categoryId: "cat-1" }],
+        } as any),
+      ).rejects.toThrow("Split transactions must have at least 2 splits");
+    });
+
+    it("rejects splits where sum does not match transaction amount", async () => {
+      await expect(
+        service.create("user-1", {
+          accountId: "account-1",
+          transactionDate: "2026-01-15",
+          amount: -100,
+          currencyCode: "USD",
+          splits: [
+            { amount: -60, categoryId: "cat-1" },
+            { amount: -30, categoryId: "cat-2" },
+          ],
+        } as any),
+      ).rejects.toThrow("Split amounts");
+    });
+
+    it("allows splits with zero amount when total matches", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        splits: [],
+      });
+
+      await expect(
+        service.create("user-1", {
+          accountId: "account-1",
+          transactionDate: "2026-01-15",
+          amount: -100,
+          currencyCode: "USD",
+          splits: [
+            { amount: 0, categoryId: "cat-1" },
+            { amount: -100, categoryId: "cat-2" },
+          ],
+        } as any),
+      ).resolves.toBeDefined();
+    });
+
+    it("allows single split for transfers (with transferAccountId)", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        splits: [{ amount: -100, transferAccountId: "acc-2" }],
+      });
+
+      // Should not throw for single split with transfer
+      await expect(
+        service.create("user-1", {
+          accountId: "account-1",
+          transactionDate: "2026-01-15",
+          amount: -100,
+          currencyCode: "USD",
+          splits: [{ amount: -100, transferAccountId: "acc-2" }],
+        } as any),
+      ).resolves.toBeDefined();
+    });
+  });
+
+  describe("create", () => {
+    it("creates a basic transaction and updates balance", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -50,
+        status: TransactionStatus.UNRECONCILED,
+        splits: [],
+      });
+
+      await service.create("user-1", {
+        accountId: "account-1",
+        transactionDate: "2026-01-15",
+        amount: -50,
+        currencyCode: "USD",
+      } as any);
+
+      expect(transactionsRepository.create).toHaveBeenCalled();
+      expect(transactionsRepository.save).toHaveBeenCalled();
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-1",
+        -50,
+      );
+    });
+
+    describe("primary currency must match the account (P5-003)", () => {
+      it("rejects a transaction whose currencyCode differs from the account's", async () => {
+        // The account is USD. A request declaring EUR used to be stored
+        // verbatim while the balance was incremented by the raw numeric amount,
+        // so the account moved 100 USD and the row reported 100 EUR. Both
+        // fields persist, so the contradiction survived into every report and
+        // into backups.
+        //
+        // A foreign-currency entry belongs in originalAmount /
+        // originalCurrencyCode / exchangeRate, which the schema models
+        // separately -- which is what shows a mismatched primary code is not an
+        // alternative supported shape.
+        await expect(
+          service.create("user-1", {
+            accountId: "account-1",
+            transactionDate: "2026-01-15",
+            amount: 100,
+            currencyCode: "EUR",
+          } as any),
+        ).rejects.toThrow(/must match the account currency/);
+
+        // Nothing was written and no balance moved.
+        expect(transactionsRepository.save).not.toHaveBeenCalled();
+        expect(accountsService.updateBalance).not.toHaveBeenCalled();
+      });
+
+      it("accepts the account's currency in any casing and stores it canonically", async () => {
+        transactionsRepository.findOne.mockResolvedValue({
+          id: "tx-1",
+          userId: "user-1",
+          accountId: "account-1",
+          amount: -50,
+          status: TransactionStatus.UNRECONCILED,
+          splits: [],
+        });
+
+        await service.create("user-1", {
+          accountId: "account-1",
+          transactionDate: "2026-01-15",
+          amount: -50,
+          currencyCode: "usd",
+        } as any);
+
+        expect(transactionsRepository.create).toHaveBeenCalledWith(
+          expect.objectContaining({ currencyCode: "USD" }),
+        );
+      });
+
+      it("still allows a foreign entry through the original-currency fields", async () => {
+        transactionsRepository.findOne.mockResolvedValue({
+          id: "tx-1",
+          userId: "user-1",
+          accountId: "account-1",
+          amount: -90,
+          status: TransactionStatus.UNRECONCILED,
+          splits: [],
+        });
+
+        await service.create("user-1", {
+          accountId: "account-1",
+          transactionDate: "2026-01-15",
+          amount: -90,
+          currencyCode: "USD",
+          originalAmount: -100,
+          originalCurrencyCode: "EUR",
+          exchangeRate: 0.9,
+        } as any);
+
+        expect(transactionsRepository.create).toHaveBeenCalledWith(
+          expect.objectContaining({
+            currencyCode: "USD",
+            originalCurrencyCode: "EUR",
+            originalAmount: -100,
+          }),
+        );
+      });
+    });
+
+    it("creates a payee from a free-text name when createPayeeIfMissing is set", async () => {
+      payeesService.findOrCreate.mockResolvedValue({
+        id: "payee-new",
+        name: "Brand New Store",
+        defaultCategoryId: null,
+      });
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -50,
+        status: TransactionStatus.UNRECONCILED,
+        splits: [],
+      });
+
+      await service.create(
+        "user-1",
+        {
+          accountId: "account-1",
+          transactionDate: "2026-01-15",
+          amount: -50,
+          currencyCode: "USD",
+          payeeName: "Brand New Store",
+        } as any,
+        { createPayeeIfMissing: true },
+      );
+
+      expect(payeesService.findOrCreate).toHaveBeenCalledWith(
+        "user-1",
+        "Brand New Store",
+      );
+      // The persisted entity links to the new payee id and canonical name.
+      expect(transactionsRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payeeId: "payee-new",
+          payeeName: "Brand New Store",
+        }),
+      );
+    });
+
+    it("keeps a free-text payee name when createPayeeIfMissing is not set", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -50,
+        status: TransactionStatus.UNRECONCILED,
+        splits: [],
+      });
+
+      await service.create("user-1", {
+        accountId: "account-1",
+        transactionDate: "2026-01-15",
+        amount: -50,
+        currencyCode: "USD",
+        payeeName: "One Off Shop",
+      } as any);
+
+      expect(payeesService.findOrCreate).not.toHaveBeenCalled();
+      expect(transactionsRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payeeName: "One Off Shop",
+          payeeId: undefined,
+        }),
+      );
+    });
+
+    it("does not update balance for VOID transactions", async () => {
+      transactionsRepository.create.mockReturnValue({
+        id: "tx-1",
+        status: TransactionStatus.VOID,
+      });
+      transactionsRepository.save.mockResolvedValue({
+        id: "tx-1",
+        status: TransactionStatus.VOID,
+      });
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        status: TransactionStatus.VOID,
+        splits: [],
+      });
+
+      await service.create("user-1", {
+        accountId: "account-1",
+        transactionDate: "2026-01-15",
+        amount: -50,
+        currencyCode: "USD",
+        status: TransactionStatus.VOID,
+      } as any);
+
+      expect(accountsService.updateBalance).not.toHaveBeenCalled();
+    });
+
+    it("auto-assigns category from payee default", async () => {
+      payeesService.findOne.mockResolvedValue({
+        id: "payee-1",
+        defaultCategoryId: "cat-1",
+      });
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        categoryId: "cat-1",
+        splits: [],
+        status: TransactionStatus.UNRECONCILED,
+      });
+
+      await service.create("user-1", {
+        accountId: "account-1",
+        transactionDate: "2026-01-15",
+        amount: -50,
+        currencyCode: "USD",
+        payeeId: "payee-1",
+      } as any);
+
+      const createCall = transactionsRepository.create.mock.calls[0][0];
+      expect(createCall.categoryId).toBe("cat-1");
+    });
+
+    it("verifies account belongs to user", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -50,
+        status: TransactionStatus.UNRECONCILED,
+        splits: [],
+      });
+
+      await service.create("user-1", {
+        accountId: "account-1",
+        transactionDate: "2026-01-15",
+        amount: -50,
+        currencyCode: "USD",
+      } as any);
+
+      expect(accountsService.findOne).toHaveBeenCalledWith(
+        "user-1",
+        "account-1",
+      );
+    });
+
+    it("rejects payeeId not owned by user", async () => {
+      payeesService.findOne.mockRejectedValue(
+        new NotFoundException("Payee not found"),
+      );
+
+      await expect(
+        service.create("user-1", {
+          accountId: "account-1",
+          transactionDate: "2026-01-15",
+          amount: -50,
+          currencyCode: "USD",
+          payeeId: "bad-payee-id",
+        } as any),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it("rejects categoryId not owned by user", async () => {
+      categoriesRepository.findOne.mockResolvedValue(null);
+
+      await expect(
+        service.create("user-1", {
+          accountId: "account-1",
+          transactionDate: "2026-01-15",
+          amount: -50,
+          currencyCode: "USD",
+          categoryId: "bad-cat-id",
+        } as any),
+      ).rejects.toThrow("Category not found");
+    });
+  });
+
+  describe("getRecent", () => {
+    it("filters by userId and excludes transfers, but includes splits", async () => {
+      transactionsRepository.find.mockResolvedValue([]);
+
+      await service.getRecent("user-1", 5);
+
+      const call = transactionsRepository.find.mock.calls[0][0];
+      expect(call.where).toEqual({ userId: "user-1", isTransfer: false });
+      expect(call.order).toEqual({
+        transactionDate: "DESC",
+        createdAt: "DESC",
+      });
+      expect(call.take).toBe(30);
+      expect(call.relations).toEqual(
+        expect.arrayContaining([
+          "payee",
+          "category",
+          "account",
+          "tags",
+          "splits",
+          "splits.category",
+          "splits.transferAccount",
+          "splits.tags",
+        ]),
+      );
+    });
+
+    it("returns split parents in the result mixed with normals", async () => {
+      const rows = [
+        {
+          id: "s1",
+          payeeId: "p1",
+          payeeName: "A",
+          categoryId: null,
+          isSplit: true,
+          transactionDate: "2026-01-04",
+          splits: [{ id: "sp1", categoryId: "c1", amount: -10 }],
+        },
+        {
+          id: "n1",
+          payeeId: "p2",
+          payeeName: "B",
+          categoryId: "c2",
+          isSplit: false,
+          transactionDate: "2026-01-03",
+        },
+      ];
+      transactionsRepository.find.mockResolvedValue(rows);
+
+      const result = await service.getRecent("user-1", 5);
+
+      expect(result.map((r: any) => r.id)).toEqual(["s1", "n1"]);
+    });
+
+    it("scopes to payeeId without dedup and uses limit-sized window", async () => {
+      const rows = [
+        {
+          id: "t1",
+          payeeId: "p1",
+          payeeName: "A",
+          categoryId: "c1",
+          transactionDate: "2026-01-04",
+        },
+        {
+          id: "t2",
+          payeeId: "p1",
+          payeeName: "A",
+          categoryId: "c1",
+          transactionDate: "2026-01-03",
+        },
+        {
+          id: "t3",
+          payeeId: "p1",
+          payeeName: "A",
+          categoryId: "c2",
+          transactionDate: "2026-01-02",
+        },
+      ];
+      transactionsRepository.find.mockResolvedValue(rows);
+
+      const result = await service.getRecent("user-1", 5, { payeeId: "p1" });
+
+      expect(transactionsRepository.find).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            userId: "user-1",
+            isTransfer: false,
+            payeeId: "p1",
+          },
+          take: 5,
+        }),
+      );
+      expect(result.map((r: any) => r.id)).toEqual(["t1", "t2", "t3"]);
+    });
+
+    it("scopes to payeeName when payeeId is not provided", async () => {
+      transactionsRepository.find.mockResolvedValue([]);
+
+      await service.getRecent("user-1", 5, { payeeName: "Free-text Coffee" });
+
+      expect(transactionsRepository.find).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            userId: "user-1",
+            isTransfer: false,
+            payeeName: "Free-text Coffee",
+          },
+          take: 5,
+        }),
+      );
+    });
+
+    it("prefers payeeId over payeeName when both are provided", async () => {
+      transactionsRepository.find.mockResolvedValue([]);
+
+      await service.getRecent("user-1", 5, {
+        payeeId: "p1",
+        payeeName: "ignored",
+      });
+
+      const call = transactionsRepository.find.mock.calls[0][0];
+      expect(call.where).toEqual({
+        userId: "user-1",
+        isTransfer: false,
+        payeeId: "p1",
+      });
+    });
+
+    it("caps payee-scoped result at limit even when DB returns more", async () => {
+      const rows = Array.from({ length: 8 }, (_, i) => ({
+        id: `t${i}`,
+        payeeId: "p1",
+        payeeName: "A",
+        categoryId: "c1",
+        transactionDate: `2026-01-${String(20 - i).padStart(2, "0")}`,
+      }));
+      transactionsRepository.find.mockResolvedValue(rows);
+
+      const result = await service.getRecent("user-1", 3, { payeeId: "p1" });
+
+      expect(result.map((r: any) => r.id)).toEqual(["t0", "t1", "t2"]);
+    });
+
+    it("returns rows in DB order without modification when all distinct", async () => {
+      const rows = [
+        {
+          id: "t1",
+          payeeId: "p1",
+          payeeName: "A",
+          categoryId: "c1",
+          transactionDate: "2026-01-03",
+        },
+        {
+          id: "t2",
+          payeeId: "p2",
+          payeeName: "B",
+          categoryId: "c2",
+          transactionDate: "2026-01-02",
+        },
+        {
+          id: "t3",
+          payeeId: "p3",
+          payeeName: "C",
+          categoryId: "c1",
+          transactionDate: "2026-01-01",
+        },
+      ];
+      transactionsRepository.find.mockResolvedValue(rows);
+
+      const result = await service.getRecent("user-1", 5);
+
+      expect(result).toEqual(rows);
+    });
+
+    it("dedupes by payeeId+categoryId, keeping the most recent", async () => {
+      const rows = [
+        {
+          id: "t1",
+          payeeId: "p1",
+          payeeName: "A",
+          categoryId: "c1",
+          transactionDate: "2026-01-04",
+        },
+        {
+          id: "t2",
+          payeeId: "p1",
+          payeeName: "A",
+          categoryId: "c1",
+          transactionDate: "2026-01-03",
+        },
+        {
+          id: "t3",
+          payeeId: "p2",
+          payeeName: "B",
+          categoryId: "c2",
+          transactionDate: "2026-01-02",
+        },
+        {
+          id: "t4",
+          payeeId: "p1",
+          payeeName: "A",
+          categoryId: "c1",
+          transactionDate: "2026-01-01",
+        },
+      ];
+      transactionsRepository.find.mockResolvedValue(rows);
+
+      const result = await service.getRecent("user-1", 5);
+
+      expect(result.map((r: any) => r.id)).toEqual(["t1", "t3"]);
+    });
+
+    it("dedupes by payeeName when payeeId is null (free-text payee)", async () => {
+      const rows = [
+        {
+          id: "t1",
+          payeeId: null,
+          payeeName: "Free-text",
+          categoryId: "c1",
+          transactionDate: "2026-01-02",
+        },
+        {
+          id: "t2",
+          payeeId: null,
+          payeeName: "Free-text",
+          categoryId: "c1",
+          transactionDate: "2026-01-01",
+        },
+      ];
+      transactionsRepository.find.mockResolvedValue(rows);
+
+      const result = await service.getRecent("user-1", 5);
+
+      expect(result.map((r: any) => r.id)).toEqual(["t1"]);
+    });
+
+    it("treats different categories on same payee as distinct entries", async () => {
+      const rows = [
+        {
+          id: "t1",
+          payeeId: "p1",
+          payeeName: "A",
+          categoryId: "c1",
+          transactionDate: "2026-01-02",
+        },
+        {
+          id: "t2",
+          payeeId: "p1",
+          payeeName: "A",
+          categoryId: "c2",
+          transactionDate: "2026-01-01",
+        },
+      ];
+      transactionsRepository.find.mockResolvedValue(rows);
+
+      const result = await service.getRecent("user-1", 5);
+
+      expect(result.map((r: any) => r.id)).toEqual(["t1", "t2"]);
+    });
+
+    it("caps result at limit even when more distinct rows exist", async () => {
+      const rows = Array.from({ length: 10 }, (_, i) => ({
+        id: `t${i}`,
+        payeeId: `p${i}`,
+        payeeName: `n${i}`,
+        categoryId: `c${i}`,
+        transactionDate: `2026-01-${String(10 - i).padStart(2, "0")}`,
+      }));
+      transactionsRepository.find.mockResolvedValue(rows);
+
+      const result = await service.getRecent("user-1", 3);
+
+      expect(result.map((r: any) => r.id)).toEqual(["t0", "t1", "t2"]);
+    });
+
+    it("clamps limit to [1, 20]", async () => {
+      transactionsRepository.find.mockResolvedValue([]);
+
+      await service.getRecent("user-1", 0);
+      expect(transactionsRepository.find).toHaveBeenLastCalledWith(
+        expect.objectContaining({ take: 6 }),
+      );
+
+      await service.getRecent("user-1", 999);
+      expect(transactionsRepository.find).toHaveBeenLastCalledWith(
+        expect.objectContaining({ take: 120 }),
+      );
+    });
+  });
+
+  describe("findOne", () => {
+    it("returns transaction when found and belongs to user", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -50,
+        splits: [],
+      };
+      transactionsRepository.findOne.mockResolvedValue(mockTx);
+
+      const result = await service.findOne("user-1", "tx-1");
+
+      expect(result).toEqual(mockTx);
+    });
+
+    it("throws NotFoundException when not found", async () => {
+      transactionsRepository.findOne.mockResolvedValue(null);
+
+      await expect(service.findOne("user-1", "nonexistent")).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    it("throws NotFoundException for wrong user", async () => {
+      transactionsRepository.findOne.mockResolvedValue(null);
+
+      await expect(service.findOne("user-1", "tx-1")).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+  });
+
+  describe("foreign-currency entry (create)", () => {
+    beforeEach(() => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -50,
+        status: TransactionStatus.UNRECONCILED,
+        splits: [],
+      });
+    });
+
+    it("persists original amount/currency and keeps the account-currency amount for the balance", async () => {
+      // Account is USD; user entered EUR 100 -> USD 145.23 at rate 1.4523.
+      await service.create("user-1", {
+        accountId: "account-1",
+        transactionDate: "2026-01-15",
+        amount: -145.23,
+        currencyCode: "USD",
+        originalAmount: -100,
+        originalCurrencyCode: "EUR",
+        exchangeRate: 1.4523,
+      } as any);
+
+      expect(transactionsRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          originalAmount: -100,
+          originalCurrencyCode: "EUR",
+        }),
+      );
+      // Balance moves by the account-currency amount, not the original amount.
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-1",
+        -145.23,
+      );
+    });
+
+    it("strips the foreign fields when the entered currency equals the account currency", async () => {
+      await service.create("user-1", {
+        accountId: "account-1",
+        transactionDate: "2026-01-15",
+        amount: -50,
+        currencyCode: "USD",
+        originalAmount: -50,
+        originalCurrencyCode: "USD",
+        exchangeRate: 1,
+      } as any);
+
+      expect(transactionsRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          originalAmount: null,
+          originalCurrencyCode: null,
+        }),
+      );
+    });
+
+    it("rejects a foreign entry with only one of the two fields", async () => {
+      await expect(
+        service.create("user-1", {
+          accountId: "account-1",
+          transactionDate: "2026-01-15",
+          amount: -50,
+          currencyCode: "USD",
+          originalAmount: -100,
+        } as any),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it("rejects a foreign entry without a positive exchange rate", async () => {
+      await expect(
+        service.create("user-1", {
+          accountId: "account-1",
+          transactionDate: "2026-01-15",
+          amount: -145.23,
+          currencyCode: "USD",
+          originalAmount: -100,
+          originalCurrencyCode: "EUR",
+        } as any),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it("rejects a foreign entry whose original amount sign differs from the amount", async () => {
+      await expect(
+        service.create("user-1", {
+          accountId: "account-1",
+          transactionDate: "2026-01-15",
+          amount: -145.23,
+          currencyCode: "USD",
+          originalAmount: 100,
+          originalCurrencyCode: "EUR",
+          exchangeRate: 1.4523,
+        } as any),
+      ).rejects.toThrow(BadRequestException);
+    });
+  });
+
+  describe("update", () => {
+    const mockTx = {
+      id: "tx-1",
+      userId: "user-1",
+      accountId: "account-1",
+      amount: -50,
+      status: TransactionStatus.UNRECONCILED,
+      isSplit: false,
+      splits: [],
+    };
+
+    it("derives the balance delta from the locked row, not the caller's snapshot", async () => {
+      // The regression guard for P4-003. Opening balance 100.00 and one -10.00
+      // row: request A changes it to -20.00 and commits (delta -10.00), then
+      // request B -- holding the pre-A snapshot of -10.00 -- changes it to
+      // -30.00. Computing B's delta from that snapshot gives -20.00 and leaves
+      // the stored balance at 60.00 against an authoritative 70.00.
+      //
+      // The locked row says -20.00, so the delta is -10.00 and the balance lands
+      // on 70.00.
+      transactionsRepository.findOne.mockResolvedValue({
+        ...mockTx,
+        amount: -10,
+      });
+      lockedRow = { ...mockTx, amount: -20 };
+      mockQueryRunner.manager.findOne.mockResolvedValueOnce({
+        ...mockTx,
+        amount: -30,
+      });
+
+      await service.update("user-1", "tx-1", { amount: -30 } as any);
+
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-1",
+        -10,
+      );
+    });
+
+    it("touches the account (no balance write) when only a past-dated transaction's date moves", async () => {
+      // A past->past date change with unchanged amount and account leaves
+      // current_balance identical, so no balance write runs -- but moving the row
+      // between months changes monthly_account_balances. touchAccount bumps
+      // accounts.updated_at so NetWorthService.sweepStaleSnapshots can still
+      // recover the stale snapshot if the debounce is lost (audit DR-04-03).
+      // Before the fix this branch wrote nothing and the account never showed as
+      // stale.
+      const oldDate = "2026-05-15";
+      const newDate = "2026-06-20";
+      transactionsRepository.findOne.mockResolvedValue({
+        ...mockTx,
+        amount: -50,
+        accountId: "account-1",
+        transactionDate: oldDate,
+      });
+      lockedRow = {
+        ...mockTx,
+        amount: -50,
+        accountId: "account-1",
+        transactionDate: oldDate,
+      };
+      mockQueryRunner.manager.findOne.mockResolvedValueOnce({
+        ...mockTx,
+        amount: -50,
+        accountId: "account-1",
+        transactionDate: newDate,
+      });
+
+      await service.update("user-1", "tx-1", {
+        transactionDate: newDate,
+      } as any);
+
+      expect(accountsService.touchAccount).toHaveBeenCalledWith(
+        "user-1",
+        "account-1",
+      );
+      expect(accountsService.updateBalance).not.toHaveBeenCalled();
+      expect(accountsService.recalculateCurrentBalance).not.toHaveBeenCalled();
+    });
+
+    it("does not touch the account when nothing that moves a snapshot changed", async () => {
+      // Same account, same amount, same date: no balance write and no snapshot
+      // change, so touchAccount must not fire either -- otherwise every no-op
+      // edit would mark the account stale and the sweep would churn.
+      const sameDate = "2026-05-15";
+      transactionsRepository.findOne.mockResolvedValue({
+        ...mockTx,
+        amount: -50,
+        accountId: "account-1",
+        transactionDate: sameDate,
+      });
+      lockedRow = {
+        ...mockTx,
+        amount: -50,
+        accountId: "account-1",
+        transactionDate: sameDate,
+      };
+      mockQueryRunner.manager.findOne.mockResolvedValueOnce({
+        ...mockTx,
+        amount: -50,
+        accountId: "account-1",
+        transactionDate: sameDate,
+      });
+
+      await service.update("user-1", "tx-1", {
+        description: "note only",
+      } as any);
+
+      expect(accountsService.touchAccount).not.toHaveBeenCalled();
+      expect(accountsService.updateBalance).not.toHaveBeenCalled();
+    });
+
+    it("throws NotFound when the row is gone by the time it is locked", async () => {
+      transactionsRepository.findOne.mockResolvedValue({ ...mockTx });
+      lockedRow = null;
+
+      await expect(
+        service.update("user-1", "tx-1", { amount: -80 } as any),
+      ).rejects.toBeInstanceOf(NotFoundException);
+      expect(accountsService.updateBalance).not.toHaveBeenCalled();
+    });
+
+    it("updates transaction amount and adjusts balance", async () => {
+      transactionsRepository.findOne.mockResolvedValue({ ...mockTx });
+      mockQueryRunner.manager.findOne.mockResolvedValueOnce({
+        ...mockTx,
+        amount: -80,
+      });
+
+      await service.update("user-1", "tx-1", { amount: -80 } as any);
+
+      expect(mockQueryRunner.manager.update).toHaveBeenCalledWith(
+        Transaction,
+        "tx-1",
+        expect.objectContaining({ amount: -80 }),
+      );
+    });
+
+    it("sets foreign-currency fields on update", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        ...mockTx,
+        currencyCode: "USD",
+        exchangeRate: 1,
+      });
+      mockQueryRunner.manager.findOne.mockResolvedValueOnce({
+        ...mockTx,
+        amount: -145.23,
+      });
+
+      await service.update("user-1", "tx-1", {
+        amount: -145.23,
+        originalAmount: -100,
+        originalCurrencyCode: "EUR",
+        exchangeRate: 1.4523,
+      } as any);
+
+      expect(mockQueryRunner.manager.update).toHaveBeenCalledWith(
+        Transaction,
+        "tx-1",
+        expect.objectContaining({
+          originalAmount: -100,
+          originalCurrencyCode: "EUR",
+        }),
+      );
+    });
+
+    it("re-normalizes a foreign entry when the row moves to an account in the entry's currency", async () => {
+      // Row in a USD account entered as EUR 100: moving it to a EUR account
+      // makes the "foreign" entry ordinary. Re-labelling currencyCode without
+      // re-normalizing left originalCurrencyCode equal to the new primary
+      // currency beside a stale rate -- a state normalizeFxEntry never
+      // produces (it strips the metadata when the currencies coincide).
+      const fxRow = {
+        ...mockTx,
+        amount: -145.23,
+        currencyCode: "USD",
+        originalAmount: -100,
+        originalCurrencyCode: "EUR",
+        exchangeRate: 1.4523,
+      };
+      transactionsRepository.findOne.mockResolvedValue(fxRow);
+      lockedRow = { ...fxRow };
+      mockQueryRunner.manager.findOne.mockResolvedValueOnce({
+        ...fxRow,
+        accountId: "account-eur",
+      });
+      accountsService.findOne.mockImplementation(
+        async (_userId: string, id: string) =>
+          id === "account-eur"
+            ? { ...mockAccount, id: "account-eur", currencyCode: "EUR" }
+            : { ...mockAccount },
+      );
+
+      await service.update("user-1", "tx-1", {
+        accountId: "account-eur",
+      } as any);
+
+      expect(mockQueryRunner.manager.update).toHaveBeenCalledWith(
+        Transaction,
+        "tx-1",
+        expect.objectContaining({
+          currencyCode: "EUR",
+          originalAmount: null,
+          originalCurrencyCode: null,
+        }),
+      );
+    });
+
+    it("clears foreign-currency fields when passed null", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        ...mockTx,
+        currencyCode: "USD",
+        exchangeRate: 1.4523,
+        originalAmount: -100,
+        originalCurrencyCode: "EUR",
+      });
+      mockQueryRunner.manager.findOne.mockResolvedValueOnce({ ...mockTx });
+
+      await service.update("user-1", "tx-1", {
+        originalAmount: null,
+        originalCurrencyCode: null,
+      } as any);
+
+      expect(mockQueryRunner.manager.update).toHaveBeenCalledWith(
+        Transaction,
+        "tx-1",
+        expect.objectContaining({
+          originalAmount: null,
+          originalCurrencyCode: null,
+        }),
+      );
+    });
+
+    it("handles VOID to non-VOID status change", async () => {
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({
+          ...mockTx,
+          status: TransactionStatus.VOID,
+        })
+        .mockResolvedValueOnce({
+          ...mockTx,
+          status: TransactionStatus.UNRECONCILED,
+          amount: -50,
+        });
+      mockQueryRunner.manager.findOne.mockResolvedValueOnce({
+        ...mockTx,
+        status: TransactionStatus.UNRECONCILED,
+        amount: -50,
+      });
+
+      await service.update("user-1", "tx-1", {
+        status: TransactionStatus.UNRECONCILED,
+      } as any);
+
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-1",
+        -50,
+      );
+    });
+
+    it("handles non-VOID to VOID status change", async () => {
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({ ...mockTx })
+        .mockResolvedValueOnce({
+          ...mockTx,
+          status: TransactionStatus.VOID,
+        });
+      mockQueryRunner.manager.findOne.mockResolvedValueOnce({
+        ...mockTx,
+        status: TransactionStatus.VOID,
+      });
+
+      await service.update("user-1", "tx-1", {
+        status: TransactionStatus.VOID,
+      } as any);
+
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-1",
+        50,
+      );
+    });
+
+    it("verifies new account when account changes", async () => {
+      transactionsRepository.findOne.mockResolvedValue({ ...mockTx });
+      mockQueryRunner.manager.findOne.mockResolvedValueOnce({
+        ...mockTx,
+        accountId: "account-2",
+      });
+
+      await service.update("user-1", "tx-1", {
+        accountId: "account-2",
+      } as any);
+
+      expect(accountsService.findOne).toHaveBeenCalledWith(
+        "user-1",
+        "account-2",
+      );
+    });
+
+    it("rejects payeeId not owned by user", async () => {
+      transactionsRepository.findOne.mockResolvedValue({ ...mockTx });
+      payeesService.findOne.mockRejectedValue(
+        new NotFoundException("Payee not found"),
+      );
+
+      await expect(
+        service.update("user-1", "tx-1", { payeeId: "bad-payee-id" } as any),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it("rejects categoryId not owned by user", async () => {
+      transactionsRepository.findOne.mockResolvedValue({ ...mockTx });
+      categoriesRepository.findOne.mockResolvedValue(null);
+
+      await expect(
+        service.update("user-1", "tx-1", {
+          categoryId: "bad-cat-id",
+        } as any),
+      ).rejects.toThrow("Category not found");
+    });
+
+    it("finds or creates a payee from a free-text name when createPayeeIfMissing is set", async () => {
+      transactionsRepository.findOne.mockResolvedValue({ ...mockTx });
+      payeesService.findOrCreate.mockResolvedValue({
+        id: "payee-new",
+        name: "Corner Store",
+      });
+      mockQueryRunner.manager.findOne.mockResolvedValueOnce({ ...mockTx });
+
+      await service.update(
+        "user-1",
+        "tx-1",
+        { payeeName: "  Corner Store  " } as any,
+        { createPayeeIfMissing: true },
+      );
+
+      expect(payeesService.findOrCreate).toHaveBeenCalledWith(
+        "user-1",
+        "Corner Store",
+      );
+      expect(mockQueryRunner.manager.update).toHaveBeenCalledWith(
+        Transaction,
+        "tx-1",
+        expect.objectContaining({
+          payeeId: "payee-new",
+          payeeName: "Corner Store",
+        }),
+      );
+    });
+
+    it("does not create a payee for a blank free-text name even with createPayeeIfMissing", async () => {
+      transactionsRepository.findOne.mockResolvedValue({ ...mockTx });
+      mockQueryRunner.manager.findOne.mockResolvedValueOnce({ ...mockTx });
+
+      await service.update("user-1", "tx-1", { payeeName: "   " } as any, {
+        createPayeeIfMissing: true,
+      });
+
+      expect(payeesService.findOrCreate).not.toHaveBeenCalled();
+    });
+
+    it("nulls out nullable fields supplied as null and rewrites created_at", async () => {
+      transactionsRepository.findOne.mockResolvedValue({ ...mockTx });
+      mockQueryRunner.manager.findOne.mockResolvedValueOnce({ ...mockTx });
+
+      await service.update("user-1", "tx-1", {
+        payeeId: null,
+        payeeName: null,
+        categoryId: null,
+        description: null,
+        referenceNumber: null,
+        createdAt: "2026-01-10T08:30:00.000Z",
+      } as any);
+
+      expect(mockQueryRunner.manager.update).toHaveBeenCalledWith(
+        Transaction,
+        "tx-1",
+        expect.objectContaining({
+          payeeId: null,
+          payeeName: null,
+          categoryId: null,
+          description: null,
+          referenceNumber: null,
+        }),
+      );
+      const createdAtCalls = mockQueryRunner.manager.query.mock.calls.filter(
+        (c: any[]) =>
+          typeof c[0] === "string" && c[0].includes("SET created_at"),
+      );
+      expect(createdAtCalls).toHaveLength(1);
+      expect(createdAtCalls[0][1]).toEqual([
+        expect.stringContaining("2026-01-10 08:30:00"),
+        "tx-1",
+      ]);
+    });
+
+    it("rolls back and rethrows when the update transaction fails", async () => {
+      transactionsRepository.findOne.mockResolvedValue({ ...mockTx });
+      mockQueryRunner.manager.update.mockRejectedValueOnce(
+        new Error("db exploded"),
+      );
+
+      await expect(
+        service.update("user-1", "tx-1", { amount: -80 } as any),
+      ).rejects.toThrow("db exploded");
+      expect(mockDataSource.transaction).toHaveBeenCalled();
+    });
+  });
+
+  describe("remove", () => {
+    it("reverts balance and removes transaction", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -50,
+        status: TransactionStatus.UNRECONCILED,
+        isSplit: false,
+        splits: [],
+      });
+      // parentSplit lookup via queryRunner.manager.findOne(TransactionSplit, ...)
+      mockQueryRunner.manager.findOne.mockResolvedValueOnce(null);
+
+      await service.remove("user-1", "tx-1");
+
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-1",
+        50,
+      );
+      // A conditional DELETE, not `remove(entity)`: the reversal only runs when
+      // the database actually removed the row (audit P4-003).
+      expect(mockQueryRunner.manager.delete).toHaveBeenCalledWith(Transaction, {
+        id: "tx-1",
+        userId: "user-1",
+      });
+    });
+
+    it("does not revert balance for VOID transactions", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -50,
+        status: TransactionStatus.VOID,
+        isSplit: false,
+        splits: [],
+      });
+      // parentSplit lookup via queryRunner.manager.findOne(TransactionSplit, ...)
+      mockQueryRunner.manager.findOne.mockResolvedValueOnce(null);
+
+      await service.remove("user-1", "tx-1");
+
+      expect(accountsService.updateBalance).not.toHaveBeenCalled();
+    });
+
+    it("locks the split parent before the leg when removing a split leg (parent-before-leg, audit RV4-005)", async () => {
+      // Removing a transfer leg that belongs to a split parent must take the
+      // two rows in the same order removeSplit does -- parent first, then leg.
+      // The earlier code locked the named leg first and only reached the parent
+      // inside removeParentTransaction, so remove() and removeSplit() took the
+      // same two rows in opposite orders: a reachable deadlock whenever both ran
+      // at once. This asserts the ordering, not just that both rows are locked,
+      // so a return to leg-then-parent fails here.
+      const legTx = {
+        id: "leg-tx",
+        userId: "user-1",
+        accountId: "account-2",
+        amount: 40,
+        status: TransactionStatus.UNRECONCILED,
+        isSplit: false,
+        linkedTransactionId: "parent-tx",
+        splits: [],
+      };
+      const parentSplit = {
+        id: "parent-split-1",
+        transactionId: "parent-tx",
+        linkedTransactionId: "leg-tx",
+      };
+      const parentTx = {
+        id: "parent-tx",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -100,
+        status: TransactionStatus.UNRECONCILED,
+      };
+
+      // The access check reads the leg; the parent is read the first time the
+      // lock helper needs it (its row was never loaded up front).
+      transactionsRepository.findOne
+        .mockResolvedValueOnce(legTx)
+        .mockResolvedValueOnce(parentTx);
+      transactionsRepository.find.mockResolvedValue([]);
+      splitsRepository.findOne.mockResolvedValue(parentSplit);
+      // removeParentTransaction reads the parent's splits; only the leg itself
+      // is linked, so no sibling legs go through the batch lock.
+      mockQueryRunner.manager.find.mockResolvedValueOnce([parentSplit]);
+
+      await service.remove("user-1", "leg-tx");
+
+      const lockedIds = (lockTransactionRow as jest.Mock).mock.calls.map(
+        (c) => c[1] as string,
+      );
+      const firstParent = lockedIds.indexOf("parent-tx");
+      const firstLeg = lockedIds.indexOf("leg-tx");
+      expect(firstParent).toBeGreaterThanOrEqual(0);
+      expect(firstLeg).toBeGreaterThanOrEqual(0);
+      // Parent locked strictly before the leg.
+      expect(firstParent).toBeLessThan(firstLeg);
+    });
+
+    it("debounces the net-worth recalc on the locked account, not the pre-lock snapshot", async () => {
+      // A concurrent edit moved the row to a different account between the
+      // pre-lock read and the lock. The balance reversal correctly uses
+      // locked.accountId, so the debounce must too -- otherwise the account whose
+      // balance actually changed never gets its snapshots recomputed. Before the
+      // fix the debounce fired on the stale snapshot's account.
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-stale",
+        amount: -50,
+        status: TransactionStatus.UNRECONCILED,
+        isSplit: false,
+        transactionDate: "2026-05-15",
+        splits: [],
+      });
+      lockedRow = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-locked",
+        amount: -50,
+        status: TransactionStatus.UNRECONCILED,
+        isSplit: false,
+        transactionDate: "2026-05-15",
+      };
+      // parentSplit lookup -> none.
+      mockQueryRunner.manager.findOne.mockResolvedValueOnce(null);
+
+      await service.remove("user-1", "tx-1");
+
+      // Balance reversed on the locked account...
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-locked",
+        50,
+      );
+      // ...and the debounce fires on the same locked account, never the stale one.
+      expect(netWorthService.triggerDebouncedRecalc).toHaveBeenCalledWith(
+        "account-locked",
+        "user-1",
+      );
+      expect(netWorthService.triggerDebouncedRecalc).not.toHaveBeenCalledWith(
+        "account-stale",
+        "user-1",
+      );
+    });
+  });
+
+  describe("updateStatus", () => {
+    const mockTx = {
+      id: "tx-1",
+      userId: "user-1",
+      accountId: "account-1",
+      amount: -50,
+      status: TransactionStatus.UNRECONCILED,
+      splits: [],
+    };
+
+    it("transitions from UNRECONCILED to VOID and reverts balance", async () => {
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({ ...mockTx })
+        .mockResolvedValueOnce({
+          ...mockTx,
+          status: TransactionStatus.VOID,
+        });
+
+      await service.updateStatus("user-1", "tx-1", TransactionStatus.VOID);
+
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-1",
+        50,
+      );
+    });
+
+    it("transitions from VOID to UNRECONCILED and adds balance", async () => {
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({
+          ...mockTx,
+          status: TransactionStatus.VOID,
+        })
+        .mockResolvedValueOnce({
+          ...mockTx,
+          status: TransactionStatus.UNRECONCILED,
+        });
+
+      await service.updateStatus(
+        "user-1",
+        "tx-1",
+        TransactionStatus.UNRECONCILED,
+      );
+
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-1",
+        -50,
+      );
+    });
+
+    it("sets reconciled date when marking RECONCILED", async () => {
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({ ...mockTx })
+        .mockResolvedValueOnce({
+          ...mockTx,
+          status: TransactionStatus.RECONCILED,
+        });
+
+      await service.updateStatus(
+        "user-1",
+        "tx-1",
+        TransactionStatus.RECONCILED,
+      );
+
+      expect(transactionsRepository.update).toHaveBeenCalledWith(
+        "tx-1",
+        expect.objectContaining({ reconciledDate: expect.any(String) }),
+      );
+    });
+  });
+
+  describe("markCleared", () => {
+    it("marks unreconciled transaction as cleared", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -50,
+        status: TransactionStatus.UNRECONCILED,
+        splits: [],
+      };
+      transactionsRepository.findOne.mockResolvedValue({ ...mockTx });
+
+      await service.markCleared("user-1", "tx-1", true);
+
+      expect(transactionsRepository.update).toHaveBeenCalledWith(
+        "tx-1",
+        expect.objectContaining({ status: TransactionStatus.CLEARED }),
+      );
+    });
+
+    it("throws for reconciled transactions", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        status: TransactionStatus.RECONCILED,
+        splits: [],
+      });
+
+      await expect(service.markCleared("user-1", "tx-1", true)).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+
+    it("throws for void transactions", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        status: TransactionStatus.VOID,
+        splits: [],
+      });
+
+      await expect(service.markCleared("user-1", "tx-1", true)).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+  });
+
+  describe("reconcile", () => {
+    it("throws for already reconciled transactions", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        status: TransactionStatus.RECONCILED,
+        splits: [],
+      });
+
+      await expect(service.reconcile("user-1", "tx-1")).rejects.toThrow(
+        "Transaction is already reconciled",
+      );
+    });
+
+    it("throws for void transactions", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        status: TransactionStatus.VOID,
+        splits: [],
+      });
+
+      await expect(service.reconcile("user-1", "tx-1")).rejects.toThrow(
+        "Cannot reconcile a void transaction",
+      );
+    });
+  });
+
+  describe("unreconcile", () => {
+    it("throws for non-reconciled transactions", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        status: TransactionStatus.UNRECONCILED,
+        splits: [],
+      });
+
+      await expect(service.unreconcile("user-1", "tx-1")).rejects.toThrow(
+        "Transaction is not reconciled",
+      );
+    });
+
+    it("sets status to CLEARED and clears reconciled date", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        status: TransactionStatus.RECONCILED,
+        splits: [],
+      });
+
+      await service.unreconcile("user-1", "tx-1");
+
+      expect(transactionsRepository.update).toHaveBeenCalledWith("tx-1", {
+        status: TransactionStatus.CLEARED,
+        reconciledDate: null,
+      });
+    });
+  });
+
+  describe("transfer wrapper tag gating (cross-owner)", () => {
+    const ownLeg = { id: "own-leg", userId: "user-1" } as any;
+    const foreignLeg = { id: "foreign-leg", userId: "owner-2" } as any;
+
+    it("createTransfer applies tags to effective-user legs only", async () => {
+      // `createTransfer` is now prepare -> write -> complete, so the seam the
+      // tag gating sits behind is `completeTransfer`.
+      jest
+        .spyOn((service as any).transferService, "prepareTransfer")
+        .mockResolvedValue({
+          effectiveUserId: "user-1",
+          realUserId: "user-1",
+          dto: { tagIds: ["tag-1"] },
+          fromOwnerId: "user-1",
+          toOwnerId: "owner-2",
+          hasForeignLeg: true,
+        });
+      jest
+        .spyOn((service as any).transferService, "writeTransferLegs")
+        .mockResolvedValue({
+          savedFromId: "own-leg",
+          savedToId: "foreign-leg",
+        });
+      jest
+        .spyOn((service as any).transferService, "completeTransfer")
+        .mockResolvedValue({
+          fromTransaction: ownLeg,
+          toTransaction: foreignLeg,
+        });
+      transactionsRepository.findOne.mockResolvedValue(ownLeg);
+
+      const result = await service.createTransfer("user-1", {
+        fromAccountId: "account-1",
+        toAccountId: "account-2",
+        transactionDate: "2026-01-15",
+        amount: 200,
+        fromCurrencyCode: "USD",
+        tagIds: ["tag-1"],
+      } as any);
+
+      expect(tagsService.setTransactionTags).toHaveBeenCalledTimes(1);
+      expect(tagsService.setTransactionTags).toHaveBeenCalledWith(
+        "own-leg",
+        ["tag-1"],
+        "user-1",
+      );
+      // The foreign leg is passed through untouched, not re-fetched as user-1.
+      expect(result.toTransaction).toBe(foreignLeg);
+    });
+
+    it("updateTransfer syncs tags to effective-user legs only", async () => {
+      jest
+        .spyOn((service as any).transferService, "updateTransfer")
+        .mockResolvedValue({
+          fromTransaction: ownLeg,
+          toTransaction: foreignLeg,
+        });
+      transactionsRepository.findOne.mockResolvedValue(ownLeg);
+      splitsRepository.findOne.mockResolvedValue(null);
+
+      const result = await service.updateTransfer("user-1", "own-leg", {
+        tagIds: ["tag-1"],
+      } as any);
+
+      expect(tagsService.setTransactionTags).toHaveBeenCalledTimes(1);
+      expect(tagsService.setTransactionTags).toHaveBeenCalledWith(
+        "own-leg",
+        ["tag-1"],
+        "user-1",
+      );
+      expect(result.toTransaction).toBe(foreignLeg);
+    });
+  });
+
+  describe("createTransfer", () => {
+    it("creates two linked transactions", async () => {
+      const mockToAccount = {
+        ...mockAccount,
+        id: "account-2",
+        name: "Savings",
+      };
+      accountsService.findOne
+        .mockResolvedValueOnce(mockAccount)
+        .mockResolvedValueOnce(mockToAccount);
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({
+          id: "tx-from",
+          userId: "user-1",
+          splits: [],
+        })
+        .mockResolvedValueOnce({
+          id: "tx-to",
+          userId: "user-1",
+          splits: [],
+        });
+      transactionsRepository.save
+        .mockResolvedValueOnce({ id: "tx-from" })
+        .mockResolvedValueOnce({ id: "tx-to" });
+
+      const result = await service.createTransfer("user-1", {
+        fromAccountId: "account-1",
+        toAccountId: "account-2",
+        transactionDate: "2026-01-15",
+        amount: 200,
+        fromCurrencyCode: "USD",
+      } as any);
+
+      expect(result).toBeDefined();
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-1",
+        -200,
+      );
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-2",
+        200,
+      );
+    });
+
+    it("throws when source and destination are the same", async () => {
+      await expect(
+        service.createTransfer("user-1", {
+          fromAccountId: "account-1",
+          toAccountId: "account-1",
+          transactionDate: "2026-01-15",
+          amount: 200,
+          fromCurrencyCode: "USD",
+        } as any),
+      ).rejects.toThrow("Source and destination accounts must be different");
+    });
+
+    it("throws when amount is negative", async () => {
+      await expect(
+        service.createTransfer("user-1", {
+          fromAccountId: "account-1",
+          toAccountId: "account-2",
+          transactionDate: "2026-01-15",
+          amount: -100,
+          fromCurrencyCode: "USD",
+        } as any),
+      ).rejects.toThrow("Transfer amount must not be negative");
+    });
+
+    it("sets tags on both transfer transactions when tagIds provided", async () => {
+      const toAccount = { ...mockAccount, id: "account-2", name: "Savings" };
+      accountsService.findOne
+        .mockResolvedValueOnce(mockAccount)
+        .mockResolvedValueOnce(toAccount);
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({
+          id: "tx-from",
+          userId: "user-1",
+          splits: [],
+        })
+        .mockResolvedValueOnce({
+          id: "tx-to",
+          userId: "user-1",
+          splits: [],
+        })
+        .mockResolvedValueOnce({
+          id: "tx-from",
+          userId: "user-1",
+          splits: [],
+          tags: [{ id: "tag-1" }],
+        })
+        .mockResolvedValueOnce({
+          id: "tx-to",
+          userId: "user-1",
+          splits: [],
+          tags: [{ id: "tag-1" }],
+        });
+      transactionsRepository.save
+        .mockResolvedValueOnce({ id: "tx-from" })
+        .mockResolvedValueOnce({ id: "tx-to" });
+
+      await service.createTransfer("user-1", {
+        fromAccountId: "account-1",
+        toAccountId: "account-2",
+        transactionDate: "2026-01-15",
+        amount: 200,
+        fromCurrencyCode: "USD",
+        tagIds: ["tag-1"],
+      } as any);
+
+      expect(tagsService.setTransactionTags).toHaveBeenCalledWith(
+        "tx-from",
+        ["tag-1"],
+        "user-1",
+      );
+      expect(tagsService.setTransactionTags).toHaveBeenCalledWith(
+        "tx-to",
+        ["tag-1"],
+        "user-1",
+      );
+    });
+
+    it("does not set tags when tagIds is empty", async () => {
+      const toAccount = { ...mockAccount, id: "account-2", name: "Savings" };
+      accountsService.findOne
+        .mockResolvedValueOnce(mockAccount)
+        .mockResolvedValueOnce(toAccount);
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({
+          id: "tx-from",
+          userId: "user-1",
+          splits: [],
+        })
+        .mockResolvedValueOnce({
+          id: "tx-to",
+          userId: "user-1",
+          splits: [],
+        });
+      transactionsRepository.save
+        .mockResolvedValueOnce({ id: "tx-from" })
+        .mockResolvedValueOnce({ id: "tx-to" });
+
+      await service.createTransfer("user-1", {
+        fromAccountId: "account-1",
+        toAccountId: "account-2",
+        transactionDate: "2026-01-15",
+        amount: 200,
+        fromCurrencyCode: "USD",
+        tagIds: [],
+      } as any);
+
+      expect(tagsService.setTransactionTags).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("getLinkedTransaction", () => {
+    it("returns null for non-transfer transaction", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        isTransfer: false,
+        linkedTransactionId: null,
+        splits: [],
+      });
+
+      const result = await service.getLinkedTransaction("user-1", "tx-1");
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe("removeTransfer", () => {
+    it("throws when transaction is not a transfer", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        isTransfer: false,
+        splits: [],
+      });
+
+      await expect(service.removeTransfer("user-1", "tx-1")).rejects.toThrow(
+        "Transaction is not a transfer",
+      );
+    });
+  });
+
+  describe("removeAny", () => {
+    it("routes a transfer leg to removeTransfer (cascades both legs)", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-from",
+        userId: "user-1",
+        isTransfer: true,
+        linkedTransactionId: "tx-to",
+        splits: [],
+      });
+      const removeTransferSpy = jest
+        .spyOn(service, "removeTransfer")
+        .mockResolvedValue(undefined);
+      const removeSpy = jest.spyOn(service, "remove").mockResolvedValue();
+
+      await service.removeAny("user-1", "tx-from");
+
+      expect(removeTransferSpy).toHaveBeenCalledWith("user-1", "tx-from");
+      expect(removeSpy).not.toHaveBeenCalled();
+    });
+
+    it("routes a plain transaction to remove", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        isTransfer: false,
+        linkedTransactionId: null,
+        splits: [],
+      });
+      const removeTransferSpy = jest
+        .spyOn(service, "removeTransfer")
+        .mockResolvedValue(undefined);
+      const removeSpy = jest.spyOn(service, "remove").mockResolvedValue();
+
+      await service.removeAny("user-1", "tx-1");
+
+      expect(removeSpy).toHaveBeenCalledWith("user-1", "tx-1");
+      expect(removeTransferSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  // ========================================================================
+  // Additional coverage tests
+  // ========================================================================
+
+  describe("findAll", () => {
+    const createMockQueryBuilder = (overrides?: Record<string, jest.Mock>) => {
+      const mockQb: Record<string, jest.Mock> = {} as Record<string, jest.Mock>;
+      const executeBrackets = (condition: unknown) => {
+        if (condition instanceof Brackets) {
+          (condition as any).whereFactory(mockQb);
+        }
+      };
+      Object.assign(mockQb, {
+        leftJoinAndSelect: jest.fn().mockReturnValue(mockQb),
+        leftJoin: jest.fn().mockReturnValue(mockQb),
+        where: jest.fn().mockImplementation((condition: unknown) => {
+          executeBrackets(condition);
+          return mockQb;
+        }),
+        andWhere: jest.fn().mockImplementation((condition: unknown) => {
+          executeBrackets(condition);
+          return mockQb;
+        }),
+        orWhere: jest.fn().mockImplementation((condition: unknown) => {
+          executeBrackets(condition);
+          return mockQb;
+        }),
+        orderBy: jest.fn().mockReturnValue(mockQb),
+        addOrderBy: jest.fn().mockReturnValue(mockQb),
+        skip: jest.fn().mockReturnValue(mockQb),
+        take: jest.fn().mockReturnValue(mockQb),
+        select: jest.fn().mockReturnValue(mockQb),
+        addSelect: jest.fn().mockReturnValue(mockQb),
+        groupBy: jest.fn().mockReturnValue(mockQb),
+        setParameter: jest.fn().mockReturnValue(mockQb),
+        getMany: jest.fn().mockResolvedValue([]),
+        getManyAndCount: jest.fn().mockResolvedValue([[], 0]),
+        getCount: jest.fn().mockResolvedValue(0),
+        getRawMany: jest.fn().mockResolvedValue([]),
+        getRawOne: jest.fn().mockResolvedValue(null),
+        getQuery: jest.fn().mockReturnValue("SELECT 1"),
+        getParameters: jest.fn().mockReturnValue({}),
+        limit: jest.fn().mockReturnValue(mockQb),
+        update: jest.fn().mockReturnValue(mockQb),
+        set: jest.fn().mockReturnValue(mockQb),
+        execute: jest.fn().mockResolvedValue({ affected: 0 }),
+        ...overrides,
+      });
+      return mockQb;
+    };
+
+    it("returns empty paginated result with defaults", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      const result = await service.findAll("user-1");
+
+      expect(result).toEqual({
+        data: [],
+        pagination: {
+          page: 1,
+          limit: 50,
+          total: 0,
+          totalPages: 0,
+          hasMore: false,
+        },
+        startingBalance: undefined,
+      });
+    });
+
+    it("filters by originalCurrencyCodes when provided", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      await service.findAll(
+        "user-1",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        1,
+        50,
+        false,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        "date",
+        "DESC",
+        undefined,
+        ["EUR", "GBP"],
+      );
+
+      expect(mockQb.andWhere).toHaveBeenCalledWith(
+        "transaction.original_currency_code IN (:...originalCurrencyCodes)",
+        { originalCurrencyCodes: ["EUR", "GBP"] },
+      );
+    });
+
+    const findAllWith = (
+      overrides: Partial<{ hasAttachments: boolean }>,
+      mockQb: Record<string, jest.Mock>,
+    ) => {
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+      return service.findAll(
+        "user-1",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        1,
+        50,
+        false,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        "date",
+        "DESC",
+        undefined,
+        undefined,
+        overrides.hasAttachments,
+      );
+    };
+
+    it("filters to transactions that have attachments (EXISTS)", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      await findAllWith({ hasAttachments: true }, mockQb);
+
+      expect(mockQb.andWhere).toHaveBeenCalledWith(
+        expect.stringContaining(
+          "EXISTS (SELECT 1 FROM transaction_attachments",
+        ),
+      );
+      expect(mockQb.andWhere).not.toHaveBeenCalledWith(
+        expect.stringContaining("NOT EXISTS"),
+      );
+    });
+
+    it("filters to transactions without attachments (NOT EXISTS)", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      await findAllWith({ hasAttachments: false }, mockQb);
+
+      expect(mockQb.andWhere).toHaveBeenCalledWith(
+        expect.stringContaining(
+          "NOT EXISTS (SELECT 1 FROM transaction_attachments",
+        ),
+      );
+    });
+
+    // "No attachments" must not be false because a scan pair's hidden original
+    // is still there behind the visible row the user deleted -- and the
+    // has-attachments side must not match on one either.
+    it.each([
+      { hasAttachments: true, label: "EXISTS" },
+      { hasAttachments: false, label: "NOT EXISTS" },
+    ])(
+      "restricts the $label attachment filter to visible attachments",
+      async ({ hasAttachments }) => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+        await findAllWith({ hasAttachments }, mockQb);
+
+        expect(mockQb.andWhere).toHaveBeenCalledWith(
+          expect.stringContaining(primaryAttachmentSql("ta")),
+        );
+      },
+    );
+
+    it("does not filter by attachments when unspecified", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      await findAllWith({}, mockQb);
+
+      expect(mockQb.andWhere).not.toHaveBeenCalledWith(
+        expect.stringContaining("transaction_attachments"),
+      );
+    });
+
+    it("annotates each transaction with its attachment count", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([
+        [
+          { id: "tx-1", isCleared: false, isReconciled: false, isVoid: false },
+          { id: "tx-2", isCleared: false, isReconciled: false, isVoid: false },
+        ],
+        2,
+      ]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+      const attachmentCountAndWhere = jest.fn().mockReturnThis();
+      attachmentsRepository.createQueryBuilder.mockReturnValue({
+        select: jest.fn().mockReturnThis(),
+        addSelect: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        andWhere: attachmentCountAndWhere,
+        groupBy: jest.fn().mockReturnThis(),
+        getRawMany: jest
+          .fn()
+          .mockResolvedValue([{ transactionId: "tx-1", count: "3" }]),
+      });
+
+      const result = await service.findAll("user-1");
+
+      expect(result.data[0].attachmentCount).toBe(3);
+      expect(result.data[1].attachmentCount).toBe(0);
+      // The paperclip counts what the attachments list shows, and that list
+      // hides a scan pair's original -- so the count is restricted to primaries
+      // through the shared predicate.
+      expect(attachmentCountAndWhere).toHaveBeenCalledWith(
+        primaryAttachmentSql("ta"),
+      );
+    });
+
+    it("applies pagination with page and limit", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      await service.findAll(
+        "user-1",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        3,
+        25,
+      );
+
+      expect(mockQb.skip).toHaveBeenCalledWith(50); // (3-1) * 25
+      expect(mockQb.take).toHaveBeenCalledWith(25);
+    });
+
+    it("clamps page to minimum 1 and limit to minimum 1", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      await service.findAll(
+        "user-1",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        -5,
+        -10,
+      );
+
+      expect(mockQb.skip).toHaveBeenCalledWith(0); // (max(1,-5) - 1) * max(1,-10) = 0
+      expect(mockQb.take).toHaveBeenCalledWith(1);
+    });
+
+    it("clamps limit to maximum 200", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      await service.findAll(
+        "user-1",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        1,
+        999999,
+      );
+
+      expect(mockQb.take).toHaveBeenCalledWith(200);
+    });
+
+    it("filters by accountIds", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      await service.findAll("user-1", ["acc-1", "acc-2"]);
+
+      expect(mockQb.andWhere).toHaveBeenCalledWith(
+        "transaction.accountId IN (:...accountIds)",
+        { accountIds: ["acc-1", "acc-2"] },
+      );
+    });
+
+    it("filters by startDate and endDate", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      await service.findAll("user-1", undefined, "2026-01-01", "2026-12-31");
+
+      expect(mockQb.andWhere).toHaveBeenCalledWith(
+        "transaction.transactionDate >= :startDate",
+        { startDate: "2026-01-01" },
+      );
+      expect(mockQb.andWhere).toHaveBeenCalledWith(
+        "transaction.transactionDate <= :endDate",
+        { endDate: "2026-12-31" },
+      );
+    });
+
+    it("filters by regular categoryIds including children", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+      categoriesRepository.find.mockResolvedValue([
+        { id: "cat-1", parentId: null },
+        { id: "cat-1-child", parentId: "cat-1" },
+      ]);
+
+      await service.findAll("user-1", undefined, undefined, undefined, [
+        "cat-1",
+      ]);
+
+      expect(categoriesRepository.find).toHaveBeenCalled();
+      // Category IDs are now passed inline via Brackets
+      expect(mockQb.where).toHaveBeenCalledWith(
+        "transaction.categoryId IN (:...filterCategoryIds)",
+        {
+          filterCategoryIds: expect.arrayContaining(["cat-1", "cat-1-child"]),
+        },
+      );
+    });
+
+    it("filters on main splits alias for category filtering so non-matching splits are excluded", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+      categoriesRepository.find.mockResolvedValue([
+        { id: "cat-1", parentId: null },
+      ]);
+
+      await service.findAll("user-1", undefined, undefined, undefined, [
+        "cat-1",
+      ]);
+
+      // Should NOT use a separate filterSplits alias -- filter directly on
+      // the main "splits" alias so non-matching split rows are excluded from
+      // hydration, enabling the frontend to detect partial amounts.
+      expect(mockQb.leftJoin).not.toHaveBeenCalledWith(
+        "transaction.splits",
+        "filterSplits",
+      );
+      // The WHERE condition should reference splits.categoryId (main alias)
+      expect(mockQb.orWhere).toHaveBeenCalledWith(
+        expect.stringContaining("splits.categoryId"),
+        expect.anything(),
+      );
+    });
+
+    it("handles 'uncategorized' special category filter", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      await service.findAll("user-1", undefined, undefined, undefined, [
+        "uncategorized",
+      ]);
+
+      // Uncategorized condition is now inside a Brackets callback
+      expect(mockQb.andWhere).toHaveBeenCalledWith(expect.any(Brackets));
+      expect(mockQb.where).toHaveBeenCalledWith(
+        expect.stringContaining("transaction.categoryId IS NULL"),
+      );
+      // Split transactions with an uncategorised, non-transfer split line are
+      // also matched so the list agrees with the account-detail breakdown.
+      expect(mockQb.orWhere).toHaveBeenCalledWith(
+        expect.stringContaining(
+          "transaction.isSplit = true AND transaction.isTransfer = false AND splits.categoryId IS NULL AND splits.transferAccountId IS NULL",
+        ),
+      );
+      // An investment line embedded in a split has no category by definition,
+      // so it is not what "uncategorised" means (issue #1257).
+      expect(mockQb.orWhere).toHaveBeenCalledWith(
+        expect.stringContaining("its.transaction_split_id = splits.id"),
+      );
+    });
+
+    it("handles 'transfer' special category filter", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      await service.findAll("user-1", undefined, undefined, undefined, [
+        "transfer",
+      ]);
+
+      // Transfer condition is now inside a Brackets callback
+      expect(mockQb.andWhere).toHaveBeenCalledWith(expect.any(Brackets));
+      expect(mockQb.where).toHaveBeenCalledWith(
+        "transaction.isTransfer = true",
+      );
+    });
+
+    it("handles combined uncategorized + transfer + regular category filters", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+      categoriesRepository.find.mockResolvedValue([
+        { id: "cat-1", parentId: null },
+      ]);
+
+      await service.findAll("user-1", undefined, undefined, undefined, [
+        "uncategorized",
+        "transfer",
+        "cat-1",
+      ]);
+
+      // All three conditions are combined via Brackets
+      expect(mockQb.andWhere).toHaveBeenCalledWith(expect.any(Brackets));
+      expect(mockQb.where).toHaveBeenCalledWith(
+        expect.stringContaining("transaction.categoryId IS NULL"),
+      );
+      expect(mockQb.orWhere).toHaveBeenCalledWith(
+        "transaction.isTransfer = true",
+      );
+    });
+
+    it("filters by payeeIds", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      await service.findAll(
+        "user-1",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        ["payee-1"],
+      );
+
+      expect(mockQb.andWhere).toHaveBeenCalledWith(
+        "transaction.payeeId IN (:...payeeIds)",
+        { payeeIds: ["payee-1"] },
+      );
+    });
+
+    it("filters by search text", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      await service.findAll(
+        "user-1",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        1,
+        50,
+        false,
+        "groceries",
+      );
+
+      expect(mockQb.andWhere).toHaveBeenCalledWith(
+        buildTransactionSearchClause({
+          transaction: "transaction",
+          splits: "splits",
+        }),
+        { search: "%groceries%", searchAmount: null, searchDate: null },
+      );
+    });
+
+    it("interprets an amount typed in the user's locale format", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+      // de-DE: "." thousands, "," decimal -> "1.234,56" means 1234.56.
+      userPreferenceRepository.findOne.mockResolvedValue({
+        numberFormat: "de-DE",
+        dateFormat: "DD.MM.YYYY",
+      });
+
+      await service.findAll(
+        "user-1",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        1,
+        50,
+        false,
+        "1.234,56",
+      );
+
+      expect(mockQb.andWhere).toHaveBeenCalledWith(
+        buildTransactionSearchClause({
+          transaction: "transaction",
+          splits: "splits",
+        }),
+        {
+          search: "%1.234,56%",
+          searchAmount: 1234.56,
+          searchDate: null,
+        },
+      );
+    });
+
+    it("interprets a date typed in the user's display format", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+      userPreferenceRepository.findOne.mockResolvedValue({
+        numberFormat: "de-DE",
+        dateFormat: "DD.MM.YYYY",
+      });
+
+      await service.findAll(
+        "user-1",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        1,
+        50,
+        false,
+        "02.07.2026",
+      );
+
+      expect(mockQb.andWhere).toHaveBeenCalledWith(
+        buildTransactionSearchClause({
+          transaction: "transaction",
+          splits: "splits",
+        }),
+        {
+          search: "%02.07.2026%",
+          searchAmount: null,
+          searchDate: "2026-07-02",
+        },
+      );
+    });
+
+    it("ignores empty/whitespace-only search", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      await service.findAll(
+        "user-1",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        1,
+        50,
+        false,
+        "   ",
+      );
+
+      // search ILIKE should not be called for whitespace-only
+      const searchCalls = mockQb.andWhere.mock.calls.filter(
+        (call: any[]) =>
+          typeof call[0] === "string" && call[0].includes("ILIKE"),
+      );
+      expect(searchCalls.length).toBe(0);
+    });
+
+    it("excludes investment brokerage accounts by default", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      await service.findAll("user-1");
+
+      expect(mockQb.andWhere).toHaveBeenCalledWith(
+        "(account.accountSubType IS NULL OR account.accountSubType != 'INVESTMENT_BROKERAGE')",
+      );
+    });
+
+    it("filters by reconciliation statuses when provided", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      await service.findAll(
+        "user-1",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        1,
+        50,
+        false,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        [TransactionStatus.UNRECONCILED, TransactionStatus.CLEARED],
+      );
+
+      expect(mockQb.andWhere).toHaveBeenCalledWith(
+        "transaction.status IN (:...statuses)",
+        {
+          statuses: [TransactionStatus.UNRECONCILED, TransactionStatus.CLEARED],
+        },
+      );
+    });
+
+    it("does not apply status filter when statuses is empty", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      await service.findAll(
+        "user-1",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        1,
+        50,
+        false,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        [],
+      );
+
+      const statusCalls = mockQb.andWhere.mock.calls.filter(
+        (call: any[]) =>
+          typeof call[0] === "string" && call[0].includes("transaction.status"),
+      );
+      expect(statusCalls.length).toBe(0);
+    });
+
+    it("includes investment brokerage accounts when requested", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      await service.findAll(
+        "user-1",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        1,
+        50,
+        true,
+      );
+
+      const investmentCalls = mockQb.andWhere.mock.calls.filter(
+        (call: any[]) =>
+          typeof call[0] === "string" &&
+          call[0].includes("INVESTMENT_BROKERAGE"),
+      );
+      expect(investmentCalls.length).toBe(0);
+    });
+
+    it("enriches transactions with linked investment transaction IDs", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -100,
+        status: TransactionStatus.UNRECONCILED,
+        isCleared: false,
+        isReconciled: false,
+        isVoid: false,
+        splits: [],
+      };
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([
+        { id: "inv-tx-1", transactionId: "tx-1" },
+      ]);
+
+      const result = await service.findAll("user-1");
+
+      expect(result.data[0].linkedInvestmentTransactionId).toBe("inv-tx-1");
+    });
+
+    it("sets linkedInvestmentTransactionId to null when no investment link", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        amount: -100,
+        status: TransactionStatus.UNRECONCILED,
+        isCleared: false,
+        isReconciled: false,
+        isVoid: false,
+        splits: [],
+      };
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      const result = await service.findAll("user-1");
+
+      expect(result.data[0].linkedInvestmentTransactionId).toBeNull();
+    });
+
+    it("calculates starting balance for page 1 with single account", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -50,
+        status: TransactionStatus.UNRECONCILED,
+        isCleared: false,
+        isReconciled: false,
+        isVoid: false,
+        splits: [],
+      };
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+      accountsService.findOne.mockResolvedValue({
+        ...mockAccount,
+        currentBalance: 950,
+      });
+      accountsService.getProjectedBalance.mockResolvedValue(950);
+
+      const result = await service.findAll("user-1", ["account-1"]);
+
+      expect(result.startingBalance).toBe(950);
+    });
+
+    it("includes future transaction amounts in starting balance for page 1", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -50,
+        status: TransactionStatus.UNRECONCILED,
+        isCleared: false,
+        isReconciled: false,
+        isVoid: false,
+        splits: [],
+      };
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+      // Future sum query — simulate a future -10000 transfer
+      const futureQb = createMockQueryBuilder();
+      futureQb.getRawOne.mockResolvedValue({ sum: -10000 });
+      transactionsRepository.createQueryBuilder
+        .mockReturnValueOnce(mockQb)
+        .mockReturnValueOnce(futureQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+      accountsService.findOne.mockResolvedValue({
+        ...mockAccount,
+        currentBalance: 13000,
+      });
+      accountsService.getProjectedBalance.mockResolvedValue(3000);
+
+      const result = await service.findAll("user-1", ["account-1"]);
+
+      // projectedBalance = currentBalance + futureSum = 13000 + (-10000) = 3000
+      expect(result.startingBalance).toBe(3000);
+    });
+
+    it("calculates starting balance for page > 1 using sum of previous pages", async () => {
+      const mockTx = {
+        id: "tx-2",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -30,
+        status: TransactionStatus.UNRECONCILED,
+        isCleared: false,
+        isReconciled: false,
+        isVoid: false,
+        splits: [],
+      };
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[mockTx], 51]);
+      // For the sum of previous pages queries:
+      // 1st = main query, 2nd = previousPagesQuery, 3rd = sumResult query
+      const sumQb = createMockQueryBuilder({
+        setParameters: jest.fn().mockReturnThis(),
+      });
+      sumQb.getRawOne.mockResolvedValue({ sum: -200 });
+      const previousPagesQb = createMockQueryBuilder();
+      previousPagesQb.getQuery.mockReturnValue("SELECT t.id FROM ...");
+      previousPagesQb.getParameters.mockReturnValue({ userId: "user-1" });
+      transactionsRepository.createQueryBuilder
+        .mockReturnValueOnce(mockQb)
+        .mockReturnValueOnce(previousPagesQb)
+        .mockReturnValueOnce(sumQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+      accountsService.findOne.mockResolvedValue({
+        ...mockAccount,
+        currentBalance: 800,
+      });
+      accountsService.getProjectedBalance.mockResolvedValue(800);
+
+      const result = await service.findAll(
+        "user-1",
+        ["account-1"],
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        2,
+        50,
+      );
+
+      // startingBalance = projectedBalance - sumBefore = 800 - (-200) = 1000
+      expect(result.startingBalance).toBe(1000);
+    });
+
+    it("does not compute starting balance for multiple accounts without filters", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      const result = await service.findAll("user-1", ["acc-1", "acc-2"]);
+
+      expect(result.startingBalance).toBeUndefined();
+    });
+
+    it("does not compute starting balance when no accounts specified without filters", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      const result = await service.findAll("user-1");
+
+      expect(result.startingBalance).toBeUndefined();
+    });
+
+    it("calculates correct pagination metadata", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([
+        [
+          {
+            id: "tx-1",
+            isCleared: false,
+            isReconciled: false,
+            isVoid: false,
+            splits: [],
+          },
+          {
+            id: "tx-2",
+            isCleared: false,
+            isReconciled: false,
+            isVoid: false,
+            splits: [],
+          },
+        ],
+        100,
+      ]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      const result = await service.findAll(
+        "user-1",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        2,
+        10,
+      );
+
+      expect(result.pagination).toEqual({
+        page: 2,
+        limit: 10,
+        total: 100,
+        totalPages: 10,
+        hasMore: true,
+      });
+    });
+
+    it("sets hasMore to false on last page", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([
+        [
+          {
+            id: "tx-1",
+            isCleared: false,
+            isReconciled: false,
+            isVoid: false,
+            splits: [],
+          },
+        ],
+        5,
+      ]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      const result = await service.findAll(
+        "user-1",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        1,
+        10,
+      );
+
+      expect(result.pagination.hasMore).toBe(false);
+    });
+
+    it("calculates page from targetTransactionId", async () => {
+      // The main query
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+
+      // The count query for target transaction page calculation
+      const countQb = createMockQueryBuilder();
+      countQb.getCount.mockResolvedValue(75); // 75 transactions come before
+
+      transactionsRepository.createQueryBuilder
+        .mockReturnValueOnce(mockQb) // main query
+        .mockReturnValueOnce(countQb); // count query
+
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "target-tx",
+        userId: "user-1",
+        transactionDate: "2026-01-15",
+        createdAt: new Date("2026-01-15T10:00:00Z"),
+      });
+
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      const result = await service.findAll(
+        "user-1",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        1,
+        50,
+        false,
+        undefined,
+        "target-tx",
+      );
+
+      // 75 transactions before / 50 per page + 1 = page 2
+      expect(result.pagination.page).toBe(2);
+    });
+
+    it("falls back to requested page when targetTransactionId is not found", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      transactionsRepository.findOne.mockResolvedValue(null);
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      const result = await service.findAll(
+        "user-1",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        3,
+        50,
+        false,
+        undefined,
+        "nonexistent-tx",
+      );
+
+      expect(result.pagination.page).toBe(3);
+    });
+
+    it("applies account + date + payee + search filters in count query for targetTransactionId", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+
+      const countQb = createMockQueryBuilder();
+      countQb.getCount.mockResolvedValue(0);
+
+      transactionsRepository.createQueryBuilder
+        .mockReturnValueOnce(mockQb)
+        .mockReturnValueOnce(countQb);
+
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "target-tx",
+        userId: "user-1",
+        transactionDate: "2026-01-15",
+        createdAt: new Date("2026-01-15T10:00:00Z"),
+      });
+
+      investmentTxRepository.find.mockResolvedValue([]);
+
+      await service.findAll(
+        "user-1",
+        ["acc-1"],
+        "2026-01-01",
+        "2026-12-31",
+        undefined,
+        ["payee-1"],
+        1,
+        50,
+        false,
+        "term",
+        "target-tx",
+      );
+
+      // Count query should have the same filters
+      expect(countQb.andWhere).toHaveBeenCalledWith(
+        "t.accountId IN (:...accountIds)",
+        { accountIds: ["acc-1"] },
+      );
+      expect(countQb.andWhere).toHaveBeenCalledWith(
+        "t.transactionDate >= :startDate",
+        { startDate: "2026-01-01" },
+      );
+      expect(countQb.andWhere).toHaveBeenCalledWith(
+        "t.transactionDate <= :endDate",
+        { endDate: "2026-12-31" },
+      );
+      expect(countQb.andWhere).toHaveBeenCalledWith(
+        "t.payeeId IN (:...payeeIds)",
+        { payeeIds: ["payee-1"] },
+      );
+    });
+
+    // ==================== Filtered Starting Balance Tests ====================
+
+    describe("content-filtered starting balance (zero-based)", () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -50,
+        status: TransactionStatus.UNRECONCILED,
+        isCleared: false,
+        isReconciled: false,
+        isVoid: false,
+        splits: [],
+      };
+
+      it("returns total sum of matching transactions for page 1 with payee filter", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+
+        const idsQb = createMockQueryBuilder();
+        const totalSumQb = createMockQueryBuilder({
+          setParameters: jest.fn().mockReturnThis(),
+        });
+        totalSumQb.getRawOne.mockResolvedValue({ totalSum: -500 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(idsQb)
+          .mockReturnValueOnce(totalSumQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+
+        const result = await service.findAll(
+          "user-1",
+          ["account-1"],
+          undefined,
+          undefined,
+          undefined,
+          ["payee-1"],
+        );
+
+        expect(result.startingBalance).toBe(-500);
+      });
+
+      it("returns total sum of matching transactions for page 1 with search filter", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+
+        const idsQb = createMockQueryBuilder();
+        const totalSumQb = createMockQueryBuilder({
+          setParameters: jest.fn().mockReturnThis(),
+        });
+        totalSumQb.getRawOne.mockResolvedValue({ totalSum: -200 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(idsQb)
+          .mockReturnValueOnce(totalSumQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+
+        const result = await service.findAll(
+          "user-1",
+          ["account-1"],
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          1,
+          50,
+          false,
+          "grocery",
+        );
+
+        expect(result.startingBalance).toBe(-200);
+      });
+
+      it("returns total sum of matching transactions for page 1 with amount filter", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+
+        const idsQb = createMockQueryBuilder();
+        const totalSumQb = createMockQueryBuilder({
+          setParameters: jest.fn().mockReturnThis(),
+        });
+        totalSumQb.getRawOne.mockResolvedValue({ totalSum: -750 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(idsQb)
+          .mockReturnValueOnce(totalSumQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+
+        const result = await service.findAll(
+          "user-1",
+          ["account-1"],
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          1,
+          50,
+          false,
+          undefined,
+          undefined,
+          -100,
+          -10,
+        );
+
+        expect(result.startingBalance).toBe(-750);
+      });
+
+      it("returns total sum of matching transactions for page 1 with tag filter", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+
+        const idsQb = createMockQueryBuilder();
+        const totalSumQb = createMockQueryBuilder({
+          setParameters: jest.fn().mockReturnThis(),
+        });
+        totalSumQb.getRawOne.mockResolvedValue({ totalSum: -300 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(idsQb)
+          .mockReturnValueOnce(totalSumQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+
+        const result = await service.findAll(
+          "user-1",
+          ["account-1"],
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          1,
+          50,
+          false,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          ["tag-1"],
+        );
+
+        expect(result.startingBalance).toBe(-300);
+      });
+
+      it("returns total sum of matching transactions for page 1 with category filter", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+
+        // Category filter triggers getAllCategoryIdsWithChildren
+        categoriesRepository.find.mockResolvedValue([
+          { id: "cat-1", parentId: null },
+        ]);
+
+        const idsQb = createMockQueryBuilder();
+        const totalSumQb = createMockQueryBuilder({
+          setParameters: jest.fn().mockReturnThis(),
+        });
+        totalSumQb.getRawOne.mockResolvedValue({ totalSum: -400 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(idsQb)
+          .mockReturnValueOnce(totalSumQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+
+        const result = await service.findAll(
+          "user-1",
+          ["account-1"],
+          undefined,
+          undefined,
+          ["cat-1"],
+        );
+
+        expect(result.startingBalance).toBe(-400);
+      });
+
+      it("subtracts previous pages sum for page > 1 with content filter", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 100]);
+
+        // buildFilteredIdsSubquery for totalSum
+        const idsQb1 = createMockQueryBuilder();
+        // totalSum QB
+        const totalSumQb = createMockQueryBuilder({
+          setParameters: jest.fn().mockReturnThis(),
+        });
+        totalSumQb.getRawOne.mockResolvedValue({ totalSum: -3000 });
+
+        // buildFilteredIdsSubquery for prevPagesSum
+        const idsQb2 = createMockQueryBuilder();
+        // prevIdsQuery QB
+        const prevIdsQb = createMockQueryBuilder({
+          setParameters: jest.fn().mockReturnThis(),
+        });
+        // sumResult QB
+        const sumQb = createMockQueryBuilder({
+          setParameters: jest.fn().mockReturnThis(),
+        });
+        sumQb.getRawOne.mockResolvedValue({ totalSum: -1000 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(idsQb1)
+          .mockReturnValueOnce(totalSumQb)
+          .mockReturnValueOnce(idsQb2)
+          .mockReturnValueOnce(prevIdsQb)
+          .mockReturnValueOnce(sumQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+
+        const result = await service.findAll(
+          "user-1",
+          ["account-1"],
+          undefined,
+          undefined,
+          undefined,
+          ["payee-1"],
+          2,
+          50,
+        );
+
+        // startingBalance = totalSum - prevPagesSum = -3000 - (-1000) = -2000
+        expect(result.startingBalance).toBe(-2000);
+      });
+
+      it("returns zero starting balance when no matching transactions", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+
+        const idsQb = createMockQueryBuilder();
+        const totalSumQb = createMockQueryBuilder({
+          setParameters: jest.fn().mockReturnThis(),
+        });
+        totalSumQb.getRawOne.mockResolvedValue({ totalSum: 0 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(idsQb)
+          .mockReturnValueOnce(totalSumQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+
+        const result = await service.findAll(
+          "user-1",
+          ["account-1"],
+          undefined,
+          undefined,
+          undefined,
+          ["payee-nonexistent"],
+        );
+
+        expect(result.startingBalance).toBe(0);
+      });
+
+      it("applies payee filter to balance subquery", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+
+        const idsQb = createMockQueryBuilder();
+        const totalSumQb = createMockQueryBuilder({
+          setParameters: jest.fn().mockReturnThis(),
+        });
+        totalSumQb.getRawOne.mockResolvedValue({ totalSum: -100 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(idsQb)
+          .mockReturnValueOnce(totalSumQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+
+        await service.findAll(
+          "user-1",
+          ["account-1"],
+          undefined,
+          undefined,
+          undefined,
+          ["payee-1", "payee-2"],
+        );
+
+        // The idsQb (buildFilteredIdsSubquery) should filter by payee
+        expect(idsQb.andWhere).toHaveBeenCalledWith(
+          "bf.payeeId IN (:...bfPayeeIds)",
+          { bfPayeeIds: ["payee-1", "payee-2"] },
+        );
+      });
+
+      it("applies amount filter to balance subquery", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+
+        const idsQb = createMockQueryBuilder();
+        const totalSumQb = createMockQueryBuilder({
+          setParameters: jest.fn().mockReturnThis(),
+        });
+        totalSumQb.getRawOne.mockResolvedValue({ totalSum: -100 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(idsQb)
+          .mockReturnValueOnce(totalSumQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+
+        await service.findAll(
+          "user-1",
+          ["account-1"],
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          1,
+          50,
+          false,
+          undefined,
+          undefined,
+          -100,
+          -10,
+        );
+
+        expect(idsQb.andWhere).toHaveBeenCalledWith(
+          "bf.amount >= :bfAmountFrom",
+          { bfAmountFrom: -100 },
+        );
+        expect(idsQb.andWhere).toHaveBeenCalledWith(
+          "bf.amount <= :bfAmountTo",
+          { bfAmountTo: -10 },
+        );
+      });
+
+      it("applies search filter to balance subquery with splits join", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+
+        const idsQb = createMockQueryBuilder();
+        const totalSumQb = createMockQueryBuilder({
+          setParameters: jest.fn().mockReturnThis(),
+        });
+        totalSumQb.getRawOne.mockResolvedValue({ totalSum: -100 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(idsQb)
+          .mockReturnValueOnce(totalSumQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+
+        await service.findAll(
+          "user-1",
+          ["account-1"],
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          1,
+          50,
+          false,
+          "grocery",
+        );
+
+        // Should join splits for search
+        expect(idsQb.leftJoin).toHaveBeenCalledWith("bf.splits", "bfSplits");
+        expect(idsQb.andWhere).toHaveBeenCalledWith(
+          buildTransactionSearchClause({
+            transaction: "bf",
+            splits: "bfSplits",
+            paramName: "bfSearch",
+          }),
+          {
+            bfSearch: "%grocery%",
+            bfSearchAmount: null,
+            bfSearchDate: null,
+          },
+        );
+      });
+
+      it("applies tag filter to balance subquery with tag joins", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+
+        const idsQb = createMockQueryBuilder();
+        const totalSumQb = createMockQueryBuilder({
+          setParameters: jest.fn().mockReturnThis(),
+        });
+        totalSumQb.getRawOne.mockResolvedValue({ totalSum: -100 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(idsQb)
+          .mockReturnValueOnce(totalSumQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+
+        await service.findAll(
+          "user-1",
+          ["account-1"],
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          1,
+          50,
+          false,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          ["tag-1"],
+        );
+
+        // Should join splits and tags
+        expect(idsQb.leftJoin).toHaveBeenCalledWith("bf.splits", "bfSplits");
+        expect(idsQb.leftJoin).toHaveBeenCalledWith("bf.tags", "bfTags");
+        expect(idsQb.leftJoin).toHaveBeenCalledWith(
+          "bfSplits.tags",
+          "bfSplitTags",
+        );
+        expect(idsQb.andWhere).toHaveBeenCalledWith(expect.any(Brackets));
+      });
+
+      it("applies category filter with child categories to balance subquery", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+
+        categoriesRepository.find.mockResolvedValue([
+          { id: "cat-1", parentId: null },
+          { id: "cat-1-child", parentId: "cat-1" },
+        ]);
+
+        const idsQb = createMockQueryBuilder();
+        const totalSumQb = createMockQueryBuilder({
+          setParameters: jest.fn().mockReturnThis(),
+        });
+        totalSumQb.getRawOne.mockResolvedValue({ totalSum: -400 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(idsQb)
+          .mockReturnValueOnce(totalSumQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+
+        await service.findAll("user-1", ["account-1"], undefined, undefined, [
+          "cat-1",
+        ]);
+
+        // Should join splits for category matching
+        expect(idsQb.leftJoin).toHaveBeenCalledWith("bf.splits", "bfSplits");
+        expect(idsQb.andWhere).toHaveBeenCalledWith(expect.any(Brackets));
+        // Category IDs are expanded to include children
+        expect(idsQb.where).toHaveBeenCalledWith(
+          "bf.categoryId IN (:...bfCatIds)",
+          { bfCatIds: expect.arrayContaining(["cat-1", "cat-1-child"]) },
+        );
+      });
+
+      it("applies date filters alongside content filters in balance subquery", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+
+        const idsQb = createMockQueryBuilder();
+        const totalSumQb = createMockQueryBuilder({
+          setParameters: jest.fn().mockReturnThis(),
+        });
+        totalSumQb.getRawOne.mockResolvedValue({ totalSum: -250 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(idsQb)
+          .mockReturnValueOnce(totalSumQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+
+        const result = await service.findAll(
+          "user-1",
+          ["account-1"],
+          "2026-01-01",
+          "2026-03-31",
+          undefined,
+          ["payee-1"],
+        );
+
+        // Content filter takes priority, so zero-based balance
+        expect(result.startingBalance).toBe(-250);
+        // Date filters are still applied to the subquery
+        expect(idsQb.andWhere).toHaveBeenCalledWith(
+          "bf.transactionDate >= :bfStartDate",
+          { bfStartDate: "2026-01-01" },
+        );
+        expect(idsQb.andWhere).toHaveBeenCalledWith(
+          "bf.transactionDate <= :bfEndDate",
+          { bfEndDate: "2026-03-31" },
+        );
+      });
+    });
+
+    describe("multi-account content-filtered starting balance", () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -50,
+        status: TransactionStatus.UNRECONCILED,
+        isCleared: false,
+        isReconciled: false,
+        isVoid: false,
+        splits: [],
+      };
+
+      it("computes zero-based balance for multiple accounts with payee filter", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+
+        const idsQb = createMockQueryBuilder();
+        const totalSumQb = createMockQueryBuilder({
+          setParameters: jest.fn().mockReturnThis(),
+        });
+        totalSumQb.getRawOne.mockResolvedValue({ totalSum: -800 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(idsQb)
+          .mockReturnValueOnce(totalSumQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+
+        const result = await service.findAll(
+          "user-1",
+          ["acc-1", "acc-2"],
+          undefined,
+          undefined,
+          undefined,
+          ["payee-1"],
+        );
+
+        expect(result.startingBalance).toBe(-800);
+        // Should filter by multiple account IDs
+        expect(idsQb.andWhere).toHaveBeenCalledWith(
+          "bf.accountId IN (:...bfAccountIds)",
+          { bfAccountIds: ["acc-1", "acc-2"] },
+        );
+      });
+
+      it("computes zero-based balance when no accounts selected with payee filter", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+
+        const idsQb = createMockQueryBuilder();
+        const totalSumQb = createMockQueryBuilder({
+          setParameters: jest.fn().mockReturnThis(),
+        });
+        totalSumQb.getRawOne.mockResolvedValue({ totalSum: -1200 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(idsQb)
+          .mockReturnValueOnce(totalSumQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+
+        const result = await service.findAll(
+          "user-1",
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          ["payee-1"],
+        );
+
+        expect(result.startingBalance).toBe(-1200);
+        // Should NOT filter by account at all
+        expect(idsQb.andWhere).not.toHaveBeenCalledWith(
+          "bf.accountId = :bfAccountId",
+          expect.anything(),
+        );
+        expect(idsQb.andWhere).not.toHaveBeenCalledWith(
+          "bf.accountId IN (:...bfAccountIds)",
+          expect.anything(),
+        );
+      });
+
+      it("does not compute balance for multiple accounts without content filters", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+        transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+        investmentTxRepository.find.mockResolvedValue([]);
+
+        const result = await service.findAll("user-1", ["acc-1", "acc-2"]);
+
+        expect(result.startingBalance).toBeUndefined();
+      });
+
+      it("does not compute balance for no accounts without content filters", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[], 0]);
+        transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+        investmentTxRepository.find.mockResolvedValue([]);
+
+        const result = await service.findAll("user-1");
+
+        expect(result.startingBalance).toBeUndefined();
+      });
+    });
+
+    describe("date-filtered starting balance", () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -50,
+        status: TransactionStatus.UNRECONCILED,
+        isCleared: false,
+        isReconciled: false,
+        isVoid: false,
+        splits: [],
+      };
+
+      it("returns balance at end of date range for page 1 with endDate", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+
+        // sumAfterEndDate QB
+        const sumAfterQb = createMockQueryBuilder();
+        sumAfterQb.getRawOne.mockResolvedValue({ sum: -300 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(sumAfterQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+        accountsService.findOne.mockResolvedValue({
+          ...mockAccount,
+          currentBalance: 1000,
+        });
+        accountsService.getProjectedBalance.mockResolvedValue(1000);
+
+        const result = await service.findAll(
+          "user-1",
+          ["account-1"],
+          "2026-01-01",
+          "2026-01-31",
+        );
+
+        // projected = 1000 + 0 = 1000
+        // balance at end of Jan = 1000 - (-300) = 1300
+        expect(result.startingBalance).toBe(1300);
+      });
+
+      it("returns projected balance for page 1 with startDate only", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+
+        transactionsRepository.createQueryBuilder.mockReturnValueOnce(mockQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+        accountsService.findOne.mockResolvedValue({
+          ...mockAccount,
+          currentBalance: 1000,
+        });
+        accountsService.getProjectedBalance.mockResolvedValue(1000);
+
+        const result = await service.findAll(
+          "user-1",
+          ["account-1"],
+          "2026-01-01",
+        );
+
+        // With startDate only, projected balance = 1000
+        expect(result.startingBalance).toBe(1000);
+      });
+
+      it("includes future transactions in projected balance for date-filtered view", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+
+        const sumAfterQb = createMockQueryBuilder();
+        sumAfterQb.getRawOne.mockResolvedValue({ sum: 200 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(sumAfterQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+        accountsService.findOne.mockResolvedValue({
+          ...mockAccount,
+          currentBalance: 1000,
+        });
+        accountsService.getProjectedBalance.mockResolvedValue(1500);
+
+        const result = await service.findAll(
+          "user-1",
+          ["account-1"],
+          "2026-01-01",
+          "2026-01-31",
+        );
+
+        // projected = 1000 + 500 = 1500
+        // balance at end of Jan = 1500 - 200 = 1300
+        expect(result.startingBalance).toBe(1300);
+      });
+
+      it("subtracts date-filtered previous pages sum for page > 1 with endDate", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 100]);
+
+        const sumAfterQb = createMockQueryBuilder();
+        sumAfterQb.getRawOne.mockResolvedValue({ sum: -300 });
+
+        // previousPagesQuery QB (date-filtered)
+        const prevPagesQb = createMockQueryBuilder();
+        // sumResult QB
+        const sumQb = createMockQueryBuilder({
+          setParameters: jest.fn().mockReturnThis(),
+        });
+        sumQb.getRawOne.mockResolvedValue({ sum: -100 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(sumAfterQb)
+          .mockReturnValueOnce(prevPagesQb)
+          .mockReturnValueOnce(sumQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+        accountsService.findOne.mockResolvedValue({
+          ...mockAccount,
+          currentBalance: 1000,
+        });
+        accountsService.getProjectedBalance.mockResolvedValue(1000);
+
+        const result = await service.findAll(
+          "user-1",
+          ["account-1"],
+          "2026-01-01",
+          "2026-01-31",
+          undefined,
+          undefined,
+          2,
+          50,
+        );
+
+        // baseBalance = 1000 - (-300) = 1300
+        // startingBalance = 1300 - (-100) = 1400
+        expect(result.startingBalance).toBe(1400);
+      });
+
+      it("applies date constraints to previous pages query", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 100]);
+
+        const sumAfterQb = createMockQueryBuilder();
+        sumAfterQb.getRawOne.mockResolvedValue({ sum: 0 });
+
+        const prevPagesQb = createMockQueryBuilder();
+        const sumQb = createMockQueryBuilder({
+          setParameters: jest.fn().mockReturnThis(),
+        });
+        sumQb.getRawOne.mockResolvedValue({ sum: 0 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(sumAfterQb)
+          .mockReturnValueOnce(prevPagesQb)
+          .mockReturnValueOnce(sumQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+        accountsService.findOne.mockResolvedValue({
+          ...mockAccount,
+          currentBalance: 1000,
+        });
+        accountsService.getProjectedBalance.mockResolvedValue(1000);
+
+        await service.findAll(
+          "user-1",
+          ["account-1"],
+          "2026-01-01",
+          "2026-01-31",
+          undefined,
+          undefined,
+          2,
+          50,
+        );
+
+        // Previous pages query should have date constraints
+        expect(prevPagesQb.andWhere).toHaveBeenCalledWith(
+          "t.transactionDate >= :startDate",
+          { startDate: "2026-01-01" },
+        );
+        expect(prevPagesQb.andWhere).toHaveBeenCalledWith(
+          "t.transactionDate <= :endDate",
+          { endDate: "2026-01-31" },
+        );
+      });
+
+      it("subtracts date-filtered previous pages sum for page > 1 with startDate only", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 100]);
+
+        const prevPagesQb = createMockQueryBuilder();
+        const sumQb = createMockQueryBuilder({
+          setParameters: jest.fn().mockReturnThis(),
+        });
+        sumQb.getRawOne.mockResolvedValue({ sum: -200 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(prevPagesQb)
+          .mockReturnValueOnce(sumQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+        accountsService.findOne.mockResolvedValue({
+          ...mockAccount,
+          currentBalance: 1000,
+        });
+        accountsService.getProjectedBalance.mockResolvedValue(1000);
+
+        const result = await service.findAll(
+          "user-1",
+          ["account-1"],
+          "2026-01-01",
+          undefined,
+          undefined,
+          undefined,
+          2,
+          50,
+        );
+
+        // projected = 1000, startingBalance = 1000 - (-200) = 1200
+        expect(result.startingBalance).toBe(1200);
+        // Previous pages query should have startDate constraint
+        expect(prevPagesQb.andWhere).toHaveBeenCalledWith(
+          "t.transactionDate >= :startDate",
+          { startDate: "2026-01-01" },
+        );
+      });
+    });
+
+    describe("unfiltered starting balance (preserved behavior)", () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -50,
+        status: TransactionStatus.UNRECONCILED,
+        isCleared: false,
+        isReconciled: false,
+        isVoid: false,
+        splits: [],
+      };
+
+      it("uses projected balance for page 1 with no filters", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+
+        const futureQb = createMockQueryBuilder();
+        futureQb.getRawOne.mockResolvedValue({ sum: 0 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(futureQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+        accountsService.findOne.mockResolvedValue({
+          ...mockAccount,
+          currentBalance: 1000,
+        });
+        accountsService.getProjectedBalance.mockResolvedValue(1000);
+
+        const result = await service.findAll("user-1", ["account-1"]);
+
+        expect(result.startingBalance).toBe(1000);
+      });
+
+      it("uses projected balance with future transactions for page 1 with no filters", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 1]);
+
+        const futureQb = createMockQueryBuilder();
+        futureQb.getRawOne.mockResolvedValue({ sum: -5000 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(futureQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+        accountsService.findOne.mockResolvedValue({
+          ...mockAccount,
+          currentBalance: 8000,
+        });
+        accountsService.getProjectedBalance.mockResolvedValue(3000);
+
+        const result = await service.findAll("user-1", ["account-1"]);
+
+        // projected = 8000 + (-5000) = 3000
+        expect(result.startingBalance).toBe(3000);
+      });
+
+      it("subtracts unfiltered previous pages sum for page > 1 with no filters", async () => {
+        const mockQb = createMockQueryBuilder();
+        mockQb.getManyAndCount.mockResolvedValue([[mockTx], 100]);
+
+        const prevPagesQb = createMockQueryBuilder();
+        const sumQb = createMockQueryBuilder({
+          setParameters: jest.fn().mockReturnThis(),
+        });
+        sumQb.getRawOne.mockResolvedValue({ sum: -500 });
+
+        transactionsRepository.createQueryBuilder
+          .mockReturnValueOnce(mockQb)
+          .mockReturnValueOnce(prevPagesQb)
+          .mockReturnValueOnce(sumQb);
+
+        investmentTxRepository.find.mockResolvedValue([]);
+        accountsService.findOne.mockResolvedValue({
+          ...mockAccount,
+          currentBalance: 2000,
+        });
+        accountsService.getProjectedBalance.mockResolvedValue(2000);
+
+        const result = await service.findAll(
+          "user-1",
+          ["account-1"],
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          2,
+          50,
+        );
+
+        // projected = 2000, startingBalance = 2000 - (-500) = 2500
+        expect(result.startingBalance).toBe(2500);
+      });
+    });
+  });
+
+  describe("getReconciliationData", () => {
+    const createMockQueryBuilder = (overrides?: Record<string, jest.Mock>) => {
+      const mockQb: Record<string, jest.Mock> = {
+        leftJoinAndSelect: jest.fn().mockReturnThis(),
+        leftJoin: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        andWhere: jest.fn().mockReturnThis(),
+        orderBy: jest.fn().mockReturnThis(),
+        setLock: jest.fn().mockReturnThis(),
+        addOrderBy: jest.fn().mockReturnThis(),
+        skip: jest.fn().mockReturnThis(),
+        take: jest.fn().mockReturnThis(),
+        select: jest.fn().mockReturnThis(),
+        addSelect: jest.fn().mockReturnThis(),
+        groupBy: jest.fn().mockReturnThis(),
+        setParameter: jest.fn().mockReturnThis(),
+        getMany: jest.fn().mockResolvedValue([]),
+        getManyAndCount: jest.fn().mockResolvedValue([[], 0]),
+        getCount: jest.fn().mockResolvedValue(0),
+        getRawMany: jest.fn().mockResolvedValue([]),
+        getRawOne: jest.fn().mockResolvedValue(null),
+        getQuery: jest.fn().mockReturnValue("SELECT 1"),
+        getParameters: jest.fn().mockReturnValue({}),
+        limit: jest.fn().mockReturnThis(),
+        update: jest.fn().mockReturnThis(),
+        set: jest.fn().mockReturnThis(),
+        execute: jest.fn().mockResolvedValue({ affected: 0 }),
+        ...overrides,
+      };
+      return mockQb;
+    };
+
+    it("returns unreconciled transactions and calculates balances", async () => {
+      const account = { ...mockAccount, openingBalance: 500 };
+      accountsService.findOne.mockResolvedValue(account);
+
+      const unreconciledTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -100,
+        status: TransactionStatus.CLEARED,
+      };
+
+      const txQb = createMockQueryBuilder();
+      txQb.getMany.mockResolvedValue([unreconciledTx]);
+
+      const reconciledQb = createMockQueryBuilder();
+      reconciledQb.getRawOne.mockResolvedValue({ sum: 200 });
+
+      const clearedQb = createMockQueryBuilder();
+      clearedQb.getRawOne.mockResolvedValue({ sum: -50 });
+
+      transactionsRepository.createQueryBuilder
+        .mockReturnValueOnce(txQb) // unreconciled transactions query
+        .mockReturnValueOnce(reconciledQb) // reconciled sum query
+        .mockReturnValueOnce(clearedQb); // cleared sum query
+
+      const result = await service.getReconciliationData(
+        "user-1",
+        "account-1",
+        "2026-01-31",
+        750,
+      );
+
+      expect(result.transactions).toEqual([unreconciledTx]);
+      // reconciledBalance = openingBalance + reconciledSum = 500 + 200 = 700
+      expect(result.reconciledBalance).toBe(700);
+      // clearedBalance = reconciledBalance + clearedSum = 700 + (-50) = 650
+      expect(result.clearedBalance).toBe(650);
+      // difference = statementBalance - clearedBalance = 750 - 650 = 100
+      expect(result.difference).toBe(100);
+    });
+
+    it("handles zero reconciled and cleared sums", async () => {
+      accountsService.findOne.mockResolvedValue({
+        ...mockAccount,
+        openingBalance: 0,
+      });
+
+      const txQb = createMockQueryBuilder();
+      txQb.getMany.mockResolvedValue([]);
+
+      const reconciledQb = createMockQueryBuilder();
+      reconciledQb.getRawOne.mockResolvedValue({ sum: null });
+
+      const clearedQb = createMockQueryBuilder();
+      clearedQb.getRawOne.mockResolvedValue({ sum: null });
+
+      transactionsRepository.createQueryBuilder
+        .mockReturnValueOnce(txQb)
+        .mockReturnValueOnce(reconciledQb)
+        .mockReturnValueOnce(clearedQb);
+
+      const result = await service.getReconciliationData(
+        "user-1",
+        "account-1",
+        "2026-01-31",
+        100,
+      );
+
+      expect(result.reconciledBalance).toBe(0);
+      expect(result.clearedBalance).toBe(0);
+      expect(result.difference).toBe(100);
+    });
+
+    it("verifies account ownership", async () => {
+      accountsService.findOne.mockResolvedValue(mockAccount);
+
+      const txQb = createMockQueryBuilder();
+      const reconciledQb = createMockQueryBuilder();
+      reconciledQb.getRawOne.mockResolvedValue({ sum: null });
+      const clearedQb = createMockQueryBuilder();
+      clearedQb.getRawOne.mockResolvedValue({ sum: null });
+
+      transactionsRepository.createQueryBuilder
+        .mockReturnValueOnce(txQb)
+        .mockReturnValueOnce(reconciledQb)
+        .mockReturnValueOnce(clearedQb);
+
+      await service.getReconciliationData(
+        "user-1",
+        "account-1",
+        "2026-01-31",
+        0,
+      );
+
+      expect(accountsService.findOne).toHaveBeenCalledWith(
+        "user-1",
+        "account-1",
+      );
+    });
+
+    it("filters transactions up to statement date", async () => {
+      accountsService.findOne.mockResolvedValue(mockAccount);
+
+      const txQb = createMockQueryBuilder();
+      const reconciledQb = createMockQueryBuilder();
+      reconciledQb.getRawOne.mockResolvedValue({ sum: null });
+      const clearedQb = createMockQueryBuilder();
+      clearedQb.getRawOne.mockResolvedValue({ sum: null });
+
+      transactionsRepository.createQueryBuilder
+        .mockReturnValueOnce(txQb)
+        .mockReturnValueOnce(reconciledQb)
+        .mockReturnValueOnce(clearedQb);
+
+      await service.getReconciliationData(
+        "user-1",
+        "account-1",
+        "2026-02-15",
+        0,
+      );
+
+      expect(txQb.andWhere).toHaveBeenCalledWith(
+        "transaction.transactionDate <= :statementDate",
+        { statementDate: "2026-02-15" },
+      );
+    });
+  });
+
+  describe("bulkReconcile", () => {
+    const createMockQueryBuilder = (overrides?: Record<string, jest.Mock>) => {
+      const mockQb: Record<string, jest.Mock> = {
+        leftJoinAndSelect: jest.fn().mockReturnThis(),
+        leftJoin: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        andWhere: jest.fn().mockReturnThis(),
+        orderBy: jest.fn().mockReturnThis(),
+        setLock: jest.fn().mockReturnThis(),
+        addOrderBy: jest.fn().mockReturnThis(),
+        skip: jest.fn().mockReturnThis(),
+        take: jest.fn().mockReturnThis(),
+        select: jest.fn().mockReturnThis(),
+        addSelect: jest.fn().mockReturnThis(),
+        groupBy: jest.fn().mockReturnThis(),
+        setParameter: jest.fn().mockReturnThis(),
+        getMany: jest.fn().mockResolvedValue([]),
+        getManyAndCount: jest.fn().mockResolvedValue([[], 0]),
+        getCount: jest.fn().mockResolvedValue(0),
+        getRawMany: jest.fn().mockResolvedValue([]),
+        getRawOne: jest.fn().mockResolvedValue(null),
+        getQuery: jest.fn().mockReturnValue("SELECT 1"),
+        getParameters: jest.fn().mockReturnValue({}),
+        limit: jest.fn().mockReturnThis(),
+        update: jest.fn().mockReturnThis(),
+        set: jest.fn().mockReturnThis(),
+        execute: jest.fn().mockResolvedValue({ affected: 2 }),
+        ...overrides,
+      };
+      return mockQb;
+    };
+
+    it("returns 0 for empty transaction IDs", async () => {
+      const result = await service.bulkReconcile(
+        "user-1",
+        "account-1",
+        [],
+        "2026-01-31",
+      );
+
+      expect(result).toEqual({ reconciled: 0 });
+    });
+
+    it("throws when some transactions are not found", async () => {
+      const verifyQb = createMockQueryBuilder();
+      verifyQb.getMany.mockResolvedValue([
+        { id: "tx-1", userId: "user-1", accountId: "account-1" },
+      ]);
+
+      transactionsRepository.createQueryBuilder.mockReturnValue(verifyQb);
+
+      await expect(
+        service.bulkReconcile(
+          "user-1",
+          "account-1",
+          ["tx-1", "tx-2"],
+          "2026-01-31",
+        ),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it("reconciles all specified transactions", async () => {
+      const verifyQb = createMockQueryBuilder();
+      verifyQb.getMany.mockResolvedValue([
+        { id: "tx-1", userId: "user-1", accountId: "account-1" },
+        { id: "tx-2", userId: "user-1", accountId: "account-1" },
+      ]);
+
+      const updateQb = createMockQueryBuilder();
+      updateQb.execute.mockResolvedValue({ affected: 2 });
+
+      transactionsRepository.createQueryBuilder
+        .mockReturnValueOnce(verifyQb) // verification query
+        .mockReturnValueOnce(updateQb); // update query
+
+      const result = await service.bulkReconcile(
+        "user-1",
+        "account-1",
+        ["tx-1", "tx-2"],
+        "2026-01-31",
+      );
+
+      expect(result).toEqual({ reconciled: 2 });
+      expect(accountsService.findOne).toHaveBeenCalledWith(
+        "user-1",
+        "account-1",
+      );
+    });
+  });
+
+  describe("getSummary", () => {
+    const createMockQueryBuilder = (overrides?: Record<string, jest.Mock>) => {
+      const mockQb: Record<string, jest.Mock> = {} as Record<string, jest.Mock>;
+      const executeBrackets = (condition: unknown) => {
+        if (condition instanceof Brackets) {
+          (condition as any).whereFactory(mockQb);
+        }
+      };
+      Object.assign(mockQb, {
+        leftJoinAndSelect: jest.fn().mockReturnValue(mockQb),
+        leftJoin: jest.fn().mockReturnValue(mockQb),
+        where: jest.fn().mockImplementation((condition: unknown) => {
+          executeBrackets(condition);
+          return mockQb;
+        }),
+        andWhere: jest.fn().mockImplementation((condition: unknown) => {
+          executeBrackets(condition);
+          return mockQb;
+        }),
+        orWhere: jest.fn().mockImplementation((condition: unknown) => {
+          executeBrackets(condition);
+          return mockQb;
+        }),
+        orderBy: jest.fn().mockReturnValue(mockQb),
+        addOrderBy: jest.fn().mockReturnValue(mockQb),
+        skip: jest.fn().mockReturnValue(mockQb),
+        take: jest.fn().mockReturnValue(mockQb),
+        select: jest.fn().mockReturnValue(mockQb),
+        addSelect: jest.fn().mockReturnValue(mockQb),
+        groupBy: jest.fn().mockReturnValue(mockQb),
+        setParameter: jest.fn().mockReturnValue(mockQb),
+        getMany: jest.fn().mockResolvedValue([]),
+        getManyAndCount: jest.fn().mockResolvedValue([[], 0]),
+        getCount: jest.fn().mockResolvedValue(0),
+        getRawMany: jest.fn().mockResolvedValue([]),
+        getRawOne: jest.fn().mockResolvedValue(null),
+        getQuery: jest.fn().mockReturnValue("SELECT 1"),
+        getParameters: jest.fn().mockReturnValue({}),
+        limit: jest.fn().mockReturnValue(mockQb),
+        update: jest.fn().mockReturnValue(mockQb),
+        set: jest.fn().mockReturnValue(mockQb),
+        execute: jest.fn().mockResolvedValue({ affected: 0 }),
+        ...overrides,
+      });
+      return mockQb;
+    };
+
+    it("returns aggregated summary by currency", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getRawMany.mockResolvedValue([
+        {
+          currencyCode: "USD",
+          totalIncome: "500",
+          totalExpenses: "200",
+          transactionCount: "10",
+        },
+        {
+          currencyCode: "CAD",
+          totalIncome: "300",
+          totalExpenses: "100",
+          transactionCount: "5",
+        },
+      ]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+
+      const result = await service.getSummary("user-1");
+
+      expect(result.totalIncome).toBe(800);
+      expect(result.totalExpenses).toBe(300);
+      expect(result.netCashFlow).toBe(500);
+      expect(result.transactionCount).toBe(15);
+      expect(result.byCurrency.USD).toEqual({
+        totalIncome: 500,
+        totalExpenses: 200,
+        netCashFlow: 300,
+        transactionCount: 10,
+      });
+      expect(result.byCurrency.CAD).toEqual({
+        totalIncome: 300,
+        totalExpenses: 100,
+        netCashFlow: 200,
+        transactionCount: 5,
+      });
+    });
+
+    it("returns zeros for no transactions", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getRawMany.mockResolvedValue([]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+
+      const result = await service.getSummary("user-1");
+
+      expect(result.totalIncome).toBe(0);
+      expect(result.totalExpenses).toBe(0);
+      expect(result.netCashFlow).toBe(0);
+      expect(result.transactionCount).toBe(0);
+      expect(result.byCurrency).toEqual({});
+    });
+
+    it("filters by accountIds", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getRawMany.mockResolvedValue([]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+
+      await service.getSummary("user-1", ["acc-1"]);
+
+      expect(mockQb.andWhere).toHaveBeenCalledWith(
+        "transaction.accountId IN (:...accountIds)",
+        { accountIds: ["acc-1"] },
+      );
+    });
+
+    it("filters by date range", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getRawMany.mockResolvedValue([]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+
+      await service.getSummary("user-1", undefined, "2026-01-01", "2026-06-30");
+
+      expect(mockQb.andWhere).toHaveBeenCalledWith(
+        "transaction.transactionDate >= :startDate",
+        { startDate: "2026-01-01" },
+      );
+      expect(mockQb.andWhere).toHaveBeenCalledWith(
+        "transaction.transactionDate <= :endDate",
+        { endDate: "2026-06-30" },
+      );
+    });
+
+    it("handles 'uncategorized' category filter with account join", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getRawMany.mockResolvedValue([]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+
+      await service.getSummary("user-1", undefined, undefined, undefined, [
+        "uncategorized",
+      ]);
+
+      expect(mockQb.leftJoin).toHaveBeenCalledWith(
+        "transaction.account",
+        "summaryAccount",
+      );
+      // Uncategorized condition is now inside a Brackets callback
+      expect(mockQb.andWhere).toHaveBeenCalledWith(expect.any(Brackets));
+      expect(mockQb.where).toHaveBeenCalledWith(
+        expect.stringContaining("transaction.categoryId IS NULL"),
+      );
+    });
+
+    it("handles 'transfer' category filter", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getRawMany.mockResolvedValue([]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+
+      await service.getSummary("user-1", undefined, undefined, undefined, [
+        "transfer",
+      ]);
+
+      // Transfer condition is now inside a Brackets callback
+      expect(mockQb.andWhere).toHaveBeenCalledWith(expect.any(Brackets));
+      expect(mockQb.where).toHaveBeenCalledWith(
+        "transaction.isTransfer = true",
+      );
+    });
+
+    it("handles regular category filter with children and joins splits", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getRawMany.mockResolvedValue([]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+      categoriesRepository.find.mockResolvedValue([
+        { id: "cat-1", parentId: null },
+        { id: "cat-child", parentId: "cat-1" },
+      ]);
+
+      await service.getSummary("user-1", undefined, undefined, undefined, [
+        "cat-1",
+      ]);
+
+      expect(mockQb.leftJoin).toHaveBeenCalledWith(
+        "transaction.splits",
+        "splits",
+      );
+      // Category IDs are now passed inline via Brackets
+      expect(mockQb.where).toHaveBeenCalledWith(
+        "transaction.categoryId IN (:...summaryCategoryIds)",
+        {
+          summaryCategoryIds: expect.arrayContaining(["cat-1", "cat-child"]),
+        },
+      );
+    });
+
+    it("filters by payeeIds", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getRawMany.mockResolvedValue([]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+
+      await service.getSummary(
+        "user-1",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        ["payee-1"],
+      );
+
+      expect(mockQb.andWhere).toHaveBeenCalledWith(
+        "transaction.payeeId IN (:...payeeIds)",
+        { payeeIds: ["payee-1"] },
+      );
+    });
+
+    it("filters by search and joins splits when no category filter", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getRawMany.mockResolvedValue([]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+
+      await service.getSummary(
+        "user-1",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        "test search",
+      );
+
+      expect(mockQb.leftJoin).toHaveBeenCalledWith(
+        "transaction.splits",
+        "splits",
+      );
+      expect(mockQb.andWhere).toHaveBeenCalledWith(
+        buildTransactionSearchClause({
+          transaction: "transaction",
+          splits: "splits",
+        }),
+        { search: "%test search%", searchAmount: null, searchDate: null },
+      );
+    });
+
+    it("skips null currencyCode rows", async () => {
+      const mockQb = createMockQueryBuilder();
+      mockQb.getRawMany.mockResolvedValue([
+        {
+          currencyCode: null,
+          totalIncome: "100",
+          totalExpenses: "50",
+          transactionCount: "3",
+        },
+      ]);
+      transactionsRepository.createQueryBuilder.mockReturnValue(mockQb);
+
+      const result = await service.getSummary("user-1");
+
+      expect(result.totalIncome).toBe(100);
+      expect(result.totalExpenses).toBe(50);
+      expect(result.byCurrency).toEqual({});
+    });
+  });
+
+  describe("getSplits", () => {
+    it("returns splits for a transaction", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        splits: [],
+      };
+      transactionsRepository.findOne.mockResolvedValue(mockTx);
+
+      const mockSplits = [
+        {
+          id: "split-1",
+          transactionId: "tx-1",
+          amount: -60,
+          categoryId: "cat-1",
+        },
+        {
+          id: "split-2",
+          transactionId: "tx-1",
+          amount: -40,
+          categoryId: "cat-2",
+        },
+      ];
+      splitsRepository.find.mockResolvedValue(mockSplits);
+
+      const result = await service.getSplits("user-1", "tx-1");
+
+      expect(result).toEqual(mockSplits);
+      expect(splitsRepository.find).toHaveBeenCalledWith({
+        where: { transactionId: "tx-1" },
+        relations: ["category", "transferAccount", "investmentTransaction"],
+        order: { createdAt: "ASC" },
+      });
+    });
+
+    it("verifies user access before returning splits", async () => {
+      transactionsRepository.findOne.mockResolvedValue(null);
+
+      await expect(service.getSplits("user-1", "tx-1")).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+  });
+
+  describe("updateSplits", () => {
+    it("validates, deletes old splits, and creates new ones", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -100,
+        transactionDate: "2026-01-15",
+        payeeName: "Store",
+        splits: [],
+      };
+      transactionsRepository.findOne.mockResolvedValue(mockTx);
+      splitsRepository.find.mockResolvedValue([]); // deleteSplitSideEffects finds no transfer legs
+
+      const newSplits = [
+        { amount: -60, categoryId: "cat-1" },
+        { amount: -40, categoryId: "cat-2" },
+      ];
+
+      await service.updateSplits("user-1", "tx-1", newSplits as any);
+
+      expect(splitsRepository.delete).toHaveBeenCalledWith({
+        transactionId: "tx-1",
+      });
+      expect(splitsRepository.create).toHaveBeenCalledTimes(2);
+      expect(transactionsRepository.update).toHaveBeenCalledWith("tx-1", {
+        isSplit: true,
+        categoryId: null,
+      });
+    });
+
+    it("rejects splits that do not sum to transaction amount", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        amount: -100,
+        splits: [],
+      };
+      transactionsRepository.findOne.mockResolvedValue(mockTx);
+
+      await expect(
+        service.updateSplits("user-1", "tx-1", [
+          { amount: -30, categoryId: "cat-1" },
+          { amount: -30, categoryId: "cat-2" },
+        ] as any),
+      ).rejects.toThrow("Split amounts");
+    });
+
+    it("cleans up linked transactions from old transfer splits", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -100,
+        transactionDate: "2026-01-15",
+        payeeName: null,
+        splits: [],
+      };
+      transactionsRepository.findOne.mockResolvedValue(mockTx);
+
+      // Old transfer split with linked transaction
+      const oldLinkedTx = {
+        id: "linked-tx-old",
+        accountId: "account-2",
+        amount: 60,
+      };
+      splitsRepository.find.mockResolvedValue([
+        {
+          id: "old-split",
+          transactionId: "tx-1",
+          linkedTransactionId: "linked-tx-old",
+          transferAccountId: "account-2",
+        },
+      ]);
+      transactionsRepository.findOne.mockResolvedValue(mockTx);
+      transactionsRepository.find.mockResolvedValue([oldLinkedTx]);
+
+      await service.updateSplits("user-1", "tx-1", [
+        { amount: -60, categoryId: "cat-1" },
+        { amount: -40, categoryId: "cat-2" },
+      ] as any);
+
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-2",
+        -60,
+      );
+      // Conditional delete keyed on id + owner (FV4-002).
+      expect(mockQueryRunner.manager.delete).toHaveBeenCalledWith(Transaction, {
+        id: oldLinkedTx.id,
+        userId: "user-1",
+      });
+      expect(transactionsRepository.remove).not.toHaveBeenCalledWith(
+        oldLinkedTx,
+      );
+    });
+  });
+
+  describe("addSplit", () => {
+    it("adds a split to a transaction", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -100,
+        transactionDate: "2026-01-15",
+        payeeName: "Store",
+        isSplit: true,
+        splits: [],
+      };
+      transactionsRepository.findOne.mockResolvedValue(mockTx);
+
+      const existingSplits = [
+        { id: "split-1", amount: -60, transactionId: "tx-1" },
+      ];
+      splitsRepository.find.mockResolvedValue(existingSplits);
+
+      const savedSplit = {
+        id: "split-new",
+        transactionId: "tx-1",
+        amount: -40,
+        categoryId: "cat-2",
+      };
+      splitsRepository.save.mockResolvedValue(savedSplit);
+      splitsRepository.findOne.mockResolvedValue({
+        ...savedSplit,
+        category: { id: "cat-2", name: "Groceries" },
+      });
+
+      const result = await service.addSplit("user-1", "tx-1", {
+        amount: -40,
+        categoryId: "cat-2",
+      } as any);
+
+      expect(result.id).toBe("split-new");
+      expect(splitsRepository.save).toHaveBeenCalled();
+    });
+
+    it("throws when adding split would exceed transaction amount", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        amount: -100,
+        splits: [],
+      };
+      transactionsRepository.findOne.mockResolvedValue(mockTx);
+
+      // Existing splits sum to -90
+      splitsRepository.find.mockResolvedValue([
+        { id: "split-1", amount: -90, transactionId: "tx-1" },
+      ]);
+
+      await expect(
+        service.addSplit("user-1", "tx-1", {
+          amount: -20,
+          categoryId: "cat-1",
+        } as any),
+      ).rejects.toThrow(
+        "Adding this split would exceed the transaction amount",
+      );
+    });
+
+    it("creates linked transaction for transfer splits", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -100,
+        transactionDate: "2026-01-15",
+        payeeName: null,
+        isSplit: true,
+        splits: [],
+      };
+      transactionsRepository.findOne.mockResolvedValue(mockTx);
+
+      const existingSplits = [
+        { id: "split-1", amount: -60, transactionId: "tx-1" },
+      ];
+      splitsRepository.find.mockResolvedValue(existingSplits);
+
+      const savedSplit = {
+        id: "split-new",
+        transactionId: "tx-1",
+        amount: -40,
+      };
+      splitsRepository.save.mockResolvedValue(savedSplit);
+
+      const linkedTx = { id: "linked-tx-1", userId: "user-1" };
+      transactionsRepository.save.mockResolvedValue(linkedTx);
+      transactionsRepository.create.mockReturnValue(linkedTx);
+
+      const targetAccount = {
+        ...mockAccount,
+        id: "account-2",
+        name: "Savings",
+        currencyCode: "USD",
+      };
+      const sourceAccount = {
+        ...mockAccount,
+        id: "account-1",
+        name: "Checking",
+      };
+      // addSplit resolves exactly two accounts: the transfer target, then the
+      // parent's own account. The chain previously began with `mockTx` -- a
+      // transaction where an account was expected -- so `targetAccount` was read
+      // as a row with no currencyCode. It went unnoticed while nothing read that
+      // field; the counterpart's amount now depends on it.
+      accountsService.findOne
+        .mockResolvedValueOnce(targetAccount)
+        .mockResolvedValueOnce(sourceAccount);
+
+      splitsRepository.findOne.mockResolvedValue({
+        ...savedSplit,
+        linkedTransactionId: "linked-tx-1",
+        transferAccount: targetAccount,
+      });
+
+      await service.addSplit("user-1", "tx-1", {
+        amount: -40,
+        transferAccountId: "account-2",
+      } as any);
+
+      expect(transactionsRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          accountId: "account-2",
+          amount: 40,
+          isTransfer: true,
+        }),
+      );
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-2",
+        40,
+      );
+      expect(splitsRepository.update).toHaveBeenCalledWith("split-new", {
+        linkedTransactionId: "linked-tx-1",
+      });
+    });
+
+    it("marks transaction as split when reaching 2+ splits", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -100,
+        isSplit: false,
+        splits: [],
+      };
+      transactionsRepository.findOne.mockResolvedValue(mockTx);
+
+      // One existing split
+      splitsRepository.find.mockResolvedValue([
+        { id: "split-1", amount: -60, transactionId: "tx-1" },
+      ]);
+
+      const savedSplit = {
+        id: "split-new",
+        transactionId: "tx-1",
+        amount: -40,
+      };
+      splitsRepository.save.mockResolvedValue(savedSplit);
+      splitsRepository.findOne.mockResolvedValue({
+        ...savedSplit,
+        category: null,
+      });
+
+      await service.addSplit("user-1", "tx-1", {
+        amount: -40,
+        categoryId: "cat-2",
+      } as any);
+
+      expect(transactionsRepository.update).toHaveBeenCalledWith("tx-1", {
+        isSplit: true,
+        categoryId: null,
+      });
+    });
+
+    it("does not mark as split if already marked", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -100,
+        isSplit: true,
+        splits: [],
+      };
+      transactionsRepository.findOne.mockResolvedValue(mockTx);
+
+      // Already 2 splits, adding a third
+      splitsRepository.find.mockResolvedValue([
+        { id: "split-1", amount: -40, transactionId: "tx-1" },
+        { id: "split-2", amount: -30, transactionId: "tx-1" },
+      ]);
+
+      const savedSplit = {
+        id: "split-new",
+        transactionId: "tx-1",
+        amount: -30,
+      };
+      splitsRepository.save.mockResolvedValue(savedSplit);
+      splitsRepository.findOne.mockResolvedValue({
+        ...savedSplit,
+        category: null,
+      });
+
+      await service.addSplit("user-1", "tx-1", {
+        amount: -30,
+        categoryId: "cat-3",
+      } as any);
+
+      // Should not call update to set isSplit since it's already true
+      const updateCalls = transactionsRepository.update.mock.calls.filter(
+        (call: any[]) => call[1]?.isSplit !== undefined,
+      );
+      expect(updateCalls.length).toBe(0);
+    });
+  });
+
+  describe("removeSplit", () => {
+    it("removes a split from a transaction", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -100,
+        isSplit: true,
+        splits: [],
+      };
+      transactionsRepository.findOne.mockResolvedValue(mockTx);
+
+      const splitToRemove = {
+        id: "split-1",
+        transactionId: "tx-1",
+        amount: -30,
+        linkedTransactionId: null,
+        transferAccountId: null,
+      };
+      splitsRepository.findOne.mockResolvedValueOnce(splitToRemove);
+
+      // After removal, 2 splits remain - stays as split
+      const remainingSplits = [
+        { id: "split-2", amount: -40 },
+        { id: "split-3", amount: -30 },
+      ];
+      splitsRepository.find.mockResolvedValue(remainingSplits);
+
+      await service.removeSplit("user-1", "tx-1", "split-1");
+
+      expect(splitsRepository.remove).toHaveBeenCalledWith(splitToRemove);
+    });
+
+    it("throws when split not found", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        splits: [],
+      });
+      splitsRepository.findOne.mockResolvedValue(null);
+
+      await expect(
+        service.removeSplit("user-1", "tx-1", "nonexistent"),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it("cleans up linked transaction when removing transfer split", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        isSplit: true,
+        splits: [],
+      };
+      transactionsRepository.findOne.mockResolvedValue(mockTx);
+
+      const linkedTx = {
+        id: "linked-tx-1",
+        accountId: "account-2",
+        amount: 40,
+      };
+
+      const splitToRemove = {
+        id: "split-1",
+        transactionId: "tx-1",
+        amount: -40,
+        linkedTransactionId: "linked-tx-1",
+        transferAccountId: "account-2",
+      };
+      splitsRepository.findOne.mockResolvedValueOnce(splitToRemove);
+
+      transactionsRepository.findOne
+        .mockResolvedValueOnce(mockTx) // findOne for access check
+        .mockResolvedValueOnce(linkedTx); // findOne for linked tx cleanup
+
+      // After removal, still 2 remaining
+      splitsRepository.find.mockResolvedValue([
+        { id: "split-2", amount: -30 },
+        { id: "split-3", amount: -30 },
+      ]);
+
+      await service.removeSplit("user-1", "tx-1", "split-1");
+
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-2",
+        -40,
+      );
+      // Conditional delete keyed on id + owner, not `remove(entity)`: the
+      // reversal above is gated on this call being the one that removed the row
+      // (audit FV4-002).
+      expect(mockQueryRunner.manager.delete).toHaveBeenCalledWith(Transaction, {
+        id: linkedTx.id,
+        userId: "user-1",
+      });
+      expect(transactionsRepository.remove).not.toHaveBeenCalledWith(linkedTx);
+    });
+
+    it("converts to simple transaction when fewer than 2 splits remain (1 left)", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        isSplit: true,
+        splits: [],
+      };
+      transactionsRepository.findOne.mockResolvedValue(mockTx);
+
+      const splitToRemove = {
+        id: "split-1",
+        transactionId: "tx-1",
+        amount: -50,
+        linkedTransactionId: null,
+        transferAccountId: null,
+      };
+      splitsRepository.findOne.mockResolvedValueOnce(splitToRemove);
+
+      // After removal, only 1 split remains
+      const lastSplit = {
+        id: "split-2",
+        transactionId: "tx-1",
+        amount: -50,
+        categoryId: "cat-1",
+        linkedTransactionId: null,
+        transferAccountId: null,
+      };
+      splitsRepository.find.mockResolvedValue([lastSplit]);
+
+      await service.removeSplit("user-1", "tx-1", "split-1");
+
+      expect(transactionsRepository.update).toHaveBeenCalledWith("tx-1", {
+        isSplit: false,
+        categoryId: "cat-1",
+      });
+      expect(splitsRepository.remove).toHaveBeenCalledWith(lastSplit);
+    });
+
+    it("converts back to simple when 0 splits remain", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        isSplit: true,
+        splits: [],
+      };
+      transactionsRepository.findOne.mockResolvedValue(mockTx);
+
+      const splitToRemove = {
+        id: "split-1",
+        transactionId: "tx-1",
+        amount: -100,
+        linkedTransactionId: null,
+        transferAccountId: null,
+      };
+      splitsRepository.findOne.mockResolvedValueOnce(splitToRemove);
+
+      // After removal, 0 splits remain
+      splitsRepository.find.mockResolvedValue([]);
+
+      await service.removeSplit("user-1", "tx-1", "split-1");
+
+      expect(transactionsRepository.update).toHaveBeenCalledWith("tx-1", {
+        isSplit: false,
+      });
+    });
+
+    it("cleans up linked transaction of last remaining transfer split", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        isSplit: true,
+        splits: [],
+      };
+
+      const splitToRemove = {
+        id: "split-1",
+        transactionId: "tx-1",
+        amount: -50,
+        linkedTransactionId: null,
+        transferAccountId: null,
+      };
+      splitsRepository.findOne.mockResolvedValueOnce(splitToRemove);
+
+      const lastSplitLinkedTx = {
+        id: "linked-tx-last",
+        accountId: "account-2",
+        amount: 50,
+      };
+
+      // After removal, 1 transfer split remains
+      const lastSplit = {
+        id: "split-2",
+        transactionId: "tx-1",
+        amount: -50,
+        categoryId: null,
+        linkedTransactionId: "linked-tx-last",
+        transferAccountId: "account-2",
+      };
+      splitsRepository.find.mockResolvedValue([lastSplit]);
+
+      // transactionsRepository.findOne is called:
+      // 1. findOne for access check (removeSplit -> findOne)
+      // 2. findOne for linked tx of last split
+      transactionsRepository.findOne
+        .mockResolvedValueOnce(mockTx) // removeSplit -> findOne
+        .mockResolvedValueOnce(lastSplitLinkedTx); // linked tx of last split
+
+      await service.removeSplit("user-1", "tx-1", "split-1");
+
+      // Should clean up the linked transaction of the last remaining transfer split
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-2",
+        -50,
+      );
+      expect(mockQueryRunner.manager.delete).toHaveBeenCalledWith(Transaction, {
+        id: lastSplitLinkedTx.id,
+        userId: "user-1",
+      });
+      expect(transactionsRepository.remove).not.toHaveBeenCalledWith(
+        lastSplitLinkedTx,
+      );
+      expect(transactionsRepository.update).toHaveBeenCalledWith("tx-1", {
+        isSplit: false,
+        categoryId: null, // Will be null since it was a transfer split
+      });
+    });
+  });
+
+  describe("update with splits", () => {
+    const mockTx = {
+      id: "tx-1",
+      userId: "user-1",
+      accountId: "account-1",
+      amount: -100,
+      status: TransactionStatus.UNRECONCILED,
+      isSplit: false,
+      transactionDate: "2026-01-15",
+      payeeName: null,
+      splits: [],
+    };
+
+    it("creates splits when providing new splits array", async () => {
+      transactionsRepository.findOne.mockResolvedValue({ ...mockTx });
+      splitsRepository.find.mockResolvedValue([]); // deleteSplitSideEffects
+
+      await service.update("user-1", "tx-1", {
+        splits: [
+          { amount: -60, categoryId: "cat-1" },
+          { amount: -40, categoryId: "cat-2" },
+        ],
+      } as any);
+
+      expect(splitsRepository.delete).toHaveBeenCalledWith({
+        transactionId: "tx-1",
+      });
+      expect(splitsRepository.create).toHaveBeenCalledTimes(2);
+      expect(transactionsRepository.update).toHaveBeenCalledWith(
+        "tx-1",
+        expect.objectContaining({
+          isSplit: true,
+          categoryId: null,
+        }),
+      );
+    });
+
+    it("converts back to simple when providing empty splits array", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        ...mockTx,
+        isSplit: true,
+      });
+      splitsRepository.find.mockResolvedValue([]); // deleteSplitSideEffects
+
+      await service.update("user-1", "tx-1", {
+        splits: [],
+      } as any);
+
+      expect(splitsRepository.delete).toHaveBeenCalledWith({
+        transactionId: "tx-1",
+      });
+      expect(transactionsRepository.update).toHaveBeenCalledWith(
+        "tx-1",
+        expect.objectContaining({ isSplit: false }),
+      );
+    });
+
+    /**
+     * A split replacement that names no new amount takes the parent amount from
+     * the pre-transaction snapshot. Another request can change that amount while
+     * this one waits for the parent row lock, and before the fix the replacement
+     * was validated against the stale figure -- so a split set that does not sum
+     * to its parent was accepted (audit FV4-002).
+     */
+    it("validates the replacement against the committed amount, not the caller's", async () => {
+      transactionsRepository.findOne.mockResolvedValue({ ...mockTx });
+      // Committed while this request waited: the parent is now -50.
+      lockedRow = { ...mockTx, amount: -50 };
+      splitsRepository.find.mockResolvedValue([]);
+
+      await expect(
+        service.update("user-1", "tx-1", {
+          splits: [
+            { amount: -60, categoryId: "cat-1" },
+            { amount: -40, categoryId: "cat-2" },
+          ],
+        } as any),
+      ).rejects.toThrow(BadRequestException);
+
+      expect(splitsRepository.create).not.toHaveBeenCalled();
+      expect(transactionsRepository.update).not.toHaveBeenCalled();
+    });
+
+    it("builds the replacement's counterparts from the committed parent fields", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        ...mockTx,
+        accountId: "account-stale",
+        transactionDate: "2026-01-15",
+        payeeName: "Stale Payee",
+        payeeId: "payee-stale",
+      });
+      lockedRow = {
+        ...mockTx,
+        accountId: "account-committed",
+        transactionDate: "2026-03-20",
+        payeeName: "Committed Payee",
+        payeeId: "payee-committed",
+      };
+      splitsRepository.find.mockResolvedValue([]);
+      const createSplits = jest.spyOn(splitService, "createSplits");
+
+      await service.update("user-1", "tx-1", {
+        splits: [
+          { amount: -60, categoryId: "cat-1" },
+          { amount: -40, categoryId: "cat-2" },
+        ],
+      } as any);
+
+      expect(createSplits).toHaveBeenCalledWith(
+        "tx-1",
+        expect.anything(),
+        "user-1",
+        "account-committed",
+        new Date("2026-03-20"),
+        "Committed Payee",
+        "payee-committed",
+        // The merged call also carries the committed parent's status (read off
+        // the locked row) and the touched-accounts set for the post-commit
+        // net-worth fan-out. Neither is what this test pins down, but the status
+        // is another committed-parent field so it is asserted precisely.
+        { parentStatus: TransactionStatus.UNRECONCILED },
+        expect.any(Set),
+      );
+    });
+  });
+
+  describe("update with account change", () => {
+    it("adjusts both old and new account balances", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -50,
+        status: TransactionStatus.UNRECONCILED,
+        isSplit: false,
+        splits: [],
+      };
+
+      const updatedTx = {
+        ...mockTx,
+        accountId: "account-2",
+        amount: -50,
+      };
+
+      // First findOne: get existing transaction (update entry)
+      // Second findOne: queryRunner.manager.findOne inside transaction
+      // Third findOne: this.findOne after commit
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({ ...mockTx })
+        .mockResolvedValueOnce(updatedTx)
+        .mockResolvedValueOnce(updatedTx);
+
+      const newAccount = { ...mockAccount, id: "account-2", name: "Savings" };
+      accountsService.findOne
+        .mockResolvedValueOnce(mockAccount) // verify old account
+        .mockResolvedValueOnce(newAccount); // verify new account
+
+      await service.update("user-1", "tx-1", {
+        accountId: "account-2",
+      } as any);
+
+      // Should remove amount from old account and add to new account
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-1",
+        50,
+      ); // remove from old
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-2",
+        -50,
+      ); // add to new
+    });
+  });
+
+  describe("updateTransfer", () => {
+    const fromTx = {
+      id: "tx-from",
+      userId: "user-1",
+      accountId: "account-1",
+      amount: -200,
+      status: TransactionStatus.UNRECONCILED,
+      isTransfer: true,
+      linkedTransactionId: "tx-to",
+      exchangeRate: 1,
+      account: { ...mockAccount, id: "account-1", name: "Checking" },
+      splits: [],
+    };
+    const toTx = {
+      id: "tx-to",
+      userId: "user-1",
+      accountId: "account-2",
+      amount: 200,
+      status: TransactionStatus.UNRECONCILED,
+      isTransfer: true,
+      linkedTransactionId: "tx-from",
+      exchangeRate: 1,
+      account: { ...mockAccount, id: "account-2", name: "Savings" },
+      splits: [],
+    };
+
+    it("throws when transaction is not a transfer", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        isTransfer: false,
+        linkedTransactionId: null,
+        splits: [],
+      });
+
+      await expect(
+        service.updateTransfer("user-1", "tx-1", { amount: 300 }),
+      ).rejects.toThrow("Transaction is not a transfer");
+    });
+
+    it("throws when source and destination are the same", async () => {
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({ ...fromTx })
+        .mockResolvedValueOnce({ ...toTx });
+
+      await expect(
+        service.updateTransfer("user-1", "tx-from", {
+          fromAccountId: "account-1",
+          toAccountId: "account-1",
+        }),
+      ).rejects.toThrow("Source and destination accounts must be different");
+    });
+
+    it("updates amount and adjusts balances", async () => {
+      // findOne returns from and to transactions for main query
+      // Then returns again for the result
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({ ...fromTx })
+        .mockResolvedValueOnce({ ...toTx })
+        .mockResolvedValueOnce({ ...fromTx, amount: -300 })
+        .mockResolvedValueOnce({ ...toTx, amount: 300 });
+
+      await service.updateTransfer("user-1", "tx-from", { amount: 300 });
+
+      // Revert old balances
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-1",
+        200,
+      ); // revert -200
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-2",
+        -200,
+      ); // revert +200
+      // Apply new balances
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-1",
+        -300,
+      );
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-2",
+        300,
+      );
+    });
+
+    it("updates accounts without writing payee names (issue #1214)", async () => {
+      const newToAccount = {
+        ...mockAccount,
+        id: "account-3",
+        name: "Investment",
+      };
+
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({ ...fromTx })
+        .mockResolvedValueOnce({ ...toTx })
+        .mockResolvedValueOnce({ ...fromTx })
+        .mockResolvedValueOnce({ ...toTx, accountId: "account-3" });
+
+      accountsService.findOne.mockResolvedValue(newToAccount);
+
+      await service.updateTransfer("user-1", "tx-from", {
+        toAccountId: "account-3",
+      });
+
+      // No payee write (issue #1214): blank stays blank and the display
+      // resolves the label from the new linked account at read time.
+      for (const call of transactionsRepository.update.mock.calls) {
+        expect(call[1]).not.toHaveProperty("payeeName");
+      }
+      expect(transactionsRepository.update).toHaveBeenCalledWith(
+        "tx-to",
+        expect.objectContaining({ accountId: "account-3" }),
+      );
+    });
+
+    it("updates the from account without writing the to leg payee (issue #1214)", async () => {
+      const newFromAccount = {
+        ...mockAccount,
+        id: "account-3",
+        name: "Business",
+      };
+
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({ ...fromTx })
+        .mockResolvedValueOnce({ ...toTx })
+        .mockResolvedValueOnce({ ...fromTx, accountId: "account-3" })
+        .mockResolvedValueOnce({ ...toTx });
+
+      accountsService.findOne.mockResolvedValue(newFromAccount);
+
+      await service.updateTransfer("user-1", "tx-from", {
+        fromAccountId: "account-3",
+      });
+
+      // No payee write (issue #1214): blank stays blank and the display
+      // resolves the label from the new linked account at read time.
+      for (const call of transactionsRepository.update.mock.calls) {
+        expect(call[1]).not.toHaveProperty("payeeName");
+      }
+      expect(transactionsRepository.update).toHaveBeenCalledWith(
+        "tx-from",
+        expect.objectContaining({ accountId: "account-3" }),
+      );
+    });
+
+    it("handles exchange rate changes", async () => {
+      // Genuinely cross-currency: a rate only means something when the two
+      // accounts differ in currency, so the destination account says CAD rather
+      // than sharing the source's USD (audit P5-002).
+      const cadSavings = {
+        ...mockAccount,
+        id: "account-2",
+        name: "Savings",
+        currencyCode: "CAD",
+      };
+      accountsService.findOne.mockImplementation((_u: string, id: string) =>
+        Promise.resolve(
+          id === "account-2"
+            ? cadSavings
+            : { ...mockAccount, id: "account-1", name: "Checking" },
+        ),
+      );
+      const cadToTx = { ...toTx, account: cadSavings };
+
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({ ...fromTx })
+        .mockResolvedValueOnce({ ...cadToTx })
+        .mockResolvedValueOnce({ ...fromTx })
+        .mockResolvedValueOnce({ ...cadToTx, amount: 260 });
+
+      await service.updateTransfer("user-1", "tx-from", {
+        exchangeRate: 1.3,
+      });
+
+      // toAmount = 200 * 1.3 = 260
+      expect(transactionsRepository.update).toHaveBeenCalledWith(
+        "tx-to",
+        expect.objectContaining({
+          amount: 260,
+          exchangeRate: 1.3,
+        }),
+      );
+    });
+
+    it("handles explicit toAmount override for a cross-currency pair", async () => {
+      const cadSavings = {
+        ...mockAccount,
+        id: "account-2",
+        name: "Savings",
+        currencyCode: "CAD",
+      };
+      accountsService.findOne.mockImplementation((_u: string, id: string) =>
+        Promise.resolve(
+          id === "account-2"
+            ? cadSavings
+            : { ...mockAccount, id: "account-1", name: "Checking" },
+        ),
+      );
+      const cadToTx = { ...toTx, account: cadSavings };
+
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({ ...fromTx })
+        .mockResolvedValueOnce({ ...cadToTx })
+        .mockResolvedValueOnce({ ...fromTx })
+        .mockResolvedValueOnce({ ...cadToTx, amount: 250 });
+
+      await service.updateTransfer("user-1", "tx-from", {
+        toAmount: 250,
+      });
+
+      expect(transactionsRepository.update).toHaveBeenCalledWith(
+        "tx-to",
+        expect.objectContaining({
+          amount: 250,
+        }),
+      );
+    });
+
+    it("rejects a toAmount that breaks a same-currency transfer", async () => {
+      // 200 out and 250 in between two USD accounts creates 50 from nothing.
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({ ...fromTx })
+        .mockResolvedValueOnce({ ...toTx });
+
+      await expect(
+        service.updateTransfer("user-1", "tx-from", { toAmount: 250 }),
+      ).rejects.toThrow(/same amount on both sides/);
+    });
+
+    it("does not modify payee names when custom payeeName is provided", async () => {
+      const newToAccount = {
+        ...mockAccount,
+        id: "account-3",
+        name: "Investment",
+      };
+
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({ ...fromTx })
+        .mockResolvedValueOnce({ ...toTx })
+        .mockResolvedValueOnce({ ...fromTx })
+        .mockResolvedValueOnce({ ...toTx, accountId: "account-3" });
+
+      accountsService.findOne
+        .mockResolvedValueOnce(fromTx.account)
+        .mockResolvedValueOnce(toTx.account)
+        .mockResolvedValueOnce(newToAccount);
+
+      await service.updateTransfer("user-1", "tx-from", {
+        toAccountId: "account-3",
+        payeeName: "Custom Transfer Name",
+      });
+
+      // Should use custom name, not auto-generated
+      expect(transactionsRepository.update).toHaveBeenCalledWith(
+        "tx-from",
+        expect.objectContaining({
+          payeeName: "Custom Transfer Name",
+        }),
+      );
+    });
+
+    it("identifies from/to correctly when starting from the to-side transaction", async () => {
+      // If we call updateTransfer with tx-to (positive amount), it should
+      // correctly identify tx-to as the toTransaction and tx-from as the fromTransaction
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({ ...toTx })
+        .mockResolvedValueOnce({ ...fromTx })
+        .mockResolvedValueOnce({ ...fromTx })
+        .mockResolvedValueOnce({ ...toTx });
+
+      await service.updateTransfer("user-1", "tx-to", { amount: 300 });
+
+      // The from transaction should get updated with negative amount
+      expect(transactionsRepository.update).toHaveBeenCalledWith(
+        "tx-from",
+        expect.objectContaining({ amount: -300 }),
+      );
+    });
+
+    it("sets tags on both transfer transactions when tagIds provided", async () => {
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({ ...fromTx })
+        .mockResolvedValueOnce({ ...toTx })
+        // re-fetch inside transferService.updateTransfer
+        .mockResolvedValueOnce({ ...fromTx })
+        .mockResolvedValueOnce({ ...toTx })
+        // re-fetch after setTransactionTags in updateTransfer wrapper
+        .mockResolvedValueOnce({ ...fromTx, tags: [{ id: "tag-1" }] })
+        .mockResolvedValueOnce({ ...toTx, tags: [{ id: "tag-1" }] });
+
+      await service.updateTransfer("user-1", "tx-from", {
+        tagIds: ["tag-1"],
+      } as any);
+
+      expect(tagsService.setTransactionTags).toHaveBeenCalledWith(
+        "tx-from",
+        ["tag-1"],
+        "user-1",
+      );
+      expect(tagsService.setTransactionTags).toHaveBeenCalledWith(
+        "tx-to",
+        ["tag-1"],
+        "user-1",
+      );
+    });
+
+    it("clears tags on both transfer transactions when tagIds is empty array", async () => {
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({ ...fromTx })
+        .mockResolvedValueOnce({ ...toTx })
+        // re-fetch inside transferService.updateTransfer
+        .mockResolvedValueOnce({ ...fromTx })
+        .mockResolvedValueOnce({ ...toTx })
+        // re-fetch after setTransactionTags in updateTransfer wrapper
+        .mockResolvedValueOnce({ ...fromTx, tags: [] })
+        .mockResolvedValueOnce({ ...toTx, tags: [] });
+
+      await service.updateTransfer("user-1", "tx-from", {
+        tagIds: [],
+      } as any);
+
+      expect(tagsService.setTransactionTags).toHaveBeenCalledWith(
+        "tx-from",
+        [],
+        "user-1",
+      );
+      expect(tagsService.setTransactionTags).toHaveBeenCalledWith(
+        "tx-to",
+        [],
+        "user-1",
+      );
+    });
+
+    it("does not call setTransactionTags when tagIds is not provided", async () => {
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({ ...fromTx })
+        .mockResolvedValueOnce({ ...toTx })
+        .mockResolvedValueOnce({ ...fromTx, amount: -300 })
+        .mockResolvedValueOnce({ ...toTx, amount: 300 });
+
+      await service.updateTransfer("user-1", "tx-from", { amount: 300 });
+
+      expect(tagsService.setTransactionTags).not.toHaveBeenCalled();
+    });
+
+    it("mirrors tags onto the owning split when editing a split-transfer leg", async () => {
+      const counterpartLeg = {
+        id: "leg-tx",
+        userId: "user-1",
+        accountId: "account-2",
+        amount: 200,
+        isTransfer: true,
+        linkedTransactionId: "parent-tx",
+        transactionDate: "2020-01-01",
+        exchangeRate: 1,
+        splits: [],
+      };
+      const parentTransaction = {
+        id: "parent-tx",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -200,
+        isSplit: true,
+        transactionDate: "2020-01-01",
+        splits: [],
+      };
+      const parentSplit = {
+        id: "split-1",
+        transactionId: "parent-tx",
+        transferAccountId: "account-2",
+        amount: -200,
+        linkedTransactionId: "leg-tx",
+      };
+
+      transactionsRepository.findOne.mockImplementation((opts: any) =>
+        Promise.resolve(
+          opts?.where?.id === "parent-tx" ? parentTransaction : counterpartLeg,
+        ),
+      );
+      // Routes updateTransfer to the split-leg path AND resolves the owning
+      // split in the wrapper's tag-mirroring step.
+      splitsRepository.findOne.mockResolvedValue(parentSplit);
+
+      await service.updateTransfer("user-1", "leg-tx", {
+        tagIds: ["tag-1"],
+      } as any);
+
+      // The leg keeps its own transaction tags...
+      expect(tagsService.setTransactionTags).toHaveBeenCalledWith(
+        "leg-tx",
+        ["tag-1"],
+        "user-1",
+      );
+      // ...and the same tags are mirrored onto the source split.
+      expect(tagsService.setSplitTags).toHaveBeenCalledWith(
+        "split-1",
+        ["tag-1"],
+        "user-1",
+      );
+      // The split parent's amount is never rewritten by a tag-only edit.
+      expect(transactionsRepository.update).not.toHaveBeenCalledWith(
+        "parent-tx",
+        expect.anything(),
+      );
+    });
+  });
+
+  describe("applySplitTags (split <-> transfer-leg tag mirroring)", () => {
+    it("mirrors a transfer split's tags onto its counterpart leg, but not plain splits", async () => {
+      const savedSplits = [
+        { id: "split-cat", linkedTransactionId: null },
+        { id: "split-xfer", linkedTransactionId: "leg-tx" },
+      ];
+      const splits = [
+        { amount: -50, categoryId: "cat-1", tagIds: ["tag-a"] },
+        { amount: -50, transferAccountId: "acc-2", tagIds: ["tag-b"] },
+      ];
+      // The tag writes join the caller's ambient withScopedDb, so no runner is
+      // threaded through any more.
+      await (service as any).applySplitTags(savedSplits, splits, "user-1");
+
+      // Both splits get their split-level tags.
+      expect(tagsService.setSplitTags).toHaveBeenCalledWith(
+        "split-cat",
+        ["tag-a"],
+        "user-1",
+      );
+      expect(tagsService.setSplitTags).toHaveBeenCalledWith(
+        "split-xfer",
+        ["tag-b"],
+        "user-1",
+      );
+      // Only the transfer split mirrors its tags onto the counterpart leg.
+      expect(tagsService.setTransactionTags).toHaveBeenCalledTimes(1);
+      expect(tagsService.setTransactionTags).toHaveBeenCalledWith(
+        "leg-tx",
+        ["tag-b"],
+        "user-1",
+      );
+    });
+
+    it("skips splits with no tags", async () => {
+      const savedSplits = [{ id: "split-1", linkedTransactionId: "leg-tx" }];
+      const splits = [{ amount: -50, transferAccountId: "acc-2", tagIds: [] }];
+
+      await (service as any).applySplitTags(savedSplits, splits, "user-1");
+
+      expect(tagsService.setSplitTags).not.toHaveBeenCalled();
+      expect(tagsService.setTransactionTags).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("removeTransfer with parent split", () => {
+    it("deletes parent transaction and all splits when removing linked transaction from split", async () => {
+      const linkedTx = {
+        id: "linked-tx-1",
+        userId: "user-1",
+        accountId: "account-2",
+        amount: 40,
+        isTransfer: true,
+        linkedTransactionId: "tx-parent",
+        splits: [],
+      };
+
+      // This is a linked transaction from a split
+      const parentSplit = {
+        id: "parent-split-1",
+        transactionId: "tx-parent",
+        linkedTransactionId: "linked-tx-1",
+      };
+      splitsRepository.findOne.mockResolvedValue(parentSplit);
+
+      const parentTx = {
+        id: "tx-parent",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -100,
+        status: TransactionStatus.UNRECONCILED,
+      };
+
+      const anotherLinkedTx = {
+        id: "another-linked-tx",
+        accountId: "account-3",
+        amount: 60,
+      };
+
+      // The access check reads the named leg; the split parent is then locked on
+      // its own, *before* its legs, because a batch sorting parent and legs
+      // together would take them in the opposite order from `removeSplit`
+      // whenever a leg's UUID sorts first (audit RV4-005). The sibling legs come
+      // through the batch reader.
+      transactionsRepository.findOne
+        .mockResolvedValueOnce(linkedTx)
+        .mockResolvedValueOnce(parentTx);
+      transactionsRepository.find.mockResolvedValue([
+        parentTx,
+        anotherLinkedTx,
+      ]);
+
+      const allSplits = [
+        {
+          id: "split-1",
+          transactionId: "tx-parent",
+          linkedTransactionId: "linked-tx-1",
+          transferAccountId: "account-2",
+        },
+        {
+          id: "split-2",
+          transactionId: "tx-parent",
+          linkedTransactionId: "another-linked-tx",
+          transferAccountId: "account-3",
+        },
+      ];
+      mockQueryRunner.manager.find.mockResolvedValueOnce(allSplits);
+
+      await service.removeTransfer("user-1", "linked-tx-1");
+
+      // Should revert balance for the other linked transaction
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-3",
+        -60,
+      );
+      expect(mockQueryRunner.manager.delete).toHaveBeenCalledWith(Transaction, {
+        id: "another-linked-tx",
+        userId: "user-1",
+      });
+
+      // Should remove all splits -- they carry no balance, so `remove` is fine
+      expect(mockQueryRunner.manager.remove).toHaveBeenCalledWith(allSplits);
+
+      // Should revert parent transaction balance and remove
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-1",
+        100,
+      );
+      expect(mockQueryRunner.manager.delete).toHaveBeenCalledWith(Transaction, {
+        id: "tx-parent",
+        userId: "user-1",
+      });
+
+      // Should revert the linked transaction's own balance and remove it
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-2",
+        -40,
+      );
+      expect(mockQueryRunner.manager.delete).toHaveBeenCalledWith(Transaction, {
+        id: "linked-tx-1",
+        userId: "user-1",
+      });
+      expect(transactionsRepository.remove).not.toHaveBeenCalledWith(linkedTx);
+    });
+
+    it("reverses nothing when the whole VOID split is deleted (RR4-001)", async () => {
+      // `removeParentTransaction` guarded the deleted row and the split parent on
+      // status, and the sibling counterpart loop in the same function did not. So
+      // deleting one leg under a VOID split parent debited every OTHER target
+      // account by its own amount -- money out of nothing, from a plain
+      // `DELETE /transactions/:id`. Every reversal now goes through one
+      // inclusion-aware helper.
+      const linkedTx = {
+        id: "linked-tx-1",
+        userId: "user-1",
+        accountId: "account-2",
+        amount: 40,
+        status: TransactionStatus.VOID,
+        transactionDate: "2020-01-01",
+        isTransfer: true,
+        linkedTransactionId: "tx-parent",
+        splits: [],
+      };
+      splitsRepository.findOne.mockResolvedValue({
+        id: "parent-split-1",
+        transactionId: "tx-parent",
+        linkedTransactionId: "linked-tx-1",
+      });
+
+      const parentTx = {
+        id: "tx-parent",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -100,
+        status: TransactionStatus.VOID,
+        transactionDate: "2020-01-01",
+      };
+      const siblingLeg = {
+        id: "another-linked-tx",
+        accountId: "account-3",
+        amount: 30,
+        status: TransactionStatus.VOID,
+        transactionDate: "2020-01-01",
+      };
+
+      // The access check reads the named leg through the caller's findOne; the
+      // split parent is then locked on its own and the sibling legs come through
+      // the batch lock reader (both served from the repository mocks, per the
+      // merged parent-before-legs lock ordering). The splits themselves are read
+      // from the scoped manager.
+      transactionsRepository.findOne
+        .mockResolvedValueOnce(linkedTx)
+        .mockResolvedValueOnce(parentTx);
+      transactionsRepository.find.mockResolvedValue([parentTx, siblingLeg]);
+      mockQueryRunner.manager.find.mockResolvedValueOnce([
+        {
+          id: "split-1",
+          transactionId: "tx-parent",
+          linkedTransactionId: "linked-tx-1",
+          transferAccountId: "account-2",
+        },
+        {
+          id: "split-2",
+          transactionId: "tx-parent",
+          linkedTransactionId: "another-linked-tx",
+          transferAccountId: "account-3",
+        },
+      ]);
+
+      await service.removeTransfer("user-1", "linked-tx-1");
+
+      // None of the three rows contributed to a balance, so none is reversed.
+      expect(accountsService.updateBalance).not.toHaveBeenCalled();
+      // All of them are still removed: the record of an event that did not
+      // happen. Rows go via the conditional DELETE (removeLockedTransactionLeg
+      // -> m.delete { id, userId }), not manager.remove(entity).
+      expect(mockQueryRunner.manager.delete).toHaveBeenCalledWith(Transaction, {
+        id: "another-linked-tx",
+        userId: "user-1",
+      });
+      expect(mockQueryRunner.manager.delete).toHaveBeenCalledWith(Transaction, {
+        id: "tx-parent",
+        userId: "user-1",
+      });
+      expect(mockQueryRunner.manager.delete).toHaveBeenCalledWith(Transaction, {
+        id: "linked-tx-1",
+        userId: "user-1",
+      });
+    });
+  });
+
+  describe("remove with split transaction", () => {
+    it("cleans up linked transfer split transactions when removing split parent", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -100,
+        status: TransactionStatus.UNRECONCILED,
+        isSplit: true,
+        splits: [
+          {
+            id: "split-1",
+            linkedTransactionId: "linked-1",
+            transferAccountId: "account-2",
+          },
+        ],
+      };
+      transactionsRepository.findOne.mockResolvedValueOnce(mockTx);
+
+      // deleteSplitSideEffects
+      const transferSplits = [
+        {
+          id: "split-1",
+          transactionId: "tx-1",
+          linkedTransactionId: "linked-1",
+          transferAccountId: "account-2",
+        },
+      ];
+      splitsRepository.find.mockResolvedValue(transferSplits);
+
+      const linkedTx = {
+        id: "linked-1",
+        accountId: "account-2",
+        amount: 40,
+      };
+      transactionsRepository.find.mockResolvedValue([linkedTx]); // batch fetch linked txs
+
+      // No parent split (this is the parent itself)
+      splitsRepository.findOne.mockResolvedValue(null);
+
+      await service.remove("user-1", "tx-1");
+
+      // Should revert linked tx balance
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-2",
+        -40,
+      );
+      expect(mockQueryRunner.manager.delete).toHaveBeenCalledWith(Transaction, {
+        id: linkedTx.id,
+        userId: "user-1",
+      });
+
+      // Should revert parent balance
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-1",
+        100,
+      );
+    });
+  });
+
+  describe("remove where transaction is a linked transaction from a split", () => {
+    it("deletes entire parent transaction when removing linked child", async () => {
+      const childTx = {
+        id: "child-tx",
+        userId: "user-1",
+        accountId: "account-2",
+        amount: 40,
+        status: TransactionStatus.UNRECONCILED,
+        isSplit: false,
+        splits: [],
+      };
+      transactionsRepository.findOne.mockResolvedValueOnce(childTx);
+
+      // Not a split parent, so deleteSplitSideEffects not called for isSplit
+
+      // This is a linked child from a split
+      const parentSplit = {
+        id: "parent-split",
+        transactionId: "tx-parent",
+        linkedTransactionId: "child-tx",
+      };
+      splitsRepository.findOne.mockResolvedValue(parentSplit);
+
+      const parentTx = {
+        id: "tx-parent",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -100,
+        status: TransactionStatus.UNRECONCILED,
+      };
+
+      const allSplits = [
+        {
+          id: "split-a",
+          transactionId: "tx-parent",
+          linkedTransactionId: "child-tx",
+        },
+        {
+          id: "split-b",
+          transactionId: "tx-parent",
+          linkedTransactionId: "another-child-tx",
+        },
+      ];
+
+      const anotherChildTx = {
+        id: "another-child-tx",
+        accountId: "account-3",
+        amount: 60,
+      };
+
+      transactionsRepository.findOne.mockResolvedValueOnce(parentTx); // parent transaction
+      // Other linked children are now fetched in one batch via manager.find
+      transactionsRepository.find.mockResolvedValue([anotherChildTx]);
+
+      splitsRepository.find.mockResolvedValue(allSplits);
+
+      await service.remove("user-1", "child-tx");
+
+      // Should clean up other linked transactions
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-3",
+        -60,
+      );
+      expect(mockQueryRunner.manager.delete).toHaveBeenCalledWith(Transaction, {
+        id: "another-child-tx",
+        userId: "user-1",
+      });
+
+      // Should remove all splits
+      expect(splitsRepository.remove).toHaveBeenCalledWith(allSplits);
+
+      // Should revert parent balance and remove
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-1",
+        100,
+      );
+      expect(mockQueryRunner.manager.delete).toHaveBeenCalledWith(Transaction, {
+        id: "tx-parent",
+        userId: "user-1",
+      });
+
+      // Should also revert the child tx balance and remove it
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-2",
+        -40,
+      );
+      expect(mockQueryRunner.manager.delete).toHaveBeenCalledWith(Transaction, {
+        id: "child-tx",
+        userId: "user-1",
+      });
+    });
+
+    it("does not revert parent balance if parent is VOID", async () => {
+      const childTx = {
+        id: "child-tx",
+        userId: "user-1",
+        accountId: "account-2",
+        amount: 40,
+        status: TransactionStatus.UNRECONCILED,
+        isSplit: false,
+        splits: [],
+      };
+      transactionsRepository.findOne.mockResolvedValueOnce(childTx);
+
+      const parentSplit = {
+        id: "parent-split",
+        transactionId: "tx-parent",
+        linkedTransactionId: "child-tx",
+      };
+      splitsRepository.findOne.mockResolvedValue(parentSplit);
+
+      const parentTx = {
+        id: "tx-parent",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -100,
+        status: TransactionStatus.VOID,
+      };
+      transactionsRepository.findOne.mockResolvedValueOnce(parentTx);
+
+      splitsRepository.find.mockResolvedValue([
+        {
+          id: "split-a",
+          transactionId: "tx-parent",
+          linkedTransactionId: "child-tx",
+        },
+      ]);
+
+      await service.remove("user-1", "child-tx");
+
+      // Should NOT revert parent balance because it's VOID
+      const balanceCalls = accountsService.updateBalance.mock.calls;
+      const parentRevertCall = balanceCalls.find(
+        (call: any[]) => call[0] === "account-1" && call[1] === 100,
+      );
+      expect(parentRevertCall).toBeUndefined();
+    });
+  });
+
+  describe("create with splits", () => {
+    it("creates transaction with valid splits", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -100,
+        isSplit: true,
+        status: TransactionStatus.UNRECONCILED,
+        splits: [
+          { id: "split-1", amount: -60 },
+          { id: "split-2", amount: -40 },
+        ],
+      });
+
+      const result = await service.create("user-1", {
+        accountId: "account-1",
+        transactionDate: "2026-01-15",
+        amount: -100,
+        currencyCode: "USD",
+        splits: [
+          { amount: -60, categoryId: "cat-1" },
+          { amount: -40, categoryId: "cat-2" },
+        ],
+      } as any);
+
+      expect(result.isSplit).toBe(true);
+      expect(transactionsRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          isSplit: true,
+          categoryId: null, // Split transactions have null category on parent
+        }),
+      );
+      expect(splitsRepository.create).toHaveBeenCalledTimes(2);
+    });
+
+    it("creates transaction with transfer splits", async () => {
+      const targetAccount = {
+        ...mockAccount,
+        id: "account-2",
+        name: "Savings",
+        currencyCode: "USD",
+      };
+      const sourceAccount = {
+        ...mockAccount,
+        id: "account-1",
+        name: "Checking",
+      };
+
+      accountsService.findOne
+        .mockResolvedValueOnce(sourceAccount) // verify account belongs to user
+        .mockResolvedValueOnce(targetAccount) // for transfer split: target account
+        .mockResolvedValueOnce(sourceAccount); // for transfer split: source account
+
+      transactionsRepository.save
+        .mockResolvedValueOnce({ id: "tx-1" }) // main transaction save
+        .mockResolvedValueOnce({ id: "linked-1" }); // linked transaction save
+
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -100,
+        isSplit: true,
+        status: TransactionStatus.UNRECONCILED,
+        splits: [
+          {
+            id: "split-1",
+            amount: -100,
+            transferAccountId: "account-2",
+            linkedTransactionId: "linked-1",
+          },
+        ],
+      });
+
+      splitsRepository.save.mockResolvedValue({
+        id: "split-1",
+        transactionId: "tx-1",
+        amount: -100,
+      });
+
+      await service.create("user-1", {
+        accountId: "account-1",
+        transactionDate: "2026-01-15",
+        amount: -100,
+        currencyCode: "USD",
+        splits: [{ amount: -100, transferAccountId: "account-2" }],
+      } as any);
+
+      // Should create linked transaction for transfer split
+      expect(transactionsRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          accountId: "account-2",
+          amount: 100, // inverse of -100
+          isTransfer: true,
+        }),
+      );
+      // Should update target account balance
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-2",
+        100,
+      );
+    });
+  });
+
+  describe("deleteSplitSideEffects transfer legs", () => {
+    it("finds and reverts linked transactions", async () => {
+      const linkedTx1 = {
+        id: "linked-1",
+        accountId: "account-2",
+        amount: 60,
+      };
+      const linkedTx2 = {
+        id: "linked-2",
+        accountId: "account-3",
+        amount: 40,
+      };
+
+      splitsRepository.find.mockResolvedValue([
+        {
+          id: "split-1",
+          transactionId: "tx-1",
+          linkedTransactionId: "linked-1",
+          transferAccountId: "account-2",
+        },
+        {
+          id: "split-2",
+          transactionId: "tx-1",
+          linkedTransactionId: "linked-2",
+          transferAccountId: "account-3",
+        },
+      ]);
+
+      transactionsRepository.find.mockResolvedValue([linkedTx1, linkedTx2]);
+
+      await splitService.deleteSplitSideEffects("tx-1", "user-1");
+
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-2",
+        -60,
+      );
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-3",
+        -40,
+      );
+      expect(mockQueryRunner.manager.delete).toHaveBeenCalledWith(Transaction, {
+        id: linkedTx1.id,
+        userId: "user-1",
+      });
+      expect(mockQueryRunner.manager.delete).toHaveBeenCalledWith(Transaction, {
+        id: linkedTx2.id,
+        userId: "user-1",
+      });
+      expect(transactionsRepository.remove).not.toHaveBeenCalled();
+    });
+
+    it("skips splits without linked transactions", async () => {
+      splitsRepository.find.mockResolvedValue([
+        {
+          id: "split-1",
+          transactionId: "tx-1",
+          linkedTransactionId: null,
+          transferAccountId: null,
+        },
+      ]);
+
+      await splitService.deleteSplitSideEffects("tx-1", "user-1");
+
+      expect(transactionsRepository.find).not.toHaveBeenCalled();
+      expect(accountsService.updateBalance).not.toHaveBeenCalled();
+    });
+
+    it("handles case where linked transaction no longer exists", async () => {
+      splitsRepository.find.mockResolvedValue([
+        {
+          id: "split-1",
+          transactionId: "tx-1",
+          linkedTransactionId: "deleted-tx",
+          transferAccountId: "account-2",
+        },
+      ]);
+
+      transactionsRepository.find.mockResolvedValue([]);
+
+      await splitService.deleteSplitSideEffects("tx-1", "user-1");
+
+      expect(accountsService.updateBalance).not.toHaveBeenCalled();
+      expect(transactionsRepository.remove).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("getLinkedTransaction additional", () => {
+    it("returns linked transaction for a transfer", async () => {
+      const mainTx = {
+        id: "tx-1",
+        userId: "user-1",
+        isTransfer: true,
+        linkedTransactionId: "tx-2",
+        splits: [],
+      };
+      const linkedTx = {
+        id: "tx-2",
+        userId: "user-1",
+        isTransfer: true,
+        linkedTransactionId: "tx-1",
+        splits: [],
+      };
+
+      transactionsRepository.findOne
+        .mockResolvedValueOnce(mainTx)
+        .mockResolvedValueOnce(linkedTx);
+
+      const result = await service.getLinkedTransaction("user-1", "tx-1");
+
+      expect(result).toEqual(linkedTx);
+    });
+
+    it("returns null when linked transaction is not found", async () => {
+      const mainTx = {
+        id: "tx-1",
+        userId: "user-1",
+        isTransfer: true,
+        linkedTransactionId: "deleted-tx",
+        splits: [],
+      };
+
+      transactionsRepository.findOne
+        .mockResolvedValueOnce(mainTx)
+        .mockResolvedValueOnce(null); // linked tx not found
+
+      const result = await service.getLinkedTransaction("user-1", "tx-1");
+
+      expect(result).toBeNull();
+    });
+
+    it("returns null when linked transaction belongs to another user", async () => {
+      const mainTx = {
+        id: "tx-1",
+        userId: "user-1",
+        isTransfer: true,
+        linkedTransactionId: "tx-2",
+        splits: [],
+      };
+
+      transactionsRepository.findOne
+        .mockResolvedValueOnce(mainTx)
+        .mockResolvedValueOnce(null); // different user's tx not found by userId-scoped query
+
+      const result = await service.getLinkedTransaction("user-1", "tx-1");
+
+      // findOne will throw NotFoundException which is caught and returns null
+      expect(result).toBeNull();
+    });
+
+    it("returns null for transaction without linkedTransactionId", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        isTransfer: true,
+        linkedTransactionId: null,
+        splits: [],
+      });
+
+      const result = await service.getLinkedTransaction("user-1", "tx-1");
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe("removeTransfer regular", () => {
+    it("removes both linked transfer transactions and reverts balances", async () => {
+      const fromTx = {
+        id: "tx-from",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -200,
+        isTransfer: true,
+        linkedTransactionId: "tx-to",
+        splits: [],
+      };
+      const toTx = {
+        id: "tx-to",
+        userId: "user-1",
+        accountId: "account-2",
+        amount: 200,
+      };
+
+      transactionsRepository.findOne.mockResolvedValueOnce(fromTx); // findOne for the transaction
+      transactionsRepository.findOne.mockResolvedValueOnce(toTx); // cross-owner routing probe (same-owner: hit)
+      mockQueryRunner.manager.findOne.mockResolvedValueOnce(toTx); // queryRunner finds linked transaction
+
+      // Not a parent split child
+      splitsRepository.findOne.mockResolvedValue(null);
+
+      await service.removeTransfer("user-1", "tx-from");
+
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-1",
+        200,
+      );
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-2",
+        -200,
+      );
+      // Conditional DELETEs, in ascending leg-id order, with each reversal gated
+      // on the row the database actually removed (audit P4-003).
+      expect(mockQueryRunner.manager.delete).toHaveBeenCalledWith(Transaction, {
+        id: "tx-to",
+        userId: "user-1",
+      });
+      expect(mockQueryRunner.manager.delete).toHaveBeenCalledWith(Transaction, {
+        id: "tx-from",
+        userId: "user-1",
+      });
+    });
+
+    it("handles removing transfer when linked transaction is missing", async () => {
+      const fromTx = {
+        id: "tx-from",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -200,
+        isTransfer: true,
+        linkedTransactionId: "tx-to",
+        splits: [],
+      };
+
+      transactionsRepository.findOne.mockResolvedValueOnce(fromTx); // findOne for the transaction
+      mockQueryRunner.manager.findOne.mockResolvedValueOnce(null); // linked transaction not found
+
+      splitsRepository.findOne.mockResolvedValue(null);
+
+      await service.removeTransfer("user-1", "tx-from");
+
+      // Should still revert the main transaction balance
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-1",
+        200,
+      );
+      // A counterpart the caller cannot read routes through the cross-owner
+      // removal, which also deletes conditionally and reverses only what it
+      // removed (audit FV4-002).
+      expect(mockQueryRunner.manager.delete).toHaveBeenCalledWith(Transaction, {
+        id: "tx-from",
+        userId: "user-1",
+      });
+      expect(mockQueryRunner.manager.remove).not.toHaveBeenCalledWith(fromTx);
+    });
+
+    it("handles removing transfer without linkedTransactionId", async () => {
+      const tx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -200,
+        isTransfer: true,
+        linkedTransactionId: null,
+        splits: [],
+      };
+
+      transactionsRepository.findOne.mockResolvedValueOnce(tx);
+      splitsRepository.findOne.mockResolvedValue(null);
+
+      await service.removeTransfer("user-1", "tx-1");
+
+      expect(accountsService.updateBalance).toHaveBeenCalledWith(
+        "account-1",
+        200,
+      );
+      expect(mockQueryRunner.manager.delete).toHaveBeenCalledWith(Transaction, {
+        id: "tx-1",
+        userId: "user-1",
+      });
+    });
+  });
+
+  describe("future-dated transactions", () => {
+    beforeEach(() => {
+      mockedIsTransactionInFuture.mockReset();
+      mockedIsTransactionInFuture.mockReturnValue(false);
+    });
+
+    it("does not call updateBalance when creating a future-dated transaction", async () => {
+      mockedIsTransactionInFuture.mockReturnValue(true);
+
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -50,
+        status: TransactionStatus.UNRECONCILED,
+        splits: [],
+      });
+
+      await service.create("user-1", {
+        accountId: "account-1",
+        transactionDate: "2099-12-31",
+        amount: -50,
+        currencyCode: "USD",
+      } as any);
+
+      expect(transactionsRepository.create).toHaveBeenCalled();
+      expect(transactionsRepository.save).toHaveBeenCalled();
+      expect(accountsService.updateBalance).not.toHaveBeenCalled();
+    });
+
+    it("does not call updateBalance when deleting a future-dated transaction", async () => {
+      mockedIsTransactionInFuture.mockReturnValue(true);
+
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -50,
+        transactionDate: "2099-12-31",
+        status: TransactionStatus.UNRECONCILED,
+        isSplit: false,
+        splits: [],
+      });
+      splitsRepository.findOne.mockResolvedValue(null);
+
+      await service.remove("user-1", "tx-1");
+
+      expect(accountsService.updateBalance).not.toHaveBeenCalled();
+      expect(mockQueryRunner.manager.delete).toHaveBeenCalledWith(Transaction, {
+        id: "tx-1",
+        userId: "user-1",
+      });
+    });
+
+    it("recalculates balance when updating a transaction from future to current date", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -75,
+        transactionDate: "2099-12-31",
+        status: TransactionStatus.UNRECONCILED,
+        isSplit: false,
+        splits: [],
+      };
+
+      const updatedTx = {
+        ...mockTx,
+        transactionDate: "2026-01-15",
+        amount: -75,
+      };
+
+      // First call (old transaction): future date
+      // Second call (saved transaction): current date
+      mockedIsTransactionInFuture
+        .mockReturnValueOnce(true) // oldIsFuture = true
+        .mockReturnValueOnce(false); // newIsFuture = false
+
+      // 1st: findOne (entry), 2nd: queryRunner.manager.findOne (inside tx), 3rd: findOne (after commit)
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({ ...mockTx })
+        .mockResolvedValueOnce(updatedTx)
+        .mockResolvedValueOnce(updatedTx);
+
+      await service.update("user-1", "tx-1", {
+        transactionDate: "2026-01-15",
+      } as any);
+
+      // When any future date is involved, recalculate from scratch
+      expect(accountsService.recalculateCurrentBalance).toHaveBeenCalledWith(
+        "user-1",
+        "account-1",
+      );
+      expect(accountsService.updateBalance).not.toHaveBeenCalled();
+    });
+
+    it("recalculates balance when updating a transaction from current to future date", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -75,
+        transactionDate: "2026-01-15",
+        status: TransactionStatus.UNRECONCILED,
+        isSplit: false,
+        splits: [],
+      };
+
+      const updatedTx = {
+        ...mockTx,
+        transactionDate: "2099-12-31",
+        amount: -75,
+      };
+
+      // First call (old transaction): current date
+      // Second call (saved transaction): future date
+      mockedIsTransactionInFuture
+        .mockReturnValueOnce(false) // oldIsFuture = false
+        .mockReturnValueOnce(true); // newIsFuture = true
+
+      // 1st: findOne (entry), 2nd: queryRunner.manager.findOne (inside tx), 3rd: findOne (after commit)
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({ ...mockTx })
+        .mockResolvedValueOnce(updatedTx)
+        .mockResolvedValueOnce(updatedTx);
+
+      await service.update("user-1", "tx-1", {
+        transactionDate: "2099-12-31",
+      } as any);
+
+      // When any future date is involved, recalculate from scratch
+      expect(accountsService.recalculateCurrentBalance).toHaveBeenCalledWith(
+        "user-1",
+        "account-1",
+      );
+      expect(accountsService.updateBalance).not.toHaveBeenCalled();
+    });
+
+    it("does not affect balance when updating a future-dated transaction that stays future", async () => {
+      const mockTx = {
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -75,
+        transactionDate: "2099-06-15",
+        status: TransactionStatus.UNRECONCILED,
+        isSplit: false,
+        splits: [],
+      };
+
+      const updatedTx = {
+        ...mockTx,
+        transactionDate: "2099-12-31",
+        amount: -100,
+      };
+
+      // Both old and new dates are in the future
+      mockedIsTransactionInFuture
+        .mockReturnValueOnce(true) // oldIsFuture = true
+        .mockReturnValueOnce(true); // newIsFuture = true
+
+      // 1st: findOne (entry), 2nd: queryRunner.manager.findOne (inside tx), 3rd: findOne (after commit)
+      transactionsRepository.findOne
+        .mockResolvedValueOnce({ ...mockTx })
+        .mockResolvedValueOnce(updatedTx)
+        .mockResolvedValueOnce(updatedTx);
+
+      await service.update("user-1", "tx-1", {
+        transactionDate: "2099-12-31",
+        amount: -100,
+      } as any);
+
+      // Both dates are future, so no balance changes
+      expect(accountsService.updateBalance).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("create transaction atomicity", () => {
+    it("runs its writes in a single tenant transaction", async () => {
+      transactionsRepository.findOne.mockResolvedValue({
+        id: "tx-1",
+        userId: "user-1",
+        accountId: "account-1",
+        amount: -50,
+        status: "UNRECONCILED",
+        isSplit: false,
+        transactionDate: "2026-01-15",
+        account: mockAccount,
+      });
+
+      await service.create("user-1", {
+        accountId: "account-1",
+        transactionDate: "2026-01-15",
+        amount: -50,
+        currencyCode: "USD",
+      } as any);
+
+      expect(mockDataSource.transaction).toHaveBeenCalled();
+    });
+
+    it("propagates write errors so the tenant transaction rolls back", async () => {
+      transactionsRepository.save.mockRejectedValue(new Error("DB save error"));
+
+      await expect(
+        service.create("user-1", {
+          accountId: "account-1",
+          transactionDate: "2026-01-15",
+          amount: -50,
+          currencyCode: "USD",
+        } as any),
+      ).rejects.toThrow("DB save error");
+
+      expect(mockDataSource.transaction).toHaveBeenCalled();
+    });
+  });
+
+  describe("getLlmTransactionRows", () => {
+    it("emits foreign-currency metadata only for foreign-entered rows", async () => {
+      jest.spyOn(service, "findAll").mockResolvedValue({
+        data: [
+          {
+            id: "t-foreign",
+            transactionDate: "2025-01-15",
+            payeeName: "Cafe Paris",
+            category: { name: "Dining" },
+            amount: -145.23,
+            account: { name: "Checking" },
+            description: null,
+            status: "cleared",
+            isSplit: false,
+            originalAmount: -100,
+            originalCurrencyCode: "EUR",
+            exchangeRate: 1.4523,
+          },
+          {
+            id: "t-plain",
+            transactionDate: "2025-01-14",
+            payeeName: "Coffee",
+            category: { name: "Dining" },
+            amount: -5,
+            account: { name: "Checking" },
+            description: null,
+            status: "cleared",
+            isSplit: false,
+            originalAmount: null,
+            originalCurrencyCode: null,
+            exchangeRate: 1,
+          },
+        ],
+        pagination: { total: 2, hasMore: false },
+      } as any);
+
+      const result = await service.getLlmTransactionRows("user-1", {});
+
+      const foreign = result.transactions.find((r) => r.id === "t-foreign");
+      expect(foreign).toMatchObject({
+        originalAmount: -100,
+        originalCurrencyCode: "EUR",
+        exchangeRate: 1.4523,
+      });
+      const plain = result.transactions.find((r) => r.id === "t-plain");
+      expect(plain).not.toHaveProperty("originalCurrencyCode");
+      expect(plain).not.toHaveProperty("originalAmount");
+    });
+
+    it("resolves a blank transfer payee from the counterpart account (issue #1214)", async () => {
+      // A blank-payee transfer leg is stored with payeeName null; the model
+      // must see the same "Transfer to/from <account>" label the register
+      // resolves, or it would describe the row as having no payee.
+      categoriesRepository.find.mockResolvedValue([]);
+      jest.spyOn(service, "findAll").mockResolvedValue({
+        data: [
+          {
+            id: "t-out",
+            transactionDate: "2026-02-01",
+            payeeName: null,
+            category: null,
+            amount: -250,
+            account: { name: "Chequing" },
+            isTransfer: true,
+            linkedTransaction: { account: { name: "Savings" } },
+            description: null,
+            status: "cleared",
+            isSplit: false,
+          },
+          {
+            id: "t-in",
+            transactionDate: "2026-02-01",
+            payeeName: null,
+            category: null,
+            amount: 250,
+            account: { name: "Savings" },
+            isTransfer: true,
+            linkedTransaction: { account: { name: "Chequing" } },
+            description: null,
+            status: "cleared",
+            isSplit: false,
+          },
+          {
+            id: "t-legacy",
+            transactionDate: "2026-02-02",
+            // A legacy stamped row (or a custom label) keeps its stored text.
+            payeeName: "Transfer to Old Name",
+            category: null,
+            amount: -10,
+            account: { name: "Chequing" },
+            isTransfer: true,
+            linkedTransaction: { account: { name: "Savings" } },
+            description: null,
+            status: "cleared",
+            isSplit: false,
+          },
+          {
+            id: "t-orphan",
+            transactionDate: "2026-02-03",
+            // Counterpart deleted: nothing to resolve from, payee stays null.
+            payeeName: null,
+            category: null,
+            amount: -10,
+            account: { name: "Chequing" },
+            isTransfer: true,
+            linkedTransaction: null,
+            description: null,
+            status: "cleared",
+            isSplit: false,
+          },
+        ],
+        pagination: { total: 4, hasMore: false },
+      } as any);
+
+      const result = await service.getLlmTransactionRows("user-1", {});
+
+      const byId = new Map(result.transactions.map((r) => [r.id, r]));
+      expect(byId.get("t-out")?.payeeName).toBe("Transfer to Savings");
+      expect(byId.get("t-in")?.payeeName).toBe("Transfer from Chequing");
+      expect(byId.get("t-legacy")?.payeeName).toBe("Transfer to Old Name");
+      expect(byId.get("t-orphan")?.payeeName).toBeNull();
+    });
+
+    it("returns every split line, not only the ones a category filter matched", async () => {
+      // The register hydrates only the matching split lines on a filtered
+      // read, on purpose. The model is not the register: it sends the lines
+      // back as a COMPLETE replacement set, so one line of a three-line split
+      // means either wiping the other two or -- as happened -- deciding these
+      // are not split transactions at all.
+      categoriesRepository.find.mockResolvedValue([
+        { id: "biz", name: "Business", parentId: null },
+        { id: "biz-cell", name: "Cell Phone", parentId: "biz" },
+        { id: "internet", name: "Internet", parentId: null },
+        { id: "tv", name: "TV", parentId: null },
+      ]);
+      // What the filtered list query hydrates: the matching line only.
+      jest.spyOn(service, "findAll").mockResolvedValue({
+        data: [
+          {
+            id: "t-split",
+            transactionDate: "2026-01-15",
+            payeeName: "Rogers",
+            category: null,
+            amount: -134.36,
+            account: { name: "WS Chequing" },
+            description: null,
+            status: "cleared",
+            isSplit: true,
+            splits: [
+              {
+                id: "s2",
+                amount: -50,
+                memo: null,
+                category: { id: "biz-cell", name: "Cell Phone" },
+              },
+            ],
+          },
+        ],
+        pagination: { total: 1, hasMore: false },
+      } as any);
+      // What the transaction actually has.
+      splitsRepository.find.mockResolvedValue([
+        {
+          id: "s1",
+          transactionId: "t-split",
+          amount: -40,
+          memo: null,
+          category: { id: "internet", name: "Internet" },
+        },
+        {
+          id: "s2",
+          transactionId: "t-split",
+          amount: -50,
+          memo: null,
+          category: { id: "biz-cell", name: "Cell Phone" },
+        },
+        {
+          id: "s3",
+          transactionId: "t-split",
+          amount: -44.36,
+          memo: null,
+          category: { id: "tv", name: "TV" },
+        },
+      ]);
+
+      const result = await service.getLlmTransactionRows("user-1", {
+        categoryId: "biz-cell",
+      });
+
+      expect(result.transactions).toHaveLength(3);
+      expect(result.transactions.map((r) => r.categoryName)).toEqual([
+        "Internet",
+        "Business: Cell Phone",
+        "TV",
+      ]);
+      expect(result.transactions.map((r) => r.splitId)).toEqual([
+        "s1",
+        "s2",
+        "s3",
+      ]);
+    });
+
+    it("does not query splits when the page holds no split transactions", async () => {
+      splitsRepository.find.mockClear();
+      jest.spyOn(service, "findAll").mockResolvedValue({
+        data: [
+          {
+            id: "t-plain",
+            transactionDate: "2026-01-14",
+            payeeName: "Coffee",
+            category: null,
+            amount: -5,
+            account: { name: "Checking" },
+            description: null,
+            status: "cleared",
+            isSplit: false,
+          },
+        ],
+        pagination: { total: 1, hasMore: false },
+      } as any);
+
+      await service.getLlmTransactionRows("user-1", {});
+
+      expect(splitsRepository.find).not.toHaveBeenCalled();
+    });
+
+    it("qualifies each category so the model cannot guess the parent", async () => {
+      // The reported defect: split lines filed under "Business: Cell Phone"
+      // reached the assistant as bare "Cell Phone", so it named the parent
+      // from whatever it had seen elsewhere -- and named the wrong one.
+      categoriesRepository.find.mockResolvedValue([
+        { id: "bills", name: "Bills", parentId: null },
+        { id: "bills-cell", name: "Cell Phone", parentId: "bills" },
+        { id: "biz", name: "Business", parentId: null },
+        { id: "biz-cell", name: "Cell Phone", parentId: "biz" },
+        { id: "groceries", name: "Groceries", parentId: null },
+      ]);
+      jest.spyOn(service, "findAll").mockResolvedValue({
+        data: [
+          {
+            id: "t-split",
+            transactionDate: "2025-01-15",
+            payeeName: "Rogers",
+            category: null,
+            amount: -150,
+            account: { name: "Checking" },
+            description: "Monthly bill",
+            status: "cleared",
+            isSplit: true,
+            splits: [
+              {
+                id: "s1",
+                amount: -100,
+                memo: null,
+                category: { id: "biz-cell", name: "Cell Phone" },
+              },
+              {
+                id: "s2",
+                amount: -50,
+                memo: null,
+                category: { id: "bills-cell", name: "Cell Phone" },
+              },
+            ],
+          },
+          {
+            id: "t-plain",
+            transactionDate: "2025-01-14",
+            payeeName: "Loblaws",
+            category: { id: "groceries", name: "Groceries" },
+            amount: -40,
+            account: { name: "Checking" },
+            description: null,
+            status: "cleared",
+            isSplit: false,
+          },
+        ],
+        pagination: { total: 2, hasMore: false },
+      } as any);
+
+      const result = await service.getLlmTransactionRows("user-1", {});
+
+      const splitRows = result.transactions.filter((r) => r.id === "t-split");
+      expect(splitRows.map((r) => r.categoryName)).toEqual([
+        "Business: Cell Phone",
+        "Bills: Cell Phone",
+      ]);
+      // A top-level category is already unambiguous, so it stays as it is.
+      expect(
+        result.transactions.find((r) => r.id === "t-plain")?.categoryName,
+      ).toBe("Groceries");
+    });
+
+    it("expands split transactions into per-split rows with their real category", async () => {
+      jest.spyOn(service, "findAll").mockResolvedValue({
+        data: [
+          {
+            id: "t-split",
+            transactionDate: "2025-01-15",
+            payeeName: "Costco",
+            category: null,
+            amount: -150,
+            account: { name: "Checking" },
+            description: "Warehouse run",
+            status: "cleared",
+            isSplit: true,
+            splits: [
+              {
+                id: "s1",
+                amount: -100,
+                memo: "Groceries portion",
+                category: { name: "Groceries" },
+              },
+              {
+                id: "s2",
+                amount: -50,
+                memo: null,
+                category: { name: "Household" },
+              },
+            ],
+          },
+          {
+            id: "t-plain",
+            transactionDate: "2025-01-14",
+            payeeName: "Coffee",
+            category: { name: "Dining" },
+            amount: -5,
+            account: { name: "Checking" },
+            description: null,
+            status: "cleared",
+            isSplit: false,
+          },
+        ],
+        pagination: { total: 2, hasMore: false },
+      } as any);
+
+      const result = await service.getLlmTransactionRows("user-1", {});
+
+      expect(result.transactions).toHaveLength(3);
+      const splitRows = result.transactions.filter((r) => r.id === "t-split");
+      expect(splitRows[0].categoryName).toBe("Groceries");
+      expect(splitRows[0].splitId).toBe("s1");
+      expect(splitRows[0].isSplit).toBe(true);
+      expect(splitRows[0].description).toBe("Groceries portion");
+      expect(splitRows[1].description).toBe("Warehouse run"); // falls back to parent
+      const plain = result.transactions.find((r) => r.id === "t-plain");
+      expect(plain?.categoryName).toBe("Dining");
+      expect(plain?.isSplit).toBeUndefined();
+      expect(result.total).toBe(2);
+    });
+
+    it("masks a cross-owner counterpart the user cannot read (AI/MCP shared read)", async () => {
+      const crossOwnerAccess = (service as any).crossOwnerAccess;
+      jest.spyOn(service, "findAll").mockResolvedValue({
+        data: [
+          {
+            id: "t-cross",
+            userId: "user-1",
+            transactionDate: "2025-01-15",
+            payeeName: "Transfer to Owner Savings",
+            amount: -100,
+            account: { name: "Checking" },
+            status: "CLEARED",
+            isTransfer: true,
+            linkedTransaction: {
+              userId: "owner-2",
+              accountId: "a2",
+              account: { id: "a2", name: "Owner Savings" },
+            },
+          },
+        ],
+        pagination: { total: 1, hasMore: false },
+      } as any);
+
+      const result = await service.getLlmTransactionRows("user-1", {});
+
+      expect(crossOwnerAccess.readableAccountIdSetFor).toHaveBeenCalledWith(
+        "user-1",
+      );
+      expect(result.transactions[0].payeeName).toBe(
+        "Transfer to Hidden account",
+      );
+    });
+
+    it("never queries grants for same-owner rows (fast path)", async () => {
+      const crossOwnerAccess = (service as any).crossOwnerAccess;
+      jest.spyOn(service, "findAll").mockResolvedValue({
+        data: [
+          {
+            id: "t-own",
+            userId: "user-1",
+            transactionDate: "2025-01-15",
+            payeeName: "Transfer to Savings",
+            amount: -100,
+            account: { name: "Checking" },
+            status: "CLEARED",
+            isTransfer: true,
+            linkedTransaction: {
+              userId: "user-1",
+              accountId: "a2",
+              account: { id: "a2", name: "Savings" },
+            },
+          },
+        ],
+        pagination: { total: 1, hasMore: false },
+      } as any);
+
+      const result = await service.getLlmTransactionRows("user-1", {});
+
+      expect(crossOwnerAccess.readableAccountIdSetFor).not.toHaveBeenCalled();
+      expect(result.transactions[0].payeeName).toBe("Transfer to Savings");
+    });
+
+    it("applies min/max amount filters to the expanded rows", async () => {
+      jest.spyOn(service, "findAll").mockResolvedValue({
+        data: [
+          {
+            id: "t-split",
+            transactionDate: "2025-01-15",
+            payeeName: "Costco",
+            amount: -150,
+            account: { name: "Checking" },
+            isSplit: true,
+            splits: [
+              { id: "s1", amount: -100, category: { name: "Groceries" } },
+              { id: "s2", amount: -50, category: { name: "Household" } },
+            ],
+          },
+        ],
+        pagination: { total: 1, hasMore: false },
+      } as any);
+
+      const result = await service.getLlmTransactionRows("user-1", {
+        minAmount: -75,
+      });
+
+      expect(result.transactions).toHaveLength(1);
+      expect(result.transactions[0].amount).toBe(-50);
+    });
+
+    it("caps the limit at 100 and passes filters to findAll", async () => {
+      const spy = jest.spyOn(service, "findAll").mockResolvedValue({
+        data: [],
+        pagination: { total: 0, hasMore: false },
+      } as any);
+
+      await service.getLlmTransactionRows("user-1", {
+        accountId: "a1",
+        startDate: "2025-01-01",
+        endDate: "2025-01-31",
+        categoryId: "c1",
+        payeeId: "p1",
+        query: "q",
+        limit: 999,
+        minAmount: 25,
+        maxAmount: 500,
+      });
+
+      // Amount filters must reach findAll so SQL-level pagination/total/hasMore
+      // reflect them, rather than being applied only to the already-paginated
+      // page (which returned a biased sample with a misleading total).
+      expect(spy).toHaveBeenCalledWith(
+        "user-1",
+        ["a1"],
+        "2025-01-01",
+        "2025-01-31",
+        ["c1"],
+        ["p1"],
+        1,
+        100,
+        false,
+        "q",
+        undefined,
+        25,
+        500,
+        undefined,
+        undefined,
+        "date",
+        "DESC",
+      );
+    });
+
+    it("passes ASC to findAll when sortDirection is 'asc'", async () => {
+      const spy = jest.spyOn(service, "findAll").mockResolvedValue({
+        data: [],
+        pagination: { total: 0, hasMore: false },
+      } as any);
+
+      await service.getLlmTransactionRows("user-1", {
+        accountId: "a1",
+        startDate: "2025-01-01",
+        endDate: "2025-01-31",
+        sortDirection: "asc",
+      });
+
+      const lastArg = spy.mock.calls[0][spy.mock.calls[0].length - 1];
+      expect(lastArg).toBe("ASC");
+    });
+
+    it("passes the chosen sortBy column to findAll", async () => {
+      const spy = jest.spyOn(service, "findAll").mockResolvedValue({
+        data: [],
+        pagination: { total: 0, hasMore: false },
+      } as any);
+
+      await service.getLlmTransactionRows("user-1", {
+        startDate: "2025-01-01",
+        endDate: "2025-01-31",
+        sortBy: "amount",
+      });
+
+      const call = spy.mock.calls[0];
+      // sortBy is the second-to-last positional arg, sortDirection the last.
+      expect(call[call.length - 2]).toBe("amount");
+      expect(call[call.length - 1]).toBe("DESC");
+    });
+  });
+
+  describe("previewCreate", () => {
+    it("resolves account + category and sanitizes strings without persisting", async () => {
+      categoriesRepository.findOne.mockResolvedValueOnce({
+        id: "cat-1",
+        userId: "user-1",
+        name: "Dining",
+      });
+
+      const preview = await service.previewCreate("user-1", {
+        accountId: "account-1",
+        amount: -12.5,
+        transactionDate: "2026-01-15",
+        payeeName: "Starbucks <script>",
+        categoryId: "cat-1",
+        description: undefined,
+      });
+
+      expect(accountsService.findOne).toHaveBeenCalledWith(
+        "user-1",
+        "account-1",
+      );
+      expect(preview).toMatchObject({
+        accountId: "account-1",
+        accountName: "Checking",
+        amount: -12.5,
+        categoryId: "cat-1",
+        categoryName: "Dining",
+        currencyCode: "USD",
+      });
+      expect(preview.payeeName).not.toContain("<");
+      expect(preview.description).toBeNull();
+      // No matching payee -> not linked; by default it will be created on confirm.
+      expect(preview.payeeId).toBeNull();
+      expect(preview.payeeMatched).toBe(false);
+      expect(preview.payeeWillBeCreated).toBe(true);
+      // Never writes.
+      expect(transactionsRepository.save).not.toHaveBeenCalled();
+    });
+
+    it("does not flag payee creation when createPayeeIfMissing is false", async () => {
+      const preview = await service.previewCreate("user-1", {
+        accountId: "account-1",
+        amount: -12.5,
+        transactionDate: "2026-01-15",
+        payeeName: "One Off Shop",
+        createPayeeIfMissing: false,
+      });
+
+      expect(preview.payeeId).toBeNull();
+      expect(preview.payeeMatched).toBe(false);
+      expect(preview.payeeWillBeCreated).toBe(false);
+    });
+
+    it("links an existing payee, adopts its category, and uses its canonical name", async () => {
+      // No explicit category; the matched payee supplies one. The caller's
+      // abbreviation ("Whole Foods") resolves to the payee's canonical name.
+      payeesService.resolveByName.mockResolvedValueOnce({
+        id: "payee-9",
+        name: "Whole Foods Market",
+        defaultCategoryId: "cat-default",
+        defaultCategory: { id: "cat-default", name: "Groceries" },
+      });
+
+      const preview = await service.previewCreate("user-1", {
+        accountId: "account-1",
+        amount: -40,
+        transactionDate: "2026-01-15",
+        payeeName: "Whole Foods",
+      });
+
+      expect(payeesService.resolveByName).toHaveBeenCalledWith(
+        "user-1",
+        "Whole Foods",
+      );
+      expect(preview.payeeId).toBe("payee-9");
+      expect(preview.payeeMatched).toBe(true);
+      expect(preview.payeeWillBeCreated).toBe(false);
+      expect(preview.payeeName).toBe("Whole Foods Market");
+      expect(preview.categoryId).toBe("cat-default");
+      expect(preview.categoryName).toBe("Groceries");
+    });
+
+    it("keeps an explicit category over the matched payee's default", async () => {
+      categoriesRepository.findOne.mockResolvedValueOnce({
+        id: "cat-1",
+        userId: "user-1",
+        name: "Dining",
+      });
+      payeesService.resolveByName.mockResolvedValueOnce({
+        id: "payee-9",
+        name: "Whole Foods Market",
+        defaultCategoryId: "cat-default",
+        defaultCategory: { id: "cat-default", name: "Groceries" },
+      });
+
+      const preview = await service.previewCreate("user-1", {
+        accountId: "account-1",
+        amount: -40,
+        transactionDate: "2026-01-15",
+        payeeName: "Whole Foods",
+        categoryId: "cat-1",
+      });
+
+      expect(preview.payeeId).toBe("payee-9");
+      expect(preview.categoryId).toBe("cat-1");
+      expect(preview.categoryName).toBe("Dining");
+    });
+
+    it("throws when the category is not owned", async () => {
+      categoriesRepository.findOne.mockResolvedValueOnce(null);
+      await expect(
+        service.previewCreate("user-1", {
+          accountId: "account-1",
+          amount: -1,
+          transactionDate: "2026-01-15",
+          categoryId: "cat-x",
+        }),
+      ).rejects.toThrow();
+    });
+  });
+
+  describe("previewCategorize", () => {
+    it("returns current and new category names without persisting", async () => {
+      transactionsRepository.findOne.mockResolvedValueOnce({
+        id: "tx-1",
+        userId: "user-1",
+        payeeName: "Starbucks",
+        amount: -12.5,
+        transactionDate: "2026-01-15",
+        account: { name: "Checking" },
+        category: { name: "Uncategorized" },
+      });
+      categoriesRepository.findOne.mockResolvedValueOnce({
+        id: "cat-1",
+        userId: "user-1",
+        name: "Dining",
+      });
+
+      const preview = await service.previewCategorize(
+        "user-1",
+        "tx-1",
+        "cat-1",
+      );
+
+      expect(preview).toMatchObject({
+        transactionId: "tx-1",
+        payeeName: "Starbucks",
+        accountName: "Checking",
+        currentCategoryName: "Uncategorized",
+        categoryId: "cat-1",
+        newCategoryName: "Dining",
+      });
+      expect(transactionsRepository.save).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("previewUpdate", () => {
+    const baseTx = {
+      id: "tx-1",
+      userId: "user-1",
+      accountId: "account-1",
+      amount: -12.5,
+      transactionDate: "2026-01-15",
+      payeeId: "payee-1",
+      payeeName: "Starbucks",
+      categoryId: "cat-old",
+      description: "old",
+      currencyCode: "USD",
+      isTransfer: false,
+      isSplit: false,
+      account: { name: "Checking" },
+      category: { name: "Coffee" },
+    };
+
+    it("returns the resulting state, only changing the provided fields", async () => {
+      transactionsRepository.findOne.mockResolvedValueOnce({ ...baseTx });
+      categoriesRepository.findOne.mockResolvedValueOnce({
+        id: "cat-1",
+        userId: "user-1",
+        name: "Dining",
+      });
+
+      const preview = await service.previewUpdate("user-1", "tx-1", {
+        amount: -30,
+        categoryId: "cat-1",
+      });
+
+      expect(preview).toMatchObject({
+        transactionId: "tx-1",
+        accountId: "account-1",
+        accountName: "Checking",
+        amount: -30,
+        // unchanged fields preserved from the stored transaction
+        transactionDate: "2026-01-15",
+        categoryId: "cat-1",
+        categoryName: "Dining",
+        description: "old",
+        currencyCode: "USD",
+      });
+      expect(transactionsRepository.save).not.toHaveBeenCalled();
+    });
+
+    it("surfaces the reconciled status of the target transaction", async () => {
+      transactionsRepository.findOne.mockResolvedValueOnce({
+        ...baseTx,
+        isReconciled: true,
+      });
+
+      const preview = await service.previewUpdate("user-1", "tx-1", {
+        amount: -30,
+      });
+
+      expect(preview.isReconciled).toBe(true);
+    });
+
+    it("resolves a changed payee name to an existing payee", async () => {
+      transactionsRepository.findOne.mockResolvedValueOnce({ ...baseTx });
+      payeesService.resolveByName.mockResolvedValueOnce({
+        id: "payee-9",
+        name: "Whole Foods Market",
+      });
+
+      const preview = await service.previewUpdate("user-1", "tx-1", {
+        payeeName: "Whole Foods",
+      });
+
+      expect(preview.payeeId).toBe("payee-9");
+      expect(preview.payeeMatched).toBe(true);
+      expect(preview.payeeName).toBe("Whole Foods Market");
+      expect(preview.payeeWillBeCreated).toBe(false);
+    });
+
+    it("flags an unmatched new payee name for creation by default", async () => {
+      transactionsRepository.findOne.mockResolvedValueOnce({ ...baseTx });
+      payeesService.resolveByName.mockResolvedValueOnce(null);
+
+      const preview = await service.previewUpdate("user-1", "tx-1", {
+        payeeName: "Brand New Vendor",
+      });
+
+      expect(preview.payeeId).toBeNull();
+      expect(preview.payeeMatched).toBe(false);
+      expect(preview.payeeName).toBe("Brand New Vendor");
+      expect(preview.payeeWillBeCreated).toBe(true);
+    });
+
+    it("keeps an unmatched new payee name as free text when createPayeeIfMissing is false", async () => {
+      transactionsRepository.findOne.mockResolvedValueOnce({ ...baseTx });
+      payeesService.resolveByName.mockResolvedValueOnce(null);
+
+      const preview = await service.previewUpdate("user-1", "tx-1", {
+        payeeName: "Brand New Vendor",
+        createPayeeIfMissing: false,
+      });
+
+      expect(preview.payeeWillBeCreated).toBe(false);
+      expect(preview.payeeName).toBe("Brand New Vendor");
+    });
+
+    it("clears the description to null when an empty string is supplied", async () => {
+      transactionsRepository.findOne.mockResolvedValueOnce({ ...baseTx });
+
+      const preview = await service.previewUpdate("user-1", "tx-1", {
+        description: "",
+      });
+
+      expect(preview.description).toBeNull();
+    });
+
+    it("falls back to null names when the stored transaction lacks category and description", async () => {
+      transactionsRepository.findOne.mockResolvedValueOnce({
+        ...baseTx,
+        categoryId: null,
+        category: null,
+        description: null,
+        payeeId: null,
+      });
+
+      const preview = await service.previewUpdate("user-1", "tx-1", {
+        amount: -99,
+      });
+
+      expect(preview.categoryName).toBeNull();
+      expect(preview.description).toBeNull();
+      expect(preview.payeeMatched).toBe(false);
+    });
+
+    it("rejects editing a transfer", async () => {
+      transactionsRepository.findOne.mockResolvedValueOnce({
+        ...baseTx,
+        isTransfer: true,
+      });
+      await expect(
+        service.previewUpdate("user-1", "tx-1", { amount: -5 }),
+      ).rejects.toBeInstanceOf(BadRequestException);
+    });
+
+    // Truth table B (docs/future-plans/split-bulk-update.md): a split parent's
+    // categories live on its lines and its amount must equal their sum, so a
+    // category or amount change is refused unless a complete replacement
+    // splits array accompanies the edit; parent fields change freely.
+    describe("split transactions (Truth table B)", () => {
+      const splitTx = {
+        ...baseTx,
+        isSplit: true,
+        categoryId: null,
+        category: null,
+      };
+
+      it("rejects an amount change without an accompanying splits array", async () => {
+        transactionsRepository.findOne.mockResolvedValueOnce({ ...splitTx });
+        await expect(
+          service.previewUpdate("user-1", "tx-1", { amount: -5 }),
+        ).rejects.toThrow(/sum of its split lines/);
+      });
+
+      it("rejects a category change without an accompanying splits array", async () => {
+        transactionsRepository.findOne.mockResolvedValueOnce({ ...splitTx });
+        await expect(
+          service.previewUpdate("user-1", "tx-1", { categoryId: "cat-1" }),
+        ).rejects.toThrow(/categories live on its split lines/);
+      });
+
+      it("gives the category guidance when both category and amount change without splits", async () => {
+        transactionsRepository.findOne.mockResolvedValueOnce({ ...splitTx });
+        await expect(
+          service.previewUpdate("user-1", "tx-1", {
+            categoryId: "cat-1",
+            amount: -5,
+          }),
+        ).rejects.toThrow(/categories live on its split lines/);
+      });
+
+      it("allows an amount change when a splits array accompanies the edit", async () => {
+        transactionsRepository.findOne.mockResolvedValueOnce({ ...splitTx });
+        const preview = await service.previewUpdate("user-1", "tx-1", {
+          amount: -50,
+          splitsAccompany: true,
+        });
+        expect(preview.amount).toBe(-50);
+        expect(preview.categoryId).toBeNull();
+      });
+
+      it("treats a splits-only replacement as a change (hasChange gate)", async () => {
+        transactionsRepository.findOne.mockResolvedValueOnce({ ...splitTx });
+        const preview = await service.previewUpdate("user-1", "tx-1", {
+          splitsAccompany: true,
+        });
+        // No scalar field changed: the preview is the stored state.
+        expect(preview.amount).toBe(-12.5);
+        expect(preview.transactionDate).toBe("2026-01-15");
+      });
+
+      it("allows parent-field edits (payee, date, description) without splits", async () => {
+        transactionsRepository.findOne.mockResolvedValueOnce({ ...splitTx });
+        payeesService.resolveByName.mockResolvedValueOnce(null);
+        const preview = await service.previewUpdate("user-1", "tx-1", {
+          payeeName: "New Vendor",
+          transactionDate: "2026-03-01",
+          description: "updated",
+        });
+        expect(preview.payeeName).toBe("New Vendor");
+        expect(preview.transactionDate).toBe("2026-03-01");
+        expect(preview.description).toBe("updated");
+        // The parent stays a split: amount and (null) category unchanged.
+        expect(preview.amount).toBe(-12.5);
+        expect(preview.categoryId).toBeNull();
+      });
+
+      it("still rejects a split edit that provides no fields", async () => {
+        transactionsRepository.findOne.mockResolvedValueOnce({ ...splitTx });
+        await expect(
+          service.previewUpdate("user-1", "tx-1", {}),
+        ).rejects.toThrow(/at least one field/);
+      });
+    });
+
+    it("rejects when no field is provided", async () => {
+      transactionsRepository.findOne.mockResolvedValueOnce({ ...baseTx });
+      await expect(
+        service.previewUpdate("user-1", "tx-1", {}),
+      ).rejects.toBeInstanceOf(BadRequestException);
+    });
+  });
+
+  describe("previewDelete", () => {
+    it("returns a display preview without persisting", async () => {
+      transactionsRepository.findOne.mockResolvedValueOnce({
+        id: "tx-1",
+        userId: "user-1",
+        amount: -12.5,
+        transactionDate: "2026-01-15",
+        payeeName: "Starbucks",
+        description: null,
+        currencyCode: "USD",
+        account: { name: "Checking" },
+        category: { name: "Coffee" },
+      });
+
+      const preview = await service.previewDelete("user-1", "tx-1");
+
+      expect(preview).toMatchObject({
+        transactionId: "tx-1",
+        accountName: "Checking",
+        amount: -12.5,
+        payeeName: "Starbucks",
+        categoryName: "Coffee",
+        currencyCode: "USD",
+      });
+      expect(transactionsRepository.remove).not.toHaveBeenCalled();
+    });
+
+    it("surfaces the reconciled status of the target transaction", async () => {
+      transactionsRepository.findOne.mockResolvedValueOnce({
+        id: "tx-1",
+        userId: "user-1",
+        amount: -12.5,
+        transactionDate: "2026-01-15",
+        payeeName: "Starbucks",
+        description: null,
+        currencyCode: "USD",
+        account: { name: "Checking" },
+        category: { name: "Coffee" },
+        isReconciled: true,
+      });
+
+      const preview = await service.previewDelete("user-1", "tx-1");
+
+      expect(preview.isReconciled).toBe(true);
+    });
+  });
+
+  describe("createBulk", () => {
+    const row = (amount: number) => ({
+      dto: {
+        accountId: "account-1",
+        transactionDate: "2026-01-15",
+        amount,
+        currencyCode: "USD",
+      } as any,
+      createPayeeIfMissing: true,
+    });
+
+    it("creates every valid row and forwards the per-row payee flag", async () => {
+      const createSpy = jest
+        .spyOn(service, "create")
+        .mockResolvedValueOnce({ id: "tx-1" } as never)
+        .mockResolvedValueOnce({ id: "tx-2" } as never);
+
+      const result = await service.createBulk("user-1", [row(-10), row(-20)]);
+
+      expect(createSpy).toHaveBeenCalledTimes(2);
+      expect(createSpy).toHaveBeenLastCalledWith(
+        "user-1",
+        expect.objectContaining({ amount: -20 }),
+        { createPayeeIfMissing: true },
+      );
+      expect(result.created.map((t) => t.id)).toEqual(["tx-1", "tx-2"]);
+      expect(result.skipped).toEqual([]);
+    });
+
+    it("collects a failing row into skipped without aborting the batch", async () => {
+      jest
+        .spyOn(service, "create")
+        .mockResolvedValueOnce({ id: "tx-1" } as never)
+        .mockRejectedValueOnce(new BadRequestException("Unknown account"));
+
+      const result = await service.createBulk("user-1", [row(-10), row(-20)]);
+
+      expect(result.created.map((t) => t.id)).toEqual(["tx-1"]);
+      expect(result.skipped).toEqual([{ index: 1, reason: "Unknown account" }]);
+    });
+  });
+});

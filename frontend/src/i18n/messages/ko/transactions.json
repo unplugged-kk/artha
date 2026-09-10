@@ -1,0 +1,601 @@
+{
+  "payeeWidget": {
+    "totalSpent": "총 지출",
+    "income": "수입",
+    "net": "순액",
+    "transactions": "거래",
+    "averageAmount": "평균 금액",
+    "lastTransaction": "마지막 거래",
+    "defaultCategory": "기본 카테고리",
+    "nextBill": "다음 청구서",
+    "viewBills": "청구서 및 입금에서 보기",
+    "topCategories": "상위 카테고리",
+    "uncategorized": "미분류",
+    "aliases": "별칭",
+    "recurring": "반복: {cadence} · {amount}",
+    "recurringTooltip": "선택한 기간(날짜 필터가 없으면 최근 12개월)의 반복 청구에서 감지되었습니다.",
+    "cadence": {
+      "weekly": "매주",
+      "biweekly": "2주마다",
+      "monthly": "매월",
+      "quarterly": "분기별",
+      "yearly": "매년"
+    },
+    "inactive": "비활성",
+    "noTransactions": "이 기간에 거래가 없습니다",
+    "editAria": "수취인 편집",
+    "detailsAria": "수취인 상세 보기",
+    "collapseAria": "수취인 정보 숨기기",
+    "show": "수취인 정보 표시",
+    "amountUnavailable": "환율 없음"
+  },
+  "categoryWidget": {
+    "detailsAria": "카테고리 상세 보기",
+    "totalSpent": "총 지출",
+    "totalEarned": "총 수입",
+    "income": "수입",
+    "expense": "지출",
+    "budgetThisMonth": "이번 달 예산",
+    "budgetProgress": "{budgeted} 중 {spent}",
+    "transactions": "거래",
+    "averageAmount": "평균 금액",
+    "monthlyAverage": "월 평균",
+    "subcategories": "하위 카테고리",
+    "thisCategory": "이 카테고리",
+    "topPayees": "상위 수취인",
+    "noPayee": "수취인 없음",
+    "nextScheduled": "다음 예약",
+    "noTransactions": "이 기간에 거래가 없습니다",
+    "editAria": "카테고리 편집",
+    "collapseAria": "카테고리 정보 숨기기",
+    "show": "카테고리 정보 표시",
+    "amountUnavailable": "환율 없음"
+  },
+  "accountWidget": {
+    "currentBalance": "현재 잔액",
+    "nextPayment": "다음 지불",
+    "viewBills": "청구서 및 입금에서 보기",
+    "viewDetailsAria": "계정 상세 정보 보기",
+    "type": "유형",
+    "accountNumber": "계정 번호",
+    "currency": "통화",
+    "creditLimit": "신용 한도",
+    "interestRate": "이자율",
+    "currentPayment": "현재 상환액",
+    "currentPaymentTooltip": "가장 최근의 정기 상환액(원금과 이자의 합계).",
+    "estPayoff": "예상 완납",
+    "estRemainingInterest": "예상 잔여 이자",
+    "estRemainingInterestTooltip": "현재 상환액과 금리가 유지될 경우 앞으로 낼 이자.",
+    "notAvailable": "없음",
+    "paidOff": "완납",
+    "statementSettlement": "결제일",
+    "statementSettlementTooltip": "청구 주기의 마지막 날입니다. 이 날짜 이전에 처리된 거래는 현재 명세서에 표시됩니다.",
+    "statementDue": "납부 기한",
+    "closed": "마감됨",
+    "editAria": "계정 설정 편집",
+    "collapseAria": "계정 정보 숨기기",
+    "showAccountNumber": "계정 번호 표시",
+    "hideAccountNumber": "계정 번호 숨기기",
+    "show": "계정 정보 표시"
+  },
+  "page": {
+    "title": "거래",
+    "subtitle": "수입과 지출을 관리하세요",
+    "newButton": "+ 새 거래",
+    "editModal": {
+      "editTitle": "거래 편집",
+      "duplicateTitle": "거래 복사",
+      "newTitle": "새 거래",
+      "scheduleTitle": "반복 거래로 예약",
+      "editPayeeTitle": "수취인 편집",
+      "editCategoryTitle": "카테고리 편집"
+    },
+    "loading": "거래를 불러오는 중...",
+    "totalCount": "{count, plural, one {# 건의 거래} other {# 건의 거래}}",
+    "bulkDelete": {
+      "title": "거래 삭제",
+      "message": "{count, plural, one {# 건의 거래} other {# 건의 거래}}를 삭제하시겠습니까? 연결된 이체 내역도 함께 삭제됩니다. 이 작업은 취소할 수 없습니다."
+    },
+    "toasts": {
+      "scheduledCreated": "반복 거래가 생성되었습니다",
+      "investmentLinked": "이 거래는 투자에 연결되어 있습니다. 투자 페이지에서 열립니다."
+    }
+  },
+  "list": {
+    "empty": {
+      "title": "거래 없음",
+      "body": "새 거래를 만들어 시작하세요."
+    },
+    "header": {
+      "date": "날짜",
+      "account": "계정",
+      "payee": "수취인",
+      "category": "카테고리",
+      "description": "설명",
+      "refNumber": "참조 번호",
+      "tags": "태그",
+      "amount": "금액",
+      "currency": "통화",
+      "paidAmount": "결제 금액",
+      "feePaid": "부과된 수수료",
+      "balance": "잔액",
+      "attachments": "첨부 파일",
+      "status": "상태",
+      "actions": "작업"
+    },
+    "dateDisplay": {
+      "toggleLabel": "연도 숨기기",
+      "toggleTitle": "날짜에서 연도를 빼서 수취인 이름이 더 많이 보이도록 합니다"
+    },
+    "attachmentsCount": "{count, plural, other {# 개의 첨부 파일}}",
+    "today": "오늘",
+    "export": {
+      "button": "내보내기",
+      "exporting": "내보내는 중...",
+      "title": "거래를 CSV로 내보내기",
+      "success": "{count, plural, one {# 건의 거래 내보냄} other {# 건의 거래 내보냄}}",
+      "noData": "내보낼 거래가 없습니다",
+      "error": "거래 내보내기에 실패했습니다"
+    },
+    "delete": {
+      "transferTitle": "이체 삭제",
+      "transactionTitle": "거래 삭제",
+      "transferMessage": "이 이체를 삭제하시겠습니까? 연결된 두 거래가 모두 삭제됩니다.",
+      "transactionMessage": "이 거래를 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
+      "success": "거래가 삭제되었습니다",
+      "transferSuccess": "이체가 삭제되었습니다",
+      "error": "거래 삭제에 실패했습니다",
+      "reconciledWarning": "이 거래는 조정되었으므로 삭제하면 완료된 조정에 영향을 줍니다."
+    },
+    "status": {
+      "voidError": "상태를 무효에서 변경하려면 거래를 편집하세요",
+      "changed": "상태가 {status}으로 변경되었습니다",
+      "changedLockedUndo": "상태를 {status}(으)로 변경했습니다. 대사 완료된 거래는 잠깁니다. {seconds}초 이내에 다시 누르면 취소됩니다.",
+      "updateError": "상태 업데이트에 실패했습니다",
+      "unreconciled": "미조정",
+      "cleared": "정리됨",
+      "reconciled": "조정됨",
+      "void": "무효",
+      "clearedDense": "정",
+      "reconciledDense": "조",
+      "voidDense": "무",
+      "pendingDense": "○",
+      "pending": "보류 중",
+      "cycleTitle": "클릭하여 상태 순환"
+    },
+    "row": {
+      "viewPayeeTitle": "{name} 상세 보기",
+      "ref": "참조: {number}",
+      "investmentLabel": "투자",
+      "linkedInvestmentTitle": "투자에서 보기",
+      "filterByDate": "날짜 \"{date}\"로 필터링",
+      "filterByAccount": "\"{name}\"으로 필터링",
+      "filterByPayee": "\"{name}\"으로 필터링",
+      "filterByCategory": "{name}으로 필터링",
+      "filterByTag": "태그 {name}으로 필터링",
+      "transfer": "이체",
+      "transferTitle": "{name}으로(부터) {direction} 이체",
+      "split": "분할",
+      "uncategorized": "미분류",
+      "splitMore": "+{count}개 더",
+      "filteredAmountTitle": "필터링된 금액 (전체 거래: {amount})",
+      "viewButton": "보기",
+      "editButton": "편집",
+      "deleteButton": "삭제"
+    },
+    "itemNamePlural": "거래"
+  },
+  "row": {
+    "copyOptions": {
+      "title": "복사 옵션",
+      "duplicateTitle": "거래 복사",
+      "copy": "복사",
+      "duplicate": "복사본 만들기",
+      "scheduleRecurring": "반복 거래로 예약"
+    }
+  },
+  "actionSheet": {
+    "defaultTitle": "거래",
+    "filterByDate": "날짜 \"{date}\"로 필터링",
+    "filterByAccount": "\"{name}\"으로 필터링",
+    "filterByPayee": "\"{name}\"으로 필터링",
+    "filterByCategory": "\"{name}\"으로 필터링",
+    "filterByTag": "태그 \"{name}\"으로 필터링",
+    "edit": "편집",
+    "duplicate": "복사본 만들기",
+    "scheduleRecurring": "반복 거래로 예약",
+    "delete": "삭제"
+  },
+  "filter": {
+    "favourites": "즐겨찾기:",
+    "panel": {
+      "title": "필터",
+      "clear": "초기화",
+      "hide": "숨기기",
+      "show": "표시"
+    },
+    "accounts": {
+      "label": "계정 표시:",
+      "all": "전체",
+      "active": "활성",
+      "closed": "마감됨"
+    },
+    "fields": {
+      "accounts": "계정",
+      "payees": "수취인",
+      "categories": "카테고리",
+      "tags": "태그",
+      "timePeriod": "기간",
+      "startDate": "시작일",
+      "endDate": "종료일",
+      "amountFrom": "금액 이상",
+      "amountTo": "금액 이하",
+      "status": "상태",
+      "search": "검색",
+      "tagKey": "태그 키",
+      "tagKeyOp": "조건",
+      "tagKeyValue": "값",
+      "currency": "통화",
+      "hasAttachments": "첨부 파일"
+    },
+    "hasAttachmentsOptions": {
+      "any": "전체",
+      "yes": "예",
+      "no": "아니오"
+    },
+    "placeholders": {
+      "accounts": "모든 계정",
+      "payees": "모든 수취인",
+      "categories": "모든 카테고리",
+      "tags": "모든 태그",
+      "statuses": "모든 상태",
+      "amountMin": "최소",
+      "amountMax": "최대",
+      "search": "수취인, 카테고리, 금액, 태그, 설명, 참조 번호 검색...",
+      "tagKeyValue": "예: usa"
+    },
+    "tagKeyNone": "모두(키 필터 없음)",
+    "tagKeyOps": {
+      "hasValue": "값 있음",
+      "noValue": "값 없음",
+      "contains": "값 포함",
+      "notContains": "값 미포함"
+    },
+    "chips": {
+      "removeAccount": "{name} 필터 제거",
+      "removePayee": "{name} 필터 제거",
+      "removeCategory": "{name} 필터 제거",
+      "removeTag": "{name} 필터 제거",
+      "removeDate": "날짜 필터 제거",
+      "removeAmount": "금액 필터 제거",
+      "removeSearch": "검색 필터 제거",
+      "dateFrom": "{date}부터",
+      "dateUntil": "{date}까지",
+      "amountFrom": "{amount}부터",
+      "amountUpTo": "{amount}까지",
+      "removeCurrency": "{name} 통화 필터 제거",
+      "hasAttachments": "첨부 파일 있음",
+      "noAttachments": "첨부 파일 없음",
+      "removeAttachments": "첨부 파일 필터 제거"
+    },
+    "bulkUpdate": "일괄 업데이트",
+    "cancelBulk": "일괄 취소",
+    "statusLabels": {
+      "unreconciled": "미조정",
+      "cleared": "정리됨",
+      "reconciled": "조정됨",
+      "void": "무효"
+    },
+    "periods": {
+      "select": "기간 선택...",
+      "allDates": "모든 날짜",
+      "today": "오늘",
+      "yesterday": "어제",
+      "thisWeek": "이번 주",
+      "lastWeek": "지난 주",
+      "last30Days": "지난 30일",
+      "monthToDate": "이번 달",
+      "lastMonth": "지난 달",
+      "last365Days": "지난 365일",
+      "yearToDate": "올해",
+      "lastYear": "지난 해",
+      "custom": "사용자 정의"
+    }
+  },
+  "bulk": {
+    "banner": {
+      "selected": "{count, plural, one {# 건의 거래 선택됨} other {# 건의 거래 선택됨}}",
+      "selectAllMatching": "일치하는 {count}건의 거래 모두 선택",
+      "allMatching": "(일치하는 모든 거래)",
+      "clearSelection": "선택 해제",
+      "bulkUpdate": "일괄 업데이트"
+    },
+    "modal": {
+      "title": "거래 일괄 업데이트",
+      "subtitle": "{count, plural, one {# 건의 선택된 거래} other {# 건의 선택된 거래}}를 업데이트합니다. 변경할 필드를 켜세요.",
+      "submitLabel": "{count, plural, one {# 건의 거래} other {# 건의 거래}} 업데이트",
+      "payee": "수취인",
+      "category": "카테고리",
+      "description": "설명",
+      "status": "상태",
+      "tags": "태그",
+      "payeePlaceholder": "수취인 이름 선택 또는 입력...",
+      "categoryPlaceholder": "카테고리 선택...",
+      "descriptionPlaceholder": "설명 입력 (비워두면 삭제)",
+      "tagsPlaceholder": "태그 선택 (비워두면 모두 삭제)...",
+      "statusOptions": {
+        "pending": "보류 중",
+        "cleared": "정리됨",
+        "void": "무효"
+      },
+      "notes": {
+        "transfer": "이체 거래는 연결된 상대 거래도 함께 업데이트됩니다.",
+        "split": "분할 거래: 새 카테고리는 분할 항목에 적용됩니다(카테고리 필터가 활성화된 경우 필터와 일치하는 항목에만). 이체 및 투자 항목은 변경되지 않습니다."
+      }
+    },
+    "toasts": {
+      "updated": "{count, plural, one {# 건의 거래 업데이트됨} other {# 건의 거래 업데이트됨}}",
+      "skipped": "{count, plural, one {# 건의 거래 건너뜀} other {# 건의 거래 건너뜀}}",
+      "splitLines": "{count, plural, one {# 건의 분할 항목 카테고리 변경됨} other {# 건의 분할 항목 카테고리 변경됨}}"
+    }
+  },
+  "form": {
+    "modeTransaction": "거래",
+    "modeSplit": "분할",
+    "modeTransfer": "이체",
+    "transferBadge": "이체",
+    "isLinkedTransfer": "이것은 연결된 이체 거래입니다",
+    "fields": {
+      "account": "계정",
+      "date": "날짜",
+      "createDate": "생성 날짜",
+      "payee": "수취인",
+      "category": "카테고리",
+      "amount": "금액",
+      "totalAmount": "총 금액",
+      "referenceNumber": "참조 번호",
+      "description": "설명",
+      "status": "상태",
+      "tags": "태그",
+      "fromAccount": "출금 계정",
+      "toAccount": "입금 계정",
+      "transferAmount": "이체 금액",
+      "transferAmountWithCurrency": "이체 금액 ({currency})",
+      "amountReceived": "수령 금액 ({currency})",
+      "payeeOptional": "수취인 (선택 사항)",
+      "categoryOptional": "카테고리(선택사항)"
+    },
+    "placeholders": {
+      "selectAccount": "계정 선택...",
+      "selectDestinationAccount": "목적 계정 선택...",
+      "selectOrTypePayee": "수취인 이름 선택 또는 입력...",
+      "selectOrCreateCategory": "카테고리 선택 또는 생성...",
+      "referenceNumber": "수표 번호, 확인 번호...",
+      "optionalDescription": "선택적 설명...",
+      "selectTags": "태그 선택...",
+      "createNewTag": "새 태그 만들기..."
+    },
+    "splitSection": {
+      "title": "분할 거래",
+      "cancelSplit": "분할 취소"
+    },
+    "statusOptions": {
+      "unreconciled": "미조정",
+      "cleared": "정리됨",
+      "reconciled": "조정됨",
+      "void": "무효"
+    },
+    "submitCreate": "{mode} 만들기",
+    "submitCreateAndNew": "{mode} 만들고 계속",
+    "submitCreateDescription": "저장하고 이 창을 닫습니다.",
+    "submitCreateAndNewDescription": "저장하고 같은 계좌와 날짜로 새로 입력합니다.",
+    "submitOptions": "만든 후 동작 선택",
+    "submitUpdate": "{mode} 업데이트",
+    "reconciledConfirm": {
+      "title": "조정된 거래를 편집하시겠습니까?",
+      "message": "이 거래는 조정되었습니다. 변경하면 완료된 조정에 영향을 줍니다. 그래도 변경 사항을 저장하시겠습니까?",
+      "confirm": "변경 사항 저장"
+    },
+    "modeLabel": {
+      "transfer": "이체",
+      "transaction": "거래"
+    },
+    "transferAmountNote": "이체 금액은 양수여야 합니다",
+    "transferCandidates": {
+      "sharedWithYou": "나와 공유됨",
+      "yourAccounts": "내 계좌",
+      "optionLabel": "{name} ({currency}) — {owner}"
+    },
+    "crossOwnerLockedNote": "이 이체의 상대편이 더 이상 공유되지 않는 계좌에 있습니다. 금액, 날짜, 계좌는 잠겨 있지만 이 거래의 세부 정보는 계속 편집할 수 있습니다.",
+    "transferCategoryNote": "선택사항. 이체는 여전히 수입이나 지출로 집계되지 않지만, 이 카테고리를 지정하면 월별 카테고리 분석에 표시됩니다(예: 매월 투자 납입).",
+    "amountReceivedNote": "환전 후 수령 금액",
+    "splitTransaction": "분할 거래",
+    "splitDisabledDuringTour": "가이드 투어 중에는 사용할 수 없습니다",
+    "newTagTitle": "새 태그",
+    "toasts": {
+      "transferCreated": "이체가 생성되었습니다",
+      "transferUpdated": "이체가 업데이트되었습니다",
+      "transactionCreated": "거래가 생성되었습니다",
+      "transactionUpdated": "거래가 업데이트되었습니다",
+      "attachmentsUploadFailed": "거래가 저장되었지만 첨부 파일 {count}개를 업로드하지 못했습니다",
+      "saveFailed": "거래 저장에 실패했습니다",
+      "loadFailed": "양식 데이터 불러오기에 실패했습니다",
+      "splitsNotEqual": "분할 합계({splitTotal})가 거래 금액({txAmount})과 일치해야 합니다",
+      "destinationRequired": "목적 계정을 선택해 주세요",
+      "sameAccount": "출금 계정과 입금 계정은 달라야 합니다",
+      "negativeTransfer": "이체 금액은 음수일 수 없습니다",
+      "payeeCreated": "수취인 \"{name}\"이(가) 생성되었습니다",
+      "payeeCreateFailed": "수취인 생성에 실패했습니다",
+      "payeeReactivated": "수취인 \"{name}\"이(가) 다시 활성화되었습니다",
+      "payeeReactivateFailed": "수취인 재활성화에 실패했습니다",
+      "categoryCreated": "카테고리 \"{name}\"이(가) 생성되었습니다",
+      "categoryCreateFailed": "카테고리 생성에 실패했습니다",
+      "tagCreated": "태그 \"{name}\"이(가) 생성되었습니다",
+      "fxRateRequired": "외화 거래를 저장하기 전에 환율 또는 환산 금액을 입력하세요.",
+      "jointPayeeCreateNotGranted": "계좌 소유자가 수취인 생성 권한을 부여하지 않았습니다. 기존 수취인 중에서 선택하세요."
+    },
+    "ariaHistory": "최근 거래 보기",
+    "ariaHistoryForPayee": "이 수취인의 최근 거래 보기",
+    "historyTitle": "최근 거래에서 자동 완성",
+    "currencyPicker": {
+      "label": "입력 통화",
+      "ariaLabel": "입력 통화 변경",
+      "title": "금액 입력 통화",
+      "accountCurrency": "계좌 통화 ({code})",
+      "addCurrency": "통화 추가...",
+      "optionLabel": "{symbol} - {name} ({code})",
+      "createFailed": "통화를 추가하지 못했습니다",
+      "reactivated": "{code}이(가) 다시 활성화되었습니다"
+    },
+    "fx": {
+      "totalInCurrency": "{currency} 기준 총액",
+      "rateCaption": "1 {from} = {rate} {to} ({date})",
+      "noRateWarning": "{date}에 {from}에서 {to}로의 환율을 찾을 수 없습니다. 환산 금액을 직접 입력하세요.",
+      "usingLatestRateHint": "사용 가능한 최신 환율을 사용 중입니다({date} 기준 아님).",
+      "displayToggle": {
+        "account": "계좌",
+        "original": "원 통화"
+      },
+      "feeCaption": "{percent}% 해외 거래 수수료({fee})가 포함됩니다."
+    },
+    "jointSplitDisabled": "공유 계좌의 분할 거래는 소유자만 관리할 수 있습니다"
+  },
+  "splitEditor": {
+    "header": "분할 세부 정보",
+    "distributeProportionally": "비례 배분",
+    "distributeProportionallyTitle": "각 분할의 금액에 비례하여 남은 금액을 배분합니다",
+    "distributeEvenly": "균등 배분",
+    "addSplit": "분할 추가",
+    "removeMinimum": "최소 2개의 분할이 필요합니다",
+    "removeSplit": "분할 제거",
+    "removeAndConvert": "분할을 제거하고 일반 거래로 변환",
+    "convertConfirm": {
+      "title": "일반 거래로 변환하시겠습니까?",
+      "message": "이 분할을 제거하면 남은 분할의 카테고리를 사용하여 일반 거래로 변환됩니다.",
+      "confirm": "변환"
+    },
+    "noUnassigned": "미배분 금액 없음",
+    "addRemaining": "이 분할에 나머지 금액 추가",
+    "total": "합계",
+    "balanced": "균형 잡힘",
+    "remaining": "남은 금액: {symbol}{amount}",
+    "needAmount": "{symbol}{amount} 필요 (남은 금액: {symbol}{remaining})",
+    "setTotal": "합계를 {symbol}{amount}으로 설정",
+    "currencyToggle": {
+      "title": "분할 금액을 표시하고 편집하는 통화를 전환합니다",
+      "ariaAmountsIn": "{code}(으)로 분할 금액 표시 및 편집"
+    },
+    "splitLabel": "분할 {number}",
+    "columns": {
+      "type": "유형",
+      "categoryAccount": "카테고리 / 계정",
+      "category": "카테고리",
+      "amount": "금액",
+      "memo": "메모",
+      "tags": "태그"
+    },
+    "splitTypes": {
+      "category": "카테고리",
+      "transfer": "이체",
+      "investment": "투자"
+    },
+    "selectCategory": "카테고리 선택...",
+    "selectAccount": "계정 선택...",
+    "memoPlaceholder": "선택적 메모",
+    "mobileMemoPlaceholder": "메모",
+    "tagsPlaceholder": "태그..."
+  },
+  "recentPopover": {
+    "recentForPayee": "{name}의 최근 거래",
+    "recentTransactions": "최근 거래",
+    "loading": "불러오는 중...",
+    "noRecent": "최근 거래가 없습니다.",
+    "noRecentForPayee": "이 수취인의 최근 거래가 없습니다.",
+    "noPayee": "(수취인 없음)",
+    "uncategorized": "(미분류)"
+  },
+  "investmentSplit": {
+    "ariaAction": "투자 작업",
+    "ariaSecurity": "유가증권",
+    "selectSecurity": "유가증권 선택...",
+    "quantityPlaceholder": "수량",
+    "pricePlaceholder": "가격",
+    "commissionPlaceholder": "수수료",
+    "amountPlaceholder": "금액 ({currency})",
+    "ratePlaceholder": "1 {from}당 {to}",
+    "ariaRate": "환율 (1 {from}당 {to})",
+    "rateHint": "수량, 가격, 수수료는 {from} 기준입니다. 이 환율이 현금 영향액을 {to}(으)로 환산합니다.",
+    "rateUnresolved": "{from}→{to} 환율이 없습니다. 입력하세요 — 없으면 현금 영향액을 계산할 수 없고, 두 통화는 같지 않습니다."
+  },
+  "charts": {
+    "balanceHistory": {
+      "title": "잔액 이력",
+      "noData": "잔액 데이터가 없습니다",
+      "starting": "시작",
+      "current": "현재",
+      "ending": "종료",
+      "lowest": "최저",
+      "minBalance": "최소 잔액",
+      "projected": "예상",
+      "range": "{start} – {end}"
+    },
+    "zeroBalances": {
+      "message": "선택한 모든 계좌의 잔액이 0이므로 표시할 잔액 차트가 없습니다."
+    },
+    "monthlyTotals": {
+      "title": "월별 합계",
+      "noData": "거래 데이터가 없습니다",
+      "monthlyAvg": "월 평균",
+      "quarterlyAvg": "분기 평균",
+      "yearlyAvg": "연 평균",
+      "total": "합계",
+      "transactions": "거래",
+      "tooltip": "{count, plural, one {# 건의 거래} other {# 건의 거래}}",
+      "quarterLabel": "{year}년 Q{quarter}",
+      "quarterTick": "{year}년 Q{quarter}",
+      "granularityLabel": "그룹화",
+      "granularity": {
+        "auto": "자동",
+        "month": "월",
+        "quarter": "분기",
+        "year": "연"
+      },
+      "granularityAutoTitle": "자동 ({granularity})",
+      "granularityTitle": "{label} 보기"
+    },
+    "accountBalances": {
+      "title": "계정 잔액",
+      "noData": "계정 잔액 데이터가 없습니다",
+      "average": "평균",
+      "total": "합계",
+      "accounts": "계정",
+      "scaleLabel": "Y축 눈금",
+      "auto": "자동",
+      "linear": "선형",
+      "log": "로그",
+      "autoTitle": "자동 ({scale})",
+      "scaleTitle": "{label} 눈금"
+    }
+  },
+  "toasts": {
+    "payeeUpdated": "수취인이 성공적으로 업데이트되었습니다",
+    "deleted": "{count, plural, one {# 건의 거래 삭제됨} other {# 건의 거래 삭제됨}}",
+    "noneToExport": "내보낼 거래가 없습니다",
+    "exported": "{count, plural, one {# 건의 거래 내보냄} other {# 건의 거래 내보냄}}",
+    "loadFormDataFailed": "양식 데이터 불러오기에 실패했습니다",
+    "loadFailed": "거래 불러오기에 실패했습니다",
+    "loadPayeeFailed": "수취인 세부 정보 불러오기에 실패했습니다",
+    "payeeUpdateFailed": "수취인 업데이트에 실패했습니다",
+    "categoryUpdated": "카테고리가 성공적으로 업데이트되었습니다",
+    "categoryUpdateFailed": "카테고리 업데이트에 실패했습니다",
+    "exportFailed": "거래 내보내기에 실패했습니다"
+  },
+  "validation": {
+    "dateRequired": "날짜는 필수입니다"
+  },
+  "tagKeyBreakdown": {
+    "title": "{key}별 지출",
+    "other": "기타",
+    "noData": "이 키로 분석할 태그된 지출이 없습니다."
+  }
+}

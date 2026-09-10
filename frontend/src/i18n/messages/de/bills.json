@@ -1,0 +1,76 @@
+{
+  "page": {
+    "title": "Rechnungen & Einzahlungen",
+    "subtitle": "Verwalten Sie Ihre wiederkehrenden Buchungen und terminierten Zahlungen",
+    "newButton": "+ Neuer Zeitplan",
+    "summaryActiveBills": "Aktive Rechnungen",
+    "summaryActiveDeposits": "Aktive Einzahlungen",
+    "summaryMonthlyNet": "Monatliches Netto",
+    "summaryAmountUnavailable": "Nicht verfügbar",
+    "summaryNetRatesUnavailable": "Wechselkurse sind derzeit nicht verfügbar, daher kann der Saldo nicht ermittelt werden.",
+    "summaryNetMissingRates": "Kein Wechselkurs für {currencies} — fügen Sie einen unter Währungen hinzu",
+    "summaryNetMissingRatesAndUnpriceable": "Kein Wechselkurs für {currencies}, und ein oder mehrere Zeitpläne konnten nicht bewertet werden.",
+    "summaryNetUnpriceable": "Ein oder mehrere Zeitpläne konnten nicht bewertet werden",
+    "summaryDueNow": "Jetzt fällig",
+    "loadingText": "Terminierte Buchungen werden geladen...",
+    "chartUnavailable": "Diagramm vorübergehend nicht verfügbar"
+  },
+  "viewTabs": {
+    "list": "Liste",
+    "calendar": "Kalender",
+    "filterAll": "Alle ({count})",
+    "filterBills": "Rechnungen ({count})",
+    "filterDeposits": "Einzahlungen ({count})",
+    "todayButton": "Heute"
+  },
+  "form": {
+    "titleNew": "Neue terminierte Buchung",
+    "titleEdit": "Terminierte Buchung bearbeiten"
+  },
+  "overrideConfirm": {
+    "title": "Vorhandene Überschreibungen gefunden",
+    "message": "Diese terminierte Buchung hat {count, plural, one {# individuelles Vorkommen} other {# individuelle Vorkommen}} mit benutzerdefinierten Änderungen.",
+    "question": "Was soll mit diesen Änderungen geschehen, wenn Sie die Basisvorlage aktualisieren?",
+    "keepButton": "Änderungen beibehalten",
+    "deleteButton": "Alle Änderungen löschen"
+  },
+  "forecast": {
+    "title": "Cashflow-Prognose",
+    "scheduledCount": "{count, plural, one {# terminierte Buchung} other {# terminierte Buchungen}} in der Prognose",
+    "tooltipTransactions": "Buchungen:",
+    "tooltipMore": "+{count} weitere",
+    "noData": "Keine Daten zum Anzeigen",
+    "noAccounts": "Keine Konten gefunden",
+    "noScheduled": "Keine terminierten Buchungen",
+    "noMatchingAccount": "Wählen Sie ein Konto mit terminierten Buchungen aus",
+    "noUpcoming": "Keine bevorstehenden Buchungen in diesem Zeitraum – aktueller Saldo wird angezeigt",
+    "summaryStarting": "Start",
+    "summaryEnding": "Ende",
+    "summaryLowest": "Niedrigster",
+    "summaryMinBalance": "Mindestsaldo",
+    "allAccounts": "Alle Konten",
+    "accountsAriaLabel": "Konten für die Prognose",
+    "totalOfAccounts": "Gesamt aller Konten",
+    "legendAriaLabel": "Prognoselinien",
+    "tooltipTransactionForAccount": "{name} ({account})",
+    "unavailableMissingRates": "Diese Prognose kann nicht in {displayCurrency} angezeigt werden: Für {currencies} ist kein Wechselkurs verfügbar, und ein prognostizierter Saldo baut auf jedem vorherigen Tag auf. Fügen Sie einen Kurs hinzu, oder wählen Sie ein Konto mit nur einer Währung."
+  },
+  "calendar": {
+    "days": {
+      "sun": "So",
+      "mon": "Mo",
+      "tue": "Di",
+      "wed": "Mi",
+      "thu": "Do",
+      "fri": "Fr",
+      "sat": "Sa"
+    },
+    "more": "+{count} weitere"
+  },
+  "toasts": {
+    "overridesDeleted": "Überschreibungen gelöscht",
+    "notFound": "Terminierte Zahlung nicht gefunden",
+    "loadFailed": "Terminierte Buchungen konnten nicht geladen werden",
+    "overridesDeleteFailed": "Überschreibungen konnten nicht gelöscht werden"
+  }
+}

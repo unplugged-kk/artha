@@ -1,0 +1,601 @@
+{
+  "payeeWidget": {
+    "totalSpent": "Dépenses totales",
+    "income": "Revenus",
+    "net": "Net",
+    "transactions": "Transactions",
+    "averageAmount": "Montant moyen",
+    "lastTransaction": "Dernière transaction",
+    "defaultCategory": "Catégorie par défaut",
+    "nextBill": "Prochaine facture",
+    "viewBills": "Voir dans Factures & Dépôts",
+    "topCategories": "Principales catégories",
+    "uncategorized": "Non catégorisé",
+    "aliases": "Alias",
+    "recurring": "Récurrent : {cadence} · {amount}",
+    "recurringTooltip": "Détecté à partir de débits répétés sur la période sélectionnée (ou les 12 derniers mois si aucun filtre de date n'est défini).",
+    "cadence": {
+      "weekly": "Hebdomadaire",
+      "biweekly": "Toutes les 2 semaines",
+      "monthly": "Mensuel",
+      "quarterly": "Trimestriel",
+      "yearly": "Annuel"
+    },
+    "inactive": "Inactif",
+    "noTransactions": "Aucune transaction sur cette période",
+    "editAria": "Modifier le bénéficiaire",
+    "detailsAria": "Voir les détails du bénéficiaire",
+    "collapseAria": "Masquer les informations du bénéficiaire",
+    "show": "Afficher les informations du bénéficiaire",
+    "amountUnavailable": "Pas de taux"
+  },
+  "categoryWidget": {
+    "detailsAria": "Voir les détails de la catégorie",
+    "totalSpent": "Dépenses totales",
+    "totalEarned": "Revenus totaux",
+    "income": "Revenu",
+    "expense": "Dépense",
+    "budgetThisMonth": "Budget de ce mois",
+    "budgetProgress": "{spent} sur {budgeted}",
+    "transactions": "Transactions",
+    "averageAmount": "Montant moyen",
+    "monthlyAverage": "Moyenne mensuelle",
+    "subcategories": "Sous-catégories",
+    "thisCategory": "Cette catégorie",
+    "topPayees": "Principaux bénéficiaires",
+    "noPayee": "Aucun bénéficiaire",
+    "nextScheduled": "Prochaine transaction planifiée",
+    "noTransactions": "Aucune transaction sur cette période",
+    "editAria": "Modifier la catégorie",
+    "collapseAria": "Masquer les informations de la catégorie",
+    "show": "Afficher les informations de la catégorie",
+    "amountUnavailable": "Pas de taux"
+  },
+  "accountWidget": {
+    "currentBalance": "Solde actuel",
+    "nextPayment": "Prochain paiement",
+    "viewBills": "Voir dans Factures & Dépôts",
+    "viewDetailsAria": "Voir les détails du compte",
+    "type": "Type",
+    "accountNumber": "Numéro de compte",
+    "currency": "Devise",
+    "creditLimit": "Limite de crédit",
+    "interestRate": "Taux d'intérêt",
+    "currentPayment": "Versement actuel",
+    "currentPaymentTooltip": "Le dernier versement régulier, capital plus intérêts.",
+    "estPayoff": "Remboursement est.",
+    "estRemainingInterest": "Intérêts restants est.",
+    "estRemainingInterestTooltip": "Intérêts restant à payer si le versement et le taux actuels se maintiennent.",
+    "notAvailable": "N/D",
+    "paidOff": "Remboursé",
+    "statementSettlement": "Jour de clôture",
+    "statementSettlementTooltip": "Le dernier jour du cycle de facturation. Les transactions enregistrées ce jour ou avant apparaissent sur le relevé en cours.",
+    "statementDue": "Échéance",
+    "closed": "Fermé",
+    "editAria": "Modifier les paramètres du compte",
+    "collapseAria": "Masquer les informations du compte",
+    "showAccountNumber": "Afficher le numéro de compte",
+    "hideAccountNumber": "Masquer le numéro de compte",
+    "show": "Afficher les informations du compte"
+  },
+  "page": {
+    "title": "Transactions",
+    "subtitle": "Gérez vos revenus et dépenses",
+    "newButton": "+ Nouvelle transaction",
+    "editModal": {
+      "editTitle": "Modifier la transaction",
+      "duplicateTitle": "Dupliquer la transaction",
+      "newTitle": "Nouvelle transaction",
+      "scheduleTitle": "Planifier comme récurrente",
+      "editPayeeTitle": "Modifier le bénéficiaire",
+      "editCategoryTitle": "Modifier la catégorie"
+    },
+    "loading": "Chargement des transactions...",
+    "totalCount": "{count, plural, one {# transaction} other {# transactions}}",
+    "bulkDelete": {
+      "title": "Supprimer les transactions",
+      "message": "Êtes-vous sûr de vouloir supprimer {count, plural, one {# transaction} other {# transactions}} ? Les virements liés seront également supprimés. Cette action est irréversible."
+    },
+    "toasts": {
+      "scheduledCreated": "Transaction récurrente créée",
+      "investmentLinked": "Cette transaction est liée à un investissement. Ouverture dans la page Investissements."
+    }
+  },
+  "list": {
+    "empty": {
+      "title": "Aucune transaction",
+      "body": "Commencez par créer une nouvelle transaction."
+    },
+    "header": {
+      "date": "Date",
+      "account": "Compte",
+      "payee": "Bénéficiaire",
+      "category": "Catégorie",
+      "description": "Description",
+      "refNumber": "Réf. #",
+      "tags": "Étiquettes",
+      "amount": "Montant",
+      "currency": "Devise",
+      "paidAmount": "Montant payé",
+      "feePaid": "Frais payés",
+      "balance": "Solde",
+      "attachments": "Pièces jointes",
+      "status": "Statut",
+      "actions": "Actions"
+    },
+    "dateDisplay": {
+      "toggleLabel": "Masquer l’année",
+      "toggleTitle": "Retirer l’année des dates pour laisser plus de place au bénéficiaire"
+    },
+    "attachmentsCount": "{count, plural, one {# pièce jointe} other {# pièces jointes}}",
+    "today": "Aujourd'hui",
+    "export": {
+      "button": "Exporter",
+      "exporting": "Exportation...",
+      "title": "Exporter les transactions vers CSV",
+      "success": "{count, plural, one {# transaction exportée} other {# transactions exportées}}",
+      "noData": "Aucune transaction à exporter",
+      "error": "Échec de l'exportation des transactions"
+    },
+    "delete": {
+      "transferTitle": "Supprimer le virement",
+      "transactionTitle": "Supprimer la transaction",
+      "transferMessage": "Êtes-vous sûr de vouloir supprimer ce virement ? Les deux transactions liées seront supprimées.",
+      "transactionMessage": "Êtes-vous sûr de vouloir supprimer cette transaction ? Cette action est irréversible.",
+      "success": "Transaction supprimée",
+      "transferSuccess": "Virement supprimé",
+      "error": "Échec de la suppression de la transaction",
+      "reconciledWarning": "Cette transaction est rapprochée ; la supprimer affectera donc un rapprochement terminé."
+    },
+    "status": {
+      "voidError": "Modifiez la transaction pour changer son statut depuis Annulé",
+      "changed": "Statut changé en {status}",
+      "changedLockedUndo": "Statut changé en {status}. Les transactions rapprochées sont verrouillées : appuyez de nouveau dans les {seconds} secondes pour annuler.",
+      "updateError": "Échec de la mise à jour du statut",
+      "unreconciled": "Non rapproché",
+      "cleared": "Encaissé",
+      "reconciled": "Rapproché",
+      "void": "Annulé",
+      "clearedDense": "E",
+      "reconciledDense": "R",
+      "voidDense": "A",
+      "pendingDense": "○",
+      "pending": "En attente",
+      "cycleTitle": "Cliquer pour changer le statut"
+    },
+    "row": {
+      "viewPayeeTitle": "Voir les détails de {name}",
+      "ref": "Réf. : {number}",
+      "investmentLabel": "Investissement",
+      "linkedInvestmentTitle": "Voir dans Investissements",
+      "filterByDate": "Filtrer par date « {date} »",
+      "filterByAccount": "Filtrer par « {name} »",
+      "filterByPayee": "Filtrer par « {name} »",
+      "filterByCategory": "Filtrer par {name}",
+      "filterByTag": "Filtrer par étiquette {name}",
+      "transfer": "Virement",
+      "transferTitle": "Virement {direction} {name}",
+      "split": "Répartition",
+      "uncategorized": "Non catégorisé",
+      "splitMore": "+{count} de plus",
+      "filteredAmountTitle": "Montant filtré (transaction complète : {amount})",
+      "viewButton": "Voir",
+      "editButton": "Modifier",
+      "deleteButton": "Supprimer"
+    },
+    "itemNamePlural": "transactions"
+  },
+  "row": {
+    "copyOptions": {
+      "title": "Options de copie",
+      "duplicateTitle": "Dupliquer la transaction",
+      "copy": "Copier",
+      "duplicate": "Dupliquer",
+      "scheduleRecurring": "Planifier comme récurrente"
+    }
+  },
+  "actionSheet": {
+    "defaultTitle": "Transaction",
+    "filterByDate": "Filtrer par date « {date} »",
+    "filterByAccount": "Filtrer par « {name} »",
+    "filterByPayee": "Filtrer par « {name} »",
+    "filterByCategory": "Filtrer par « {name} »",
+    "filterByTag": "Filtrer par étiquette « {name} »",
+    "edit": "Modifier",
+    "duplicate": "Dupliquer",
+    "scheduleRecurring": "Planifier comme récurrente",
+    "delete": "Supprimer"
+  },
+  "filter": {
+    "favourites": "Favoris :",
+    "panel": {
+      "title": "Filtres",
+      "clear": "Effacer",
+      "hide": "Masquer",
+      "show": "Afficher"
+    },
+    "accounts": {
+      "label": "Afficher les comptes :",
+      "all": "Tous",
+      "active": "Actifs",
+      "closed": "Fermés"
+    },
+    "fields": {
+      "accounts": "Comptes",
+      "payees": "Bénéficiaires",
+      "categories": "Catégories",
+      "tags": "Étiquettes",
+      "timePeriod": "Période",
+      "startDate": "Date de début",
+      "endDate": "Date de fin",
+      "amountFrom": "Montant depuis",
+      "amountTo": "Montant jusqu'à",
+      "status": "Statut",
+      "search": "Rechercher",
+      "tagKey": "Clé d'étiquette",
+      "tagKeyOp": "Condition",
+      "tagKeyValue": "Valeur",
+      "currency": "Devise",
+      "hasAttachments": "Pièces jointes"
+    },
+    "hasAttachmentsOptions": {
+      "any": "Tous",
+      "yes": "Oui",
+      "no": "Non"
+    },
+    "placeholders": {
+      "accounts": "Tous les comptes",
+      "payees": "Tous les bénéficiaires",
+      "categories": "Toutes les catégories",
+      "tags": "Toutes les étiquettes",
+      "statuses": "Tous les statuts",
+      "amountMin": "Min",
+      "amountMax": "Max",
+      "search": "Rechercher bénéficiaire, catégorie, montant, étiquette, description, référence #...",
+      "tagKeyValue": "p. ex. usa"
+    },
+    "tagKeyNone": "Toutes (aucun filtre de clé)",
+    "tagKeyOps": {
+      "hasValue": "A une valeur",
+      "noValue": "N'a pas de valeur",
+      "contains": "La valeur contient",
+      "notContains": "La valeur ne contient pas"
+    },
+    "chips": {
+      "removeAccount": "Supprimer le filtre {name}",
+      "removePayee": "Supprimer le filtre {name}",
+      "removeCategory": "Supprimer le filtre {name}",
+      "removeTag": "Supprimer le filtre {name}",
+      "removeDate": "Supprimer le filtre de date",
+      "removeAmount": "Supprimer le filtre de montant",
+      "removeSearch": "Supprimer le filtre de recherche",
+      "dateFrom": "Depuis {date}",
+      "dateUntil": "Jusqu'au {date}",
+      "amountFrom": "Depuis {amount}",
+      "amountUpTo": "Jusqu'à {amount}",
+      "removeCurrency": "Retirer le filtre de devise {name}",
+      "hasAttachments": "Avec pièces jointes",
+      "noAttachments": "Sans pièces jointes",
+      "removeAttachments": "Retirer le filtre de pièces jointes"
+    },
+    "bulkUpdate": "Mise à jour groupée",
+    "cancelBulk": "Annuler la sélection",
+    "statusLabels": {
+      "unreconciled": "Non rapproché",
+      "cleared": "Encaissé",
+      "reconciled": "Rapproché",
+      "void": "Annulé"
+    },
+    "periods": {
+      "select": "Sélectionner une période...",
+      "allDates": "Toutes les dates",
+      "today": "Aujourd'hui",
+      "yesterday": "Hier",
+      "thisWeek": "Cette semaine",
+      "lastWeek": "Semaine dernière",
+      "last30Days": "30 derniers jours",
+      "monthToDate": "Mois en cours",
+      "lastMonth": "Mois dernier",
+      "last365Days": "365 derniers jours",
+      "yearToDate": "Année en cours",
+      "lastYear": "Année dernière",
+      "custom": "Personnalisé"
+    }
+  },
+  "bulk": {
+    "banner": {
+      "selected": "{count, plural, one {# transaction sélectionnée} other {# transactions sélectionnées}}",
+      "selectAllMatching": "Sélectionner les {count} transactions correspondantes",
+      "allMatching": "(toutes les transactions correspondantes)",
+      "clearSelection": "Effacer la sélection",
+      "bulkUpdate": "Mise à jour groupée"
+    },
+    "modal": {
+      "title": "Mise à jour groupée des transactions",
+      "subtitle": "Mettre à jour {count, plural, one {# transaction sélectionnée} other {# transactions sélectionnées}}. Activez les champs à modifier.",
+      "submitLabel": "Mettre à jour {count, plural, one {# transaction} other {# transactions}}",
+      "payee": "Bénéficiaire",
+      "category": "Catégorie",
+      "description": "Description",
+      "status": "Statut",
+      "tags": "Étiquettes",
+      "payeePlaceholder": "Sélectionner ou saisir le nom du bénéficiaire...",
+      "categoryPlaceholder": "Sélectionner une catégorie...",
+      "descriptionPlaceholder": "Saisir une description (laisser vide pour effacer)",
+      "tagsPlaceholder": "Sélectionner des étiquettes (laisser vide pour tout effacer)...",
+      "statusOptions": {
+        "pending": "En attente",
+        "cleared": "Encaissé",
+        "void": "Annulé"
+      },
+      "notes": {
+        "transfer": "Les transactions de virement auront également leur contrepartie liée mise à jour.",
+        "split": "Transactions réparties : la nouvelle catégorie est appliquée à leurs répartitions (uniquement celles correspondant à votre filtre de catégorie lorsqu'il est actif). Les répartitions de virement et d'investissement restent inchangées."
+      }
+    },
+    "toasts": {
+      "updated": "{count, plural, one {# transaction mise à jour} other {# transactions mises à jour}}",
+      "skipped": "{count, plural, one {# transaction ignorée} other {# transactions ignorées}}",
+      "splitLines": "{count, plural, one {# répartition recatégorisée} other {# répartitions recatégorisées}}"
+    }
+  },
+  "form": {
+    "modeTransaction": "Transaction",
+    "modeSplit": "Répartition",
+    "modeTransfer": "Virement",
+    "transferBadge": "Virement",
+    "isLinkedTransfer": "Ceci est une transaction de virement liée",
+    "fields": {
+      "account": "Compte",
+      "date": "Date",
+      "createDate": "Date de création",
+      "payee": "Bénéficiaire",
+      "category": "Catégorie",
+      "amount": "Montant",
+      "totalAmount": "Montant total",
+      "referenceNumber": "Numéro de référence",
+      "description": "Description",
+      "status": "Statut",
+      "tags": "Étiquettes",
+      "fromAccount": "Compte source",
+      "toAccount": "Compte destination",
+      "transferAmount": "Montant du virement",
+      "transferAmountWithCurrency": "Montant du virement ({currency})",
+      "amountReceived": "Montant reçu ({currency})",
+      "payeeOptional": "Bénéficiaire (facultatif)",
+      "categoryOptional": "Catégorie (facultatif)"
+    },
+    "placeholders": {
+      "selectAccount": "Sélectionner un compte...",
+      "selectDestinationAccount": "Sélectionner le compte destination...",
+      "selectOrTypePayee": "Sélectionner ou saisir le nom du bénéficiaire...",
+      "selectOrCreateCategory": "Sélectionner ou créer une catégorie...",
+      "referenceNumber": "N° chèque, N° confirmation...",
+      "optionalDescription": "Description facultative...",
+      "selectTags": "Sélectionner des étiquettes...",
+      "createNewTag": "Créer une nouvelle étiquette..."
+    },
+    "splitSection": {
+      "title": "Répartir la transaction",
+      "cancelSplit": "Annuler la répartition"
+    },
+    "statusOptions": {
+      "unreconciled": "Non rapproché",
+      "cleared": "Encaissé",
+      "reconciled": "Rapproché",
+      "void": "Annulé"
+    },
+    "submitCreate": "Créer {mode}",
+    "submitCreateAndNew": "Créer {mode} et continuer",
+    "submitCreateDescription": "Enregistrer et fermer cette fenêtre.",
+    "submitCreateAndNewDescription": "Enregistrer et en saisir une autre, avec le même compte et la même date.",
+    "submitOptions": "Choisir ce qui se passe après la création",
+    "submitUpdate": "Mettre à jour {mode}",
+    "reconciledConfirm": {
+      "title": "Modifier une transaction rapprochée ?",
+      "message": "Cette transaction est rapprochée. La modifier affectera un rapprochement terminé. Voulez-vous quand même enregistrer vos modifications ?",
+      "confirm": "Enregistrer les modifications"
+    },
+    "modeLabel": {
+      "transfer": "Virement",
+      "transaction": "Transaction"
+    },
+    "transferAmountNote": "Le montant doit être positif pour les virements",
+    "transferCandidates": {
+      "sharedWithYou": "Partagés avec vous",
+      "yourAccounts": "Vos comptes",
+      "optionLabel": "{name} ({currency}) — {owner}"
+    },
+    "crossOwnerLockedNote": "L'autre côté de ce virement se trouve dans un compte qui n'est plus partagé avec vous. Son montant, sa date et ses comptes sont verrouillés, mais vous pouvez toujours modifier les détails de cette transaction.",
+    "transferCategoryNote": "Facultatif. Le transfert ne comptera toujours pas comme un revenu ni une dépense, mais cette catégorie lui permet d'apparaître dans la répartition mensuelle par catégorie (par exemple des versements d'investissement mensuels).",
+    "amountReceivedNote": "Montant reçu après conversion de devise",
+    "splitTransaction": "Répartir la transaction",
+    "splitDisabledDuringTour": "Indisponible pendant la visite guidée",
+    "newTagTitle": "Nouvelle étiquette",
+    "toasts": {
+      "transferCreated": "Virement créé",
+      "transferUpdated": "Virement mis à jour",
+      "transactionCreated": "Transaction créée",
+      "transactionUpdated": "Transaction mise à jour",
+      "attachmentsUploadFailed": "Transaction enregistrée, mais le téléversement de {count} pièce(s) jointe(s) a échoué",
+      "saveFailed": "Échec de l'enregistrement de la transaction",
+      "loadFailed": "Échec du chargement des données du formulaire",
+      "splitsNotEqual": "Le total des répartitions ({splitTotal}) doit être égal au montant de la transaction ({txAmount})",
+      "destinationRequired": "Veuillez sélectionner un compte destination",
+      "sameAccount": "Les comptes source et destination doivent être différents",
+      "negativeTransfer": "Le montant du virement ne doit pas être négatif",
+      "payeeCreated": "Bénéficiaire « {name} » créé",
+      "payeeCreateFailed": "Échec de la création du bénéficiaire",
+      "payeeReactivated": "Bénéficiaire « {name} » réactivé",
+      "payeeReactivateFailed": "Échec de la réactivation du bénéficiaire",
+      "categoryCreated": "Catégorie « {name} » créée",
+      "categoryCreateFailed": "Échec de la création de la catégorie",
+      "tagCreated": "Étiquette « {name} » créée",
+      "fxRateRequired": "Saisissez un taux de change ou le montant converti avant d'enregistrer une transaction en devise étrangère.",
+      "jointPayeeCreateNotGranted": "Le propriétaire du compte ne vous a pas autorisé à créer des bénéficiaires. Choisissez plutôt un de ses bénéficiaires existants."
+    },
+    "ariaHistory": "Afficher les transactions récentes",
+    "ariaHistoryForPayee": "Afficher les transactions récentes pour ce bénéficiaire",
+    "historyTitle": "Remplissage rapide depuis une transaction récente",
+    "currencyPicker": {
+      "label": "Devise de saisie",
+      "ariaLabel": "Changer la devise de saisie",
+      "title": "Saisir le montant en",
+      "accountCurrency": "Devise du compte ({code})",
+      "addCurrency": "Ajouter une devise...",
+      "optionLabel": "{symbol} - {name} ({code})",
+      "createFailed": "Échec de l'ajout de la devise",
+      "reactivated": "{code} réactivée"
+    },
+    "fx": {
+      "totalInCurrency": "Total en {currency}",
+      "rateCaption": "1 {from} = {rate} {to} ({date})",
+      "noRateWarning": "Aucun taux de change trouvé de {from} vers {to} le {date}. Saisissez le montant converti manuellement.",
+      "usingLatestRateHint": "Utilisation du dernier taux disponible (non daté du {date}).",
+      "displayToggle": {
+        "account": "Compte",
+        "original": "Original"
+      },
+      "feeCaption": "Comprend des frais de transaction à l'étranger de {percent}% ({fee})."
+    },
+    "jointSplitDisabled": "Seul le propriétaire peut gérer les transactions ventilées d'un compte partagé"
+  },
+  "splitEditor": {
+    "header": "Détails de la répartition",
+    "distributeProportionally": "Répartir proportionnellement",
+    "distributeProportionallyTitle": "Répartir le montant restant proportionnellement selon le montant de chaque répartition",
+    "distributeEvenly": "Répartir équitablement",
+    "addSplit": "Ajouter une répartition",
+    "removeMinimum": "Minimum 2 répartitions requises",
+    "removeSplit": "Supprimer la répartition",
+    "removeAndConvert": "Supprimer la ventilation et convertir en transaction normale",
+    "convertConfirm": {
+      "title": "Convertir en transaction normale ?",
+      "message": "La suppression de cette ventilation reconvertira l'élément en transaction normale en utilisant la catégorie de la ventilation restante.",
+      "confirm": "Convertir"
+    },
+    "noUnassigned": "Aucun montant non affecté",
+    "addRemaining": "Ajouter le reste à cette répartition",
+    "total": "Total",
+    "balanced": "Équilibré",
+    "remaining": "Restant : {symbol}{amount}",
+    "needAmount": "Besoin de {symbol}{amount} (restant : {symbol}{remaining})",
+    "setTotal": "Définir le total à {symbol}{amount}",
+    "currencyToggle": {
+      "title": "Changer la devise dans laquelle les montants ventilés sont affichés et modifiés",
+      "ariaAmountsIn": "Afficher et modifier les montants ventilés en {code}"
+    },
+    "splitLabel": "Répartition {number}",
+    "columns": {
+      "type": "Type",
+      "categoryAccount": "Catégorie / Compte",
+      "category": "Catégorie",
+      "amount": "Montant",
+      "memo": "Note",
+      "tags": "Étiquettes"
+    },
+    "splitTypes": {
+      "category": "Catégorie",
+      "transfer": "Virement",
+      "investment": "Investissement"
+    },
+    "selectCategory": "Sélectionner une catégorie...",
+    "selectAccount": "Sélectionner un compte...",
+    "memoPlaceholder": "Note facultative",
+    "mobileMemoPlaceholder": "Note",
+    "tagsPlaceholder": "Étiquettes..."
+  },
+  "recentPopover": {
+    "recentForPayee": "Récent pour {name}",
+    "recentTransactions": "Transactions récentes",
+    "loading": "Chargement...",
+    "noRecent": "Aucune transaction récente.",
+    "noRecentForPayee": "Aucune transaction récente pour ce bénéficiaire.",
+    "noPayee": "(sans bénéficiaire)",
+    "uncategorized": "(non catégorisé)"
+  },
+  "investmentSplit": {
+    "ariaAction": "Action d'investissement",
+    "ariaSecurity": "Titre",
+    "selectSecurity": "Sélectionner un titre...",
+    "quantityPlaceholder": "Quantité",
+    "pricePlaceholder": "Prix",
+    "commissionPlaceholder": "Commission",
+    "amountPlaceholder": "Montant ({currency})",
+    "ratePlaceholder": "{to} pour 1 {from}",
+    "ariaRate": "Taux de change ({to} pour 1 {from})",
+    "rateHint": "La quantité, le prix et la commission sont en {from} ; ce taux convertit l'impact de trésorerie en {to}.",
+    "rateUnresolved": "Aucun taux de {from} vers {to} n'est disponible. Saisissez-en un — sans lui, l'impact de trésorerie ne peut pas être calculé, et les deux devises ne sont pas égales."
+  },
+  "charts": {
+    "balanceHistory": {
+      "title": "Historique du solde",
+      "noData": "Aucune donnée de solde disponible",
+      "starting": "Départ",
+      "current": "Actuel",
+      "ending": "Final",
+      "lowest": "Minimum",
+      "minBalance": "Solde minimal",
+      "projected": "Projeté",
+      "range": "{start} – {end}"
+    },
+    "zeroBalances": {
+      "message": "Tous les comptes sélectionnés ont un solde nul ; il n'y a donc aucun graphique de solde à afficher."
+    },
+    "monthlyTotals": {
+      "title": "Totaux mensuels",
+      "noData": "Aucune donnée de transaction disponible",
+      "monthlyAvg": "Moy. mensuelle",
+      "quarterlyAvg": "Moy. trimestrielle",
+      "yearlyAvg": "Moy. annuelle",
+      "total": "Total",
+      "transactions": "Transactions",
+      "tooltip": "{count, plural, one {# transaction} other {# transactions}}",
+      "quarterLabel": "T{quarter} {year}",
+      "quarterTick": "T{quarter} {year}",
+      "granularityLabel": "Regroupement",
+      "granularity": {
+        "auto": "Auto",
+        "month": "Mois",
+        "quarter": "Trimestre",
+        "year": "Année"
+      },
+      "granularityAutoTitle": "Auto ({granularity})",
+      "granularityTitle": "Vue par {label}"
+    },
+    "accountBalances": {
+      "title": "Soldes des comptes",
+      "noData": "Aucune donnée de solde de compte disponible",
+      "average": "Moyenne",
+      "total": "Total",
+      "accounts": "Comptes",
+      "scaleLabel": "Échelle de l'axe Y",
+      "auto": "Auto",
+      "linear": "Linéaire",
+      "log": "Log",
+      "autoTitle": "Auto ({scale})",
+      "scaleTitle": "Échelle {label}"
+    }
+  },
+  "toasts": {
+    "payeeUpdated": "Bénéficiaire mis à jour",
+    "deleted": "{count, plural, one {# transaction supprimée} other {# transactions supprimées}}",
+    "noneToExport": "Aucune transaction à exporter",
+    "exported": "{count, plural, one {# transaction exportée} other {# transactions exportées}}",
+    "loadFormDataFailed": "Échec du chargement des données du formulaire",
+    "loadFailed": "Échec du chargement des transactions",
+    "loadPayeeFailed": "Échec du chargement des détails du bénéficiaire",
+    "payeeUpdateFailed": "Échec de la mise à jour du bénéficiaire",
+    "categoryUpdated": "Catégorie mise à jour",
+    "categoryUpdateFailed": "Échec de la mise à jour de la catégorie",
+    "exportFailed": "Échec de l'exportation des transactions"
+  },
+  "validation": {
+    "dateRequired": "La date est obligatoire"
+  },
+  "tagKeyBreakdown": {
+    "title": "Dépenses par {key}",
+    "other": "Autres",
+    "noData": "Aucune dépense étiquetée à répartir pour cette clé."
+  }
+}

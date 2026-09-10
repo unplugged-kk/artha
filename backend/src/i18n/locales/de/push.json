@@ -1,0 +1,35 @@
+{
+  "test": {
+    "title": "Monize-Testbenachrichtigung",
+    "body": "Push-Benachrichtigungen funktionieren auf diesem Gerät."
+  },
+  "notification": {
+    "payments": {
+      "title": "Zahlungserinnerung",
+      "body": "Eine Rechnung oder geplante Zahlung braucht Ihre Aufmerksamkeit. Öffnen Sie Monize für die Details."
+    },
+    "budgets": {
+      "title": "Budgetwarnung",
+      "body": "Eines Ihrer Budgets braucht Ihre Aufmerksamkeit. Öffnen Sie Monize für die Details."
+    },
+    "system": {
+      "title": "Systemhinweis",
+      "body": "Monize hat einen Systemhinweis für Sie. Öffnen Sie die App für die Details."
+    },
+    "balances": {
+      "title": "Kontostandwarnung",
+      "body": "Ein Kontostand hat einen von Ihnen festgelegten Schwellenwert überschritten. Öffnen Sie Monize für die Details."
+    },
+    "investments": {
+      "title": "Anlagebewegung",
+      "body": "Ihre Anlagen haben sich heute bewegt. Öffnen Sie Monize für die Details."
+    },
+    "strategies": {
+      "title": "Strategiesignal",
+      "body": "Eine Ihrer Strategien hat ihre Empfehlung geändert. Öffnen Sie Monize für die Details."
+    }
+  },
+  "actions": {
+    "stopReminder": "Erinnerungen stoppen"
+  }
+}

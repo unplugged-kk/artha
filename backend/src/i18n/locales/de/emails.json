@@ -1,0 +1,294 @@
+{
+  "test": {
+    "subject": "Monize Test-E-Mail",
+    "heading": "Monize Test-E-Mail",
+    "greeting": "Hallo {{ name }},",
+    "body": "Dies ist eine Test-E-Mail von Monize. Wenn Sie diese erhalten haben, funktionieren Ihre E-Mail-Benachrichtigungen korrekt."
+  },
+  "billReminder": {
+    "subjectOne": "Monize: 1 anstehende Rechnung erfordert Ihre Aufmerksamkeit",
+    "subjectMany": "Monize: {{ count }} anstehende Rechnungen erfordern Ihre Aufmerksamkeit",
+    "heading": "Erinnerung an anstehende Rechnung",
+    "greeting": "Hallo {{ name }},",
+    "introOne": "Sie haben 1 anstehende Rechnung, die Ihre Aufmerksamkeit erfordert:",
+    "introMany": "Sie haben {{ count }} anstehende Rechnungen, die Ihre Aufmerksamkeit erfordern:",
+    "colPayee": "Zahlungsempfänger",
+    "colDueDate": "Fälligkeitsdatum",
+    "colType": "Typ",
+    "colAmount": "Betrag",
+    "typeIncome": "Einnahme",
+    "typeExpense": "Ausgabe",
+    "typeUnknown": "Richtung unbekannt",
+    "amountUnavailable": "Betrag nicht verfügbar",
+    "button": "Rechnungen &amp; Einzahlungen anzeigen"
+  },
+  "mortgageReminder": {
+    "subject": "Monize: 1 bevorstehende Hypothekenverlängerung",
+    "subjectPlural": "Monize: {{ count }} bevorstehende Hypothekenverlängerungen",
+    "heading": "Erinnerung an Hypothekenverlängerung",
+    "greeting": "Hallo {{ name }},",
+    "introOne": "Sie haben 1 Hypothek mit einer bevorstehenden Laufzeitverlängerung. Kontaktieren Sie Ihren Kreditgeber, um Verlängerungsoptionen zu besprechen, bevor die Laufzeit endet:",
+    "introMany": "Sie haben {{ count }} Hypotheken mit bevorstehenden Laufzeitverlängerungen. Kontaktieren Sie Ihren Kreditgeber, um Verlängerungsoptionen zu besprechen, bevor die Laufzeit endet:",
+    "colMortgage": "Hypothek",
+    "colTermEndDate": "Laufzeitende",
+    "colTimeRemaining": "Verbleibende Zeit",
+    "daysRemainingOne": "1 Tag",
+    "daysRemainingMany": "{{ count }} Tage",
+    "button": "Konten anzeigen"
+  },
+  "severity": {
+    "critical": "Kritisch",
+    "warning": "Warnung",
+    "success": "Gute Nachrichten",
+    "info": "Info"
+  },
+  "budgetAlertImmediate": {
+    "subject": "Monize: Alarm – {{ title }}",
+    "subjectPlural": "Monize: {{ count }} Alarme erfordern Ihre Aufmerksamkeit",
+    "heading": "Alarm",
+    "greeting": "Hallo {{ name }},",
+    "intro": "Ihr Budget erfordert Ihre Aufmerksamkeit:",
+    "colSeverity": "Schweregrad",
+    "colAlert": "Alarm",
+    "colDetails": "Details",
+    "button": "Budget anzeigen"
+  },
+  "budgetWeeklyDigest": {
+    "subject": "Monize: Ihre wöchentliche Budget-Zusammenfassung",
+    "heading": "Wöchentliche Budget-Zusammenfassung",
+    "greeting": "Hallo {{ name }},",
+    "intro": "Hier ist Ihre wöchentliche Budget-Zusammenfassung für: <strong>{{ budgets }}</strong>",
+    "criticalOne": "kritisch",
+    "criticalMany": "kritisch",
+    "warningOne": "Warnung",
+    "warningMany": "Warnungen",
+    "positiveOne": "positiv",
+    "positiveMany": "positiv",
+    "thisWeek": "Diese Woche:",
+    "noAlerts": "Keine Alarme",
+    "totalAlerts": "Alarme gesamt: {{ count }}",
+    "topAlertsHeading": "Top-Alarme",
+    "andMore": "...und {{ count }} weitere",
+    "button": "Budget-Dashboard anzeigen"
+  },
+  "budgetMonthlySummary": {
+    "subject": "Monize: Monatliche Budget-Zusammenfassung – {{ period }}",
+    "subjectPlural": "Monize: Monatliche Budget-Zusammenfassung für {{ count }} Budgets",
+    "heading": "Monatliche Budget-Zusammenfassung",
+    "greeting": "Hallo {{ name }},",
+    "intro": "Hier ist Ihre monatliche Budget-Zusammenfassung für den gerade abgeschlossenen Zeitraum:",
+    "overBudget": "Über Budget",
+    "healthScore": "Gesundheitswert:",
+    "labelBudgeted": "Budgetiert",
+    "labelSpent": "Ausgegeben",
+    "labelRemaining": "Verbleibend",
+    "percentUsed": "{{ percent }}% verwendet",
+    "topCategories": "Top-Kategorien",
+    "button": "Budget-Dashboard anzeigen"
+  },
+  "oidcLink": {
+    "subject": "Monize: SSO-Kontoverknüpfung bestätigen",
+    "heading": "Ihr SSO-Konto verknüpfen",
+    "greeting": "Hallo {{ name }},",
+    "intro": "Jemand hat versucht, sich über SSO mit einer E-Mail-Adresse anzumelden, die mit Ihrem bestehenden Monize-Konto übereinstimmt. Um Ihre SSO-Identität mit diesem Konto zu verknüpfen, klicken Sie auf die Schaltfläche unten:",
+    "button": "Kontoverknüpfung bestätigen",
+    "disclaimer": "Wenn Sie diese Anfrage nicht initiiert haben, können Sie diese E-Mail ignorieren. Der Link läuft in 1 Stunde ab."
+  },
+  "accountLocked": {
+    "subject": "Konto vorübergehend gesperrt",
+    "heading": "Konto vorübergehend gesperrt",
+    "greeting": "Hallo {{ name }},",
+    "body1": "Ihr Monize-Konto wurde aufgrund mehrerer fehlgeschlagener Anmeldeversuche vorübergehend gesperrt. Dies ist eine Sicherheitsmaßnahme zum Schutz Ihres Kontos.",
+    "body2": "Die Sperre läuft automatisch ab. Wenn Sie nicht versucht haben, sich anzumelden, empfehlen wir Ihnen, Ihr Passwort sofort zurückzusetzen."
+  },
+  "passwordReset": {
+    "subject": "Monize Passwort zurücksetzen",
+    "heading": "Anfrage zum Zurücksetzen des Passworts",
+    "greeting": "Hallo {{ name }},",
+    "intro": "Wir haben eine Anfrage erhalten, Ihr Passwort zurückzusetzen. Klicken Sie auf die Schaltfläche unten, um ein neues Passwort festzulegen:",
+    "button": "Passwort zurücksetzen",
+    "disclaimer": "Dieser Link läuft in 1 Stunde ab. Wenn Sie keine Passwortrücksetzung angefordert haben, können Sie diese E-Mail ignorieren."
+  },
+  "emailVerification": {
+    "subject": "Bestätigen Sie Ihre Monize-E-Mail-Adresse",
+    "heading": "Bestätigen Sie Ihre E-Mail-Adresse",
+    "greeting": "Hallo {{ name }},",
+    "intro": "Danke, dass Sie sich für Monize registriert haben. Bitte bestätigen Sie Ihre E-Mail-Adresse, um Ihr Konto zu aktivieren und sich anzumelden:",
+    "button": "E-Mail bestätigen",
+    "disclaimer": "Dieser Link läuft in 24 Stunden ab. Wenn Sie kein Monize-Konto erstellt haben, können Sie diese E-Mail ignorieren."
+  },
+  "accountInvite": {
+    "subject": "Ihr Monize-Konto ist bereit",
+    "heading": "Ihr Monize-Konto ist bereit",
+    "greeting": "Hallo {{ name }},",
+    "intro": "Ein Administrator hat ein Monize-Konto für Sie erstellt. Klicken Sie auf die Schaltfläche unten, um Ihr Passwort festzulegen und sich anzumelden:",
+    "button": "Ihr Passwort festlegen",
+    "disclaimer": "Dieser Link läuft in 24 Stunden ab. Wenn Sie dies nicht erwartet haben, können Sie diese E-Mail ignorieren."
+  },
+  "delegateInvite": {
+    "subject": "Sie wurden zu Monize eingeladen",
+    "heading": "Sie wurden zu Monize eingeladen",
+    "greeting": "Hallo {{ name }},",
+    "intro": "{{ owner }} hat Sie eingeladen, als Delegierter auf das Monize-Konto zuzugreifen. Klicken Sie auf die Schaltfläche unten, um Ihr Passwort festzulegen und zu beginnen:",
+    "button": "Ihr Passwort festlegen",
+    "disclaimer": "Dieser Link läuft in 24 Stunden ab. Wenn Sie diese Einladung nicht erwartet haben, können Sie diese E-Mail ignorieren."
+  },
+  "emergencyAccessReminder": {
+    "subjectOne": "Monize: Ihr Konto war 1 Tag lang inaktiv",
+    "subjectMany": "Monize: Ihr Konto war {{ daysSinceLogin }} Tage lang inaktiv",
+    "heading": "Monize Erinnerung an Notfallzugriff",
+    "greeting": "Hallo {{ name }},",
+    "grantPhraseToday": "heute",
+    "grantPhraseFutureOne": "in 1 Tag",
+    "grantPhraseFutureMany": "in {{ count }} Tagen",
+    "bodyOne": "Sie haben sich seit <strong>1 Tag</strong> nicht bei Monize angemeldet. Wenn Sie inaktiv bleiben, erhalten Ihre designierten Notfallkontakte {{ grantPhrase }} vollen Zugriff auf Ihr Konto.",
+    "bodyMany": "Sie haben sich seit <strong>{{ daysSinceLogin }} Tagen</strong> nicht bei Monize angemeldet. Wenn Sie inaktiv bleiben, erhalten Ihre designierten Notfallkontakte {{ grantPhrase }} vollen Zugriff auf Ihr Konto.",
+    "contactsLabel": "Designierte Kontakte:",
+    "button": "Jetzt anmelden",
+    "footer": "Die Anmeldung setzt den Timer zurück. Wenn Sie diese Funktion nicht mehr aktiviert haben möchten, können Sie sie unter Einstellungen → Notfallzugriff deaktivieren."
+  },
+  "emergencyAccessGrant": {
+    "subject": "Sie haben Notfallzugriff auf das Monize-Konto von {{ owner }} erhalten",
+    "heading": "Notfallzugriff gewährt",
+    "greeting": "Hallo {{ name }},",
+    "body": "<strong>{{ owner }}</strong> hat Sie zuvor als Notfallkontakt in seinem Monize-Konto eingetragen. Da er sich über einen längeren Zeitraum nicht angemeldet hat, erhalten Sie nun vollen Zugriff, um das Konto zu übernehmen.",
+    "claimIntro": "Um den Zugriff zu beanspruchen, klicken Sie auf den Link unten und legen Sie ein neues Passwort fest. Sie werden als Kontoinhaber angemeldet.",
+    "button": "Notfallzugriff beanspruchen",
+    "expiry": "Dieser Link ist gültig bis <strong>{{ expiry }}</strong> und kann nur einmal verwendet werden. Wenn mehrere Kontakte diese E-Mail erhalten haben, übernimmt derjenige das Konto, der zuerst den Zugriff beansprucht."
+  },
+  "emergencyAccessGrantRevoked": {
+    "subject": "Monize: Notfallzugriff wurde während Ihrer Abwesenheit gewährt",
+    "heading": "Notfallzugriff wurde während Ihrer Abwesenheit gewährt",
+    "greeting": "Hallo {{ name }},",
+    "body1": "Da Ihr Konto inaktiv war, wurden Ihren designierten Notfallkontakten Links zur Übernahme Ihres Kontos zugeschickt. Da Sie sich nun wieder angemeldet haben, <strong>wurden diese Links widerrufen</strong> und die Schutzfunktion wurde neu aktiviert.",
+    "body2": "Wenn dies erwartet war, sind keine weiteren Maßnahmen erforderlich. Wenn Sie dies nicht erwartet haben, überprüfen Sie Ihre Anmeldeaktivität und Ihre Notfallzugriffseinstellungen.",
+    "button": "Notfallzugriff überprüfen"
+  },
+  "providerOutage": {
+    "subject": "Monize: {{ provider }} antwortet nicht",
+    "heading": "Marktdatenanbieter nicht erreichbar",
+    "greeting": "Hallo {{ name }},",
+    "intro": "Monize kann <strong>{{ provider }}</strong> seit {{ since }} ({{ duration }}) nicht erreichen. Anfragen an den Anbieter sind vorerst ausgesetzt und werden in immer größeren Abständen wiederholt.",
+    "labelFailures": "Fehlgeschlagene Versuche",
+    "labelLastError": "Letzter Fehler",
+    "labelLastSuccess": "Letzte erfolgreiche Antwort",
+    "valueNever": "nie",
+    "valueUnknown": "unbekannt",
+    "impact": "Kurse, Diagramme und Indexvergleiche, die von diesem Anbieter abhängen, können bis zur Wiederherstellung fehlen oder veraltet sein. In Monize erfasste Daten sind nicht verloren.",
+    "whatToCheck": "Wenn der Anbieter selbst erreichbar ist, prüfen Sie den ausgehenden Netzwerkzugang und das DNS dieses Servers -- ein Container, der den Anbieter nicht auflösen oder erreichen kann, fällt genau so aus.",
+    "throttleNote": "Sie erhalten eine weitere E-Mail, sobald der Anbieter wieder antwortet. Warnungen zum selben Anbieter werden höchstens einmal alle {{ hours }} Stunden verschickt, damit ein instabiler Anbieter Ihr Postfach nicht füllen kann.",
+    "durationMinutes": "{{ minutes }} Min.",
+    "durationHoursMinutes": "{{ hours }} Std. {{ minutes }} Min."
+  },
+  "providerRecovery": {
+    "subject": "Monize: {{ provider }} antwortet wieder",
+    "heading": "Marktdatenanbieter antwortet wieder",
+    "greeting": "Hallo {{ name }},",
+    "intro": "<strong>{{ provider }}</strong> hat um {{ restoredAt }} wieder geantwortet. Die Störung dauerte {{ duration }}.",
+    "backfill": "Kurse und Indexverläufe, die während der Störung fehlten, werden bei der nächsten geplanten Aktualisierung nachgeholt; es ist nichts zu tun."
+  },
+  "systemAlert": {
+    "subject": "Monize: {{ title }}",
+    "heading": "Systemwarnung",
+    "greeting": "Hallo {{ name }},",
+    "intro": "Ein Problem in Ihrer Monize-Installation erfordert die Aufmerksamkeit eines Administrators.",
+    "footer": "Diese Warnung wird auch in der Benachrichtigungsglocke der App angezeigt. Sie wird höchstens einmal pro Vorfall ausgelöst, unabhängig von der Anzahl der Server-Replikate."
+  },
+  "notificationImmediate": {
+    "subject": "Sie haben eine neue Monize-Benachrichtigung",
+    "eyebrow": "Monize-Benachrichtigung",
+    "button": "In Monize öffnen",
+    "footer": "Sie erhalten dies, weil die Sofort-E-Mail für diesen Benachrichtigungstyp aktiviert ist. Ändern Sie das unter Einstellungen, Benachrichtigungen."
+  },
+  "notificationCopy": {
+    "billDue": {
+      "titleOverdue": "{{ payee }} überfällig",
+      "titleToday": "{{ payee }} heute fällig",
+      "titleTomorrow": "{{ payee }} morgen fällig",
+      "titleInDays": "{{ payee }} fällig in {{ days }} Tagen",
+      "amountDue": "{{ amount }} fällig am {{ date }}",
+      "amountUnavailable": "Betrag nicht verfügbar (kein aktueller Wechselkurs), fällig am {{ date }}"
+    },
+    "gemSignal": {
+      "riskTitle": "{{ strategy }} auf {{ state }} umgestellt",
+      "riskMessage": "Ihre GEM-Strategie \"{{ strategy }}\" ist von {{ fromState }} auf {{ toState }} gewechselt. Öffnen Sie, um die Empfehlung zu prüfen.",
+      "allocationTitle": "{{ strategy }} hat das Ziel geändert",
+      "allocationMessage": "Ihre GEM-Strategie \"{{ strategy }}\" zielt jetzt auf {{ target }}. Öffnen Sie, um die Empfehlung zu prüfen.",
+      "riskOn": "risk-on",
+      "riskOff": "risk-off",
+      "roles": {
+        "US_EQUITY": "S&P 500",
+        "EX_US_EQUITY": "Entwickelte Märkte ohne USA",
+        "EM_EQUITY": "Schwellenmärkte",
+        "SAFE": "Sicheres Anlagegut",
+        "RISK_FREE": "Risikofreier Vergleichsmaßstab"
+      },
+      "allocationMessageUnknown": "Deine GEM-Strategie „{{ strategy }}“ hat ihr Ziel geändert. Öffne sie, um die Empfehlung zu prüfen."
+    },
+    "portfolioMovement": {
+      "titleUp": "Anlagen {{ percent }}% im Plus",
+      "titleDown": "Anlagen {{ percent }}% im Minus",
+      "messageUp": "Ihre Anlagen liegen heute {{ percent }}% im Plus, ohne Ein- und Auszahlungen. Öffnen Sie zur Prüfung.",
+      "messageDown": "Ihre Anlagen liegen heute {{ percent }}% im Minus, ohne Ein- und Auszahlungen. Öffnen Sie zur Prüfung."
+    },
+    "balanceThreshold": {
+      "titleLow": "{{ account }} liegt unter Ihrem Schwellenwert",
+      "titleHigh": "{{ account }} liegt über Ihrem Schwellenwert",
+      "messageLow": "{{ account }} ist auf {{ balance }} gefallen, unter Ihren Schwellenwert von {{ threshold }}.",
+      "messageHigh": "{{ account }} ist auf {{ balance }} gestiegen, über Ihren Schwellenwert von {{ threshold }}."
+    },
+    "system": {
+      "backupFailed": {
+        "title": "Automatisches Backup fehlgeschlagen",
+        "message": "Das automatische Backup für {{ user }} ist fehlgeschlagen: {{ error }}"
+      },
+      "backupPartial": {
+        "title": "Automatisches Backup unvollständig",
+        "messageAttachments": "Das Backup für {{ user }} wurde geschrieben, aber {{ missing }} von {{ expected }} Anhängen konnten nicht aufgenommen werden und {{ inconsistent }} stimmten nicht mit ihren Metadaten überein. Vollständige Backups wurden bewahrt.",
+        "messagePromotion": "Das tägliche Backup für {{ user }} war erfolgreich, aber die wöchentliche oder monatliche Kopie konnte nicht geschrieben werden: {{ error }}",
+        "messageRetention": "Das Backup für {{ user }} war erfolgreich, aber alte Backup-Dateien konnten nicht aufgeräumt werden: {{ error }}"
+      },
+      "encryptionKeyMissing": {
+        "title": "Verschlüsselungsschlüssel nicht konfiguriert",
+        "message": "ENCRYPTION_KEY ist nicht gesetzt, daher werden Backups unverschlüsselt geschrieben und Geheimnisse können nicht gespeichert werden. Eine zukünftige Version wird ohne den Schlüssel nicht mehr starten."
+      },
+      "smtpFailure": {
+        "title": "E-Mail-Zustellung schlägt fehl",
+        "message": "Monize konnte keine E-Mail senden: {{ error }}. Benachrichtigungen und Erinnerungen werden nicht zugestellt."
+      },
+      "providerOutage": {
+        "title": "{{ provider }} antwortet nicht",
+        "message": "Marktdaten von {{ provider }} sind nicht verfügbar. Kurse und Indexdaten sind möglicherweise veraltet, bis der Anbieter wieder antwortet."
+      },
+      "providerRecovered": {
+        "title": "{{ provider }} antwortet wieder",
+        "message": "Der Ausfall ist vorbei und Marktdaten von {{ provider }} werden wieder aktualisiert."
+      },
+      "scheduledPostFailed": {
+        "title": "{{ name }} konnte nicht gebucht werden",
+        "message": "Ihre geplante Transaktion, fällig am {{ date }}, wurde nicht automatisch gebucht: {{ error }}. Sie können sie unter Rechnungen & Einzahlungen manuell buchen."
+      }
+    },
+    "budget": {
+      "overTitle": "{{ category }} liegt über dem Budget",
+      "overMessage": "Du hast {{ amount }} deines Budgets von {{ limit }} für {{ category }} ausgegeben ({{ percent }}%).",
+      "criticalTitle": "{{ category }} nähert sich dem Limit",
+      "warningTitle": "{{ category }} erreicht die Budgetgrenze",
+      "thresholdMessage": "Du hast {{ percent }}% deines Budgets für {{ category }} verbraucht ({{ amount }} von {{ limit }}).",
+      "projectedTitle": "Für {{ category }} wird eine Budgetüberschreitung erwartet",
+      "projectedMessage": "Bei deinem aktuellen Tempo werden die Ausgaben für {{ category }} bis zum Ende des Zeitraums voraussichtlich {{ projected }} erreichen (Budget: {{ budgeted }}).",
+      "flexTitle": "Flex-Gruppe „{{ group }}“ bei {{ percent }}%",
+      "flexMessage": "Die Flex-Gruppe „{{ group }}“ hat {{ spent }} ihres Gesamtbudgets von {{ budgeted }} verbraucht ({{ percent }}%).",
+      "incomeTitle": "Einkommen unter den Erwartungen",
+      "incomeMessage": "Dein tatsächliches Einkommen ({{ actual }}) beträgt {{ ratio }}% des zu diesem Zeitpunkt erwarteten Einkommens ({{ expected }}).",
+      "milestoneTitle": "Budget im Plan",
+      "milestoneMessage": "{{ progress }}% des Zeitraums sind vergangen und du hast erst {{ percent }}% deines Gesamtbudgets verbraucht. Weiter so!",
+      "seasonalTitle": "Saisonaler Ausgabenanstieg für {{ category }} erwartet",
+      "seasonalMessage": "Im letzten {{ month }} hast du für {{ category }} das {{ increase }}-Fache des üblichen Betrags ausgegeben. Erwäge eine Anpassung deines Budgets."
+    },
+    "priceMovement": {
+      "title": "Alarm bei Kursänderung: {{ symbol }} ({{ percent }}%)",
+      "message": "{{ symbol }}: {{ percent }}% gegenüber der letzten verfügbaren Sitzung."
+    }
+  }
+}

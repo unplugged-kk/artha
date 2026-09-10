@@ -1,0 +1,72 @@
+import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { UserPreferences } from '@/types/auth';
+import { userSettingsApi } from '@/lib/user-settings';
+import { createLogger } from '@/lib/logger';
+
+const logger = createLogger('Preferences');
+
+interface PreferencesState {
+  preferences: UserPreferences | null;
+  isLoaded: boolean;
+  _hasHydrated: boolean;
+  loadPreferences: () => Promise<void>;
+  getLanguage: () => string;
+  updatePreferences: (prefs: Partial<UserPreferences>) => void;
+  clearPreferences: () => void;
+  setHasHydrated: (state: boolean) => void;
+}
+
+export const usePreferencesStore = create<PreferencesState>()(
+  persist(
+    (set, get) => ({
+      preferences: null,
+      isLoaded: false,
+      _hasHydrated: false,
+
+      loadPreferences: async () => {
+        try {
+          const prefs = await userSettingsApi.getPreferences();
+          logger.debug('Preferences loaded:', prefs.defaultCurrency, prefs.theme);
+          set({ preferences: prefs, isLoaded: true });
+        } catch (error) {
+          logger.error('Failed to load preferences:', error);
+          // Set defaults if loading fails
+          set({ isLoaded: true });
+        }
+      },
+
+      getLanguage: () => get().preferences?.language || 'en',
+
+      updatePreferences: (prefs) => {
+        const current = get().preferences;
+        if (current) {
+          set({ preferences: { ...current, ...prefs } });
+        } else {
+          // If no current preferences, set the new prefs directly
+          set({ preferences: prefs as UserPreferences });
+        }
+      },
+
+      clearPreferences: () => {
+        set({ preferences: null, isLoaded: false });
+      },
+
+      setHasHydrated: (state) => {
+        set({ _hasHydrated: state });
+      },
+    }),
+    {
+      name: 'monize-preferences',
+      storage: createJSONStorage(() => localStorage),
+      // Persist only the cached preferences, never `isLoaded`: it must
+      // start false on every load so PreferencesLoader refetches for the
+      // current effective user (e.g. the owner a delegate is acting as),
+      // otherwise a delegate keeps their own stale cached preferences.
+      partialize: (state) => ({ preferences: state.preferences }),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
+    }
+  )
+);

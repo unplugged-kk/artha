@@ -1,0 +1,143 @@
+import * as crypto from "crypto";
+
+const ALGORITHM = "aes-256-gcm";
+const IV_LENGTH = 16;
+const SALT_LENGTH = 16;
+
+/**
+ * Derive a purpose-specific key from the master secret using HKDF.
+ * Each purpose (e.g., "totp-encryption", "csrf") gets a cryptographically
+ * independent key so that compromising one use does not compromise others.
+ */
+export function derivePurposeKey(
+  masterSecret: string,
+  purpose: string,
+): string {
+  const key = crypto.hkdfSync(
+    "sha256",
+    masterSecret,
+    "", // no salt needed -- purpose string provides domain separation
+    purpose,
+    32,
+  );
+  return Buffer.from(key).toString("hex");
+}
+
+/**
+ * Hash a token (refresh token, reset token, device token, PAT) using SHA-256.
+ * Shared utility to eliminate duplication across auth.service.ts and pat.service.ts.
+ */
+export function hashToken(token: string): string {
+  return crypto.createHash("sha256").update(token).digest("hex");
+}
+
+/**
+ * Compare two `hashToken` digests in constant time.
+ *
+ * `hashToken`'s comparison partner, and it lives beside it so the next caller finds
+ * it rather than reaching for `===`. A digest is a credential-derived value, and
+ * `===` on two strings returns as soon as they differ -- the timing reports the
+ * length of the shared prefix. Whether that is *reachable* depends on the call
+ * site, but deciding case by case makes the property an argument each time;
+ * constant time costs nothing here and makes it a property instead.
+ *
+ * The length mismatch is answered first because `timingSafeEqual` throws on
+ * unequal lengths, and it is not a secret: both sides are SHA-256 hex, so anything
+ * else is malformed input rather than a near miss.
+ */
+export function tokenHashesEqual(a: string | null, b: string | null): boolean {
+  if (a == null || b == null) return false;
+  const left = Buffer.from(a, "utf8");
+  const right = Buffer.from(b, "utf8");
+  if (left.length !== right.length) return false;
+  return crypto.timingSafeEqual(left, right);
+}
+
+function deriveKey(secret: string, salt: Buffer): Buffer {
+  return crypto.scryptSync(secret, salt, 32);
+}
+
+/**
+ * Legacy key derivation for backward compatibility with existing encrypted TOTP secrets.
+ * New encryptions use a random per-encryption salt instead.
+ */
+function deriveLegacyKey(secret: string): Buffer {
+  return crypto.scryptSync(secret, "totp-encryption-salt", 32);
+}
+
+export function encrypt(text: string, jwtSecret: string): string {
+  // SECURITY: Use a random salt per encryption so each ciphertext has a unique derived key
+  const salt = crypto.randomBytes(SALT_LENGTH);
+  const key = deriveKey(jwtSecret, salt);
+  const iv = crypto.randomBytes(IV_LENGTH);
+  const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
+
+  let encrypted = cipher.update(text, "utf8", "hex");
+  encrypted += cipher.final("hex");
+
+  const authTag = cipher.getAuthTag();
+
+  // Format: salt:iv:authTag:ciphertext (4 parts = new format)
+  return `${salt.toString("hex")}:${iv.toString("hex")}:${authTag.toString("hex")}:${encrypted}`;
+}
+
+/**
+ * Returns true if the ciphertext uses the legacy 3-part format (static salt).
+ */
+export function isLegacyEncryption(encryptedText: string): boolean {
+  return encryptedText.split(":").length === 3;
+}
+
+export function decrypt(encryptedText: string, jwtSecret: string): string {
+  const parts = encryptedText.split(":");
+
+  let key: Buffer;
+  let ivHex: string;
+  let authTagHex: string;
+  let ciphertext: string;
+
+  if (parts.length === 4) {
+    // New format: salt:iv:authTag:ciphertext
+    const salt = Buffer.from(parts[0], "hex");
+    key = deriveKey(jwtSecret, salt);
+    ivHex = parts[1];
+    authTagHex = parts[2];
+    ciphertext = parts[3];
+  } else if (parts.length === 3) {
+    // DEPRECATED: Legacy format with static salt -- retained only for backward
+    // compatibility with existing encrypted TOTP secrets. New encryptions always
+    // use the 4-part format with a random per-encryption salt.
+    // Use migrateFromLegacy() to re-encrypt legacy values.
+    key = deriveLegacyKey(jwtSecret);
+    ivHex = parts[0];
+    authTagHex = parts[1];
+    ciphertext = parts[2];
+  } else {
+    throw new Error("Invalid encrypted text format");
+  }
+
+  const iv = Buffer.from(ivHex, "hex");
+  const authTag = Buffer.from(authTagHex, "hex");
+  const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
+  decipher.setAuthTag(authTag);
+
+  let decrypted = decipher.update(ciphertext, "hex", "utf8");
+  decrypted += decipher.final("utf8");
+
+  return decrypted;
+}
+
+/**
+ * Re-encrypt a legacy (static salt) ciphertext using the current format
+ * with a random per-encryption salt. Returns null if already in new format.
+ */
+export function migrateFromLegacy(
+  encryptedText: string,
+  jwtSecret: string,
+): string | null {
+  if (!isLegacyEncryption(encryptedText)) {
+    return null;
+  }
+  const plaintext = decrypt(encryptedText, jwtSecret);
+  return encrypt(plaintext, jwtSecret);
+}

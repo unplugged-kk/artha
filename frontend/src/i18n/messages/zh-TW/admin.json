@@ -1,0 +1,173 @@
+{
+  "createUserModal": {
+    "title": "新增使用者",
+    "description": "建立新帳號。您可以寄送邀請信、自行設定密碼，或產生臨時密碼供分享。",
+    "emailLabel": "電子郵件",
+    "emailPlaceholder": "user@example.com",
+    "firstNameLabel": "名字（選填）",
+    "firstNamePlaceholder": "名字",
+    "lastNameLabel": "姓氏（選填）",
+    "lastNamePlaceholder": "姓氏",
+    "roleLabel": "角色",
+    "roleUser": "使用者",
+    "roleAdmin": "管理員",
+    "credentialsLegend": "憑證",
+    "inviteLabel": "寄送電子郵件邀請以設定密碼",
+    "inviteSmtpNote": "需要設定 SMTP。",
+    "setPasswordLabel": "立即設定密碼",
+    "tempPasswordLabel": "產生臨時密碼",
+    "tempPasswordNote": "建立後僅顯示一次。使用者首次登入時必須變更密碼。",
+    "passwordFieldLabel": "密碼",
+    "passwordPlaceholder": "設定密碼",
+    "createButton": "建立使用者",
+    "validation": {
+      "invalidPassword": "密碼無效。"
+    },
+    "toasts": {
+      "createFailed": "建立使用者失敗"
+    }
+  },
+  "resetPasswordModal": {
+    "defaultTitle": "密碼重設成功",
+    "defaultDescription": "已為 {userName} 設定臨時密碼。",
+    "temporaryPasswordLabel": "臨時密碼",
+    "copy": "複製",
+    "copied": "已複製",
+    "notShownAgain": "此密碼將不再顯示。",
+    "mustChangeOnLogin": "使用者下次登入時必須變更密碼。",
+    "toasts": {
+      "copied": "密碼已複製至剪貼簿",
+      "copyFailed": "複製至剪貼簿失敗"
+    }
+  },
+  "userTable": {
+    "colUser": "使用者",
+    "colRole": "角色",
+    "colProvider": "提供者",
+    "colStatus": "狀態",
+    "colLastLogin": "最後登入",
+    "colActions": "操作",
+    "youSuffix": "（您）",
+    "noEmail": "無電子郵件",
+    "unknown": "未知",
+    "never": "從未",
+    "providerSso": "SSO",
+    "providerLocal": "本機",
+    "roleAdmin": "管理員",
+    "roleUser": "使用者",
+    "statusActive": "有效",
+    "statusDisabled": "已停用",
+    "clickToDisable": "點擊以停用",
+    "clickToEnable": "點擊以啟用",
+    "resetPassword": "重設密碼",
+    "noUsers": "找不到使用者。"
+  },
+  "usersPage": {
+    "title": "使用者管理",
+    "userCount": "{count, plural, one {# 位使用者} other {# 位使用者}}",
+    "newUser": "+ 新增使用者",
+    "loadingUsers": "載入使用者中...",
+    "toasts": {
+      "inviteSent": "邀請信已寄送至 {email}",
+      "userCreated": "{name} 已建立",
+      "userUpgraded": "{name} 已升級為完整帳號",
+      "roleChanged": "{name} 現在是{role}",
+      "roleAdmin": "管理員",
+      "roleUser": "使用者",
+      "userEnabled": "{name} 已啟用",
+      "userDisabled": "{name} 已停用",
+      "userDeleted": "{name} 已刪除",
+      "userDowngraded": "{name} 的個人資料已移除；其委派存取權仍保留。",
+      "loadFailed": "載入使用者失敗",
+      "deleteFailed": "刪除使用者失敗",
+      "disableFailed": "停用使用者失敗",
+      "resetFailed": "重設密碼失敗"
+    },
+    "dialogs": {
+      "promoteTitle": "升級使用者？",
+      "demoteTitle": "降級使用者？",
+      "promoteMessage": "確定要將 {name} 升級為{role}嗎？",
+      "demoteMessage": "確定要將 {name} 降級為{role}嗎？",
+      "promoteConfirm": "升級為管理員",
+      "demoteConfirm": "降級為使用者",
+      "disableTitle": "停用使用者？",
+      "disableMessage": "確定要停用 {name}？他們將無法登入。",
+      "disableConfirm": "停用使用者",
+      "resetTitle": "重設密碼？",
+      "resetMessage": "這將為 {name} 產生新的臨時密碼。他們下次登入時必須變更密碼。",
+      "resetConfirm": "重設密碼",
+      "deleteTitle": "刪除使用者？",
+      "deleteMessage": "確定要刪除 {name}？這將永久移除其帳號及所有相關資料。此操作無法復原。若他們是其他帳號的委派人，其個人資料將被移除，但登入憑證將保留以維持委派關係——他們將成為僅限委派的使用者。",
+      "deleteConfirm": "刪除使用者",
+      "tempPasswordTitleCreated": "使用者已建立",
+      "tempPasswordTitleUpgraded": "帳號已升級",
+      "tempPasswordDescCreated": "已為 {name} 產生臨時密碼。請將其分享給對方以供登入。",
+      "tempPasswordDescUpgraded": "現有的共用使用者已升級為完整帳號。請將此臨時密碼分享給 {name}。"
+    }
+  },
+  "notificationsPage": {
+    "title": "通知",
+    "subtitle": "此 Monize 執行個體提供的傳送管道，以及其背後的推播身分。",
+    "loading": "正在載入通知設定...",
+    "loadUnavailable": "Monize 無法從伺服器讀取通知設定。請重新載入頁面後再試。",
+    "channelsHeading": "傳送管道",
+    "identityHeading": "Web Push 身分",
+    "perAccountNote": "裝置、測試通知與通知偏好屬於各個帳戶，於「設定」中管理。管理員只負責設定執行個體，絕不會傳送或檢視他人的通知。",
+    "channelState": {
+      "on": "已開啟",
+      "off": "已關閉",
+      "unconfigured": "無法使用",
+      "unknown": "未知"
+    },
+    "channels": {
+      "inApp": {
+        "name": "應用程式內通知",
+        "description": "標題列的鈴鐺。永遠可用且無法關閉：即使其他所有管道失效，通知仍留在這裡。"
+      },
+      "webPush": {
+        "name": "瀏覽器推播",
+        "description": "即使 Monize 已關閉，也能把通知送到手機或桌面。不需要 Firebase、Google Play 或 Apple Developer 帳戶。",
+        "toggleLabel": "為此執行個體啟用瀏覽器推播",
+        "missingKeys": "此執行個體沒有推播金鑰組。請設定 ENCRYPTION_KEY 並重新啟動：Monize 會在下次啟動時自行產生金鑰組。",
+        "keyUnreadable": "此執行個體無法解密已儲存的推播金鑰組，因此無法傳送任何通知。請於下方輪替金鑰組以恢復。",
+        "serverKeyMissing": "此實例沒有 ENCRYPTION_KEY，因此無法開啟已儲存的推播金鑰組。請在部署中設定 ENCRYPTION_KEY 並重新啟動 — 缺少金鑰時輪換無法解決問題。"
+      },
+      "email": {
+        "name": "電子郵件",
+        "description": "帳單提醒、預算摘要與系統警示會寄送到每個帳戶的電子郵件地址。",
+        "missingSmtp": "尚未設定郵件伺服器。請設定 SMTP 環境變數以啟用電子郵件。",
+        "statusUnavailable": "Monize 無法讀取郵件伺服器狀態。"
+      },
+      "ntfy": {
+        "name": "ntfy 與 UnifiedPush",
+        "description": "同樣的加密推播，投遞到自架的 UnifiedPush 分發器（ntfy、NextPush），而非 Google 或 Apple 的基礎設施。它與本執行個體共用推播金鑰對和開關；每個人在自己的 UnifiedPush 應用程式中註冊端點，並在設定中開啟此頻道。",
+        "followsWebPush": "瀏覽器推播關閉或其金鑰對無法使用時不可用 — 此頻道以同一金鑰對投遞。"
+      }
+    },
+    "identity": {
+      "fingerprintLabel": "金鑰指紋",
+      "generatedLabel": "產生時間",
+      "devicesLabel": "已註冊裝置",
+      "deviceCounts": "{live} 台使用中，{disabled} 台已停用",
+      "rotateDescription": "輪替會更換此執行個體的金鑰組。所有已註冊裝置將無法送達，必須重新啟用推播，因此僅在金鑰可能外洩時才輪替。",
+      "rotateButton": "輪替金鑰組",
+      "rotatingButton": "輪替中...",
+      "missingEncryptionKey": "由於未設定 ENCRYPTION_KEY，私密金鑰將必須以明文儲存，因此此執行個體沒有推播金鑰組。設定後重新啟動，Monize 會自行產生金鑰組。",
+      "keyUnreadable": "此執行個體持有一組已無法解密的推播金鑰組，因此無法傳送任何通知。這通常發生在資料庫運作期間變更了 ENCRYPTION_KEY，或將備份還原到另一個執行個體。輪替金鑰組即可恢復，所有裝置將重新註冊。",
+      "serverKeyMissing": "此實例未設定 ENCRYPTION_KEY，因此無法開啟已儲存的推播金鑰組。缺少金鑰時輪換沒有幫助：請在部署中設定 ENCRYPTION_KEY 並重新啟動，推播即可繼續使用現有裝置。"
+    },
+    "dialogs": {
+      "rotateTitle": "要輪替推播金鑰組嗎？",
+      "rotateMessage": "{count, plural, =0 {尚未註冊任何裝置，不會有任何損失。} other {# 台已註冊裝置將停止接收通知，直到在各自的瀏覽器中重新啟用推播。}}",
+      "rotateConfirm": "輪替"
+    },
+    "toasts": {
+      "loadFailed": "無法載入通知設定",
+      "pushEnabled": "已為此執行個體啟用瀏覽器推播",
+      "pushDisabled": "已為此執行個體關閉瀏覽器推播",
+      "pushToggleFailed": "無法變更瀏覽器推播設定",
+      "rotated": "{count, plural, =0 {已輪替金鑰組} other {已輪替金鑰組；# 台裝置必須重新註冊}}",
+      "rotateFailed": "無法輪替金鑰組"
+    }
+  }
+}

@@ -1,0 +1,115 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { aiApi } from '@/lib/ai';
+import { AiInsight } from '@/types/ai';
+import { stripLinkMarkup } from '@/lib/ai-entity-links';
+import { WidgetHeading } from './widget-meta';
+import { CARD_CLASS } from '@/components/ui/Card';
+
+const severityColors: Record<string, string> = {
+  alert: 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800',
+  warning: 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800',
+  info: 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800',
+};
+
+interface InsightsWidgetProps {
+  isLoading: boolean;
+}
+
+export function InsightsWidget({ isLoading: parentLoading }: InsightsWidgetProps) {
+  const t = useTranslations('dashboard');
+  const router = useRouter();
+  const [insights, setInsights] = useState<AiInsight[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (parentLoading) return;
+
+    const loadInsights = async () => {
+      try {
+        const response = await aiApi.getInsights();
+        setInsights(response.insights.slice(0, 3));
+      } catch {
+        // Silently fail - widget is optional
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadInsights();
+  }, [parentLoading]);
+
+  const sectionTitle = t('insights.title');
+
+  if (isLoading || parentLoading) {
+    return (
+      <div className={`${CARD_CLASS} p-3 sm:p-6 lg:min-h-[390px]`}>
+        <WidgetHeading id="insights" onClick={() => router.push('/insights')} className="mb-4">
+          {sectionTitle}
+        </WidgetHeading>
+        <div className="animate-pulse space-y-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-16 bg-gray-200 dark:bg-gray-700 rounded" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (insights.length === 0) {
+    return (
+      <div className={`${CARD_CLASS} p-3 sm:p-6 lg:min-h-[390px]`}>
+        <WidgetHeading id="insights" onClick={() => router.push('/insights')} className="mb-4">
+          {sectionTitle}
+        </WidgetHeading>
+        <p className="text-gray-500 dark:text-gray-400 text-sm">
+          {t('insights.empty')}
+        </p>
+        <button
+          onClick={() => router.push('/insights')}
+          className="mt-3 w-full text-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
+        >
+          {t('insights.goToInsights')}
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`${CARD_CLASS} p-3 sm:p-6 lg:min-h-[390px]`}>
+      <div className="flex items-center justify-between mb-4">
+        <WidgetHeading id="insights" onClick={() => router.push('/insights')}>
+          {sectionTitle}
+        </WidgetHeading>
+        <span className="text-sm text-gray-500 dark:text-gray-400">
+          {t('insights.activeCount', { count: insights.length })}
+        </span>
+      </div>
+      <div className="space-y-2 sm:space-y-3">
+        {insights.map((insight) => {
+          const colors = severityColors[insight.severity] || severityColors.info;
+          return (
+            <div
+              key={insight.id}
+              className={`p-2 sm:p-3 rounded-lg border ${colors}`}
+            >
+              <div className="font-medium text-sm">{insight.title}</div>
+              <div className="text-xs mt-0.5 opacity-80 line-clamp-2">
+                {stripLinkMarkup(insight.description)}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <button
+        onClick={() => router.push('/insights')}
+        className="mt-3 w-full text-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
+      >
+        {t('insights.viewAll')}
+      </button>
+    </div>
+  );
+}

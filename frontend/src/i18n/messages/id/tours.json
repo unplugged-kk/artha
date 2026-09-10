@@ -1,0 +1,361 @@
+{
+  "controls": {
+    "next": "Berikutnya",
+    "back": "Kembali",
+    "done": "Selesai",
+    "endTour": "Akhiri tur",
+    "tryIt": "Coba sendiri — tur akan berlanjut setelah Anda melakukannya",
+    "skipStep": "Lewati langkah ini",
+    "stepCounter": "{current} dari {total}",
+    "skippedTitle": "Tur selesai",
+    "skippedBody": "Beberapa langkah dilewati karena layar atau kontrolnya tidak tersedia. Anda dapat mengulang tur kapan saja dari Pengaturan.",
+    "move": "Pindahkan kartu ini — seret, atau geser dengan tombol panah"
+  },
+  "offer": {
+    "heading": "Ikuti tur singkat",
+    "subheading": "Panduan singkat tentang fitur terbaru di rilis ini. Jendela ini menyingkir selama tur berjalan dan kembali setelah tur selesai.",
+    "showMe": "Tunjukkan",
+    "viewed": "Sudah dilihat",
+    "introTitle": "Baru di sini? Ikuti tur pengenalan",
+    "introSubtitle": "Panduan singkat tentang dasar-dasarnya."
+  },
+  "areas": {
+    "intro": "Memulai",
+    "transactions": "Transaksi",
+    "accounts": "Akun",
+    "budgets": "Anggaran",
+    "reports": "Laporan",
+    "investments": "Investasi",
+    "settings": "Pengaturan"
+  },
+  "gettingStarted": {
+    "takeTour": "Ikuti tur",
+    "retakeTour": "Ulangi tur"
+  },
+  "settings": {
+    "title": "Tur berpandu",
+    "description": "Pelajari fitur-fitur aplikasi langkah demi langkah.",
+    "backLink": "Kembali ke Pengaturan",
+    "pageTitle": "Tur berpandu",
+    "pageSubtitle": "Semua tur yang ditawarkan Monize dalam satu tempat. Mulai kapan saja — Anda bisa keluar dari tur dengan Escape dan melanjutkannya lagi dari sini.",
+    "meta": "{steps} · {status}",
+    "metaWithRelease": "{steps} · {release} · {status}",
+    "stepCount": "{count, plural, other {# langkah}}",
+    "releaseLabel": "Ditambahkan di {version}",
+    "requirementsLoading": "Memeriksa apakah Anda bisa mengikuti tur ini…",
+    "requires": {
+      "transactionEntry": "Tambahkan akun terlebih dahulu — tur ini memandu pencatatan transaksi.",
+      "securitiesExist": "Tambahkan sekuritas terlebih dahulu — tur ini membuka salah satunya dari daftar sekuritas Anda."
+    },
+    "start": "Mulai",
+    "restart": "Ulangi",
+    "statusNotViewed": "Belum dilihat",
+    "statusDismissed": "Keluar lebih awal",
+    "resetHeading": "Mulai dari awal",
+    "resetDescription": "Hapus semua tur yang tercatat agar ditawarkan lagi dari dasbor dan setelah pembaruan.",
+    "reset": "Atur ulang progres tur",
+    "resetSuccess": "Progres tur telah diatur ulang.",
+    "resetError": "Progres tur gagal diatur ulang. Silakan coba lagi."
+  },
+  "intro": {
+    "basics": {
+      "title": "Pengenalan Monize",
+      "steps": {
+        "welcome": {
+          "title": "Selamat datang di Monize",
+          "body": "Tur singkat ini menunjukkan bagian inti aplikasi. Anda bisa keluar kapan saja dengan menekan **Escape** atau **Akhiri tur**."
+        },
+        "dashboard": {
+          "title": "Dasbor Anda",
+          "body": "Ini adalah dasbor Anda. Gunakan tombol **Sesuaikan** di kanan atas untuk mengatur ulang atau menyembunyikan widget agar ringkasan yang penting bagi Anda berada tepat di bagian atas."
+        },
+        "tools": {
+          "title": "Menu Alat",
+          "body": "Menu **Alat** adalah tempat Anda mengelola elemen dasar keuangan Anda — penerima pembayaran, kategori, mata uang, tag, dan lainnya."
+        },
+        "accounts": {
+          "title": "Akun Anda",
+          "body": "Tambahkan akun bank, kartu kredit, pinjaman, dan investasi Anda di sini dengan tombol yang disorot. Setiap saldo dan transaksi terkait dengan sebuah akun."
+        },
+        "openAccountDetail": {
+          "title": "Buka tampilan detail sebuah akun",
+          "body": "Setiap akun punya halaman yang disesuaikan dengan jenisnya. Pilih **Detail** — ikon mata pada baris akun — untuk membukanya. Di ponsel, tekan lama akunnya lalu pilih **Detail**."
+        },
+        "accountDetailView": {
+          "title": "Tampilan yang dibuat untuk akun ini",
+          "body": "Halaman ini berubah mengikuti jenis akun, sehingga rekening bank, kartu kredit, pinjaman, akun investasi, atau aset masing-masing menampilkan angka dan alat yang paling berguna baginya. Kembali kapan saja lewat **Detail** di daftar akun."
+        },
+        "transactions": {
+          "title": "Transaksi",
+          "body": "Ini adalah daftar transaksi Anda — setiap pembayaran dan setoran untuk akun Anda tercatat di sini, siap untuk dicari dan disaring."
+        },
+        "createTransaction": {
+          "title": "Catat transaksi",
+          "body": "Tambahkan pemasukan atau pengeluaran dengan **Transaksi Baru**. Silakan buka formulirnya."
+        },
+        "fields": {
+          "title": "Penerima pembayaran dan kategori",
+          "body": "Untuk setiap transaksi, Anda memilih penerima pembayaran dan menetapkan kategori. Kategori inilah yang menjadi dasar anggaran dan laporan Anda; jumlahnya menyusul di langkah berikutnya."
+        },
+        "splits": {
+          "title": "Bagi transaksi",
+          "body": "Satu pembelian mencakup beberapa kategori? Gunakan **Transaksi Terbagi** untuk membagi satu transaksi ke beberapa kategori — misalnya belanja bahan makanan dan keperluan rumah tangga dari satu toko."
+        },
+        "currencyField": {
+          "title": "Jumlah dan mata uang",
+          "body": "Masukkan jumlah transaksinya di sini. Membayar dalam mata uang lain? Atur mata uang di samping jumlah dan masukkan sesuai yang dibebankan — Monize akan mengonversinya ke mata uang akun untuk Anda."
+        },
+        "closeForm": {
+          "title": "Tutup formulir untuk melanjutkan",
+          "body": "Tutup formulir transaksi dengan **Batal**, atau simpan dengan tombol satunya, dan tur akan berlanjut."
+        },
+        "bills": {
+          "title": "Tagihan & Setoran",
+          "body": "Jadwalkan tagihan dan setoran berulang agar pembayaran mendatang dapat diperkirakan dan tidak ada yang terlewat."
+        },
+        "investments": {
+          "title": "Investasi",
+          "body": "Pantau kepemilikan, harga, dan imbal hasil di seluruh akun investasi Anda."
+        },
+        "budgets": {
+          "title": "Rencanakan dengan anggaran",
+          "body": "Anggaran memungkinkan Anda menetapkan target bulanan per kategori dan memantau perkembangannya."
+        },
+        "reports": {
+          "title": "Pahami keuangan Anda",
+          "body": "Laporan mengubah transaksi Anda menjadi grafik — pengeluaran per kategori, kekayaan bersih dari waktu ke waktu, dan lainnya."
+        },
+        "finish": {
+          "title": "Semua sudah siap",
+          "body": "Itulah turnya. Anda dapat mengulanginya kapan saja dari bagian **Tur berpandu** di **Pengaturan**."
+        }
+      }
+    }
+  },
+  "release": {
+    "v1_13_0": {
+      "foreignCurrency": {
+        "title": "Transaksi mata uang asing",
+        "steps": {
+          "welcome": {
+            "title": "Lacak pengeluaran dalam mata uang lain",
+            "body": "Belanja di luar negeri? Tur ini menyiapkan biaya transaksi mata uang asing sebuah akun, mencatat pembelian dalam mata uang yang ditagihkan kepada Anda, dan menunjukkan di mana biaya itu muncul. Anda bisa keluar kapan saja dengan **Esc** atau **Akhiri tur**."
+          },
+          "openAccountEdit": {
+            "title": "Mulai dari akunnya",
+            "body": "Biaya transaksi mata uang asing melekat pada akun. Pilih akun yang Anda pakai membayar di luar negeri — kartu kredit, kartu debit, atau apa pun yang dipakai ponsel Anda — lalu pilih **Edit** pada tindakan barisnya, atau tekan lama barisnya di ponsel, untuk membuka pengaturannya."
+          },
+          "fxFeePercent": {
+            "title": "Tetapkan biaya konversi",
+            "body": "Masukkan biaya transaksi mata uang asing akun ini di sini dalam persen — misalnya 2,5. Monize menyertakannya ke dalam jumlah terkonversi setiap pembelian luar negeri, sehingga biayanya tercatat untuk Anda."
+          },
+          "closeAccountForm": {
+            "title": "Simpan dan tutup",
+            "body": "Gunakan tombol ini untuk menyelesaikan: **Perbarui Akun** menyimpan biayanya, **Batal** menutup tanpa menyimpan. Bagaimanapun, tur tetap berlanjut."
+          },
+          "newTransaction": {
+            "title": "Catat pembelian luar negeri",
+            "body": "Sekarang catat pembelian yang Anda lakukan dengan akun itu dalam mata uang lain. Buka **Transaksi Baru** dan pilih akun itu."
+          },
+          "chooseAccount": {
+            "title": "Periksa akun dan tanggal",
+            "body": "Biaya konversi melekat pada akun, jadi pastikan **Akun** adalah akun yang baru saja Anda atur — ubah di sini jika bukan. Atur juga **Tanggal** ke hari pembelian: kurs dicari untuk tanggal tersebut."
+          },
+          "enterDetails": {
+            "title": "Isi detailnya",
+            "body": "Isi penerima dan kategori seperti transaksi lainnya. Bagian mata uang asingnya menyusul."
+          },
+          "entryCurrency": {
+            "title": "Pilih mata uang yang Anda bayarkan",
+            "body": "Buka ini dan pilih mata uang yang ditagihkan kepada Anda. Hanya mata uang Anda sendiri yang ada di daftar? Pilih **Tambah mata uang...** di bagian bawah untuk menambahkannya — langsung terpilih untuk Anda."
+          },
+          "enterAmount": {
+            "title": "Masukkan jumlah yang ditagihkan",
+            "body": "Ketik totalnya persis seperti yang tertera di rekening koran Anda. Monize mencari **kurs** untuk tanggal transaksi, menampilkan total terkonversi di sebelahnya, dan menyertakan **biaya transaksi mata uang asing** yang Anda atur pada akun — keterangan di bawah menjabarkan keduanya. Bank membulatkan berbeda? Ubah kursnya atau total terkonversinya agar cocok hingga sen terakhir."
+          },
+          "closeTransactionForm": {
+            "title": "Tutup formulirnya",
+            "body": "Sama di sini: simpan transaksinya dengan tombol kirim, atau tutup dengan **Batal**, dan tur berlanjut."
+          },
+          "openAccountDetail": {
+            "title": "Kembali ke akunnya",
+            "body": "Buka halaman detail akun itu — pilih **Detail** pada tindakan barisnya — untuk melihat bagaimana aktivitas mata uang asing dirangkum."
+          },
+          "fxSection": {
+            "title": "Bagian mata uang asing Anda",
+            "body": "Akun dengan aktivitas mata uang asing mendapatkan bagian ini: biaya yang dibayar per mata uang, grafik dari waktu ke waktu, dan transaksi yang cocok, dapat diekspor ke CSV dan PNG. Bagian ini muncul begitu akun memiliki pembelian luar negeri.",
+            "fallbackBody": "Akun ini belum memiliki aktivitas mata uang asing, jadi bagian tersebut tidak ada di halamannya. Catat pembelian dalam mata uang lain pada akun ini dan bagian itu akan muncul: biaya per mata uang, grafik sepanjang waktu, serta ekspor CSV dan PNG."
+          },
+          "report": {
+            "title": "Laporan Biaya Transaksi Mata Uang Asing",
+            "body": "Laporan ini mengumpulkan pembelian luar negeri dari semua akun dan mata uang Anda di satu tempat, sehingga Anda bisa melihat berapa sebenarnya biaya kartu \"tanpa biaya luar negeri\" itu. Buka kapan saja dari **Laporan**.",
+            "fallbackBody": "Laporan **Biaya mata uang asing** mengumpulkan pembelian luar negeri dari semua akun dan mata uang Anda dalam satu tempat. Saat ini tidak terlihat — pencarian atau filter kategori bisa menyembunyikannya — tetapi Anda akan menemukannya di **Laporan**."
+          },
+          "finish": {
+            "title": "Itulah mata uang asing di Monize",
+            "body": "Atur biayanya sekali, masukkan pembelian sesuai yang ditagihkan, dan biayanya terlacak sendiri. Anda bisa mengulang tur ini kapan saja dari bagian **Tur berpandu** di **Pengaturan**."
+          }
+        }
+      },
+      "settings": {
+        "title": "Ringkasan Yang Baru",
+        "steps": {
+          "whatsNewToggle": {
+            "title": "Sorotan rilis",
+            "body": "Sakelar ini mengatur apakah ringkasan Yang Baru muncul otomatis setelah pembaruan."
+          },
+          "appVersion": {
+            "title": "Baca ulang catatan rilis",
+            "body": "Klik label versi di bagian bawah **Pengaturan** kapan saja untuk membuka kembali catatan rilis."
+          },
+          "done": {
+            "title": "Selesai",
+            "body": "Anda dapat meninjau kembali sorotan ini kapan saja dari sini di Pengaturan."
+          }
+        }
+      }
+    },
+    "v1_14_0": {
+      "securityDetail": {
+        "title": "Halaman detail efek",
+        "steps": {
+          "welcome": {
+            "title": "Setiap efek dalam satu halaman",
+            "body": "Efek sebelumnya tersebar di tiga dialog. Kini masing-masing punya halaman sendiri yang mengumpulkan semuanya: apa yang Anda pegang, bagaimana perjalanannya, dan semua yang Monize ketahui tentangnya. Ini versi singkatnya."
+          },
+          "openDetail": {
+            "title": "Membuka sebuah efek",
+            "body": "Klik efek mana pun di daftar: seluruh baris membuka halamannya. Tekan lama, atau klik kanan, justru menampilkan tindakan lain pada baris itu."
+          },
+          "summary": {
+            "title": "Posisi Anda dalam sekali lihat",
+            "body": "Nilai pasar, harga perolehan, keuntungan belum terealisasi, unit yang dipegang, dan di rekening mana saja. Jumlahnya dalam mata uang efek itu sendiri — mata uang harganya dikutip — dan nilai pasar menyebut dari penutupan mana angka itu berasal.",
+            "fallbackBody": "Baris ini biasanya menampilkan posisi Anda. Anda tidak lagi memegang efek ini, jadi halaman menampilkan apa yang Anda realisasikan darinya. Buka efek yang masih Anda pegang untuk melihat angkanya."
+          },
+          "chart": {
+            "title": "Tiga cara membaca riwayat",
+            "body": "Beralih antara **harga**, **nilai posisi Anda**, dan **hasil** pada jendela itu. Pembelian dan penjualan ditandai di setiap seri. Tombol di kanan menentukan seberapa jauh ke belakang, dan **panah** di sebelahnya menggeser jendela itu melewati riwayat sebelumnya pada perbesaran yang sama: pilih 1T lalu mundur setahun demi setahun ketimbang beralih ke 5T."
+          },
+          "keyInfo": {
+            "title": "Apa instrumen ini",
+            "body": "Di samping grafik: jenis efek, bursa, mata uang, penyedia kuotasi yang Monize pakai, dan harga terakhir yang tercatat. Di bawahnya, kartu **Rincian** menunjukkan isi sebuah reksa dana: beralih antara rincian sektor, negara, dan kelas aset."
+          },
+          "tabs": {
+            "title": "Detail di bawahnya",
+            "body": "**Ringkasan** memuat deskripsi, hasil efek itu sendiri, hasil total Anda atas posisi, dan kepemilikan Anda per rekening. **Transaksi** dan **Riwayat harga** adalah tabel yang sama seperti pada dialog lama. **Dokumen** adalah tempat untuk lembar fakta atau laporan tahunan, dan **Berita** membawa judul terbaru yang menyebut simbol ini."
+          },
+          "finish": {
+            "title": "Itu seluruh panduannya",
+            "body": "Setiap tautan yang menuju dialog lama sekarang mendarat di sini: widget harga di dasbor membuka halaman ini langsung pada tab Riwayat harga. Ini halaman sungguhan, jadi Anda bisa menandainya dan kembali lagi."
+          }
+        }
+      },
+      "gemStrategy": {
+        "title": "GEM: aturan yang memilih satu instrumen per periode",
+        "steps": {
+          "welcome": {
+            "title": "Mengenal strategi GEM",
+            "body": "Sebulan atau sekuartal sekali, GEM membandingkan pergerakan tiga pasar saham dan satu aset aman, lalu menyebut satu instrumen yang perlu dipegang sampai pemeriksaan berikutnya. Ketika saham bergerak terlalu lemah, GEM menyebut aset aman."
+          },
+          "findReport": {
+            "title": "Temukan GEM di Laporan",
+            "body": "Buka laporan **Strategi GEM** di sini. Laporan ini ada di kategori **Investasi**. Laporan tetap tersedia meski Anda belum punya instrumen investasi atau posisi yang dicatat di Monize.",
+            "fallbackBody": "Kartu laporan tidak terlihat sekarang, biasanya karena filter. Pilih **Berikutnya** dan tur akan membuka laporan GEM secara langsung. Nanti Anda dapat menemukannya di **Laporan**, kategori **Investasi**."
+          },
+          "page": {
+            "title": "Satu laporan, empat pertanyaan",
+            "body": "Di bagian atas, **skenario** berarti sekumpulan pilihan GEM yang tersimpan, bukan order, catatan transaksi, atau rekening sekuritas. Halaman ini menjawab empat pertanyaan: apa yang dipilih strategi sekarang? mengapa? apakah portofolio pada rekening terpilih sudah sesuai? apa yang perlu berubah? GEM biasanya menunjuk satu instrumen sampai evaluasi bulanan atau kuartalan berikutnya."
+          },
+          "summary": {
+            "title": "Empat kartu sekilas",
+            "body": "**Sinyal saat ini** adalah instrumen yang dipilih oleh aturan. **Portofolio Anda** membandingkan target itu dengan apa yang tercatat di rekening strategi. **Untuk dipindahkan** memperkirakan nilai yang mungkin perlu berubah. **Aset strategi** menunjukkan instrumen mana yang mengisi setiap peran. Informasi yang tidak ada ditampilkan sebagai tidak ada, bukan sebagai nol."
+          },
+          "action": {
+            "title": "Saran, bukan order otomatis",
+            "body": "Grafik membandingkan instrumen yang ditetapkan. **Apa yang harus saya lakukan?** menerjemahkan sinyal menjadi kemungkinan operasi jual lalu beli, serta memperkirakan pajak dan komisi bila datanya cukup. Monize tidak pernah mengirim order ke broker Anda. Setelah benar-benar bertransaksi melalui broker, catat transaksinya di Monize; baru gunakan **Tandai sudah dilakukan** hanya sebagai catatan bahwa Anda menjalankan sinyal itu."
+          },
+          "reasoning": {
+            "title": "Mengapa GEM memilih ini?",
+            "body": "Di sini „momentum“ hanya berarti bagaimana harga berubah selama periode lampau yang dipilih. GEM pertama-tama memeriksa apakah instrumen saham Amerika Serikat mengalahkan tolok ukur bebas risiko yang dipakai sebagai pembanding. Jika ya, GEM memilih yang terkuat di antara instrumen Amerika Serikat, pasar maju di luar Amerika Serikat, dan pasar berkembang. Jika tidak, GEM memilih aset aman. **Mengapa sinyal ini?** dan riwayat sinyal menunjukkan seluruh keputusan, bukan sekadar kode akhir."
+          },
+          "tabs": {
+            "title": "Kembali ke Ringkasan untuk melihat hasilnya",
+            "body": "Pilih **Ringkasan** untuk melihat apa yang dihasilkan konfigurasi ini. Tab lainnya juga baik untuk diketahui: **Sinyal** menampilkan keputusan sebelumnya, **Portofolio saya** menjelaskan apa yang tercatat di rekening terpilih, dan **Backtest** menunjukkan bagaimana aturan akan berperilaku pada harga historis yang tersedia; itu model, bukan ramalan atau janji."
+          },
+          "openSettings": {
+            "title": "Buka pengaturan skenario",
+            "body": "Pilih **Ubah pengaturan**: kita siapkan dulu strateginya, baru setelah itu membaca sesuatu darinya. Konfigurasi yang kosong menghasilkan laporan yang kosong, jadi di sinilah tempat yang berguna untuk memulai. Tidak ada apa pun di layar ini yang membeli instrumen atau mengubah sesuatu di broker Anda."
+          },
+          "accounts": {
+            "title": "Pilih rekening yang dibandingkan",
+            "body": "**Rekening strategi** adalah rekening investasi yang termasuk dalam skenario GEM ini. Hanya posisi dan kas yang tercatat di rekening tersebut yang dipakai untuk perbandingan portofolio dan perkiraan nilai yang perlu dipindahkan. Belum punya rekening investasi? Biarkan daftarnya kosong. GEM masih bisa menghitung sinyal, tetapi tidak bisa membandingkannya dengan portofolio Anda yang sebenarnya."
+          },
+          "timingAndCosts": {
+            "title": "Pilih seberapa jauh GEM menengok ke belakang",
+            "body": "**Frekuensi evaluasi** menentukan apakah GEM mengambil keputusan baru setiap bulan atau setiap kuartal. **Jendela momentum (bulan)** hanyalah jumlah bulan lampau yang harganya dibandingkan; nilai bawaannya 12. **Tarif pajak (%)** dan **Komisi per transaksi** bersifat opsional dan hanya memengaruhi perkiraan biaya; keduanya tidak mengubah sinyal. Biarkan kosong jika Anda tidak tahu."
+          },
+          "addInstruments": {
+            "title": "Belum punya instrumen? Mulai di sini",
+            "body": "GEM butuh satu instrumen di setiap peran agar bisa memutuskan apa pun. Ketika sebuah peran kosong, kartu **Peran dan instrumen** menawarkan jalan singkat yang menambahkan ETF contoh. Pertama, di **Pencatatan yang ditambahkan**, pilih kawasan yang benar-benar dapat ditransaksikan broker Anda: **Amerika** atau **Eropa (UCITS)**. Tombol tambah langsung membuat catatan instrumen di Monize, bahkan sebelum Anda menyimpan konfigurasi GEM; tombol itu tidak membeli apa pun. Hanya peran yang kosong yang diisi, dan instrumen yang cocok dan sudah ada di daftar Anda dapat dipakai ulang. Periksa setiap simbol, bursa, dan mata uang. Contoh-contoh ini bukan rekomendasi. Jika jalan singkat itu tidak muncul, peran Anda sudah terisi dan Anda bisa memeriksanya di bawah.",
+            "fallbackBody": "Formulir pengaturan belum termuat, jadi tur tidak dapat menunjuk kartu peran. Tidak ada pengaturan yang diubah. Gunakan tombol coba lagi di halaman ini, atau ulangi tur nanti dari **Tur berpandu** di **Pengaturan**."
+          },
+          "roles": {
+            "title": "Lima peran, satu sasaran",
+            "body": "Lima pemilih ini adalah yang diisi oleh jalan singkat tadi, dan yang Anda atur sendiri bila tidak memakainya. Tiga peran saham mewakili Amerika Serikat (**S&P 500**), **Pasar maju di luar AS**, dan **Pasar berkembang**. **Aset aman** adalah yang akan dipegang GEM ketika saham gagal melewati uji keamanan. **Tolok ukur bebas risiko** hanyalah pembanding untuk uji itu dan boleh dibiarkan kosong; saat itu aset aman menjalankan kedua tugas. Ini lima tugas dalam perhitungan, bukan lima investasi yang GEM harapkan Anda pegang sekaligus. Sasarannya tetap satu instrumen setiap kali."
+          },
+          "save": {
+            "title": "Periksa sebelum menyimpan",
+            "body": "Periksa daftar rekening, setiap pencatatan, dan mata uangnya, lalu **Simpan konfigurasi** untuk menyimpan skenario dan menghitung ulang laporan dari riwayat harga yang tersedia. Penyimpanan inilah yang memberi langkah-langkah berikutnya sesuatu untuk ditampilkan. Itu tetap tidak mengirim order apa pun, dan Anda tidak perlu menyimpan untuk menyelesaikan tur ini. Jika harga tidak ada atau terlalu lama, Monize menampilkan bahwa sinyal tidak tersedia daripada menebak."
+          },
+          "finish": {
+            "title": "Kembalilah pada evaluasi berikutnya",
+            "body": "GEM mengambil satu keputusan per periode, dan tanggal evaluasi berikutnya ada di bagian atas laporan. Sampai hari itu tidak ada yang perlu dilakukan. Ketika tiba, periksa apakah sinyalnya berubah; jika ya, lakukan transaksinya melalui broker Anda dan catat di Monize agar perbandingan portofolio tetap cocok. Anda dapat mengulangi tur ini kapan saja dari **Tur berpandu** di **Pengaturan**."
+          }
+        }
+      }
+    },
+    "v1_16_0": {
+      "notifications": {
+        "title": "Notifikasi",
+        "steps": {
+          "welcome": {
+            "title": "Monize kini bisa memberi tahu Anda",
+            "body": "Tagihan yang jatuh tempo, anggaran yang terlampaui, saldo yang melewati batas yang Anda tetapkan, cadangan yang gagal. Panduan ini menunjukkan ke mana semua itu tiba, dan bagaimana Anda memilih mana yang sampai lewat email atau di ponsel."
+          },
+          "bell": {
+            "title": "Loncengnya adalah catatannya",
+            "body": "Setiap notifikasi yang dibuat Monize ditulis di sini, apa pun yang Anda nyalakan atau matikan di tempat lain. Email dan push adalah salinan yang dikirim menyusul; daftar ini adalah aslinya, dan angka pada lonceng menghitung yang belum Anda baca."
+          },
+          "panel": {
+            "title": "Apa yang dibawa sebuah notifikasi",
+            "body": "Masing-masing menyebut apa yang terjadi dan menautkan ke halaman yang menampilkannya: tagihan, anggaran, rekening. **Tandai semua sudah dibaca** menihilkan penghitung tanpa menghapus apa pun. Bila ingin diingatkan, setiap notifikasi punya **Ingatkan saya**: sekali lagi setelah jeda, atau berulang sampai Anda hentikan — dan Anda bisa menghentikannya dari notifikasi itu sendiri saat sampai di ponsel."
+          },
+          "filters": {
+            "title": "Persempit daftarnya, lalu bertindak",
+            "body": "Baris atas menyaring menurut tingkat kegawatan, baris bawah memisahkan **Keuangan** dari **Sistem** — cadangan, pengiriman surel, dan hal lain yang hanya bisa ditangani administrator. **Hapus semua** mengikuti saringan yang sedang tampil dan menjangkau seluruh yang cocok, bukan hanya yang di layar, sehingga Anda bisa membersihkan serangkaian peringatan sistem yang sudah selesai dan menyisakan sisanya."
+          },
+          "settings": {
+            "title": "Tempat pengiriman diputuskan",
+            "body": "**Pengaturan → Notifikasi** memuat sisa panduan ini. Di bagian atas kartu ada sakelar email dan ringkasan anggaran mingguan; di bawahnya kisi yang memutuskan segalanya, lalu perangkat push Anda."
+          },
+          "matrix": {
+            "title": "Satu baris per jenis, satu kolom per kanal",
+            "body": "Untuk tiap jenis notifikasi, pilih apakah ia keluar sebagai **Email (laporan)**, **Email (peringatan)**, **Push**, atau lewat **UnifiedPush** ke distributor yang Anda jalankan sendiri. Tidak ada kolom untuk lonceng, karena lonceng selalu menerima barisnya. **Jeda** adalah kolom terakhir: email dan push dilewati bila sesuatu dari grup yang sama sudah keluar dalam rentang itu — catatan di lonceng tetap ditulis. Setiap sakelar tersimpan begitu Anda ubah."
+          },
+          "push": {
+            "title": "Perangkat Anda",
+            "body": "Daftarkan sebuah peramban di sini dan Monize bisa menjangkaunya meski aplikasi tertutup. Monize menandatangani pesannya sendiri, jadi tidak ada akun Google atau Apple di tengah. Tiap perangkat bisa diuji dan dilepas sendiri-sendiri, dan perangkat yang tak lagi terjangkau menyebutkan alasannya. Di iPhone ini berjalan setelah Monize ditambahkan ke Layar Utama; bila administrator belum mengaktifkan push pada instansi ini, keterangannya muncul di sini."
+          },
+          "portfolio": {
+            "title": "Pergerakan nilai investasi",
+            "body": "Sekali sehari, ketika rekening investasi Anda bergerak melebihi jumlah yang Anda tetapkan di sini. Yang diukur adalah gerak pasar dan dividen — uang yang Anda setor atau tarik bukan pergerakan."
+          },
+          "finish": {
+            "title": "Satu tempat lagi",
+            "body": "Peringatan saldo ada pada rekeningnya sendiri: sunting rekening mana pun lalu isi **Beri tahu di bawah** atau **Beri tahu di atas**. Keduanya berbunyi saat saldo *melewati* batasnya, jadi Anda diberi tahu sekali, bukan setelah setiap pembayaran yang menahannya di sana. Panduan ini bisa Anda ulang kapan saja dari Pengaturan."
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,253 @@
+{
+  "chartFlag": {
+    "dismiss": "Deze waarde verbergen"
+  },
+  "appVersion": {
+    "releaseNotes": "Release-opmerkingen voor v{version} bekijken"
+  },
+  "whatsNew": {
+    "title": "Wat is er nieuw",
+    "versionLabel": "Versie {version}",
+    "expandAll": "Alles uitklappen",
+    "collapseAll": "Alles inklappen",
+    "viewFullNotes": "Volledige release-opmerkingen bekijken",
+    "dontShowAgain": "Niet meer weergeven",
+    "showNextLogin": "Weergeven bij volgende aanmelding",
+    "close": "Sluiten",
+    "unavailable": "Er zijn geen release-opmerkingen beschikbaar voor deze versie.",
+    "englishOnly": "De release-opmerkingen hieronder zijn alleen in het Engels. Monize zelf, inclusief de rondleidingen, volgt je taalinstelling."
+  },
+  "transferPayee": "{direction, select, to {Overboeking naar {name}} other {Overboeking van {name}}}",
+  "save": "Opslaan",
+  "cancel": "Annuleren",
+  "delete": "Verwijderen",
+  "edit": "Bewerken",
+  "close": "Sluiten",
+  "actions": {
+    "edit": "Bewerken",
+    "delete": "Verwijderen",
+    "view": "Bekijken",
+    "duplicate": "Dupliceren",
+    "merge": "Samenvoegen",
+    "reactivate": "Heractiveren",
+    "reconcile": "Afstemmen",
+    "post": "Boeken",
+    "skip": "Overslaan",
+    "close": "Sluiten",
+    "reopen": "Heropenen",
+    "scheduleRecurring": "Terugkerend maken",
+    "more": "Meer acties"
+  },
+  "loading": "Laden...",
+  "pagination": {
+    "showing": "Weergeven",
+    "of": "van",
+    "firstPage": "Eerste pagina",
+    "lastPage": "Laatste pagina",
+    "previousPage": "Vorige pagina",
+    "nextPage": "Volgende pagina",
+    "back10Pages": "10 pagina's terug",
+    "forward10Pages": "10 pagina's vooruit",
+    "enterPageNumber": "Voer paginanummer in"
+  },
+  "confirmDialog": {
+    "confirm": "Bevestigen"
+  },
+  "unsavedChanges": {
+    "title": "Niet-opgeslagen wijzigingen",
+    "message": "Je hebt niet-opgeslagen wijzigingen. Wat wil je doen?",
+    "discard": "Verwerpen"
+  },
+  "exportDropdown": {
+    "export": "Exporteren",
+    "exporting": "Exporteren...",
+    "exportPdf": "PDF exporteren",
+    "exportReport": "Rapport exporteren",
+    "failedPdf": "PDF exporteren mislukt. Probeer het opnieuw."
+  },
+  "dateRange": {
+    "custom": "Aangepast",
+    "startDate": "Begindatum",
+    "endDate": "Einddatum"
+  },
+  "colorPicker": {
+    "custom": "Aangepast:",
+    "apply": "Toepassen"
+  },
+  "chartDownload": {
+    "downloadAsPng": "Download {filename} als PNG",
+    "unableToCapture": "Kan grafiekafbeelding niet vastleggen",
+    "failedToDownload": "Grafiek downloaden mislukt"
+  },
+  "csvDownload": {
+    "downloadAsCsv": "Download {filename} als CSV"
+  },
+  "chartViewToggle": {
+    "pieChart": "Cirkeldiagram",
+    "barChart": "Staafdiagram",
+    "stackedChart": "100% gestapeld staafdiagram",
+    "lineChart": "Lijndiagram",
+    "areaChart": "Vlakdiagram",
+    "table": "Tabel"
+  },
+  "formActions": {
+    "cancel": "Annuleren",
+    "save": "Opslaan"
+  },
+  "themeToggle": {
+    "light": "Licht",
+    "dark": "Donker",
+    "system": "Systeem",
+    "title": "Thema: {label}. Klik om te wijzigen."
+  },
+  "errorPage": {
+    "title": "Er is iets misgegaan",
+    "description": "Er is een onverwachte fout opgetreden. Probeer het opnieuw of neem contact op met de ondersteuning als het probleem aanhoudt.",
+    "errorId": "Fout-ID: {digest}",
+    "tryAgain": "Opnieuw proberen",
+    "goToDashboard": "Naar het dashboard"
+  },
+  "errorBoundary": {
+    "defaultMessage": "Er is iets misgegaan bij het weergeven van dit onderdeel."
+  },
+  "calendar": {
+    "clear": "Wissen",
+    "today": "Vandaag"
+  },
+  "multiSelect": {
+    "search": "Zoeken...",
+    "selectAll": "Alles selecteren",
+    "clear": "Wissen",
+    "noOptions": "Geen opties gevonden",
+    "selectedCount": "{count} geselecteerd"
+  },
+  "combobox": {
+    "createOption": "Maak \"{value}\" aan",
+    "deleteOption": "\"{value}\" verwijderen"
+  },
+  "passwordInput": {
+    "show": "Invoer tonen",
+    "hide": "Invoer verbergen"
+  },
+  "currencyInput": {
+    "openCalculator": "Calculator openen",
+    "calculator": "Calculator",
+    "toggleSign": "Teken wijzigen",
+    "apply": "Toepassen"
+  },
+  "dateInput": {
+    "shortcutsTitle": "Sneltoetsen",
+    "today": "Vandaag",
+    "firstDayOfYear": "Eerste dag van het jaar",
+    "lastDayOfYear": "Laatste dag van het jaar",
+    "firstDayOfMonth": "Eerste dag van de maand",
+    "lastDayOfMonth": "Laatste dag van de maand",
+    "nextDay": "Volgende dag",
+    "previousDay": "Vorige dag",
+    "nextMonth": "Volgende maand",
+    "previousMonth": "Vorige maand",
+    "partialDateHint": "Typ een deel van een datum en de rest wordt aangevuld: dag en maand nemen het huidige jaar over."
+  },
+  "accountTypes": {
+    "CHEQUING": "Betaalrekening",
+    "SAVINGS": "Spaarrekening",
+    "CREDIT_CARD": "Creditcard",
+    "INVESTMENT": "Belegging",
+    "LOAN": "Lening",
+    "MORTGAGE": "Hypotheek",
+    "CASH": "Contanten",
+    "LINE_OF_CREDIT": "Kredietlijn",
+    "ASSET": "Activa",
+    "OTHER": "Overig"
+  },
+  "accountFilter": {
+    "allAccounts": "Alle rekeningen",
+    "allBut": "Alles behalve {names}"
+  },
+  "passwordRequirements": "Het wachtwoord moet minimaal 12 tekens bevatten en een hoofdletter, een kleine letter, een cijfer en een speciaal teken.",
+  "passwordValidation": {
+    "min": "Wachtwoord moet minimaal 12 tekens lang zijn",
+    "max": "Wachtwoord mag maximaal 100 tekens lang zijn",
+    "lowercase": "Moet een kleine letter bevatten",
+    "uppercase": "Moet een hoofdletter bevatten",
+    "number": "Moet een cijfer bevatten",
+    "special": "Moet een speciaal teken bevatten"
+  },
+  "codeValidation": {
+    "length": "Code moet precies 6 cijfers bevatten",
+    "digits": "Code moet 6 cijfers zijn"
+  },
+  "monthsShort": [
+    "jan",
+    "feb",
+    "mrt",
+    "apr",
+    "mei",
+    "jun",
+    "jul",
+    "aug",
+    "sep",
+    "okt",
+    "nov",
+    "dec"
+  ],
+  "weekdaysShort": [
+    "zo",
+    "ma",
+    "di",
+    "wo",
+    "do",
+    "vr",
+    "za"
+  ],
+  "weekdaysMin": [
+    "zo",
+    "ma",
+    "di",
+    "wo",
+    "do",
+    "vr",
+    "za"
+  ],
+  "weekdaysNarrow": [
+    "Z",
+    "M",
+    "D",
+    "W",
+    "D",
+    "V",
+    "Z"
+  ],
+  "dateFormat": {
+    "browserAuto": "Browserinstelling gebruiken (automatisch gedetecteerd als {sample})",
+    "custom": "Aangepast..."
+  },
+  "emailInvalid": "Voer een geldig e-mailadres in",
+  "noSectionAccess": "Je hebt geen toegang tot dit gedeelte.",
+  "undoRedo": {
+    "nothingToUndo": "Niets om ongedaan te maken",
+    "cannotUndo": "Deze actie kan niet ongedaan worden gemaakt",
+    "undoFailed": "Ongedaan maken mislukt",
+    "nothingToRedo": "Niets om opnieuw te doen",
+    "cannotRedo": "Deze actie kan niet opnieuw worden gedaan",
+    "redoFailed": "Opnieuw doen mislukt"
+  },
+  "partialTotal": {
+    "srSuffix": "(deeltotaal)",
+    "explanation": "Deeltotaal: {count, plural, one {# bedrag} other {# bedragen}} konden niet worden meegeteld, dus het weergegeven bedrag sluit ze uit. Er is geen koers naar {displayCurrency} beschikbaar voor {currencies}.",
+    "explanationExcluded": "Deeltotaal: {count, plural, one {# bedrag} other {# bedragen}} konden niet worden berekend, dus het weergegeven bedrag sluit ze uit."
+  },
+  "unknownAmount": {
+    "marker": "—",
+    "srLabel": "Bedrag niet beschikbaar",
+    "scheduledFx": "Het huidige bedrag kan niet worden bepaald: er is geen wisselkoers beschikbaar voor het afwikkelingsvalutapaar van dit geplande item. Het opgeslagen bedrag is met een oudere koers berekend en wordt daarom niet weergegeven.",
+    "displayFx": "Dit bedrag kan hier niet worden weergegeven: het bedrag is bekend, maar er is geen wisselkoers beschikbaar om het om te rekenen naar de valuta van dit totaal. Vernieuw de koersen op de pagina Valuta's.",
+    "noPrice": "Deze waarde kan niet worden berekend: het aantal aandelen is bekend, maar het effect heeft geen koers om ze mee te waarderen. Vernieuw de koersen of voeg er handmatig een toe in de koershistorie van het effect."
+  },
+  "density": {
+    "title": "Rijdichtheid wisselen",
+    "normal": "Normaal",
+    "compact": "Compact",
+    "dense": "Dicht"
+  }
+}

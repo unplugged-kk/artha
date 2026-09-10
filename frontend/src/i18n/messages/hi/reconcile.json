@@ -1,0 +1,95 @@
+{
+  "title": "खाता समाधान करें",
+  "subtitle": "अपने बैंक विवरण के विरुद्ध अपने रिकॉर्ड मिलाएं",
+  "subtitleActive": "समाधान हो रहा है: {name}",
+  "setup": {
+    "title": "समाधान शुरू करें",
+    "intro": "यह सुनिश्चित करने के लिए कि आपके रिकॉर्ड मेल खाते हैं, बैंक विवरण के विरुद्ध अपने खाते का समाधान करें।",
+    "accountLabel": "खाता",
+    "accountPlaceholder": "खाता चुनें...",
+    "statementDateLabel": "विवरण दिनांक",
+    "statementBalanceLabel": "विवरण अंतिम शेष",
+    "start": "समाधान शुरू करें"
+  },
+  "summary": {
+    "statementBalance": "विवरण शेष",
+    "reconciledBalance": "समाधानित शेष",
+    "selected": "चुने गए ({count})",
+    "difference": "अंतर"
+  },
+  "list": {
+    "heading": "असमाधानित लेनदेन ({count})",
+    "selectAll": "सभी चुनें",
+    "selectNone": "कोई नहीं चुनें",
+    "empty": "इस अवधि के लिए कोई असमाधानित लेनदेन नहीं मिले।",
+    "colSelect": "चुनें",
+    "colDate": "दिनांक",
+    "colPayee": "भुगतानकर्ता",
+    "colCategory": "श्रेणी",
+    "colAmount": "राशि",
+    "colStatus": "स्थिति",
+    "finish": "समाधान पूर्ण करें",
+    "colActions": "कार्रवाइयाँ",
+    "selectRow": "{payee} का लेनदेन चुनें",
+    "groupByFlow": "आय और व्यय के अनुसार समूहित करें",
+    "groupCredits": "आय ({count})",
+    "groupDebits": "व्यय ({count})",
+    "groupSubtotal": "समूह उप-योग {amount}",
+    "addTransaction": "लेनदेन जोड़ें",
+    "lockedRow": "लॉक"
+  },
+  "status": {
+    "cleared": "क्लियर हुआ",
+    "unreconciled": "असमाधानित",
+    "void": "रद्द",
+    "reconciled": "समाधानित"
+  },
+  "complete": {
+    "title": "समाधान पूर्ण",
+    "message": "आपके खाते का {date} तक सफलतापूर्वक समाधान हो गया।",
+    "existingPayment": "इस खाते में एक अनुसूचित भुगतान है, <b>{name}</b>। क्या आप इसके अगले अवसर को <b>{amount}</b> के समाधानित शेष में अपडेट करना चाहते हैं?",
+    "updatePayment": "अगला भुगतान अपडेट करें",
+    "noPayment": "इस खाते के लिए कोई अनुसूचित भुगतान नहीं मिला। क्या आप <b>{amount}</b> के समाधानित शेष के लिए एक बनाना चाहते हैं?",
+    "createPayment": "अनुसूचित भुगतान बनाएं",
+    "backToAccounts": "खातों पर वापस जाएं",
+    "reconcileAnother": "दूसरा खाता समाधान करें"
+  },
+  "toasts": {
+    "loadAccountsFailed": "खाते लोड करने में विफल",
+    "fillAllFields": "कृपया सभी फ़ील्ड भरें",
+    "loadDataFailed": "समाधान डेटा लोड करने में विफल",
+    "differenceRequired": "समाधान पूर्ण करने के लिए अंतर {amount} होना चाहिए",
+    "noneSelected": "समाधान के लिए कोई लेनदेन नहीं चुना गया",
+    "success": "{count, plural, one {# लेनदेन सफलतापूर्वक समाधानित हुआ} other {# लेनदेन सफलतापूर्वक समाधानित हुए}}",
+    "reconcileFailed": "लेनदेन समाधान करने में विफल",
+    "deleted": "लेनदेन हटाया गया",
+    "transferDeleted": "ट्रांसफर हटाया गया",
+    "deleteFailed": "लेनदेन हटाने में विफल",
+    "voidStatus": "रद्द लेनदेन केवल लेनदेन फ़ॉर्म से बदला जा सकता है",
+    "statusFailed": "स्थिति बदलने में विफल"
+  },
+  "form": {
+    "newTitle": "नया लेनदेन",
+    "editTitle": "लेनदेन संपादित करें"
+  },
+  "delete": {
+    "title": "लेनदेन हटाएं",
+    "message": "यह लेनदेन हटाएं? इसे खाते से और इस समाधान से हटा दिया जाएगा।",
+    "transferTitle": "ट्रांसफर हटाएं",
+    "transferMessage": "यह ट्रांसफर हटाएं? इसके दोनों पक्ष हटा दिए जाएंगे, इस खाते में और दूसरे खाते में।"
+  },
+  "stale": {
+    "missedChip": "छूटा हुआ",
+    "missedTooltip": "यह लेनदेन आपके अंतिम समाधानित विवरण की तारीख का या उससे पहले का है, इसलिए वह विवरण इसके बिना समाधानित हुआ।",
+    "overdueChip": "अतिदेय",
+    "overdueTooltip": "यह लेनदेन एक विवरण चक्र से अधिक समय से समाधान की प्रतीक्षा कर रहा है।"
+  },
+  "reminder": {
+    "title": "समाधान",
+    "badgeLabel": "{count, plural, one {# लेनदेन समाधान की प्रतीक्षा में} other {# लेनदेन समाधान की प्रतीक्षा में}}",
+    "accountLine": "{count, plural, one {# लेनदेन} other {# लेनदेन}}, सबसे पुराना {date}",
+    "missedLine": "{count, plural, one {# समाधानित विवरण से छूटा} other {# समाधानित विवरणों से छूटे}}",
+    "overdueLine": "{count, plural, one {# {days} दिन से अधिक पुराना} other {# {days} दिन से अधिक पुराने}}",
+    "reconcileAction": "मिलान करें"
+  }
+}

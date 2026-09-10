@@ -1,0 +1,601 @@
+{
+  "payeeWidget": {
+    "totalSpent": "Spesa totale",
+    "income": "Entrate",
+    "net": "Netto",
+    "transactions": "Transazioni",
+    "averageAmount": "Importo medio",
+    "lastTransaction": "Ultima transazione",
+    "defaultCategory": "Categoria predefinita",
+    "nextBill": "Prossima fattura",
+    "viewBills": "Visualizza in Fatture e Versamenti",
+    "topCategories": "Categorie principali",
+    "uncategorized": "Non categorizzata",
+    "aliases": "Alias",
+    "recurring": "Ricorrente: {cadence} · {amount}",
+    "recurringTooltip": "Rilevato da addebiti ripetuti nel periodo selezionato (o negli ultimi 12 mesi se non è impostato un filtro data).",
+    "cadence": {
+      "weekly": "Settimanale",
+      "biweekly": "Ogni 2 settimane",
+      "monthly": "Mensile",
+      "quarterly": "Trimestrale",
+      "yearly": "Annuale"
+    },
+    "inactive": "Inattivo",
+    "noTransactions": "Nessuna transazione in questo periodo",
+    "editAria": "Modifica beneficiario",
+    "detailsAria": "Vedi dettagli del beneficiario",
+    "collapseAria": "Nascondi info beneficiario",
+    "show": "Mostra info beneficiario",
+    "amountUnavailable": "Nessun tasso"
+  },
+  "categoryWidget": {
+    "detailsAria": "Vedi dettagli della categoria",
+    "totalSpent": "Spesa totale",
+    "totalEarned": "Entrate totali",
+    "income": "Entrata",
+    "expense": "Spesa",
+    "budgetThisMonth": "Budget di questo mese",
+    "budgetProgress": "{spent} di {budgeted}",
+    "transactions": "Transazioni",
+    "averageAmount": "Importo medio",
+    "monthlyAverage": "Media mensile",
+    "subcategories": "Sottocategorie",
+    "thisCategory": "Questa categoria",
+    "topPayees": "Beneficiari principali",
+    "noPayee": "Nessun beneficiario",
+    "nextScheduled": "Prossima pianificata",
+    "noTransactions": "Nessuna transazione in questo periodo",
+    "editAria": "Modifica categoria",
+    "collapseAria": "Nascondi info categoria",
+    "show": "Mostra info categoria",
+    "amountUnavailable": "Nessun tasso"
+  },
+  "accountWidget": {
+    "currentBalance": "Saldo attuale",
+    "nextPayment": "Prossimo pagamento",
+    "viewBills": "Visualizza in Fatture e Versamenti",
+    "viewDetailsAria": "Visualizza dettagli del conto",
+    "type": "Tipo",
+    "accountNumber": "Numero di conto",
+    "currency": "Valuta",
+    "creditLimit": "Limite di credito",
+    "interestRate": "Tasso d'interesse",
+    "currentPayment": "Rata attuale",
+    "currentPaymentTooltip": "L'ultima rata regolare, capitale più interessi.",
+    "estPayoff": "Estinzione stim.",
+    "estRemainingInterest": "Interessi residui stim.",
+    "estRemainingInterestTooltip": "Interessi ancora da pagare se la rata e il tasso attuali restano invariati.",
+    "notAvailable": "N/D",
+    "paidOff": "Estinto",
+    "statementSettlement": "Giorno di chiusura",
+    "statementSettlementTooltip": "L'ultimo giorno del ciclo di fatturazione. Le transazioni registrate entro questo giorno compaiono nell'estratto conto corrente.",
+    "statementDue": "Scadenza pagamento",
+    "closed": "Chiuso",
+    "editAria": "Modifica impostazioni conto",
+    "collapseAria": "Nascondi info conto",
+    "showAccountNumber": "Mostra numero di conto",
+    "hideAccountNumber": "Nascondi numero di conto",
+    "show": "Mostra info conto"
+  },
+  "page": {
+    "title": "Transazioni",
+    "subtitle": "Gestisci entrate e uscite",
+    "newButton": "+ Nuova transazione",
+    "editModal": {
+      "editTitle": "Modifica transazione",
+      "duplicateTitle": "Duplica transazione",
+      "newTitle": "Nuova transazione",
+      "scheduleTitle": "Pianifica come ricorrente",
+      "editPayeeTitle": "Modifica beneficiario",
+      "editCategoryTitle": "Modifica categoria"
+    },
+    "loading": "Caricamento transazioni...",
+    "totalCount": "{count, plural, one {# transazione} other {# transazioni}}",
+    "bulkDelete": {
+      "title": "Elimina transazioni",
+      "message": "Sei sicuro di voler eliminare {count, plural, one {# transazione} other {# transazioni}}? Verranno eliminati anche i trasferimenti collegati. Questa azione non può essere annullata."
+    },
+    "toasts": {
+      "scheduledCreated": "Transazione pianificata creata",
+      "investmentLinked": "Questa transazione è collegata a un investimento. Apertura nella pagina Investimenti."
+    }
+  },
+  "list": {
+    "empty": {
+      "title": "Nessuna transazione",
+      "body": "Inizia creando una nuova transazione."
+    },
+    "header": {
+      "date": "Data",
+      "account": "Conto",
+      "payee": "Beneficiario",
+      "category": "Categoria",
+      "description": "Descrizione",
+      "refNumber": "Rif. #",
+      "tags": "Etichette",
+      "amount": "Importo",
+      "currency": "Valuta",
+      "paidAmount": "Importo pagato",
+      "feePaid": "Commissione pagata",
+      "balance": "Saldo",
+      "attachments": "Allegati",
+      "status": "Stato",
+      "actions": "Azioni"
+    },
+    "dateDisplay": {
+      "toggleLabel": "Nascondi l’anno",
+      "toggleTitle": "Togli l’anno dalle date per lasciare più spazio al beneficiario"
+    },
+    "attachmentsCount": "{count, plural, one {# allegato} other {# allegati}}",
+    "today": "Oggi",
+    "export": {
+      "button": "Esporta",
+      "exporting": "Esportazione...",
+      "title": "Esporta transazioni in CSV",
+      "success": "{count, plural, one {Esportata # transazione} other {Esportate # transazioni}}",
+      "noData": "Nessuna transazione da esportare",
+      "error": "Esportazione transazioni non riuscita"
+    },
+    "delete": {
+      "transferTitle": "Elimina trasferimento",
+      "transactionTitle": "Elimina transazione",
+      "transferMessage": "Sei sicuro di voler eliminare questo trasferimento? Entrambe le transazioni collegate verranno eliminate.",
+      "transactionMessage": "Sei sicuro di voler eliminare questa transazione? Questa azione non può essere annullata.",
+      "success": "Transazione eliminata",
+      "transferSuccess": "Trasferimento eliminato",
+      "error": "Eliminazione transazione non riuscita",
+      "reconciledWarning": "Questa transazione è riconciliata, quindi eliminarla influirà su una riconciliazione completata."
+    },
+    "status": {
+      "voidError": "Modifica la transazione per cambiarne lo stato da Annullata",
+      "changed": "Stato cambiato in {status}",
+      "changedLockedUndo": "Stato modificato in {status}. Le transazioni riconciliate sono bloccate: premi di nuovo entro {seconds} secondi per annullare.",
+      "updateError": "Aggiornamento stato non riuscito",
+      "unreconciled": "Non riconciliata",
+      "cleared": "Compensata",
+      "reconciled": "Riconciliata",
+      "void": "Annullata",
+      "clearedDense": "C",
+      "reconciledDense": "R",
+      "voidDense": "V",
+      "pendingDense": "○",
+      "pending": "In attesa",
+      "cycleTitle": "Fai clic per cambiare stato"
+    },
+    "row": {
+      "viewPayeeTitle": "Vedi i dettagli di {name}",
+      "ref": "Rif: {number}",
+      "investmentLabel": "Investimento",
+      "linkedInvestmentTitle": "Visualizza in Investimenti",
+      "filterByDate": "Filtra per data \"{date}\"",
+      "filterByAccount": "Filtra per \"{name}\"",
+      "filterByPayee": "Filtra per \"{name}\"",
+      "filterByCategory": "Filtra per {name}",
+      "filterByTag": "Filtra per etichetta {name}",
+      "transfer": "Trasferimento",
+      "transferTitle": "Trasferimento {direction} {name}",
+      "split": "Suddivisione",
+      "uncategorized": "Non categorizzata",
+      "splitMore": "+{count} altre",
+      "filteredAmountTitle": "Importo filtrato (transazione completa: {amount})",
+      "viewButton": "Visualizza",
+      "editButton": "Modifica",
+      "deleteButton": "Elimina"
+    },
+    "itemNamePlural": "transazioni"
+  },
+  "row": {
+    "copyOptions": {
+      "title": "Opzioni copia",
+      "duplicateTitle": "Duplica transazione",
+      "copy": "Copia",
+      "duplicate": "Duplica",
+      "scheduleRecurring": "Pianifica come ricorrente"
+    }
+  },
+  "actionSheet": {
+    "defaultTitle": "Transazione",
+    "filterByDate": "Filtra per data \"{date}\"",
+    "filterByAccount": "Filtra per \"{name}\"",
+    "filterByPayee": "Filtra per \"{name}\"",
+    "filterByCategory": "Filtra per \"{name}\"",
+    "filterByTag": "Filtra per etichetta \"{name}\"",
+    "edit": "Modifica",
+    "duplicate": "Duplica",
+    "scheduleRecurring": "Pianifica come ricorrente",
+    "delete": "Elimina"
+  },
+  "filter": {
+    "favourites": "Preferiti:",
+    "panel": {
+      "title": "Filtri",
+      "clear": "Cancella",
+      "hide": "Nascondi",
+      "show": "Mostra"
+    },
+    "accounts": {
+      "label": "Mostra conti:",
+      "all": "Tutti",
+      "active": "Attivi",
+      "closed": "Chiusi"
+    },
+    "fields": {
+      "accounts": "Conti",
+      "payees": "Beneficiari",
+      "categories": "Categorie",
+      "tags": "Etichette",
+      "timePeriod": "Periodo",
+      "startDate": "Data inizio",
+      "endDate": "Data fine",
+      "amountFrom": "Importo da",
+      "amountTo": "Importo a",
+      "status": "Stato",
+      "search": "Cerca",
+      "tagKey": "Chiave tag",
+      "tagKeyOp": "Condizione",
+      "tagKeyValue": "Valore",
+      "currency": "Valuta",
+      "hasAttachments": "Allegati"
+    },
+    "hasAttachmentsOptions": {
+      "any": "Qualsiasi",
+      "yes": "Sì",
+      "no": "No"
+    },
+    "placeholders": {
+      "accounts": "Tutti i conti",
+      "payees": "Tutti i beneficiari",
+      "categories": "Tutte le categorie",
+      "tags": "Tutte le etichette",
+      "statuses": "Tutti gli stati",
+      "amountMin": "Min",
+      "amountMax": "Max",
+      "search": "Cerca beneficiario, categoria, importo, etichetta, descrizione, rif. #...",
+      "tagKeyValue": "es. usa"
+    },
+    "tagKeyNone": "Qualsiasi (nessun filtro chiave)",
+    "tagKeyOps": {
+      "hasValue": "Ha un valore",
+      "noValue": "Non ha valore",
+      "contains": "Il valore contiene",
+      "notContains": "Il valore non contiene"
+    },
+    "chips": {
+      "removeAccount": "Rimuovi filtro {name}",
+      "removePayee": "Rimuovi filtro {name}",
+      "removeCategory": "Rimuovi filtro {name}",
+      "removeTag": "Rimuovi filtro {name}",
+      "removeDate": "Rimuovi filtro data",
+      "removeAmount": "Rimuovi filtro importo",
+      "removeSearch": "Rimuovi filtro ricerca",
+      "dateFrom": "Dal {date}",
+      "dateUntil": "Fino al {date}",
+      "amountFrom": "Da {amount}",
+      "amountUpTo": "Fino a {amount}",
+      "removeCurrency": "Rimuovi il filtro valuta {name}",
+      "hasAttachments": "Con allegati",
+      "noAttachments": "Senza allegati",
+      "removeAttachments": "Rimuovi filtro allegati"
+    },
+    "bulkUpdate": "Aggiornamento multiplo",
+    "cancelBulk": "Annulla multiplo",
+    "statusLabels": {
+      "unreconciled": "Non riconciliata",
+      "cleared": "Compensata",
+      "reconciled": "Riconciliata",
+      "void": "Annullata"
+    },
+    "periods": {
+      "select": "Seleziona periodo...",
+      "allDates": "Tutte le date",
+      "today": "Oggi",
+      "yesterday": "Ieri",
+      "thisWeek": "Questa settimana",
+      "lastWeek": "Settimana scorsa",
+      "last30Days": "Ultimi 30 giorni",
+      "monthToDate": "Mese corrente",
+      "lastMonth": "Mese scorso",
+      "last365Days": "Ultimi 365 giorni",
+      "yearToDate": "Anno corrente",
+      "lastYear": "Anno scorso",
+      "custom": "Personalizzato"
+    }
+  },
+  "bulk": {
+    "banner": {
+      "selected": "{count, plural, one {# transazione selezionata} other {# transazioni selezionate}}",
+      "selectAllMatching": "Seleziona tutte le {count} transazioni corrispondenti",
+      "allMatching": "(tutte le transazioni corrispondenti)",
+      "clearSelection": "Cancella selezione",
+      "bulkUpdate": "Aggiornamento multiplo"
+    },
+    "modal": {
+      "title": "Aggiornamento multiplo transazioni",
+      "subtitle": "Aggiorna {count, plural, one {# transazione selezionata} other {# transazioni selezionate}}. Attiva i campi che vuoi modificare.",
+      "submitLabel": "Aggiorna {count, plural, one {# transazione} other {# transazioni}}",
+      "payee": "Beneficiario",
+      "category": "Categoria",
+      "description": "Descrizione",
+      "status": "Stato",
+      "tags": "Etichette",
+      "payeePlaceholder": "Seleziona o digita il nome del beneficiario...",
+      "categoryPlaceholder": "Seleziona categoria...",
+      "descriptionPlaceholder": "Inserisci descrizione (lascia vuoto per cancellare)",
+      "tagsPlaceholder": "Seleziona etichette (lascia vuoto per cancellare tutto)...",
+      "statusOptions": {
+        "pending": "In attesa",
+        "cleared": "Compensata",
+        "void": "Annullata"
+      },
+      "notes": {
+        "transfer": "Anche la controparte collegata dei trasferimenti verrà aggiornata.",
+        "split": "Transazioni suddivise: la nuova categoria viene applicata alle loro suddivisioni (solo a quelle corrispondenti al filtro categoria quando è attivo). Le suddivisioni di trasferimento e investimento restano invariate."
+      }
+    },
+    "toasts": {
+      "updated": "{count, plural, one {# transazione aggiornata} other {# transazioni aggiornate}}",
+      "skipped": "{count, plural, one {# transazione saltata} other {# transazioni saltate}}",
+      "splitLines": "{count, plural, one {# suddivisione ricategorizzata} other {# suddivisioni ricategorizzate}}"
+    }
+  },
+  "form": {
+    "modeTransaction": "Transazione",
+    "modeSplit": "Suddivisione",
+    "modeTransfer": "Trasferimento",
+    "transferBadge": "Trasferimento",
+    "isLinkedTransfer": "Questa è una transazione di trasferimento collegata",
+    "fields": {
+      "account": "Conto",
+      "date": "Data",
+      "createDate": "Data creazione",
+      "payee": "Beneficiario",
+      "category": "Categoria",
+      "amount": "Importo",
+      "totalAmount": "Importo totale",
+      "referenceNumber": "Numero di riferimento",
+      "description": "Descrizione",
+      "status": "Stato",
+      "tags": "Etichette",
+      "fromAccount": "Conto di origine",
+      "toAccount": "Conto di destinazione",
+      "transferAmount": "Importo trasferimento",
+      "transferAmountWithCurrency": "Importo trasferimento ({currency})",
+      "amountReceived": "Importo ricevuto ({currency})",
+      "payeeOptional": "Beneficiario (facoltativo)",
+      "categoryOptional": "Categoria (facoltativa)"
+    },
+    "placeholders": {
+      "selectAccount": "Seleziona conto...",
+      "selectDestinationAccount": "Seleziona conto di destinazione...",
+      "selectOrTypePayee": "Seleziona o digita il nome del beneficiario...",
+      "selectOrCreateCategory": "Seleziona o crea categoria...",
+      "referenceNumber": "N. assegno, n. conferma...",
+      "optionalDescription": "Descrizione facoltativa...",
+      "selectTags": "Seleziona etichette...",
+      "createNewTag": "Crea nuova etichetta..."
+    },
+    "splitSection": {
+      "title": "Suddividi transazione",
+      "cancelSplit": "Annulla suddivisione"
+    },
+    "statusOptions": {
+      "unreconciled": "Non riconciliata",
+      "cleared": "Compensata",
+      "reconciled": "Riconciliata",
+      "void": "Annullata"
+    },
+    "submitCreate": "Crea {mode}",
+    "submitCreateAndNew": "Crea {mode} e continua",
+    "submitCreateDescription": "Salva e chiudi questa finestra.",
+    "submitCreateAndNewDescription": "Salva e inseriscine un'altra, con lo stesso conto e la stessa data.",
+    "submitOptions": "Scegli cosa succede dopo la creazione",
+    "submitUpdate": "Aggiorna {mode}",
+    "reconciledConfirm": {
+      "title": "Modificare la transazione riconciliata?",
+      "message": "Questa transazione è riconciliata. Modificarla influirà su una riconciliazione completata. Vuoi salvare comunque le modifiche?",
+      "confirm": "Salva modifiche"
+    },
+    "modeLabel": {
+      "transfer": "Trasferimento",
+      "transaction": "Transazione"
+    },
+    "transferAmountNote": "L'importo deve essere positivo per i trasferimenti",
+    "transferCandidates": {
+      "sharedWithYou": "Condivisi con te",
+      "yourAccounts": "I tuoi conti",
+      "optionLabel": "{name} ({currency}) — {owner}"
+    },
+    "crossOwnerLockedNote": "L'altro lato di questo trasferimento si trova in un conto non più condiviso con te. Importo, data e conti sono bloccati, ma puoi comunque modificare i dettagli di questa transazione.",
+    "transferCategoryNote": "Facoltativo. Il trasferimento continuerà a non contare come entrata o uscita, ma questa categoria gli consente di comparire nel riepilogo mensile per categoria (ad es. contributi di investimento mensili).",
+    "amountReceivedNote": "Importo ricevuto dopo la conversione valuta",
+    "splitTransaction": "Suddividi transazione",
+    "splitDisabledDuringTour": "Non disponibile durante il tour guidato",
+    "newTagTitle": "Nuova etichetta",
+    "toasts": {
+      "transferCreated": "Trasferimento creato",
+      "transferUpdated": "Trasferimento aggiornato",
+      "transactionCreated": "Transazione creata",
+      "transactionUpdated": "Transazione aggiornata",
+      "attachmentsUploadFailed": "Transazione salvata, ma il caricamento di {count} allegato/i non è riuscito",
+      "saveFailed": "Salvataggio transazione non riuscito",
+      "loadFailed": "Caricamento dati modulo non riuscito",
+      "splitsNotEqual": "Il totale delle suddivisioni ({splitTotal}) deve corrispondere all'importo della transazione ({txAmount})",
+      "destinationRequired": "Seleziona un conto di destinazione",
+      "sameAccount": "Il conto di origine e quello di destinazione devono essere diversi",
+      "negativeTransfer": "L'importo del trasferimento non deve essere negativo",
+      "payeeCreated": "Beneficiario \"{name}\" creato",
+      "payeeCreateFailed": "Creazione beneficiario non riuscita",
+      "payeeReactivated": "Beneficiario \"{name}\" riattivato",
+      "payeeReactivateFailed": "Riattivazione beneficiario non riuscita",
+      "categoryCreated": "Categoria \"{name}\" creata",
+      "categoryCreateFailed": "Creazione categoria non riuscita",
+      "tagCreated": "Etichetta \"{name}\" creata",
+      "fxRateRequired": "Inserisci un tasso di cambio o l'importo convertito prima di salvare una transazione in valuta estera.",
+      "jointPayeeCreateNotGranted": "Il proprietario del conto non ti ha concesso il permesso di creare beneficiari. Scegli uno dei suoi beneficiari esistenti."
+    },
+    "ariaHistory": "Mostra transazioni recenti",
+    "ariaHistoryForPayee": "Mostra transazioni recenti per questo beneficiario",
+    "historyTitle": "Compilazione rapida da una transazione recente",
+    "currencyPicker": {
+      "label": "Valuta di inserimento",
+      "ariaLabel": "Cambia la valuta di inserimento",
+      "title": "Inserisci l'importo in",
+      "accountCurrency": "Valuta del conto ({code})",
+      "addCurrency": "Aggiungi valuta...",
+      "optionLabel": "{symbol} - {name} ({code})",
+      "createFailed": "Impossibile aggiungere la valuta",
+      "reactivated": "{code} riattivata"
+    },
+    "fx": {
+      "totalInCurrency": "Totale in {currency}",
+      "rateCaption": "1 {from} = {rate} {to} ({date})",
+      "noRateWarning": "Nessun tasso di cambio trovato da {from} a {to} il {date}. Inserisci manualmente l'importo convertito.",
+      "usingLatestRateHint": "Viene usato l'ultimo tasso disponibile (non alla data {date}).",
+      "displayToggle": {
+        "account": "Conto",
+        "original": "Originale"
+      },
+      "feeCaption": "Include una commissione per transazione estera del {percent}% ({fee})."
+    },
+    "jointSplitDisabled": "Le transazioni suddivise in un conto condiviso possono essere gestite solo dal proprietario"
+  },
+  "splitEditor": {
+    "header": "Dettagli suddivisione",
+    "distributeProportionally": "Distribuisci proporzionalmente",
+    "distributeProportionallyTitle": "Distribuisce l'importo rimanente in modo proporzionale in base all'importo di ogni suddivisione",
+    "distributeEvenly": "Distribuisci uniformemente",
+    "addSplit": "Aggiungi suddivisione",
+    "removeMinimum": "Sono richieste almeno 2 suddivisioni",
+    "removeSplit": "Rimuovi suddivisione",
+    "removeAndConvert": "Rimuovi la suddivisione e converti in una transazione normale",
+    "convertConfirm": {
+      "title": "Convertire in una transazione normale?",
+      "message": "Rimuovendo questa suddivisione, l'elemento tornerà a essere una transazione normale utilizzando la categoria della suddivisione rimanente.",
+      "confirm": "Converti"
+    },
+    "noUnassigned": "Nessun importo non assegnato",
+    "addRemaining": "Aggiungi il rimanente a questa suddivisione",
+    "total": "Totale",
+    "balanced": "Bilanciato",
+    "remaining": "Rimanente: {symbol}{amount}",
+    "needAmount": "Necessari {symbol}{amount} (rimanente: {symbol}{remaining})",
+    "setTotal": "Imposta totale a {symbol}{amount}",
+    "currencyToggle": {
+      "title": "Cambia la valuta in cui gli importi suddivisi vengono mostrati e modificati",
+      "ariaAmountsIn": "Mostra e modifica gli importi suddivisi in {code}"
+    },
+    "splitLabel": "Suddivisione {number}",
+    "columns": {
+      "type": "Tipo",
+      "categoryAccount": "Categoria / Conto",
+      "category": "Categoria",
+      "amount": "Importo",
+      "memo": "Memo",
+      "tags": "Etichette"
+    },
+    "splitTypes": {
+      "category": "Categoria",
+      "transfer": "Trasferimento",
+      "investment": "Investimento"
+    },
+    "selectCategory": "Seleziona categoria...",
+    "selectAccount": "Seleziona conto...",
+    "memoPlaceholder": "Memo facoltativo",
+    "mobileMemoPlaceholder": "Memo",
+    "tagsPlaceholder": "Etichette..."
+  },
+  "recentPopover": {
+    "recentForPayee": "Recenti per {name}",
+    "recentTransactions": "Transazioni recenti",
+    "loading": "Caricamento...",
+    "noRecent": "Nessuna transazione recente.",
+    "noRecentForPayee": "Nessuna transazione recente per questo beneficiario.",
+    "noPayee": "(nessun beneficiario)",
+    "uncategorized": "(non categorizzata)"
+  },
+  "investmentSplit": {
+    "ariaAction": "Azione investimento",
+    "ariaSecurity": "Titolo",
+    "selectSecurity": "Seleziona titolo...",
+    "quantityPlaceholder": "Quantità",
+    "pricePlaceholder": "Prezzo",
+    "commissionPlaceholder": "Commissione",
+    "amountPlaceholder": "Importo ({currency})",
+    "ratePlaceholder": "{to} per 1 {from}",
+    "ariaRate": "Tasso di cambio ({to} per 1 {from})",
+    "rateHint": "Quantità, prezzo e commissione sono in {from}; questo tasso converte l'impatto di cassa in {to}.",
+    "rateUnresolved": "Nessun tasso da {from} a {to} disponibile. Inseriscine uno — senza non si può calcolare l'impatto di cassa, e le due valute non sono uguali."
+  },
+  "charts": {
+    "balanceHistory": {
+      "title": "Storico saldo",
+      "noData": "Nessun dato saldo disponibile",
+      "starting": "Iniziale",
+      "current": "Corrente",
+      "ending": "Finale",
+      "lowest": "Minimo",
+      "minBalance": "Saldo minimo",
+      "projected": "Previsto",
+      "range": "{start} – {end}"
+    },
+    "zeroBalances": {
+      "message": "Tutti i conti selezionati hanno saldo zero, quindi non c'è alcun grafico dei saldi da mostrare."
+    },
+    "monthlyTotals": {
+      "title": "Totali mensili",
+      "noData": "Nessun dato transazione disponibile",
+      "monthlyAvg": "Media mensile",
+      "quarterlyAvg": "Media trimestrale",
+      "yearlyAvg": "Media annuale",
+      "total": "Totale",
+      "transactions": "Transazioni",
+      "tooltip": "{count, plural, one {# transazione} other {# transazioni}}",
+      "quarterLabel": "T{quarter} {year}",
+      "quarterTick": "T{quarter} {year}",
+      "granularityLabel": "Raggruppamento",
+      "granularity": {
+        "auto": "Auto",
+        "month": "Mese",
+        "quarter": "Trimestre",
+        "year": "Anno"
+      },
+      "granularityAutoTitle": "Auto ({granularity})",
+      "granularityTitle": "Vista per {label}"
+    },
+    "accountBalances": {
+      "title": "Saldi dei conti",
+      "noData": "Nessun dato saldo disponibile",
+      "average": "Media",
+      "total": "Totale",
+      "accounts": "Conti",
+      "scaleLabel": "Scala asse Y",
+      "auto": "Auto",
+      "linear": "Lineare",
+      "log": "Log",
+      "autoTitle": "Auto ({scale})",
+      "scaleTitle": "Scala {label}"
+    }
+  },
+  "toasts": {
+    "payeeUpdated": "Beneficiario aggiornato con successo",
+    "deleted": "{count, plural, one {# transazione eliminata} other {# transazioni eliminate}}",
+    "noneToExport": "Nessuna transazione da esportare",
+    "exported": "{count, plural, one {Esportata # transazione} other {Esportate # transazioni}}",
+    "loadFormDataFailed": "Caricamento dati modulo non riuscito",
+    "loadFailed": "Caricamento transazioni non riuscito",
+    "loadPayeeFailed": "Caricamento dettagli beneficiario non riuscito",
+    "payeeUpdateFailed": "Aggiornamento beneficiario non riuscito",
+    "categoryUpdated": "Categoria aggiornata con successo",
+    "categoryUpdateFailed": "Aggiornamento categoria non riuscito",
+    "exportFailed": "Esportazione transazioni non riuscita"
+  },
+  "validation": {
+    "dateRequired": "La data è obbligatoria"
+  },
+  "tagKeyBreakdown": {
+    "title": "Spese per {key}",
+    "other": "Altro",
+    "noData": "Nessuna spesa etichettata da ripartire per questa chiave."
+  }
+}

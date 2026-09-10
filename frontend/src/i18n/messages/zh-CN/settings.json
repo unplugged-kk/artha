@@ -1,0 +1,1239 @@
+{
+  "language": {
+    "label": "语言",
+    "browserOption": "使用浏览器语言（自动检测为 {locale}）",
+    "helpText": "选择整个 Monize 界面使用的语言。数字和日期格式在下方单独设置。",
+    "saved": "语言已更新",
+    "saveFailed": "保存语言失败"
+  },
+  "profile": {
+    "heading": "个人资料",
+    "firstNameLabel": "名字",
+    "firstNamePlaceholder": "输入您的名字",
+    "lastNameLabel": "姓氏",
+    "lastNamePlaceholder": "输入您的姓氏",
+    "emailLabel": "电子邮件",
+    "emailPlaceholder": "输入您的电子邮件",
+    "currentPasswordLabel": "当前密码",
+    "currentPasswordPlaceholder": "更改电子邮件时需要",
+    "passwordRequired": "更改电子邮件需要当前密码",
+    "noChanges": "没有需要保存的更改",
+    "passwordConfirmNote": "更改电子邮件地址时需要密码确认。",
+    "saveButton": "保存个人资料",
+    "savingButton": "保存中...",
+    "toasts": {
+      "success": "个人资料已成功更新",
+      "updateFailed": "更新个人资料失败"
+    },
+    "validation": {
+      "firstNameMax": "名字不能超过 100 个字符",
+      "lastNameMax": "姓氏不能超过 100 个字符",
+      "emailRequired": "电子邮件为必填项",
+      "emailInvalid": "请输入有效的电子邮件地址",
+      "emailMax": "电子邮件不能超过 254 个字符",
+      "passwordMax": "密码不能超过 128 个字符"
+    }
+  },
+  "security": {
+    "heading": "安全",
+    "ssoNotice": "您的账户使用单点登录（SSO）进行身份验证。下方密码不用于登录，但可作为 SSO 被停用时的备用凭据。",
+    "currentPasswordLabel": "当前密码",
+    "currentPasswordPlaceholder": "输入当前密码",
+    "newPasswordLabel": "新密码",
+    "newPasswordPlaceholder": "输入新密码",
+    "confirmPasswordLabel": "确认新密码",
+    "confirmPasswordPlaceholder": "确认新密码",
+    "changePasswordButton": "更改密码",
+    "changingPasswordButton": "更改中...",
+    "toasts": {
+      "passwordChanged": "密码已成功更改",
+      "passwordChangeFailed": "更改密码失败"
+    },
+    "twoFactor": {
+      "heading": "双因素认证",
+      "ssoUnavailable": "SSO 账户不支持双因素认证。身份验证安全由您的身份提供商管理。",
+      "enabledBadge": "已启用",
+      "enabledDescription": "您的账户已受 TOTP 验证保护。",
+      "requiredByAdmin": "管理员要求",
+      "addLayerDescription": "为您的账户添加额外安全层。",
+      "enableButton": "启用 2FA",
+      "disableButton": "禁用 2FA",
+      "disableModal": {
+        "title": "禁用双因素认证",
+        "description": "输入您当前的 6 位验证码以确认禁用 2FA。",
+        "verificationCodeLabel": "验证码",
+        "disablingButton": "禁用中...",
+        "toasts": {
+          "disabled": "双因素认证已禁用",
+          "disableFailed": "禁用 2FA 失败"
+        }
+      }
+    },
+    "backupCodes": {
+      "heading": "备用代码",
+      "description": "当您无法访问身份验证器应用时，可使用备用代码登录。",
+      "regenerateButton": "重新生成代码",
+      "regenerateModal": {
+        "title": "重新生成备用代码",
+        "description": "输入您当前的 6 位验证码以确认重新生成备用代码。这将使所有现有代码失效。",
+        "verificationCodeLabel": "验证码",
+        "regeneratingButton": "重新生成中...",
+        "regenerateButton": "重新生成"
+      },
+      "toasts": {
+        "generateFailed": "生成备用代码失败"
+      }
+    },
+    "trustedDevices": {
+      "heading": "受信任设备",
+      "revokeAllButton": "撤销全部",
+      "noDevices": "无受信任设备。在 2FA 登录时勾选\"不再询问此浏览器\"后，设备将显示在此处。",
+      "currentBadge": "当前设备",
+      "revokeButton": "撤销",
+      "revokeAllModal": {
+        "title": "撤销所有受信任设备",
+        "description": "这将移除所有受信任设备。下次从任何设备登录时，您需要输入 2FA 验证码。"
+      },
+      "toasts": {
+        "revoked": "设备已撤销",
+        "revokedAll": "已撤销 {count} 台设备",
+        "revokeFailed": "撤销设备失败",
+        "revokeAllFailed": "撤销设备失败"
+      }
+    },
+    "validation": {
+      "currentPasswordRequired": "当前密码为必填项",
+      "passwordMax": "密码不能超过 128 个字符",
+      "confirmRequired": "请确认您的新密码",
+      "newPasswordsNoMatch": "新密码不一致"
+    }
+  },
+  "preferences": {
+    "heading": "偏好设置",
+    "groups": {
+      "languageRegion": "语言与地区",
+      "appearance": "外观",
+      "datesNumbers": "日期与数字",
+      "investments": "投资",
+      "transactions": "交易",
+      "application": "应用"
+    },
+    "themeLabel": "主题",
+    "defaultCurrencyLabel": "默认货币",
+    "preferredExchangesLabel": "首选交易所（用于证券查询）",
+    "preferredExchangesHelp": "按优先顺序选择最多 3 个交易所。查询证券时将优先使用这些交易所。",
+    "exchangePriorityPlaceholder": "优先级 {n}",
+    "defaultQuoteProviderLabel": "默认行情提供商",
+    "defaultQuoteProviderHelp": "当证券没有提供商覆盖时使用。如果所选提供商失败，Monize 将自动尝试另一个。",
+    "msnNoIntradayNote": "注意：MSN Money 不提供日内行情数据，因此对于 MSN 追踪的持仓，投资组合价值走势图的 1D/1W/1M 时间范围不可用。",
+    "msnNotConfigured": "MSN 已选为默认行情提供商，但服务器未配置 MSN_API_KEY。在管理员设置环境变量并重启后端之前，MSN 行情将失败。",
+    "dateFormatLabel": "日期格式",
+    "numberFormatLabel": "数字格式",
+    "timezoneLabel": "时区",
+    "timezonePlaceholder": "搜索时区...",
+    "weekStartsOnLabel": "一周开始于",
+    "showCreatedAtLabel": "在交易表单中显示创建日期",
+    "showCreatedAtTooltip": "在交易表单中显示交易最初创建的日期和时间。这与交易日期不同，可帮助您了解条目实际添加到 Monize 的时间。",
+    "showWhatsNewLabel": "升级后显示更新内容",
+    "showWhatsNewTooltip": "在 Monize 更新到新版本后，您首次登录时显示版本说明摘要。您随时可以通过点击本页面底部或登录界面上的版本号重新打开它。",
+    "lockReconciledLabel": "锁定已对账交易",
+    "lockReconciledTooltip": "关闭时，如果某项修改会改变已对账交易的日期或金额，Monize 会先提醒你，然后仍允许修改。开启时，已对账交易完全不能编辑、删除或取消对账。要更正请再次关闭。",
+    "timeFormatLabel": "时间格式",
+    "timeFormatOptions": {
+      "h24": "24 小时制 (14:30)",
+      "h12": "12 小时制 (下午 2:30)"
+    },
+    "recentTransactionsLabel": "快速填充中的近期交易数量",
+    "recentTransactionsHelp": "交易表单中收款人字段旁历史按钮弹出框中显示的条目数量。",
+    "mapProviderLabel": "地址使用的地图服务",
+    "mapProviderHelp": "在桌面浏览器中点击地址时打开哪个地图服务。无论您在此处如何选择，手机和平板电脑始终会打开自己的地图应用。自动将在桌面端使用 OpenStreetMap。",
+    "mapProviderOptions": {
+      "device": "自动",
+      "apple": "Apple Maps",
+      "bing": "Bing Maps",
+      "google": "Google Maps",
+      "openstreetmap": "OpenStreetMap",
+      "waze": "Waze"
+    },
+    "toasts": {
+      "saved": "偏好设置已保存",
+      "saveFailed": "保存偏好设置失败",
+      "themeSaveFailed": "保存主题失败",
+      "colorThemeSaveFailed": "保存颜色主题失败"
+    },
+    "browserLocale": "使用浏览器语言（自动检测）",
+    "numberFormatOptions": {
+      "browser": "使用浏览器语言（自动检测为 {sample}）",
+      "enUS": "英语（美国）- 1,234.56",
+      "enGB": "英语（英国）- 1,234.56",
+      "deDE": "德语 - 1.234,56",
+      "frFR": "法语 - 1 234,56"
+    },
+    "weekDays": {
+      "sunday": "星期日",
+      "monday": "星期一",
+      "tuesday": "星期二",
+      "wednesday": "星期三",
+      "thursday": "星期四",
+      "friday": "星期五",
+      "saturday": "星期六"
+    },
+    "themeOptions": {
+      "system": "系统（跟随设备设置）",
+      "light": "浅色",
+      "dark": "深色"
+    },
+    "colorThemeLabel": "颜色主题",
+    "colorThemeHint": "预览使用您当前的浅色或深色模式。",
+    "colorThemeOptions": {
+      "default": "默认",
+      "latte": "拿铁",
+      "msmoney": "MS Money",
+      "newspaper": "报纸",
+      "burgundy": "勃艮第红",
+      "nord": "Nord",
+      "forest": "森林",
+      "solarized": "Solarized",
+      "gruvbox": "Gruvbox",
+      "dracula": "Dracula",
+      "tokyonight": "Tokyo Night",
+      "rosepine": "Rosé Pine",
+      "midnight": "午夜",
+      "highcontrast": "高对比度",
+      "colorblind": "色盲友好"
+    },
+    "timezoneBrowserOption": "使用浏览器时区（自动检测为 {tz}）"
+  },
+  "notifications": {
+    "heading": "通知",
+    "portfolioAlert": {
+      "title": "投资价值变动",
+      "description": "当我的投资账户变动超过阈值时，每天通知我一次；以市场变化和分红衡量（不含存入和取出）。",
+      "enableLabel": "启用投资变动提醒",
+      "thresholdLabel": "当每日变动至少达到以下值时通知",
+      "saveError": "无法保存阈值",
+      "loadError": "无法加载投资提醒设置",
+      "retry": "重试"
+    },
+    "smtpNotConfigured": "邮件通知不可用。管理员尚未配置 SMTP。",
+    "emailNotificationsTitle": "邮件通知",
+    "emailNotificationsDescription": "接收即将到期账单和预算提醒的邮件提醒",
+    "budgetNotificationsHeading": "预算通知",
+    "weeklyBudgetDigestTitle": "每周预算摘要",
+    "weeklyBudgetDigestDescription": "接收每周预算提醒和状态摘要",
+    "toggleBudgetDigestLabel": "切换预算摘要",
+    "digestDayLabel": "摘要日期",
+    "digestDayAriaLabel": "预算摘要日期",
+    "mondayOption": "星期一",
+    "fridayOption": "星期五",
+    "immediateAlertsNote": "严重预算提醒（超出预算、收入不足）无论摘要设置如何都会立即发送。",
+    "sendTestEmailDescription": "发送测试邮件以验证通知是否正常工作。",
+    "sendTestEmailButton": "发送测试邮件",
+    "sendingTestEmailButton": "发送中...",
+    "toasts": {
+      "emailEnabled": "邮件通知已启用",
+      "emailDisabled": "邮件通知已禁用",
+      "digestEnabled": "预算摘要已启用",
+      "digestDisabled": "预算摘要已禁用",
+      "digestDaySet": "预算摘要日期已设置为 {day}",
+      "testEmailSent": "测试邮件已发送！请查看您的收件箱。",
+      "emailUpdateFailed": "更新通知偏好失败",
+      "digestUpdateFailed": "更新预算摘要偏好失败",
+      "digestDayFailed": "更新摘要日期失败",
+      "testEmailFailed": "发送测试邮件失败"
+    },
+    "push": {
+      "heading": "浏览器推送",
+      "collapsedDevices": "{count, plural, =0 {未注册任何设备} other {已注册 # 台设备}}",
+      "collapsedDevicesWithRetired": "{count, plural, =0 {未注册任何设备} other {已注册 # 台设备}}，{retired, plural, other {# 台已停用}}",
+      "collapsedDevicesUnavailable": "设备列表不可用",
+      "diagnostics": {
+        "summary": "通知诊断",
+        "intro": "此浏览器和设备向 Monize 报告的通知相关信息。更改设置后请刷新，然后用“复制报告”发送完整报告。",
+        "refresh": "刷新",
+        "copy": "复制报告",
+        "copied": "已将诊断复制到剪贴板"
+      },
+      "description": "注册此设备，Monize 即可在应用关闭时也送达通知。目前通过这条通道送达的只有测试通知，其余仍然出现在铃铛里。",
+      "androidNotify": "在 Android 上，仅授予权限还不够：系统仍可能隐藏通知。长按主屏幕上的 Monize 图标，点按“应用信息”，然后“通知”，并确保已开启。",
+      "permissionHint": "开启后，浏览器会请求显示通知的权限。在你允许之前不会发送任何内容。",
+      "enableButton": "在此设备上启用",
+      "enablingButton": "正在启用...",
+      "sendTestButton": "发送测试通知",
+      "sendingTestButton": "正在发送...",
+      "removeButton": "移除",
+      "thisDevice": "此设备",
+      "unifiedpushBadge": "UnifiedPush",
+      "unnamedDevice": "未命名设备",
+      "noLiveDevices": "尚未注册任何设备。请在此设备上启用推送后再发送测试。",
+      "notConfigured": "此 Monize 实例不提供浏览器推送。管理员可以在 Admin 区域启用。",
+      "disabledByAdmin": "管理员已为此 Monize 实例关闭浏览器推送。",
+      "keyUnreadable": "Monize 无法读取此实例的推送密钥对，因此无法投递任何通知。管理员可在 Admin 区域轮换密钥对以恢复。",
+      "serverKeyMissing": "此 Monize 实例缺少打开推送密钥对所需的加密密钥，因此无法投递任何内容。需要管理员在部署中设置该密钥并重启。",
+      "statusUnavailable": "Monize 无法确认浏览器推送是否可用。请重新加载页面后重试。",
+      "devicesUnavailable": "Monize 无法加载你已注册的设备。本页其他功能仍可使用；请重新加载后重试。",
+      "unsupported": {
+        "unsupported": "此浏览器无法接收推送通知。",
+        "denied": "此浏览器已阻止 Monize 的通知。请在浏览器的网站设置中允许通知，然后重新加载本页。",
+        "ios-browser": "在 iPhone 和 iPad 上，只有将 Monize 添加到主屏幕后推送通知才会生效。请使用“分享”，然后选择“添加到主屏幕”，并从那里打开 Monize。"
+      },
+      "disabledReason": {
+        "GONE": "已无法送达。请在该浏览器中重新启用推送。",
+        "KEY_ROTATED": "此实例轮换推送密钥对时已停用。请在该浏览器中重新启用推送。",
+        "FAILING": "多次投递失败后已停用。请在该浏览器中重新启用推送。"
+      },
+      "toasts": {
+        "enabled": "已在此设备上启用推送通知",
+        "enableFailed": "无法启用推送通知",
+        "permissionDenied": "此浏览器正在阻止 Monize 的通知。请在网站设置中允许后重试。",
+        "permissionDeniedIos": "Monize 的通知已被阻止。请打开 iOS“设置”，然后“通知”，再选择 Monize 以允许。",
+        "permissionDismissed": "未启用通知。浏览器询问时请选择“允许”。",
+        "permissionNoPrompt": "通知未开启，也没有出现任何请求。请打开 iOS“设置”，然后“通知”，再选择 Monize 并允许。如果列表中没有 Monize，请从主屏幕移除后重新添加（“分享”，然后“添加到主屏幕”），再试一次。",
+        "removed": "已移除设备",
+        "removeFailed": "无法移除设备",
+        "testSent": "{count, plural, other {测试通知已发送至 # 台设备}}",
+        "testPartial": "测试通知送达 {attempted} 台设备中的 {delivered} 台",
+        "testFailed": "无法投递测试通知",
+        "pushServiceRefused": "浏览器的推送服务拒绝了注册。请稍后重试；如果持续失败，请检查浏览器的推送设置。",
+        "pushServiceRefusedBrave": "Brave 默认屏蔽推送服务。在 Brave 中打开“设置”，然后“隐私和安全”，开启“使用 Google 服务进行推送消息传递”，重启浏览器后重试。"
+      },
+      "testResults": {
+        "heading": "上次测试（按设备）",
+        "status": {
+          "sent": "已送达推送服务",
+          "expired": "订阅已过期；请在该设备上重新启用推送",
+          "transient": "未送达（临时错误）；请重试",
+          "unconfigured": "此实例目前无法为推送消息签名"
+        }
+      },
+      "transport": {
+        "webpush": "网页推送",
+        "unifiedpush": "UnifiedPush"
+      },
+      "facts": {
+        "endpoint": "端点",
+        "transport": "投递方式",
+        "registeredIp": "注册来源",
+        "registered": "注册时间",
+        "lastSeen": "最近活动",
+        "lastDelivery": "最近投递",
+        "noDelivery": "尚未投递过任何内容",
+        "userAgent": "浏览器",
+        "unknownIp": "未知"
+      }
+    },
+    "preferences": {
+      "heading": "如何通知我",
+      "description": "选择 Monize 通过邮件或推送发送哪些类型，以及发送频率。",
+      "categoryHeader": "通知",
+      "channels": {
+        "emailReport": "邮件（报告）",
+        "emailNotification": "邮件（提醒）",
+        "push": "推送",
+        "unifiedpush": "UnifiedPush",
+        "unifiedpushHint": "通知通过你自行运行的分发应用（例如 ntfy）投递，而不是浏览器厂商的推送服务。请在该应用中注册一个端点以使用此通道。"
+      },
+      "categories": {
+        "PAYMENTS": "账单与计划",
+        "BUDGETS": "预算",
+        "SYSTEM": "系统警报",
+        "BALANCES": "账户余额",
+        "INVESTMENTS": "投资价值",
+        "STRATEGIES": "策略信号"
+      },
+      "channelNotApplicable": "不适用于此通知类型",
+      "emailToggleLabel": "{category} 的报告邮件",
+      "saveFailed": "无法保存该设置",
+      "throttle": {
+        "label": "间隔",
+        "ariaLabel": "{category} 的冷却时间",
+        "hint": "如果同组通知已在此时间窗内发送，则跳过提醒或推送。",
+        "options": {
+          "0": "关闭",
+          "5": "5 分钟",
+          "15": "15 分钟",
+          "30": "30 分钟",
+          "60": "1 小时",
+          "360": "6 小时",
+          "1440": "24 小时"
+        }
+      },
+      "emailNotificationToggleLabel": "{category} 的提醒邮件",
+      "pushToggleLabel": "{category} 的推送",
+      "unifiedpushToggleLabel": "{category} 的 UnifiedPush",
+      "emailUnavailable": "在上方开启邮件通知，即可通过邮件发送。",
+      "pushUnavailable": "没有设备注册推送，因此此通道无法投递。",
+      "pushEnableHint": "此浏览器尚未注册推送通知。"
+    }
+  },
+  "help": {
+    "heading": "帮助与支持",
+    "description": "查找文档、报告问题或加入讨论。",
+    "github": {
+      "label": "GitHub",
+      "description": "查看源代码并为项目点星。"
+    },
+    "openIssue": {
+      "label": "提交问题",
+      "description": "报告错误或请求新功能。"
+    },
+    "discussions": {
+      "label": "讨论",
+      "description": "与社区提问和分享想法。"
+    },
+    "wiki": {
+      "label": "Wiki",
+      "description": "浏览指南和文档。"
+    },
+    "supportBackup": {
+      "label": "创建支持备份",
+      "description": "分享一份去标识化且加密的数据副本,让维护者无需看到您的真实名称或金额即可重现问题。"
+    }
+  },
+  "about": {
+    "heading": "关于",
+    "description": "此实例正在运行的版本，以及版本说明、许可证和安全政策的位置。",
+    "appName": "Monize",
+    "tagline": "自托管的个人财务管理。",
+    "versionLabel": "版本",
+    "versionUnknown": "未知",
+    "versionButtonTitle": "查看 v{version} 版本说明",
+    "apiVersionLabel": "API 版本",
+    "versionMismatch": "Web 应用与 API 运行的版本不一致。这通常意味着升级只部署了一部分 -- 请重启或重新部署落后的服务。",
+    "updateLabel": "更新",
+    "updateUpToDate": "已是最新",
+    "updateAvailable": "有新版本 v{version}",
+    "updateAvailableGeneric": "有更新的版本可用",
+    "updateViewRelease": "查看发布",
+    "whatsNew": {
+      "label": "v{version} 更新内容",
+      "labelGeneric": "更新内容",
+      "description": "无需离开应用即可阅读此版本的版本说明。"
+    },
+    "allReleases": {
+      "label": "所有版本",
+      "description": "在 GitHub 上浏览每个版本及其说明。"
+    },
+    "license": {
+      "label": "许可证",
+      "description": "Monize 是遵循 GNU AGPL v3 的自由软件。"
+    },
+    "securityPolicy": {
+      "label": "安全政策",
+      "description": "如何私下报告安全漏洞。"
+    },
+    "diagnostics": {
+      "label": "复制诊断信息",
+      "description": "复制版本、浏览器和语言信息，以便粘贴到问题报告中。",
+      "copied": "诊断信息已复制到剪贴板",
+      "copyFailed": "无法将诊断信息复制到剪贴板"
+    }
+  },
+  "supportBackup": {
+    "title": "创建支持备份",
+    "howItWorks": "生成备份的去标识化副本:名称被掩码(保留首尾各两个字符),备注/描述/账号被移除,每笔金额乘以同一个隐藏系数,而公开数值(汇率、价格、利率)保持不变。文件始终使用下方密码加密,并像普通备份一样还原。这只能防范偶然泄露,防不住已经认识您的人——日期、频率和结构会被保留,以便问题仍可重现。",
+    "sectionsLabel": "包含内容",
+    "sections": {
+      "investments": "投资(证券、持仓、价格)",
+      "scheduled": "定期交易",
+      "budgets": "预算",
+      "reports": "报表与预测",
+      "importMappings": "导入列映射",
+      "autoBackup": "自动备份设置"
+    },
+    "priceHistoryLabel": "包含证券价格历史",
+    "priceHistoryHint": "默认关闭:完整的价格序列与公开市场数据一致,可能识别出被掩码的代码。仅当问题涉及价格或估值时才开启。",
+    "accountsLabel": "限定为特定账户",
+    "accountsHint": "全部不勾选则包含所有账户。选择子集时也会带入其引用的账户和收款人。",
+    "dateRangeLabel": "日期范围(可选)",
+    "dateRangeHint": "将导出的历史限定在这些日期内。期初余额会相应调整,使裁剪后的文件依然对账。",
+    "dateFromLabel": "从",
+    "dateToLabel": "至",
+    "multiplierLabel": "金额乘数",
+    "multiplierHint": "每笔私人金额都会乘以该数字,以在保持一致性的同时隐藏真实数值。任何大于 1 的非整数均可;“重新生成”会选取新值。",
+    "multiplierWarning": "请勿将乘数分享给任何人——它是还原隐藏金额的密钥。",
+    "multiplierInvalid": "请输入大于 1 的非整数。",
+    "regenerate": "重新生成",
+    "passwordLabel": "加密密码",
+    "preview": "预览",
+    "previewLabel": "预览",
+    "previewBefore": "之前",
+    "previewAfter": "之后",
+    "previewEmpty": "当前选择没有可预览的示例行。",
+    "previewFailed": "无法生成预览,请重试。",
+    "generate": "生成",
+    "confirmPasswordTitle": "密码保存好了吗?",
+    "confirmPasswordMessage": "文件只能用上方显示的加密密码打开。密码不会被存储在任何地方,之后也无法找回——生成前请确认已妥善保存。",
+    "confirmPasswordConfirm": "已保存——生成",
+    "generatedToast": "支持备份已下载。",
+    "generateFailed": "无法生成支持备份,请重试。",
+    "passwordHint": "文件始终加密。请通过单独渠道将此密码交给排查者,不要与文件一起发送。",
+    "passwordInvalid": "请输入至少 8 个字符。"
+  },
+  "dangerZone": {
+    "heading": "危险区域",
+    "deleteData": {
+      "heading": "删除数据",
+      "description": "从您的账户中移除财务数据。此操作无法撤销。",
+      "openButton": "删除数据...",
+      "alwaysDeletedHeading": "以下内容将始终被删除：",
+      "optionalHeading": "可选择同时删除：",
+      "accountsOption": "账户",
+      "categoriesOption": "分类",
+      "payeesOption": "收款人",
+      "currencyPreferencesOption": "货币偏好",
+      "balanceResetNote": "账户余额将被重置为其初始余额。",
+      "oidcConfirmLabel": "通过身份提供商重新验证以确认：",
+      "passwordConfirmLabel": "输入您的密码以确认：",
+      "passwordPlaceholder": "输入您的密码",
+      "oidcReauthButton": "重新验证并删除",
+      "deletingButton": "删除中...",
+      "confirmButton": "确认删除数据",
+      "toasts": {
+        "success": "已成功删除 {count} 条记录",
+        "failed": "删除数据失败"
+      }
+    },
+    "deleteAccount": {
+      "heading": "删除账户",
+      "description": "永久删除您的账户及所有关联数据。此操作无法撤销。",
+      "delegateNotice": {
+        "title": "您是另一个账户的委托人。",
+        "body": "删除您的账户将移除您自己的数据，但您的登录凭据以及他人授予您的共享访问权限将保留，以维持委托关系。要撤销该访问权限，请先请账户所有者将您从其共享访问列表中移除。"
+      },
+      "openButton": "删除账户",
+      "typeDeleteLabel": "输入 DELETE 以确认账户删除：",
+      "typeDeletePlaceholder": "输入 DELETE",
+      "enterPasswordLabel": "输入您的密码：",
+      "enterPasswordPlaceholder": "输入您的密码",
+      "deletingButton": "删除中...",
+      "confirmButton": "确认删除",
+      "toasts": {
+        "downgraded": "您自己的数据已移除。登录凭据和共享访问权限已保留，以维持委托关系。",
+        "deleted": "账户已删除",
+        "failed": "删除账户失败",
+        "reauthRedirect": "正在跳转到身份提供商以确认你的身份，完成后会回到这里。"
+      },
+      "errors": {
+        "typeDelete": "请输入 DELETE 以确认",
+        "passwordRequired": "请输入您的密码以确认"
+      }
+    }
+  },
+  "apiAccess": {
+    "heading": "API 访问",
+    "description": "创建个人访问令牌，通过 MCP 连接 Claude Desktop 等外部 AI 工具。",
+    "createTokenButton": "创建令牌",
+    "mcpServerUrlLabel": "MCP 服务器 URL",
+    "mcpServerUrlHelp": "配置 Claude Code 或 Claude Desktop 等 MCP 客户端时使用此 URL。",
+    "copyButton": "复制",
+    "copiedButton": "已复制",
+    "noTokens": "暂无 API 令牌。创建一个以开始使用。",
+    "tokenPrefix": "最后使用",
+    "expires": "到期",
+    "created": "创建",
+    "lastUsed": "最后使用",
+    "revokeButton": "撤销",
+    "revokeModal": {
+      "title": "撤销令牌",
+      "message": "此令牌将立即失效。使用该令牌的任何 MCP 连接将被断开。",
+      "confirmLabel": "撤销"
+    },
+    "createModal": {
+      "title": "创建 API 令牌",
+      "tokenNameLabel": "令牌名称",
+      "tokenNamePlaceholder": "例如：Claude Desktop",
+      "scopesLabel": "权限范围",
+      "expirationLabel": "有效期",
+      "creatingButton": "创建中...",
+      "createButton": "创建令牌",
+      "scopes": {
+        "read": {
+          "label": "读取",
+          "description": "查看账户、交易和分类"
+        },
+        "write": {
+          "label": "写入",
+          "description": "创建交易、收款人和分类"
+        }
+      },
+      "expiry": {
+        "none": "永不过期",
+        "d30": "30 天",
+        "d90": "90 天",
+        "y1": "1 年"
+      },
+      "validation": {
+        "nameRequired": "令牌名称为必填项",
+        "nameMax": "令牌名称不能超过 100 个字符"
+      }
+    },
+    "createdModal": {
+      "title": "令牌已创建",
+      "warningNote": "请立即复制此令牌。之后将无法再次查看。",
+      "doneButton": "完成"
+    },
+    "toasts": {
+      "copied": "令牌已复制到剪贴板",
+      "mcpUrlCopied": "MCP URL 已复制到剪贴板",
+      "revoked": "令牌已撤销",
+      "selectScope": "至少选择一个权限范围",
+      "copyTokenFailed": "复制令牌失败",
+      "copyUrlFailed": "复制 URL 失败",
+      "loadFailed": "加载 API 令牌失败",
+      "createFailed": "创建令牌失败",
+      "revokeFailed": "撤销令牌失败"
+    },
+    "relative": {
+      "never": "从未",
+      "today": "今天",
+      "yesterday": "昨天",
+      "daysAgo": "{count} 天前",
+      "monthsAgo": "{count} 个月前"
+    }
+  },
+  "autoBackup": {
+    "heading": "自动备份",
+    "description": "按计划自动将数据备份到文件夹。由于 Monize 在 Docker 中运行，您必须将主机文件夹作为卷映射到容器中（例如：-v /host/backups:/data/backups）。",
+    "adminManagedNote": "只有管理员可以更改这些设置。其他所有用户都会按照相同的计划和保留策略自动备份到各自的文件夹中。",
+    "loadingText": "加载中...",
+    "enableLabel": "启用自动备份",
+    "backupFolderLabel": "备份文件夹",
+    "backupFolderPlaceholder": "/data/backups",
+    "perUserFolderHelp": "每位用户的备份都会存放在此文件夹内以其用户 ID 命名的专属文件夹中。",
+    "perUserFolderHelpWithPath": "每位用户的备份都会存放在此文件夹内以其用户 ID 命名的专属文件夹中。您的：{path}",
+    "browseButton": "浏览...",
+    "validateButton": "验证",
+    "validatingButton": "验证中...",
+    "folderValid": "文件夹有效且可写",
+    "selectThisFolder": "选择此文件夹",
+    "noSubdirectories": "无子目录",
+    "frequencyLabel": "备份频率",
+    "backupTimeLabel": "备份时间（{timezone}）",
+    "backupTimeHelpInterval": "当天第一次备份在此时间（{timezone}）开始。后续备份按配置的间隔进行。",
+    "backupTimeHelpDaily": "在您本地时区（{timezone}）运行备份的时间。",
+    "retention": {
+      "heading": "保留策略",
+      "description": "配置保留多少备份。超出这些限制的较旧备份将自动删除。",
+      "dailyLabel": "每日备份",
+      "dailyHelp": "保留最近的备份数量",
+      "weeklyLabel": "每周备份",
+      "weeklyHelp": "每周保留一份",
+      "monthlyLabel": "每月备份",
+      "monthlyHelp": "每月保留一份"
+    },
+    "status": {
+      "heading": "状态",
+      "lastBackup": "上次备份",
+      "nextBackup": "下次备份",
+      "error": "错误",
+      "success": "成功",
+      "failed": "失败",
+      "partial": "不完整"
+    },
+    "saveButton": "保存设置",
+    "savingButton": "保存中...",
+    "runNowButton": "立即运行备份",
+    "runningButton": "正在运行备份...",
+    "toasts": {
+      "saved": "自动备份设置已保存",
+      "backupCreated": "备份已创建：{filename}",
+      "folderValid": "文件夹有效且可写",
+      "loadFailed": "加载自动备份设置失败",
+      "saveFailed": "保存设置失败",
+      "runFailed": "运行备份失败",
+      "browseFailed": "浏览文件夹失败"
+    },
+    "folderErrors": {
+      "required": "文件夹路径为必填项",
+      "validationFailed": "文件夹验证失败",
+      "validationError": "验证失败"
+    },
+    "frequencyOptions": {
+      "every6hours": "每 6 小时",
+      "every12hours": "每 12 小时",
+      "daily": "每天",
+      "weekly": "每周"
+    },
+    "noStorage": {
+      "title": "此部署没有备份存储",
+      "body": "自动备份将写入 {folderPath}，但此部署无法向该位置写入。管理员需要先在该位置挂载存储，计划任务才能运行。"
+    },
+    "never": "从未"
+  },
+  "backupRestore": {
+    "heading": "备份与恢复",
+    "encryption": {
+      "heading": "备份加密",
+      "descriptionOidc": "使用您在此处设置的专用备份密码加密手动和自动备份。恢复时需要此密码。",
+      "descriptionLocal": "您的备份使用登录密码加密。无需另外记住其他密码：用同一个密码即可恢复。",
+      "unavailable": "此服务器未配置备份加密，因此备份以未加密方式写入。",
+      "enabledBadge": "已启用",
+      "disabledBadge": "未启用",
+      "enabledLocalNote": "备份使用您的登录密码加密。",
+      "disabledLocalNote": "在您确认登录密码之前，备份将以未加密方式写入。",
+      "enableWithLoginPasswordButton": "使用我的登录密码启用",
+      "loading": "加载中...",
+      "changePasswordButton": "更改备份密码",
+      "disableButton": "禁用",
+      "setPasswordButton": "设置备份密码",
+      "setupModal": {
+        "titleOidc": "设置备份密码",
+        "titleLocal": "启用加密备份",
+        "descriptionOidc": "选择用于加密备份的密码。请妥善保存——恢复时需要此密码。",
+        "descriptionLocal": "确认您的登录密码以启用加密备份。备份将使用该密码加密，恢复时也需要它。",
+        "placeholderOidc": "新备份密码（至少 12 位）",
+        "placeholderLocal": "您的登录密码",
+        "savingButton": "保存中...",
+        "confirmButton": "确认"
+      },
+      "toasts": {
+        "enabled": "加密备份已启用",
+        "disabled": "加密备份已禁用",
+        "enableFailed": "启用加密失败",
+        "disableFailed": "禁用加密失败"
+      }
+    },
+    "export": {
+      "heading": "创建备份",
+      "description": "下载完整的财务数据备份。包括账户、交易、分类、收款人、预算、投资及所有其他用户数据。",
+      "downloadButton": "下载备份",
+      "creatingButton": "创建备份中...",
+      "exportPasswordModal": {
+        "title": "加密备份",
+        "description": "输入密码以加密此备份。恢复时需要此密码。",
+        "placeholderOidc": "备份密码",
+        "placeholderLocal": "登录密码",
+        "encryptingButton": "加密中...",
+        "downloadButton": "下载"
+      },
+      "toasts": {
+        "success": "备份已成功下载",
+        "incomplete": "备份已下载，但内容不完整：{total} 个附件中有 {unusable} 个未能完整保存（{missing} 个缺失，{inconsistent} 个未通过完整性校验）。请勿将此文件视为完整备份——修复附件存储后重新导出。",
+        "failed": "创建备份失败"
+      }
+    },
+    "restore": {
+      "heading": "从备份恢复",
+      "description": "用之前导出的备份文件替换当前所有数据。这将永久覆盖您现有的数据。",
+      "openButton": "从备份恢复...",
+      "warning": "警告：这将删除您当前的所有数据并用备份内容替换。此操作无法撤销。",
+      "selectFileLabel": "选择备份文件",
+      "encryptedBackupLabel": "此备份已加密。请输入创建时使用的备份密码：",
+      "backupPasswordPlaceholder": "备份密码",
+      "oidcConfirmLabel": "通过身份提供商重新验证以确认：",
+      "passwordConfirmLabel": "输入您的账户密码以确认：",
+      "passwordPlaceholder": "输入您的密码",
+      "oidcRestoreButton": "重新验证并恢复",
+      "restoringButton": "恢复中...",
+      "confirmRestoreButton": "确认恢复",
+      "toasts": {
+        "pleaseSelectFile": "请选择备份文件",
+        "pleaseEnterPassword": "请输入您的密码以确认",
+        "encryptedNeedsPassword": "此备份已加密。请在\"备份密码\"字段中输入创建时使用的密码，然后重试。",
+        "failed": "恢复备份失败",
+        "reauthRedirect": "正在跳转到身份提供商以确认你的身份。返回后请重新选择备份文件。"
+      }
+    },
+    "restoreResult": {
+      "title": "恢复完成",
+      "description": "您的数据已成功恢复。以下是恢复内容摘要：",
+      "totalRecords": "总记录数",
+      "doneButton": "完成",
+      "skippedAttachments": "{count, plural, other {# 个附件未被恢复}}：备份中没有可用的字节——导出时它们缺失或未通过校验和，或该文件早于自包含备份。请在附件存储恢复正常后重新导出备份。",
+      "unusableAiProviderKeys": "{count, plural, other {# 个 AI 提供商在恢复后没有可用的 API 密钥}}：该备份创建于提供商密钥随备份一同保存之前，因此存储的密钥属于生成该文件的服务器，或者本服务器没有配置用于保存密钥的加密密钥。请打开“设置 → AI 提供商”并重新输入 API 密钥。"
+    }
+  },
+  "sharedAccess": {
+    "description": "委托人使用自己的凭据登录，永远不会看到您的密码。他们只能看到您授权的账户和功能区域。",
+    "addDelegateButton": "添加委托人",
+    "loading": "加载中...",
+    "noDelegates": "暂无委托人。",
+    "statusLabel": "状态：{status}",
+    "sectionsLabel": "功能区域：{count}",
+    "accountsLabel": "账户：{count}",
+    "sharedDataLabel": "共享数据：{count}",
+    "editAccessButton": "编辑访问权限",
+    "resetPasswordButton": "重置密码",
+    "resetPasswordDisabledTitle": "此人自行管理密码（他们有自己的 Monize 账户或在其他地方拥有委托访问权限）。",
+    "removeButton": "移除",
+    "createModal": {
+      "title": "添加委托人",
+      "description": "授予他人对您账户的范围访问权限。",
+      "emailLabel": "电子邮件",
+      "emailPlaceholder": "委托人电子邮件",
+      "checkingEmail": "正在将此电子邮件与现有 Monize 账户进行核对……",
+      "retryEmailCheck": "重新检查",
+      "firstNameLabel": "名字",
+      "firstNamePlaceholder": "名字（可选）",
+      "lastNameLabel": "姓氏",
+      "lastNamePlaceholder": "姓氏（可选）",
+      "existingAccountNotice": "此人已有 Monize 登录账户。他们将保留自己的凭据并被授予额外的共享访问权限——无需密码或邀请。",
+      "sendInviteLabel": "发送邮件邀请而不是设置密码",
+      "passwordLabel": "密码",
+      "passwordPlaceholder": "设置密码",
+      "submitButton": "添加委托人"
+    },
+    "revokeDialog": {
+      "title": "移除委托人",
+      "message": "移除此委托人？他们将失去对您账户的访问权限。如果他们没有其他共享访问权限，也没有将此电子邮件作为自己的 Monize 账户，则由所有者管理的登录也将被移除。",
+      "removingButton": "移除中...",
+      "removeButton": "移除"
+    },
+    "tempPasswordModal": {
+      "title": "临时密码",
+      "description": "请安全地将此密码发送给委托人。首次登录时将要求其更改密码。此密码不会再次显示。",
+      "copyButton": "复制",
+      "copiedButton": "已复制",
+      "doneButton": "完成"
+    },
+    "toasts": {
+      "created": "委托人已创建",
+      "createdWithTempPassword": "委托人已创建。临时密码：{password}",
+      "invited": "邀请邮件已发送",
+      "removed": "委托人已移除"
+    },
+    "errors": {
+      "setPasswordOrInvite": "请设置密码或发送邮件邀请。",
+      "loadFailed": "加载共享访问失败",
+      "createFailed": "创建委托人失败",
+      "revokeFailed": "撤销委托人失败",
+      "resetPasswordFailed": "重置密码失败",
+      "copyFailed": "无法复制到剪贴板",
+      "lookupFailed": "无法将此电子邮件与现有 Monize 账户进行核对。在该核对成功之前，添加委托人已暂停，以免误覆盖现有密码。"
+    },
+    "jointLabel": "{count, plural, other {# 个联名账户}}"
+  },
+  "delegateAccessModal": {
+    "title": "编辑访问权限",
+    "tabs": {
+      "accounts": "账户",
+      "sections": "功能区域",
+      "shared": "共享数据"
+    },
+    "sections": {
+      "description": "授予对整个应用功能区域的只读访问权限。账户范围的数据还需要逐账户访问权限。"
+    },
+    "accounts": {
+      "noAccounts": "无账户可授权。",
+      "grantAll": "授权全部",
+      "jointRequiresFullAccount": "联名账户只能与拥有自己 Monize 账户的用户共享"
+    },
+    "shared": {
+      "description": "收款人、分类和标签的读取权限始终允许。这些控制创建/编辑/删除权限。"
+    },
+    "saveButton": "保存",
+    "toasts": {
+      "saved": "访问权限已更新",
+      "saveFailed": "更新访问权限失败"
+    }
+  },
+  "nav": {
+    "sectionsAriaLabel": "设置分区",
+    "profile": "个人资料",
+    "preferences": "偏好设置",
+    "tours": "引导式导览",
+    "notifications": "通知",
+    "security": "安全",
+    "sharedAccess": "共享访问",
+    "emergencyAccess": "紧急访问",
+    "apiAccess": "API 访问",
+    "aiSettings": "AI 设置",
+    "backupRestore": "备份与恢复",
+    "autoBackup": "自动备份",
+    "help": "帮助与支持",
+    "dangerZone": "危险区域",
+    "about": "关于",
+    "payeeLookup": "收款方查询"
+  },
+  "page": {
+    "title": "设置",
+    "demoRestricted": {
+      "heading": "演示模式受限",
+      "body": "演示模式下，个人资料编辑、密码更改、双因素认证和账户删除均已禁用。"
+    },
+    "sharedAccessCard": {
+      "title": "共享访问",
+      "description": "授予他人对特定账户的细粒度访问权限。"
+    },
+    "toursCard": {
+      "title": "引导式导览",
+      "description": "Monize 提供的所有导览，以及你已经看过的部分。可以开始或重新查看其中任意一个。"
+    },
+    "emergencyAccessCard": {
+      "title": "紧急访问",
+      "description": "指定联系人，当您长时间未登录时，他们将自动获得对您账户的完全访问权限。"
+    },
+    "aiSettingsCard": {
+      "title": "AI 设置",
+      "description": "配置 AI 提供商、管理 API 密钥并查看使用统计。"
+    },
+    "delegateSecurityError": "无法加载您的安全设置。",
+    "toasts": {
+      "securityLoadFailed": "加载安全设置失败",
+      "loadFailed": "加载设置失败"
+    }
+  },
+  "aiSettings": {
+    "backLink": "返回设置",
+    "title": "AI 设置",
+    "subtitle": "为智能财务功能配置 AI 提供商",
+    "bubble": {
+      "title": "悬浮聊天气泡",
+      "subtitle": "在每个页面显示一个聊天按钮，让你随时随地向 AI 助手提问。它会以底部面板的形式打开，你可以将其展开为全屏。",
+      "toggleLabel": "启用悬浮 AI 聊天气泡",
+      "enabled": "已启用悬浮聊天气泡",
+      "disabled": "已禁用悬浮聊天气泡",
+      "saveFailed": "无法更新聊天气泡设置"
+    },
+    "demoRestricted": {
+      "heading": "演示模式受限",
+      "body": "演示模式下，AI 提供商配置已禁用。"
+    },
+    "toasts": {
+      "loadFailed": "加载 AI 设置失败",
+      "usageLoadFailed": "加载使用数据失败"
+    },
+    "mcpRelay": {
+      "title": "使用您自己的助手（MCP 中继）",
+      "subtitle": "使用您自己的 MCP 代理而非服务器端 AI 提供商来回答聊天提示。",
+      "toggleLabel": "使用 MCP 中继",
+      "saved": "已保存中继设置",
+      "saveFailed": "无法保存中继设置",
+      "how": {
+        "intro": "启用后，AI 聊天不会调用服务器端 LLM。而是：",
+        "step1": "您在自己的计算机上运行一个 MCP 代理（例如 Claude CLI），并登录到您的订阅。",
+        "step2": "代理对 Monize 进行长轮询以获取您在聊天中输入的提示，并使用 Monize 工具回答它们。",
+        "step3": "回答会流式传输回聊天。状态点显示您的代理是否已连接。",
+        "note": "在您的代理连接并侦听之前，不会运行任何内容。聊天会显示连接说明。"
+      }
+    }
+  },
+  "sharedAccessPage": {
+    "backLink": "返回设置",
+    "title": "共享访问",
+    "subtitle": "授予他人对特定账户的细粒度访问权限",
+    "demoRestricted": {
+      "heading": "演示模式受限",
+      "body": "演示模式下，委托人管理已禁用。"
+    }
+  },
+  "emergencyAccess": {
+    "backLink": "返回设置",
+    "title": "紧急访问",
+    "subtitle": "指定联系人，当您长时间未登录时，他们将自动获得对您账户的完全访问权限",
+    "delegateRestricted": "紧急访问只能由账户所有者配置。",
+    "demoRestricted": "演示模式下，紧急访问已禁用。",
+    "emailNotConfigured": {
+      "heading": "邮件未配置",
+      "body": "紧急访问依赖邮件发送。请让管理员配置 SMTP 环境变量（SMTP_HOST、SMTP_USER、SMTP_PASSWORD）后重试。"
+    },
+    "encryptionNotConfigured": {
+      "heading": "需要加密密钥",
+      "body": "紧急访问需要在服务器上设置 ENCRYPTION_KEY。授予访问权限时会加密存储每位联系人的访问链接，以便重试时能重新发送同一链接；没有该密钥，任何链接都无法发送。"
+    },
+    "alreadyGranted": {
+      "heading": "紧急访问已授权",
+      "description": "您指定的联系人已收到接管账户的魔法链接。如果这是误操作，请在下方清除已授权状态以使未完成的链接失效。",
+      "clearButton": "清除已授权状态"
+    },
+    "loadError": "无法加载紧急访问设置。",
+    "settings": {
+      "heading": "设置",
+      "enableLabel": "启用紧急访问",
+      "grantAfterDaysLabel": "多少天不活跃后授予访问权限",
+      "reminderAfterDaysLabel": "多少天不活跃后发送提醒邮件",
+      "saveButton": "保存设置",
+      "toasts": {
+        "saved": "紧急访问设置已保存",
+        "saveFailed": "保存设置失败"
+      }
+    },
+    "message": {
+      "heading": "给联系人的留言",
+      "description": "静态加密存储。查看或编辑需要重新验证身份。",
+      "unlockTimer": "已解锁 {mins}:{secs}",
+      "messageSet": "留言已设置",
+      "charCount": "（{count} 字符",
+      "updatedAt": "，更新于 {timestamp}",
+      "noMessage": "未设置留言",
+      "revealButton": "显示留言",
+      "editButton": "编辑留言",
+      "addButton": "添加留言",
+      "emptyMessage": "（空）",
+      "lockNowButton": "立即锁定",
+      "editMessageButton": "编辑",
+      "messagePlaceholder": "备注、说明、重要文件存放位置...",
+      "maxCharsNote": "最多 4000 个字符。静态加密存储。",
+      "cancelButton": "取消",
+      "saveButton": "保存留言",
+      "toasts": {
+        "saved": "留言已保存",
+        "verifyAgain": "验证已过期——请重新验证以保存",
+        "loadFailed": "加载留言失败",
+        "saveFailed": "保存留言失败"
+      }
+    },
+    "contacts": {
+      "heading": "紧急联系人",
+      "description": "授予访问权限时，每位联系人将通过邮件收到魔法链接。他们使用该链接设置新密码并接管您的账户。第一个声明的联系人获得控制权。",
+      "addButton": "添加联系人",
+      "noContacts": "暂无联系人。",
+      "editButton": "编辑",
+      "removeButton": "移除",
+      "contactModal": {
+        "addTitle": "添加紧急联系人",
+        "editTitle": "编辑联系人",
+        "firstNameLabel": "名字",
+        "emailLabel": "电子邮件",
+        "addButton": "添加联系人",
+        "saveButton": "保存更改"
+      },
+      "removeDialog": {
+        "title": "移除联系人",
+        "message": "此联系人将不再收到紧急访问权限。您可以稍后重新添加。",
+        "removingButton": "移除中...",
+        "removeButton": "移除"
+      },
+      "toasts": {
+        "added": "联系人已添加",
+        "updated": "联系人已更新",
+        "removed": "联系人已移除",
+        "saveFailed": "保存联系人失败",
+        "removeFailed": "移除联系人失败"
+      }
+    },
+    "status": {
+      "heading": "状态",
+      "lastAccess": "上次访问：",
+      "lastReminderSent": "上次提醒发送：",
+      "grantStatus": "授权状态：",
+      "unknown": "未知",
+      "never": "从未",
+      "daysAgo": "{count} 天前",
+      "grantedOn": "授权于 {timestamp}",
+      "notYetGranted": "尚未授权",
+      "timerNote": "任何时候您使用应用（登录、查看页面、记录交易等经过身份验证的操作），计时器都会自动重置。"
+    },
+    "resetConfirm": {
+      "title": "清除已授权状态",
+      "message": "这将使所有未完成的魔法链接失效，让提醒节奏重新开始，并在再次长时间不活跃后触发授权级联。",
+      "clearingButton": "清除中...",
+      "clearButton": "清除",
+      "toasts": {
+        "cleared": "已授权状态已清除",
+        "resetFailed": "重置已授权状态失败"
+      }
+    },
+    "stepUp": {
+      "reason": "重新验证您的身份以查看或编辑您的紧急访问留言。"
+    },
+    "toasts": {
+      "loadFailed": "加载紧急访问失败",
+      "reauthFailed": "确认重新验证失败"
+    }
+  },
+  "aiProviders": {
+    "heading": "AI 提供商",
+    "addButton": "添加提供商",
+    "encryptionWarning": "未配置 ENCRYPTION_KEY。您可以使用 Ollama（本地，无需 API 密钥），但云提供商需要加密来安全存储 API 密钥。",
+    "systemDefault": {
+      "heading": "系统默认 AI 提供商可用",
+      "description": "您的管理员已配置中央 AI 提供商",
+      "usedAutomatically": "由于您没有配置个人提供商，它将自动使用。",
+      "personalPriority": "您的个人提供商优先于系统默认提供商。",
+      "limitsManaged": "它的设置由您的管理员管理，包括回答一个问题可以做多少工作。添加您自己的提供商即可自行控制这些设置。"
+    },
+    "noProviders": {
+      "withSystemDefault": "未配置个人 AI 提供商。将使用系统默认提供商。",
+      "withoutSystemDefault": "未配置 AI 提供商。添加提供商以启用 AI 功能。"
+    },
+    "providerCard": {
+      "activeBadge": "活跃",
+      "inactiveBadge": "非活跃",
+      "priorityLabel": "优先级：{n}",
+      "modelLabel": "模型：{model}",
+      "keyLabel": "密钥：{key}",
+      "urlLabel": "URL：{url}",
+      "costLabel": "费用/百万（{currency}）：{input} 输入 / {output} 输出",
+      "disableButton": "禁用",
+      "enableButton": "启用",
+      "editButton": "编辑",
+      "deleteButton": "删除"
+    },
+    "configForm": {
+      "addTitle": "添加 AI 提供商",
+      "editTitle": "编辑提供商",
+      "providerLabel": "提供商",
+      "displayNameLabel": "显示名称",
+      "modelLabel": "模型",
+      "testButton": "测试",
+      "testingButton": "测试中...",
+      "ollamaCloudNote": "模型名称必须包含 -cloud 后缀（例如：gpt-oss:20b-cloud）。",
+      "apiKeyLabel": "API 密钥",
+      "baseUrlLabel": "基础 URL",
+      "priorityLabel": "优先级",
+      "priorityHelp": "数字越小，优先级越高。用于回退排序。",
+      "costRatesHeading": "费率（可选）",
+      "costRatesHelp": "输入您提供商公布的每百万 Token 费率，以在用量仪表盘上查看预估费用。留空则跳过费用估算。",
+      "inputCostLabel": "输入费用 / 百万 Token",
+      "outputCostLabel": "输出费用 / 百万 Token",
+      "rateCurrencyLabel": "费率货币",
+      "rateCurrencyHelp": "如果与您的本国货币不同，用量仪表盘可使用您保存的汇率进行费用换算。",
+      "saveButton": "保存更改",
+      "addProviderButton": "添加提供商",
+      "modelPlaceholder": "输入模型名称",
+      "testModelAria": "测试模型",
+      "apiKeyPlaceholder": "输入 API 密钥",
+      "saveFailed": "保存配置失败",
+      "inputCostPlaceholder": "例如：3.00",
+      "outputCostPlaceholder": "例如：15.00",
+      "toasts": {
+        "notReachable": "无法连接到提供商。",
+        "modelUnavailable": "模型\"{model}\"在此提供商上不可用。",
+        "modelReady": "模型\"{model}\"已就绪。",
+        "success": "连接成功。",
+        "testFailed": "模型测试失败"
+      },
+      "costCurrencies": {
+        "USD": "USD - 美元",
+        "EUR": "EUR - 欧元",
+        "GBP": "GBP - 英镑",
+        "CAD": "CAD - 加拿大元",
+        "AUD": "AUD - 澳大利亚元",
+        "JPY": "JPY - 日元",
+        "CNY": "CNY - 人民币",
+        "INR": "INR - 印度卢比"
+      },
+      "validation": {
+        "displayNameMax": "显示名称不能超过 100 个字符",
+        "mustBeNumber": "必须为数字",
+        "currencyCode": "必须是 3 位货币代码",
+        "budgetRange": "必须介于 {min} 和 {max} 之间"
+      },
+      "queryBudgets": {
+        "heading": "查询限制（可选）",
+        "help": "此提供商回答一个问题时可以做多少工作。留空则使用显示的默认值。如果助手经常在查完之前就停止，请先提高分析步数。",
+        "defaultPlaceholder": "默认：{value}",
+        "maxIterationsLabel": "分析步数",
+        "maxIterationsHelp": "工具调用循环的轮次。较小的本地模型通常每次查询消耗一步。",
+        "maxToolCallsLabel": "数据查询次数",
+        "maxToolCallsHelp": "助手回答一个问题时可以执行的查询总次数。",
+        "timeoutMinutesLabel": "时间限制（分钟）",
+        "timeoutMinutesHelp": "一个问题可用的实际时间。本地推理较慢时请调高。",
+        "maxInputTokensLabel": "输入 Token",
+        "maxInputTokensHelp": "所有步骤的输入 Token 总数。付费提供商的主要成本控制项。",
+        "maxToolResultCharsLabel": "结果大小（字符）",
+        "maxToolResultCharsHelp": "单次查询结果中，模型在被截断前能看到的部分。"
+      }
+    },
+    "testButton": {
+      "testLabel": "测试",
+      "connectionFailed": "连接失败",
+      "modelUnavailable": "模型\"{model}\"在此提供商上不可用。",
+      "successWithModel": "连接成功。模型\"{model}\"已就绪。",
+      "success": "连接成功",
+      "testFailed": "连接测试失败"
+    },
+    "toasts": {
+      "added": "提供商已添加",
+      "updated": "提供商已更新",
+      "removed": "提供商已移除",
+      "modelReady": "模型\"{model}\"已就绪。",
+      "notReachable": "已保存，但无法连接到提供商。请检查 URL/API 密钥。",
+      "modelUnavailable": "已保存，但模型\"{model}\"在此提供商上不可用。",
+      "deleteFailed": "删除提供商失败",
+      "updateFailed": "更新提供商失败"
+    }
+  },
+  "usage": {
+    "heading": "用量",
+    "totalRequests": "总请求数",
+    "inputTokens": "输入 Token",
+    "outputTokens": "输出 Token",
+    "estCost": "预估费用",
+    "setRatesToEnable": "请在提供商上设置费率以启用",
+    "inHomeCurrency": "以 {currency} 计",
+    "inProviderCurrency": "以提供商货币计",
+    "byProvider": {
+      "heading": "按提供商",
+      "provider": "提供商",
+      "requests": "请求数",
+      "inputTokens": "输入 Token",
+      "outputTokens": "输出 Token",
+      "estCost": "预估费用"
+    },
+    "recentActivity": {
+      "heading": "近期活动",
+      "date": "日期",
+      "provider": "提供商",
+      "feature": "功能",
+      "tokens": "Token",
+      "duration": "时长",
+      "estCost": "预估费用"
+    },
+    "noUsage": "暂无使用数据。开始使用 AI 功能后，用量将显示在此处。",
+    "periods": {
+      "d7": "7 天",
+      "d30": "30 天",
+      "d90": "90 天",
+      "all": "所有时间"
+    },
+    "estCostTooltip": "使用您在每个提供商上配置的费率估算。不包括没有匹配费率的活动。"
+  },
+  "payeeLookup": {
+    "title": "收款方查询",
+    "subtitle": "收款方的网站、地址、电子邮件和电话号码来自何处，以及查询何时自动运行。",
+    "saved": "已保存收款方查询设置",
+    "saveFailed": "无法保存收款方查询设置",
+    "loadFailed": "无法加载收款方查询设置。请刷新页面重试。",
+    "googlePlaces": {
+      "toggleLabel": "使用 Google Places 查询收款方",
+      "notConfigured": "添加 Google Places API 密钥，即可在 Google 的商户目录中查询，而不使用你的 AI 提供方。",
+      "operatorManaged": "由本服务器的管理员配置。你可以为自己的收款方关闭它。",
+      "configure": "设置",
+      "edit": "编辑",
+      "removeKey": "移除密钥",
+      "usage": "本月已用：{used}/{cap}",
+      "usageNoCap": "本月已用：{used}。无每月上限。",
+      "keyUnreadable": "本服务器无法读取已保存的 API 密钥。将备份恢复到其他实例，或加密密钥变更后会出现这种情况。请重新输入密钥以修复。",
+      "encryptionUnavailable": "本服务器未配置加密密钥，因此无法安全保存 API 密钥。请让管理员配置一个。",
+      "modalTitle": "Google Places",
+      "modalSubtitle": "Monize 会将收款方名称和你已有的地址发送给 Google，不会在 Google 存储任何内容。",
+      "apiKeyLabel": "API 密钥",
+      "apiKeyPlaceholder": "粘贴你的 Google Places API 密钥",
+      "apiKeyHelp": "在 Google Cloud 控制台创建密钥并启用 Places API (New)。留空则保留已保存的密钥。",
+      "capToggleLabel": "限制每月请求数",
+      "capHelp": "对于此查询所需的字段，Google 每月提供 {free} 次免费 Text Search 请求。超出上限后，查询将回退到你的 AI 提供方。",
+      "capLabel": "每月请求数",
+      "capRange": "请输入 {min} 到 {max} 之间的数字。",
+      "test": "测试",
+      "testing": "测试中...",
+      "testSuccess": "Google 已接受该密钥。",
+      "save": "保存",
+      "cancel": "取消",
+      "setupInstructions": "设置说明"
+    },
+    "automatic": {
+      "title": "自动查询收款方联系信息",
+      "subtitle": "自动查询新收款方的网站、地址、电子邮件和电话号码。系统会发送收款方名称，以及其已有的备注、网站、地址、电子邮件和电话，以便查询区分正确的商户和门店。",
+      "toggleLabel": "启用自动查询收款方联系信息",
+      "enabled": "已启用自动查询收款方联系信息",
+      "disabled": "已停用自动查询收款方联系信息",
+      "saveFailed": "无法更新收款方联系信息查询设置",
+      "noSource": "请在上方开启一个来源以自动查询收款方。两者都关闭时，没有任何来源可以回答查询。"
+    },
+    "order": {
+      "title": "先查询哪个来源",
+      "placesTitle": "Google Places",
+      "placesHelp": "目录事实，每次查询更便宜。Google 不提供电子邮件地址。",
+      "aiTitle": "现有 AI 提供商",
+      "aiHelp": "可以找到电子邮件地址，但每次查询都会产生一次模型调用费用。",
+      "aiToggleLabel": "使用 AI 提供商进行收款方查询",
+      "aiProviderLabel": "要使用的提供商",
+      "aiProviderAny": "任意提供商，按优先级顺序",
+      "moveUp": "上移",
+      "moveDown": "下移"
+    }
+  }
+}

@@ -1,0 +1,342 @@
+'use client';
+
+import { useMemo } from 'react';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { chartColors } from '@/lib/chart-colors';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import { Account } from '@/types/account';
+import { Category } from '@/types/category';
+import { transactionsApi } from '@/lib/transactions';
+import { useNumberFormat } from '@/hooks/useNumberFormat';
+import { useExchangeRates } from '@/hooks/useExchangeRates';
+import { PartialTotal } from '@/components/ui/PartialTotal';
+import { useReportData } from '@/hooks/useReportData';
+import { useWidgetConfig } from '@/hooks/useWidgetConfig';
+import { resolveRangePreset } from '@/lib/date-range';
+import { CHART_COLOURS } from '@/lib/chart-colours';
+import { DateRangeSelector } from '@/components/ui/DateRangeSelector';
+import { ReportAccountMultiSelect } from '@/components/reports/ReportAccountMultiSelect';
+import { WidgetCard, WidgetConfigRow, WidgetMessage } from './WidgetCard';
+import {
+  EXPENSES_PIE_DEFAULT,
+  SPENDING_RANGES,
+  RangeAccountsConfig,
+} from './widget-config';
+
+const WIDGET_ID = 'expenses-pie';
+
+const nonInvestmentAccounts = (a: Account) => a.accountType !== 'INVESTMENT';
+
+interface ExpensesPieChartProps {
+  accounts: Account[];
+  categories: Category[];
+  isLoading: boolean;
+}
+
+export function ExpensesPieChart({
+  accounts,
+  categories,
+  isLoading,
+}: ExpensesPieChartProps) {
+  const t = useTranslations('dashboard');
+  const router = useRouter();
+  const { formatCurrencyCompact: formatCurrency, formatPercent } = useNumberFormat();
+  const { convertToDefault, defaultCurrency } = useExchangeRates();
+  const { config, updateConfig } = useWidgetConfig<RangeAccountsConfig>(
+    WIDGET_ID,
+    EXPENSES_PIE_DEFAULT,
+  );
+
+  const { start, end } = useMemo(() => resolveRangePreset(config.range), [config.range]);
+  const accountIdsKey = config.accountIds.join(',');
+
+  const { data: transactions, isLoading: dataLoading } = useReportData(
+    () =>
+      transactionsApi.getAllPages({
+        startDate: start || undefined,
+        endDate: end,
+        accountIds: config.accountIds.length > 0 ? config.accountIds : undefined,
+      }),
+    [start, end, accountIdsKey],
+  );
+
+  // Calculate spending by category
+  const breakdown = useMemo(() => {
+    const categoryMap = new Map<string, { id: string; name: string; value: number; colour: string }>();
+    // Currencies left out of the breakdown for want of a rate, so the chart can
+    // say the slices do not add up to everything spent, and how many individual
+    // amounts (a component count) were dropped.
+    const missingCurrencies = new Set<string>();
+    let excludedCount = 0;
+    let uncategorizedTotal = 0;
+
+    // Build category lookup
+    const categoryLookup = new Map(categories.map((c) => [c.id, c]));
+
+    (transactions ?? []).forEach((tx) => {
+      // Skip transfers and investment account transactions
+      if (tx.isTransfer) return;
+      if (tx.account?.accountType === 'INVESTMENT') return;
+
+      // Spend is netted per category: a credit filed against an expense
+      // category (a refund, a return) reduces what was spent there rather than
+      // being skipped, so both signs are read and negated. Categories that end
+      // up net-credit are dropped below, which is what keeps income out.
+      const txAmount = Number(tx.amount) || 0;
+      if (txAmount === 0) return;
+      const convertedTx = convertToDefault(txAmount, tx.currencyCode);
+      // No rate, no slice. A pie slice cannot say "unknown", and counting the
+      // unconverted figure would size it in the wrong currency. Only a
+      // transaction that could land in the expense breakdown makes the total
+      // partial: a non-split income-category transaction is dropped by the
+      // net-credit filter regardless, so naming its currency here would warn
+      // about a currency that has no expenses.
+      if (convertedTx === null) {
+        // A transaction that would not land in the expense breakdown even with a
+        // rate does not make the expense total partial. Only a *positive* amount
+        // on an income category, or an uncategorized positive one, nets credit and
+        // is dropped regardless; a negative amount (a clawback of income) can
+        // become an expense slice, so it still counts as excluded. This is a
+        // per-transaction heuristic and cannot see the category-level net, so it
+        // errs toward marking partial rather than hiding a real gap -- the safe
+        // direction under "a subtotal is not a total".
+        const uncategorized = !tx.categoryId || !tx.category;
+        const incomeOnly =
+          !tx.isSplit &&
+          txAmount > 0 &&
+          (tx.category?.isIncome === true || uncategorized);
+        if (!incomeOnly) {
+          missingCurrencies.add(tx.currencyCode);
+          excludedCount += 1;
+        }
+        return;
+      }
+      const expenseAmount = -convertedTx;
+
+      if (tx.isSplit && tx.splits && tx.splits.length > 0) {
+        // Handle split transactions
+        tx.splits.forEach((split) => {
+          const splitAmt = Number(split.amount) || 0;
+          if (splitAmt === 0) return;
+          // Splits carry the transaction's currency, which the whole-amount
+          // conversion above already resolved, so this null branch is a defensive
+          // guard rather than a reachable exclusion -- the missing rate is caught
+          // once at the transaction level, not per split.
+          const convertedSplit = convertToDefault(splitAmt, tx.currencyCode);
+          if (convertedSplit === null) {
+            missingCurrencies.add(tx.currencyCode);
+            excludedCount += 1;
+            return;
+          }
+          const splitAmount = -convertedSplit;
+          if (split.categoryId && split.category) {
+            const cat = categoryLookup.get(split.categoryId) || split.category;
+            const existing = categoryMap.get(split.categoryId);
+            if (existing) {
+              existing.value += splitAmount;
+            } else {
+              categoryMap.set(split.categoryId, {
+                id: split.categoryId,
+                name: cat.name,
+                value: splitAmount,
+                colour: cat.effectiveColor ?? cat.color ?? '',
+              });
+            }
+          } else if (!split.transferAccountId) {
+            uncategorizedTotal += splitAmount;
+          }
+        });
+      } else if (tx.categoryId && tx.category) {
+        // Regular transaction with category
+        const cat = categoryLookup.get(tx.categoryId) || tx.category;
+        const existing = categoryMap.get(tx.categoryId);
+        if (existing) {
+          existing.value += expenseAmount;
+        } else {
+          categoryMap.set(tx.categoryId, {
+            id: tx.categoryId,
+            name: cat.name,
+            value: expenseAmount,
+            colour: cat.effectiveColor ?? cat.color ?? '',
+          });
+        }
+      } else {
+        // Uncategorized
+        uncategorizedTotal += expenseAmount;
+      }
+    });
+
+    // Add uncategorized if any
+    if (uncategorizedTotal > 0) {
+      categoryMap.set('uncategorized', {
+        id: '',
+        name: t('expensesPieChart.uncategorized'),
+        value: uncategorizedTotal,
+        colour: chartColors.neutral,
+      });
+    }
+
+    // Convert to array and sort by value descending. A category whose credits
+    // met or exceeded its debits over the range was not spent in, so it is not
+    // a slice -- and neither is an income category, which nets negative.
+    const sorted = Array.from(categoryMap.values())
+      .filter((entry) => entry.value > 0)
+      .sort((a, b) => b.value - a.value);
+
+    const MAX_SLICES = 11;
+    let data: typeof sorted;
+
+    if (sorted.length > MAX_SLICES) {
+      const top = sorted.slice(0, MAX_SLICES);
+      const otherTotal = sorted.slice(MAX_SLICES).reduce((sum, item) => sum + item.value, 0);
+      data = [
+        ...top,
+        { id: '', name: t('expensesPieChart.other'), value: otherTotal, colour: chartColors.neutral },
+      ];
+    } else {
+      data = sorted;
+    }
+
+    // Assign colours to categories without one
+    let colourIndex = 0;
+    data.forEach((item) => {
+      if (!item.colour) {
+        item.colour = CHART_COLOURS[colourIndex % CHART_COLOURS.length];
+        colourIndex++;
+      }
+    });
+
+    return { data, missingCurrencies: [...missingCurrencies], excludedCount };
+  }, [transactions, categories, convertToDefault, t]);
+
+  const chartData = breakdown.data;
+  const totalExpenses = chartData.reduce((sum, item) => sum + item.value, 0);
+
+  const handleCategoryClick = (categoryId: string) => {
+    if (categoryId) {
+      const params = new URLSearchParams({ categoryIds: categoryId });
+      if (start) params.set('startDate', start);
+      params.set('endDate', end);
+      router.push(`/transactions?${params.toString()}`);
+    }
+  };
+
+  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: { id: string; name: string; value: number; colour: string } }> }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      const percentage = (data.value / totalExpenses) * 100;
+      return (
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3">
+          <p className="font-medium text-gray-900 dark:text-gray-100">{data.name}</p>
+          <p className="text-gray-600 dark:text-gray-400">
+            {formatCurrency(data.value)} ({formatPercent(percentage, 1)})
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const configControls = (
+    <>
+      <WidgetConfigRow label={t('widgets.timeframe')}>
+        <DateRangeSelector
+          ranges={SPENDING_RANGES}
+          value={config.range}
+          onChange={(range) => updateConfig({ range })}
+          size="sm"
+        />
+      </WidgetConfigRow>
+      <WidgetConfigRow label={t('widgets.accounts')}>
+        <ReportAccountMultiSelect
+          accounts={accounts}
+          value={config.accountIds}
+          onChange={(accountIds) => updateConfig({ accountIds })}
+          filter={nonInvestmentAccounts}
+          className="w-full"
+        />
+      </WidgetConfigRow>
+    </>
+  );
+
+  const loading = isLoading || dataLoading;
+
+  return (
+    <WidgetCard
+      title={t('expensesPieChart.title')}
+      widgetId={WIDGET_ID}
+      configTitle={t('expensesPieChart.title')}
+      configControls={configControls}
+      headerRight={
+        <span className="text-sm text-gray-500 dark:text-gray-400">
+          {t(`widgets.rangeLabels.${config.range}` as Parameters<typeof t>[0])}
+        </span>
+      }
+    >
+      {loading ? (
+        <div className="h-64 flex items-center justify-center">
+          <div className="animate-pulse w-48 h-48 rounded-full bg-gray-200 dark:bg-gray-700" />
+        </div>
+      ) : chartData.length === 0 ? (
+        <WidgetMessage>{t('expensesPieChart.empty')}</WidgetMessage>
+      ) : (
+        <>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+              <PieChart>
+                <Pie
+                  data={chartData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={50}
+                  outerRadius={80}
+                  paddingAngle={2}
+                  dataKey="value"
+                  cursor="pointer"
+                  onClick={(data) => data.id && handleCategoryClick(data.id)}
+                >
+                  {chartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.colour} />
+                  ))}
+                </Pie>
+                <Tooltip content={<CustomTooltip />} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-x-3 gap-y-1.5">
+            {chartData.map((item, index) => (
+              <button
+                key={index}
+                onClick={() => handleCategoryClick(item.id)}
+                className={`flex items-center gap-2 text-sm text-left ${item.id ? 'hover:underline cursor-pointer' : ''}`}
+                disabled={!item.id}
+              >
+                <div
+                  className="w-3 h-3 rounded-full flex-shrink-0"
+                  style={{ backgroundColor: item.colour }}
+                />
+                <span className="text-gray-600 dark:text-gray-400 truncate">{item.name}</span>
+              </button>
+            ))}
+          </div>
+          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 text-center flex-shrink-0">
+            <div className="text-sm text-gray-500 dark:text-gray-400">{t('expensesPieChart.total')}</div>
+            <div className="font-semibold text-gray-900 dark:text-gray-100">
+              <PartialTotal
+                total={{
+                  value: totalExpenses,
+                  missingCurrencies: breakdown.missingCurrencies,
+                  excludedCount: breakdown.excludedCount,
+                }}
+                displayCurrency={defaultCurrency}
+              >
+                {formatCurrency(totalExpenses)}
+              </PartialTotal>
+            </div>
+          </div>
+        </>
+      )}
+    </WidgetCard>
+  );
+}

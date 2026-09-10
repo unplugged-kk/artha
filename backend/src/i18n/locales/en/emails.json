@@ -1,0 +1,294 @@
+{
+  "test": {
+    "subject": "Monize Test Email",
+    "heading": "Monize Test Email",
+    "greeting": "Hi {{ name }},",
+    "body": "This is a test email from Monize. If you received this, your email notifications are working correctly."
+  },
+  "billReminder": {
+    "subjectOne": "Monize: 1 upcoming bill needs attention",
+    "subjectMany": "Monize: {{ count }} upcoming bills need attention",
+    "heading": "Upcoming Bill Reminder",
+    "greeting": "Hi {{ name }},",
+    "introOne": "You have 1 upcoming bill that needs attention:",
+    "introMany": "You have {{ count }} upcoming bills that need attention:",
+    "colPayee": "Payee",
+    "colDueDate": "Due Date",
+    "colType": "Type",
+    "colAmount": "Amount",
+    "typeIncome": "Income",
+    "typeExpense": "Expense",
+    "typeUnknown": "Direction unknown",
+    "amountUnavailable": "Amount unavailable",
+    "button": "View Bills &amp; Deposits"
+  },
+  "mortgageReminder": {
+    "subject": "Monize: 1 upcoming mortgage renewal",
+    "subjectPlural": "Monize: {{ count }} upcoming mortgage renewals",
+    "heading": "Mortgage Renewal Reminder",
+    "greeting": "Hi {{ name }},",
+    "introOne": "You have 1 mortgage with an upcoming term renewal. Contact your lender to discuss renewal options before the term ends:",
+    "introMany": "You have {{ count }} mortgages with an upcoming term renewal. Contact your lender to discuss renewal options before the term ends:",
+    "colMortgage": "Mortgage",
+    "colTermEndDate": "Term End Date",
+    "colTimeRemaining": "Time Remaining",
+    "daysRemainingOne": "1 day",
+    "daysRemainingMany": "{{ count }} days",
+    "button": "View Accounts"
+  },
+  "severity": {
+    "critical": "Critical",
+    "warning": "Warning",
+    "success": "Good News",
+    "info": "Info"
+  },
+  "budgetAlertImmediate": {
+    "subject": "Monize: Alert - {{ title }}",
+    "subjectPlural": "Monize: {{ count }} alerts need attention",
+    "heading": "Alert",
+    "greeting": "Hi {{ name }},",
+    "intro": "Your budget needs attention:",
+    "colSeverity": "Severity",
+    "colAlert": "Alert",
+    "colDetails": "Details",
+    "button": "View Budget"
+  },
+  "budgetWeeklyDigest": {
+    "subject": "Monize: Your weekly budget summary",
+    "heading": "Weekly Budget Summary",
+    "greeting": "Hi {{ name }},",
+    "intro": "Here is your weekly budget summary for: <strong>{{ budgets }}</strong>",
+    "criticalOne": "critical",
+    "criticalMany": "critical",
+    "warningOne": "warning",
+    "warningMany": "warnings",
+    "positiveOne": "positive",
+    "positiveMany": "positive",
+    "thisWeek": "This Week:",
+    "noAlerts": "No alerts",
+    "totalAlerts": "Total alerts: {{ count }}",
+    "topAlertsHeading": "Top Alerts",
+    "andMore": "...and {{ count }} more",
+    "button": "View Budget Dashboard"
+  },
+  "budgetMonthlySummary": {
+    "subject": "Monize: Monthly budget summary - {{ period }}",
+    "subjectPlural": "Monize: Monthly budget summary for {{ count }} budgets",
+    "heading": "Monthly Budget Summary",
+    "greeting": "Hi {{ name }},",
+    "intro": "Here is your monthly budget summary for the period that just closed:",
+    "overBudget": "Over Budget",
+    "healthScore": "Health Score:",
+    "labelBudgeted": "Budgeted",
+    "labelSpent": "Spent",
+    "labelRemaining": "Remaining",
+    "percentUsed": "{{ percent }}% used",
+    "topCategories": "Top Categories",
+    "button": "View Budget Dashboard"
+  },
+  "oidcLink": {
+    "subject": "Monize: Confirm SSO Account Link",
+    "heading": "Link Your SSO Account",
+    "greeting": "Hi {{ name }},",
+    "intro": "Someone attempted to sign in via SSO with an email that matches your existing Monize account. To link your SSO identity to this account, click the button below:",
+    "button": "Confirm Account Link",
+    "disclaimer": "If you did not initiate this request, you can safely ignore this email. The link expires in 1 hour."
+  },
+  "accountLocked": {
+    "subject": "Account Temporarily Locked",
+    "heading": "Account Temporarily Locked",
+    "greeting": "Hi {{ name }},",
+    "body1": "Your Monize account has been temporarily locked due to multiple failed login attempts. This is a security measure to protect your account.",
+    "body2": "The lock will expire automatically. If you did not attempt to log in, we recommend resetting your password immediately."
+  },
+  "passwordReset": {
+    "subject": "Monize Password Reset",
+    "heading": "Password Reset Request",
+    "greeting": "Hi {{ name }},",
+    "intro": "We received a request to reset your password. Click the button below to set a new password:",
+    "button": "Reset Password",
+    "disclaimer": "This link will expire in 1 hour. If you did not request a password reset, you can safely ignore this email."
+  },
+  "emailVerification": {
+    "subject": "Verify your Monize email",
+    "heading": "Verify your email address",
+    "greeting": "Hi {{ name }},",
+    "intro": "Thanks for signing up for Monize. Please confirm your email address to activate your account and sign in:",
+    "button": "Verify Email",
+    "disclaimer": "This link will expire in 24 hours. If you did not create a Monize account, you can safely ignore this email."
+  },
+  "accountInvite": {
+    "subject": "Your Monize account is ready",
+    "heading": "Your Monize account is ready",
+    "greeting": "Hi {{ name }},",
+    "intro": "An administrator has created a Monize account for you. Click the button below to set your password and sign in:",
+    "button": "Set Your Password",
+    "disclaimer": "This link will expire in 24 hours. If you were not expecting this, you can safely ignore this email."
+  },
+  "delegateInvite": {
+    "subject": "You have been invited to Monize",
+    "heading": "You have been invited to Monize",
+    "greeting": "Hi {{ name }},",
+    "intro": "{{ owner }} has invited you to access their Monize account as a delegate. Click the button below to set your password and get started:",
+    "button": "Set Your Password",
+    "disclaimer": "This link will expire in 24 hours. If you were not expecting this invitation, you can safely ignore this email."
+  },
+  "emergencyAccessReminder": {
+    "subjectOne": "Monize: your account has been inactive for 1 day",
+    "subjectMany": "Monize: your account has been inactive for {{ daysSinceLogin }} days",
+    "heading": "Monize Emergency Access Reminder",
+    "greeting": "Hi {{ name }},",
+    "grantPhraseToday": "today",
+    "grantPhraseFutureOne": "in 1 day",
+    "grantPhraseFutureMany": "in {{ count }} days",
+    "bodyOne": "You have not signed in to Monize for <strong>1 day</strong>. If you remain inactive, your designated emergency contacts will be granted full access to your account {{ grantPhrase }}.",
+    "bodyMany": "You have not signed in to Monize for <strong>{{ daysSinceLogin }} days</strong>. If you remain inactive, your designated emergency contacts will be granted full access to your account {{ grantPhrase }}.",
+    "contactsLabel": "Designated contacts:",
+    "button": "Sign in now",
+    "footer": "Signing in resets the timer. If you no longer want this feature enabled, you can disable it from Settings → Emergency Access."
+  },
+  "emergencyAccessGrant": {
+    "subject": "You have been granted emergency access to {{ owner }}'s Monize account",
+    "heading": "Emergency Access Granted",
+    "greeting": "Hi {{ name }},",
+    "body": "<strong>{{ owner }}</strong> previously designated you as an emergency contact on their Monize account. Because they have not signed in for an extended period, you are now being granted full access to take over the account.",
+    "claimIntro": "To claim access, click the link below and set a new password. You will be signed in as the account holder.",
+    "button": "Claim Emergency Access",
+    "expiry": "This link is valid until <strong>{{ expiry }}</strong> and can only be used once. If multiple contacts received this email, the first to claim will take over the account."
+  },
+  "emergencyAccessGrantRevoked": {
+    "subject": "Monize: emergency access was granted while you were away",
+    "heading": "Emergency Access Was Granted While You Were Away",
+    "greeting": "Hi {{ name }},",
+    "body1": "Because your account had been inactive, your designated emergency contacts were sent links to take over your account. You have now signed back in, so <strong>those links have been revoked</strong> and the safeguard has been re-armed.",
+    "body2": "If this was expected, no action is needed. If you did not expect this, review your sign-in activity and your emergency-access settings.",
+    "button": "Review Emergency Access"
+  },
+  "providerOutage": {
+    "subject": "Monize: {{ provider }} is not responding",
+    "heading": "Market data provider unavailable",
+    "greeting": "Hi {{ name }},",
+    "intro": "Monize has not been able to reach <strong>{{ provider }}</strong> since {{ since }} ({{ duration }}). Requests to it are suspended for now and retried at widening intervals.",
+    "labelFailures": "Failed attempts",
+    "labelLastError": "Last error",
+    "labelLastSuccess": "Last successful response",
+    "valueNever": "never",
+    "valueUnknown": "unknown",
+    "impact": "Prices, charts and index comparisons that depend on this provider may be missing or out of date until it answers again. Nothing recorded in Monize has been lost.",
+    "whatToCheck": "If the provider itself is up, check this server's outbound network access and DNS -- a container that cannot resolve or reach the provider fails exactly this way.",
+    "throttleNote": "You will get one more email when it recovers. Alerts about the same provider are sent at most once every {{ hours }} hours, so a provider that keeps flapping cannot fill your inbox.",
+    "durationMinutes": "{{ minutes }} min",
+    "durationHoursMinutes": "{{ hours }} h {{ minutes }} min"
+  },
+  "providerRecovery": {
+    "subject": "Monize: {{ provider }} is answering again",
+    "heading": "Market data provider is answering again",
+    "greeting": "Hi {{ name }},",
+    "intro": "<strong>{{ provider }}</strong> answered again at {{ restoredAt }}. The outage lasted {{ duration }}.",
+    "backfill": "Prices and index history missed during the outage are picked up by the next scheduled refresh; no action is needed."
+  },
+  "systemAlert": {
+    "subject": "Monize: {{ title }}",
+    "heading": "System alert",
+    "greeting": "Hi {{ name }},",
+    "intro": "An issue on your Monize deployment needs an administrator's attention.",
+    "footer": "This alert is also shown in the app's notification bell. It is raised at most once per occurrence, however many server replicas noticed it."
+  },
+  "notificationImmediate": {
+    "subject": "You have a new Monize notification",
+    "eyebrow": "Monize notification",
+    "button": "Open in Monize",
+    "footer": "You are receiving this because immediate email is on for this notification type. Change it in Settings, Notifications."
+  },
+  "notificationCopy": {
+    "billDue": {
+      "titleOverdue": "{{ payee }} overdue",
+      "titleToday": "{{ payee }} due today",
+      "titleTomorrow": "{{ payee }} due tomorrow",
+      "titleInDays": "{{ payee }} due in {{ days }} days",
+      "amountDue": "{{ amount }} due on {{ date }}",
+      "amountUnavailable": "Amount unavailable (no current exchange rate), due on {{ date }}"
+    },
+    "gemSignal": {
+      "riskTitle": "{{ strategy }} switched to {{ state }}",
+      "riskMessage": "Your GEM strategy \"{{ strategy }}\" changed from {{ fromState }} to {{ toState }}. Open to review the recommendation.",
+      "allocationTitle": "{{ strategy }} changed its target",
+      "allocationMessage": "Your GEM strategy \"{{ strategy }}\" now targets {{ target }}. Open to review the recommendation.",
+      "riskOn": "risk-on",
+      "riskOff": "risk-off",
+      "roles": {
+        "US_EQUITY": "S&P 500",
+        "EX_US_EQUITY": "Developed markets ex-US",
+        "EM_EQUITY": "Emerging markets",
+        "SAFE": "Safe asset",
+        "RISK_FREE": "Risk-free benchmark"
+      },
+      "allocationMessageUnknown": "Your GEM strategy \"{{ strategy }}\" changed its target. Open to review the recommendation."
+    },
+    "portfolioMovement": {
+      "titleUp": "Investments up {{ percent }}%",
+      "titleDown": "Investments down {{ percent }}%",
+      "messageUp": "Your investments are up {{ percent }}% today, excluding deposits and withdrawals. Open to review.",
+      "messageDown": "Your investments are down {{ percent }}% today, excluding deposits and withdrawals. Open to review."
+    },
+    "balanceThreshold": {
+      "titleLow": "{{ account }} is below your threshold",
+      "titleHigh": "{{ account }} is above your threshold",
+      "messageLow": "{{ account }} dropped to {{ balance }}, below your {{ threshold }} threshold.",
+      "messageHigh": "{{ account }} rose to {{ balance }}, above your {{ threshold }} threshold."
+    },
+    "system": {
+      "backupFailed": {
+        "title": "Automatic backup failed",
+        "message": "The automatic backup for {{ user }} failed: {{ error }}"
+      },
+      "backupPartial": {
+        "title": "Automatic backup incomplete",
+        "messageAttachments": "The backup for {{ user }} was written, but {{ missing }} of {{ expected }} attachments could not be included and {{ inconsistent }} did not match their metadata. Complete backups were preserved.",
+        "messagePromotion": "The daily backup for {{ user }} succeeded, but its weekly or monthly copy could not be written: {{ error }}",
+        "messageRetention": "The backup for {{ user }} succeeded, but old backup files could not be cleaned up: {{ error }}"
+      },
+      "encryptionKeyMissing": {
+        "title": "Encryption key not configured",
+        "message": "ENCRYPTION_KEY is not set, so backups are written unencrypted and secrets cannot be stored. A future release will refuse to start without it."
+      },
+      "smtpFailure": {
+        "title": "Email delivery is failing",
+        "message": "Monize could not send email: {{ error }}. Notifications and reminders are not being delivered."
+      },
+      "providerOutage": {
+        "title": "{{ provider }} is not responding",
+        "message": "Market data from {{ provider }} is unavailable. Prices and index data may be out of date until it answers again."
+      },
+      "providerRecovered": {
+        "title": "{{ provider }} is answering again",
+        "message": "The outage is over and market data from {{ provider }} is updating again."
+      },
+      "scheduledPostFailed": {
+        "title": "{{ name }} could not be posted",
+        "message": "Your scheduled transaction due {{ date }} did not post automatically: {{ error }}. You can post it manually from Bills."
+      }
+    },
+    "budget": {
+      "overTitle": "{{ category }} is over budget",
+      "overMessage": "You have spent {{ amount }} of your {{ limit }} budget for {{ category }} ({{ percent }}%).",
+      "criticalTitle": "{{ category }} approaching limit",
+      "warningTitle": "{{ category }} reaching budget limit",
+      "thresholdMessage": "You have used {{ percent }}% of your {{ category }} budget ({{ amount }} of {{ limit }}).",
+      "projectedTitle": "{{ category }} projected to overspend",
+      "projectedMessage": "At your current pace, {{ category }} is projected to reach {{ projected }} by the end of the period (budget: {{ budgeted }}).",
+      "flexTitle": "Flex group \"{{ group }}\" at {{ percent }}%",
+      "flexMessage": "The \"{{ group }}\" flex group has used {{ spent }} of its combined {{ budgeted }} budget ({{ percent }}%).",
+      "incomeTitle": "Income below expected",
+      "incomeMessage": "Your actual income ({{ actual }}) is at {{ ratio }}% of expected income ({{ expected }}) at this point in the period.",
+      "milestoneTitle": "Budget on track",
+      "milestoneMessage": "You are {{ progress }}% through the period and have only used {{ percent }}% of your total budget. Keep it up!",
+      "seasonalTitle": "Seasonal spike expected for {{ category }}",
+      "seasonalMessage": "Last {{ month }} you spent {{ increase }}x your usual on {{ category }}. Consider adjusting your budget."
+    },
+    "priceMovement": {
+      "title": "Price change alert: {{ symbol }} ({{ percent }}%)",
+      "message": "{{ symbol }}: {{ percent }}% compared with the previous available session."
+    }
+  }
+}

@@ -1,0 +1,558 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent } from '@/test/render';
+import { NormalTransactionFields } from './NormalTransactionFields';
+import { Account } from '@/types/account';
+import { Payee } from '@/types/payee';
+import { useTourStore } from '@/store/tourStore';
+
+vi.mock('@/lib/format', () => ({
+  getCurrencySymbol: (code: string) => (code === 'USD' ? 'US$' : '$'),
+  getDecimalPlacesForCurrency: () => 2,
+}));
+
+vi.mock('@/components/ui/Combobox', () => ({
+  Combobox: ({ label, options, value, onChange, onCreateNew, error, placeholder, allowCustomValue: _allowCustomValue, initialDisplayValue: _initialDisplayValue }: any) => (
+    <div data-testid={`combobox-${label}`}>
+      <label>{label}</label>
+      {error && <span data-testid={`combobox-error-${label}`}>{error}</span>}
+      <select
+        data-testid={`combobox-select-${label}`}
+        value={value}
+        onChange={(e) => {
+          const selected = options.find((o: any) => o.value === e.target.value);
+          onChange(e.target.value, selected?.label || e.target.value);
+        }}
+      >
+        <option value="">{placeholder || 'Select...'}</option>
+        {options.map((opt: any) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+      {onCreateNew && (
+        <button
+          data-testid={`combobox-create-${label}`}
+          onClick={() => onCreateNew('New Item')}
+        >
+          Create
+        </button>
+      )}
+    </div>
+  ),
+}));
+
+vi.mock('@/components/ui/CurrencyInput', () => ({
+  CurrencyInput: ({ label, value, onChange, error, prefix }: any) => (
+    <div data-testid={`currency-input-${label}`}>
+      <label>{label}</label>
+      {prefix && <span data-testid={`currency-prefix-${label}`}>{prefix}</span>}
+      <input
+        data-testid={`currency-input-field-${label}`}
+        type="number"
+        value={value ?? ''}
+        onChange={(e) => onChange(e.target.value ? Number(e.target.value) : undefined)}
+      />
+      {error && <span data-testid={`currency-error-${label}`}>{error}</span>}
+    </div>
+  ),
+}));
+
+function createAccount(overrides: Partial<Account> = {}): Account {
+  return {
+    id: 'acc-1',
+    userId: 'user-1',
+    accountType: 'CHEQUING',
+    accountSubType: null,
+    linkedAccountId: null,
+    name: 'Chequing',
+    description: null,
+    currencyCode: 'CAD',
+    accountNumber: null,
+    institution: null, institutionId: null,
+    openingBalance: 0,
+    currentBalance: 1000,
+    creditLimit: null,
+    interestRate: null,
+    isClosed: false,
+    closedDate: null,
+    isFavourite: false,
+    favouriteSortOrder: 0,
+    excludeFromNetWorth: false,
+    paymentAmount: null,
+    paymentFrequency: null,
+    paymentStartDate: null,
+    sourceAccountId: null,
+    principalCategoryId: null,
+    interestCategoryId: null,
+    interestBookingMode: 'AUTO',
+    overpaymentCategoryId: null, overpaymentMemo: null, overpaymentPayeeId: null, fxFeePercent: null,
+    scheduledTransactionId: null,
+    assetCategoryId: null,
+    dateAcquired: null,
+    linkedLoanAccountId: null,
+    isCanadianMortgage: false,
+    isVariableRate: false,
+    termMonths: null,
+    termEndDate: null,
+    amortizationMonths: null,
+    originalPrincipal: null,
+    statementDueDay: null,
+    statementSettlementDay: null,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z',
+    ...overrides,
+  };
+}
+
+function createPayee(overrides: Partial<Payee> = {}): Payee {
+  return {
+    id: 'payee-1',
+    userId: 'user-1',
+    name: 'Test Payee',
+    defaultCategoryId: null,
+    defaultCategory: null,
+    notes: null,
+    website: null,
+    hasLogo: false,
+    logoFetchedAt: null,
+    contactLookupAt: null,
+    contactLookupSource: null,
+    address: null,
+    email: null,
+    phone: null,
+    isActive: true,
+    createdAt: '2024-01-01T00:00:00Z',
+    ...overrides,
+  };
+}
+
+describe('NormalTransactionFields', () => {
+  const mockRegister = vi.fn().mockReturnValue({
+    name: 'fieldName', onChange: vi.fn(), onBlur: vi.fn(), ref: vi.fn(),
+  });
+
+  const defaultProps = {
+    register: mockRegister,
+    setValue: vi.fn(),
+    errors: {},
+    watchedAccountId: '',
+    watchedAmount: 0,
+    watchedCurrencyCode: 'CAD',
+    accounts: [] as Account[],
+    selectedPayeeId: '',
+    selectedCategoryId: '',
+    payees: [] as Payee[],
+    payeeAliasMap: {} as Record<string, string[]>,
+    categoryOptions: [] as Array<{ value: string; label: string }>,
+    handlePayeeChange: vi.fn(),
+    handlePayeeCreate: vi.fn(),
+    handleCategoryChange: vi.fn(),
+    handleCategoryCreate: vi.fn(),
+    handleAmountChange: vi.fn(),
+    handleModeChange: vi.fn(),
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    // No tour running by default, so a tour started in one test cannot leak
+    // its form constraints into the next.
+    useTourStore.setState({ active: null });
+  });
+
+  it('renders Account select', () => {
+    render(<NormalTransactionFields {...defaultProps} />);
+
+    expect(screen.getByText('Account')).toBeInTheDocument();
+  });
+
+  it('renders Date input', () => {
+    render(<NormalTransactionFields {...defaultProps} />);
+
+    expect(screen.getByText('Date')).toBeInTheDocument();
+  });
+
+  it('renders Payee combobox', () => {
+    render(<NormalTransactionFields {...defaultProps} />);
+
+    expect(screen.getByText('Payee')).toBeInTheDocument();
+  });
+
+  it('renders Category combobox', () => {
+    render(<NormalTransactionFields {...defaultProps} />);
+
+    expect(screen.getByText('Category')).toBeInTheDocument();
+  });
+
+  it('renders Amount input', () => {
+    render(<NormalTransactionFields {...defaultProps} />);
+
+    expect(screen.getByText('Amount')).toBeInTheDocument();
+  });
+
+  it('renders Reference Number input', () => {
+    render(<NormalTransactionFields {...defaultProps} />);
+
+    expect(screen.getByText('Reference Number')).toBeInTheDocument();
+  });
+
+  it('uses the amountLabel override for the Amount input when provided', () => {
+    render(<NormalTransactionFields {...defaultProps} amountLabel="Total in USD" />);
+
+    expect(screen.getByText('Total in USD')).toBeInTheDocument();
+    expect(screen.queryByText('Amount')).not.toBeInTheDocument();
+  });
+
+  it('stacks each currency field and Reference Number on its own line on mobile in the foreign-currency layout', () => {
+    const { container } = render(
+      <NormalTransactionFields
+        {...defaultProps}
+        amountLabel="Total in EUR"
+        convertedAmountSlot={<div data-testid="converted-slot">Total in CAD</div>}
+      />,
+    );
+
+    // The foreign layout stacks every field on mobile (grid-cols-1) and only
+    // packs the amount, converted amount, and Reference Number into one row
+    // from md up (md:grid-cols-3).
+    const grid = container.querySelector('.grid-cols-1.md\\:grid-cols-3');
+    expect(grid).not.toBeNull();
+    expect(grid).toHaveTextContent('Total in EUR');
+    expect(grid).toHaveTextContent('Total in CAD');
+    expect(grid).toHaveTextContent('Reference Number');
+  });
+
+  it('renders the conversion note spanning both currency fields on desktop', () => {
+    render(
+      <NormalTransactionFields
+        {...defaultProps}
+        amountLabel="Total in EUR"
+        convertedAmountSlot={<div data-testid="converted-slot">Total in CAD</div>}
+        fxCaptionSlot={<p data-testid="fx-caption">1 EUR = 1.45 CAD</p>}
+      />,
+    );
+
+    // The note is a sibling below the two-column currency grid (not a grid row,
+    // so only its own margin separates it), inside the span container that
+    // covers both currency columns on desktop (md:col-span-2).
+    const currencyGrid = screen.getByTestId('converted-slot').parentElement;
+    expect(currencyGrid?.className).toContain('md:grid-cols-2');
+    expect(currencyGrid).not.toContainElement(screen.getByTestId('fx-caption'));
+
+    const spanContainer = screen.getByTestId('fx-caption').parentElement;
+    expect(spanContainer?.className).toContain('md:col-span-2');
+    expect(spanContainer).toContainElement(screen.getByTestId('converted-slot'));
+    expect(spanContainer).toContainElement(screen.getByTestId('fx-caption'));
+  });
+
+  // --- New tests below ---
+
+  it('filters out investment brokerage accounts from the Account dropdown', () => {
+    const chequingAccount = createAccount({ id: 'acc-1', name: 'Chequing', accountSubType: null });
+    const investmentAccount = createAccount({
+      id: 'acc-inv',
+      name: 'Brokerage',
+      accountSubType: 'INVESTMENT_BROKERAGE',
+    });
+
+    render(
+      <NormalTransactionFields
+        {...defaultProps}
+        accounts={[chequingAccount, investmentAccount]}
+      />
+    );
+
+    const accountSelect = screen.getByLabelText('Account');
+    const options = Array.from(accountSelect.querySelectorAll('option'));
+    const optionLabels = options.map(o => o.textContent);
+
+    expect(optionLabels).toContain('Chequing (CAD)');
+    expect(optionLabels).not.toContain('Brokerage (CAD)');
+  });
+
+  it('filters out closed accounts from the Account dropdown unless currently selected', () => {
+    const openAccount = createAccount({ id: 'acc-1', name: 'Open Account', isClosed: false });
+    const closedAccount = createAccount({ id: 'acc-2', name: 'Closed Account', isClosed: true });
+
+    render(
+      <NormalTransactionFields
+        {...defaultProps}
+        accounts={[openAccount, closedAccount]}
+      />
+    );
+
+    const accountSelect = screen.getByLabelText('Account');
+    const options = Array.from(accountSelect.querySelectorAll('option'));
+    const optionLabels = options.map(o => o.textContent);
+
+    expect(optionLabels).toContain('Open Account (CAD)');
+    expect(optionLabels).not.toContain('Closed Account (CAD) (Closed)');
+  });
+
+  it('shows a closed account with (Closed) label when it is the currently selected account', () => {
+    const closedAccount = createAccount({ id: 'acc-closed', name: 'Closed Account', isClosed: true });
+
+    render(
+      <NormalTransactionFields
+        {...defaultProps}
+        accounts={[closedAccount]}
+        watchedAccountId="acc-closed"
+      />
+    );
+
+    const accountSelect = screen.getByLabelText('Account');
+    const options = Array.from(accountSelect.querySelectorAll('option'));
+    const optionLabels = options.map(o => o.textContent);
+
+    expect(optionLabels).toContain('Closed Account (CAD) (Closed)');
+  });
+
+  it('sorts account options alphabetically', () => {
+    const accountB = createAccount({ id: 'acc-b', name: 'Beta Account' });
+    const accountA = createAccount({ id: 'acc-a', name: 'Alpha Account' });
+    const accountC = createAccount({ id: 'acc-c', name: 'Charlie Account' });
+
+    render(
+      <NormalTransactionFields
+        {...defaultProps}
+        accounts={[accountB, accountA, accountC]}
+      />
+    );
+
+    const accountSelect = screen.getByLabelText('Account');
+    const options = Array.from(accountSelect.querySelectorAll('option'));
+    // First option is the placeholder
+    const accountLabels = options.slice(1).map(o => o.textContent);
+
+    expect(accountLabels).toEqual([
+      'Alpha Account (CAD)',
+      'Beta Account (CAD)',
+      'Charlie Account (CAD)',
+    ]);
+  });
+
+  it('displays payee options in the Payee combobox', () => {
+    const payees = [
+      createPayee({ id: 'p1', name: 'Grocery Store' }),
+      createPayee({ id: 'p2', name: 'Gas Station' }),
+    ];
+
+    render(
+      <NormalTransactionFields
+        {...defaultProps}
+        payees={payees}
+      />
+    );
+
+    const payeeSelect = screen.getByTestId('combobox-select-Payee');
+    const options = Array.from(payeeSelect.querySelectorAll('option'));
+    const labels = options.map(o => o.textContent);
+
+    expect(labels).toContain('Grocery Store');
+    expect(labels).toContain('Gas Station');
+  });
+
+  it('calls handlePayeeChange when a payee is selected', () => {
+    const payees = [
+      createPayee({ id: 'p1', name: 'Grocery Store' }),
+    ];
+
+    render(
+      <NormalTransactionFields
+        {...defaultProps}
+        payees={payees}
+      />
+    );
+
+    const payeeSelect = screen.getByTestId('combobox-select-Payee');
+    fireEvent.change(payeeSelect, { target: { value: 'p1' } });
+
+    expect(defaultProps.handlePayeeChange).toHaveBeenCalledWith('p1', 'Grocery Store');
+  });
+
+  it('calls handlePayeeCreate when create button is clicked', () => {
+    render(<NormalTransactionFields {...defaultProps} />);
+
+    const createButton = screen.getByTestId('combobox-create-Payee');
+    fireEvent.click(createButton);
+
+    expect(defaultProps.handlePayeeCreate).toHaveBeenCalledWith('New Item');
+  });
+
+  it('displays category options in the Category combobox', () => {
+    const categoryOptions = [
+      { value: 'cat-1', label: 'Groceries' },
+      { value: 'cat-2', label: 'Entertainment' },
+    ];
+
+    render(
+      <NormalTransactionFields
+        {...defaultProps}
+        categoryOptions={categoryOptions}
+      />
+    );
+
+    const categorySelect = screen.getByTestId('combobox-select-Category');
+    const options = Array.from(categorySelect.querySelectorAll('option'));
+    const labels = options.map(o => o.textContent);
+
+    expect(labels).toContain('Groceries');
+    expect(labels).toContain('Entertainment');
+  });
+
+  it('calls handleCategoryChange when a category is selected', () => {
+    const categoryOptions = [
+      { value: 'cat-1', label: 'Groceries' },
+    ];
+
+    render(
+      <NormalTransactionFields
+        {...defaultProps}
+        categoryOptions={categoryOptions}
+      />
+    );
+
+    const categorySelect = screen.getByTestId('combobox-select-Category');
+    fireEvent.change(categorySelect, { target: { value: 'cat-1' } });
+
+    expect(defaultProps.handleCategoryChange).toHaveBeenCalledWith('cat-1', 'Groceries');
+  });
+
+  it('calls handleCategoryCreate when category create button is clicked', () => {
+    render(<NormalTransactionFields {...defaultProps} />);
+
+    const createButton = screen.getByTestId('combobox-create-Category');
+    fireEvent.click(createButton);
+
+    expect(defaultProps.handleCategoryCreate).toHaveBeenCalledWith('New Item');
+  });
+
+  it('calls handleAmountChange when amount input changes', () => {
+    render(<NormalTransactionFields {...defaultProps} />);
+
+    const amountInput = screen.getByTestId('currency-input-field-Amount');
+    fireEvent.change(amountInput, { target: { value: '42.50' } });
+
+    expect(defaultProps.handleAmountChange).toHaveBeenCalledWith(42.50);
+  });
+
+  it('calls handleModeChange with "split" when Split Transaction button is clicked', () => {
+    render(<NormalTransactionFields {...defaultProps} />);
+
+    // There are two split buttons (desktop and mobile), click the first
+    const splitButtons = screen.getAllByText('Split Transaction');
+    fireEvent.click(splitButtons[0]);
+
+    expect(defaultProps.handleModeChange).toHaveBeenCalledWith('split');
+  });
+
+  it('disables Split while a tour asks for the single-path form', () => {
+    // The Split control sits inside the payee/category row the tour highlights,
+    // and interactive steps deliberately let clicks through so the fields can
+    // be filled in -- so the tour flag is what keeps Split out of reach.
+    useTourStore.getState().startTour({
+      id: 'test/no-split',
+      area: 'transactions',
+      i18nPrefix: 'intro.basics',
+      disableTransactionSplit: true,
+      steps: [{ id: 'fields', route: '/transactions', anchorId: null }],
+    });
+
+    render(<NormalTransactionFields {...defaultProps} />);
+    for (const button of screen.getAllByText('Split Transaction')) {
+      expect(button).toBeDisabled();
+    }
+    fireEvent.click(screen.getAllByText('Split Transaction')[0]);
+    expect(defaultProps.handleModeChange).not.toHaveBeenCalled();
+  });
+
+  it('leaves Split enabled for tours that do not ask for it', () => {
+    useTourStore.getState().startTour({
+      id: 'test/with-split',
+      area: 'intro',
+      i18nPrefix: 'intro.basics',
+      steps: [{ id: 'splits', route: '/transactions', anchorId: null }],
+    });
+
+    render(<NormalTransactionFields {...defaultProps} />);
+    expect(screen.getAllByText('Split Transaction')[0]).toBeEnabled();
+  });
+
+  it('includes currency code in account labels', () => {
+    const usdAccount = createAccount({ id: 'acc-usd', name: 'US Savings', currencyCode: 'USD' });
+
+    render(
+      <NormalTransactionFields
+        {...defaultProps}
+        accounts={[usdAccount]}
+      />
+    );
+
+    const accountSelect = screen.getByLabelText('Account');
+    const options = Array.from(accountSelect.querySelectorAll('option'));
+    const labels = options.map(o => o.textContent);
+
+    expect(labels).toContain('US Savings (USD)');
+  });
+
+  it('shows the first option as "Select account..." placeholder', () => {
+    render(
+      <NormalTransactionFields
+        {...defaultProps}
+        accounts={[createAccount()]}
+      />
+    );
+
+    const accountSelect = screen.getByLabelText('Account');
+    const firstOption = accountSelect.querySelector('option');
+
+    expect(firstOption?.textContent).toBe('Select account...');
+    expect(firstOption?.value).toBe('');
+  });
+
+  it('passes watchedAmount as value to CurrencyInput', () => {
+    render(
+      <NormalTransactionFields
+        {...defaultProps}
+        watchedAmount={99.99}
+      />
+    );
+
+    const amountInput = screen.getByTestId('currency-input-field-Amount');
+    expect(amountInput).toHaveValue(99.99);
+  });
+
+  it('passes selectedPayeeId as value to the Payee combobox', () => {
+    const payees = [
+      createPayee({ id: 'p1', name: 'Selected Payee' }),
+    ];
+
+    render(
+      <NormalTransactionFields
+        {...defaultProps}
+        payees={payees}
+        selectedPayeeId="p1"
+      />
+    );
+
+    const payeeSelect = screen.getByTestId('combobox-select-Payee');
+    expect(payeeSelect).toHaveValue('p1');
+  });
+
+  it('passes selectedCategoryId as value to the Category combobox', () => {
+    const categoryOptions = [
+      { value: 'cat-1', label: 'Groceries' },
+    ];
+
+    render(
+      <NormalTransactionFields
+        {...defaultProps}
+        categoryOptions={categoryOptions}
+        selectedCategoryId="cat-1"
+      />
+    );
+
+    const categorySelect = screen.getByTestId('combobox-select-Category');
+    expect(categorySelect).toHaveValue('cat-1');
+  });
+});

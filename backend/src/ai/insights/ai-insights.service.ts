@@ -1,0 +1,807 @@
+import { Injectable, Logger, NotFoundException } from "@nestjs/common";
+import { tr } from "../../i18n/translate";
+import { ConfigService } from "@nestjs/config";
+import { DataSource, LessThan } from "typeorm";
+import { withScopedDb } from "../../common/db/scoped-db";
+import {
+  JobClaimService,
+  JobClaimType,
+} from "../../common/jobs/job-claim.service";
+import { Cron, CronExpression } from "@nestjs/schedule";
+import {
+  AiInsight,
+  InsightType,
+  InsightSeverity,
+} from "../entities/ai-insight.entity";
+import { AiService } from "../ai.service";
+import { AiUsageService } from "../ai-usage.service";
+import { mapWithConcurrency } from "../../common/concurrency.util";
+import {
+  withSystemContext,
+  withUserContext,
+} from "../../common/db/with-context";
+import {
+  InsightsAggregatorService,
+  SpendingAggregates,
+} from "./insights-aggregator.service";
+import { INSIGHT_SYSTEM_PROMPT } from "../context/prompt-templates";
+import { aiLanguageInstruction } from "../context/language-directive";
+import { sanitizePromptValue } from "../../common/sanitization.util";
+import { UserPreference } from "../../users/entities/user-preference.entity";
+import { AiInsightResponse, InsightsListResponse } from "./dto/ai-insights.dto";
+import { preferredCurrency } from "../../common/default-currency.util";
+
+const INSIGHT_EXPIRY_DAYS = 7;
+const MAX_INSIGHTS_PER_USER = 50;
+const MIN_GENERATION_INTERVAL_HOURS = 12;
+
+/**
+ * The lease key. One per user -- there is only ever one generation in flight for
+ * a user, so the key names the activity rather than a window.
+ */
+const INSIGHT_GENERATION_CLAIM_KEY = "generation";
+
+/**
+ * How long a generation lease survives its holder.
+ *
+ * Long enough to cover aggregate computation plus a slow provider call, short
+ * enough that a killed replica does not block the user until someone intervenes.
+ * The lease is released on the happy path, so this only ever matters after a
+ * crash.
+ */
+const INSIGHT_GENERATION_LEASE_MS = 15 * 60 * 1000;
+// Number of users whose insights are generated concurrently in the daily cron.
+// Each generation makes LLM calls, so keep this modest to respect provider
+// rate limits and cost while still being faster than fully sequential.
+const INSIGHT_GENERATION_CONCURRENCY = 5;
+
+interface RawInsight {
+  type: string;
+  title: string;
+  description: string;
+  severity: string;
+  data: Record<string, unknown>;
+}
+
+@Injectable()
+export class AiInsightsService {
+  private readonly logger = new Logger(AiInsightsService.name);
+  private readonly generatingUsers = new Set<string>();
+
+  constructor(
+    private readonly dataSource: DataSource,
+    private readonly aiService: AiService,
+    private readonly usageService: AiUsageService,
+    private readonly aggregatorService: InsightsAggregatorService,
+    private readonly configService: ConfigService,
+    private readonly jobClaims: JobClaimService,
+  ) {}
+
+  async getInsights(
+    userId: string,
+    type?: InsightType,
+    severity?: InsightSeverity,
+    includeDismissed = false,
+  ): Promise<InsightsListResponse> {
+    // The list and its "last generated" stamp are one snapshot -- a generation
+    // landing between them would report a timestamp newer than the rows shown.
+    const { insights, lastGenerated } = await withScopedDb(
+      this.dataSource,
+      async (manager) => {
+        const repo = manager.getRepository(AiInsight);
+        const qb = repo
+          .createQueryBuilder("i")
+          .where("i.userId = :userId", { userId })
+          .andWhere("i.expiresAt > :now", { now: new Date() });
+
+        if (!includeDismissed) {
+          qb.andWhere("i.isDismissed = false");
+        }
+
+        if (type) {
+          qb.andWhere("i.type = :type", { type });
+        }
+
+        if (severity) {
+          qb.andWhere("i.severity = :severity", { severity });
+        }
+
+        qb.orderBy("i.severity", "ASC")
+          .addOrderBy("i.generatedAt", "DESC")
+          .take(MAX_INSIGHTS_PER_USER);
+
+        return {
+          insights: await qb.getMany(),
+          lastGenerated: await repo
+            .createQueryBuilder("i")
+            .select("MAX(i.generatedAt)", "lastGenerated")
+            .where("i.userId = :userId", { userId })
+            .getRawOne(),
+        };
+      },
+    );
+
+    return {
+      insights: insights.map((i) => this.toResponse(i)),
+      total: insights.length,
+      lastGeneratedAt: lastGenerated?.lastGenerated
+        ? new Date(lastGenerated.lastGenerated).toISOString()
+        : null,
+      isGenerating: this.generatingUsers.has(userId),
+    };
+  }
+
+  isGenerating(userId: string): boolean {
+    return this.generatingUsers.has(userId);
+  }
+
+  async dismissInsight(userId: string, insightId: string): Promise<void> {
+    // Read-modify-write: the ownership check and the flag flip are one unit.
+    await withScopedDb(this.dataSource, async (manager) => {
+      const repo = manager.getRepository(AiInsight);
+      const insight = await repo.findOne({
+        where: { id: insightId, userId },
+      });
+
+      if (!insight) {
+        throw new NotFoundException(
+          tr("errors.ai.insightNotFound", "Insight not found"),
+        );
+      }
+
+      await repo.update({ id: insightId }, { isDismissed: true });
+    });
+  }
+
+  async generateInsights(userId: string): Promise<InsightsListResponse> {
+    if (this.generatingUsers.has(userId)) {
+      this.logger.log(
+        `Insights generation already in progress user=${userId}; returning current list`,
+      );
+      return this.getInsights(userId);
+    }
+
+    const recentInsight = await withScopedDb(this.dataSource, (manager) =>
+      manager
+        .getRepository(AiInsight)
+        .createQueryBuilder("i")
+        .where("i.userId = :userId", { userId })
+        .andWhere("i.generatedAt > :cutoff", {
+          cutoff: new Date(
+            Date.now() - MIN_GENERATION_INTERVAL_HOURS * 60 * 60 * 1000,
+          ),
+        })
+        .getOne(),
+    );
+
+    if (recentInsight) {
+      this.logger.log(
+        `Insights generation skipped user=${userId}: last run within ${MIN_GENERATION_INTERVAL_HOURS}h cooldown`,
+      );
+      return this.getInsights(userId);
+    }
+
+    // A durable lease, because `generatingUsers` is per process.
+    //
+    // Every backend replica fires the daily cron, and each has its own Set -- so
+    // both replicas observed no recent insight, both added the user to their own
+    // in-memory guard, both computed aggregates, both called the provider and
+    // both saved. Duplicate insights, double the provider spend and double the
+    // usage accounting (audit P4-013). The in-memory Set stays as a cheap local
+    // short-circuit; the lease is the actual exclusion.
+    //
+    // A lease rather than a permanent claim, so a replica killed mid-generation
+    // does not lock the user out until someone notices. It is released on the way
+    // out, which keeps the real cooldown where it already was: the recent-insight
+    // query above.
+    const leased = await this.jobClaims.claimLease(
+      JobClaimType.AiInsightGeneration,
+      userId,
+      INSIGHT_GENERATION_CLAIM_KEY,
+      INSIGHT_GENERATION_LEASE_MS,
+    );
+    if (!leased) {
+      this.logger.log(
+        `Insights generation already leased elsewhere user=${userId}; returning current list`,
+      );
+      return this.getInsights(userId);
+    }
+
+    this.generatingUsers.add(userId);
+    const startTime = Date.now();
+    this.logger.log(`Insights generation start user=${userId}`);
+
+    try {
+      const preferences = await withScopedDb(this.dataSource, (manager) =>
+        manager.getRepository(UserPreference).findOne({
+          where: { userId },
+        }),
+      );
+      const currency = preferredCurrency(preferences);
+
+      let aggregates: SpendingAggregates;
+      const aggregateStart = Date.now();
+      try {
+        aggregates = await this.aggregatorService.computeAggregates(
+          userId,
+          currency,
+        );
+        this.logger.log(
+          `Insights aggregates built user=${userId} currency=${currency} ` +
+            `categories=${aggregates.categorySpending.length} ` +
+            `months=${aggregates.monthlySpending.length} ` +
+            `recurring=${aggregates.recurringCharges.length} ` +
+            `in ${Date.now() - aggregateStart}ms`,
+        );
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Unknown error";
+        this.logger.warn(
+          `Failed to compute aggregates for user ${userId}: ${message}`,
+        );
+        return this.getInsights(userId);
+      }
+
+      if (
+        aggregates.categorySpending.length === 0 &&
+        aggregates.monthlySpending.length === 0
+      ) {
+        this.logger.log(
+          `Insights generation skipped user=${userId}: no spending data to analyze`,
+        );
+        return this.getInsights(userId);
+      }
+
+      const prompt = this.buildInsightsPrompt(aggregates);
+
+      try {
+        const providerCallStart = Date.now();
+        this.logger.log(
+          `Insights provider call start user=${userId} promptChars=${prompt.length}`,
+        );
+        const response = await this.aiService.complete(
+          userId,
+          {
+            systemPrompt:
+              INSIGHT_SYSTEM_PROMPT +
+              aiLanguageInstruction(preferences?.language),
+            messages: [{ role: "user", content: prompt }],
+            maxTokens: 4096,
+            temperature: 0.3,
+            responseFormat: "json",
+          },
+          "insight",
+        );
+        const providerCallMs = Date.now() - providerCallStart;
+        this.logger.log(
+          `Insights provider call done user=${userId} ` +
+            `model=${response.model} ms=${providerCallMs} ` +
+            `inputTokens=${response.usage.inputTokens} ` +
+            `outputTokens=${response.usage.outputTokens} ` +
+            `contentChars=${response.content.length}`,
+        );
+
+        const rawInsights = this.parseInsightsResponse(
+          response.content,
+          userId,
+        );
+        await this.saveInsights(userId, rawInsights);
+        this.logger.log(
+          `Insights generation complete user=${userId} ` +
+            `totalMs=${Date.now() - startTime} ` +
+            `parsed=${rawInsights.length} ` +
+            `inputTokens=${response.usage.inputTokens} ` +
+            `outputTokens=${response.usage.outputTokens}`,
+        );
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Unknown error";
+        this.logger.warn(
+          `Failed to generate AI insights for user ${userId} ` +
+            `after ${Date.now() - startTime}ms: ${message}`,
+        );
+      }
+
+      return this.getInsights(userId);
+    } finally {
+      this.generatingUsers.delete(userId);
+      await this.jobClaims
+        .releaseLease(
+          JobClaimType.AiInsightGeneration,
+          userId,
+          INSIGHT_GENERATION_CLAIM_KEY,
+          // By token, so a generation that outran its own lease releases nothing
+          // rather than freeing a lease another replica now holds (DR-RRV4-01).
+          leased,
+        )
+        .catch((error: unknown) =>
+          this.logger.warn(
+            `Failed to release insight generation lease for user ${userId}: ` +
+              `${error instanceof Error ? error.message : String(error)}`,
+          ),
+        );
+    }
+  }
+
+  @Cron(CronExpression.EVERY_DAY_AT_6AM)
+  async handleDailyInsightGeneration(): Promise<void> {
+    this.logger.log("Starting daily insight generation");
+
+    try {
+      // RLS (task C2): cross-user cleanup runs under a system context.
+      await withSystemContext(() => this.cleanupExpiredInsights());
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unknown error";
+      this.logger.warn(`Failed to cleanup expired insights: ${message}`);
+    }
+
+    // RLS (task C2): cross-user fan-out over active users.
+    const userIds = await withSystemContext(() => this.getActiveUserIds());
+
+    await mapWithConcurrency(
+      userIds,
+      INSIGHT_GENERATION_CONCURRENCY,
+      async (userId) => {
+        try {
+          // RLS: per-user generation keeps the user's RLS net.
+          await withUserContext(userId, () => this.generateInsights(userId));
+        } catch (error) {
+          const message =
+            error instanceof Error ? error.message : "Unknown error";
+          this.logger.warn(
+            `Failed to generate insights for user ${userId}: ${message}`,
+          );
+        }
+      },
+    );
+
+    this.logger.log(
+      `Daily insight generation complete for ${userIds.length} users`,
+    );
+  }
+
+  private async cleanupExpiredInsights(): Promise<void> {
+    const result = await withScopedDb(this.dataSource, (manager) =>
+      manager.getRepository(AiInsight).delete({
+        expiresAt: LessThan(new Date()),
+      }),
+    );
+
+    if (result.affected && result.affected > 0) {
+      this.logger.log(`Cleaned up ${result.affected} expired insights`);
+    }
+
+    // Purge dismissed insights older than 30 days
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - 30);
+    const dismissedResult = await withScopedDb(this.dataSource, (manager) =>
+      manager.getRepository(AiInsight).delete({
+        isDismissed: true,
+        createdAt: LessThan(cutoff),
+      }),
+    );
+
+    if (dismissedResult.affected && dismissedResult.affected > 0) {
+      this.logger.log(
+        `Purged ${dismissedResult.affected} old dismissed insights`,
+      );
+    }
+  }
+
+  private async getActiveUserIds(): Promise<string[]> {
+    // Relay-backed completions need the in-memory relay broker with a
+    // connected agent, which lives in the web-server process -- this cron runs
+    // in the separate scheduler process, where a relay prompt can never be
+    // served. Skip users whose only active provider is the relay instead of
+    // failing their generation every day; they can still generate on demand
+    // from the Insights page.
+    const userIdsWithConfig = await withScopedDb(this.dataSource, (manager) =>
+      manager
+        .createQueryBuilder()
+        .select("DISTINCT apc.user_id", "userId")
+        .from("ai_provider_configs", "apc")
+        .where("apc.is_active = true")
+        .andWhere("apc.provider != :relayProvider", {
+          relayProvider: "mcp_relay",
+        })
+        .getRawMany(),
+    );
+
+    const ids = new Set(userIdsWithConfig.map((r: any) => r.userId as string));
+
+    const hasServerDefault = !!this.configService.get<string>(
+      "AI_DEFAULT_PROVIDER",
+    );
+
+    if (hasServerDefault) {
+      const allActiveUsers = await withScopedDb(this.dataSource, (manager) =>
+        manager
+          .createQueryBuilder()
+          .select("u.id", "userId")
+          .from("users", "u")
+          .where("u.is_active = true")
+          .getRawMany(),
+      );
+
+      for (const row of allActiveUsers) {
+        ids.add(row.userId as string);
+      }
+    }
+
+    return [...ids] as string[];
+  }
+
+  private formatPctWithDirection(pct: number): string {
+    if (Math.abs(pct) < 0.05) return "0.0% (UNCHANGED)";
+    if (pct > 0) return `+${pct.toFixed(1)}% (ABOVE)`;
+    return `${pct.toFixed(1)}% (BELOW)`;
+  }
+
+  private buildInsightsPrompt(aggregates: SpendingAggregates): string {
+    const sections: string[] = [];
+
+    const monthProgress =
+      aggregates.daysElapsedInMonth / aggregates.daysInMonth;
+    const hasEnoughDaysForProjection = aggregates.daysElapsedInMonth >= 10;
+
+    let projectedMonthlySpending: number | null = null;
+    let projectedVsAvgPct: number | null = null;
+
+    if (hasEnoughDaysForProjection && aggregates.daysElapsedInMonth > 0) {
+      projectedMonthlySpending =
+        (aggregates.totalSpendingCurrentMonth / aggregates.daysElapsedInMonth) *
+        aggregates.daysInMonth;
+      projectedVsAvgPct =
+        aggregates.averageMonthlySpending > 0
+          ? ((projectedMonthlySpending - aggregates.averageMonthlySpending) /
+              aggregates.averageMonthlySpending) *
+            100
+          : 0;
+    }
+
+    sections.push(
+      `Currency: ${aggregates.currency}`,
+      `Days elapsed in current month: ${aggregates.daysElapsedInMonth}/${aggregates.daysInMonth} (${(monthProgress * 100).toFixed(0)}% through month)`,
+      `Total spending current month (so far): ${aggregates.totalSpendingCurrentMonth.toFixed(2)}`,
+    );
+
+    if (projectedMonthlySpending !== null && projectedVsAvgPct !== null) {
+      sections.push(
+        `Projected full-month spending: ${projectedMonthlySpending.toFixed(2)}`,
+        `Projected vs average: ${this.formatPctWithDirection(projectedVsAvgPct)}`,
+      );
+    } else {
+      sections.push(
+        `Projected full-month spending: NOT AVAILABLE (only ${aggregates.daysElapsedInMonth} days elapsed, need at least 10 for reliable projection)`,
+      );
+    }
+
+    sections.push(
+      `Total spending previous month: ${aggregates.totalSpendingPreviousMonth.toFixed(2)}`,
+      `Average monthly spending (6-month): ${aggregates.averageMonthlySpending.toFixed(2)}`,
+    );
+
+    // Filter to categories with actual current-month spending
+    const activeCategories = aggregates.categorySpending.filter(
+      (cat) => cat.currentMonthTotal > 0,
+    );
+
+    if (activeCategories.length > 0) {
+      sections.push("\n--- CATEGORY SPENDING (current month > $0 only) ---");
+      for (const cat of activeCategories.slice(0, 15)) {
+        const vsAvgPct =
+          cat.averageMonthlyTotal > 0
+            ? ((cat.currentMonthTotal - cat.averageMonthlyTotal) /
+                cat.averageMonthlyTotal) *
+              100
+            : 0;
+        const vsPrevPct =
+          cat.previousMonthTotal > 0
+            ? ((cat.currentMonthTotal - cat.previousMonthTotal) /
+                cat.previousMonthTotal) *
+              100
+            : 0;
+
+        const vsAvgLabel =
+          cat.averageMonthlyTotal > 0
+            ? cat.currentMonthTotal > cat.averageMonthlyTotal
+              ? `${Math.abs(vsAvgPct).toFixed(1)}% ABOVE average`
+              : cat.currentMonthTotal < cat.averageMonthlyTotal
+                ? `${Math.abs(vsAvgPct).toFixed(1)}% BELOW average`
+                : "EQUAL to average"
+            : "no historical average";
+        const vsPrevLabel =
+          cat.previousMonthTotal > 0
+            ? cat.currentMonthTotal > cat.previousMonthTotal
+              ? `${Math.abs(vsPrevPct).toFixed(1)}% ABOVE previous month`
+              : cat.currentMonthTotal < cat.previousMonthTotal
+                ? `${Math.abs(vsPrevPct).toFixed(1)}% BELOW previous month`
+                : "EQUAL to previous month"
+            : "no previous month data";
+
+        const catIdSuffix = cat.categoryId
+          ? `, categoryId=${cat.categoryId}`
+          : "";
+        sections.push(
+          `${sanitizePromptValue(cat.categoryName)}: current=${cat.currentMonthTotal.toFixed(2)}, prev=${cat.previousMonthTotal.toFixed(2)}, avg=${cat.averageMonthlyTotal.toFixed(2)}, vs avg: ${vsAvgLabel}, vs prev: ${vsPrevLabel}, months=${cat.monthCount}, txns=${cat.transactionCount}${catIdSuffix}`,
+        );
+      }
+    }
+
+    if (aggregates.monthlySpending.length > 0) {
+      sections.push("\n--- MONTHLY SPENDING TRENDS ---");
+      for (const month of aggregates.monthlySpending) {
+        const top3 = month.categoryBreakdown
+          .slice(0, 3)
+          .map(
+            (c) =>
+              `${sanitizePromptValue(c.categoryName)}=${c.total.toFixed(2)}`,
+          )
+          .join(", ");
+        sections.push(
+          `${month.month}: total=${month.total.toFixed(2)} (top: ${top3})`,
+        );
+      }
+    }
+
+    if (aggregates.recurringCharges.length > 0) {
+      sections.push("\n--- RECURRING CHARGES ---");
+      for (const charge of aggregates.recurringCharges.slice(0, 15)) {
+        const amountChange =
+          charge.previousAmount > 0
+            ? (
+                ((charge.currentAmount - charge.previousAmount) /
+                  charge.previousAmount) *
+                100
+              ).toFixed(1)
+            : "N/A";
+        const payeeIdSuffix = charge.payeeId
+          ? `, payeeId=${charge.payeeId}`
+          : "";
+        const chargeCatIdSuffix = charge.categoryId
+          ? `, categoryId=${charge.categoryId}`
+          : "";
+        sections.push(
+          `${sanitizePromptValue(charge.payeeName)} (${charge.frequency}): current=${charge.currentAmount.toFixed(2)}, previous=${charge.previousAmount.toFixed(2)}, change=${amountChange}%, category=${sanitizePromptValue(charge.categoryName || "unknown")}, occurrences=${charge.amounts.length}${payeeIdSuffix}${chargeCatIdSuffix}`,
+        );
+      }
+    }
+
+    return sections.join("\n");
+  }
+
+  private parseInsightsResponse(content: string, userId: string): RawInsight[] {
+    const MAX_JSON_SIZE = 100 * 1024; // 100KB
+    const trimmed = content.trim();
+    const preview = trimmed.slice(0, 500).replace(/\s+/g, " ");
+
+    // Some providers (notably OpenAI-compatible endpoints like Cloudflare)
+    // wrap JSON output in markdown code fences even when asked not to.
+    // Strip them before attempting JSON extraction.
+    const stripped = this.stripMarkdownFences(trimmed);
+
+    const insightsArray = this.extractInsightsArray(stripped);
+    if (!insightsArray) {
+      this.logger.warn(
+        `AI response did not contain a JSON insights array user=${userId} ` +
+          `contentChars=${content.length} preview="${preview}"`,
+      );
+      return [];
+    }
+
+    // Serialized-size guard on the extracted array (defense in depth).
+    if (JSON.stringify(insightsArray).length > MAX_JSON_SIZE) {
+      this.logger.warn(
+        `AI insights JSON too large user=${userId} ` +
+          `items=${insightsArray.length} limit=${MAX_JSON_SIZE}`,
+      );
+      return [];
+    }
+
+    const validTypes = new Set([
+      "anomaly",
+      "trend",
+      "subscription",
+      "budget_pace",
+      "seasonal",
+      "new_recurring",
+    ]);
+    const validSeverities = new Set(["info", "warning", "alert"]);
+
+    const rawCount = insightsArray.length;
+    const validated = insightsArray
+      .filter((item: unknown) => {
+        if (!item || typeof item !== "object") return false;
+        const obj = item as Record<string, unknown>;
+        return (
+          typeof obj.type === "string" &&
+          validTypes.has(obj.type) &&
+          typeof obj.title === "string" &&
+          typeof obj.description === "string" &&
+          typeof obj.severity === "string" &&
+          validSeverities.has(obj.severity)
+        );
+      })
+      .map((item) => {
+        const obj = item as Record<string, unknown>;
+        return {
+          type: obj.type as string,
+          title: String(obj.title).substring(0, 255),
+          description: String(obj.description).substring(0, 5000),
+          severity: obj.severity as string,
+          data: this.sanitizeData(obj.data),
+        };
+      });
+
+    if (rawCount !== validated.length) {
+      this.logger.warn(
+        `Filtered invalid insights user=${userId} ` +
+          `raw=${rawCount} valid=${validated.length} ` +
+          `dropped=${rawCount - validated.length}`,
+      );
+    }
+
+    return validated;
+  }
+
+  private stripMarkdownFences(text: string): string {
+    const fenceMatch = text.match(/^```(?:json)?\s*\n?([\s\S]*?)\n?```\s*$/i);
+    if (fenceMatch) {
+      return fenceMatch[1].trim();
+    }
+    return text;
+  }
+
+  /**
+   * Extract the insights array from the model output. Accepts the
+   * strict contract ({"insights": [...]}) as well as legacy/tolerant shapes
+   * (a bare array, or an object with the array under a commonly-seen key).
+   * Returns null if no insights array can be recovered.
+   */
+  private extractInsightsArray(text: string): unknown[] | null {
+    if (!text) return null;
+
+    // 1. Try to parse the whole thing as JSON first (strict-shape path).
+    const direct = this.safeJsonParse(text);
+    if (direct !== undefined) {
+      const arr = this.findInsightsArrayIn(direct);
+      if (arr) return arr;
+    }
+
+    // 2. Fall back to regex-extracting the first object blob, for models
+    //    that emit preamble/trailing text around the JSON.
+    const objectMatch = text.match(/\{[\s\S]*\}/);
+    if (objectMatch) {
+      const parsed = this.safeJsonParse(objectMatch[0]);
+      if (parsed !== undefined) {
+        const arr = this.findInsightsArrayIn(parsed);
+        if (arr) return arr;
+      }
+    }
+
+    // 3. Legacy/tolerant: accept a bare array (pre-wrapper contract).
+    //    LLM02-F1: non-greedy regex bounds the match size.
+    const arrayMatch = text.match(/\[[\s\S]*?\]/);
+    if (arrayMatch) {
+      const parsed = this.safeJsonParse(arrayMatch[0]);
+      if (Array.isArray(parsed)) return parsed;
+    }
+
+    return null;
+  }
+
+  private safeJsonParse(text: string): unknown | undefined {
+    try {
+      return JSON.parse(text);
+    } catch {
+      return undefined;
+    }
+  }
+
+  private findInsightsArrayIn(value: unknown): unknown[] | null {
+    if (Array.isArray(value)) return value;
+    if (!value || typeof value !== "object") return null;
+    const obj = value as Record<string, unknown>;
+    if (Array.isArray(obj.insights)) return obj.insights;
+    // Some models emit alternate key names; accept the common ones.
+    if (Array.isArray(obj.results)) return obj.results;
+    if (Array.isArray(obj.data)) return obj.data;
+    return null;
+  }
+
+  private async saveInsights(
+    userId: string,
+    rawInsights: RawInsight[],
+  ): Promise<void> {
+    if (rawInsights.length === 0) return;
+
+    const now = new Date();
+    const expiresAt = new Date(
+      now.getTime() + INSIGHT_EXPIRY_DAYS * 24 * 60 * 60 * 1000,
+    );
+
+    // One transaction: the save and the cap-enforcing prune are a
+    // read-modify-write over the same rows.
+    await withScopedDb(this.dataSource, async (manager) => {
+      const repo = manager.getRepository(AiInsight);
+      const insights = rawInsights.map((raw) =>
+        repo.create({
+          userId,
+          type: raw.type as InsightType,
+          title: raw.title,
+          description: raw.description,
+          severity: raw.severity as InsightSeverity,
+          data: raw.data,
+          isDismissed: false,
+          generatedAt: now,
+          expiresAt,
+        }),
+      );
+
+      await repo.save(insights);
+
+      // Enforce max insights per user by removing oldest
+      const count = await repo.count({ where: { userId } });
+      if (count > MAX_INSIGHTS_PER_USER) {
+        const toRemove = await repo.find({
+          where: { userId },
+          order: { generatedAt: "ASC" },
+          take: count - MAX_INSIGHTS_PER_USER,
+        });
+        if (toRemove.length > 0) {
+          await repo.remove(toRemove);
+        }
+      }
+    });
+  }
+
+  private sanitizeData(data: unknown): Record<string, unknown> {
+    if (!data || typeof data !== "object" || Array.isArray(data)) {
+      return {};
+    }
+
+    const DANGEROUS_KEYS = new Set(["__proto__", "constructor", "prototype"]);
+    const MAX_KEYS = 20;
+    const MAX_STRING_LENGTH = 1000;
+
+    const result: Record<string, unknown> = {};
+    let keyCount = 0;
+
+    for (const key of Object.keys(data)) {
+      if (keyCount >= MAX_KEYS) break;
+      if (DANGEROUS_KEYS.has(key)) continue;
+
+      const value = (data as Record<string, unknown>)[key];
+
+      if (
+        typeof value === "string" ||
+        typeof value === "number" ||
+        typeof value === "boolean" ||
+        value === null
+      ) {
+        result[key] =
+          typeof value === "string"
+            ? value.substring(0, MAX_STRING_LENGTH)
+            : value;
+        keyCount++;
+      }
+    }
+
+    return result;
+  }
+
+  private toResponse(insight: AiInsight): AiInsightResponse {
+    return {
+      id: insight.id,
+      type: insight.type,
+      title: insight.title,
+      description: insight.description,
+      severity: insight.severity,
+      data: insight.data,
+      isDismissed: insight.isDismissed,
+      generatedAt: insight.generatedAt.toISOString(),
+      expiresAt: insight.expiresAt.toISOString(),
+      createdAt: insight.createdAt.toISOString(),
+    };
+  }
+}

@@ -1,0 +1,211 @@
+/**
+ * Provider-neutral multimodal content blocks for a user turn. Attachments
+ * (images, PDFs) arrive on the current user message; each provider adapter
+ * maps these to its own native shape (Anthropic image/document blocks, OpenAI
+ * image_url parts, Ollama images[]). CSV/plain-text files are decoded and
+ * inlined as `text` blocks upstream in the query service, so only `image` and
+ * `document` carry binary here.
+ */
+export interface AiTextBlock {
+  type: "text";
+  text: string;
+}
+
+export interface AiImageBlock {
+  type: "image";
+  mediaType: "image/png" | "image/jpeg" | "image/gif" | "image/webp";
+  /** base64-encoded image bytes, no `data:` prefix and no newlines. */
+  data: string;
+}
+
+export interface AiDocumentBlock {
+  type: "document";
+  mediaType: "application/pdf";
+  /** base64-encoded PDF bytes, no `data:` prefix and no newlines. */
+  data: string;
+  filename?: string;
+}
+
+export type AiContentBlock = AiTextBlock | AiImageBlock | AiDocumentBlock;
+
+export interface AiUserMessage {
+  role: "user";
+  /**
+   * Plain text for the common (text-only) path, or an ordered array of
+   * content blocks when the turn carries attachments. Only user turns are
+   * multimodal -- assistant/tool messages stay string-only.
+   */
+  content: string | AiContentBlock[];
+}
+
+export interface AiAssistantMessage {
+  role: "assistant";
+  content: string;
+  toolCalls?: AiToolCall[];
+}
+
+export interface AiToolResultMessage {
+  role: "tool";
+  toolCallId: string;
+  name: string;
+  content: string;
+}
+
+export type AiMessage =
+  | AiUserMessage
+  | AiAssistantMessage
+  | AiToolResultMessage;
+
+export interface AiCompletionRequest {
+  systemPrompt: string;
+  messages: AiMessage[];
+  maxTokens?: number;
+  temperature?: number;
+  responseFormat?: "text" | "json";
+}
+
+export interface AiCompletionResponse {
+  content: string;
+  usage: { inputTokens: number; outputTokens: number };
+  model: string;
+  provider: string;
+}
+
+/**
+ * Knobs for a provider's own server-side web search (Anthropic's `web_search`
+ * tool, OpenAI's Responses `web_search` tool). The provider runs the searches
+ * itself; no client-side tool loop is involved.
+ */
+export interface AiWebSearchOptions {
+  /**
+   * Upper bound on searches per completion. Anthropic enforces it as
+   * `max_uses`; OpenAI has no such cap, so there it is a prompt instruction.
+   */
+  maxUses: number;
+  allowedDomains?: string[];
+}
+
+/**
+ * A completion that may have consulted the web. `searched` is only true when
+ * the provider reports at least one search that returned results -- an error
+ * result, or a provider with no search at all, leaves it false so the caller
+ * can weight the answer accordingly.
+ */
+export interface AiWebSearchResponse extends AiCompletionResponse {
+  searched: boolean;
+  searchCount: number;
+  /**
+   * Set when the answer came through the MCP relay: the user's own agent may
+   * or may not have searched, and cannot say which.
+   */
+  viaRelay?: boolean;
+}
+
+export interface AiStreamChunk {
+  content: string;
+  done: boolean;
+}
+
+export interface AiToolDefinition {
+  name: string;
+  description: string;
+  inputSchema: Record<string, unknown>;
+}
+
+export interface AiToolCall {
+  id: string;
+  name: string;
+  input: Record<string, unknown>;
+}
+
+export interface AiToolResponse {
+  content: string;
+  toolCalls: AiToolCall[];
+  usage: { inputTokens: number; outputTokens: number };
+  model: string;
+  provider: string;
+  stopReason: "end_turn" | "tool_use" | "max_tokens";
+}
+
+/**
+ * Streaming chunk produced by `streamWithTools()`. Providers emit zero or more
+ * `text` chunks as the model generates output, followed by exactly one `done`
+ * chunk that carries the fully-assembled tool calls (if any), final usage
+ * counters, model id, and stop reason.
+ */
+export type AiToolStreamChunk =
+  | { type: "text"; text: string }
+  | {
+      type: "done";
+      content: string;
+      toolCalls: AiToolCall[];
+      usage: { inputTokens: number; outputTokens: number };
+      model: string;
+      stopReason: "end_turn" | "tool_use" | "max_tokens";
+    };
+
+export interface AiProvider {
+  readonly name: string;
+  readonly supportsStreaming: boolean;
+  readonly supportsToolUse: boolean;
+  /**
+   * Whether `completeWithWebSearch` runs a real server-side web search. A
+   * provider without one still serves such a request through `complete()`,
+   * from model knowledge; `AiService.completeWithWebSearch` makes that switch.
+   */
+  readonly supportsWebSearch: boolean;
+
+  complete(request: AiCompletionRequest): Promise<AiCompletionResponse>;
+
+  /**
+   * A single tool-free completion with the provider's own web search enabled.
+   * Only providers with `supportsWebSearch` implement it. Like `complete()`,
+   * it maps messages through the simple (user/assistant-only) path.
+   */
+  completeWithWebSearch?(
+    request: AiCompletionRequest,
+    search: AiWebSearchOptions,
+  ): Promise<AiWebSearchResponse>;
+
+  stream?(request: AiCompletionRequest): AsyncIterable<AiStreamChunk>;
+
+  completeWithTools?(
+    request: AiCompletionRequest,
+    tools: AiToolDefinition[],
+  ): Promise<AiToolResponse>;
+
+  /**
+   * Streaming variant of `completeWithTools()` that yields the model's text
+   * output incrementally so the caller can surface realtime feedback.
+   * Optional — providers that haven't implemented it will fall back to
+   * `completeWithTools()` in the query service.
+   */
+  streamWithTools?(
+    request: AiCompletionRequest,
+    tools: AiToolDefinition[],
+  ): AsyncIterable<AiToolStreamChunk>;
+
+  isAvailable(): Promise<boolean>;
+
+  /**
+   * Verify that the configured model exists and can be invoked by this
+   * provider. Implementations should prefer a cheap probe (e.g. listing
+   * available models or retrieving model metadata) over a full inference
+   * call, but a minimal 1-token completion is acceptable when the
+   * backend doesn't expose a catalogue endpoint.
+   *
+   * Returning `{ ok: true }` means the configured model works. Returning
+   * `{ ok: false, reason }` means the server is reachable but the model
+   * won't respond (e.g. typo, model not pulled on an Ollama host, API
+   * key lacks access to that model, etc.). The `reason` is surfaced to
+   * the user and should be short and actionable.
+   *
+   * Optional -- callers treat a missing implementation as "can't
+   * verify" and skip the model check.
+   */
+  verifyModel?(): Promise<ModelVerificationResult>;
+}
+
+export type ModelVerificationResult =
+  | { ok: true; model: string }
+  | { ok: false; model: string; reason: string };

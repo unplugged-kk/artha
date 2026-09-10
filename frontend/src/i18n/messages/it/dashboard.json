@@ -1,0 +1,253 @@
+{
+  "page": {
+    "welcomePrefix": "Benvenuto",
+    "welcomeWithName": "Benvenuto, {name}!",
+    "subtitle": "Ecco il riepilogo delle tue finanze"
+  },
+  "favouriteAccounts": {
+    "title": "Conti preferiti",
+    "empty": "Nessun conto preferito. Aggiungi conti ai preferiti per visualizzarli qui.",
+    "reorder": "Riordina",
+    "dragToReorder": "Trascina i conti per riordinarli oppure usa i pulsanti freccia.",
+    "done": "Fine",
+    "moveUp": "Sposta su",
+    "moveDown": "Sposta giù",
+    "marketValue": "Valore di mercato",
+    "due": "Scadenza: {ordinal}",
+    "dueTooltip": "Il giorno del mese in cui scade il pagamento della carta di credito",
+    "settlement": "Liquidazione: {ordinal}",
+    "settlementTooltip": "L'ultimo giorno del ciclo di fatturazione. Le transazioni registrate entro questo giorno compaiono nell'estratto conto corrente."
+  },
+  "upcomingBills": {
+    "title": "Fatture e versamenti in arrivo",
+    "empty": "Nessuna fattura, versamento o trasferimento scaduto o in arrivo nelle finestre di promemoria.",
+    "perReminderSettings": "In base alle impostazioni promemoria",
+    "postTransaction": "Registra questa transazione",
+    "manual": "Manuale",
+    "manualTitle": "Richiede registrazione manuale",
+    "negativeBalanceWarning": "Questa transazione porterà il saldo del conto sotto zero",
+    "viewAll": "Visualizza tutte le fatture e i versamenti",
+    "moreItems": "+{count} altri",
+    "overdue": "Scaduta",
+    "today": "Oggi",
+    "tomorrow": "Domani",
+    "daysUntil": "{count} giorni",
+    "typeBadge": {
+      "bill": "Fattura",
+      "deposit": "Versamento",
+      "transfer": "Trasferimento",
+      "reminder": "Promemoria",
+      "unknown": "Sconosciuto"
+    }
+  },
+  "gettingStarted": {
+    "title": "Per iniziare",
+    "subtitle": "Configura il tuo account in pochi passaggi",
+    "dismiss": "Ignora",
+    "steps": {
+      "settings": {
+        "title": "Esamina le impostazioni",
+        "description": "Imposta valuta, formato data e tema"
+      },
+      "categories": {
+        "title": "Configura le categorie",
+        "description": "Crea categorie o importa un set predefinito"
+      },
+      "account": {
+        "title": "Aggiungi il primo conto",
+        "description": "Crea un conto bancario per iniziare a monitorare"
+      },
+      "import": {
+        "title": "Importa da QIF",
+        "description": "Importa conti e transazioni da file QIF"
+      }
+    }
+  },
+  "budgetStatus": {
+    "title": "Stato del budget",
+    "noBudget": "Nessun budget attivo. Crea un budget per monitorare le spese.",
+    "createBudget": "Crea budget",
+    "viewFullBudget": "Visualizza budget completo",
+    "daysLeft": "{count} giorni rimanenti",
+    "safeToSpend": "Disponibile oggi",
+    "topCategories": "Categorie principali"
+  },
+  "insights": {
+    "title": "Analisi delle spese",
+    "empty": "Nessuna analisi disponibile. Visita la pagina Analisi per generare la prima.",
+    "goToInsights": "Vai ad Analisi",
+    "viewAll": "Visualizza tutte le analisi",
+    "activeCount": "{count} attive"
+  },
+  "topMovers": {
+    "title": "Maggiori variazioni",
+    "empty": {
+      "noInvestments": "Aggiungi conti investimento per monitorare le variazioni giornaliere.",
+      "noPrices": "Nessuna variazione di prezzo disponibile.",
+      "noGainers": "Nessun guadagno oggi.",
+      "noLosers": "Nessuna perdita oggi."
+    },
+    "dailyChange": "Variazione giornaliera",
+    "openPriceHistory": "Storico prezzi di {symbol}",
+    "refreshPrices": "Aggiorna quotazioni",
+    "viewPortfolio": "Visualizza portafoglio",
+    "filter": {
+      "all": "Tutti",
+      "gainers": "Guadagni",
+      "losers": "Perdite"
+    }
+  },
+  "favouriteSecurities": {
+    "title": "Titoli preferiti",
+    "empty": "Nessun titolo preferito. Visita la <securitiesLink>pagina Titoli</securitiesLink> e aggiungi ai preferiti i titoli che vuoi monitorare.",
+    "noPriceYet": "Nessun prezzo disponibile",
+    "dailyChange": "Variazione giornaliera",
+    "openPriceHistory": "Storico prezzi di {symbol}",
+    "refreshPrices": "Aggiorna quotazioni",
+    "manage": "Gestisci titoli"
+  },
+  "netWorth": {
+    "title": "Patrimonio netto",
+    "empty": "Nessun dato sul patrimonio netto disponibile.",
+    "past12Months": "Ultimi 12 mesi",
+    "viewReport": "Visualizza report completo"
+  },
+  "assetsVsLiabilities": {
+    "title": "Attività vs Passività",
+    "empty": "Nessun dato sul patrimonio netto disponibile.",
+    "current": "Attuale",
+    "netWorthLabel": "Patrimonio netto",
+    "assets": "Attività",
+    "liabilities": "Passività"
+  },
+  "expensesPieChart": {
+    "title": "Uscite per categoria",
+    "empty": "Nessun dato sulle uscite per questo periodo.",
+    "total": "Totale",
+    "uncategorized": "Non categorizzate",
+    "other": "Altro"
+  },
+  "incomeExpenses": {
+    "title": "Entrate vs Uscite",
+    "income": "Entrate",
+    "expenses": "Uscite",
+    "net": "Netto"
+  },
+  "customize": {
+    "button": "Personalizza",
+    "title": "Personalizza il pannello",
+    "description": "Il layout qui sotto rispecchia il tuo pannello di controllo: i widget scorrono da sinistra a destra, due per riga sugli schermi grandi.",
+    "moveEarlier": "Sposta {name} prima",
+    "moveLater": "Sposta {name} dopo",
+    "dragToReorder": "Trascina i widget per riorganizzarli oppure usa i pulsanti freccia.",
+    "hiddenWidgets": "Widget nascosti",
+    "hide": "Nascondi {name}",
+    "show": "Mostra {name}",
+    "atLeastOne": "Seleziona almeno un widget da mostrare nel pannello.",
+    "reset": "Ripristina predefiniti",
+    "toasts": {
+      "saveFailed": "Impossibile salvare il layout del pannello"
+    }
+  },
+  "favouriteReports": {
+    "title": "Report preferiti",
+    "empty": "Nessun report preferito. Aggiungi una stella ai report nella pagina Report per vederli qui.",
+    "browseReports": "Sfoglia i report"
+  },
+  "widgets": {
+    "configure": "Configura {name}",
+    "done": "Fine",
+    "configSaveFailed": "Impossibile salvare le impostazioni del widget. Riprova.",
+    "timeframe": "Intervallo di tempo",
+    "accounts": "Conti",
+    "chartType": "Tipo di grafico",
+    "view": "Vista",
+    "displayName": "Nome visualizzato",
+    "description": "Descrizione",
+    "descriptionPlaceholder": "Aggiungi una descrizione facoltativa",
+    "rangeLabels": {
+      "1m": "1M",
+      "3m": "3M",
+      "6m": "6M",
+      "1y": "1Y",
+      "2y": "2Y",
+      "5y": "5Y",
+      "ytd": "YTD",
+      "all": "Tutti"
+    }
+  },
+  "portfolioValue": {
+    "title": "Valore del portafoglio",
+    "empty": "Nessuno storico investimenti da mostrare per ora.",
+    "refresh": "Aggiorna valore attuale"
+  },
+  "spendingByPayee": {
+    "title": "Uscite per beneficiario",
+    "empty": "Nessuna uscita in questo periodo.",
+    "totalLabel": "Totale"
+  },
+  "monthlySpendingTrend": {
+    "title": "Andamento mensile delle uscite",
+    "empty": "Nessun dato per questo periodo.",
+    "expenses": "Uscite",
+    "income": "Entrate"
+  },
+  "incomeBySource": {
+    "title": "Entrate per fonte",
+    "empty": "Nessuna entrata in questo periodo.",
+    "totalLabel": "Totale entrate"
+  },
+  "creditUtilizationAccounts": {
+    "title": "Utilizzo per conto",
+    "empty": "Nessun conto di credito con un limite impostato.",
+    "utilization": "Utilizzo",
+    "used": "Utilizzato",
+    "noRate": "non disponibile (nessun tasso {currency})"
+  },
+  "creditUtilizationTotal": {
+    "title": "Utilizzo totale",
+    "empty": "Nessun conto di credito con un limite impostato.",
+    "used": "Utilizzato",
+    "available": "Disponibile"
+  },
+  "sectorWeightings": {
+    "title": "Allocazione per settore",
+    "empty": "Nessun dato di settore disponibile.",
+    "direct": "Diretta",
+    "etf": "ETF"
+  },
+  "securityTypeAllocation": {
+    "title": "Allocazione per tipo di titolo",
+    "empty": "Nessuna posizione da mostrare.",
+    "types": {
+      "STOCK": "Azioni",
+      "ETF": "ETF",
+      "MUTUAL_FUND": "Fondi comuni",
+      "BOND": "Obbligazioni",
+      "CASH": "Contanti"
+    }
+  },
+  "geographicAllocation": {
+    "title": "Allocazione geografica",
+    "empty": "Nessuna posizione da mostrare.",
+    "viewRegion": "Regione",
+    "viewExchange": "Borsa",
+    "viewCountry": "Paese"
+  },
+  "recurringExpenses": {
+    "title": "Principali spese ricorrenti",
+    "empty": "Nessuna spesa ricorrente trovata.",
+    "minOccurrences": "Occorrenze minime",
+    "minOccurrencesOption": "{count} o più",
+    "occurrences": "{count} occorrenze",
+    "monthlyEstimate": "Stima mensile"
+  },
+  "weekendVsWeekday": {
+    "title": "Uscite weekend vs giorni feriali",
+    "empty": "Nessuna uscita in questo periodo.",
+    "weekendLabel": "Weekend",
+    "weekdayLabel": "Giorni feriali",
+    "viewOverview": "Panoramica",
+    "viewByDay": "Per giorno"
+  }
+}

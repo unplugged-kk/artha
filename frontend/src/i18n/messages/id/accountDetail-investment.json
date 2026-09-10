@@ -1,0 +1,14 @@
+{
+  "openInInvestments": "Buka di Investasi",
+  "income": {
+    "title": "Pendapatan Investasi",
+    "dividendsInterest": "Dividen & Bunga",
+    "realizedGains": "Keuntungan Terealisasi",
+    "ytd": "Sejak awal tahun",
+    "empty": "Tidak ada pendapatan investasi tahun ini"
+  },
+  "register": {
+    "deleteFailed": "Gagal menghapus transaksi",
+    "loadFailed": "Gagal memuat transaksi"
+  }
+}

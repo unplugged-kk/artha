@@ -1,0 +1,14 @@
+{
+  "openInInvestments": "निवेश में खोलें",
+  "income": {
+    "title": "निवेश आय",
+    "dividendsInterest": "लाभांश और ब्याज",
+    "realizedGains": "वसूल किया गया लाभ",
+    "ytd": "वर्ष अब तक",
+    "empty": "इस वर्ष कोई निवेश आय नहीं"
+  },
+  "register": {
+    "deleteFailed": "लेनदेन हटाने में विफल",
+    "loadFailed": "लेनदेन लोड करने में विफल"
+  }
+}

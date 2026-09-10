@@ -1,0 +1,125 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import '@/lib/zodConfig';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import toast from 'react-hot-toast';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
+import { AuthShell } from '@/components/auth/AuthShell';
+import { useAuthStore } from '@/store/authStore';
+import { userSettingsApi } from '@/lib/user-settings';
+import { authApi } from '@/lib/auth';
+import { getErrorMessage } from '@/lib/errors';
+import { buildPasswordSchema } from '@/lib/zod-helpers';
+
+const buildChangePasswordSchema = (t: (key: string) => string, tc: (key: string) => string) => z
+  .object({
+    currentPassword: z.string().min(1, t('currentPasswordRequired')),
+    newPassword: buildPasswordSchema(tc),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: t('passwordsNoMatch'),
+    path: ['confirmPassword'],
+  });
+
+type ChangePasswordFormData = z.infer<ReturnType<typeof buildChangePasswordSchema>>;
+
+export default function ChangePasswordPage() {
+  const t = useTranslations('auth.changePassword');
+  const tc = useTranslations('common');
+  const router = useRouter();
+  const { user, setUser } = useAuthStore();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ChangePasswordFormData>({
+    resolver: zodResolver(buildChangePasswordSchema(t, tc)),
+  });
+
+  const onSubmit = async (data: ChangePasswordFormData) => {
+    setIsLoading(true);
+    try {
+      await userSettingsApi.changePassword({
+        currentPassword: data.currentPassword,
+        newPassword: data.newPassword,
+      });
+
+      // Refresh user profile to get updated mustChangePassword: false
+      const updatedUser = await authApi.getProfile();
+      setUser(updatedUser);
+
+      toast.success(t('toasts.success'));
+      router.push('/dashboard');
+    } catch (error) {
+      toast.error(getErrorMessage(error, t('toasts.failed')));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // If the user doesn't need to change password, redirect to dashboard
+  useEffect(() => {
+    if (user && !user.mustChangePassword) {
+      router.push('/dashboard');
+    }
+  }, [user, router]);
+
+  if (user && !user.mustChangePassword) {
+    return null;
+  }
+
+  return (
+    <AuthShell title={t('title')} subtitle={t('subtitle')}>
+      <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          <div className="space-y-4">
+            <Input
+              label={t('currentPasswordLabel')}
+              type="password"
+              autoComplete="current-password"
+              error={errors.currentPassword?.message}
+              {...register('currentPassword')}
+            />
+
+            <Input
+              label={t('newPasswordLabel')}
+              type="password"
+              autoComplete="new-password"
+              error={errors.newPassword?.message}
+              {...register('newPassword')}
+            />
+
+            <Input
+              label={t('confirmPasswordLabel')}
+              type="password"
+              autoComplete="new-password"
+              error={errors.confirmPassword?.message}
+              {...register('confirmPassword')}
+            />
+          </div>
+
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            {tc('passwordRequirements')}
+          </p>
+
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            isLoading={isLoading}
+            className="w-full"
+          >
+            {t('submit')}
+          </Button>
+      </form>
+    </AuthShell>
+  );
+}

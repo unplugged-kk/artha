@@ -1,0 +1,253 @@
+{
+  "chartFlag": {
+    "dismiss": "Ocultar este valor"
+  },
+  "appVersion": {
+    "releaseNotes": "Ver las notas de la versión v{version}"
+  },
+  "whatsNew": {
+    "title": "Novedades",
+    "versionLabel": "Versión {version}",
+    "expandAll": "Expandir todo",
+    "collapseAll": "Contraer todo",
+    "viewFullNotes": "Ver las notas de la versión completas",
+    "dontShowAgain": "No volver a mostrar",
+    "showNextLogin": "Mostrar en el próximo inicio de sesión",
+    "close": "Cerrar",
+    "unavailable": "Las notas de esta versión no están disponibles.",
+    "englishOnly": "Las notas de esta versión solo están en inglés. Monize, incluidas las visitas guiadas, sigue tu configuración de idioma."
+  },
+  "transferPayee": "{direction, select, to {Transferencia a {name}} other {Transferencia desde {name}}}",
+  "save": "Guardar",
+  "cancel": "Cancelar",
+  "delete": "Eliminar",
+  "edit": "Editar",
+  "close": "Cerrar",
+  "actions": {
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "view": "Ver",
+    "duplicate": "Duplicar",
+    "merge": "Combinar",
+    "reactivate": "Reactivar",
+    "reconcile": "Conciliar",
+    "post": "Registrar",
+    "skip": "Omitir",
+    "close": "Cerrar",
+    "reopen": "Reabrir",
+    "scheduleRecurring": "Hacer recurrente",
+    "more": "Más acciones"
+  },
+  "loading": "Cargando...",
+  "pagination": {
+    "showing": "Mostrando",
+    "of": "de",
+    "firstPage": "Primera página",
+    "lastPage": "Última página",
+    "previousPage": "Página anterior",
+    "nextPage": "Página siguiente",
+    "back10Pages": "Retroceder 10 páginas",
+    "forward10Pages": "Avanzar 10 páginas",
+    "enterPageNumber": "Introduce el número de página"
+  },
+  "confirmDialog": {
+    "confirm": "Confirmar"
+  },
+  "unsavedChanges": {
+    "title": "Cambios sin guardar",
+    "message": "Tienes cambios sin guardar. ¿Qué quieres hacer?",
+    "discard": "Descartar"
+  },
+  "exportDropdown": {
+    "export": "Exportar",
+    "exporting": "Exportando...",
+    "exportPdf": "Exportar PDF",
+    "exportReport": "Exportar informe",
+    "failedPdf": "Error al exportar el PDF. Inténtalo de nuevo."
+  },
+  "dateRange": {
+    "custom": "Personalizado",
+    "startDate": "Fecha de inicio",
+    "endDate": "Fecha de fin"
+  },
+  "colorPicker": {
+    "custom": "Personalizado:",
+    "apply": "Aplicar"
+  },
+  "chartDownload": {
+    "downloadAsPng": "Descargar {filename} como PNG",
+    "unableToCapture": "No se puede capturar la imagen del gráfico",
+    "failedToDownload": "Error al descargar el gráfico"
+  },
+  "csvDownload": {
+    "downloadAsCsv": "Descargar {filename} como CSV"
+  },
+  "chartViewToggle": {
+    "pieChart": "Gráfico circular",
+    "barChart": "Gráfico de barras",
+    "stackedChart": "Gráfico de barras apiladas 100%",
+    "lineChart": "Gráfico de líneas",
+    "areaChart": "Gráfico de área",
+    "table": "Tabla"
+  },
+  "formActions": {
+    "cancel": "Cancelar",
+    "save": "Guardar"
+  },
+  "themeToggle": {
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema",
+    "title": "Tema: {label}. Haz clic para cambiar."
+  },
+  "errorPage": {
+    "title": "Algo salió mal",
+    "description": "Se produjo un error inesperado. Inténtalo de nuevo o contacta con el soporte si el problema persiste.",
+    "errorId": "ID de error: {digest}",
+    "tryAgain": "Intentar de nuevo",
+    "goToDashboard": "Ir al panel de control"
+  },
+  "errorBoundary": {
+    "defaultMessage": "Ocurrió un error al renderizar este componente."
+  },
+  "calendar": {
+    "clear": "Limpiar",
+    "today": "Hoy"
+  },
+  "multiSelect": {
+    "search": "Buscar...",
+    "selectAll": "Seleccionar todo",
+    "clear": "Limpiar",
+    "noOptions": "No se encontraron opciones",
+    "selectedCount": "{count} seleccionados"
+  },
+  "combobox": {
+    "createOption": "Crear \"{value}\"",
+    "deleteOption": "Eliminar «{value}»"
+  },
+  "passwordInput": {
+    "show": "Mostrar entrada",
+    "hide": "Ocultar entrada"
+  },
+  "currencyInput": {
+    "openCalculator": "Abrir calculadora",
+    "calculator": "Calculadora",
+    "toggleSign": "Cambiar signo",
+    "apply": "Aplicar"
+  },
+  "dateInput": {
+    "shortcutsTitle": "Atajos de teclado",
+    "today": "Hoy",
+    "firstDayOfYear": "Primer día del año",
+    "lastDayOfYear": "Último día del año",
+    "firstDayOfMonth": "Primer día del mes",
+    "lastDayOfMonth": "Último día del mes",
+    "nextDay": "Día siguiente",
+    "previousDay": "Día anterior",
+    "nextMonth": "Mes siguiente",
+    "previousMonth": "Mes anterior",
+    "partialDateHint": "Escriba parte de una fecha y el resto se completa: el día y el mes toman el año actual."
+  },
+  "accountTypes": {
+    "CHEQUING": "Cuenta corriente",
+    "SAVINGS": "Cuenta de ahorros",
+    "CREDIT_CARD": "Tarjeta de crédito",
+    "INVESTMENT": "Inversión",
+    "LOAN": "Préstamo",
+    "MORTGAGE": "Hipoteca",
+    "CASH": "Efectivo",
+    "LINE_OF_CREDIT": "Línea de crédito",
+    "ASSET": "Activo",
+    "OTHER": "Otro"
+  },
+  "accountFilter": {
+    "allAccounts": "Todas las cuentas",
+    "allBut": "Todas excepto {names}"
+  },
+  "passwordRequirements": "La contraseña debe tener al menos 12 caracteres e incluir una letra mayúscula, una minúscula, un número y un carácter especial.",
+  "passwordValidation": {
+    "min": "La contraseña debe tener al menos 12 caracteres",
+    "max": "La contraseña no puede superar los 100 caracteres",
+    "lowercase": "Debe contener una letra minúscula",
+    "uppercase": "Debe contener una letra mayúscula",
+    "number": "Debe contener un número",
+    "special": "Debe contener un carácter especial"
+  },
+  "codeValidation": {
+    "length": "El código debe tener exactamente 6 dígitos",
+    "digits": "El código debe ser de 6 dígitos"
+  },
+  "monthsShort": [
+    "Ene",
+    "Feb",
+    "Mar",
+    "Abr",
+    "May",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dic"
+  ],
+  "weekdaysShort": [
+    "Dom",
+    "Lun",
+    "Mar",
+    "Mié",
+    "Jue",
+    "Vie",
+    "Sáb"
+  ],
+  "weekdaysMin": [
+    "Do",
+    "Lu",
+    "Ma",
+    "Mi",
+    "Ju",
+    "Vi",
+    "Sá"
+  ],
+  "weekdaysNarrow": [
+    "D",
+    "L",
+    "M",
+    "X",
+    "J",
+    "V",
+    "S"
+  ],
+  "dateFormat": {
+    "browserAuto": "Usar configuración regional del navegador (detectado automáticamente como {sample})",
+    "custom": "Personalizado..."
+  },
+  "emailInvalid": "Introduce una dirección de correo electrónico válida",
+  "noSectionAccess": "No tienes acceso a esa sección.",
+  "undoRedo": {
+    "nothingToUndo": "Nada que deshacer",
+    "cannotUndo": "No se puede deshacer esta acción",
+    "undoFailed": "Error al deshacer",
+    "nothingToRedo": "Nada que rehacer",
+    "cannotRedo": "No se puede rehacer esta acción",
+    "redoFailed": "Error al rehacer"
+  },
+  "partialTotal": {
+    "srSuffix": "(total parcial)",
+    "explanation": "Total parcial: {count, plural, one {# importe} other {# importes}} no se pudieron incluir, por lo que la cifra mostrada los excluye. No hay tipo de cambio a {displayCurrency} para {currencies}.",
+    "explanationExcluded": "Total parcial: {count, plural, one {# importe} other {# importes}} no se pudieron calcular, por lo que la cifra mostrada los excluye."
+  },
+  "unknownAmount": {
+    "marker": "—",
+    "srLabel": "Importe no disponible",
+    "scheduledFx": "No se puede calcular el importe actual: no hay tipo de cambio disponible para el par de divisas de liquidación de este elemento programado. El importe guardado se calculó con un tipo anterior, por lo que no se muestra.",
+    "displayFx": "Esta cifra no se puede mostrar aquí: el importe se conoce, pero no hay ningún tipo de cambio disponible para convertirlo a la moneda de este total. Actualice los tipos en la página Monedas.",
+    "noPrice": "Este valor no se puede calcular: se conocen las acciones en cartera, pero el valor no tiene ningún precio con el que valorarlas. Actualice los precios o añada uno a mano en el historial de precios del valor."
+  },
+  "density": {
+    "title": "Cambiar densidad de filas",
+    "normal": "Normal",
+    "compact": "Compacto",
+    "dense": "Denso"
+  }
+}
