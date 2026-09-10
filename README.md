@@ -1,3 +1,7 @@
+# Artha
+
+Unified self-hosted India-first personal finance platform.
+
 > **Provenance:** artha is a fork of [Monize](https://github.com/kenlasko/monize) (AGPL-3.0-only, all upstream copyright notices and license files retained verbatim). Divergence roadmap is India-first: AMFI/NSE market data, UPI/SMS/CAS imports, India instruments, FY-versioned tax engine. Upstream attribution is preserved; see LICENSE.
 
 <p align="center">
