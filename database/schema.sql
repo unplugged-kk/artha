@@ -2469,6 +2469,121 @@ CREATE UNIQUE INDEX idx_push_subscriptions_endpoint ON push_subscriptions(endpoi
 CREATE INDEX idx_push_subscriptions_user_live ON push_subscriptions(user_id) WHERE disabled_at IS NULL;
 
 -- ===========================================================================
+-- Phase 2 India data-model extension: new tables, additive only.
+--
+-- Mirrored from database/migrations/20260911083426_india_phase2_data_model.sql,
+-- which carries the full reasoning for each shape. Nothing here alters an
+-- existing table, column, constraint or policy, so the rollback is a DROP of
+-- these objects alone (data/fin-audit-01/report.md §9, Phase 2).
+--
+-- Ownership: aa_consents and sms_sender_registry are direct (user_id, policied
+-- just below); india_holdings_ext is indirect through holdings; tax_rules and
+-- broker_import_layouts are global reference data with no owner column and
+-- carry the `rls-exempt:` markers at the foot of this section.
+-- ===========================================================================
+
+CREATE TABLE tax_rules (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    fy VARCHAR(9) NOT NULL, -- 'YYYY-YYYY', April-March
+    regime VARCHAR(10) NOT NULL, -- 'old' | 'new'; text, not an enum -- see the migration
+    rule_id VARCHAR(100) NOT NULL, -- stable slug cited by a computation, e.g. 'slab.0_300000'
+    version INTEGER NOT NULL DEFAULT 1,
+    payload JSONB NOT NULL DEFAULT '{}'::jsonb, -- rule body; shape owned by the tax engine
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- The identity a computation cites: a changed rule is a new row, never an edit.
+CREATE UNIQUE INDEX idx_tax_rules_identity ON tax_rules(fy, regime, rule_id, version);
+
+CREATE TRIGGER update_tax_rules_updated_at BEFORE UPDATE ON tax_rules FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TABLE aa_consents (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    provider VARCHAR(50) NOT NULL DEFAULT 'manual', -- licensed AA, or v1's staged-file provider
+    status VARCHAR(20) NOT NULL DEFAULT 'pending', -- pending | active | expired | revoked | rejected
+    purpose VARCHAR(100),
+    consent_handle VARCHAR(255), -- provider-issued handle; access tokens are never stored
+    date_range_start DATE,
+    date_range_end DATE,
+    account_ids UUID[], -- empty = every account under the consent; NULL = not yet known
+    granted_at TIMESTAMP,
+    expires_at TIMESTAMP,
+    revoked_at TIMESTAMP,
+    -- Receipt fields: the signed artifact approved at grant time, retained for
+    -- audit. Revoking sets revoked_at; it never deletes the row.
+    receipt_id VARCHAR(255),
+    receipt_payload JSONB,
+    receipt_issued_at TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_aa_consents_user ON aa_consents(user_id);
+CREATE INDEX idx_aa_consents_status ON aa_consents(status);
+
+CREATE TRIGGER update_aa_consents_updated_at BEFORE UPDATE ON aa_consents FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TABLE sms_sender_registry (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    -- NULL is a known sender with no destination yet; the import review screen
+    -- surfaces those rather than dropping the message.
+    account_id UUID REFERENCES accounts(id) ON DELETE CASCADE,
+    sender_pattern VARCHAR(255) NOT NULL, -- sender id as the operator sees it, e.g. 'VM-HDFCBK'
+    display_name VARCHAR(255),
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- One registration per (user, sender): two rows would leave the parser two
+-- answers and no rule to choose between them.
+CREATE UNIQUE INDEX idx_sms_sender_registry_user_sender ON sms_sender_registry(user_id, sender_pattern);
+CREATE INDEX idx_sms_sender_registry_account ON sms_sender_registry(account_id);
+
+CREATE TRIGGER update_sms_sender_registry_updated_at BEFORE UPDATE ON sms_sender_registry FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TABLE india_holdings_ext (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    -- Ownership is transitive through the holding, so there is no user_id here:
+    -- a second copy could disagree with the parent it resolves through.
+    holding_id UUID NOT NULL REFERENCES holdings(id) ON DELETE CASCADE,
+    instrument_type VARCHAR(40) NOT NULL, -- PPF | EPF | NPS | FD | RD | SGB | GOLD | ESOP | ULIP
+    folio_number VARCHAR(100), -- folio / PRAN / UAN; dropped from the de-identified support backup
+    plan_type VARCHAR(20), -- 'direct' | 'regular'; a scheme NAME is shared, the AMFI code is not
+    scheme_code VARCHAR(20),
+    maturity_date DATE,
+    interest_rate NUMERIC(20,10),
+    principal_amount NUMERIC(20,4),
+    notes TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_india_holdings_ext_holding ON india_holdings_ext(holding_id);
+
+CREATE TRIGGER update_india_holdings_ext_updated_at BEFORE UPDATE ON india_holdings_ext FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TABLE broker_import_layouts (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    broker VARCHAR(50) NOT NULL, -- broker or bank whose export this layout reads
+    layout VARCHAR(100) NOT NULL, -- layout identity within the broker
+    version INTEGER NOT NULL DEFAULT 1, -- bumped when the source file's columns change
+    source_format VARCHAR(20) NOT NULL DEFAULT 'csv', -- csv | xlsx | pdf
+    parser_key VARCHAR(100) NOT NULL, -- hook the Phase 4 parser registry resolves, never a column map
+    golden_file VARCHAR(255), -- repo-relative fixture this layout is proven against
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE UNIQUE INDEX idx_broker_import_layouts_identity ON broker_import_layouts(broker, layout, version);
+
+CREATE TRIGGER update_broker_import_layouts_updated_at BEFORE UPDATE ON broker_import_layouts FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- ===========================================================================
 -- Row-Level Security policies
 --
 -- Mirrored from database/migrations/112_rls_policies_direct.sql,
@@ -2493,6 +2608,7 @@ DO $$
 DECLARE
     t text;
     direct_tables text[] := ARRAY[
+        'aa_consents',
         'action_history',
         'attachment_blob_tombstones',
         'ai_insights',
@@ -2525,6 +2641,7 @@ DECLARE
         'push_subscriptions',
         'scheduled_transactions',
         'securities',
+        'sms_sender_registry',
         'transaction_attachments',
         'user_currency_preferences'
     ];
@@ -2890,6 +3007,20 @@ CREATE POLICY holdings_isolation ON holdings
     WHERE a.id = holdings.account_id
       AND a.user_id = (SELECT app_current_user_id())));
 
+-- india_holdings_ext -> holdings.account_id -> accounts.user_id (two-hop)
+DROP POLICY IF EXISTS india_holdings_ext_isolation ON india_holdings_ext;
+CREATE POLICY india_holdings_ext_isolation ON india_holdings_ext
+  USING ((SELECT app_bypass_rls()) OR EXISTS (
+    SELECT 1 FROM holdings h
+    JOIN accounts a ON a.id = h.account_id
+    WHERE h.id = india_holdings_ext.holding_id
+      AND a.user_id = (SELECT app_current_user_id())))
+  WITH CHECK ((SELECT app_bypass_rls()) OR EXISTS (
+    SELECT 1 FROM holdings h
+    JOIN accounts a ON a.id = h.account_id
+    WHERE h.id = india_holdings_ext.holding_id
+      AND a.user_id = (SELECT app_current_user_id())));
+
 -- ---------------------------------------------------------------------------
 -- Budgets family
 -- ---------------------------------------------------------------------------
@@ -3069,6 +3200,7 @@ CREATE POLICY emergency_access_contacts_isolation ON emergency_access_contacts
 -- table in neither a policy migration nor this list fails
 -- backend/test/integration/rls-enforcement.integration.spec.ts.
 --
+-- rls-exempt: broker_import_layouts
 -- rls-exempt: currencies
 -- rls-exempt: exchange_rates
 -- rls-exempt: google_places_instance_usage
@@ -3079,23 +3211,17 @@ CREATE POLICY emergency_access_contacts_isolation ON emergency_access_contacts
 -- rls-exempt: push_chart_artifacts
 -- rls-exempt: push_instance_config
 -- rls-exempt: schema_migrations
+-- rls-exempt: tax_rules
 -- ---------------------------------------------------------------------------
 
 -- Verification helper (run manually; not part of the migration's effect):
 --   SELECT tablename, policyname FROM pg_policies
 --    WHERE schemaname = 'public' ORDER BY tablename;
--- Expected: 62 policies -- 26 direct + 4 real-user-keyed (112),
---           15 indirect (113), 5 special (114),
---           2 direct for the .mny import's staging + job tables (117),
---           1 direct for security_documents (118),
---           4 direct for the GEM strategy tables (124, 125),
---           2 direct for job_claims and attachment_blob_tombstones,
---           1 indirect for scheduled_transaction_postings (133),
---           1 direct for the OIDC step-up claim ledger (155),
---           1 direct for push_subscriptions (178),
---           1 direct for notification_preferences (180),
---           1 direct for notification_reminders (182), and
---           1 direct for notification_portfolio_state (185).
+-- Expected: 71 policies. The count is a smoke value, not a gate -- the
+-- catalog-driven specs assert the real invariants (every table in exactly one
+-- bucket; every covered table policied and enabled). Recount with the query
+-- above after adding a policy, rather than trusting a hand-maintained
+-- breakdown: the one that used to sit here had drifted from the schema.
 
 -- ---------------------------------------------------------------------------
 -- Enable row-level security (migration 123).
@@ -3113,7 +3239,7 @@ CREATE POLICY emergency_access_contacts_isolation ON emergency_access_contacts
 -- db-init, db-migrate and backup restore.
 --
 -- Derived from pg_policies, never from a hard-coded list -- enabling RLS on a
--- table with no policy is a deny-all outage, and the four exempt tables above
+-- table with no policy is a deny-all outage, and the exempt tables above
 -- have no policy and are therefore never touched. A new user-owned table must
 -- ship its policy AND its enable; see database/CLAUDE.md.
 -- ---------------------------------------------------------------------------

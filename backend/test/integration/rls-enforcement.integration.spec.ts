@@ -74,6 +74,7 @@ describe("RLS enforcement (T2, catalog-driven)", () => {
     security_prices: "securities",
     security_tags: "securities",
     holdings: "accounts",
+    india_holdings_ext: "holdings -> accounts",
     budget_categories: "budgets",
     budget_periods: "budgets",
     budget_period_categories: "budget_periods -> budgets",

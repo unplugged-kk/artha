@@ -20,6 +20,8 @@
  * paragraph repeated in two places is how the previous four copies diverged.
  */
 export const RLS_EXEMPT_TABLES: Readonly<Record<string, string>> = {
+  broker_import_layouts:
+    "Global reference data describing the broker/bank file layouts this build parses; a layout belongs to the source export, not to the household.",
   currencies:
     "Global reference data keyed by ISO 4217 code; created_by_user_id is attribution, not ownership.",
   exchange_rates:
@@ -40,6 +42,8 @@ export const RLS_EXEMPT_TABLES: Readonly<Record<string, string>> = {
     "Singleton deployment push identity (one VAPID key pair per instance); no owner column, one identity is every user's.",
   schema_migrations:
     "Migration infrastructure, written only by db-migrate running as the owner.",
+  tax_rules:
+    "Global statutory reference data keyed by financial year and regime; a slab belongs to the law, not to the household, and is never user-authored.",
 };
 
 /** The exempt table names, sorted, for comparison against the schema block. */
