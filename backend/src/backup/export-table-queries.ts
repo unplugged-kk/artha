@@ -150,6 +150,18 @@ export const INTENTIONALLY_EXCLUDED_TABLES: ReadonlySet<string> = new Set([
   // the backup/restore lifecycle of ENCRYPTION_KEY rather than of a ledger.
   "push_instance_config",
   "push_chart_artifacts",
+  // Phase 2's additive India tables. Each is created ahead of the feature that
+  // will write it (market data, import pack, instruments, tax engine, AA), so
+  // none can hold a row yet and none has a restore path -- exporting one would
+  // put a table in the archive that RESTORABLE_TABLES refuses on insert, which
+  // is the failure this list exists to prevent. Each moves into the export, the
+  // restore plan and the support-backup rules with the phase that starts
+  // writing it, rather than being guessed at here.
+  "aa_consents",
+  "sms_sender_registry",
+  "india_holdings_ext",
+  "tax_rules",
+  "broker_import_layouts",
 ]);
 
 export function buildExportTableQueries(
