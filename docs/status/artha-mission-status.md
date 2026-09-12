@@ -1,70 +1,58 @@
-# Artha — mission status
+# Artha — India investment foundation mission status
 
-**Living status document.** It is updated at the end of each working turn and lives on its own branch so the captain can review progress and reply with the next instructions from the pull request itself.
+**Living status document.** Updated at the end of each working turn so it can be reviewed from the pull request — including from a phone. Detail lives here; the PR description carries the summary.
 
-Last updated: 2026-09-12 · Branch: `fm/artha-mission-status` · Work is checkpointed in PRs #2, #3, #4 (none merged).
+Last updated: 2026-09-12 · Branch `fm/artha-mission-status` · Work is checkpointed in PRs #2–#8 (**none merged**).
 
 ---
 
 ## TL;DR
 
-- **Phase 1 (India instrument identity) — done and validated.** PR #3.
-- **Phase 2 (India market data) — partially done.** NSE/BSE equity quoting works; the AMFI mutual-fund NAV adapter, IST sessions and the Indian holiday calendar are **not** done. PR #4.
-- **Phases 3–27 — not started.** The full roadmap is many working sessions, not one.
-- The limit reached was working budget, **not** a technical blocker: no financial-contract, security, licensing or irreversible-migration question is open.
-- **Four decisions are waiting on you** (last section).
+- **Phase A — AMFI NAV provider: done.** PR #6.
+- **Phase B — India instrument forms: done.** PR #7.
+- **Phase C — BONUS / FEE / TAX_WITHHELD: done.** PR #8.
+- **Phases D–G not started**: cost-basis reconciliation guard (D), XIRR (E), SIP plan-vs-actual (F), IST sessions + Indian holiday calendar (G).
+- All checkpoints validated and green; the only test failures anywhere are the **pre-existing** ones, reproduced on a clean baseline.
 
 ---
 
 ## Phase status
 
-| Phase | Status | Commit | PR |
-|---|---|---|---|
-| 0 — Current state recon | done | — | — |
-| 1 — India instrument foundation | **done** | `5baab28f6` | #3 |
-| 2 — India market data foundation | **partial** — equity quoting only | `dad1a5e7b` | #4 |
-| 3 — India investment instruments | not started | — | — |
-| 4 — Investment actions (BONUS / FEE / TAX_WITHHELD) | not started | — | — |
-| 5 — XIRR | not started | — | — |
-| 6 — SIP plan vs actual | not started | — | — |
-| 7 — Transaction experience (from Fintrack) | not started | — | — |
-| 8 — Brand + INR (owned by the rebrand branch) | not started | — | — |
-| 9 — Global currency switcher | not started | — | — |
-| 10 — Accounts + cards | not started | — | — |
-| 11 — Recurring + rules | not started | — | — |
-| 12 — Budgets | not started | — | — |
-| 13 — Goals + emergency fund | not started | — | — |
-| 14 — Import / normalization engine | not started | — | — |
-| 15 — SMS / India intake | not started | — | — |
-| 16 — Broker imports | not started | — | — |
-| 17 — Portfolio valuation | not started | — | — |
-| 18 — Portfolio analytics | not started | — | — |
-| 19 — Mutual fund intelligence | not started | — | — |
-| 20 — Stock research | not started | — | — |
-| 21 — Dashboard | not started | — | — |
-| 22 — Reporting | not started | — | — |
-| 23 — AI foundation | not started | — | — |
-| 24 — India tax foundation | not started | — | — |
-| 25 — PWA / offline / Hindi | not started | — | — |
-| 26 — Final hardening | not started | — | — |
-| 27 — Final product verification | not started | — | — |
+| Phase | Status | PR |
+|---|---|---|
+| A — AMFI NAV provider | **done** | #6 |
+| B — India instrument forms | **done** | #7 |
+| C — BONUS / FEE / TAX_WITHHELD | **done** | #8 |
+| D — Cost-basis reconciliation guard | not started | — |
+| E — XIRR | not started | — |
+| F — SIP plan-vs-actual | not started | — |
+| G — IST sessions + holiday calendar | not started (IST sessions partly landed in Phase A) | — |
+
+Earlier foundation work, already checkpointed: **#2** India data model, **#3** instrument identity, **#4** NSE/BSE equity quoting.
 
 ---
 
 ## What is delivered
 
-**Phase 1 — instrument identity (PR #3)**
+### Phase A — AMFI NAV (PR #6)
 
-- **ISIN** on every instrument, validated structurally **and** by its ISO 6166 check digit (a mistyped identifier is refused, not stored).
-- **AMFI scheme code**, for an Indian mutual fund.
-- **Ticker-alias registry** — an exchange rename (`TATAMOTORS → TMPV`) is recorded once as global reference data.
-- **Instrument types** extended with REIT, gold and the India scheme types (PPF, EPF, NPS, FD, RD, SGB, ESOP, ULIP).
-- **One mapping function** from an instrument to a provider's symbol, so symbol formatting cannot drift between features.
+- An Indian mutual fund is priced from the AMFI/mfapi.in catalogue through the existing provider seam.
+- **Addressed by identity**, not a ticker: the scheme code comes from `securities.amfi_scheme_code`; a missing or non-numeric code means "cannot address" → `null` with **no request made**.
+- **A NAV is a settled daily value**: the quote carries the NAV's own date and the NSE session for that date, so the stored `price_date` is the day the NAV belongs to, not the day we asked.
+- **Missing is `null`, never `0`** — HTTP failure, malformed payload, zero/negative NAV and future-dated NAV all produce `null`.
+- **No silent fallback**: a scheme-coded fund resolves to AMFI alone; a stale override cannot divert it.
+- `india-market.util.ts` is the single authority for India's market clock (Asia/Kolkata, 09:15–15:30, IST calendar days, weekends).
 
-**Phase 2, part 1 — Indian equity quoting (PR #4)**
+### Phase B — India instrument forms (PR #7)
 
-- `RELIANCE` on **NSE** now resolves to `RELIANCE.NS` and **BSE** to `.BO`, so NSE/BSE holdings get live quotes, price history and valuation through the existing pipeline.
-- The exchange → symbol-suffix table was consolidated into a single authority instead of two that could disagree.
+- The security form offers every India type: **REIT, GOLD, PPF, EPF, NPS, FD, RD, SGB, ESOP, ULIP**.
+- The **AMFI scheme-code field appears only for a mutual fund** — identity is shown where it means something.
+- The security detail shows **ISIN** and **AMFI scheme code**, and omits both rows when absent.
+
+### Phase C — investment actions (PR #8)
+
+- **BONUS** — shares at no cost; leaves the cost basis **known** (unlike ADD_SHARES, whose cost is unknown). That distinction is the reason it exists.
+- **FEE / TAX_WITHHELD** — cash-only costs, amount from `price`, quantity ignored, stored as a positive magnitude, exported as `CASH_COST_ACTIONS` so cash-flow maths can find them.
 
 ---
 
@@ -72,45 +60,50 @@ Last updated: 2026-09-12 · Branch: `fm/artha-mission-status` · Work is checkpo
 
 | Gate | Result |
 |---|---|
-| Schema replay (`scripts/verify-schema.sh`) | clean |
-| Migration lint + prefix check | clean |
-| Backend unit (identity, consumers, AI/MCP tools) | 445 passed |
-| Integration — RLS enforcement/enable/harness | 66/66 passed |
-| Integration — backup + support-backup coverage guards | passed |
-| Frontend type-check + lint | clean |
-| Frontend tests (incl. full locale parity) | 1671 passed |
-| Provider + securities suites | 2 failures, both **pre-existing** (proven by re-running with the changes stashed) |
+| Full frontend suite (Phase B) | **16,397 passed across 849 files** |
+| Securities suite (Phases A + C) | 1736–1780 passed; 2 **pre-existing** failures |
+| Action + ledger suites (Phase C) | 444 passed |
+| `scripts/verify-schema.sh` | clean (every migration replays twice over `schema.sql`) |
+| `migration:lint`, prefix check | clean |
+| Backend / frontend typecheck + lint | clean |
+
+**Pre-existing failures, proved not mine:** `security-price.service` (`pricesLoaded` expected <40, got 40) and `yahoo-finance` (`getHours()` expected 0, got 5 — the runner is IST/UTC+05:30 against a UTC-midnight date). Both reproduce with this work stashed.
 
 ---
 
 ## Known limitations
 
-1. Indian **mutual funds** cannot be priced yet — the AMFI NAV adapter is not built.
-2. Six new UI strings ship as English across the other locales; the locale-parity test requires every locale to hold every key, and translations are pending.
-3. The India instrument types are selectable in the import wizard but not yet in the security form's type picker (their per-type forms come with Phase 3).
-4. Two pre-existing test failures remain in the securities suite; they also fail on a clean baseline.
+1. **TAX_WITHHELD is not yet linked** to the income row it was withheld from. The action is recorded and reaches cash flows; the attribution link needs a DTO field plus a validation guard.
+2. **No XIRR yet** (Phase E) — the engine has TWR and CAGR only.
+3. **Indian market holidays are not modelled**; `isIndianWeekday` answers the weekend question only, deliberately named for what it knows.
+4. Twelve new UI strings exist as **English pending translation** in the non-`en` locales (the parity test requires every locale to hold every key).
+5. Two pre-existing test failures remain in the securities suite.
 
 ---
 
 ## Open checkpoints
 
-| PR | Contents | State |
-|---|---|---|
-| #2 | Additive India data model (five tables) | open, unmerged |
-| #3 | Instrument identity (ISIN, AMFI code, aliases) | open, unmerged |
-| #4 | Indian equity quoting (NSE/BSE) | open, unmerged |
+| PR | Contents |
+|---|---|
+| #2 | India data model (five tables) |
+| #3 | Instrument identity (ISIN, AMFI code, aliases) |
+| #4 | NSE/BSE equity quoting |
+| #6 | AMFI NAV provider |
+| #7 | India instrument forms |
+| #8 | BONUS / FEE / TAX_WITHHELD |
+| #5 | This status document |
 
-The three branch off one another: merging them in order keeps each diff clean.
+They stack; merging in order (#2 → #3 → #4 → #6 → #7 → #8) keeps every diff clean. Nothing has been merged by the agent.
 
 ---
 
 ## Decisions needed
 
-1. **Merge order** for #2 → #3 → #4 (all open; nothing merged by the agent).
-2. **Translation policy** for new UI strings — ship English until translated, or fund a translation pass with each phase.
-3. **What to build next.** The dependency order says finish AMFI → instruments → actions → XIRR; the adoption argument favours the import pack. These are different sequences.
+1. **Merge order** for the checkpoint chain (nothing merged).
+2. **Translation policy** for new UI strings — English until translated, or a translation pass per phase.
+3. **Whether to continue with D–G** (reconciliation guard, XIRR, SIP plan-vs-actual, holiday calendar), and in what order. XIRR is the headline gap.
 4. Whether to **quarantine the pre-existing failing tests** so later phases start from a green baseline.
 
 ---
 
-*This file is a status document, not a deliverable feature. It can be closed without merging once the phases it describes have landed.*
+*Status document, not a deliverable feature. It can be closed without merging once the phases it describes have landed.*
