@@ -212,6 +212,16 @@ const REFS: Record<string, RefRule[]> = {
       refTable: "scheduled_transactions",
       onMissing: "dropRow",
     },
+    {
+      // `null`, matching the column's own ON DELETE SET NULL: the posting is a
+      // record that the occurrence was posted, so it survives and simply stops
+      // claiming an investment transaction. Dropping the row would lose that
+      // fact. Nullable, and not backfilled -- a posting made before the link
+      // existed genuinely does not know which transaction it created.
+      column: "investment_transaction_id",
+      refTable: "investment_transactions",
+      onMissing: "null",
+    },
   ],
   scheduled_transaction_split_tags: [
     {
