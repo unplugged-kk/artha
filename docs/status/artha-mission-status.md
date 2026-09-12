@@ -1,247 +1,206 @@
-# Artha mission status — review me here
+# Artha mission status — Fintrack + Finsight adoption, and the CI OOM
 
-**How this works:** each mission rewrites this file as a current snapshot (never a diary). The summary is below; the detail is here. **This PR is never merged — it is overwritten.**
+**How this works:** each mission rewrites this file as a current snapshot (never a diary). **This PR is never merged — it is overwritten.** The summary is at the top; the full matrices and evidence are below.
 
-Last updated: 2026-09-12 · **Everything is merged into `main` (`f642088a0`).** The only open pull request is this status document — code PRs #2–#4 and #6–#9 are all in.
+Last updated: 2026-09-12 · `main` at `f642088a0` · mission branch `fm/artha-fintrack-ux-01` (**PR #10, unmerged**)
 
 ---
 
 ## TL;DR
 
-- **The India investment foundation is now complete for everything that is safely achievable.** SIP plan-vs-actual — the one ticket deferred last mission for want of a link — is **implemented and tested**.
-- **One item remains deliberately incomplete: the variable-date holiday calendar.** No trustworthy, maintainable source exists in the repository, so `indianCalendarComplete(year)` still returns `false`. Dates were **not** invented.
-- Nothing was reimplemented: AMFI NAV, India instrument UX and the three investment actions were already merged and were **validated, not rebuilt**.
-- **7 test failures across the swept suites — all 7 pre-existing baseline, none a regression.** Two were caught by repo guards while building SIP (see below).
-- **One PR open: this status document.** All code is merged — #9 (SIP, XIRR, calendar) included.
+- **The backend unit-test OOM is diagnosed, reproduced and fixed**, with proof in both directions. `Backend Unit Tests` has been red on `main` for months **without a single failing test** — the worker hit V8's heap ceiling and aborted before Jest printed a summary, so the job reported a failure that named no test.
+- **The Fintrack ledger work landed**: month navigation, day-grouped rows, per-day income/expense subtotals, and relative day names — the India-first daily-money UX that was this mission's primary priority.
+- **The audits found less to absorb than expected.** Most ledger items and most Finsight analytics dimensions were **already present**; two rows in the previous matrix were **wrong** and are corrected below.
+- **One Finsight item was dependency-ready but deliberately not started** — concentration/diversification. Starting a large feature on a thin budget was the worse trade; its path is written down instead.
+- **No financial semantics changed.** Every change is either presentation or test-runner configuration.
 
 ---
 
-## Ticket table
+## Mission objectives
 
-| Ticket | Status | Commit | PR |
-|---|---|---|---|
-| **A — SIP plan-vs-actual** | **DONE** — link column + write path + comparison service | `18edb3421` | #9 |
-| B — India instrument UX | **DONE** (implemented earlier; re-validated) | `bc06d6f50` | #7 |
-| C — BONUS / FEE / TAX_WITHHELD | **DONE** (implemented earlier; re-validated) | `383458beb` | #8 |
-| D — AMFI NAV provider | **DONE** (implemented earlier; re-validated) | `47be2126c` | #6 |
-| E — Indian holiday calendar | **PARTIAL** — mechanism complete; variable-date **data not curated** (deliberate) | `16861cd85` | #9 |
-| — native XIRR (prior mission) | **DONE** | `8606d4f5a` | #9 |
-| — India identity / NSE-BSE quoting | **DONE** (earlier missions) | `e88d29b95`, `5146e80f5` | #3, #4 |
+| Objective | Result |
+|---|---|
+| **A** — audit Fintrack against Artha | **done** — matrix below, evidence per row |
+| **B** — audit Finsight against Artha | **done** — matrix below, evidence per row |
+| **C** — implement the highest-value ready capability | **partly** — Fintrack ledger implemented and validated; the Finsight increment documented and deferred |
+| **D** — fix the backend unit-test OOM | **done** — cause measured, fix proved both ways, regression guard added |
 
 ---
 
-## India investment foundation
+## Objective D — the CI OOM (fixed)
 
-**Instrument identity** — ISIN with ISO 6166 check-digit validation, AMFI scheme code, alias registry (`instrument_aliases`), India instrument types (REIT, GOLD, PPF, EPF, NPS, FD, RD, SGB, ESOP, ULIP), one central `toProviderInstrument` symbol boundary.
+**Symptom.** `Backend Unit Tests` red on `main`, with no failing test and no Jest summary in the log: `FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory` → `Aborted (core dumped)` (exit 134). It fails identically on `23281f1e7` (2026-09-10, the merge of PR #1, **before any India work existed**) and on the merged `main`.
 
-**Market data** — AMFI mutual-fund NAV by scheme code (dated on the NAV's own day, NSE session, 4h cache that does not cache failures, circuit-breaker, no fallback to an equity provider); NSE `.NS` and BSE `.BO` quoting through a single exchange→suffix table.
+**Cause — measured, not guessed.**
 
-**Trading calendar** — `indianMarketDay` (weekend / named closure / trading, null for a malformed date), `nextIndianTradingDay`, `previousIndianTradingDay`, `indianHolidayName`, `effectiveIndianValuationDate`, bounded searches, and `indianCalendarComplete(year)`.
+| Hypothesis | Measurement | Verdict |
+|---|---|---|
+| One enormous spec exhausts the heap | the 8,419-line `scheduled-transactions.service.spec.ts` (276 tests) passes **alone at a 1 GB cap** | false |
+| Workers retain memory **across** files | three of the largest suites, each passing alone at 1 GB, **together in one worker** abort with `FATAL ERROR: Reached heap limit` | **true** |
 
-**Investment actions** — `BONUS` (quantity only, basis kept **known**, distinguishes it from ADD_SHARES whose cost is unrecorded), `FEE` and `TAX_WITHHELD` (cash only, amount from `price`, quantity ignored, positive magnitude).
+**Fix.** `workerIdleMemoryLimit: "512MB"` in the Jest config (`backend/package.json`). A worker that goes idle above the bound is recycled, releasing the retained module graph between files. No test is disabled, no scope reduced, no assertion weakened. The heap ceiling is deliberately **not** raised — that would hide the retention rather than bound it.
 
-**XIRR** — investor-signed dated cash flows, 365-day convention, grid scan + bisection, deterministic lowest root, `null` when no solution exists, wired into the portfolio summary beside TWR and CAGR with each flow at its own historical rate.
+**Proof — identical command both ways** (1 GB heap cap, 2 workers, the four largest suites):
 
-**SIP plan-vs-actual (new)** — the plan comes from `ScheduledOccurrenceService` (cadence, overrides and moving due dates are **not** reimplemented), the actual from the investment row the posting created. Per occurrence: `plannedAmount`, `actualAmount`, `variance`, `investmentTransactionId`, and status `matched | partial | extra | missed | voided | unknown`.
+```
+with the setting       4 suites passed, 973 tests passed
+without it (stashed)   2 workers FATAL ERROR, 2 suites failed, 442 tests ran
+```
+
+On PR #10 the same job that used to abort after ~2 minutes now runs past ten minutes without dying — a second, independent sign that the abort is gone.
+
+**Guard.** `jest-config.guard.spec.ts` now fails if the setting is removed, so the job cannot quietly go back to reporting a crash as a test failure (26 guard tests pass).
+
+**Separately still red on `main`:** `Workflow Security Scan (zizmor)`. Untouched by this mission and unrelated.
 
 ---
 
-## Financial correctness
+## Did any financial semantics change?
 
-- **Sign convention**: unchanged. No Fintrack inverted-income convention was imported.
-- **Cost basis**: unchanged, still transaction-derived; `holdings.average_cost` remains a rebuildable cache. Nothing in this mission touched replay.
-- **Cash legs**: unchanged. SIP *reads* them; it does not write money.
-- **The actual is never the plan.** A posted occurrence whose amount is unknowable reports `actualAmount: null` and status `unknown`, and its total is withheld. Substituting the planned amount would produce a perfect plan-vs-actual report for every portfolio — the exact defect the feature exists to expose.
-- **A reversed contribution is `voided`, not `matched` and not `missed`.** The postings query reads VOID rows deliberately and says so; filtering them away would turn a reversal into an apparent missed payment.
-- **`missed` means zero contributed**, which is a fact (no posting, no money), not an assumption.
-- **Matching tolerance** is the storage scale (`NUMERIC(20,4)`): a difference below the fourth decimal is representation, not variance.
-- **XIRR** returns `null` rather than a plausible number when no rate solves the series.
-- **No hard-coded analytics** were added. No NAV, price, return or FX value is fabricated anywhere.
+**No.** Precisely:
 
-### Safety of this mission's change (schema / security / data)
-
-- The one schema change is **additive and nullable**: `scheduled_transaction_postings.investment_transaction_id`, with a named FK `ON DELETE SET NULL`. **Nothing is backfilled** — the link was never recorded, and matching by date would be a heuristic standing in for a fact.
-- **No destructive or irreversible migration.** `verify-schema` confirms every retained migration is a no-op when replayed on top of `schema.sql`.
-- **RLS unchanged** (the table remains indirect via `scheduled_transactions`).
-- **Backup coverage updated in both directions**: the column is classified `keep` in support-backup rules, and `restore-plan` defers it — `investment_transactions` restores *after* the postings table, so leaving it inline would raise a foreign-key violation on every SIP posting in a backup. **Correction (2026-09-12): the third structure was missed** — `RULES` classifies a column, `restore-plan` orders the tables, and `REFS` says what to do when a referenced row is absent on restore. The `REFS` rule was not added, so a restore had no instruction for the new reference. The integration completeness guard caught it (`uncoveredFks: scheduled_transaction_postings.investment_transaction_id -> investment_transactions`) and it is now added with `onMissing: "null"`, matching the column's own `ON DELETE SET NULL` — see `4c1b7cce0`.
-- **No credentials, no new provider trust, no new external calls.** Provider responses remain validated before use.
-- **Residual risk**: a pre-existing posting reports `unknown` rather than a number. That is a visible gap, not a silent error.
+- No ledger, cash-leg, VOID, cost-basis, realized-gain, valuation, FX, TWR, CAGR or XIRR code was touched.
+- The ledger subtotal is **presentation arithmetic over rows already on screen**; it feeds nothing and is persisted nowhere.
+- It excludes **VOID** rows, **split children** and **transfers**, matching the reporting convention. A transfer between the user's own accounts is not income or expense; counting it would inflate both sides by the same amount while the position is unchanged.
+- **A day whose rows span currencies reports no total** rather than adding unlike amounts without a rate, and a side is drawn only when it is non-zero.
+- Sums accumulate as scaled integers and divide once — the same convention the existing running-balance column uses.
+- **No new schema, no migration, no provider, no currency or sign-convention change.**
 
 ---
 
 ## Fintrack adoption matrix
 
-Evidence is the repository at this branch's head. `DONE` = implemented and working; `PARTIAL` = some pieces; `READY` = dependencies suffice; `MISSING` = not present; `DEFERRED` = later; `REJECTED` = must not be imported.
+`DONE` = present and working · `PARTIAL` = some pieces · `READY` = dependencies suffice, not built · `BLOCKED` = missing a dependency · `DEFERRED` = later · `REJECTED` = must not be imported.
 
-| Capability | Status | Action | Evidence |
+| Capability | Status | Evidence | Next action |
 |---|---|---|---|
-| Month-keyed ledger | PARTIAL | DEFERRED | Register exists (`frontend/src/app/transactions/`); Fintrack's month keying + day grouping is UX work, not started |
-| Date-grouped rows | MISSING | DEFERRED | No grouping component |
-| Day subtotals | MISSING | DEFERRED | — |
-| Smart relative dates | MISSING | DEFERRED | Absolute formatting only |
-| Data-quality badges | MISSING | DEFERRED | Per-row badge not present |
-| Quick add (date + amount) | MISSING | DEFERRED | Transaction form is full-field |
-| Single add/edit modal | DONE | — | Existing transaction form |
-| Minimal required date + amount | PARTIAL | DEFERRED | Amount + account required; account is forced |
-| UPI default / suggestion | MISSING | DEFERRED | No payment-method field anywhere (`paymentMethod` matches nothing) |
-| 9-column CSV import | MISSING | DEFERRED | No importer in `transactions/` |
-| Merchant normalization | PARTIAL | READY | `payees/`, payee aliases and lookup providers already exist |
-| Duplicate detection | MISSING | DEFERRED | No duplicate-transaction detection found; bulk-update "deduplicated" is a different concern |
-| Four-bucket taxonomy | MISSING | DEFERRED | Categories have hierarchy + `is_income`; no buckets |
-| Indian merchant keyword starters | MISSING | READY | `categories/` seeding is the natural seam |
-| Six-month dashboard selector | PARTIAL | DEFERRED | Dashboard widget registry exists; range selector differs |
-| Five-KPI dashboard | PARTIAL | DEFERRED | KPI set differs from Fintrack's five |
-| Budget bars | DONE | — | `backend/src/budgets/**` |
-| 5% tolerance bars | MISSING | READY | Budget health/alerts exist; tolerance band is additive |
-| INR compact formatting | PARTIAL | READY | Number-locale formatter exists; Cr/L compaction not added |
-| Indian fiscal-year helper | PARTIAL | READY | `budgets/entities/budget.entity.ts:31` has `fiscalYearStart`; no general FY utility |
-| April FY cutover | PARTIAL | READY | Same field; no cutover logic outside budgets |
-| Goals | MISSING | DEFERRED | No goals module |
-| Emergency fund | MISSING | DEFERRED | — |
-| **SIP plan-vs-actual** | **DONE** | — | `scheduled-transactions/sip-plan-comparison.service.ts` (this mission) |
-| Credit-card cycle | PARTIAL | DEFERRED | `accounts/statement-cycle.service.ts` |
-| Recurring transactions | DONE | — | `backend/src/scheduled-transactions/**` (richer than Fintrack's) |
-| Accounts / cards | DONE | — | `backend/src/accounts/**` |
-| SMS intake | MISSING | DEFERRED | Only the `sms_sender_registry` table exists; no parser |
-| Rules engine | MISSING | DEFERRED | No rules module |
-| Transaction auto-classification | MISSING | DEFERRED | No auto-categorisation found |
+| Month-keyed ledger view | **DONE** (this mission) | `components/transactions/MonthNavigator.tsx` + `app/transactions/page.tsx`, driving the existing date filters | — |
+| Date-grouped rows | **DONE** (this mission) | `TransactionList.tsx` (`groupByDate`) + `lib/transaction-day-groups.ts` | — |
+| Day subtotals | **DONE** (this mission) | `groupTransactionsByDay` — income and expense per day | — |
+| Smart relative dates | **DONE** | day headings name *Today* / *Yesterday*, with the absolute date kept beside them | extend to "this week" if wanted |
+| Data-quality indicators | **PARTIAL** | exists: stale-reconciliation chip (`stale-reconciliation.ts`), budget dot (`TransactionRow.tsx`). Missing: a "no category"/"no payee" mark | add a missing-category mark |
+| Single add/edit modal | **DONE** | `TransactionForm.tsx` (+ split / transfer sub-forms) | — |
+| Minimal required fields | **PARTIAL** | frontend zod **and** `CreateTransactionDto` require `accountId`, `transactionDate`, `amount`, `currencyCode`; all else optional | default account/currency from context more often |
+| Quick add | **PARTIAL** | "Create & New" (`useTransactionSubmitMode`) and `RecentTransactionsPopover` quick-fill; no distinct minimal flow | optional |
+| UPI as default payment method | **BLOCKED** | no `paymentMethod` / `payment_method` / `UPI` anywhere in frontend or backend; the only hit is a README roadmap line | needs a field + form + import support — a scope decision precedes the code |
+| Indian merchant keyword starters | **READY** | payee aliases are wired into import (`alias-match.util.ts`); `payee-normalize.util.ts` and `COMMON_WORD_SEED` (payment-rail noise tokens) exist but import never calls them | wire the existing normalizer into import, then seed Indian merchants |
+| Four-bucket taxonomy | **READY** | categories have hierarchy + `is_income`; no bucket concept | additive classification layer — do not replace the category model |
+| INR compact / full formatting | **READY** | `useNumberFormat.ts` has compact notation but **hardcoded K/M/B/T**; `number-parse.ts` already *parses* lakh grouping; no `en-IN` preset | add lakh/crore display and an Indian number-locale option |
+| Indian fiscal-year helper + April cutover | **PARTIAL** | `budgets/entities/budget.entity.ts` has `fiscalYearStart`; no general FY utility | extract one shared helper |
+| Budget model + bars | **DONE** | `backend/src/budgets/**`; budget indicators in register rows | — |
+| 5 % tolerance visualisation | **READY** | budget health/alerts exist | additive band |
+| Six-month dashboard selector | **PARTIAL** | dashboard widget registry exists; its range selector differs | — |
+| Nine-column CSV import (Fintrack layout) | **PARTIAL** | a real importer exists — CSV, QIF, multi-QIF, OFX/QFX, `.mny` — with column mapping, preview and commit (`import/import.service.ts`) | the Fintrack *layout*, UPI column and content dedup are a dedicated mission |
+| Duplicate detection | **PARTIAL** | import dedup counts transfer/split signatures only; **no content hash and no unique index**. `.mny` hashes the staged *file*, not transactions | design deliberately — Fintrack's 20-character hash is REJECTED |
+| Recurring transactions | **DONE** | `backend/src/scheduled-transactions/**` (richer than Fintrack's) | — |
+| Accounts / cards | **DONE** | `backend/src/accounts/**` | — |
+| Credit-card cycle | **PARTIAL** | `accounts/statement-cycle.service.ts` | — |
+| Goals / emergency fund | **DEFERRED** | no goals module | a product module, not a foundation |
+| SMS intake | **DEFERRED** | only the `sms_sender_registry` table exists; no parser | dedicated mission |
+| Rules engine / auto-classification | **DEFERRED** | no rules module; no auto-categorisation | dedicated mission |
 
-**Fintrack answer:** the *concepts* absorbed are recurring transactions, accounts/cards, budgets and now SIP plan-vs-actual; the personal-finance **UX** layer (month ledger, quick add, buckets, import) is largely unabsorbed and is a product mission, not a foundation one.
+**Fintrack answer:** the *daily-money UX* was the real gap and is now largely closed — month view, day grouping, subtotals, relative dates. What remains is genuinely India-specific: UPI, lakh/crore display, merchant seeds and the fiscal-year helper.
 
 ---
 
 ## Finsight adoption matrix
 
-| Capability | Status | Action | Evidence |
+| Capability | Status | Evidence | Next action |
 |---|---|---|---|
-| NSE equities | DONE | — | `.NS` via `instrument-key.util.ts` |
-| BSE equities | DONE | — | `.BO` same table |
-| AMFI NAVs | DONE | — | `amfi-nav.service.ts` |
-| Provider aliases | DONE | — | `instrument_aliases` + `instrument-alias.entity.ts` |
-| Historical prices / NAVs | DONE | — | `security_prices` + AMFI series fetch |
-| Portfolio allocation | DONE | — | `portfolio-calculation.service.ts` |
-| Sector allocation | DONE | — | `sector-weighting.service.ts` |
-| Country allocation | DONE | — | `securities.country_weightings` + rollup |
-| Market-cap allocation | PARTIAL | READY | A `marketCap` report column exists; no allocation view |
-| CAGR | DONE | — | `calculateCAGR` (real, completeness-gated) |
-| **XIRR** | **DONE** | — | `xirr.util.ts` + `PortfolioCalculationService.calculateXirr` |
-| Risk metrics (β/α/Sharpe/Sortino/σ/VaR) | MISSING | DEFERRED | No portfolio risk surface; only a strategy backtest util |
-| Diversification metrics | MISSING | DEFERRED | — |
-| Drawdown | MISSING | DEFERRED | Not in production code |
-| Correlation | MISSING | DEFERRED | — |
-| Stock screener | MISSING | DEFERRED (reimplement natively) | Finsight's ignored every filter — REJECTED as a source |
-| Stock detail / research | PARTIAL | DEFERRED | `security-detail.service.ts` |
-| Index data | DONE | — | `market_index_prices`; `performance-comparison.service.ts` |
-| MF category explorer | PARTIAL | READY | AMFI search resolves schemes; no category model |
-| MF comparison | MISSING | DEFERRED | — |
-| Rolling returns | MISSING | DEFERRED | Needs NAV history depth |
-| Portfolio (fund) overlap | MISSING | DEFERRED | Only tag-exposure "overlapping" comments exist |
-| News | PARTIAL | DEFERRED | `security-news.service.ts` |
-| Sentiment | MISSING | DEFERRED | No hits in production code |
-| Events / catalysts | MISSING | DEFERRED | No hits |
-| AI investment assistant | DONE | — | `backend/src/ai/**`, `mcp/**` (real providers) |
-| Portfolio-grounded AI | PARTIAL | READY | `ai/context/financial-context.builder.ts` |
-| Alerts | DONE | — | `notification-center/**`, `push/**` |
-| Investment reports | DONE | — | `investment-reports/**` |
-| Watchlists | PARTIAL | DEFERRED | `securities/entities/security.entity.ts:129` `is_favourite` only |
+| NSE / BSE equities | **DONE** | `.NS` / `.BO` via `instrument-key.util.ts` | — |
+| AMFI NAVs | **DONE** | `amfi-nav.service.ts` — by scheme code, dated on the NAV's own day | — |
+| Provider aliases | **DONE** | `instrument_aliases` + `instrument-alias.entity.ts` | — |
+| Historical prices / NAVs | **DONE** | `security_prices` (no retention limit); AMFI returns the full scheme series; equity backfill ≈1 year, wider when transactions predate it | — |
+| Portfolio valuation | **DONE** | `PortfolioService.getPortfolioSummary` + `PortfolioCalculationService` | — |
+| Allocation — by security | **DONE** | `buildAllocation` | — |
+| Allocation — by tag / tag-key | **DONE** | `buildAllocationByTag`, `buildAllocationByTagKey` | — |
+| Allocation — sector | **DONE** | `sector-weighting.service.ts` `getSectorWeightings` — stocks direct, ETFs by weight slice | — |
+| Allocation — country | **DONE** | `getCountryWeightings`; `EXCHANGE_TO_COUNTRY` maps NSE/BSE → India | — |
+| Allocation — asset class | **DONE** | `getAssetClassWeightings` | — |
+| Allocation — market capitalisation | **BLOCKED** | **no market-cap data exists anywhere** — no column, no weighting code, and a spec asserts `marketCap` is *not* a report column. *The previous matrix called this READY; that was wrong* | needs a provider / reference-data source before it can exist |
+| Allocation — instrument type | **PARTIAL** | type is folded into asset class via `SECURITY_TYPE_TO_ASSET_CLASS` | expose type separately if wanted |
+| CAGR | **DONE** | `calculateCAGR` (completeness-gated) | — |
+| XIRR | **DONE** | `calculateXirr` + `xirr.util.ts` | — |
+| TWR | **DONE** | `calculateTWR` | — |
+| Realized / capital gains | **DONE** | `calculateRealizedGains`, by month and by day | — |
+| Risk metrics (σ, Sharpe, Sortino, VaR, β, α) | **BLOCKED** | none in production code; volatility and drawdown exist only as **Monte Carlo simulation outputs** and in the GEM backtest util | needs a portfolio return series built from price history |
+| Concentration / diversification | **DEFERRED (READY)** | computable read-side from the existing authoritative allocation — no new data needed | **the top Finsight candidate** — see below |
+| Index data / benchmarks | **DONE** | `market_index_prices`, `performance-comparison.service.ts` | — |
+| Investment reports | **DONE** | `investment-reports/**` | — |
+| Alerts | **DONE** | `notification-center/**`, `push/**` | — |
+| AI investment assistant | **DONE** | `backend/src/ai/**`, `mcp/**` — real providers, no mock | — |
+| Portfolio-grounded AI | **PARTIAL** | `ai/context/financial-context.builder.ts` | deepen as analytics land |
+| News | **PARTIAL** | `security-news.service.ts` | — |
+| Sentiment / events / catalysts | **DEFERRED** | absent from production code | — |
+| Stock screener | **DEFERRED** | must be reimplemented natively — Finsight's ignored its own filters, so its implementation is REJECTED as a source | — |
+| MF category explorer / comparison | **DEFERRED** | AMFI search resolves schemes; no category model and no comparison | needs a category source |
+| Rolling returns | **READY** (funds) | the AMFI series is fetched in full, so fund rolling returns are computable; equity history is only as deep as the backfill | bounded by equity history depth |
+| Fund overlap | **DEFERRED** | only tag-exposure comments exist | — |
+| Watchlists | **BLOCKED** | nothing beyond `securities.is_favourite`, a boolean | real watchlists are a small module if wanted |
 
-**Finsight answer:** the market-data and core-return stack is absorbed and real (NSE/BSE/AMFI, allocation, CAGR, XIRR, reports, alerts, AI). The analytics *depth* (risk, drawdown, correlation, rolling returns, screener, MF comparison) is structurally ready but needs price/NAV history depth that does not exist yet.
-
-**REJECTED, never to be imported** — Fintrack: inverted income sign, float money, `Math.abs` double-count traps, weak dedup hashes, free-text transfers, `confirm()` flows, demo numbers as data, inert rule fields. Finsight: hard-coded CAGR/XIRR, zero/placeholder analytics shown as real, AI echo shown as intelligence, orphaned provider code, float valuation, FX-blind aggregation, stored-never-rebuilt cost basis, string-patched bridges.
+**Finsight answer:** the market-data and return stack is absorbed and real — NSE/BSE, AMFI, valuation, five allocation dimensions including India-mapped country, CAGR/XIRR/TWR, realized gains, reports, alerts and AI. What is missing is **depth**: risk statistics, concentration, and MF research.
 
 ---
 
-## What Artha can do now that it could not at the start of the chain
-
-- Price an Indian mutual fund from AMFI by scheme code; price NSE/BSE equities.
-- Record ISIN, AMFI scheme code and ticker aliases; create India instrument types.
-- Record a bonus issue, a standalone fee, and tax withheld.
-- Reason about Indian trading days and the day a valuation should be struck on.
-- Report **XIRR** beside TWR and CAGR.
-- **Compare a SIP plan with what was actually invested**, per occurrence, including missed, partial, extra and reversed contributions — with an explicit "unknown" wherever the amount cannot be established.
-
----
-
-## Validation
+## Validation — actual results
 
 | Gate | Result |
 |---|---|
-| SIP plan-vs-actual (new) | **13 passed** |
-| XIRR solver | **19 passed** |
-| Indian calendar module | **26 passed** |
-| securities + scheduled-transactions + backup sweep | **3015 passed, 7 failed** |
-| `scripts/verify-schema.sh` | **OK** — migration replay is a no-op on `schema.sql` |
-| typecheck, lint | clean |
-| Frontend suite | **not run** (no frontend change this mission) |
-| Full backend suite | **not run** — the targeted sweep above was used instead |
+| **CI OOM fix, A/B** | **with**: 4 suites, **973 passed** · **without**: 2 workers OOM, 442 ran |
+| Largest spec alone at a 1 GB cap | 276 passed (disproves the single-file cause) |
+| Jest config guard | 26 passed |
+| **Frontend — every transaction component test** | **34 files, 1205 passed** |
+| New unit tests — day groups | 15 passed |
+| New unit tests — month navigator | 9 passed |
+| New unit tests — grouped register | 6 passed |
+| `tsc --noEmit` | clean |
+| eslint on every changed file | clean |
+| i18n structural parity, all locales | **18/18 identical to `en`** (544 key paths); pseudo-locale regenerated |
 
-**All 7 failures are pre-existing baseline, verified as a set with no other failures present:**
-
-| # | Failure | Cause |
-|---|---|---|
-| 1–5 | `AutoBackupService` (5 tests) | macOS resolves `/var/folders/…` to `/private/var/folders/…`, so the expected temp path differs. Platform-specific, environmental, not code. |
-| 6 | `SecurityPriceService › backfillSecurityHoldingPeriod › still clips when no range is given` | expected `< 40`, got `40` — red on `main` |
-| 7 | `YahooFinanceService › fetchHistorical › should set hours to midnight` | `getHours()` expected `0`, got `5` (IST runner vs UTC-midnight date) — red on `main` |
-
-**Two regressions I introduced and fixed** (recorded because both were caught by repo guards, not by me):
-
-1. My XIRR query used the `investmentEffectStatusSql` helper, which expands to `status != 'VOID'` at runtime but is invisible to the void-classification guard's **static** scan. Replaced with the literal predicate the guard documents.
-2. Adding the SIP column pushed `support-backup-rules.ts` past the repository's **line ceiling** (802 > 800). Fixed by trimming my own comment rather than grandfathering the file.
-   A third guard — `restore-plan`'s forward-reference check — was satisfied before it could fail, because the postings table restores before `investment_transactions`.
-
-**A third regression, found later and fixed** (found by CI rather than locally, because the guard that catches it is an integration test needing a database):
-
-3. The new FK was classified in `RULES` but **not registered in `REFS`**, so the restore had no instruction for it. `Backend Integration Tests` failed deterministically with `uncoveredFks: ["scheduled_transaction_postings.investment_transaction_id -> investment_transactions"]` — **while the same job passed on `main`**, which is how it was proved to be a regression and not baseline. Fixed in `4c1b7cce0` with `onMissing: "null"`.
-   Worth stating plainly: the earlier claim that backup coverage was handled "in both directions" was true of `RULES` and `restore-plan` and false of `REFS`. The guard was right and the summary was incomplete.
-
-**Another pre-existing CI failure, newly evidenced** (uncovered while checking whether the chain merges were safe):
-
-`main`'s `Backend Unit Tests` job does not fail on assertions — it **dies of a V8 out-of-memory crash**: `FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory` → `Aborted (core dumped)` (exit 134). It fails identically on commit `23281f1e7` (2026-09-10, merge of PR #1, *before any India work existed*) and on the merged `main` (`816e2819f`), with the same two jobs red — `Backend Unit Tests` and `zizmor`. The crash aborts the run before Jest prints a summary, so CI shows no test counts at all. This makes the backend job a false signal for every future PR: it would hide a real test regression behind an OOM. It deserves its own fix (raise the heap, or split the lanes), and none of the India work caused it or can mask it.
+**Two pre-existing environment limits, recorded rather than hidden:** the local Postgres does not accept the configured credentials, so the **integration** guards could not run locally (CI runs them); and four `src/i18n` spec files fail to *load* locally (`No such built-in module: node:`) — proved pre-existing by re-running with this mission's changes stashed. Structural parity was verified directly instead.
 
 ---
 
-## Known limitations
+## Remaining gaps (actual, not aspirational)
 
-1. **Variable-date Indian holidays are not curated.** Only the three statutory national closures are encoded. `indianCalendarComplete(year)` returns `false`, and an "open" verdict means "no *known* closure" — not a claim the exchange traded. This is deliberate: a date recalled rather than sourced would silently mis-date a settlement.
-2. **SIP amounts for postings made before this change report `unknown`.** Nothing was backfilled. Future postings link exactly.
-3. **`TAX_WITHHELD` is still not linked** to the income row it was withheld from.
-4. **XIRR omits a REDEEM's accrued-interest companion** (that companion carries no cash leg of its own) — documented in code.
-5. **SIP comparison is a service, not a surface.** The foundation is complete and tested; no UI renders it yet (deliberately — the mission asked for the foundation, not a dashboard).
-6. Two baseline test failures and five macOS-environmental failures remain, as above.
-
----
-
-## Open decisions
-
-**One, and it is a data-sourcing decision rather than an engineering one:**
-
-**The Indian holiday calendar needs an authoritative, maintainable source.** The mechanism is finished and waiting: adding a year to the variable-date table flips `indianCalendarComplete(year)` to `true` and every consumer inherits it at once. What it needs is a decision on where the dates come from — the NSE/BSE published annual trading-holiday list, transcribed and versioned per year — and who maintains it annually. Until then the calendar is honest about what it does not know. No other decision is outstanding; everything else in this mission was ordinary additive work.
+1. **Concentration / diversification** — dependency-ready, not built. The honest shape: Herfindahl index, effective number of holdings, and top-1/top-5 share, computed read-side from the weights `PortfolioService.getPortfolioSummary` already returns, reporting **unavailable** when holdings are unpriced. No new data, no parallel engine, deterministic tests.
+2. **Market-cap allocation** — blocked; no market-cap data exists to allocate.
+3. **Risk statistics** — blocked on a portfolio return series; the price history exists, the series does not.
+4. **UPI / payment method** — no field exists; a scope decision precedes the code.
+5. **Import pack** — CSV/QIF/OFX/`.mny` import is real; the Fintrack 9-column layout, content-based dedup and Indian payment methods are a dedicated mission.
+6. **Indian number formatting** — lakh/crore display and an `en-IN` preset (the formatter currently hardcodes K/M/B/T).
+7. **Variable-date Indian holiday calendar** — unchanged and deliberately so; `indianCalendarComplete(year)` stays `false`, because a date recalled rather than sourced would silently mis-date a settlement. The open question is the authoritative annual source and who maintains it.
+8. **Watchlists** — absent beyond a favourite flag.
+9. **Six new UI strings** ship as English in the 18 full mirrors; translations pending (standing policy).
 
 ---
 
-## Recommended next mission
+## Recommended next mission (dependency-ordered)
 
-Ranked by dependency readiness, financial correctness, user value and leverage:
+1. **Concentration / diversification analytics** — the only Finsight item that is ready today with **zero new data**. Small, read-side, deterministic, and it gives the allocation views meaning they do not currently have.
+2. **Indian number formatting + fiscal-year helper** — two `READY` items, self-contained, and together they make money Indian-readable and FY reporting possible.
+3. **Wire the merchant normalizer into import, then seed Indian merchants** — the normalizer already exists and import never calls it; the seeds make first-run categorisation useful.
+4. **`zizmor`** — now the last red job on `main`; the unit job beside it is trustworthy again, so the remaining failure is worth clearing.
+5. **Watchlists** — small and visible, but better placed after the analytics that give a watchlist something to say.
 
-1. **Indian holiday-data curation** — the only unfinished item of the approved foundation, and the mechanism already reports when it is done. Small, bounded, real correctness value for settlement and valuation dating.
-2. **`TAX_WITHHELD` attribution link** — small additive work that completes the action's contract.
-3. **Market-cap allocation** — `READY` on the existing weighting architecture; the last allocation dimension Finsight had that Artha lacks.
-4. **Indian fiscal-year helper + Indian merchant category seeds** — both `READY`, self-contained, and they unlock FY reporting and first-run categorisation together.
-5. **Fund overlap / MF comparison** — high value, but genuinely blocked on NAV history depth; needs its own data-retention work first.
-
-Deliberately *not* recommended yet: risk metrics, drawdown, correlation and rolling returns (all blocked on history depth), and the whole Fintrack personal-finance UX layer (a redesign, not a foundation).
+Not recommended yet: risk statistics, fund overlap and equity rolling returns (all need history depth), and the Fintrack bucket/dashboard work (presentation of a shape the ledger now has).
 
 ---
 
-## Commits / PRs
+## NEVER to be imported
+
+**Fintrack:** inverted income sign, float money, `Math.abs` double-count traps, weak short dedup hashes, free-text transfers, `confirm()` flows, demo numbers as data, inert rule fields.
+**Finsight:** hard-coded CAGR/XIRR, zero or placeholder analytics presented as real, AI echo shown as intelligence, orphaned provider code, float valuation, FX-blind aggregation, stored-never-rebuilt cost basis, string-patched bridges.
+
+---
+
+## Mission artefacts
 
 | Ref | What |
 |---|---|
-| `18edb3421` | SIP plan-vs-actual: link column, write path, comparison service, tests |
-| `8606d4f5a` | native XIRR + portfolio wiring |
-| `16861cd85` | Indian trading calendar |
-| `4c1b7cce0` | backup REFS rule for the SIP postings FK (the CI-caught regression) |
-| **PR #9** | `fm/artha-xirr-sip-sessions` → calendar, XIRR, SIP — **MERGED** |
-| **PR #5** | this status — **the only open PR, never merged, overwritten each mission** |
-| `f642088a0` | `main` tip; contains every phase (#2–#9) |
-| `816e2819f` | previous `main` tip (phases #2–#8) |
+| `9f1ea16c2` | ledger: month navigation, day grouping, day subtotals |
+| `e157904cf` | CI: Jest worker recycling for the OOM, plus its guard |
+| **PR #10** | both of the above — **open, unmerged** |
+| **PR #5** | this status — **the only status PR, never merged, overwritten each mission** |
+| `f642088a0` | `main` tip (India foundation: phases #2–#9) |
+| `4c1b7cce0` | previous mission: backup `REFS` rule for the SIP postings FK |
