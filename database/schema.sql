@@ -977,7 +977,12 @@ CREATE TYPE investment_action AS ENUM (
     'REINVEST_CAPITAL_GAIN_LONG',
     'CAPITAL_GAIN_SHORT',
     'CAPITAL_GAIN_LONG',
-    'REDEEM'
+    'REDEEM',
+    -- India investment foundation (migration 20260912054024): a bonus issue,
+    -- a standalone cost, and tax withheld at source.
+    'BONUS',
+    'FEE',
+    'TAX_WITHHELD'
 );
 
 CREATE TABLE investment_transactions (

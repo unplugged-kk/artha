@@ -2063,6 +2063,13 @@ export class InvestmentTransactionsService {
       case InvestmentAction.REMOVE_SHARES:
         return 0;
 
+      case InvestmentAction.FEE:
+      case InvestmentAction.TAX_WITHHELD:
+        // A cost, stored as a positive magnitude like every other total; its
+        // direction comes from the action, not from the sign of this field.
+        result = Math.abs(price || 0);
+        break;
+
       default:
         return 0;
     }

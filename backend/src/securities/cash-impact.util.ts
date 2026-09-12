@@ -56,6 +56,11 @@ export function computeInvestmentCashImpact(
     case InvestmentAction.INTEREST:
     case InvestmentAction.CAPITAL_GAIN:
       return (q || 1) * p;
+    case InvestmentAction.FEE:
+    case InvestmentAction.TAX_WITHHELD:
+      // A cost with no quantity: `price` is the amount. Quantity is ignored
+      // rather than multiplied, because a fee is not a per-unit figure.
+      return -p;
     case InvestmentAction.REINVEST:
       return 0;
     default:
