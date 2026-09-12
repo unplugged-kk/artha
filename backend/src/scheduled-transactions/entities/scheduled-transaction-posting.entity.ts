@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { ScheduledTransaction } from "./scheduled-transaction.entity";
+import { InvestmentTransaction } from "../../securities/entities/investment-transaction.entity";
 
 /**
  * One posted occurrence of a scheduled transaction.
@@ -68,6 +69,21 @@ export class ScheduledTransactionPosting {
     },
   })
   postedDate: string;
+
+  /**
+   * The investment transaction this occurrence created, when it created one.
+   *
+   * This is what makes plan-vs-actual exact: the *actual* amount is that
+   * transaction's own figure, not the schedule's planned amount restated. Null
+   * on a bill or transfer posting, and on any posting made before the link
+   * existed -- an unknown actual, never a guessed one.
+   */
+  @Column({ type: "uuid", name: "investment_transaction_id", nullable: true })
+  investmentTransactionId: string | null;
+
+  @ManyToOne(() => InvestmentTransaction, { onDelete: "SET NULL" })
+  @JoinColumn({ name: "investment_transaction_id" })
+  investmentTransaction?: InvestmentTransaction | null;
 
   @CreateDateColumn({ name: "created_at" })
   createdAt: Date;

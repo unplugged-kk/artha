@@ -10,6 +10,7 @@ import { ScheduledEffectiveAmountService } from "./scheduled-effective-amount.se
 import { ScheduledOccurrenceService } from "./scheduled-occurrence.service";
 import { ScheduledTransactionOverrideService } from "./scheduled-transaction-override.service";
 import { ScheduledTransactionLoanService } from "./scheduled-transaction-loan.service";
+import { SipPlanComparisonService } from "./sip-plan-comparison.service";
 import { ScheduledTransactionsController } from "./scheduled-transactions.controller";
 import { AccountsModule } from "../accounts/accounts.module";
 import { TransactionsModule } from "../transactions/transactions.module";
@@ -46,6 +47,7 @@ import { SystemAlertsModule } from "../system-alerts/system-alerts.module";
     ScheduledOccurrenceService,
     ScheduledTransactionOverrideService,
     ScheduledTransactionLoanService,
+    SipPlanComparisonService,
   ],
   controllers: [ScheduledTransactionsController],
   // Both read-side services are exported so a consumer that holds schedule rows
@@ -56,6 +58,7 @@ import { SystemAlertsModule } from "../system-alerts/system-alerts.module";
     ScheduledTransactionsService,
     ScheduledEffectiveAmountService,
     ScheduledOccurrenceService,
+    SipPlanComparisonService,
   ],
 })
 export class ScheduledTransactionsModule {}

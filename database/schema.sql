@@ -840,11 +840,20 @@ CREATE TABLE scheduled_transaction_postings (
     scheduled_transaction_id UUID NOT NULL REFERENCES scheduled_transactions(id) ON DELETE CASCADE,
     original_due_date DATE NOT NULL,
     posted_date DATE NOT NULL,
+    -- The investment transaction this occurrence created, when it created one
+    -- (migration 20260912072408). Nullable: postings made before the link
+    -- existed keep no link, and a bill or transfer posting never has one.
+    -- Its foreign key is declared below, after investment_transactions.
+    investment_transaction_id UUID,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE UNIQUE INDEX idx_stp_occurrence
     ON scheduled_transaction_postings(scheduled_transaction_id, original_due_date);
+
+CREATE INDEX idx_stp_investment_transaction
+    ON scheduled_transaction_postings(investment_transaction_id)
+    WHERE investment_transaction_id IS NOT NULL;
 
 -- Security documents: factsheet, KIID, prospectus, annual report, tax slip,
 -- research. Real columns rather than a JSONB blob so the type, name, date and
@@ -1011,6 +1020,13 @@ CREATE INDEX idx_investment_transactions_user ON investment_transactions(user_id
 CREATE INDEX idx_investment_transactions_status ON investment_transactions(status);
 CREATE INDEX idx_investment_transactions_account ON investment_transactions(account_id);
 CREATE INDEX idx_investment_transactions_security ON investment_transactions(security_id);
+
+-- scheduled_transaction_postings is declared earlier, so its link to the row a
+-- posting created is constrained here. SET NULL, not CASCADE: deleting the money
+-- does not un-happen the occurrence, and a vanished occurrence record would make
+-- a posted month look like a missed one.
+ALTER TABLE scheduled_transaction_postings ADD CONSTRAINT fk_scheduled_transaction_postings_investment_transaction
+    FOREIGN KEY (investment_transaction_id) REFERENCES investment_transactions(id) ON DELETE SET NULL;
 CREATE INDEX idx_investment_transactions_date ON investment_transactions(transaction_date DESC);
 CREATE INDEX idx_investment_transactions_transaction ON investment_transactions(transaction_id);
 CREATE INDEX idx_investment_transactions_split_id ON investment_transactions(transaction_split_id);

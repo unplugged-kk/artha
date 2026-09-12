@@ -3298,13 +3298,27 @@ export class ScheduledTransactionsService {
         // the stale account (issue #1154 review). `current` carries the
         // authoritative scalar investment fields; postInvestment reads only
         // those, and the nested create resolves its own settlement account.
-        await this.postInvestment(
+        const createdInvestmentTransactionId = await this.postInvestment(
           userId,
           current,
           postDto,
           postDate,
           lockedOverride,
         );
+
+        // Record which occurrence produced which investment row, in the same
+        // transaction that created it. Without this the occurrence knows it
+        // happened but not what it booked, and plan-vs-actual could only
+        // restate the plan as the actual.
+        if (createdInvestmentTransactionId) {
+          await m.query(
+            `UPDATE scheduled_transaction_postings
+                SET investment_transaction_id = $1
+              WHERE scheduled_transaction_id = $2
+                AND original_due_date = $3`,
+            [createdInvestmentTransactionId, id, nextDueDateStr],
+          );
+        }
       } else if (preparedTransfer) {
         // Already validated and authorized above; only the writes join this
         // transaction, so the legs and their balance updates commit with the
@@ -3452,7 +3466,7 @@ export class ScheduledTransactionsService {
     postDto: PostScheduledTransactionDto | undefined,
     postDate: string,
     storedOverride: ScheduledTransactionOverride | null,
-  ): Promise<void> {
+  ): Promise<string | null> {
     const action = scheduled.investmentAction as InvestmentAction | null;
     if (!action) {
       throw new BadRequestException(
@@ -3608,7 +3622,14 @@ export class ScheduledTransactionsService {
     // through to fresh resolution in the posting resolver (issue #1167).
     if (exchangeRate !== undefined) dto.exchangeRate = exchangeRate;
 
-    await this.investmentTransactionsService.create(userId, dto);
+    // The created row's id comes back so the caller can record which occurrence
+    // produced it. Plan-vs-actual needs the *actual* amount, and this
+    // transaction is the only authoritative source for it.
+    const created = await this.investmentTransactionsService.create(
+      userId,
+      dto,
+    );
+    return created?.id ?? null;
   }
 
   private calculateNextDueDate(
