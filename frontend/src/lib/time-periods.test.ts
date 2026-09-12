@@ -8,7 +8,7 @@ describe('time-periods', () => {
 
   describe('TIME_PERIOD_OPTIONS', () => {
     it('has the correct number of options', () => {
-      expect(TIME_PERIOD_OPTIONS).toHaveLength(13);
+      expect(TIME_PERIOD_OPTIONS).toHaveLength(15);
     });
 
     it('starts with placeholder option', () => {
@@ -28,7 +28,50 @@ describe('time-periods', () => {
       expect(values).toContain('last_365_days');
       expect(values).toContain('year_to_date');
       expect(values).toContain('last_year');
+      expect(values).toContain('this_fiscal_year');
+      expect(values).toContain('last_fiscal_year');
       expect(values).toContain('custom');
+    });
+  });
+
+  describe('resolveTimePeriod for the Indian financial year', () => {
+    it('spans 1 April to 31 March for "this financial year"', () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2026, 8, 15)); // 15 Sep 2026, inside FY 2026
+      expect(resolveTimePeriod('this_fiscal_year')).toEqual({
+        startDate: '2026-04-01',
+        endDate: '2027-03-31',
+      });
+    });
+
+    it('reads the year from the local calendar date, not the UTC one', () => {
+      vi.useFakeTimers();
+      // Local time on 1 April: the financial year has just turned over. A UTC
+      // read would still be 31 March in zones behind UTC and would answer with
+      // the year that has just ended.
+      vi.setSystemTime(new Date(2026, 3, 1, 0, 30)); // 1 Apr 2026, 00:30 local
+      expect(resolveTimePeriod('this_fiscal_year')).toEqual({
+        startDate: '2026-04-01',
+        endDate: '2027-03-31',
+      });
+    });
+
+    it('steps back one year for "last financial year"', () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2026, 8, 15));
+      expect(resolveTimePeriod('last_fiscal_year')).toEqual({
+        startDate: '2025-04-01',
+        endDate: '2026-03-31',
+      });
+    });
+
+    it('answers with the year that is ending on 31 March', () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2026, 2, 31)); // 31 Mar 2026
+      expect(resolveTimePeriod('this_fiscal_year')).toEqual({
+        startDate: '2025-04-01',
+        endDate: '2026-03-31',
+      });
     });
   });
 

@@ -299,6 +299,8 @@
       "last365Days": "Laatste 365 dagen",
       "yearToDate": "Jaar tot nu toe",
       "lastYear": "Vorig jaar",
+      "thisFiscalYear": "This financial year (Apr-Mar)",
+      "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "Aangepast"
     }
   },

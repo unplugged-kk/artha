@@ -299,6 +299,8 @@
       "last365Days": "過去365日間",
       "yearToDate": "今年初めから",
       "lastYear": "昨年",
+      "thisFiscalYear": "This financial year (Apr-Mar)",
+      "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "カスタム"
     }
   },

@@ -299,6 +299,8 @@
       "last365Days": "最近365天",
       "yearToDate": "今年至今",
       "lastYear": "去年",
+      "thisFiscalYear": "This financial year (Apr-Mar)",
+      "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "自定义"
     }
   },

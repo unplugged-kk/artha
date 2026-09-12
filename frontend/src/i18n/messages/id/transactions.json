@@ -299,6 +299,8 @@
       "last365Days": "365 Hari Terakhir",
       "yearToDate": "Tahun Berjalan",
       "lastYear": "Tahun Lalu",
+      "thisFiscalYear": "This financial year (Apr-Mar)",
+      "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "Kustom"
     }
   },

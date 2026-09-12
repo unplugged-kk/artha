@@ -299,6 +299,8 @@
       "last365Days": "Последние 365 дней",
       "yearToDate": "Текущий год",
       "lastYear": "Прошлый год",
+      "thisFiscalYear": "This financial year (Apr-Mar)",
+      "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "Произвольный"
     }
   },

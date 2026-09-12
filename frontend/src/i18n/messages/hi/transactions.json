@@ -299,6 +299,8 @@
       "last365Days": "पिछले 365 दिन",
       "yearToDate": "वर्ष की शुरुआत से",
       "lastYear": "पिछला वर्ष",
+      "thisFiscalYear": "This financial year (Apr-Mar)",
+      "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "कस्टम"
     }
   },
