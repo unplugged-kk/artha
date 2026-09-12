@@ -1,4 +1,5 @@
 import { PortfolioService } from "./portfolio.service";
+import { ConcentrationResult } from "./concentration.util";
 import { PortfolioCalculationService } from "./portfolio-calculation.service";
 import { Holding } from "./entities/holding.entity";
 import { SecurityPrice } from "./entities/security-price.entity";
@@ -13,6 +14,22 @@ import {
 } from "../accounts/entities/account.entity";
 import { UserPreference } from "../users/entities/user-preference.entity";
 import { createScopedDbMocks } from "../test-helpers/scoped-db-testing";
+
+/**
+ * The concentration block a mocked summary carries. These fixtures exercise
+ * other parts of the summary, so they stand in the shape rather than the
+ * arithmetic -- the arithmetic has its own suite in concentration.util.spec.ts.
+ */
+const MOCK_CONCENTRATION: ConcentrationResult = {
+  status: "unavailable",
+  currencyCode: "USD",
+  holdings: null,
+  portfolio: null,
+  pricedPositions: 0,
+  unpricedPositions: 0,
+  missingRatePairs: [],
+  nonPositiveValuePositions: 0,
+};
 
 jest.mock("../common/db/scoped-db", () =>
   jest.requireActual("../test-helpers/scoped-db-testing").scopedDbMockModule(),
@@ -358,6 +375,51 @@ describe("PortfolioService", () => {
         expect(result.totalPortfolioValue).toBe(
           result.totalCashValue + result.totalHoldingsValue,
         );
+      });
+
+      it("reports concentration that reconciles with the allocation it was drawn from", async () => {
+        const result = await service.getPortfolioSummary(userId);
+
+        // The measure is *of* the allocation -- same prices, same FX, same
+        // denominator -- so this is the property that makes it trustworthy
+        // rather than a second opinion about the same portfolio.
+        const allocationTotal = result.allocation.reduce(
+          (sum, item) => sum + item.value,
+          0,
+        );
+        expect(result.concentration.portfolio!.drawnValue).toBeCloseTo(
+          allocationTotal,
+          6,
+        );
+        expect(result.concentration.portfolio!.positions).toBe(
+          result.allocation.length,
+        );
+
+        // Cash is one slice of the portfolio basis and none of the holdings one.
+        expect(result.concentration.portfolio!.drawnValue).toBeCloseTo(
+          5000 + 4750 + 2362.5,
+          6,
+        );
+        expect(result.concentration.holdings!.drawnValue).toBeCloseTo(
+          4750 + 2362.5,
+          6,
+        );
+        expect(result.concentration.holdings!.positions).toBe(2);
+        expect(result.concentration.portfolio!.top1Percent).toBeCloseTo(
+          (5000 / (5000 + 4750 + 2362.5)) * 100,
+          6,
+        );
+
+        // The index and its reciprocal are the same statement.
+        expect(result.concentration.portfolio!.effectiveHoldings).toBeCloseTo(
+          1 / result.concentration.portfolio!.herfindahl,
+          9,
+        );
+
+        // Everything here is priced and convertible, so the figure covers the
+        // whole portfolio and says so.
+        expect(result.concentration.status).toBe("complete");
+        expect(result.concentration.currencyCode).toBe("CAD");
       });
 
       it("returns holdings with calculated market values", async () => {
@@ -1586,6 +1648,7 @@ describe("PortfolioService", () => {
         holdings: [],
         holdingsByAccount: [],
         allocation: [],
+        concentration: MOCK_CONCENTRATION,
       } as never);
 
       const result = await service.getLlmSummary("user-1", ["acct-1"], {
@@ -1657,6 +1720,7 @@ describe("PortfolioService", () => {
               percentage: 18.56789,
             },
           ],
+          concentration: MOCK_CONCENTRATION,
         });
 
       const result = await service.getLlmSummary("user-1");
@@ -1717,6 +1781,7 @@ describe("PortfolioService", () => {
         holdings: [],
         holdingsByAccount: [],
         allocation: [],
+        concentration: MOCK_CONCENTRATION,
       });
 
       await service.getLlmSummary("user-1", ["acc-1", "acc-2"]);
@@ -1749,6 +1814,7 @@ describe("PortfolioService", () => {
         holdings: [],
         holdingsByAccount: [],
         allocation: [],
+        concentration: MOCK_CONCENTRATION,
       });
 
       const result = await service.getLlmSummary("user-1");
@@ -1795,6 +1861,7 @@ describe("PortfolioService", () => {
         ],
         holdingsByAccount: [],
         allocation: [],
+        concentration: MOCK_CONCENTRATION,
       });
 
       const result = await service.getLlmSummary("user-1");
@@ -1864,6 +1931,7 @@ describe("PortfolioService", () => {
           },
         ],
         allocation: [],
+        concentration: MOCK_CONCENTRATION,
       });
 
       const result = await service.getLlmSummary("user-1");
@@ -4107,6 +4175,7 @@ describe("PortfolioService", () => {
             currencyCode: "CAD",
           },
         ],
+        concentration: MOCK_CONCENTRATION,
       });
 
       // The symbol -> tag lookup is a raw statement; it lands on the

@@ -21,6 +21,11 @@ import {
 import { YahooFinanceService } from "./yahoo-finance.service";
 import { QuoteProviderRegistry } from "./providers/quote-provider.registry";
 import { roundMoney } from "../common/round.util";
+import {
+  ConcentrationMeasure,
+  ConcentrationResult,
+  computeConcentration,
+} from "./concentration.util";
 import { collectTagKeys } from "../tags/tag-key-value.util";
 import { mapWithConcurrency } from "../common/concurrency.util";
 import { formatDateYMD } from "../common/date-utils";
@@ -178,6 +183,13 @@ export interface PortfolioSummary {
   holdings: HoldingWithMarketValue[];
   holdingsByAccount: AccountHoldings[];
   allocation: AllocationItem[]; // Include allocation to avoid duplicate API call
+  /**
+   * Concentration and diversification over the slices above. Derived from them,
+   * never from the holdings again, so it cannot disagree with the allocation it
+   * describes; `status` says whether it covers the whole portfolio or only the
+   * priced, convertible part.
+   */
+  concentration: ConcentrationResult;
 }
 
 export interface AllocationItem {
@@ -288,11 +300,41 @@ export interface LlmPortfolioSummary {
   holdingsByAccount: LlmAccountHoldings[];
   allocation: LlmPortfolioAllocation[];
   /**
+   * How concentrated the book is: the Herfindahl index and the effective number
+   * of holdings over the allocation above, on both bases (holdings, and holdings
+   * plus cash). `status` says whether it covers the whole portfolio or only the
+   * priced, convertible part, and the counts say what was excluded.
+   */
+  concentration: LlmConcentration;
+  /**
    * Country and asset-class look-through breakdowns. Only present when the
    * caller asks for them: they cost a second holdings/FX pass, and most
    * portfolio questions don't need them.
    */
   lookThrough?: LlmLookThrough;
+}
+
+/** One basis of the concentration block, with its money and ratios rounded. */
+interface LlmConcentrationMeasure {
+  basis: ConcentrationMeasure["basis"];
+  positions: number;
+  drawnValue: number;
+  herfindahl: number;
+  effectiveHoldings: number;
+  top1Percent: number;
+  top5Percent: number;
+  largest: { name: string; value: number; percent: number }[];
+}
+
+interface LlmConcentration {
+  status: ConcentrationResult["status"];
+  currencyCode: string;
+  holdings: LlmConcentrationMeasure | null;
+  portfolio: LlmConcentrationMeasure | null;
+  pricedPositions: number;
+  unpricedPositions: number;
+  missingRatePairs: string[];
+  nonPositiveValuePositions: number;
 }
 
 /**
@@ -752,6 +794,26 @@ export class PortfolioService {
       ]),
     ].sort();
 
+    // Concentration over the slices just drawn. Reading the allocation rather
+    // than walking the holdings again is what makes this a measure *of* the
+    // portfolio value above instead of a second opinion about it: same prices,
+    // same FX, same consolidation by security, same denominator convention. The
+    // counts that qualify it come from the same result the totals do, so the
+    // figure and its caveat cannot drift apart.
+    const concentration = computeConcentration({
+      slices: allocation.map((item) => ({
+        name: item.name,
+        value: item.value,
+        isCash: item.type === "cash",
+      })),
+      currencyCode: defaultCurrency,
+      unpricedPositions: holdingsResult.unpricedSecurityIds.length,
+      missingRatePairs,
+      nonPositiveValuePositions: sortedHoldings.filter(
+        (holding) => holding.marketValue !== null && holding.marketValue <= 0,
+      ).length,
+    });
+
     return {
       totalCashValue,
       totalHoldingsValue: holdingsResult.totalHoldingsValue,
@@ -772,6 +834,7 @@ export class PortfolioService {
       holdings: sortedHoldings,
       holdingsByAccount,
       allocation,
+      concentration,
     };
   }
 
@@ -801,6 +864,48 @@ export class PortfolioService {
       v === null || v === undefined ? null : roundMoney(Number(v));
     const roundPct = (v: number | null | undefined): number | null =>
       v === null || v === undefined ? null : Math.round(Number(v) * 100) / 100;
+    /**
+     * The concentration index and its reciprocal are dimensionless, so they get
+     * their own precision rather than a currency's: six places keeps a large
+     * book's index (which is small) meaningful, and two is as much as an
+     * effective-holdings count ever needs.
+     */
+    const roundIndex = (v: number, places: number): number => {
+      const factor = 10 ** places;
+      return Math.round(Number(v) * factor) / factor;
+    };
+
+    const toLlmConcentrationMeasure = (
+      measure: ConcentrationMeasure | null,
+    ): LlmConcentrationMeasure | null =>
+      measure === null
+        ? null
+        : {
+            basis: measure.basis,
+            positions: measure.positions,
+            drawnValue: roundMoneyValue(measure.drawnValue),
+            herfindahl: roundIndex(measure.herfindahl, 6),
+            effectiveHoldings: roundIndex(measure.effectiveHoldings, 2),
+            top1Percent: roundPct(measure.top1Percent) ?? 0,
+            top5Percent: roundPct(measure.top5Percent) ?? 0,
+            largest: measure.largest.map((position) => ({
+              name: position.name,
+              value: roundMoneyValue(position.value),
+              percent: roundPct(position.percent) ?? 0,
+            })),
+          };
+
+    const concentration: LlmConcentration = {
+      status: summary.concentration.status,
+      currencyCode: summary.concentration.currencyCode,
+      holdings: toLlmConcentrationMeasure(summary.concentration.holdings),
+      portfolio: toLlmConcentrationMeasure(summary.concentration.portfolio),
+      pricedPositions: summary.concentration.pricedPositions,
+      unpricedPositions: summary.concentration.unpricedPositions,
+      missingRatePairs: summary.concentration.missingRatePairs,
+      nonPositiveValuePositions:
+        summary.concentration.nonPositiveValuePositions,
+    };
 
     const toLlmHolding = (h: HoldingWithMarketValue): LlmPortfolioHolding => ({
       securityId: h.securityId,
@@ -870,6 +975,7 @@ export class PortfolioService {
       holdings,
       holdingsByAccount,
       allocation,
+      concentration,
       ...(lookThrough ? { lookThrough } : {}),
     };
   }
