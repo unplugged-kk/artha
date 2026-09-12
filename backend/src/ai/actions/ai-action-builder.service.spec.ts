@@ -160,6 +160,7 @@ describe("AiActionBuilderService", () => {
       isFavourite: true,
       quoteProvider: "yahoo" as const,
       msnInstrumentId: null,
+      amfiSchemeCode: null,
     };
 
     const action = builder.buildCreateSecurity("u1", preview);

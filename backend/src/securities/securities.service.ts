@@ -90,6 +90,8 @@ export interface CreateSecurityPreview {
   isFavourite: boolean;
   quoteProvider: "yahoo" | "msn" | null;
   msnInstrumentId: string | null;
+  /** The AMFI scheme code, when the lookup resolved an Indian fund. */
+  amfiSchemeCode: string | null;
 }
 
 /**
@@ -1237,7 +1239,14 @@ export class SecuritiesService {
       exchange: input.exchange ?? lookup.exchange ?? null,
       currencyCode: currencyCode.toUpperCase(),
       isFavourite: input.isFavourite ?? false,
-      quoteProvider: lookup.provider ?? null,
+      // `quote_provider` is constrained to the user-selectable providers, so an
+      // AMFI-sourced fund stores no override: it is routed by the scheme code
+      // below, which is its identity.
+      quoteProvider:
+        lookup.provider === "yahoo" || lookup.provider === "msn"
+          ? lookup.provider
+          : null,
+      amfiSchemeCode: lookup.amfiSchemeCode ?? null,
       msnInstrumentId: lookup.msnInstrumentId ?? null,
     };
   }

@@ -13,6 +13,7 @@ import { lockAccountsForBalanceWrite } from "../common/db/locks";
 import {
   QuoteProvider,
   QuoteProviderName,
+  PriceProviderName,
   QuoteResult,
   HistoricalPrice,
   SecurityLookupResult,
@@ -142,8 +143,10 @@ function trackPriceWrite<T>(work: Promise<T>): Promise<T> {
   return work.finally(() => pendingPriceWrites.delete(work));
 }
 
-function sourceFor(provider: QuoteProviderName | undefined): string {
-  return provider === "msn" ? "msn_finance" : "yahoo_finance";
+function sourceFor(provider: PriceProviderName | undefined): string {
+  if (provider === "msn") return "msn_finance";
+  if (provider === "amfi") return "amfi_nav";
+  return "yahoo_finance";
 }
 
 /**
@@ -158,9 +161,14 @@ function isRefreshEligible(s: {
   skipPriceUpdates: boolean;
   quoteProvider: string | null;
   msnInstrumentId: string | null;
+  amfiSchemeCode?: string | null;
 }): boolean {
   if (!s.skipPriceUpdates) return true;
-  return Boolean(s.quoteProvider) || Boolean(s.msnInstrumentId);
+  return (
+    Boolean(s.quoteProvider) ||
+    Boolean(s.msnInstrumentId) ||
+    Boolean(s.amfiSchemeCode)
+  );
 }
 
 export interface PriceUpdateResult {
@@ -168,7 +176,7 @@ export interface PriceUpdateResult {
   success: boolean;
   price?: number;
   error?: string;
-  provider?: QuoteProviderName;
+  provider?: PriceProviderName;
 }
 
 export interface PriceRefreshSummary {
@@ -194,7 +202,7 @@ export interface HistoricalBackfillResult {
   success: boolean;
   pricesLoaded?: number;
   error?: string;
-  provider?: QuoteProviderName;
+  provider?: PriceProviderName;
 }
 
 export interface HistoricalBackfillSummary {
@@ -212,7 +220,7 @@ interface UserContext {
 
 interface HistoricalWithProvider {
   prices: HistoricalPrice[];
-  provider: QuoteProviderName;
+  provider: PriceProviderName;
 }
 
 @Injectable()
@@ -356,7 +364,9 @@ export class SecurityPriceService {
       instrumentId:
         provider.name === "msn"
           ? (security.msnInstrumentId ?? undefined)
-          : undefined,
+          : provider.name === "amfi"
+            ? (security.amfiSchemeCode ?? undefined)
+            : undefined,
       currencyCode: security.currencyCode,
       preferredExchanges: ctx.preferredExchanges,
     };
@@ -984,7 +994,7 @@ export class SecurityPriceService {
     // fetchQuoteWithFallback so lookups respect the same Primary/Secondary
     // preference used during price refresh.
     const ordered = this.providers.resolveForSecurity(
-      { quoteProvider: null },
+      { quoteProvider: null, amfiSchemeCode: null },
       ctx.defaultQuoteProvider,
     );
     for (const p of ordered) {
@@ -1012,7 +1022,7 @@ export class SecurityPriceService {
       preferredExchanges: [],
     };
     const ordered = this.providers.resolveForSecurity(
-      { quoteProvider: null },
+      { quoteProvider: null, amfiSchemeCode: null },
       ctx.defaultQuoteProvider,
     );
     for (const p of ordered) {

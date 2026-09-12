@@ -10,6 +10,7 @@ import {
 } from "./dto/price-history-query.dto";
 import { Security } from "./entities/security.entity";
 import { YahooFinanceService } from "./yahoo-finance.service";
+import { AmfiNavService } from "./amfi-nav.service";
 import { createTestProviderHealth } from "../test-helpers/provider-health-testing";
 import { ProviderHealthService } from "../provider-health/provider-health.service";
 import { QuoteProviderRegistry } from "./providers/quote-provider.registry";
@@ -372,6 +373,7 @@ describe("SecurityPriceService", () => {
     const providers = new QuoteProviderRegistry(
       yahoo,
       msnFinanceService as never,
+      new AmfiNavService(health) as never,
     );
 
     service = new SecurityPriceService(

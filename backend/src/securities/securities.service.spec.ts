@@ -200,6 +200,8 @@ describe("SecuritiesService", () => {
         isFavourite: false,
         quoteProvider: "yahoo",
         msnInstrumentId: null,
+        // An equity lookup carries no AMFI identity; a fund lookup fills it.
+        amfiSchemeCode: null,
       });
     });
 
