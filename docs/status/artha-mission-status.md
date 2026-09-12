@@ -8,7 +8,7 @@ Last updated: 2026-09-12 · `main` at `f642088a0` · mission branch `fm/artha-fi
 
 ## TL;DR
 
-- **The backend unit-test OOM is diagnosed, reproduced and fixed**, with proof in both directions. `Backend Unit Tests` has been red on `main` for months **without a single failing test** — the worker hit V8's heap ceiling and aborted before Jest printed a summary, so the job reported a failure that named no test.
+- **The backend unit-test OOM is diagnosed, reproduced and fixed**, with proof in both directions. `Backend Unit Tests` has been red on `main` for months **without a single failing test** — the worker hit V8's heap ceiling and aborted before Jest printed a summary, so the job reported a failure that named no test. The abort is gone; **the open trade-off is that the job now runs much longer**, and its completion was not confirmed within this mission.
 - **The Fintrack ledger work landed**: month navigation, day-grouped rows, per-day income/expense subtotals, and relative day names — the India-first daily-money UX that was this mission's primary priority.
 - **The audits found less to absorb than expected.** Most ledger items and most Finsight analytics dimensions were **already present**; two rows in the previous matrix were **wrong** and are corrected below.
 - **One Finsight item was dependency-ready but deliberately not started** — concentration/diversification. Starting a large feature on a thin budget was the worse trade; its path is written down instead.
@@ -47,7 +47,9 @@ with the setting       4 suites passed, 973 tests passed
 without it (stashed)   2 workers FATAL ERROR, 2 suites failed, 442 tests ran
 ```
 
-On PR #10 the same job that used to abort after ~2 minutes now runs past ten minutes without dying — a second, independent sign that the abort is gone.
+On PR #10 the same job **no longer aborts**: where it used to die within about two minutes, it was still running `npm run test:unit -- --coverage` more than thirty minutes in (started 10:20:47Z, last completed step `npm ci`).
+
+**That is the honest state: the crash is gone, and completion was not confirmed within this mission's budget.** The trade-off is real — recycling a worker restarts its module graph, so the run is materially slower. The remaining decision, which needs one full CI iteration to settle, is whether `512MB` is the right bound (a higher limit restarts less often but retains more) or whether the two ~8,000-line suites should be split instead. Everything else on PR #10 is green, including `Backend Integration Tests` (11m54s) and `Frontend Unit Tests`.
 
 **Guard.** `jest-config.guard.spec.ts` now fails if the setting is removed, so the job cannot quietly go back to reporting a crash as a test failure (26 guard tests pass).
 
