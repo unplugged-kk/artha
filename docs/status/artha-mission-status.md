@@ -2,7 +2,7 @@
 
 **How this works:** each mission rewrites this file as a current snapshot (never a diary). The summary is below; the detail is here. **This PR is never merged — it is overwritten.**
 
-Last updated: 2026-09-12 · Code branch `fm/artha-xirr-sip-sessions` (PR #9) · `main` at `816e2819f`
+Last updated: 2026-09-12 · **Everything is merged into `main` (`f642088a0`).** The only open pull request is this status document — code PRs #2–#4 and #6–#9 are all in.
 
 ---
 
@@ -12,7 +12,7 @@ Last updated: 2026-09-12 · Code branch `fm/artha-xirr-sip-sessions` (PR #9) · 
 - **One item remains deliberately incomplete: the variable-date holiday calendar.** No trustworthy, maintainable source exists in the repository, so `indianCalendarComplete(year)` still returns `false`. Dates were **not** invented.
 - Nothing was reimplemented: AMFI NAV, India instrument UX and the three investment actions were already merged and were **validated, not rebuilt**.
 - **7 test failures across the swept suites — all 7 pre-existing baseline, none a regression.** Two were caught by repo guards while building SIP (see below).
-- Two PRs open, **neither merged**: #9 (code) and #5 (this status).
+- **One PR open: this status document.** All code is merged — #9 (SIP, XIRR, calendar) included.
 
 ---
 
@@ -63,7 +63,7 @@ Last updated: 2026-09-12 · Code branch `fm/artha-xirr-sip-sessions` (PR #9) · 
 - The one schema change is **additive and nullable**: `scheduled_transaction_postings.investment_transaction_id`, with a named FK `ON DELETE SET NULL`. **Nothing is backfilled** — the link was never recorded, and matching by date would be a heuristic standing in for a fact.
 - **No destructive or irreversible migration.** `verify-schema` confirms every retained migration is a no-op when replayed on top of `schema.sql`.
 - **RLS unchanged** (the table remains indirect via `scheduled_transactions`).
-- **Backup coverage updated in both directions**: the column is classified `keep` in support-backup rules, and `restore-plan` defers it — `investment_transactions` restores *after* the postings table, so leaving it inline would raise a foreign-key violation on every SIP posting in a backup.
+- **Backup coverage updated in both directions**: the column is classified `keep` in support-backup rules, and `restore-plan` defers it — `investment_transactions` restores *after* the postings table, so leaving it inline would raise a foreign-key violation on every SIP posting in a backup. **Correction (2026-09-12): the third structure was missed** — `RULES` classifies a column, `restore-plan` orders the tables, and `REFS` says what to do when a referenced row is absent on restore. The `REFS` rule was not added, so a restore had no instruction for the new reference. The integration completeness guard caught it (`uncoveredFks: scheduled_transaction_postings.investment_transaction_id -> investment_transactions`) and it is now added with `onMissing: "null"`, matching the column's own `ON DELETE SET NULL` — see `4c1b7cce0`.
 - **No credentials, no new provider trust, no new external calls.** Provider responses remain validated before use.
 - **Residual risk**: a pre-existing posting reports `unknown` rather than a number. That is a visible gap, not a silent error.
 
@@ -189,6 +189,15 @@ Evidence is the repository at this branch's head. `DONE` = implemented and worki
 2. Adding the SIP column pushed `support-backup-rules.ts` past the repository's **line ceiling** (802 > 800). Fixed by trimming my own comment rather than grandfathering the file.
    A third guard — `restore-plan`'s forward-reference check — was satisfied before it could fail, because the postings table restores before `investment_transactions`.
 
+**A third regression, found later and fixed** (found by CI rather than locally, because the guard that catches it is an integration test needing a database):
+
+3. The new FK was classified in `RULES` but **not registered in `REFS`**, so the restore had no instruction for it. `Backend Integration Tests` failed deterministically with `uncoveredFks: ["scheduled_transaction_postings.investment_transaction_id -> investment_transactions"]` — **while the same job passed on `main`**, which is how it was proved to be a regression and not baseline. Fixed in `4c1b7cce0` with `onMissing: "null"`.
+   Worth stating plainly: the earlier claim that backup coverage was handled "in both directions" was true of `RULES` and `restore-plan` and false of `REFS`. The guard was right and the summary was incomplete.
+
+**Another pre-existing CI failure, newly evidenced** (uncovered while checking whether the chain merges were safe):
+
+`main`'s `Backend Unit Tests` job does not fail on assertions — it **dies of a V8 out-of-memory crash**: `FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory` → `Aborted (core dumped)` (exit 134). It fails identically on commit `23281f1e7` (2026-09-10, merge of PR #1, *before any India work existed*) and on the merged `main` (`816e2819f`), with the same two jobs red — `Backend Unit Tests` and `zizmor`. The crash aborts the run before Jest prints a summary, so CI shows no test counts at all. This makes the backend job a false signal for every future PR: it would hide a real test regression behind an OOM. It deserves its own fix (raise the heap, or split the lanes), and none of the India work caused it or can mask it.
+
 ---
 
 ## Known limitations
@@ -231,6 +240,8 @@ Deliberately *not* recommended yet: risk metrics, drawdown, correlation and roll
 | `18edb3421` | SIP plan-vs-actual: link column, write path, comparison service, tests |
 | `8606d4f5a` | native XIRR + portfolio wiring |
 | `16861cd85` | Indian trading calendar |
-| **PR #9** | `fm/artha-xirr-sip-sessions` → calendar, XIRR, SIP — **open, unmerged** |
-| **PR #5** | this status — **open, never merged, overwritten each mission** |
-| `816e2819f` | `main` tip; contains the earlier merged phases (#2–#8) |
+| `4c1b7cce0` | backup REFS rule for the SIP postings FK (the CI-caught regression) |
+| **PR #9** | `fm/artha-xirr-sip-sessions` → calendar, XIRR, SIP — **MERGED** |
+| **PR #5** | this status — **the only open PR, never merged, overwritten each mission** |
+| `f642088a0` | `main` tip; contains every phase (#2–#9) |
+| `816e2819f` | previous `main` tip (phases #2–#8) |
