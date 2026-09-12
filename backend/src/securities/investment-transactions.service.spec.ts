@@ -633,6 +633,75 @@ describe("InvestmentTransactionsService", () => {
       );
     });
 
+    it("stores a FEE as a positive magnitude and moves no shares", async () => {
+      const feeDto = {
+        accountId,
+        securityId,
+        action: InvestmentAction.FEE,
+        transactionDate: "2025-03-15",
+        price: 118.5,
+      };
+
+      const findOneQB = createMockQueryBuilder(mockDividendTransaction);
+      investmentTransactionsRepository.createQueryBuilder.mockReturnValue(
+        findOneQB,
+      );
+
+      await service.create(userId, feeDto);
+
+      // FEE: total = |price| = 118.5. A cost is stored as a magnitude; its
+      // direction comes from the action (cash impact -118.5), not the field.
+      expect(investmentTransactionsRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          totalAmount: 118.5,
+          quantity: 0,
+        }),
+      );
+    });
+
+    it("stores TAX_WITHHELD as a positive magnitude too", async () => {
+      const tdsDto = {
+        accountId,
+        securityId,
+        action: InvestmentAction.TAX_WITHHELD,
+        transactionDate: "2025-03-15",
+        price: 250,
+      };
+
+      const findOneQB = createMockQueryBuilder(mockDividendTransaction);
+      investmentTransactionsRepository.createQueryBuilder.mockReturnValue(
+        findOneQB,
+      );
+
+      await service.create(userId, tdsDto);
+
+      expect(investmentTransactionsRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({ totalAmount: 250, quantity: 0 }),
+      );
+    });
+
+    it("records a BONUS as quantity-only, with no cash total", async () => {
+      const bonusDto = {
+        accountId,
+        securityId,
+        action: InvestmentAction.BONUS,
+        transactionDate: "2025-03-15",
+        quantity: 50,
+      };
+
+      const findOneQB = createMockQueryBuilder(mockDividendTransaction);
+      investmentTransactionsRepository.createQueryBuilder.mockReturnValue(
+        findOneQB,
+      );
+
+      await service.create(userId, bonusDto);
+
+      // A bonus is shares arriving at no cost: no total, and no cash leg.
+      expect(investmentTransactionsRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({ totalAmount: 0, quantity: 50 }),
+      );
+    });
+
     it("creates a positive cash transaction for DIVIDEND", async () => {
       const divDto = {
         accountId,

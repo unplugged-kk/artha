@@ -63,6 +63,21 @@ export enum InvestmentAction {
   CAPITAL_GAIN_SHORT = "CAPITAL_GAIN_SHORT",
   CAPITAL_GAIN_LONG = "CAPITAL_GAIN_LONG",
   REDEEM = "REDEEM",
+  /**
+   * A bonus issue: shares arrive with no cash and no new cost, so total basis
+   * is unchanged (per-share cost dilutes). Distinct from ADD_SHARES, which is
+   * the "shares of unknown cost" case, because a bonus's cost is known to be
+   * nothing -- which is what a later capital-gains computation needs.
+   */
+  BONUS = "BONUS",
+  /** A standalone investment cost (DP charges, AMC, stamp duty). Cash-only. */
+  FEE = "FEE",
+  /**
+   * Tax withheld at source on an income payment. Cash-only, and linked to the
+   * income row it was withheld from so the net return and the tax report can
+   * attribute it.
+   */
+  TAX_WITHHELD = "TAX_WITHHELD",
 }
 
 @Entity("investment_transactions")

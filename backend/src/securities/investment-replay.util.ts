@@ -21,6 +21,11 @@ const BASE_ACTION_BY_REFINEMENT: ReadonlyMap<
   [InvestmentAction.CAPITAL_GAIN_SHORT, InvestmentAction.CAPITAL_GAIN],
   [InvestmentAction.CAPITAL_GAIN_LONG, InvestmentAction.CAPITAL_GAIN],
   [InvestmentAction.REDEEM, InvestmentAction.SELL],
+  // A bonus moves shares exactly as ADD_SHARES does, and deliberately does NOT
+  // inherit its basis treatment: `isQuantityOnlyAction` reads the raw action, so
+  // a bonus leaves the basis known (its cost is genuinely nil) where an
+  // ADD_SHARES makes it unknown (the cost is genuinely unrecorded).
+  [InvestmentAction.BONUS, InvestmentAction.ADD_SHARES],
 ]);
 
 /**
@@ -97,6 +102,8 @@ export const SHARE_MOVING_ACTIONS: readonly InvestmentAction[] = [
   InvestmentAction.ADD_SHARES,
   InvestmentAction.REMOVE_SHARES,
   InvestmentAction.SPLIT,
+  // A bonus issue adds shares with no cash leg.
+  InvestmentAction.BONUS,
   // Money-vocabulary refinements that move shares, exactly as their base does.
   InvestmentAction.REINVEST_INTEREST,
   InvestmentAction.REINVEST_CAPITAL_GAIN_SHORT,
@@ -135,6 +142,20 @@ export const CASH_INCOME_ACTIONS: readonly InvestmentAction[] = [
   InvestmentAction.CAPITAL_GAIN,
   InvestmentAction.CAPITAL_GAIN_SHORT,
   InvestmentAction.CAPITAL_GAIN_LONG,
+];
+
+/**
+ * Actions that are cash leaving the sleeve with no share movement.
+ *
+ * Kept as its own list so a cash-flow calculation (XIRR, a return series) can
+ * include the cost side without sweeping in income: a fee or a withholding
+ * reduces the return exactly as a contribution does, and omitting them
+ * overstates every return that uses real cash flows. `amount` for these actions
+ * is the stored total (a positive magnitude); the sign comes from the action.
+ */
+export const CASH_COST_ACTIONS: readonly InvestmentAction[] = [
+  InvestmentAction.FEE,
+  InvestmentAction.TAX_WITHHELD,
 ];
 
 /**
