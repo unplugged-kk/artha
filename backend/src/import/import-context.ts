@@ -20,6 +20,22 @@ export interface ImportContext {
   /** Tracks how many QIF entries with each transfer signature have been seen in the current block,
    *  used to distinguish genuinely different transfers that share date/amount/account. */
   transferDupCounts: Map<string, number>;
+  /**
+   * Existing payees keyed by their normalised name, so the same merchant
+   * written one way by one bank and another way by the next resolves to a
+   * single payee instead of one per spelling. Built on first use and carried
+   * for the rest of the import, so the lookup costs one query per import rather
+   * than one per transaction. Payees created *during* the import register
+   * themselves here, so a spelling first seen in row 3 is matched in row 300.
+   */
+  payeeByNormalizedName?: Map<string, ImportedPayeeRef>;
+}
+
+/** What the import matching needs to know about an existing payee. */
+export interface ImportedPayeeRef {
+  id: string;
+  name: string;
+  defaultCategoryId: string | null;
 }
 
 /**

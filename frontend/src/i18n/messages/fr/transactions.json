@@ -309,6 +309,8 @@
       "last365Days": "365 derniers jours",
       "yearToDate": "Année en cours",
       "lastYear": "Année dernière",
+      "thisFiscalYear": "This financial year (Apr-Mar)",
+      "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "Personnalisé"
     }
   },

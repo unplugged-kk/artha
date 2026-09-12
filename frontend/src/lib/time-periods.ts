@@ -11,6 +11,10 @@ import {
   subYears,
   subDays,
 } from 'date-fns';
+import {
+  indianFiscalYearOf,
+  indianFiscalYearRange,
+} from './indian-fiscal-year';
 
 export type TimePeriod =
   | 'all_dates'
@@ -24,6 +28,8 @@ export type TimePeriod =
   | 'last_365_days'
   | 'year_to_date'
   | 'last_year'
+  | 'this_fiscal_year'
+  | 'last_fiscal_year'
   | 'custom';
 
 export const TIME_PERIOD_OPTIONS: Array<{ value: string; labelKey: string }> = [
@@ -39,6 +45,12 @@ export const TIME_PERIOD_OPTIONS: Array<{ value: string; labelKey: string }> = [
   { value: 'last_365_days', labelKey: 'filter.periods.last365Days' },
   { value: 'year_to_date', labelKey: 'filter.periods.yearToDate' },
   { value: 'last_year', labelKey: 'filter.periods.lastYear' },
+  // The Indian financial year, 1 April to 31 March. Offered beside the calendar
+  // years rather than instead of them: a reader who files by the financial year
+  // and one who thinks in calendar years are both served, and neither has to
+  // work out the boundary for themselves.
+  { value: 'this_fiscal_year', labelKey: 'filter.periods.thisFiscalYear' },
+  { value: 'last_fiscal_year', labelKey: 'filter.periods.lastFiscalYear' },
   { value: 'custom', labelKey: 'filter.periods.custom' },
 ];
 
@@ -115,6 +127,23 @@ export function resolveTimePeriod(
 
     case 'custom':
       return { startDate: '', endDate: '' };
+
+    // The financial year is read from the same local calendar date as every
+    // other case here (`fmt(today)`, not `today`), so a reader in a zone ahead
+    // of UTC does not get the previous year on the morning of 1 April.
+    case 'this_fiscal_year': {
+      const fiscalYear = indianFiscalYearOf(fmt(today));
+      return fiscalYear === null
+        ? { startDate: '', endDate: '' }
+        : indianFiscalYearRange(fiscalYear);
+    }
+
+    case 'last_fiscal_year': {
+      const fiscalYear = indianFiscalYearOf(fmt(today));
+      return fiscalYear === null
+        ? { startDate: '', endDate: '' }
+        : indianFiscalYearRange(fiscalYear - 1);
+    }
 
     default:
       return { startDate: '', endDate: '' };

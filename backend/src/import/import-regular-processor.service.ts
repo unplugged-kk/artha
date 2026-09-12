@@ -12,6 +12,7 @@ import { PayeeAlias } from "../payees/entities/payee-alias.entity";
 import { TransactionTag } from "../tags/entities/transaction-tag.entity";
 import { TransactionSplitTag } from "../tags/entities/transaction-split-tag.entity";
 import { ImportContext, updateAccountBalance } from "./import-context";
+import { normalizePayeeName } from "../payees/payee-normalize.util";
 import { deletionBalanceEffect } from "../common/deletion-balance.util";
 import { tr } from "../i18n/translate";
 
@@ -360,18 +361,92 @@ export class ImportRegularProcessorService {
       }
     }
 
-    // 3. No match found - create new payee
+    // 3. Normalised match. A bank writes the same merchant differently from one
+    //    export to the next -- "AMAZON PAY INDIA", "AMAZON PAY INDIA PVT LTD",
+    //    "UPI/4081/AMAZON PAY INDIA" -- and creating a payee per spelling
+    //    fragments one merchant into many, which is what makes an imported
+    //    register useless for "how much do I spend at X".
+    //
+    //    Equality of the *normalised* forms, deliberately not similarity: the
+    //    fuzzy helpers in `payee-normalize` are not used here because merging
+    //    two genuinely different merchants is worse than missing a merge --
+    //    it silently files transactions under the wrong payee, and the user has
+    //    no way to notice. Case, punctuation, store numbers and legal suffixes
+    //    are exactly what normalisation removes, and that is the whole rule.
+    const normalized = normalizePayeeName(qifTx.payee);
+    if (normalized) {
+      const byNormalizedName =
+        ctx.payeeByNormalizedName ?? (await this.loadPayeeIndex(ctx));
+      const match = byNormalizedName.get(normalized);
+      if (match) {
+        this.logger.debug(
+          `Normalised match: "${qifTx.payee}" -> payee "${match.name}"`,
+        );
+        return {
+          payeeId: match.id,
+          payeeName: match.name,
+          defaultCategoryId: match.defaultCategoryId,
+        };
+      }
+    }
+
+    // 4. No match found - create new payee
     const newPayee = ctx.manager.create(Payee, {
       userId: ctx.userId,
       name: qifTx.payee,
     });
     const savedPayee = await ctx.manager.save(newPayee);
     ctx.importResult.payeesCreated++;
+    // Register it for the rest of this import: the same merchant spelled the
+    // same way later in the file must not create a second payee, and neither
+    // must another spelling of it.
+    if (normalized && ctx.payeeByNormalizedName) {
+      ctx.payeeByNormalizedName.set(normalized, {
+        id: savedPayee.id,
+        name: savedPayee.name,
+        defaultCategoryId: savedPayee.defaultCategoryId ?? null,
+      });
+    }
     return {
       payeeId: savedPayee.id,
       payeeName: savedPayee.name,
-      defaultCategoryId: null,
+      defaultCategoryId: savedPayee.defaultCategoryId ?? null,
     };
+  }
+
+  /**
+   * Load the user's payees once per import, keyed by normalised name.
+   *
+   * Stored on the context so the cost is one query per import rather than one
+   * per transaction. The first payee to claim a normalised key keeps it: two
+   * existing payees that normalise alike are a pre-existing duplication the
+   * user can merge deliberately, and picking the older one silently would hide
+   * it.
+   */
+  private async loadPayeeIndex(
+    ctx: ImportContext,
+  ): Promise<
+    Map<string, { id: string; name: string; defaultCategoryId: string | null }>
+  > {
+    const index = new Map<
+      string,
+      { id: string; name: string; defaultCategoryId: string | null }
+    >();
+    const payees = await ctx.manager.find(Payee, {
+      where: { userId: ctx.userId },
+      order: { createdAt: "ASC" },
+    });
+    for (const payee of payees) {
+      const key = normalizePayeeName(payee.name);
+      if (!key || index.has(key)) continue;
+      index.set(key, {
+        id: payee.id,
+        name: payee.name,
+        defaultCategoryId: payee.defaultCategoryId ?? null,
+      });
+    }
+    ctx.payeeByNormalizedName = index;
+    return index;
   }
 
   /**

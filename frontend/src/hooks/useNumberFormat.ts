@@ -112,6 +112,79 @@ function getNumberFormat(
 }
 
 /**
+ * One compact unit a locale uses, with the value it starts at.
+ *
+ * `threshold` is a real divisor, not a restatement of a guess: it is derived
+ * below by asking `Intl` how it renders a known magnitude and reading back the
+ * number it produced.
+ */
+interface CompactUnit {
+  threshold: number;
+  suffix: string;
+}
+
+/**
+ * Magnitudes to probe for compact units, lowest first. Covers the scales the
+ * world's locales actually use: 10^3 (thousand/K), 10^5 (lakh/L), 10^6
+ * (million/M), 10^7 (crore/Cr), 10^9 (billion/B), 10^12 (trillion/T).
+ */
+const COMPACT_PROBE_MAGNITUDES = [1e3, 1e5, 1e6, 1e7, 1e8, 1e9, 1e11, 1e12];
+
+/** Derived units per locale; each one costs a handful of `Intl` calls once. */
+const compactUnitCache = new Map<string, CompactUnit[]>();
+
+/**
+ * The compact units a locale counts in, derived from `Intl` rather than
+ * declared here.
+ *
+ * This is the whole reason the module knows nothing about lakhs or crores:
+ * `en-IN` renders 10^5 as "1L" and 10^7 as "1Cr", `en-US` renders them as
+ * "100K" and "10M", and asking rather than switching on the magnitude is what
+ * lets each be right without a table of Indian arithmetic (`/100000`,
+ * `/10000000`) scattered through the components. The divisor is recovered by
+ * dividing the probed magnitude by the number `Intl` produced for it, so a
+ * threshold cannot drift from the unit it belongs to.
+ *
+ * A suffix seen at several magnitudes keeps its smallest divisor: "K" is a
+ * thousand, even though `Intl` also writes "100K" for a hundred thousand.
+ */
+function compactUnitsFor(locale: string | undefined): CompactUnit[] {
+  const key = locale ?? '';
+  const cached = compactUnitCache.get(key);
+  if (cached) return cached;
+
+  const compact = getNumberFormat(locale, {
+    notation: 'compact',
+    compactDisplay: 'short',
+  });
+  const bySuffix = new Map<string, CompactUnit>();
+  for (const magnitude of COMPACT_PROBE_MAGNITUDES) {
+    const parts = compact.formatToParts(magnitude);
+    const suffix = parts.find((part) => part.type === 'compact')?.value;
+    if (!suffix) continue;
+    const numeric = parts
+      .filter((part) =>
+        ['integer', 'decimal', 'fraction', 'minusSign'].includes(part.type),
+      )
+      .map((part) => part.value)
+      .join('');
+    const scaled = Number(numeric);
+    if (!Number.isFinite(scaled) || scaled <= 0) continue;
+    const threshold = magnitude / scaled;
+    const existing = bySuffix.get(suffix);
+    if (!existing || threshold < existing.threshold) {
+      bySuffix.set(suffix, { threshold, suffix });
+    }
+  }
+
+  const units = [...bySuffix.values()].sort(
+    (a, b) => a.threshold - b.threshold,
+  );
+  compactUnitCache.set(key, units);
+  return units;
+}
+
+/**
  * Hook to format numbers according to user preferences.
  * Returns formatCurrency and formatNumber functions that use the user's preferred number format.
  * All currency functions default to the user's configured defaultCurrency preference.
@@ -382,17 +455,20 @@ export function useNumberFormat() {
     [numberFormat, language]
   );
 
-  /** Compact currency for chart labels: K with 1dp, M/B/T with 2dp (e.g., "$123.5K", "$1.23M"). */
+  /** Compact currency for chart labels: the locale's own units, with 1 decimal
+   *  on the smallest one and 2 above it (e.g. "$123.5K", "$1.23M" in en-US;
+   *  "₹1.5L", "₹1.23Cr" in en-IN). */
   const formatCurrencyLabel = useCallback(
     (value: number): string => {
       const locale = getEffectiveLocale(numberFormat, language);
       const abs = Math.abs(value);
-      let divisor: number, suffix: string, decimals: number;
-      if (abs >= 1e12) { divisor = 1e12; suffix = 'T'; decimals = 2; }
-      else if (abs >= 1e9) { divisor = 1e9; suffix = 'B'; decimals = 2; }
-      else if (abs >= 1e6) { divisor = 1e6; suffix = 'M'; decimals = 2; }
-      else if (abs >= 1e3) { divisor = 1e3; suffix = 'K'; decimals = 1; }
-      else { divisor = 1; suffix = ''; decimals = 0; }
+      const units = compactUnitsFor(locale);
+      const unit = [...units].reverse().find((candidate) => abs >= candidate.threshold);
+      const divisor = unit?.threshold ?? 1;
+      // Unchanged digit policy: a value under the smallest unit reads whole, the
+      // smallest unit keeps one decimal, and anything larger keeps two. What
+      // changed is where the unit comes from -- `Intl`, so a lakh is a lakh.
+      const decimals = !unit ? 0 : unit === units[0] ? 1 : 2;
 
       const scaled = value / divisor;
       const formatted = getNumberFormat(locale, {
@@ -402,7 +478,7 @@ export function useNumberFormat() {
         minimumFractionDigits: decimals,
         maximumFractionDigits: decimals,
       }).format(scaled);
-      return formatted + suffix;
+      return formatted + (unit?.suffix ?? '');
     },
     [numberFormat, defaultCurrency, language]
   );

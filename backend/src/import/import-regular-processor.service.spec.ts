@@ -1045,6 +1045,153 @@ describe("ImportRegularProcessorService", () => {
       const createCall = managerOf(ctx).create.mock.calls[0];
       expect(createCall[1].payeeId).toBeNull();
     });
+
+    /** Every payee row the import asked the manager to create. */
+    const createdPayees = (ctx: ImportContext) =>
+      managerOf(ctx).create.mock.calls.filter((call) => call[0] === Payee);
+
+    it("reuses an existing payee whose name differs only by normalisation", async () => {
+      const ctx = makeContext();
+      managerOf(ctx).findOne.mockImplementation((entity: any) =>
+        Promise.resolve(entity === Payee ? null : null),
+      );
+      managerOf(ctx).find.mockImplementation((entity: any) =>
+        Promise.resolve(
+          entity === Payee
+            ? [
+                {
+                  id: "payee-amazon",
+                  name: "AMAZON PAY INDIA",
+                  defaultCategoryId: "cat-shopping",
+                },
+              ]
+            : [],
+        ),
+      );
+
+      await service.processTransaction(ctx, {
+        date: "2025-01-15",
+        amount: -1200,
+        payee: "Amazon Pay India Pvt Ltd",
+      });
+
+      // Case, punctuation and the legal suffix are exactly what normalisation
+      // removes, so this is the same merchant and must not become a new payee.
+      expect(ctx.importResult.payeesCreated).toBe(0);
+      expect(createdPayees(ctx)).toHaveLength(0);
+      const transaction = managerOf(ctx).create.mock.calls[0][1];
+      expect(transaction.payeeId).toBe("payee-amazon");
+      // The matched payee's own default category comes with it.
+      expect(transaction.categoryId).toBe("cat-shopping");
+    });
+
+    it("creates one payee across two spellings in the same import", async () => {
+      const ctx = makeContext();
+      managerOf(ctx).findOne.mockResolvedValue(null);
+      managerOf(ctx).find.mockResolvedValue([]);
+
+      await service.processTransaction(ctx, {
+        date: "2025-01-15",
+        amount: -499,
+        payee: "Swiggy",
+      });
+      await service.processTransaction(ctx, {
+        date: "2025-01-16",
+        amount: -250,
+        payee: "SWIGGY PRIVATE LIMITED",
+      });
+
+      // The second row is the same merchant written the way a bank export
+      // writes it, so the first payee is reused rather than a near-duplicate
+      // being created beside it.
+      expect(ctx.importResult.payeesCreated).toBe(1);
+      expect(createdPayees(ctx)).toHaveLength(1);
+    });
+
+    it("keeps a city-qualified variant separate, because that is clustering", async () => {
+      const ctx = makeContext();
+      managerOf(ctx).findOne.mockResolvedValue(null);
+      managerOf(ctx).find.mockResolvedValue([]);
+
+      await service.processTransaction(ctx, {
+        date: "2025-01-15",
+        amount: -300,
+        payee: "Swiggy",
+      });
+      await service.processTransaction(ctx, {
+        date: "2025-01-16",
+        amount: -450,
+        payee: "SWIGGY BANGALORE 4412",
+      });
+
+      // "SWIGGY BANGALORE" is not "SWIGGY": a city is part of the name, and
+      // collapsing it would be clustering, not normalisation -- a judgement the
+      // user's own Auto-Merge review is the place for, not an import.
+      expect(ctx.importResult.payeesCreated).toBe(2);
+      expect(createdPayees(ctx)).toHaveLength(2);
+    });
+
+    it("does not merge two merchants that only look alike", async () => {
+      const ctx = makeContext();
+      managerOf(ctx).findOne.mockResolvedValue(null);
+      managerOf(ctx).find.mockResolvedValue([]);
+
+      await service.processTransaction(ctx, {
+        date: "2025-01-15",
+        amount: -300,
+        payee: "Uber",
+      });
+      await service.processTransaction(ctx, {
+        date: "2025-01-16",
+        amount: -450,
+        payee: "Uber Eats",
+      });
+
+      // Equality of the normalised forms, not similarity: these are two
+      // different merchants and merging them would silently mis-file the
+      // transactions under one of them.
+      expect(ctx.importResult.payeesCreated).toBe(2);
+      expect(createdPayees(ctx)).toHaveLength(2);
+    });
+
+    it("keeps the raw spelling when it does have to create the payee", async () => {
+      const ctx = makeContext();
+      managerOf(ctx).findOne.mockResolvedValue(null);
+      managerOf(ctx).find.mockResolvedValue([]);
+
+      await service.processTransaction(ctx, {
+        date: "2025-01-15",
+        amount: -99,
+        payee: "Third Wave Coffee",
+      });
+
+      // Normalisation decides *matching*; it never rewrites what is stored.
+      expect(createdPayees(ctx)[0][1].name).toBe("Third Wave Coffee");
+    });
+
+    it("does not match when the name normalises away to nothing", async () => {
+      const ctx = makeContext();
+      managerOf(ctx).findOne.mockResolvedValue(null);
+      // A store number with no merchant words in it normalises to the empty
+      // key; matching that would sweep every such row onto one payee.
+      managerOf(ctx).find.mockImplementation((entity: any) =>
+        Promise.resolve(
+          entity === Payee
+            ? [{ id: "payee-numeric", name: "4412", defaultCategoryId: null }]
+            : [],
+        ),
+      );
+
+      await service.processTransaction(ctx, {
+        date: "2025-01-15",
+        amount: -10,
+        payee: "4412",
+      });
+
+      expect(ctx.importResult.payeesCreated).toBe(1);
+      const transaction = managerOf(ctx).create.mock.calls[0][1];
+      expect(transaction.payeeId).not.toBe("payee-numeric");
+    });
   });
 
   describe("resolveTransactionTarget (via processTransaction)", () => {

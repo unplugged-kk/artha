@@ -309,6 +309,8 @@
       "last365Days": "Останні 365 днів",
       "yearToDate": "З початку року",
       "lastYear": "Минулий рік",
+      "thisFiscalYear": "This financial year (Apr-Mar)",
+      "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "Довільний"
     }
   },

@@ -309,6 +309,8 @@
       "last365Days": "지난 365일",
       "yearToDate": "올해",
       "lastYear": "지난 해",
+      "thisFiscalYear": "This financial year (Apr-Mar)",
+      "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "사용자 정의"
     }
   },

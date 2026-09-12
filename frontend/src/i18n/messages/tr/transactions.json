@@ -309,6 +309,8 @@
       "last365Days": "Son 365 Gün",
       "yearToDate": "Yılbaşından Bugüne",
       "lastYear": "Geçen Yıl",
+      "thisFiscalYear": "This financial year (Apr-Mar)",
+      "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "Özel"
     }
   },

@@ -27,6 +27,10 @@ const NUMBER_FORMAT_OPTIONS = [
   { value: 'browser', labelKey: 'numberFormatOptions.browser' },
   { value: 'en-US', labelKey: 'numberFormatOptions.enUS' },
   { value: 'en-GB', labelKey: 'numberFormatOptions.enGB' },
+  // Placed with the English variants because that is what it is: English
+  // numbering is the language, and Indian grouping is the convention. Its
+  // lakh/crore grouping and K/L/Cr compaction come from the locale itself.
+  { value: 'en-IN', labelKey: 'numberFormatOptions.enIN' },
   { value: 'de-DE', labelKey: 'numberFormatOptions.deDE' },
   { value: 'fr-FR', labelKey: 'numberFormatOptions.frFR' },
 ];

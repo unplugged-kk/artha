@@ -1,4 +1,13 @@
 # zizmor configuration. See https://docs.zizmor.sh/configuration/
+#
+# A NOTE ON THE POINTERS BELOW. Each `ignore` entry names a `file:line:col`, so
+# every one of them is a promise about a line number in a file this repository
+# keeps editing. Adding or removing a line above one of these findings silently
+# detaches its suppression: the scan is not failed by a finding (ci.yml runs
+# zizmor with `|| true`), so the only symptom is the finding reappearing in the
+# Security tab -- or, worse, an unrelated line inheriting a suppression written
+# for another. When ci.yml moves, re-derive these against the new file rather
+# than trusting the numbers.
 
 rules:
   cache-poisoning:
@@ -12,8 +21,8 @@ rules:
     # pattern -- setup-node without npm caching, plus a docker/build-push-action
     # type=gha buildx cache -- so it carries the same documented suppression.
     ignore:
-      - ci.yml:486:9
-      - ci.yml:862:9
+      - ci.yml:504:9
+      - ci.yml:890:9
 
   artipacked:
     # The release job intentionally keeps the GITHUB_TOKEN persisted on the
@@ -21,4 +30,4 @@ rules:
     # version bump and `gh release create` the tag. Every other checkout in this
     # repo sets persist-credentials: false.
     ignore:
-      - ci.yml:639:9
+      - ci.yml:667:9

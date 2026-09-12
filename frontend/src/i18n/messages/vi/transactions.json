@@ -309,6 +309,8 @@
       "last365Days": "365 ngày qua",
       "yearToDate": "Năm đến nay",
       "lastYear": "Năm ngoái",
+      "thisFiscalYear": "This financial year (Apr-Mar)",
+      "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "Tùy chọn"
     }
   },
