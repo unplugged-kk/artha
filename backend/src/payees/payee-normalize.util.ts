@@ -47,6 +47,14 @@ const BUSINESS_SUFFIXES: ReadonlySet<string> = new Set([
   "OOD",
   "GES",
   "MBH",
+  // Indian legal forms. A bank export writes "Amazon Pay India Pvt Ltd",
+  // "SWIGGY PRIVATE LIMITED" and "Zerodha Brokerage LLP", so without these the
+  // same merchant normalises differently from the way the user typed it --
+  // which is the whole failure this normalisation exists to prevent.
+  "PVT",
+  "PRIVATE",
+  "LIMITED",
+  "LLP",
 ]);
 
 // Latin letters whose diacritic is an integral stroke or ligature that Unicode
