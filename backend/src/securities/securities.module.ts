@@ -17,6 +17,7 @@ import { SecurityToolPrepService } from "./security-tool-prep.service";
 import { SecurityPriceService } from "./security-price.service";
 import { YahooFinanceService } from "./yahoo-finance.service";
 import { MsnFinanceService } from "./msn-finance.service";
+import { AmfiNavService } from "./amfi-nav.service";
 import { QuoteProviderRegistry } from "./providers/quote-provider.registry";
 import { HoldingsService } from "./holdings.service";
 import { InvestmentTransactionsService } from "./investment-transactions.service";
@@ -73,6 +74,7 @@ import { ProviderHealthModule } from "../provider-health/provider-health.module"
     SecurityPriceService,
     YahooFinanceService,
     MsnFinanceService,
+    AmfiNavService,
     QuoteProviderRegistry,
     HoldingsService,
     InvestmentTransactionsService,
@@ -98,6 +100,7 @@ import { ProviderHealthModule } from "../provider-health/provider-health.module"
     SecurityPriceService,
     YahooFinanceService,
     MsnFinanceService,
+    AmfiNavService,
     QuoteProviderRegistry,
     HoldingsService,
     InvestmentTransactionsService,

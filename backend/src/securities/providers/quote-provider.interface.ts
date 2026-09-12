@@ -1,4 +1,21 @@
+/**
+ * The providers a user may choose: the per-security override and the
+ * "default provider" preference. Both columns are constrained to this set
+ * (`securities.quote_provider`, `user_preferences.default_quote_provider`).
+ */
 export type QuoteProviderName = "yahoo" | "msn";
+
+/**
+ * Every provider that can answer a price question, whether or not a user may
+ * pick it.
+ *
+ * `amfi` is deliberately absent from `QuoteProviderName`: a NAV source is
+ * selected by the instrument's *identity* (it has an AMFI scheme code), not by a
+ * preference, so offering it as an override would let a user point an equity at
+ * a fund catalogue. It appears here because a quote, a lookup result and a
+ * refresh summary all have to be able to say that AMFI answered.
+ */
+export type PriceProviderName = QuoteProviderName | "amfi";
 
 export interface QuoteResult {
   symbol: string;
@@ -21,7 +38,7 @@ export interface QuoteResult {
    * reflected rather than assumed away.
    */
   regularSession?: { start: number; end: number } | null;
-  provider?: QuoteProviderName;
+  provider?: PriceProviderName;
   /**
    * The instrument's actual trading currency as reported by the provider
    * (GBX/GBp normalized to GBP). Authoritative — unlike a currency guessed from
@@ -85,9 +102,17 @@ export interface SecurityLookupResult {
   securityType: string | null;
   currencyCode: string | null;
   /** Provider that produced this result, if known. */
-  provider?: QuoteProviderName;
+  provider?: PriceProviderName;
   /** MSN Financial Instrument ID, when the result came from MSN. */
   msnInstrumentId?: string | null;
+  /**
+   * The AMFI scheme code, when the result came from the fund catalogue.
+   *
+   * This is what makes the result addressable later: `quote_provider` cannot
+   * hold "amfi" (the column is constrained to the user-selectable providers), so
+   * a fund is routed by its *identity* rather than by an override column.
+   */
+  amfiSchemeCode?: string | null;
 }
 
 export interface StockSectorInfo {
@@ -108,7 +133,7 @@ export interface QuoteProviderOptions {
 }
 
 export interface QuoteProvider {
-  readonly name: QuoteProviderName;
+  readonly name: PriceProviderName;
 
   fetchQuote(
     symbol: string,
