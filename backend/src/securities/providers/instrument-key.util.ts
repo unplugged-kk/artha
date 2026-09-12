@@ -57,13 +57,63 @@ export interface ProviderInstrument {
 }
 
 /**
- * Suffixes Yahoo appends to a local ticker. Only markets that need one appear
- * here: a US symbol is sent bare. Keyed by upper-cased exchange code.
+ * Suffixes Yahoo appends to a locally-quoted ticker, keyed by upper-cased
+ * exchange code. An empty string is a market Yahoo addresses bare (the US
+ * listings), and an exchange absent from the table is also bare.
+ *
+ * This is the single authority for the exchange -> Yahoo suffix decision:
+ * `YahooFinanceService.getYahooSymbol` reads it rather than keeping a second
+ * copy, so a market added here cannot be honored by one path and missed by the
+ * other. Legacy spellings (`TORONTO`, `TSX VENTURE`, `LONDON`) are kept because
+ * instruments imported from other tools carry them as free text.
  */
 export const EXCHANGE_SYMBOL_SUFFIX: Record<string, string> = {
+  // Canada
+  TSX: ".TO",
+  TSE: ".TO",
+  TORONTO: ".TO",
+  "TORONTO STOCK EXCHANGE": ".TO",
+  "TSX-V": ".V",
+  "TSX VENTURE": ".V",
+  TSXV: ".V",
+  CSE: ".CN",
+  "CANADIAN SECURITIES EXCHANGE": ".CN",
+  NEO: ".NE",
+  // United States -- bare
+  NYSE: "",
+  NASDAQ: "",
+  AMEX: "",
+  ARCA: "",
+  // Europe
+  LSE: ".L",
+  LONDON: ".L",
+  FRANKFURT: ".F",
+  XETRA: ".DE",
+  PARIS: ".PA",
+  // Asia-Pacific
+  TOKYO: ".T",
+  "HONG KONG": ".HK",
+  HKEX: ".HK",
+  ASX: ".AX",
+  // India
   NSE: ".NS",
   BSE: ".BO",
 };
+
+/**
+ * The Yahoo spelling of `symbol` for a given exchange, without asking whether
+ * the symbol is already qualified. `getYahooSymbol` wraps this with the
+ * already-qualified check; `toProviderInstrument` applies that check itself.
+ */
+export function applyExchangeSuffix(
+  symbol: string,
+  exchange: string | null | undefined,
+): string {
+  const normalized = normalizeExchange(exchange);
+  if (!normalized) return symbol;
+  const suffix = EXCHANGE_SYMBOL_SUFFIX[normalized.toUpperCase()] ?? "";
+  return `${symbol}${suffix}`;
+}
 
 /** Trim + upper-case, the form every comparison and lookup uses. */
 export function normalizeSymbol(symbol: string | null | undefined): string {

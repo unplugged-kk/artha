@@ -15,6 +15,7 @@ import {
   EtfSectorWeighting,
 } from "./providers/quote-provider.interface";
 import { getTradingDateFromQuote } from "./providers/trading-date.util";
+import { applyExchangeSuffix } from "./providers/instrument-key.util";
 import { barDate } from "./providers/market-session.util";
 import { describeFetchFailure } from "../common/http/fetch-failure.util";
 import { ProviderHealthService } from "../provider-health/provider-health.service";
@@ -1001,41 +1002,11 @@ export class YahooFinanceService implements QuoteProvider {
       return symbol;
     }
 
-    const exchangeSuffixMap: Record<string, string> = {
-      TSX: ".TO",
-      TSE: ".TO",
-      TORONTO: ".TO",
-      "TORONTO STOCK EXCHANGE": ".TO",
-      "TSX-V": ".V",
-      "TSX VENTURE": ".V",
-      TSXV: ".V",
-      CSE: ".CN",
-      "CANADIAN SECURITIES EXCHANGE": ".CN",
-      NEO: ".NE",
-      NYSE: "",
-      NASDAQ: "",
-      AMEX: "",
-      ARCA: "",
-      LSE: ".L",
-      LONDON: ".L",
-      ASX: ".AX",
-      FRANKFURT: ".F",
-      XETRA: ".DE",
-      PARIS: ".PA",
-      TOKYO: ".T",
-      "HONG KONG": ".HK",
-      HKEX: ".HK",
-    };
-
-    if (exchange) {
-      const normalizedExchange = exchange.toUpperCase().trim();
-      const suffix = exchangeSuffixMap[normalizedExchange];
-      if (suffix !== undefined) {
-        return `${symbol}${suffix}`;
-      }
-    }
-
-    return symbol;
+    // The exchange -> suffix table lives in the instrument-key util so the
+    // identity layer and this provider cannot disagree about a market. This
+    // method keeps its own already-qualified check (a dotted symbol is final)
+    // and delegates the rest.
+    return applyExchangeSuffix(symbol, exchange);
   }
 
   getAlternateSymbols(symbol: string): string[] {

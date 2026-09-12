@@ -2,6 +2,7 @@ import {
   AliasLookup,
   EXCHANGE_SYMBOL_SUFFIX,
   NO_ALIASES,
+  applyExchangeSuffix,
   isProviderQualified,
   normalizeExchange,
   normalizeSymbol,
@@ -66,7 +67,9 @@ describe("toProviderInstrument — Yahoo symbol formatting", () => {
     ["NSE", "RELIANCE", "RELIANCE.NS"],
     ["BSE", "RELIANCE", "RELIANCE.BO"],
     ["NASDAQ", "AAPL", "AAPL"],
-    ["TSX", "XEQT", "XEQT"],
+    // TSX is not bare on Yahoo: the exchange table is now the provider's own,
+    // so a Canadian listing resolves the way the provider has always spelled it.
+    ["TSX", "XEQT", "XEQT.TO"],
   ])("maps %s %s -> %s", (exchange, symbol, expected) => {
     expect(
       toProviderInstrument({ symbol, exchange, currencyCode: "USD" }, "yahoo")
@@ -116,8 +119,24 @@ describe("toProviderInstrument — Yahoo symbol formatting", () => {
     ).toBe("RELIANCE");
   });
 
-  it("only suffixes the exchanges that have a rule", () => {
-    expect(Object.keys(EXCHANGE_SYMBOL_SUFFIX).sort()).toEqual(["BSE", "NSE"]);
+  it("carries the India exchanges alongside the long-standing ones", () => {
+    // The table is the single authority the Yahoo provider reads, so it holds
+    // every market, not only the two this phase added.
+    expect(EXCHANGE_SYMBOL_SUFFIX.NSE).toBe(".NS");
+    expect(EXCHANGE_SYMBOL_SUFFIX.BSE).toBe(".BO");
+    expect(EXCHANGE_SYMBOL_SUFFIX.TSX).toBe(".TO");
+    expect(EXCHANGE_SYMBOL_SUFFIX.LSE).toBe(".L");
+    expect(EXCHANGE_SYMBOL_SUFFIX.NYSE).toBe("");
+  });
+
+  it("applies a suffix from the shared table, and leaves other markets bare", () => {
+    expect(applyExchangeSuffix("RELIANCE", "NSE")).toBe("RELIANCE.NS");
+    expect(applyExchangeSuffix("RELIANCE", "bse")).toBe("RELIANCE.BO");
+    expect(applyExchangeSuffix("XEQT", "TSX")).toBe("XEQT.TO");
+    expect(applyExchangeSuffix("AAPL", "NASDAQ")).toBe("AAPL");
+    expect(applyExchangeSuffix("AAPL", "  nasdaq  ")).toBe("AAPL");
+    expect(applyExchangeSuffix("RELIANCE", null)).toBe("RELIANCE");
+    expect(applyExchangeSuffix("RELIANCE", "UNKNOWN_VENUE")).toBe("RELIANCE");
   });
 });
 
