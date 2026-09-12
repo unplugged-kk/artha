@@ -183,7 +183,17 @@
       "editButton": "संपादित करें",
       "deleteButton": "हटाएं"
     },
-    "itemNamePlural": "लेन-देन"
+    "itemNamePlural": "लेन-देन",
+    "dayGroup": {
+      "yesterday": "Yesterday",
+      "income": "Income",
+      "expense": "Expense"
+    },
+    "monthNav": {
+      "previous": "Previous month",
+      "next": "Next month",
+      "thisMonth": "This month"
+    }
   },
   "row": {
     "copyOptions": {

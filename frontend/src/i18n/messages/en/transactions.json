@@ -129,6 +129,16 @@
     },
     "attachmentsCount": "{count, plural, one {# attachment} other {# attachments}}",
     "today": "Today",
+    "dayGroup": {
+      "yesterday": "Yesterday",
+      "income": "Income",
+      "expense": "Expense"
+    },
+    "monthNav": {
+      "previous": "Previous month",
+      "next": "Next month",
+      "thisMonth": "This month"
+    },
     "export": {
       "button": "Export",
       "exporting": "Exporting...",

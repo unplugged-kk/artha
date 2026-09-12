@@ -183,7 +183,17 @@
       "editButton": "Изменить",
       "deleteButton": "Удалить"
     },
-    "itemNamePlural": "проводки"
+    "itemNamePlural": "проводки",
+    "dayGroup": {
+      "yesterday": "Yesterday",
+      "income": "Income",
+      "expense": "Expense"
+    },
+    "monthNav": {
+      "previous": "Previous month",
+      "next": "Next month",
+      "thisMonth": "This month"
+    }
   },
   "row": {
     "copyOptions": {

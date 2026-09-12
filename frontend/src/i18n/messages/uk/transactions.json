@@ -183,7 +183,17 @@
       "editButton": "Редагувати",
       "deleteButton": "Видалити"
     },
-    "itemNamePlural": "транзакцій"
+    "itemNamePlural": "транзакцій",
+    "dayGroup": {
+      "yesterday": "Yesterday",
+      "income": "Income",
+      "expense": "Expense"
+    },
+    "monthNav": {
+      "previous": "Previous month",
+      "next": "Next month",
+      "thisMonth": "This month"
+    }
   },
   "row": {
     "copyOptions": {

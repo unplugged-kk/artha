@@ -183,7 +183,17 @@
       "editButton": "編集",
       "deleteButton": "削除"
     },
-    "itemNamePlural": "件の取引"
+    "itemNamePlural": "件の取引",
+    "dayGroup": {
+      "yesterday": "Yesterday",
+      "income": "Income",
+      "expense": "Expense"
+    },
+    "monthNav": {
+      "previous": "Previous month",
+      "next": "Next month",
+      "thisMonth": "This month"
+    }
   },
   "row": {
     "copyOptions": {

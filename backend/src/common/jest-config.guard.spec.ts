@@ -68,6 +68,7 @@ type JestConfig = {
   testMatch?: string[];
   testPathIgnorePatterns?: string[];
   maxWorkers?: number;
+  workerIdleMemoryLimit?: string | number;
   projects?: unknown[];
   preset?: string;
 };
@@ -310,6 +311,18 @@ describeTree("jest configuration", () => {
       (file) => !discovers(packageJson.jest, virtual("backend"), virtual(file)),
     );
     expect(missed).toEqual([]);
+  });
+
+  it("bounds what a Jest worker may retain between spec files", () => {
+    // A worker keeps its module registry, mocks and compiled output between the
+    // files it is handed. Across the 8,000-line suites in this repository that
+    // retained memory is enough to reach V8's heap ceiling and abort the run
+    // **before Jest prints a summary** -- which is what `Backend Unit Tests` did
+    // on main, for months, reporting a failure that named no test and hid
+    // whatever else was wrong. Recycling a worker when it goes idle above this
+    // bound is the fix; the setting is what makes the job a real signal again,
+    // so its removal is a regression rather than a tidy-up.
+    expect(packageJson.jest.workerIdleMemoryLimit).toBeTruthy();
   });
 
   it("leaves the integration specs owned by a single-worker config", () => {

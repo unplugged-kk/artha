@@ -31,6 +31,10 @@ import { useCompactMobileDates } from '@/store/dateDisplayStore';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { usePreferencesStore } from '@/store/preferencesStore';
 import { EmptyState } from '@/components/ui/EmptyState';
+import {
+  groupTransactionsByDay,
+  type TransactionDayGroup,
+} from '@/lib/transaction-day-groups';
 
 interface TransactionListProps {
   transactions: Transaction[];
@@ -117,6 +121,14 @@ interface TransactionListProps {
     lastReconciledByAccount: Map<string, string>;
     overdueBefore: string;
   };
+  /**
+   * Groups the rows under a heading for each day, carrying the day's income and
+   * expense. Off by default: the register is the surface where months of rows
+   * arrive at once, while the embedded lists (an account's or a payee's own tab)
+   * show a short, already-narrow slice where a heading per day is noise. The
+   * caller decides, and nothing else about the list changes either way.
+   */
+  groupByDate?: boolean;
 }
 
 /**
@@ -228,6 +240,7 @@ export function TransactionList({
   highlightTransactionId,
   showFxColumns = false,
   jointPermissionsByAccount,
+  groupByDate = false,
 }: TransactionListProps) {
   const t = useTranslations('transactions');
   const tc = useTranslations('common');
@@ -503,6 +516,27 @@ export function TransactionList({
     return balances;
   }, [transactions, startingBalance, displayAmounts]);
 
+  // The day headings, and the row index each row keeps when they are on: the
+  // striped row treatment is keyed by position in the whole list, so a grouped
+  // render must not renumber rows by their position inside a day.
+  const todayDate = useMemo(() => getLocalDateString(), []);
+  const dayGroups = useMemo(
+    () =>
+      groupByDate
+        ? groupTransactionsByDay(
+            transactions,
+            todayDate,
+            (transaction) =>
+              displayAmounts.get(transaction.id) ?? Number(transaction.amount),
+          )
+        : [],
+    [groupByDate, transactions, todayDate, displayAmounts],
+  );
+  const dayGroupByDate = useMemo(
+    () => new Map(dayGroups.map((group) => [group.date, group])),
+    [dayGroups],
+  );
+
   const formatAmount = useCallback((amount: number, currencyCode?: string) => {
     const isNegative = amount < 0;
     const absAmount = Math.abs(amount);
@@ -523,6 +557,63 @@ export function TransactionList({
       </span>
     );
   }, [formatCurrency]);
+
+  /**
+   * The heading over a day's rows: the date, named relatively when that is
+   * clearer, and the day's income and expense beside it.
+   *
+   * The total is only drawn when the day has one -- see `groupTransactionsByDay`
+   * for why a day of mixed currencies or of nothing but transfers reports none,
+   * and each side is drawn only when it is non-zero, so a heading never claims a
+   * "0.00" income the day did not have.
+   */
+  const renderDayHeader = (group: TransactionDayGroup) => {
+    const relativeLabel =
+      group.label === 'today'
+        ? t('list.today')
+        : group.label === 'yesterday'
+          ? t('list.dayGroup.yesterday')
+          : null;
+    const currencyCode = group.currencyCode;
+    const income = currencyCode ? (group.income ?? 0) : 0;
+    const expense = currencyCode ? (group.expense ?? 0) : 0;
+
+    return (
+      <tr data-testid={`day-group-${group.date}`}>
+        <th
+          scope="colgroup"
+          colSpan={wrapped ? 1 : colCount}
+          className="px-4 py-1.5 text-left font-normal bg-gray-50 dark:bg-gray-800/60"
+        >
+          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-0.5">
+            <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+              {relativeLabel && (
+                <span className="text-blue-500 dark:text-blue-400">
+                  {relativeLabel}
+                  {' · '}
+                </span>
+              )}
+              {formatDate(group.date)}
+            </span>
+            {(income > 0 || expense > 0) && currencyCode && (
+              <span className="flex items-center gap-3 text-xs tabular-nums">
+                {income > 0 && (
+                  <span className="text-green-600 dark:text-green-400">
+                    {'+'}{formatCurrency(income, currencyCode)}
+                  </span>
+                )}
+                {expense > 0 && (
+                  <span className="text-red-600 dark:text-red-400">
+                    {'-'}{formatCurrency(expense, currencyCode)}
+                  </span>
+                )}
+              </span>
+            )}
+          </div>
+        </th>
+      </tr>
+    );
+  };
 
   if (transactions.length === 0) {
     return (
@@ -683,9 +774,23 @@ export function TransactionList({
           <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
             {transactions.map((transaction, index) => {
               const isFuture = index < futureBoundaryIndex;
+              // Rows arrive sorted by date, so a date begins wherever it differs
+              // from the row above it.
+              const startsDay =
+                groupByDate &&
+                (index === 0 ||
+                  transactions[index - 1].transactionDate !==
+                    transaction.transactionDate);
+              const dayGroup = startsDay
+                ? dayGroupByDate.get(transaction.transactionDate)
+                : undefined;
               return (
                 <React.Fragment key={transaction.id}>
-                  {index === futureBoundaryIndex && futureBoundaryIndex > 0 && (
+                  {dayGroup && renderDayHeader(dayGroup)}
+                  {/* The "today" divider separates future-dated rows from the
+                      rest. A day heading already names today, so the two would
+                      say the same thing twice. */}
+                  {!groupByDate && index === futureBoundaryIndex && futureBoundaryIndex > 0 && (
                     <tr>
                       {/* In the wrapped phone layout every header and body row
                           spans one column, so the divider does too; the tier

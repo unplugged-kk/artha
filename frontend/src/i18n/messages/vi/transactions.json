@@ -183,7 +183,17 @@
       "editButton": "Chỉnh sửa",
       "deleteButton": "Xóa"
     },
-    "itemNamePlural": "giao tác"
+    "itemNamePlural": "giao tác",
+    "dayGroup": {
+      "yesterday": "Yesterday",
+      "income": "Income",
+      "expense": "Expense"
+    },
+    "monthNav": {
+      "previous": "Previous month",
+      "next": "Next month",
+      "thisMonth": "This month"
+    }
   },
   "row": {
     "copyOptions": {

@@ -183,7 +183,17 @@
       "editButton": "Edit",
       "deleteButton": "Hapus"
     },
-    "itemNamePlural": "transaksi"
+    "itemNamePlural": "transaksi",
+    "dayGroup": {
+      "yesterday": "Yesterday",
+      "income": "Income",
+      "expense": "Expense"
+    },
+    "monthNav": {
+      "previous": "Previous month",
+      "next": "Next month",
+      "thisMonth": "This month"
+    }
   },
   "row": {
     "copyOptions": {
