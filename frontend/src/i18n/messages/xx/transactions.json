@@ -129,6 +129,16 @@
     },
     "attachmentsCount": "[XX-{count, plural, one {# attachment} other {# attachments}}-XX]",
     "today": "[XX-Today-XX]",
+    "dayGroup": {
+      "yesterday": "[XX-Yesterday-XX]",
+      "income": "[XX-Income-XX]",
+      "expense": "[XX-Expense-XX]"
+    },
+    "monthNav": {
+      "previous": "[XX-Previous month-XX]",
+      "next": "[XX-Next month-XX]",
+      "thisMonth": "[XX-This month-XX]"
+    },
     "export": {
       "button": "[XX-Export-XX]",
       "exporting": "[XX-Exporting...-XX]",
