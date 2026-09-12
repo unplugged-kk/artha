@@ -141,6 +141,8 @@ export interface PortfolioSummary {
   totalGainLossPercent: number;
   timeWeightedReturn: number | null;
   cagr: number | null;
+  /** Money-weighted return: null when the portfolio cannot be completely valued. */
+  xirr: number | null;
   /**
    * False when a component of these totals could not be converted into the
    * reporting currency, which makes every `total*` field above a subtotal of what
@@ -280,6 +282,8 @@ export interface LlmPortfolioSummary {
   totalGainLossPercent: number;
   timeWeightedReturn: number | null;
   cagr: number | null;
+  /** Money-weighted return: null when the portfolio cannot be completely valued. */
+  xirr: number | null;
   holdings: LlmPortfolioHolding[];
   holdingsByAccount: LlmAccountHoldings[];
   allocation: LlmPortfolioAllocation[];
@@ -713,6 +717,22 @@ export class PortfolioService {
           )
         : null;
 
+    // XIRR shares CAGR's completeness gate for the same reason: the terminal
+    // value is part of the series, so an unpriced or unconvertible holding makes
+    // the answer unknowable rather than smaller. It is additionally `null` when
+    // the dated flow series has no solvable rate.
+    const xirr =
+      netInvestedAgg.isComplete &&
+      holdingsResult.fxComplete &&
+      holdingsResult.pricesComplete &&
+      cashResult.fxComplete
+        ? await this.calculationService.calculateXirr(
+            userId,
+            categorised.holdingsAccountIds,
+            totalPortfolioValue,
+          )
+        : null;
+
     // Whether every component of these totals could be converted into the
     // reporting currency. A log entry is invisible to an API consumer, so the
     // completeness state travels with the numbers: without it an incomplete cash
@@ -742,6 +762,7 @@ export class PortfolioService {
       totalGainLossPercent,
       timeWeightedReturn,
       cagr,
+      xirr,
       fxComplete: missingRatePairs.length === 0,
       missingRatePairs,
       pricesComplete: holdingsResult.pricesComplete,
@@ -833,6 +854,7 @@ export class PortfolioService {
       totalGainLossPercent: roundPct(summary.totalGainLossPercent) ?? 0,
       timeWeightedReturn: roundPct(summary.timeWeightedReturn),
       cagr: roundPct(summary.cagr),
+      xirr: roundPct(summary.xirr),
       fxComplete: summary.fxComplete,
       missingRatePairs: summary.missingRatePairs,
       pricesComplete: summary.pricesComplete,

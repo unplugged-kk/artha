@@ -1582,6 +1582,7 @@ describe("PortfolioService", () => {
         valuationComplete: true,
         timeWeightedReturn: null,
         cagr: null,
+        xirr: null,
         holdings: [],
         holdingsByAccount: [],
         allocation: [],
@@ -1626,6 +1627,7 @@ describe("PortfolioService", () => {
           valuationComplete: true,
           timeWeightedReturn: 8.56789,
           cagr: null,
+          xirr: null,
           holdings: [
             {
               id: "h1",
@@ -1711,6 +1713,7 @@ describe("PortfolioService", () => {
         valuationComplete: true,
         timeWeightedReturn: null,
         cagr: null,
+        xirr: null,
         holdings: [],
         holdingsByAccount: [],
         allocation: [],
@@ -1742,6 +1745,7 @@ describe("PortfolioService", () => {
         valuationComplete: false,
         timeWeightedReturn: null,
         cagr: null,
+        xirr: null,
         holdings: [],
         holdingsByAccount: [],
         allocation: [],
@@ -1769,6 +1773,7 @@ describe("PortfolioService", () => {
         valuationComplete: true,
         timeWeightedReturn: null,
         cagr: null,
+        xirr: null,
         holdings: [
           {
             id: "h1",
@@ -1815,6 +1820,7 @@ describe("PortfolioService", () => {
         valuationComplete: true,
         timeWeightedReturn: null,
         cagr: null,
+        xirr: null,
         holdings: [],
         holdingsByAccount: [
           {
@@ -4072,6 +4078,7 @@ describe("PortfolioService", () => {
         valuationComplete: true,
         timeWeightedReturn: null,
         cagr: null,
+        xirr: null,
         holdings: [],
         holdingsByAccount: [],
         allocation: [

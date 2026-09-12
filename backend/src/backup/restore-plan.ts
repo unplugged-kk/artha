@@ -281,6 +281,11 @@ export const RESTORABLE_TABLES: ReadonlySet<string> = new Set(
 export const DEFERRED_FK_COLUMNS: Readonly<Record<string, readonly string[]>> =
   {
     categories: ["parent_id"],
+    // A posting may point at the investment transaction it created, and
+    // investment_transactions restores *after* scheduled_transaction_postings.
+    // Left inline it would raise a foreign-key violation on every SIP posting
+    // in a backup, rolling the whole restore back.
+    scheduled_transaction_postings: ["investment_transaction_id"],
     accounts: [
       "linked_account_id",
       "source_account_id",
@@ -351,4 +356,9 @@ export const DEFERRED_FK_REPAIRS: ReadonlyArray<DeferredFkRepair> = [
   { table: "payees", column: "default_category_id" },
   { table: "scheduled_transactions", column: "investment_security_id" },
   { table: "scheduled_transaction_splits", column: "investment_security_id" },
+  // Repaired once investment_transactions exists; see DEFERRED_FK_COLUMNS.
+  {
+    table: "scheduled_transaction_postings",
+    column: "investment_transaction_id",
+  },
 ];

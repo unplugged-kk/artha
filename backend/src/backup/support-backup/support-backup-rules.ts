@@ -348,6 +348,7 @@ export const RULES: Record<string, TableRules> = {
     scheduled_transaction_id: keep,
     original_due_date: keep,
     posted_date: keep,
+    investment_transaction_id: keep,
     created_at: keep,
   },
   scheduled_transaction_split_tags: {
