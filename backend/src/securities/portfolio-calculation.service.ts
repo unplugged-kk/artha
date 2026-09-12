@@ -3,6 +3,8 @@ import { DataSource, FindOptionsWhere, In, LessThanOrEqual } from "typeorm";
 import { withScopedDb } from "../common/db/scoped-db";
 import { Holding } from "./entities/holding.entity";
 import { NON_VOID_INVESTMENT_STATUS } from "./investment-row-effects.util";
+import { computeInvestmentCashImpact } from "./cash-impact.util";
+import { CashFlow, calculateXirrPercent } from "./xirr.util";
 import {
   InvestmentTransaction,
   InvestmentAction,
@@ -2538,6 +2540,86 @@ export class PortfolioCalculationService {
     return (
       (Math.pow(totalPortfolioValue / totalNetInvested, 1 / years) - 1) * 100
     );
+  }
+
+  /**
+   * XIRR over the portfolio's own dated cash flows plus what it is worth now.
+   *
+   * The flows are the investment ledger's external cash movements, converted at
+   * **each row's own** exchange rate -- the same `* exchange_rate` convention the
+   * existing flow aggregate uses, so a two-year-old contribution is discounted at
+   * the rate that was actually paid rather than today's. The sign comes from
+   * `computeInvestmentCashImpact`, the one authority for it, which is also what
+   * keeps a bonus (no cash), a transfer (no external cash) and a fee (cash out,
+   * no shares) correct here without restating any of those rules.
+   *
+   * The terminal value closes the series as a receipt today. It is passed in
+   * rather than recomputed, so this cannot disagree with the valuation the caller
+   * already performed.
+   *
+   * Returns null -- never an approximation -- when the terminal value is unknown,
+   * when there is no account to report on, or when the series has no solvable
+   * rate. A caller shows "not computable" rather than a number it cannot stand
+   * behind.
+   *
+   * Known limitation, stated rather than hidden: a REDEEM whose accrued interest
+   * is recorded as a linked companion row does not have that interest folded into
+   * this series, because the companion carries no cash leg of its own. The effect
+   * is confined to bonds redeemed with accrued interest.
+   */
+  async calculateXirr(
+    userId: string,
+    accountIds: string[],
+    terminalValue: number | null,
+  ): Promise<number | null> {
+    if (terminalValue === null || !Number.isFinite(terminalValue)) return null;
+    if (accountIds.length === 0) return null;
+
+    const rows: {
+      date: string;
+      action: InvestmentAction;
+      quantity: string | null;
+      price: string | null;
+      commission: string | null;
+      exchange_rate: string | null;
+    }[] = await withScopedDb(this.dataSource, (m) =>
+      m.query(
+        `SELECT it.transaction_date::text AS date,
+                it.action,
+                it.quantity,
+                it.price,
+                it.commission,
+                it.exchange_rate
+           FROM investment_transactions it
+          WHERE it.user_id = $1
+            AND it.account_id = ANY($2)
+            AND it.transaction_date <= CURRENT_DATE
+            AND it.status != 'VOID'
+          ORDER BY it.transaction_date`,
+        [userId, accountIds],
+      ),
+    );
+
+    const flows: CashFlow[] = [];
+    for (const row of rows) {
+      const impact = computeInvestmentCashImpact(
+        row.action,
+        Number(row.quantity ?? 0),
+        Number(row.price ?? 0),
+        Number(row.commission ?? 0),
+      );
+      const rate = Number(row.exchange_rate ?? 1);
+      const amount = roundMoney(impact * rate);
+      // Zero has no effect on the series: a bonus, a transfer or a reinvest
+      // moves shares without moving external cash.
+      if (!Number.isFinite(amount) || amount === 0) continue;
+      flows.push({ date: row.date, amount });
+    }
+
+    const today = new Date().toISOString().slice(0, 10);
+    flows.push({ date: today, amount: roundMoney(terminalValue) });
+
+    return calculateXirrPercent(flows);
   }
 
   // ---------------------------------------------------------------------------
