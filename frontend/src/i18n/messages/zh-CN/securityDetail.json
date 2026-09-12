@@ -71,6 +71,8 @@
     "distributionsTitle": "从价格历史读取：每次派发时，调整后收盘价都会与报价收盘价分离。这是由数据推断的，不是发行方的声明。",
     "exchange": "交易所",
     "currency": "货币",
+    "isin": "ISIN",
+    "amfiCode": "AMFI scheme code",
     "sector": "板块",
     "industry": "行业",
     "provider": "数据源",

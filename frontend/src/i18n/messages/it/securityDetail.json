@@ -71,6 +71,8 @@
     "distributionsTitle": "Letto dallo storico dei prezzi: la chiusura aggiustata si discosta da quella quotata ogni volta che viene pagata una distribuzione. Dedotto dai dati, non dichiarato dall'emittente.",
     "exchange": "Borsa",
     "currency": "Valuta",
+    "isin": "ISIN",
+    "amfiCode": "AMFI scheme code",
     "sector": "Settore",
     "industry": "Industria",
     "provider": "Fornitore",

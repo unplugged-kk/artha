@@ -155,7 +155,17 @@
       "bond": "Tahvil",
       "option": "Opsiyon",
       "crypto": "Kripto Para",
-      "other": "Diğer"
+      "other": "Diğer",
+      "reit": "REIT",
+      "gold": "Gold",
+      "ppf": "PPF",
+      "epf": "EPF",
+      "nps": "NPS",
+      "fd": "Fixed Deposit",
+      "rd": "Recurring Deposit",
+      "sgb": "Sovereign Gold Bond",
+      "esop": "ESOP",
+      "ulip": "ULIP"
     },
     "quoteProviderUseDefault": "Varsayılanı kullan ({provider})",
     "symbolPlaceholder": "örn., AAPL, XEQT, BTC",

@@ -155,7 +155,17 @@
       "bond": "Obligasi",
       "option": "Opsi",
       "crypto": "Mata Uang Kripto",
-      "other": "Lainnya"
+      "other": "Lainnya",
+      "reit": "REIT",
+      "gold": "Gold",
+      "ppf": "PPF",
+      "epf": "EPF",
+      "nps": "NPS",
+      "fd": "Fixed Deposit",
+      "rd": "Recurring Deposit",
+      "sgb": "Sovereign Gold Bond",
+      "esop": "ESOP",
+      "ulip": "ULIP"
     },
     "quoteProviderUseDefault": "Gunakan default ({provider})",
     "symbolPlaceholder": "mis., AAPL, XEQT, BTC",

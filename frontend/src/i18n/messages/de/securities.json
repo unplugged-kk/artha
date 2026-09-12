@@ -155,7 +155,17 @@
       "bond": "Anleihe",
       "option": "Option",
       "crypto": "Kryptowährung",
-      "other": "Sonstiges"
+      "other": "Sonstiges",
+      "reit": "REIT",
+      "gold": "Gold",
+      "ppf": "PPF",
+      "epf": "EPF",
+      "nps": "NPS",
+      "fd": "Fixed Deposit",
+      "rd": "Recurring Deposit",
+      "sgb": "Sovereign Gold Bond",
+      "esop": "ESOP",
+      "ulip": "ULIP"
     },
     "quoteProviderUseDefault": "Standard verwenden ({provider})",
     "symbolPlaceholder": "z. B. AAPL, XEQT, BTC",

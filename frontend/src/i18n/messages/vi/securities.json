@@ -155,7 +155,17 @@
       "bond": "Trái phiếu",
       "option": "Quyền chọn",
       "crypto": "Tiền điện tử",
-      "other": "Khác"
+      "other": "Khác",
+      "reit": "REIT",
+      "gold": "Gold",
+      "ppf": "PPF",
+      "epf": "EPF",
+      "nps": "NPS",
+      "fd": "Fixed Deposit",
+      "rd": "Recurring Deposit",
+      "sgb": "Sovereign Gold Bond",
+      "esop": "ESOP",
+      "ulip": "ULIP"
     },
     "quoteProviderUseDefault": "Sử dụng mặc định ({provider})",
     "symbolPlaceholder": "VD: AAPL, XEQT, BTC",

@@ -76,6 +76,30 @@ describe('SecurityKeyInformation', () => {
     expect(screen.queryByText('Last price')).not.toBeInTheDocument();
   });
 
+  it('shows the instrument identity when the security carries one', () => {
+    render(
+      <SecurityKeyInformation
+        security={security({ isin: 'INE002A01018', amfiSchemeCode: '122639' })}
+        latestPrice={null}
+        prices={[]}
+      />,
+    );
+
+    expect(screen.getByText('ISIN')).toBeInTheDocument();
+    expect(screen.getByText('INE002A01018')).toBeInTheDocument();
+    expect(screen.getByText('AMFI scheme code')).toBeInTheDocument();
+    expect(screen.getByText('122639')).toBeInTheDocument();
+  });
+
+  it('omits the identity rows for an instrument that has none', () => {
+    render(
+      <SecurityKeyInformation security={security()} latestPrice={null} prices={[]} />,
+    );
+
+    expect(screen.queryByText('ISIN')).not.toBeInTheDocument();
+    expect(screen.queryByText('AMFI scheme code')).not.toBeInTheDocument();
+  });
+
   it('states the distribution behaviour it can read off the price history', () => {
     render(
       <SecurityKeyInformation

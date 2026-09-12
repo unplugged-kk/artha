@@ -72,6 +72,19 @@ export function SecurityKeyInformation({
     },
     { key: 'exchange', label: t('keyInfo.exchange'), value: security.exchange },
     {
+      // Identity, when the instrument carries any: an ISIN or an AMFI scheme
+      // code is what makes it findable again after a rename, so it belongs on
+      // the detail view rather than only in the edit form.
+      key: 'isin',
+      label: t('keyInfo.isin'),
+      value: security.isin,
+    },
+    {
+      key: 'amfiCode',
+      label: t('keyInfo.amfiCode'),
+      value: security.amfiSchemeCode,
+    },
+    {
       key: 'currency',
       label: t('keyInfo.currency'),
       value: security.currencyCode,

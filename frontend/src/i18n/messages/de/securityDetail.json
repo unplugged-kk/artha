@@ -71,6 +71,8 @@
     "distributionsTitle": "Aus der Kurshistorie gelesen: der bereinigte Schlusskurs weicht vom notierten Schlusskurs ab, sobald eine Ausschüttung erfolgt. Aus Daten abgeleitet, nicht vom Emittenten angegeben.",
     "exchange": "Börse",
     "currency": "Währung",
+    "isin": "ISIN",
+    "amfiCode": "AMFI scheme code",
     "sector": "Sektor",
     "industry": "Branche",
     "provider": "Anbieter",

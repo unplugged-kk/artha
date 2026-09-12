@@ -155,7 +155,17 @@
       "bond": "[XX-Bond-XX]",
       "option": "[XX-Option-XX]",
       "crypto": "[XX-Cryptocurrency-XX]",
-      "other": "[XX-Other-XX]"
+      "other": "[XX-Other-XX]",
+      "reit": "[XX-REIT-XX]",
+      "gold": "[XX-Gold-XX]",
+      "ppf": "[XX-PPF-XX]",
+      "epf": "[XX-EPF-XX]",
+      "nps": "[XX-NPS-XX]",
+      "fd": "[XX-Fixed Deposit-XX]",
+      "rd": "[XX-Recurring Deposit-XX]",
+      "sgb": "[XX-Sovereign Gold Bond-XX]",
+      "esop": "[XX-ESOP-XX]",
+      "ulip": "[XX-ULIP-XX]"
     },
     "quoteProviderUseDefault": "[XX-Use default ({provider})-XX]",
     "symbolPlaceholder": "[XX-e.g., AAPL, XEQT, BTC-XX]",

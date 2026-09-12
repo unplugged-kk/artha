@@ -71,6 +71,8 @@
     "distributionsTitle": "Dibaca dari riwayat harga: penutupan yang disesuaikan menyimpang dari penutupan kuotasi setiap kali distribusi dibayarkan. Disimpulkan dari data, bukan dinyatakan oleh penerbit.",
     "exchange": "Bursa",
     "currency": "Mata uang",
+    "isin": "ISIN",
+    "amfiCode": "AMFI scheme code",
     "sector": "Sektor",
     "industry": "Industri",
     "provider": "Penyedia",

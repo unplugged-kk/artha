@@ -71,6 +71,8 @@
     "distributionsTitle": "Uit de koershistorie gelezen: de aangepaste slotkoers wijkt af van de genoteerde slotkoers zodra er een uitkering wordt gedaan. Afgeleid uit de gegevens, niet opgegeven door de uitgevende instelling.",
     "exchange": "Beurs",
     "currency": "Valuta",
+    "isin": "ISIN",
+    "amfiCode": "AMFI scheme code",
     "sector": "Sector",
     "industry": "Bedrijfstak",
     "provider": "Aanbieder",

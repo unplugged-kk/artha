@@ -345,6 +345,44 @@ describe('SecurityForm', () => {
     expect(optionValues).toContain('OPTION');
     expect(optionValues).toContain('CRYPTO');
     expect(optionValues).toContain('OTHER');
+
+    // The India instrument pack is selectable from the form that owns the
+    // identity fields, so a PPF or an FD is representable without the API.
+    for (const value of [
+      'REIT',
+      'GOLD',
+      'PPF',
+      'EPF',
+      'NPS',
+      'FD',
+      'RD',
+      'SGB',
+      'ESOP',
+      'ULIP',
+    ]) {
+      expect(optionValues).toContain(value);
+    }
+  });
+
+  it('shows the AMFI scheme code field only for a mutual fund', async () => {
+    render(<SecurityForm onSubmit={onSubmit} onCancel={onCancel} />);
+
+    const typeSelect = screen.getByLabelText('Type') as HTMLSelectElement;
+    // Absent, not merely empty: a scheme code is identity for a fund and
+    // meaningless for anything else.
+    expect(screen.queryByLabelText('AMFI scheme code')).not.toBeInTheDocument();
+
+    fireEvent.change(typeSelect, { target: { value: 'MUTUAL_FUND' } });
+    await waitFor(() => {
+      expect(screen.getByLabelText('AMFI scheme code')).toBeInTheDocument();
+    });
+
+    fireEvent.change(typeSelect, { target: { value: 'PPF' } });
+    await waitFor(() => {
+      expect(
+        screen.queryByLabelText('AMFI scheme code'),
+      ).not.toBeInTheDocument();
+    });
   });
 
   it('renders security type option labels', async () => {

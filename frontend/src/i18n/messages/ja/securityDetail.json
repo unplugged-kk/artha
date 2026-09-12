@@ -71,6 +71,8 @@
     "distributionsTitle": "価格履歴から読み取っています。分配が行われるたびに調整後終値が呼値の終値から離れます。発行者の表明ではなく、データからの推定です。",
     "exchange": "取引所",
     "currency": "通貨",
+    "isin": "ISIN",
+    "amfiCode": "AMFI scheme code",
     "sector": "セクター",
     "industry": "業種",
     "provider": "提供元",

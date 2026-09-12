@@ -71,6 +71,8 @@
     "distributionsTitle": "Lido do histórico de preços: o fechamento ajustado se afasta do fechamento cotado sempre que uma distribuição é paga. Inferido dos dados, não declarado pelo emissor.",
     "exchange": "Bolsa",
     "currency": "Moeda",
+    "isin": "ISIN",
+    "amfiCode": "AMFI scheme code",
     "sector": "Setor",
     "industry": "Indústria",
     "provider": "Fornecedor",

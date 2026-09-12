@@ -71,6 +71,8 @@
     "distributionsTitle": "Leído del historial de precios: el cierre ajustado se separa del cierre cotizado cada vez que se paga una distribución. Deducido de los datos, no declarado por el emisor.",
     "exchange": "Mercado",
     "currency": "Moneda",
+    "isin": "ISIN",
+    "amfiCode": "AMFI scheme code",
     "sector": "Sector",
     "industry": "Industria",
     "provider": "Proveedor",

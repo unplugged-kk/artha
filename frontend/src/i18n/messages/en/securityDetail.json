@@ -71,6 +71,8 @@
     "distributionsTitle": "Read from the price history: the adjusted close parts from the quoted close whenever a distribution is paid. Observed from data, not declared by the issuer.",
     "exchange": "Exchange",
     "currency": "Currency",
+    "isin": "ISIN",
+    "amfiCode": "AMFI scheme code",
     "sector": "Sector",
     "industry": "Industry",
     "provider": "Provider",

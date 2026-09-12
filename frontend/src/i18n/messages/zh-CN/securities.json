@@ -155,7 +155,17 @@
       "bond": "债券",
       "option": "期权",
       "crypto": "加密货币",
-      "other": "其他"
+      "other": "其他",
+      "reit": "REIT",
+      "gold": "Gold",
+      "ppf": "PPF",
+      "epf": "EPF",
+      "nps": "NPS",
+      "fd": "Fixed Deposit",
+      "rd": "Recurring Deposit",
+      "sgb": "Sovereign Gold Bond",
+      "esop": "ESOP",
+      "ulip": "ULIP"
     },
     "quoteProviderUseDefault": "使用默认（{provider}）",
     "symbolPlaceholder": "例如：AAPL、XEQT、BTC",
