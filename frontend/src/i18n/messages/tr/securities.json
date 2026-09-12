@@ -117,6 +117,10 @@
     "exchangeLabel": "Borsa",
     "currencyLabel": "Para Birimi",
     "currencyNotConfigured": "{code} — para birimlerinizde yok",
+    "isinLabel": "ISIN",
+    "isinPlaceholder": "e.g., INE002A01018",
+    "amfiCodeLabel": "AMFI scheme code",
+    "amfiCodePlaceholder": "e.g., 122639",
     "quoteProviderLabel": "Fiyat Teklifi Sağlayıcısı",
     "msnIdLabel": "MSN Araç ID'si (gelişmiş)",
     "lookupProviderAriaLabel": "Sağlayıcıyı ara",
@@ -335,7 +339,9 @@
     "nameRequired": "Ad zorunludur",
     "nameMax": "Ad 255 karakter veya daha az olmalıdır",
     "currencyRequired": "Para birimi zorunludur",
-    "descriptionMax": "Açıklama en fazla 5000 karakter olabilir"
+    "descriptionMax": "Açıklama en fazla 5000 karakter olabilir",
+    "isinFormat": "ISIN must be 12 characters with a valid check digit",
+    "amfiCodeFormat": "AMFI scheme code must be 1-10 digits"
   },
   "priceValidation": {
     "dateRequired": "Tarih zorunludur",

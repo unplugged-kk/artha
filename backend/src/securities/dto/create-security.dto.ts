@@ -18,6 +18,8 @@ import {
 import { Type } from "class-transformer";
 import { SanitizeHtml } from "../../common/decorators/sanitize-html.decorator";
 import { IsCurrencyCode } from "../../common/validators/is-currency-code.validator";
+import { IsIsin } from "../../common/validators/is-isin.validator";
+import { IsAmfiSchemeCode } from "../../common/validators/is-amfi-scheme-code.validator";
 
 /**
  * One slice of a manual allocation breakdown (e.g. a country and its share of
@@ -108,6 +110,34 @@ export class CreateSecurityDto {
   @ApiProperty({ example: "USD", description: "Currency code" })
   @IsCurrencyCode()
   currencyCode: string;
+
+  /**
+   * Optional identity, not required to create a security: most instruments have
+   * no ISIN, and only an Indian mutual fund has an AMFI scheme code. When
+   * present they are validated -- a mistyped ISIN is a wrong identity that a
+   * later corporate action or tax record would cite.
+   */
+  @ApiProperty({
+    example: "INE002A01018",
+    description: "ISIN (ISO 6166), when the instrument has one",
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @ValidateIf((_o, value) => value !== null && value !== "")
+  @IsIsin()
+  isin?: string | null;
+
+  @ApiProperty({
+    example: "122639",
+    description: "AMFI scheme code, for an Indian mutual fund",
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @ValidateIf((_o, value) => value !== null && value !== "")
+  @IsAmfiSchemeCode()
+  amfiSchemeCode?: string | null;
 
   @ApiProperty({
     example: "Global aggregate bond ETF. ~99% bonds, ~1% cash. TER 0.10%.",

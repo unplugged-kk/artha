@@ -37,7 +37,12 @@ const TOOL_BYTE_BUDGET: Record<string, number> = {
   list_investment_transactions: 2450,
   list_capital_gains: 2050,
   lookup_securities: 1550,
-  manage_securities: 4200,
+  // Raised 4200 -> 4260 for the India instrument pack: `securityType` in this
+  // tool's schema is the canonical SECURITY_TYPES enum, which gained REIT, GOLD
+  // and the eight India scheme types (PPF/EPF/NPS/FD/RD/SGB/ESOP/ULIP). The
+  // measured payload is 4229 bytes; the cap is the measurement plus a small
+  // margin, not slack. No other tool or the total moved.
+  manage_securities: 4260,
   manage_investment_transactions: 4500,
   list_upcoming_bills: 3000,
   calculate: 1200,

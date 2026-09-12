@@ -117,6 +117,10 @@
     "exchangeLabel": "取引所",
     "currencyLabel": "通貨",
     "currencyNotConfigured": "{code} — 登録した通貨にありません",
+    "isinLabel": "ISIN",
+    "isinPlaceholder": "e.g., INE002A01018",
+    "amfiCodeLabel": "AMFI scheme code",
+    "amfiCodePlaceholder": "e.g., 122639",
     "quoteProviderLabel": "株価プロバイダー",
     "msnIdLabel": "MSN 銘柄 ID（上級者向け）",
     "lookupProviderAriaLabel": "プロバイダーを検索",
@@ -335,7 +339,9 @@
     "nameRequired": "名前は必須です",
     "nameMax": "名前は 255 文字以内にしてください",
     "currencyRequired": "通貨は必須です",
-    "descriptionMax": "説明は5000文字以内である必要があります"
+    "descriptionMax": "説明は5000文字以内である必要があります",
+    "isinFormat": "ISIN must be 12 characters with a valid check digit",
+    "amfiCodeFormat": "AMFI scheme code must be 1-10 digits"
   },
   "priceValidation": {
     "dateRequired": "日付は必須です",

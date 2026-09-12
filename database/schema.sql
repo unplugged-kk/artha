@@ -593,6 +593,8 @@ CREATE TABLE securities (
     security_type VARCHAR(50), -- 'STOCK', 'ETF', 'MUTUAL_FUND', 'BOND', etc
     exchange VARCHAR(50), -- 'NYSE', 'NASDAQ', 'TSX', 'TSXV', etc
     currency_code VARCHAR(3) NOT NULL REFERENCES currencies(code),
+    isin VARCHAR(12),                -- ISO 6166 identity, when the instrument has one (migration 20260912023003)
+    amfi_scheme_code VARCHAR(10),    -- AMFI catalogue id for an Indian mutual-fund scheme (migration 20260912023003)
     description TEXT, -- free-text notes, optionally pre-filled from the quote provider
     is_active BOOLEAN DEFAULT true,
     is_favourite BOOLEAN NOT NULL DEFAULT false, -- pinned to the dashboard Favourite Securities widget
@@ -624,6 +626,29 @@ CREATE INDEX idx_securities_user_id ON securities(user_id);
 CREATE INDEX idx_securities_symbol ON securities(symbol);
 CREATE INDEX idx_securities_exchange ON securities(exchange);
 CREATE INDEX idx_securities_user_favourite ON securities(user_id, is_favourite);
+-- One instrument per ISIN / AMFI scheme code within a user's book; the NULL
+-- case (most instruments) stays unconstrained, hence the partial predicate.
+CREATE UNIQUE INDEX idx_securities_user_isin ON securities(user_id, isin) WHERE isin IS NOT NULL;
+CREATE UNIQUE INDEX idx_securities_user_amfi_code ON securities(user_id, amfi_scheme_code) WHERE amfi_scheme_code IS NOT NULL;
+
+-- Instrument aliases (migration 20260912023003)
+--
+-- A ticker an exchange has since renamed. Global reference data: the rename is a
+-- fact about the exchange, identical for every user, so there is no owner column
+-- and no RLS policy -- it is exempt, like currencies. The provider-key mapping
+-- reads it before formatting a symbol, so a security stored under the name the
+-- user knows still resolves to the ticker the provider publishes.
+CREATE TABLE instrument_aliases (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    exchange VARCHAR(50) NOT NULL,       -- canonical exchange code: 'NSE', 'BSE', ...
+    alias_symbol VARCHAR(20) NOT NULL,   -- the retired ticker
+    canonical_symbol VARCHAR(20) NOT NULL, -- the ticker the exchange uses now
+    note VARCHAR(255),                   -- why it changed, for an operator
+    effective_from DATE,                 -- when the exchange says it changed
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE UNIQUE INDEX idx_instrument_aliases_lookup ON instrument_aliases(exchange, alias_symbol);
 
 -- Security Tags (many-to-many) -- reuses the shared tags pool, mirrors transaction_tags
 CREATE TABLE security_tags (
@@ -3204,6 +3229,7 @@ CREATE POLICY emergency_access_contacts_isolation ON emergency_access_contacts
 -- rls-exempt: currencies
 -- rls-exempt: exchange_rates
 -- rls-exempt: google_places_instance_usage
+-- rls-exempt: instrument_aliases
 -- rls-exempt: market_index_prices
 -- rls-exempt: market_index_sync
 -- rls-exempt: oauth_payloads

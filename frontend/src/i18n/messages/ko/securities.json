@@ -117,6 +117,10 @@
     "exchangeLabel": "거래소",
     "currencyLabel": "통화",
     "currencyNotConfigured": "{code} — 등록한 통화에 없음",
+    "isinLabel": "ISIN",
+    "isinPlaceholder": "e.g., INE002A01018",
+    "amfiCodeLabel": "AMFI scheme code",
+    "amfiCodePlaceholder": "e.g., 122639",
     "quoteProviderLabel": "시세 제공자",
     "msnIdLabel": "MSN 금융 상품 ID (고급)",
     "lookupProviderAriaLabel": "제공자 조회",
@@ -335,7 +339,9 @@
     "nameRequired": "이름은 필수입니다",
     "nameMax": "이름은 255자 이하여야 합니다",
     "currencyRequired": "통화는 필수입니다",
-    "descriptionMax": "설명은 5000자 이하여야 합니다"
+    "descriptionMax": "설명은 5000자 이하여야 합니다",
+    "isinFormat": "ISIN must be 12 characters with a valid check digit",
+    "amfiCodeFormat": "AMFI scheme code must be 1-10 digits"
   },
   "priceValidation": {
     "dateRequired": "날짜는 필수입니다",

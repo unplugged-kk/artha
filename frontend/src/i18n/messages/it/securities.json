@@ -117,6 +117,10 @@
     "exchangeLabel": "Borsa",
     "currencyLabel": "Valuta",
     "currencyNotConfigured": "{code} — non è tra le tue valute",
+    "isinLabel": "ISIN",
+    "isinPlaceholder": "e.g., INE002A01018",
+    "amfiCodeLabel": "AMFI scheme code",
+    "amfiCodePlaceholder": "e.g., 122639",
     "quoteProviderLabel": "Fornitore quotazioni",
     "msnIdLabel": "ID strumento MSN (avanzato)",
     "lookupProviderAriaLabel": "Cerca fornitore",
@@ -335,7 +339,9 @@
     "nameRequired": "Il nome è obbligatorio",
     "nameMax": "Il nome deve avere al massimo 255 caratteri",
     "currencyRequired": "La valuta è obbligatoria",
-    "descriptionMax": "La descrizione non può superare i 5000 caratteri"
+    "descriptionMax": "La descrizione non può superare i 5000 caratteri",
+    "isinFormat": "ISIN must be 12 characters with a valid check digit",
+    "amfiCodeFormat": "AMFI scheme code must be 1-10 digits"
   },
   "priceValidation": {
     "dateRequired": "La data è obbligatoria",

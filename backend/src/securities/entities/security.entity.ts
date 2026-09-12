@@ -9,6 +9,7 @@ import {
   JoinTable,
   JoinColumn,
   Unique,
+  Index,
 } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { User } from "../../users/entities/user.entity";
@@ -23,6 +24,14 @@ const numericTransformer = {
 
 @Entity("securities")
 @Unique(["userId", "symbol"])
+@Index("idx_securities_user_isin", ["userId", "isin"], {
+  unique: true,
+  where: '"isin" IS NOT NULL',
+})
+@Index("idx_securities_user_amfi_code", ["userId", "amfiSchemeCode"], {
+  unique: true,
+  where: '"amfi_scheme_code" IS NOT NULL',
+})
 export class Security {
   @ApiProperty({ example: "c5f5d5f0-1234-4567-890a-123456789abc" })
   @PrimaryGeneratedColumn("uuid")
@@ -63,6 +72,42 @@ export class Security {
   @ApiProperty({ example: "USD" })
   @Column({ type: "varchar", length: 3, name: "currency_code" })
   currencyCode: string;
+
+  /**
+   * Stable cross-provider identity for an instrument that has one (ISO 6166).
+   * The ticker can be renamed on the exchange and the provider can relabel it;
+   * the ISIN does not move, which is what makes it the identity a future
+   * corporate-action or tax record should cite. Null for instruments that have
+   * no ISIN (most funds, and every India scheme type).
+   */
+  @ApiProperty({
+    example: "INE002A01018",
+    description: "ISIN (ISO 6166), when the instrument has one",
+    required: false,
+    nullable: true,
+  })
+  @Column({ type: "varchar", length: 12, nullable: true })
+  isin: string | null;
+
+  /**
+   * The AMFI catalogue identifier for an Indian mutual-fund scheme. This is
+   * instrument identity, not holding detail: quotes/NAV resolve per instrument,
+   * so the code has to sit where the provider layer can read it. See
+   * `india_holdings_ext` for the per-position attributes.
+   */
+  @ApiProperty({
+    example: "122639",
+    description: "AMFI scheme code, for an Indian mutual fund",
+    required: false,
+    nullable: true,
+  })
+  @Column({
+    type: "varchar",
+    length: 10,
+    nullable: true,
+    name: "amfi_scheme_code",
+  })
+  amfiSchemeCode: string | null;
 
   @ApiProperty({
     example: "Global aggregate bond ETF. ~99% bonds, ~1% cash. TER 0.10%.",

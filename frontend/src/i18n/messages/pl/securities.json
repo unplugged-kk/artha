@@ -117,6 +117,10 @@
     "exchangeLabel": "Giełda",
     "currencyLabel": "Waluta",
     "currencyNotConfigured": "{code} — brak w Twoich walutach",
+    "isinLabel": "ISIN",
+    "isinPlaceholder": "e.g., INE002A01018",
+    "amfiCodeLabel": "AMFI scheme code",
+    "amfiCodePlaceholder": "e.g., 122639",
     "quoteProviderLabel": "Dostawca notowań",
     "msnIdLabel": "Identyfikator instrumentu MSN (zaawansowane)",
     "lookupProviderAriaLabel": "Dostawca wyszukiwania",
@@ -335,7 +339,9 @@
     "nameRequired": "Nazwa jest wymagana",
     "nameMax": "Nazwa może mieć maksymalnie 255 znaków",
     "currencyRequired": "Waluta jest wymagana",
-    "descriptionMax": "Opis może mieć maksymalnie 5000 znaków"
+    "descriptionMax": "Opis może mieć maksymalnie 5000 znaków",
+    "isinFormat": "ISIN must be 12 characters with a valid check digit",
+    "amfiCodeFormat": "AMFI scheme code must be 1-10 digits"
   },
   "priceValidation": {
     "dateRequired": "Data jest wymagana",

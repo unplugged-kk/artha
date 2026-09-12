@@ -62,6 +62,25 @@ const buildSecuritySchema = (t: (key: string) => string) => z.object({
   securityType: z.string().optional(),
   exchange: z.string().optional(),
   currencyCode: z.string().min(1, t('validation.currencyRequired')),
+  // Structural checks only on the client: the server also verifies the ISIN
+  // check digit, so a mistyped identifier is caught there rather than by a
+  // second copy of the algorithm living here.
+  isin: z
+    .string()
+    .max(12)
+    .optional()
+    .refine(
+      (v) => !v?.trim() || /^[A-Z]{2}[A-Z0-9]{9}[0-9]$/.test(v.trim().toUpperCase()),
+      t('validation.isinFormat'),
+    ),
+  amfiSchemeCode: z
+    .string()
+    .max(10)
+    .optional()
+    .refine(
+      (v) => !v?.trim() || /^\d{1,10}$/.test(v.trim()),
+      t('validation.amfiCodeFormat'),
+    ),
   description: z.string().max(5000, t('validation.descriptionMax')).optional(),
   website: z.string().max(2048).optional(),
   irWebsite: z.string().max(2048).optional(),
@@ -233,6 +252,8 @@ export function SecurityForm({ security, defaults, onSubmit, onCancel, onDirtyCh
       irWebsite: security?.irWebsite || '',
       quoteProvider: security?.quoteProvider || '',
       msnInstrumentId: security?.msnInstrumentId || '',
+      isin: security?.isin || '',
+      amfiSchemeCode: security?.amfiSchemeCode || '',
       isFavourite: security?.isFavourite || false,
       priceChartEnabled: security?.priceChartEnabled ?? false,
       priceAlertPercent: security?.priceAlertPercent == null ? '' : String(security.priceAlertPercent),
@@ -384,6 +405,8 @@ export function SecurityForm({ security, defaults, onSubmit, onCancel, onDirtyCh
         description: '',
         quoteProvider: '',
         msnInstrumentId: '',
+        isin: '',
+        amfiSchemeCode: '',
         isFavourite: false,
         priceChartEnabled: false,
         priceAlertPercent: '',
@@ -470,6 +493,8 @@ export function SecurityForm({ security, defaults, onSubmit, onCancel, onDirtyCh
       website: data.website?.trim() ?? '',
       irWebsite: data.irWebsite?.trim() ?? '',
       msnInstrumentId: data.msnInstrumentId?.trim() || undefined,
+      isin: data.isin?.trim().toUpperCase() || undefined,
+      amfiSchemeCode: data.amfiSchemeCode?.trim() || undefined,
       isFavourite: data.isFavourite ?? false,
       priceChartEnabled: data.priceChartEnabled ?? false,
       priceAlertPercent: data.priceAlertPercent?.trim() ? Number(data.priceAlertPercent) : null,
@@ -680,6 +705,22 @@ export function SecurityForm({ security, defaults, onSubmit, onCancel, onDirtyCh
           placeholder={t('form.exchangePlaceholder')}
         />
       )}
+
+      <Input
+        label={t('form.isinLabel')}
+        {...register('isin')}
+        error={errors.isin?.message}
+        placeholder={t('form.isinPlaceholder')}
+        maxLength={12}
+      />
+
+      <Input
+        label={t('form.amfiCodeLabel')}
+        {...register('amfiSchemeCode')}
+        error={errors.amfiSchemeCode?.message}
+        placeholder={t('form.amfiCodePlaceholder')}
+        maxLength={10}
+      />
 
       {/* Favourite star toggle */}
       <button

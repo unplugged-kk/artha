@@ -105,6 +105,10 @@ export const INTENTIONALLY_EXCLUDED_TABLES: ReadonlySet<string> = new Set([
   // counter another user's lookups are still spending.
   "google_places_instance_usage",
   "exchange_rates", // global shared reference data, not per-user
+  // Instrument identity reference data: which ticker an exchange renamed.
+  // Global, and republished by the exchange, so a restore must not carry one
+  // instance's copy over another's.
+  "instrument_aliases",
   "market_index_prices", // global market reference data, refetched from the provider
   "market_index_sync", // provider fetch bookkeeping for the above
   "provider_health", // deployment-wide provider availability + alert bookkeeping
