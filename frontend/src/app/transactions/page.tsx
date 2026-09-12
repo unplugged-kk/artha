@@ -12,6 +12,11 @@ import { TransactionFilterPanel } from '@/components/transactions/TransactionFil
 import { TagKeyBreakdownChart } from '@/components/transactions/TagKeyBreakdownChart';
 import { ListBottomPager } from '@/components/ui/ListBottomPager';
 import { TransactionList } from '@/components/transactions/TransactionList';
+import {
+  MonthNavigator,
+  currentMonthKey,
+  monthBounds,
+} from '@/components/transactions/MonthNavigator';
 import dynamic from 'next/dynamic';
 
 const TransactionForm = dynamic(() => import('@/components/transactions/TransactionForm').then(m => m.TransactionForm), { ssr: false });
@@ -972,6 +977,14 @@ function TransactionsContent() {
     }
   }, [accountIdsForQuery, filters.filterCategoryIds, filters.filterPayeeIds, filters.filterTagIds, filters.filterStartDate, filters.filterEndDate, filters.filterSearch, filters.filterAmountFrom, filters.filterAmountTo, filters.filterStatuses, filters.filterOriginalCurrencyCodes, filters.filterHasAttachments, t]);
 
+  // The month the ledger is browsing. It follows the range's own start date
+  // rather than being held in its own state: a month picker that remembered a
+  // month the list is not showing would let the heading and the rows disagree.
+  const currentMonth = useMemo(() => currentMonthKey(), []);
+  const visibleMonth = filters.filterStartDate
+    ? filters.filterStartDate.slice(0, 7)
+    : currentMonth;
+
   return (
     <PageLayout>
       <main className="px-4 sm:px-6 lg:px-12 pt-6 pb-8">
@@ -1353,6 +1366,23 @@ function TransactionsContent() {
           variant="danger"
         />
 
+        {/* Month browsing sits directly above the ledger it governs, so the
+            month named here is visibly the one the rows below belong to. */}
+        <div className="mb-3">
+          <MonthNavigator
+            month={visibleMonth}
+            currentMonth={currentMonth}
+            onSelectMonth={(monthKey) => {
+              const bounds = monthBounds(monthKey);
+              if (!bounds) return;
+              filters.isFilterChange.current = true;
+              filters.setFilterStartDate(bounds.startDate);
+              filters.setFilterEndDate(bounds.endDate);
+              filters.setFilterTimePeriod('custom');
+            }}
+          />
+        </div>
+
         {/* Transactions List */}
         <div className={`${CARD_CLASS} overflow-hidden`}>
           {isLoading && transactions.length === 0 ? (
@@ -1395,6 +1425,7 @@ function TransactionsContent() {
               categoryLabelMap={filters.categoryLabelMap}
               budgetStatusMap={budgetStatusMap}
               highlightTransactionId={filters.highlightTransactionId}
+              groupByDate
             />
           )}
         </div>

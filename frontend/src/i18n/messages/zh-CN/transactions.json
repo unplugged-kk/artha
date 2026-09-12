@@ -183,7 +183,17 @@
       "editButton": "编辑",
       "deleteButton": "删除"
     },
-    "itemNamePlural": "笔交易"
+    "itemNamePlural": "笔交易",
+    "dayGroup": {
+      "yesterday": "Yesterday",
+      "income": "Income",
+      "expense": "Expense"
+    },
+    "monthNav": {
+      "previous": "Previous month",
+      "next": "Next month",
+      "thisMonth": "This month"
+    }
   },
   "row": {
     "copyOptions": {

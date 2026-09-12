@@ -183,7 +183,17 @@
       "editButton": "編輯",
       "deleteButton": "刪除"
     },
-    "itemNamePlural": "筆交易"
+    "itemNamePlural": "筆交易",
+    "dayGroup": {
+      "yesterday": "Yesterday",
+      "income": "Income",
+      "expense": "Expense"
+    },
+    "monthNav": {
+      "previous": "Previous month",
+      "next": "Next month",
+      "thisMonth": "This month"
+    }
   },
   "row": {
     "copyOptions": {

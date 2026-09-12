@@ -183,7 +183,17 @@
       "editButton": "편집",
       "deleteButton": "삭제"
     },
-    "itemNamePlural": "거래"
+    "itemNamePlural": "거래",
+    "dayGroup": {
+      "yesterday": "Yesterday",
+      "income": "Income",
+      "expense": "Expense"
+    },
+    "monthNav": {
+      "previous": "Previous month",
+      "next": "Next month",
+      "thisMonth": "This month"
+    }
   },
   "row": {
     "copyOptions": {
