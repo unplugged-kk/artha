@@ -468,6 +468,15 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      # `upload-sarif` reads the workflow run to attach the scan to it. Declaring
+      # any `permissions` block sets every scope it does not name to `none`, so
+      # without this the upload fails with "Resource not accessible by
+      # integration" on `GET /repos/{owner}/{repo}/actions/runs/{run_id}` and the
+      # job goes red -- not because the scan found anything, but because its
+      # result could not be published. Reading the run is the least privilege
+      # that lets the findings reach the Security tab; the scanner itself is
+      # neither suppressed nor narrowed.
+      actions: read
       security-events: write # for github/codeql-action/upload-sarif to publish zizmor findings to the Security tab
     steps:
       - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
