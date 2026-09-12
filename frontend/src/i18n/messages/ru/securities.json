@@ -155,7 +155,17 @@
       "bond": "Облигация",
       "option": "Опцион",
       "crypto": "Криптовалюта",
-      "other": "Другое"
+      "other": "Другое",
+      "reit": "REIT",
+      "gold": "Gold",
+      "ppf": "PPF",
+      "epf": "EPF",
+      "nps": "NPS",
+      "fd": "Fixed Deposit",
+      "rd": "Recurring Deposit",
+      "sgb": "Sovereign Gold Bond",
+      "esop": "ESOP",
+      "ulip": "ULIP"
     },
     "quoteProviderUseDefault": "Использовать по умолчанию ({provider})",
     "symbolPlaceholder": "например, AAPL, XEQT, BTC",

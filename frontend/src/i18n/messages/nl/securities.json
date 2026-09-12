@@ -155,7 +155,17 @@
       "bond": "Obligatie",
       "option": "Optie",
       "crypto": "Cryptovaluta",
-      "other": "Overig"
+      "other": "Overig",
+      "reit": "REIT",
+      "gold": "Gold",
+      "ppf": "PPF",
+      "epf": "EPF",
+      "nps": "NPS",
+      "fd": "Fixed Deposit",
+      "rd": "Recurring Deposit",
+      "sgb": "Sovereign Gold Bond",
+      "esop": "ESOP",
+      "ulip": "ULIP"
     },
     "quoteProviderUseDefault": "Standaard gebruiken ({provider})",
     "symbolPlaceholder": "bijv. AAPL, XEQT, BTC",

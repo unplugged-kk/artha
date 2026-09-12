@@ -71,6 +71,8 @@
     "distributionsTitle": "從價格歷史讀取：每次配息時，調整後收盤價都會與報價收盤價分離。這是由資料推斷的，不是發行機構的宣告。",
     "exchange": "交易所",
     "currency": "貨幣",
+    "isin": "ISIN",
+    "amfiCode": "AMFI scheme code",
     "sector": "類股",
     "industry": "產業",
     "provider": "資料來源",

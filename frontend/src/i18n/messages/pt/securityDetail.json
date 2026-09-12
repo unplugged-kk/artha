@@ -71,6 +71,8 @@
     "distributionsTitle": "Lido do histórico de cotações: o fecho ajustado afasta-se do fecho cotado sempre que é paga uma distribuição. Inferido dos dados, não declarado pelo emitente.",
     "exchange": "Bolsa",
     "currency": "Moeda",
+    "isin": "ISIN",
+    "amfiCode": "AMFI scheme code",
     "sector": "Setor",
     "industry": "Indústria",
     "provider": "Fornecedor",

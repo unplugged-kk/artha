@@ -155,7 +155,17 @@
       "bond": "債券",
       "option": "選擇權",
       "crypto": "加密貨幣",
-      "other": "其他"
+      "other": "其他",
+      "reit": "REIT",
+      "gold": "Gold",
+      "ppf": "PPF",
+      "epf": "EPF",
+      "nps": "NPS",
+      "fd": "Fixed Deposit",
+      "rd": "Recurring Deposit",
+      "sgb": "Sovereign Gold Bond",
+      "esop": "ESOP",
+      "ulip": "ULIP"
     },
     "quoteProviderUseDefault": "使用預設（{provider}）",
     "symbolPlaceholder": "例如：AAPL、XEQT、BTC",

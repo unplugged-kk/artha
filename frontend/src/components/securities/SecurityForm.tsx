@@ -128,8 +128,22 @@ const securityTypeOptions = [
   { value: 'MUTUAL_FUND', labelKey: 'form.types.mutualFund' },
   { value: 'BOND', labelKey: 'form.types.bond' },
   { value: 'OPTION', labelKey: 'form.types.option' },
+  { value: 'REIT', labelKey: 'form.types.reit' },
+  { value: 'GOLD', labelKey: 'form.types.gold' },
   { value: 'CRYPTO', labelKey: 'form.types.crypto' },
   { value: 'OTHER', labelKey: 'form.types.other' },
+  // India instrument pack: holdings the user tracks that have no exchange
+  // listing, so their identity is the scheme/account detail rather than a
+  // ticker. Kept here rather than behind a feature flag because choosing the
+  // type is what makes those fields meaningful.
+  { value: 'PPF', labelKey: 'form.types.ppf' },
+  { value: 'EPF', labelKey: 'form.types.epf' },
+  { value: 'NPS', labelKey: 'form.types.nps' },
+  { value: 'FD', labelKey: 'form.types.fd' },
+  { value: 'RD', labelKey: 'form.types.rd' },
+  { value: 'SGB', labelKey: 'form.types.sgb' },
+  { value: 'ESOP', labelKey: 'form.types.esop' },
+  { value: 'ULIP', labelKey: 'form.types.ulip' },
 ];
 
 export function SecurityForm({ security, defaults, onSubmit, onCancel, onDirtyChange, submitRef }: SecurityFormProps) {
@@ -714,13 +728,17 @@ export function SecurityForm({ security, defaults, onSubmit, onCancel, onDirtyCh
         maxLength={12}
       />
 
-      <Input
-        label={t('form.amfiCodeLabel')}
-        {...register('amfiSchemeCode')}
-        error={errors.amfiSchemeCode?.message}
-        placeholder={t('form.amfiCodePlaceholder')}
-        maxLength={10}
-      />
+      {/* A scheme code is identity for a mutual fund and meaningless for
+          anything else, so the field only appears where it can be used. */}
+      {watch('securityType') === 'MUTUAL_FUND' && (
+        <Input
+          label={t('form.amfiCodeLabel')}
+          {...register('amfiSchemeCode')}
+          error={errors.amfiSchemeCode?.message}
+          placeholder={t('form.amfiCodePlaceholder')}
+          maxLength={10}
+        />
+      )}
 
       {/* Favourite star toggle */}
       <button

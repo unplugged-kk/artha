@@ -71,6 +71,8 @@
     "distributionsTitle": "Lu dans l'historique des cours : le cours ajusté s'écarte du cours de clôture à chaque distribution. Déduit des données, non déclaré par l'émetteur.",
     "exchange": "Place de cotation",
     "currency": "Devise",
+    "isin": "ISIN",
+    "amfiCode": "AMFI scheme code",
     "sector": "Secteur",
     "industry": "Industrie",
     "provider": "Fournisseur",

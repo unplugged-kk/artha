@@ -71,6 +71,8 @@
     "distributionsTitle": "가격 이력에서 읽어낸 값입니다. 분배가 있을 때마다 수정 종가가 호가 종가와 벌어집니다. 발행사가 밝힌 것이 아니라 데이터에서 추론한 것입니다.",
     "exchange": "거래소",
     "currency": "통화",
+    "isin": "ISIN",
+    "amfiCode": "AMFI scheme code",
     "sector": "섹터",
     "industry": "산업",
     "provider": "제공처",

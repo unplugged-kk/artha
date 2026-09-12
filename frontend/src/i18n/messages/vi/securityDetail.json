@@ -71,6 +71,8 @@
     "distributionsTitle": "Đọc từ lịch sử giá: giá đóng cửa điều chỉnh tách khỏi giá đóng cửa niêm yết mỗi khi có một lần phân phối. Suy ra từ dữ liệu, không phải do tổ chức phát hành công bố.",
     "exchange": "Sàn giao dịch",
     "currency": "Tiền tệ",
+    "isin": "ISIN",
+    "amfiCode": "AMFI scheme code",
     "sector": "Ngành",
     "industry": "Phân ngành",
     "provider": "Nhà cung cấp",

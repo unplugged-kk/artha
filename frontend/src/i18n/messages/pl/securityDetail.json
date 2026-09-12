@@ -71,6 +71,8 @@
     "distributionsTitle": "Odczytane z historii cen: kurs skorygowany odchodzi od kursu zamknięcia przy każdej wypłacie. Wnioskowane z danych, nie zadeklarowane przez emitenta.",
     "exchange": "Giełda",
     "currency": "Waluta",
+    "isin": "ISIN",
+    "amfiCode": "AMFI scheme code",
     "sector": "Sektor",
     "industry": "Branża",
     "provider": "Dostawca",

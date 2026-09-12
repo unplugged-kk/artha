@@ -71,6 +71,8 @@
     "distributionsTitle": "Fiyat geçmişinden okundu: her dağıtımda düzeltilmiş kapanış, kote kapanıştan ayrılır. Veriden çıkarıldı; ihraççı tarafından bildirilmedi.",
     "exchange": "Borsa",
     "currency": "Para birimi",
+    "isin": "ISIN",
+    "amfiCode": "AMFI scheme code",
     "sector": "Sektör",
     "industry": "Endüstri",
     "provider": "Sağlayıcı",

@@ -155,7 +155,17 @@
       "bond": "채권",
       "option": "옵션",
       "crypto": "암호화폐",
-      "other": "기타"
+      "other": "기타",
+      "reit": "REIT",
+      "gold": "Gold",
+      "ppf": "PPF",
+      "epf": "EPF",
+      "nps": "NPS",
+      "fd": "Fixed Deposit",
+      "rd": "Recurring Deposit",
+      "sgb": "Sovereign Gold Bond",
+      "esop": "ESOP",
+      "ulip": "ULIP"
     },
     "quoteProviderUseDefault": "기본값 사용 ({provider})",
     "symbolPlaceholder": "예: AAPL, XEQT, BTC",

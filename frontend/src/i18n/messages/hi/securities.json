@@ -155,7 +155,17 @@
       "bond": "बॉन्ड",
       "option": "विकल्प",
       "crypto": "क्रिप्टोकरेंसी",
-      "other": "अन्य"
+      "other": "अन्य",
+      "reit": "REIT",
+      "gold": "Gold",
+      "ppf": "PPF",
+      "epf": "EPF",
+      "nps": "NPS",
+      "fd": "Fixed Deposit",
+      "rd": "Recurring Deposit",
+      "sgb": "Sovereign Gold Bond",
+      "esop": "ESOP",
+      "ulip": "ULIP"
     },
     "quoteProviderUseDefault": "डिफ़ॉल्ट उपयोग करें ({provider})",
     "symbolPlaceholder": "उदा., AAPL, XEQT, BTC",

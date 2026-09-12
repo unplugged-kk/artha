@@ -155,7 +155,17 @@
       "bond": "Облігація",
       "option": "Опціон",
       "crypto": "Криптовалюта",
-      "other": "Інше"
+      "other": "Інше",
+      "reit": "REIT",
+      "gold": "Gold",
+      "ppf": "PPF",
+      "epf": "EPF",
+      "nps": "NPS",
+      "fd": "Fixed Deposit",
+      "rd": "Recurring Deposit",
+      "sgb": "Sovereign Gold Bond",
+      "esop": "ESOP",
+      "ulip": "ULIP"
     },
     "quoteProviderUseDefault": "Використовувати за замовчуванням ({provider})",
     "symbolPlaceholder": "наприклад AAPL, XEQT, BTC",
