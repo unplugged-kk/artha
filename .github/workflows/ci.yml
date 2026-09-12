@@ -492,8 +492,27 @@ jobs:
         run: uv tool install zizmor
       - name: Run zizmor
         run: zizmor --format sarif .github/workflows/ > zizmor.sarif || true
+      # The findings, in the job log. The SARIF upload below is the richer
+      # channel, but it only exists where code scanning is enabled, and this
+      # repository does not have it -- so without this step the scan's result is
+      # invisible here, and an advisory scan nobody can read is not a control.
+      # Advisory, exactly as this job has always run it: `|| true` because a
+      # finding is reported, not because the job gates on it.
+      - name: Report findings
+        if: always()
+        run: zizmor --format plain .github/workflows/ || true
       - name: Upload SARIF
         if: always()
+        # Publishing is best-effort and must not decide the job. Code scanning
+        # is not enabled on this repository, so `upload-sarif` fails with
+        # "Code scanning is not enabled for this repository" -- a repository
+        # setting, not a finding. Leaving it fatal made the job red for the
+        # state of the publishing environment rather than for anything the scan
+        # found, which is precisely the false signal this job exists not to be.
+        # The scan still runs and still reports (above, and in the uploaded
+        # artifact); enable code scanning and this step starts publishing with
+        # nothing else changed.
+        continue-on-error: true
         uses: github/codeql-action/upload-sarif@fb0994ef1c058010acf1efccff928b0a83b1ed54 # v4.32.6
         with:
           sarif_file: zizmor.sarif

@@ -21,8 +21,8 @@ rules:
     # pattern -- setup-node without npm caching, plus a docker/build-push-action
     # type=gha buildx cache -- so it carries the same documented suppression.
     ignore:
-      - ci.yml:495:9
-      - ci.yml:871:9
+      - ci.yml:504:9
+      - ci.yml:890:9
 
   artipacked:
     # The release job intentionally keeps the GITHUB_TOKEN persisted on the
@@ -30,4 +30,4 @@ rules:
     # version bump and `gh release create` the tag. Every other checkout in this
     # repo sets persist-credentials: false.
     ignore:
-      - ci.yml:648:9
+      - ci.yml:667:9
