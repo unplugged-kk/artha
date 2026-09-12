@@ -353,27 +353,43 @@ describe('SECURITY_TYPE_OPTIONS', () => {
       expect(option).toHaveProperty('label');
       expect(typeof option.value).toBe('string');
       expect(typeof option.label).toBe('string');
+      expect(option.label.length).toBeGreaterThan(0);
     });
   });
 
-  it('contains all expected security types', () => {
+  it('pins the canonical type list, so a change is deliberate', () => {
+    // Mirrors `SECURITY_TYPES` in the backend's security-enums.ts. Restated
+    // here because the two live in different packages with no shared module:
+    // adding a type must be a deliberate edit on both sides.
+    expect(SECURITY_TYPE_OPTIONS.map((o) => o.value)).toEqual([
+      'STOCK',
+      'ETF',
+      'MUTUAL_FUND',
+      'BOND',
+      'OPTION',
+      'GIC',
+      'REIT',
+      'GOLD',
+      'CRYPTO',
+      'CASH',
+      'OTHER',
+      'PPF',
+      'EPF',
+      'NPS',
+      'FD',
+      'RD',
+      'SGB',
+      'ESOP',
+      'ULIP',
+    ]);
+  });
+
+  it('lists each type once', () => {
     const values = SECURITY_TYPE_OPTIONS.map((o) => o.value);
-    expect(values).toContain('STOCK');
-    expect(values).toContain('ETF');
-    expect(values).toContain('MUTUAL_FUND');
-    expect(values).toContain('BOND');
-    expect(values).toContain('OPTION');
-    expect(values).toContain('GIC');
-    expect(values).toContain('CRYPTO');
-    expect(values).toContain('CASH');
-    expect(values).toContain('OTHER');
+    expect(new Set(values).size).toBe(values.length);
   });
 
-  it('has 9 security type options', () => {
-    expect(SECURITY_TYPE_OPTIONS).toHaveLength(9);
-  });
-
-  it('has correct labels for each type', () => {
+  it('has correct labels for the long-standing types', () => {
     const map = Object.fromEntries(SECURITY_TYPE_OPTIONS.map((o) => [o.value, o.label]));
     expect(map['STOCK']).toBe('Stock');
     expect(map['ETF']).toBe('ETF');
@@ -384,6 +400,14 @@ describe('SECURITY_TYPE_OPTIONS', () => {
     expect(map['CRYPTO']).toBe('Cryptocurrency');
     expect(map['CASH']).toBe('Cash/Money Market');
     expect(map['OTHER']).toBe('Other');
+  });
+
+  it('offers the India instrument types with readable labels', () => {
+    const map = Object.fromEntries(SECURITY_TYPE_OPTIONS.map((o) => [o.value, o.label]));
+    expect(map['PPF']).toBe('PPF');
+    expect(map['FD']).toBe('Fixed Deposit');
+    expect(map['RD']).toBe('Recurring Deposit');
+    expect(map['SGB']).toBe('Sovereign Gold Bond');
   });
 });
 

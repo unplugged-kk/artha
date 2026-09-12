@@ -50,9 +50,22 @@ export const SECURITY_TYPES = [
   "BOND",
   "OPTION",
   "GIC",
+  "REIT",
+  "GOLD",
   "CRYPTO",
   "CASH",
   "OTHER",
+  // India instrument pack (Phase 3). These are holdings the user tracks but
+  // that have no exchange listing, so identity is the scheme/account details on
+  // `india_holdings_ext` rather than a ticker.
+  "PPF",
+  "EPF",
+  "NPS",
+  "FD",
+  "RD",
+  "SGB",
+  "ESOP",
+  "ULIP",
 ] as const;
 
 export type SecurityType = (typeof SECURITY_TYPES)[number];
@@ -185,6 +198,18 @@ export const SECURITY_TYPE_TO_ASSET_CLASS: Record<string, string> = {
   BOND: "Fixed Income",
   CRYPTO: "Crypto",
   CASH: "Cash",
+  // India instrument pack. NPS and ULIP are deliberately absent, like
+  // ETF/MUTUAL_FUND above: a pension or a unit-linked plan holds an equity/debt
+  // mix the type alone does not state, so their value belongs in the
+  // unclassified remainder rather than in a guessed bucket.
+  REIT: "Real Estate",
+  GOLD: "Gold",
+  SGB: "Gold",
+  PPF: "Fixed Income",
+  EPF: "Fixed Income",
+  FD: "Fixed Income",
+  RD: "Fixed Income",
+  ESOP: "Equity",
 };
 
 /**

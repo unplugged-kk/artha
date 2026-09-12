@@ -117,6 +117,10 @@
     "exchangeLabel": "Sàn giao dịch",
     "currencyLabel": "Tiền tệ",
     "currencyNotConfigured": "{code} — không có trong tiền tệ của bạn",
+    "isinLabel": "ISIN",
+    "isinPlaceholder": "e.g., INE002A01018",
+    "amfiCodeLabel": "AMFI scheme code",
+    "amfiCodePlaceholder": "e.g., 122639",
     "quoteProviderLabel": "Nhà cung cấp báo giá",
     "msnIdLabel": "ID công cụ MSN (nâng cao)",
     "lookupProviderAriaLabel": "Tra cứu nhà cung cấp",
@@ -335,7 +339,9 @@
     "nameRequired": "Tên là bắt buộc",
     "nameMax": "Tên phải có tối đa 255 ký tự",
     "currencyRequired": "Tiền tệ là bắt buộc",
-    "descriptionMax": "Mô tả không được vượt quá 5000 ký tự"
+    "descriptionMax": "Mô tả không được vượt quá 5000 ký tự",
+    "isinFormat": "ISIN must be 12 characters with a valid check digit",
+    "amfiCodeFormat": "AMFI scheme code must be 1-10 digits"
   },
   "priceValidation": {
     "dateRequired": "Ngày là bắt buộc",

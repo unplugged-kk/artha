@@ -117,6 +117,10 @@
     "exchangeLabel": "Біржа",
     "currencyLabel": "Валюта",
     "currencyNotConfigured": "{code} — немає у ваших валютах",
+    "isinLabel": "ISIN",
+    "isinPlaceholder": "e.g., INE002A01018",
+    "amfiCodeLabel": "AMFI scheme code",
+    "amfiCodePlaceholder": "e.g., 122639",
     "quoteProviderLabel": "Провайдер котирувань",
     "msnIdLabel": "MSN Instrument ID (розширено)",
     "lookupProviderAriaLabel": "Провайдер пошуку",
@@ -335,7 +339,9 @@
     "nameRequired": "Назва обов'язкова",
     "nameMax": "Назва має бути не більше 255 символів",
     "currencyRequired": "Валюта обов'язкова",
-    "descriptionMax": "Опис не може перевищувати 5000 символів"
+    "descriptionMax": "Опис не може перевищувати 5000 символів",
+    "isinFormat": "ISIN must be 12 characters with a valid check digit",
+    "amfiCodeFormat": "AMFI scheme code must be 1-10 digits"
   },
   "priceValidation": {
     "dateRequired": "Дата обов'язкова",

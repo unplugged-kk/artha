@@ -117,6 +117,10 @@
     "exchangeLabel": "交易所",
     "currencyLabel": "货币",
     "currencyNotConfigured": "{code} — 不在你的货币列表中",
+    "isinLabel": "ISIN",
+    "isinPlaceholder": "e.g., INE002A01018",
+    "amfiCodeLabel": "AMFI scheme code",
+    "amfiCodePlaceholder": "e.g., 122639",
     "quoteProviderLabel": "行情提供商",
     "msnIdLabel": "MSN 工具 ID（高级）",
     "lookupProviderAriaLabel": "查询提供商",
@@ -335,7 +339,9 @@
     "nameRequired": "名称为必填项",
     "nameMax": "名称不能超过 255 个字符",
     "currencyRequired": "货币为必填项",
-    "descriptionMax": "描述不能超过5000个字符"
+    "descriptionMax": "描述不能超过5000个字符",
+    "isinFormat": "ISIN must be 12 characters with a valid check digit",
+    "amfiCodeFormat": "AMFI scheme code must be 1-10 digits"
   },
   "priceValidation": {
     "dateRequired": "日期为必填项",

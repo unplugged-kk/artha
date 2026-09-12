@@ -34,6 +34,10 @@ export interface Security {
   securityType: string | null;
   exchange: string | null;
   currencyCode: string;
+  /** ISO 6166 identity, when the instrument has one. */
+  isin?: string | null;
+  /** AMFI catalogue id, for an Indian mutual-fund scheme. */
+  amfiSchemeCode?: string | null;
   description?: string | null;
   tags?: Tag[];
   isActive: boolean;
@@ -575,6 +579,10 @@ export interface CreateSecurityData {
   securityType?: string;
   exchange?: string;
   currencyCode: string;
+  /** ISO 6166 identity, when the instrument has one. */
+  isin?: string | null;
+  /** AMFI catalogue id, for an Indian mutual-fund scheme. */
+  amfiSchemeCode?: string | null;
   description?: string;
   /** Empty string clears the stored address; the backend normalises the rest. */
   website?: string | null;

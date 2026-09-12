@@ -117,6 +117,10 @@
     "exchangeLabel": "एक्सचेंज",
     "currencyLabel": "मुद्रा",
     "currencyNotConfigured": "{code} — आपकी मुद्राओं में नहीं",
+    "isinLabel": "ISIN",
+    "isinPlaceholder": "e.g., INE002A01018",
+    "amfiCodeLabel": "AMFI scheme code",
+    "amfiCodePlaceholder": "e.g., 122639",
     "quoteProviderLabel": "उद्धरण प्रदाता",
     "msnIdLabel": "MSN इंस्ट्रूमेंट ID (उन्नत)",
     "lookupProviderAriaLabel": "प्रदाता खोजें",
@@ -335,7 +339,9 @@
     "nameRequired": "नाम आवश्यक है",
     "nameMax": "नाम 255 अक्षरों या उससे कम होना चाहिए",
     "currencyRequired": "मुद्रा आवश्यक है",
-    "descriptionMax": "विवरण 5000 अक्षरों से अधिक नहीं होना चाहिए"
+    "descriptionMax": "विवरण 5000 अक्षरों से अधिक नहीं होना चाहिए",
+    "isinFormat": "ISIN must be 12 characters with a valid check digit",
+    "amfiCodeFormat": "AMFI scheme code must be 1-10 digits"
   },
   "priceValidation": {
     "dateRequired": "तिथि आवश्यक है",

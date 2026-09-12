@@ -87,9 +87,21 @@ export const SECURITY_TYPE_OPTIONS = [
   { value: 'BOND', label: 'Bond' },
   { value: 'OPTION', label: 'Option' },
   { value: 'GIC', label: 'GIC' },
+  { value: 'REIT', label: 'REIT' },
+  { value: 'GOLD', label: 'Gold' },
   { value: 'CRYPTO', label: 'Cryptocurrency' },
   { value: 'CASH', label: 'Cash/Money Market' },
   { value: 'OTHER', label: 'Other' },
+  // India instrument pack: holdings with no exchange listing, whose details
+  // live on their India extension record.
+  { value: 'PPF', label: 'PPF' },
+  { value: 'EPF', label: 'EPF' },
+  { value: 'NPS', label: 'NPS' },
+  { value: 'FD', label: 'Fixed Deposit' },
+  { value: 'RD', label: 'Recurring Deposit' },
+  { value: 'SGB', label: 'Sovereign Gold Bond' },
+  { value: 'ESOP', label: 'ESOP' },
+  { value: 'ULIP', label: 'ULIP' },
 ];
 
 /**

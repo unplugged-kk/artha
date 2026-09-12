@@ -117,6 +117,10 @@
     "exchangeLabel": "Биржа",
     "currencyLabel": "Валюта",
     "currencyNotConfigured": "{code} — нет в ваших валютах",
+    "isinLabel": "ISIN",
+    "isinPlaceholder": "e.g., INE002A01018",
+    "amfiCodeLabel": "AMFI scheme code",
+    "amfiCodePlaceholder": "e.g., 122639",
     "quoteProviderLabel": "Провайдер котировок",
     "msnIdLabel": "Идентификатор инструмента MSN (расширенный)",
     "lookupProviderAriaLabel": "Поиск провайдера",
@@ -335,7 +339,9 @@
     "nameRequired": "Имя обязательно",
     "nameMax": "Имя должно содержать не более 255 символов",
     "currencyRequired": "Валюта обязательна",
-    "descriptionMax": "Описание не должно превышать 5000 символов"
+    "descriptionMax": "Описание не должно превышать 5000 символов",
+    "isinFormat": "ISIN must be 12 characters with a valid check digit",
+    "amfiCodeFormat": "AMFI scheme code must be 1-10 digits"
   },
   "priceValidation": {
     "dateRequired": "Дата обязательна",

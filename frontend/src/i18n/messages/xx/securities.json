@@ -117,6 +117,10 @@
     "exchangeLabel": "[XX-Exchange-XX]",
     "currencyLabel": "[XX-Currency-XX]",
     "currencyNotConfigured": "[XX-{code} — not in your currencies-XX]",
+    "isinLabel": "[XX-ISIN-XX]",
+    "isinPlaceholder": "[XX-e.g., INE002A01018-XX]",
+    "amfiCodeLabel": "[XX-AMFI scheme code-XX]",
+    "amfiCodePlaceholder": "[XX-e.g., 122639-XX]",
     "quoteProviderLabel": "[XX-Quote Provider-XX]",
     "msnIdLabel": "[XX-MSN Instrument ID (advanced)-XX]",
     "lookupProviderAriaLabel": "[XX-Lookup provider-XX]",
@@ -335,7 +339,9 @@
     "nameRequired": "[XX-Name is required-XX]",
     "nameMax": "[XX-Name must be 255 characters or less-XX]",
     "currencyRequired": "[XX-Currency is required-XX]",
-    "descriptionMax": "[XX-Description must be 5000 characters or fewer-XX]"
+    "descriptionMax": "[XX-Description must be 5000 characters or fewer-XX]",
+    "isinFormat": "[XX-ISIN must be 12 characters with a valid check digit-XX]",
+    "amfiCodeFormat": "[XX-AMFI scheme code must be 1-10 digits-XX]"
   },
   "priceValidation": {
     "dateRequired": "[XX-Date is required-XX]",

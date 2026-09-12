@@ -22,6 +22,8 @@ import { ActionHistoryService } from "../action-history/action-history.service";
 import { SecurityLookupResult } from "./providers/quote-provider.interface";
 import { UserPreference } from "../users/entities/user-preference.entity";
 import { normalizeWebsite } from "../common/normalize-website";
+import { normalizeIsin } from "../common/validators/is-isin.validator";
+import { normalizeAmfiSchemeCode } from "../common/validators/is-amfi-scheme-code.validator";
 import {
   normalizeCountryName,
   normalizeAssetName,
@@ -419,6 +421,16 @@ export class SecuritiesService {
     if ("irWebsite" in securityData) {
       securityData.irWebsite = this.normalizeWebsite(securityData.irWebsite);
     }
+    // Identity fields take the same "". clears it contract as the address fields
+    // above: a blank ISIN is an absent ISIN, never an empty string that would
+    // later read as a duplicate identity.
+    if ("isin" in securityData) {
+      securityData.isin = normalizeIsin(securityData.isin ?? "") || null;
+    }
+    if ("amfiSchemeCode" in securityData) {
+      securityData.amfiSchemeCode =
+        normalizeAmfiSchemeCode(securityData.amfiSchemeCode ?? "") || null;
+    }
 
     const saved = await withScopedDb(this.dataSource, async (m) => {
       // Check if symbol already exists for this user
@@ -591,6 +603,16 @@ export class SecuritiesService {
       updateSecurityDto.irWebsite = this.normalizeWebsite(
         updateSecurityDto.irWebsite,
       );
+    }
+    // Identity fields, same as on create: "" clears, and a stored ISIN is
+    // canonical upper-case.
+    if ("isin" in updateSecurityDto) {
+      updateSecurityDto.isin =
+        normalizeIsin(updateSecurityDto.isin ?? "") || null;
+    }
+    if ("amfiSchemeCode" in updateSecurityDto) {
+      updateSecurityDto.amfiSchemeCode =
+        normalizeAmfiSchemeCode(updateSecurityDto.amfiSchemeCode ?? "") || null;
     }
 
     // Check for symbol conflicts if updating symbol

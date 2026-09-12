@@ -117,6 +117,10 @@
     "exchangeLabel": "Bursa",
     "currencyLabel": "Mata Uang",
     "currencyNotConfigured": "{code} — tidak ada di mata uang Anda",
+    "isinLabel": "ISIN",
+    "isinPlaceholder": "e.g., INE002A01018",
+    "amfiCodeLabel": "AMFI scheme code",
+    "amfiCodePlaceholder": "e.g., 122639",
     "quoteProviderLabel": "Penyedia Kutipan",
     "msnIdLabel": "ID Instrumen MSN (lanjutan)",
     "lookupProviderAriaLabel": "Cari penyedia",
@@ -335,7 +339,9 @@
     "nameRequired": "Nama wajib diisi",
     "nameMax": "Nama harus 255 karakter atau kurang",
     "currencyRequired": "Mata uang wajib diisi",
-    "descriptionMax": "Keterangan tidak boleh lebih dari 5000 karakter"
+    "descriptionMax": "Keterangan tidak boleh lebih dari 5000 karakter",
+    "isinFormat": "ISIN must be 12 characters with a valid check digit",
+    "amfiCodeFormat": "AMFI scheme code must be 1-10 digits"
   },
   "priceValidation": {
     "dateRequired": "Tanggal wajib diisi",

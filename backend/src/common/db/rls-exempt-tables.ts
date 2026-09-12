@@ -28,6 +28,8 @@ export const RLS_EXEMPT_TABLES: Readonly<Record<string, string>> = {
     "Global reference data with no owner column; written by the scheduled refresh under system context.",
   google_places_instance_usage:
     "Request counter for the operator's own Google Places key; no owner column, one key is one bill.",
+  instrument_aliases:
+    "Exchange ticker renames (TATAMOTORS -> TMPV); a fact about the exchange, identical for every user, with no owner column.",
   market_index_prices:
     "Global market reference data with no owner column; one index close serves every user.",
   market_index_sync:

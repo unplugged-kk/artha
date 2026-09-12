@@ -384,6 +384,11 @@ export const RULES: Record<string, TableRules> = {
     website: drop, // a public URL names the instrument the masked symbol hides
     ir_website: drop,
     msn_instrument_id: drop, // would identify a masked ticker
+    // Identity codes: an ISIN or an AMFI scheme code names the exact instrument
+    // the masked symbol and name are hiding, so both are dropped for the same
+    // reason as the provider id above.
+    isin: drop,
+    amfi_scheme_code: drop,
     historical_backfill_attempted_at: keep,
     created_at: keep,
     updated_at: keep,

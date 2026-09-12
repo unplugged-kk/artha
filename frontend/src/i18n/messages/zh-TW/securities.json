@@ -117,6 +117,10 @@
     "exchangeLabel": "交易所",
     "currencyLabel": "貨幣",
     "currencyNotConfigured": "{code} — 不在你的貨幣清單中",
+    "isinLabel": "ISIN",
+    "isinPlaceholder": "e.g., INE002A01018",
+    "amfiCodeLabel": "AMFI scheme code",
+    "amfiCodePlaceholder": "e.g., 122639",
     "quoteProviderLabel": "報價提供者",
     "msnIdLabel": "MSN 金融商品 ID（進階）",
     "lookupProviderAriaLabel": "查找提供者",
@@ -335,7 +339,9 @@
     "nameRequired": "名稱為必填",
     "nameMax": "名稱不得超過 255 個字元",
     "currencyRequired": "貨幣為必填",
-    "descriptionMax": "描述不能超過5000個字元"
+    "descriptionMax": "描述不能超過5000個字元",
+    "isinFormat": "ISIN must be 12 characters with a valid check digit",
+    "amfiCodeFormat": "AMFI scheme code must be 1-10 digits"
   },
   "priceValidation": {
     "dateRequired": "日期為必填",

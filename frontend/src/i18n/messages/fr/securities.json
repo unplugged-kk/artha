@@ -117,6 +117,10 @@
     "exchangeLabel": "Marché",
     "currencyLabel": "Devise",
     "currencyNotConfigured": "{code} — absente de vos devises",
+    "isinLabel": "ISIN",
+    "isinPlaceholder": "e.g., INE002A01018",
+    "amfiCodeLabel": "AMFI scheme code",
+    "amfiCodePlaceholder": "e.g., 122639",
     "quoteProviderLabel": "Fournisseur de cours",
     "msnIdLabel": "Identifiant instrument MSN (avancé)",
     "lookupProviderAriaLabel": "Rechercher le fournisseur",
@@ -335,7 +339,9 @@
     "nameRequired": "Le nom est requis",
     "nameMax": "Le nom doit comporter 255 caractères ou moins",
     "currencyRequired": "La devise est requise",
-    "descriptionMax": "La description ne doit pas dépasser 5000 caractères"
+    "descriptionMax": "La description ne doit pas dépasser 5000 caractères",
+    "isinFormat": "ISIN must be 12 characters with a valid check digit",
+    "amfiCodeFormat": "AMFI scheme code must be 1-10 digits"
   },
   "priceValidation": {
     "dateRequired": "La date est requise",
