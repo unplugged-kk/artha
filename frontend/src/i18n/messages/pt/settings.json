@@ -166,6 +166,7 @@
       "browser": "Utilizar locale do browser (detetado automaticamente como {sample})",
       "enUS": "English (US) - 1,234.56",
       "enGB": "English (UK) - 1,234.56",
+      "enIN": "English (India) - 12,34,567.89",
       "deDE": "German - 1.234,56",
       "frFR": "French - 1 234,56"
     },
