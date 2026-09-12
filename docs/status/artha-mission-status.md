@@ -257,7 +257,28 @@ Nothing beyond `securities.is_favourite`, a boolean. Deferred by budget, not by 
 | Frontend typecheck + eslint | clean |
 | i18n structural parity | **all 40 namespaces × 18 locales identical to `en`**; pseudo-locale regenerated |
 | `zizmor` job | **PASSES** on the corrected head — `No findings to report. Good job! (5 suppressed)` |
-| Other CI jobs on PR #11 (first pass) | Dockerfile lint, docs/manifests, Helm, license ×2, NPM audit, schema drift, PR checklist — all pass |
+
+**CI on PR #11, complete except `Frontend Unit Tests`:**
+
+| Job | Result |
+|---|---|
+| Backend Lint & Type Check | **pass** (2m31s) |
+| Backend Integration Tests | **pass** (12m5s) — real Postgres; covers the import and portfolio paths this mission changed |
+| Frontend Lint & Type Check | **pass** (2m43s) |
+| Frontend Bundle Size | **pass** (2m43s) |
+| Schema vs Migrations Drift | **pass** (58s) |
+| Workflow Security Scan (zizmor) | **pass** (1m2s) |
+| License ×2, NPM Audit, Lighthouse, hadolint, Helm, docs/manifests, Bearer, checklist | **pass** |
+| Backend Unit Tests | **fail (2m19s) — the pre-existing OOM, not this mission's work** |
+
+That last one needs stating plainly, because it is the one red job and it looks like a regression:
+
+```
+FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+Aborted (core dumped)
+```
+
+It is the **identical signature** to `main` and to `23281f1e7` (2026-09-10, before any India work), the crash **aborts before Jest prints a summary**, and the fix is `workerIdleMemoryLimit` in the still-unmerged **PR #10** — this branch is cut from `main` and deliberately does not carry it. It is a pre-existing baseline failure, proved on three trees, and it is the reason PR #10 should merge first.
 
 **Pre-existing failure met and proved baseline**: `InsightsAggregatorService › computes average monthly spending from completed months only` (date-sensitive) — it fails identically with this mission's changes stashed.
 
