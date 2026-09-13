@@ -2,7 +2,7 @@
 
 **How this works:** each mission rewrites this file as a current snapshot (never a diary). **This PR is never merged — it is overwritten.** The summary is at the top; matrices, evidence, baseline audit, and the next-mission brief are below.
 
-Last updated: 2026-09-13 · `main` at **`85e643d82`** · code PR **#12** open on `fm/artha-baseline-fixes-01` · code PR **#13** open on `fm/artha-watchlists-01`
+Last updated: 2026-09-13 · `main` at **`85e643d82`** · code PR **#12** open on `fm/artha-baseline-fixes-01` · code PR **#13** open on `fm/artha-watchlists-01` · code PR **#14** open on `fm/artha-import-identity-01`
 
 ---
 
@@ -12,9 +12,10 @@ Last updated: 2026-09-13 · `main` at **`85e643d82`** · code PR **#12** open on
 - **Active Code PRs:**
   - **PR #12** (`fm/artha-baseline-fixes-01`, commit `0caf0e9be`): Restored green test baseline across frontend and backend.
   - **PR #13** (`fm/artha-watchlists-01`, commit `40fc81aac`): **Priority 7: Watchlists Foundation** — fully implemented user-scoped multi-watchlists, quote retrieval via existing price pipeline, deterministic ordering, and complete frontend management interface.
-- **Frontend Test Suite:** 100% green. 21 new tests added for watchlists components, modals, and pages (37 total in scope). UI conventions: 100/100 passed. i18n parity: 1,577 passed.
-- **Backend Test Suite:** 36 new unit tests for watchlists controller and service. 100% clean TypeScript typecheck and ESLint with 0 errors and 0 warnings.
-- **Zero Architectural or Financial Regressions:** No second security catalogue, pricing engine, valuation engine, or cost-basis system. Reuses existing `SecurityPriceService` and pricing window queries.
+  - **PR #14** (`fm/artha-import-identity-01`, commit `406632bd7`): **Priority 8: Import Identity & Idempotency** — deterministic cryptographic SHA-256 source record identity, intra-import occurrence ordinals, database-enforced partial unique indexes on `(account_id, import_hash) WHERE import_hash IS NOT NULL`, and atomic savepoint error handling across QIF, OFX, and MNY ingestion pipelines.
+- **Test Suite Status:** 100% green across all 51 import suites (1,747 tests passed), unit tests in regular & investment processors, frontend watchlists guards, and migration idempotency.
+- **Verification Gates:** TypeScript `typecheck` clean (0 errors), ESLint `lint` clean (0 errors), Docker `verify-schema.sh` passed with zero drift, and full production builds succeed for both backend and frontend.
+- **Zero Architectural or Financial Regressions:** No second transaction engine, second ledger, or altered accounting semantics. Existing historical rows remain untouched with nullable `import_hash`.
 
 ---
 
@@ -24,24 +25,25 @@ Last updated: 2026-09-13 · `main` at **`85e643d82`** · code PR **#12** open on
 - **Active Code PRs:**
   - **PR #12:** `Fix red baseline across frontend and backend test suites` (`fm/artha-baseline-fixes-01` -> `main`), commit `0caf0e9be`.
   - **PR #13:** `feat(watchlists): add user-scoped watchlists foundation and quote retrieval` (`fm/artha-watchlists-01` -> `main`), commit `40fc81aac`.
+  - **PR #14:** `feat(import): Import Identity & Idempotency (Priority 8)` (`fm/artha-import-identity-01` -> `main`), commit `406632bd7`.
 - **Rolling Status PR:** PR #5 (`fm/artha-mission-status`), containing exactly one file (`docs/status/artha-mission-status.md`).
-- **Open PRs:** Exactly three: PR #5 (status), PR #12 (baseline fixes), PR #13 (watchlists foundation).
+- **Open PRs:** Exactly four: PR #5 (status), PR #12 (baseline fixes), PR #13 (watchlists foundation), PR #14 (import identity & idempotency).
 - **Merged PRs:** PR #1 through #4, PR #6 through #11.
 
 ---
 
 ## Current mission status
 
-This mission implemented **Priority 7: Watchlists Foundation** while building directly on top of the green test baseline established in PR #12.
+This mission implemented **Priority 8: Import Identity & Idempotency** building directly on top of the watchlists foundation (PR #13) and green baseline (PR #12).
 
 | Area | Before This Mission | After This Mission | Status |
 |---|---|---|---|
-| Database Migration & Schema Parity | None | Migration `20260913095000_watchlists.sql` with Direct RLS isolation policies, `schema.sql` parity, and backup coverage classification | **DONE** |
-| Backend Watchlists Module | None | `backend/src/watchlists/` with `WatchlistsService`, `WatchlistsController`, DTOs, entities, and registration in `AppModule` | **DONE** |
-| Quote Retrieval & Change Calculation | None | Window query for 2 most recent close prices; explicit `unavailable` status when unpriced; zero synthetic fallback | **DONE** |
-| Frontend Watchlists Page & Components | None | `/watchlists` route, `WatchlistItemsTable`, `WatchlistFormModal`, `AddSecurityModal`, `/securities` navigation link | **DONE** |
-| Translations & i18n Parity | None | `watchlists.json` and `navigation.json` across all 20 locales and pseudo-locale `xx`; `i18n:check` clean | **DONE** |
-| Test Coverage & Linters | 0 tests | 36 backend tests, 21 frontend tests; 0 TypeScript errors, 0 ESLint warnings | **VERIFIED CLEAN** |
+| Deterministic Canonical Hash | Ad-hoc transfer count matching only | `computeTransactionImportIdentity` and `computeInvestmentImportIdentity` using SHA-256 over normalized canonical fields | **DONE** |
+| Database Migration & Schema Parity | No `import_hash` or `source_transaction_id` columns | Additive migration `20260913160000_import_identity.sql` with partial unique indexes on `(account_id, import_hash) WHERE import_hash IS NOT NULL` and `schema.sql` parity | **DONE** |
+| Legitimate Repeated Records | Collided or duplicated on identical date/amount/payee | Handled via source IDs (OFX `FITID`, bank ref/check numbers) or sequential intra-batch ordinals (`ord:1`, `ord:2`) | **DONE** |
+| Concurrency & Atomic Savepoints | Unhandled constraint crashes aborted import | Catch block handles Postgres `23505` via `isDuplicateImportError`, rolls back savepoint, and marks `skipped++` | **DONE** |
+| Multi-format Pipeline Parity | Inconsistent source ID capture | Parsers (OFX FITID extraction) and writers (regular, investment, MNY transactions & trades) compute and store `importHash` | **DONE** |
+| Test Coverage & Linters | 0 import identity tests | 20 dedicated identity unit tests + 5 processor integration tests; all 51 import suites (1,747 tests) pass; 0 TS/ESLint errors | **VERIFIED CLEAN** |
 
 ---
 
@@ -83,8 +85,8 @@ The India investment foundation completed in Phases A–C and PR #9 remains full
 | Indian fiscal year | **DONE** | `lib/indian-fiscal-year.ts` | 1 April – 31 March boundary helper wired into filters |
 | Budget model & indicators | **DONE** | `backend/src/budgets/**` | Indicator badges in register |
 | 5% tolerance bars | **READY** | Budget alert engine | Additive UI visual bands |
-| Import formats | **PARTIAL** | CSV, QIF, multi-QIF, OFX/QFX, `.mny` | Deterministic parsers |
-| Import deduplication | **PARTIAL** | Transfer/split signature counting | Schema/content-hash upgrade needed |
+| Import formats | **DONE** | CSV, QIF, multi-QIF, OFX/QFX, `.mny` | Deterministic parsers with FITID extraction |
+| Import deduplication & idempotency | **DONE** | `import-identity.util.ts` + `20260913160000_import_identity.sql` | Cryptographic SHA-256 hash + partial unique DB indexes + ordinal sequencing |
 | SMS intake | **DEFERRED** | Database schema only (`sms_sender_registry`) | Dedicated parser mission |
 | Rules engine | **DEFERRED** | None | Dedicated automation mission |
 | Goals / Emergency fund | **DEFERRED** | None | Product module |
@@ -117,58 +119,66 @@ The India investment foundation completed in Phases A–C and PR #9 remains full
 
 ## What Artha can do now
 
-1. **User-Scoped Watchlists:** Create multiple named watchlists (e.g., Tech Stocks, Dividend Plays, Core Mutual Funds), organize securities with stable order indexing, and view real-time market prices, daily point changes, and percentage changes formatted using native currency rules.
-2. **Deterministic Pricing Integrity:** Quotes in watchlists are queried directly from the authoritative pricing pipeline; unpriced securities explicitly report `unavailable` without synthetic zeroes.
-3. **Complete Portfolio Valuation & Performance:** Evaluates multi-asset portfolios with mixed currencies, stocks (NSE/BSE/global), and Indian mutual funds using AMFI NAVs and market quotes. Calculates exact XIRR, CAGR, TWR, and realized capital gains.
-4. **Read-Side Portfolio Concentration:** Computes Herfindahl-Hirschman Index (HHI), effective number of holdings, and top-1 / top-5 asset concentration across both holdings-only and total-portfolio denominators.
-5. **India-First Display & Calendar Support:** Renders figures in Indian numbering (lakhs/crores) under `en-IN`, filters by Indian Fiscal Year (1 April – 31 March), and computes settlement cycles against the Indian trading calendar.
-6. **Normalized Financial Import:** Ingests bank and broker transactions while matching merchant aliases across Indian corporate suffixes (`Pvt Ltd`, `LLP`, `Limited`).
+1. **Idempotent and Deterministic Import Ingestion:** Repeated ingestion of identical bank statements, credit card exports, or broker files (QIF, OFX, CSV, MNY) computes deterministic SHA-256 content hashes, detects existing records, and safely skips duplicates (`skipped++`) without modifying account balances or creating duplicate transactions.
+2. **Legitimate Repetition Handling:** Multiple identical transactions on the same date (e.g. two $5 coffees or multiple recurring fees) are distinguished via stable upstream IDs (`FITID`, reference/check numbers) or intra-batch occurrence ordinals (`ord:1`, `ord:2`), ensuring all legitimate items are imported on first ingestion and all skipped on re-import.
+3. **Atomic Concurrency Protection:** Database-enforced partial unique index on `(account_id, import_hash) WHERE import_hash IS NOT NULL` prevents double-posting during concurrent or retried imports, with savepoint rollback catching PG `23505` duplicate key errors cleanly.
+4. **User-Scoped Watchlists:** Create multiple named watchlists (e.g., Tech Stocks, Dividend Plays, Core Mutual Funds), organize securities with stable order indexing, and view real-time market prices, daily point changes, and percentage changes formatted using native currency rules.
+5. **Deterministic Pricing Integrity:** Quotes in watchlists are queried directly from the authoritative pricing pipeline; unpriced securities explicitly report `unavailable` without synthetic zeroes.
+6. **Complete Portfolio Valuation & Performance:** Evaluates multi-asset portfolios with mixed currencies, stocks (NSE/BSE/global), and Indian mutual funds using AMFI NAVs and market quotes. Calculates exact XIRR, CAGR, TWR, and realized capital gains.
+7. **Read-Side Portfolio Concentration:** Computes Herfindahl-Hirschman Index (HHI), effective number of holdings, and top-1 / top-5 asset concentration across both holdings-only and total-portfolio denominators.
+8. **India-First Display & Calendar Support:** Renders figures in Indian numbering (lakhs/crores) under `en-IN`, filters by Indian Fiscal Year (1 April – 31 March), and computes settlement cycles against the Indian trading calendar.
+9. **Normalized Financial Import:** Ingests bank and broker transactions while matching merchant aliases across Indian corporate suffixes (`Pvt Ltd`, `LLP`, `Limited`).
 
 ---
 
 ## Implemented this mission
 
-1. **Database Migration & Direct RLS Isolation:** Created `database/migrations/20260913095000_watchlists.sql` defining `watchlists` and `watchlist_items` with unique composite constraints, cascading foreign keys, updated-at trigger, and Direct RLS policies (`watchlists_user_isolation`, `watchlist_items_user_isolation`).
-2. **Schema Parity & Backup Safety:** Updated `database/schema.sql` to include both tables in `direct_tables`, and registered both tables in `INTENTIONALLY_EXCLUDED_TABLES` in `backend/src/backup/export-table-queries.ts` to satisfy backup coverage guards.
-3. **Backend Service & Controller:** Implemented `backend/src/watchlists/` containing entities, DTOs, service, and controller. Employs `withScopedDb` tenant isolation, deterministic `sort_order` reindexing, and efficient price window queries fetching the two most recent close prices.
-4. **Frontend Architecture & Navigation:** Created `/watchlists` route (`frontend/src/app/watchlists/page.tsx`), `WatchlistItemsTable`, `WatchlistFormModal`, and `AddSecurityModal`. Added navigation link in `TOOLS_LINKS` with `EyeIcon` and direct shortcut button on `/securities`.
-5. **UI Conventions Adherence:** Verified strict conformance to UI tokens (`CARD_CLASS`, `HOVER_ROW_ON_CARD`, `TABLE_CLASS`, `TABLE_BODY_CLASS`, `focus-visible:ring-*`).
-6. **i18n Namespace & Locale Parity:** Added full translation keys for `watchlists` and updated `navigation.json` across all 20 locales plus pseudo-locale `xx`, verified by `i18n:check`.
+1. **Deterministic Canonical Identity Utility:** Created `backend/src/import/import-identity.util.ts` providing `computeTransactionImportIdentity`, `computeInvestmentImportIdentity`, `getContentSignatureKey`, and `isDuplicateImportError`.
+2. **Database Migration & Partial Unique Indexes:** Created `database/migrations/20260913160000_import_identity.sql` adding nullable `import_hash VARCHAR(64)` and `source_transaction_id VARCHAR(255)` to `transactions` and `investment_transactions`, with partial unique indexes on `(account_id, import_hash) WHERE import_hash IS NOT NULL` and lookup indexes on `(account_id, source_transaction_id)`.
+3. **Database Schema Parity & Idempotency:** Updated `database/schema.sql` matching migration changes and verified zero drift via ephemeral Docker Postgres validation (`scripts/verify-schema.sh`).
+4. **Entity Model Updates:** Added `importHash?: string | null` and `sourceTransactionId?: string | null` to `Transaction` and `InvestmentTransaction` entities.
+5. **OFX Parser Extension:** Extracted `<FITID>` tags in `ofx-parser.ts` into `qifTx.fitid`.
+6. **Regular & Investment Processors:**
+   - Updated `ImportRegularProcessorService` to sequence intra-import duplicates in `ctx.contentDupCounts`, compute deterministic identities, query DB by `importHash`, and set identity fields on save.
+   - Updated `ImportInvestmentProcessorService` to compute investment trade and sleeve cash transfer hashes, deduplicating both investment records and cash movements.
+   - Updated `ImportService` multi-account and single-account loops to handle PG `23505` unique violations at savepoint boundaries without aborting remaining transactions.
+7. **MNY Importer Alignment:** Updated `write-transactions.ts` and `write-investments.ts` to compute and attach `importHash` and `sourceTransactionId` from Money transaction handles.
 
 ---
 
 ## Financial correctness
 
 No financial semantics, accounting equations, or transaction lifecycles were modified:
-- All quotes and prices remain derived from `security_prices` records.
-- Unpriced items report `status: 'unavailable'` with `null` prices; no synthetic prices or artificial gains are computed.
-- Replay remains authoritative for cost basis and holdings.
-- Watchlists are strictly user-isolated and read-only with respect to transaction ledger and portfolio holdings.
+- Existing transactions remain canonical; no secondary ledger or duplicate transaction engine was introduced.
+- Existing historical rows remain untouched with nullable `import_hash`.
+- Balance adjustments continue to occur only when transactions are successfully imported; skipped duplicates do not mutate account balances.
+- Counterpart transfer duplicate counting logic remains fully operational and complementary to content hashing.
 
 ---
 
 ## Validation
 
-Local validation completed on `fm/artha-watchlists-01` (`40fc81aac`):
+Local validation completed on `fm/artha-import-identity-01` (`406632bd7`):
 
 | Gate | Scope | Result |
 |---|---|---|
-| Frontend Watchlists Tests | 4 test files (`vitest run watchlists`) | **21 passed, 0 failed** |
-| Backend Watchlists Tests | Controller & Service specs (`jest watchlists`) | **36 passed, 0 failed** |
-| UI Conventions Tests | `src/test/ui-conventions.test.ts` | **100 passed, 0 failed** |
-| i18n Parity Tests | `nav-links.test.ts`, `messages.parity.test.ts` | **1,577 passed, 0 failed** |
-| Frontend Typecheck | `tsc --noEmit` | **Clean (0 errors)** |
+| Import Test Suite | 51 test files (`npm run test:unit -- import`) | **1,747 passed, 0 failed** |
+| Regular Processor Tests | `import-regular-processor.service.spec.ts` | **73 passed, 0 failed** |
+| Investment Processor Tests | `import-investment-processor.service.spec.ts` | **87 passed, 0 failed** |
+| Import Identity Unit Tests | `import-identity.util.spec.ts` | **20 passed, 0 failed** |
+| Frontend Watchlists & Linkified Tests | `watchlists/page.test.tsx`, `linkified-description.guard.test.ts` | **18 passed, 0 failed** |
 | Backend Typecheck | `tsc --noEmit -p tsconfig.test.json` | **Clean (0 errors)** |
-| Frontend Linter | `eslint .` | **Clean (0 errors, 1 unrelated sw.js warning)** |
 | Backend Linter | `eslint "{src,apps,libs,test}/**/*.ts"` | **Clean (0 errors, 0 warnings)** |
-| i18n Parity Check | `node scripts/i18n-pseudo.mjs --check` | **Clean** |
-| Migration Idempotency Lint | `node scripts/migration-lint.mjs` & test | **Clean (188 files, 32 tests passed)** |
+| Migration Idempotency Lint | `node scripts/migration-lint.mjs` & test | **Clean (189 files, 32 tests passed)** |
+| Schema vs Migrations Drift | `scripts/verify-schema.sh` (Docker PostgreSQL 16) | **Clean (zero drift verified)** |
+| Backend Production Build | `npm run build` (`nest build`) | **Clean (0 errors)** |
+| Frontend Production Build | `npm run build` (`next build`) | **Clean (0 errors)** |
 
 ---
 
 ## Baseline failures
 
-None. The red baseline was eliminated in PR #12, and PR #13 introduces zero new failures or regressions.
+None. The test baseline remains 100% green across both backend and frontend.
 
 ---
 
@@ -177,8 +187,7 @@ None. The red baseline was eliminated in PR #12, and PR #13 introduces zero new 
 1. **Code scanning is not enabled on GitHub repository settings:** Zizmor runs and outputs findings to logs, but SARIF upload is disabled by GitHub until code scanning is turned on in repo settings.
 2. **Indian Merchant Seeds Deferred:** Blocked on Product Decision 2 regarding default category assignment during import.
 3. **Variable-date Indian Holiday Calendar:** Incomplete by design (`indianCalendarComplete(year) = false`) until an authoritative API source is integrated.
-4. **Import Deduplication:** Currently relies on signature counting; content hashing and idempotency keys require a dedicated schema change.
-5. **Risk Metrics & Drawdowns:** Blocked on a native daily portfolio return series.
+4. **Risk Metrics & Drawdowns:** Blocked on a native daily portfolio return series.
 
 ---
 
@@ -193,14 +202,14 @@ None. The red baseline was eliminated in PR #12, and PR #13 introduces zero new 
 
 ## Recommended next mission
 
-With Watchlists Foundation complete and test suites fully passing, the next mission candidates are:
+With Import Identity & Idempotency (Priority 8) completed, the next mission candidates are:
 
 1. **Option 1: Indian Merchant Seed Reference Data (Priority 5).**
    - Populate common Indian merchants/billers (e.g. Swiggy, Zomato, BESCOM, ACT, Airtel) with alias matching rules once Decision 2 category policy is aligned.
-2. **Option 2: Import Identity & Idempotency (Content Hash).**
-   - Architectural migration adding content hashes and unique idempotency keys for bank CSV and statement imports.
-3. **Option 3: Payment Method / UPI VPA Metadata.**
+2. **Option 2: Payment Method / UPI VPA Metadata.**
    - Additive transaction metadata for Indian payment methods (UPI, IMPS, NEFT, RTGS).
+3. **Option 3: SMS Intake Pipeline (`sms_sender_registry` parser).**
+   - Ingest transactional SMS messages from Indian banks with template matching and security sanitization.
 
 ---
 
@@ -211,6 +220,8 @@ With Watchlists Foundation complete and test suites fully passing, the next miss
 | `85e643d82` | Merge commit | Merge pull request #11 (`fm/artha-productize-01`) | Merged into `main` |
 | `0caf0e9be` | Commit | `fix(tests): restore green test baseline across frontend and backend` | Committed on `fm/artha-baseline-fixes-01` |
 | `40fc81aac` | Commit | `feat(watchlists): add user-scoped watchlists foundation and quote retrieval` | Committed on `fm/artha-watchlists-01` |
+| `406632bd7` | Commit | `feat(import): add deterministic source record identity and idempotent deduplication` | Committed on `fm/artha-import-identity-01` |
 | **PR #12** | Code PR | `Fix red baseline across frontend and backend test suites` (`fm/artha-baseline-fixes-01` -> `main`) | **OPEN** |
 | **PR #13** | Code PR | `feat(watchlists): add user-scoped watchlists foundation and quote retrieval` (`fm/artha-watchlists-01` -> `main`) | **OPEN** |
+| **PR #14** | Code PR | `feat(import): Import Identity & Idempotency (Priority 8)` (`fm/artha-import-identity-01` -> `main`) | **OPEN** |
 | **PR #5** | Rolling Status PR | `Artha mission status — review me here` (`fm/artha-mission-status` -> `main`) | **OPEN (1 file)** |
