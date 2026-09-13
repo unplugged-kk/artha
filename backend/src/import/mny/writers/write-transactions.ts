@@ -3,6 +3,7 @@ import { Transaction } from "../../../transactions/entities/transaction.entity";
 import { TransactionSplit } from "../../../transactions/entities/transaction-split.entity";
 import { SplitKind } from "../../../transactions/entities/split-kind.enum";
 import { roundMoney } from "../../../common/round.util";
+import { computeTransactionImportIdentity } from "../../import-identity.util";
 import { MappedTransaction } from "../model/mny-import-model";
 import { INSERT_CHUNK_SIZE, chunk } from "./chunk";
 
@@ -100,6 +101,19 @@ export async function writeTransactions(
         referenceNumber: transaction.referenceNumber,
         isSplit: transaction.splits.length > 0,
         isTransfer: transaction.isTransfer,
+        importHash: computeTransactionImportIdentity({
+          accountId,
+          date: transaction.transactionDate,
+          amount: transaction.amount,
+          payee:
+            transaction.payeeHandle === null
+              ? null
+              : (input.payeeNameByHandle.get(transaction.payeeHandle) ?? null),
+          memo: transaction.description,
+          sourceId: String(transaction.handle),
+          isTransfer: transaction.isTransfer,
+        }).hash,
+        sourceTransactionId: String(transaction.handle),
         // Set by the back-patch pass: the column is a self-referencing FK, so
         // the counterpart may not exist yet.
         linkedTransactionId: null,

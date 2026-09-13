@@ -95,6 +95,8 @@ const PLAIN: Record<string, string> = {
     'inside the <button> that selects the transaction -- nothing interactive nests in a button',
   '/src/components/ui/SplitSubmitButton.tsx':
     'a menu option label inside a button, and composed by the app besides',
+  '/src/app/watchlists/page.tsx':
+    "a watchlist's own description, not a transaction's",
 };
 
 /**

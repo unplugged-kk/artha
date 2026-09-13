@@ -49,6 +49,7 @@ import {
   ColumnMappingResponseDto,
 } from "./dto/import.dto";
 import { ImportContext, updateAccountBalance } from "./import-context";
+import { isDuplicateImportError } from "./import-identity.util";
 import { ImportEntityCreatorService } from "./import-entity-creator.service";
 import { ImportPostProcessingService } from "./import-post-processing.service";
 import { ImportInvestmentProcessorService } from "./import-investment-processor.service";
@@ -371,6 +372,7 @@ export class ImportService {
             affectedAccountIds,
             importResult,
             transferDupCounts: new Map(),
+            contentDupCounts: new Map(),
           };
 
           // Apply opening balance
@@ -399,13 +401,20 @@ export class ImportService {
                 await manager.query(`RELEASE SAVEPOINT ${savepointName}`);
               } catch (error) {
                 await manager.query(`ROLLBACK TO SAVEPOINT ${savepointName}`);
-                importResult.errors++;
-                importResult.errorMessages.push(
-                  `Error importing transaction ${txIndex}/${block.transactions.length} in "${block.accountName}" on ${qifTx.date}: ${error.message}`,
-                );
-                this.logger.warn(
-                  `Error importing transaction in "${block.accountName}": ${error.message}`,
-                );
+                if (isDuplicateImportError(error)) {
+                  importResult.skipped++;
+                  this.logger.debug(
+                    `Skipped duplicate transaction (import_hash collision) in "${block.accountName}" on ${qifTx.date}`,
+                  );
+                } else {
+                  importResult.errors++;
+                  importResult.errorMessages.push(
+                    `Error importing transaction ${txIndex}/${block.transactions.length} in "${block.accountName}" on ${qifTx.date}: ${error.message}`,
+                  );
+                  this.logger.warn(
+                    `Error importing transaction in "${block.accountName}": ${error.message}`,
+                  );
+                }
               }
             } catch (savepointError) {
               importResult.errors++;
@@ -1240,6 +1249,7 @@ export class ImportService {
           affectedAccountIds,
           importResult,
           transferDupCounts: new Map<string, number>(),
+          contentDupCounts: new Map<string, number>(),
         };
 
         // Create new entities
@@ -1305,13 +1315,20 @@ export class ImportService {
               await manager.query(`RELEASE SAVEPOINT ${savepointName}`);
             } catch (error) {
               await manager.query(`ROLLBACK TO SAVEPOINT ${savepointName}`);
-              importResult.errors++;
-              importResult.errorMessages.push(
-                `Error importing transaction ${txIndex}/${totalTransactions} on ${qifTx.date}: ${error.message}`,
-              );
-              this.logger.warn(
-                `Error importing transaction ${txIndex}/${totalTransactions}: ${error.message}`,
-              );
+              if (isDuplicateImportError(error)) {
+                importResult.skipped++;
+                this.logger.debug(
+                  `Skipped duplicate transaction (import_hash collision) on ${qifTx.date}`,
+                );
+              } else {
+                importResult.errors++;
+                importResult.errorMessages.push(
+                  `Error importing transaction ${txIndex}/${totalTransactions} on ${qifTx.date}: ${error.message}`,
+                );
+                this.logger.warn(
+                  `Error importing transaction ${txIndex}/${totalTransactions}: ${error.message}`,
+                );
+              }
             }
           } catch (savepointError) {
             importResult.errors++;

@@ -12,6 +12,11 @@ import {
   TransactionStatus,
 } from "../transactions/entities/transaction.entity";
 import { ImportContext, updateAccountBalance } from "./import-context";
+import {
+  computeInvestmentImportIdentity,
+  computeTransactionImportIdentity,
+  getContentSignatureKey,
+} from "./import-identity.util";
 import { roundMoney, roundToDecimals } from "../common/round.util";
 import { resolveFxRateOrNull } from "../common/fx-entry.util";
 import { ExchangeRateService } from "../currencies/exchange-rate.service";
@@ -192,6 +197,44 @@ export class ImportInvestmentProcessorService {
     // trade imported downgraded and an unreconciled one imported cleared.
     const status = statusFromQifFlags(qifTx);
 
+    // Deterministic import identity and idempotency check
+    const contentKey = getContentSignatureKey({
+      date: qifTx.date,
+      amount: totalAmount,
+      action,
+      securitySymbol: qifTx.security,
+      memo: qifTx.memo || qifTx.payee,
+      sourceId: qifTx.fitid || qifTx.number,
+    });
+    const seenCount = (ctx.contentDupCounts.get(contentKey) || 0) + 1;
+    ctx.contentDupCounts.set(contentKey, seenCount);
+
+    const identity = computeInvestmentImportIdentity({
+      accountId: ctx.accountId,
+      date: qifTx.date,
+      amount: totalAmount,
+      action,
+      securitySymbol: qifTx.security,
+      quantity,
+      price,
+      memo: qifTx.memo || qifTx.payee,
+      sourceId: qifTx.fitid || qifTx.number,
+      ordinal: seenCount,
+    });
+
+    const existingInvTx = await ctx.manager.findOne(InvestmentTransaction, {
+      where: {
+        accountId: ctx.accountId,
+        importHash: identity.hash,
+      },
+      select: ["id"],
+    });
+
+    if (existingInvTx) {
+      ctx.importResult.skipped++;
+      return;
+    }
+
     // Create investment transaction
     const investmentTx = new InvestmentTransaction();
     investmentTx.userId = ctx.userId;
@@ -205,6 +248,8 @@ export class ImportInvestmentProcessorService {
     investmentTx.totalAmount = totalAmount;
     investmentTx.description = qifTx.memo || qifTx.payee || null;
     investmentTx.status = status;
+    investmentTx.importHash = identity.hash;
+    investmentTx.sourceTransactionId = identity.sourceId;
 
     await ctx.manager.save(investmentTx);
 
@@ -390,6 +435,41 @@ export class ImportInvestmentProcessorService {
       }
     }
 
+    const contentKey = getContentSignatureKey({
+      date: qifTx.date,
+      amount: cashAmount,
+      payee: qifTx.payee,
+      memo: qifTx.memo,
+      sourceId: qifTx.fitid || qifTx.number,
+      isTransfer: !!transferAccountId,
+    });
+    const seenCount = (ctx.contentDupCounts.get(contentKey) || 0) + 1;
+    ctx.contentDupCounts.set(contentKey, seenCount);
+
+    const identity = computeTransactionImportIdentity({
+      accountId: cashAccountId,
+      date: qifTx.date,
+      amount: cashAmount,
+      payee: qifTx.payee,
+      memo: qifTx.memo,
+      sourceId: qifTx.fitid || qifTx.number,
+      isTransfer: !!transferAccountId,
+      ordinal: seenCount,
+    });
+
+    const existingCashTx = await ctx.manager.findOne(Transaction, {
+      where: {
+        accountId: cashAccountId,
+        importHash: identity.hash,
+      },
+      select: ["id"],
+    });
+
+    if (existingCashTx) {
+      ctx.importResult.skipped++;
+      return;
+    }
+
     const cashTx = ctx.manager.create(Transaction, {
       userId: ctx.userId,
       accountId: cashAccountId,
@@ -400,6 +480,8 @@ export class ImportInvestmentProcessorService {
       status,
       currencyCode: cashCurrencyCode,
       isTransfer: !!transferAccountId,
+      importHash: identity.hash,
+      sourceTransactionId: identity.sourceId,
     });
     const savedCashTx = await ctx.manager.save(cashTx);
     await updateAccountBalance(ctx.manager, cashAccountId, cashAmount);

@@ -203,6 +203,7 @@ export function parseOfx(content: string): QifParseResult {
     const name = getTagValue(block, "NAME");
     const memo = getTagValue(block, "MEMO");
     const checkNum = getTagValue(block, "CHECKNUM");
+    const fitid = getTagValue(block, "FITID");
 
     // Determine cleared status based on transaction type
     const isCleared = true; // OFX transactions are typically already posted
@@ -224,6 +225,7 @@ export function parseOfx(content: string): QifParseResult {
       payee,
       memo: memoText,
       number: truncate(checkNum, 100),
+      fitid: truncate(fitid, 255) || undefined,
       cleared: isCleared,
       reconciled: false,
       category: "",

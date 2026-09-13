@@ -1,7 +1,10 @@
 import { ImportRegularProcessorService } from "./import-regular-processor.service";
 import { ImportContext } from "./import-context";
-import { TransactionStatus } from "../transactions/entities/transaction.entity";
-import { AccountType } from "../accounts/entities/account.entity";
+import {
+  Transaction,
+  TransactionStatus,
+} from "../transactions/entities/transaction.entity";
+import { Account, AccountType } from "../accounts/entities/account.entity";
 import { Payee } from "../payees/entities/payee.entity";
 import { SplitKind } from "../transactions/entities/split-kind.enum";
 import { ImportResultDto } from "./dto/import.dto";
@@ -87,6 +90,7 @@ describe("ImportRegularProcessorService", () => {
       affectedAccountIds: new Set(),
       importResult: makeImportResult(),
       transferDupCounts: new Map(),
+      contentDupCounts: new Map(),
       ...overrides,
     };
   };
@@ -997,8 +1001,11 @@ describe("ImportRegularProcessorService", () => {
         if (entity === Payee && opts?.where?.name === "Tim Hortons") {
           return Promise.resolve({ id: "payee-tim", name: "Tim Hortons" });
         }
-        // For account balance update
-        return Promise.resolve({ id: accountId, currentBalance: 500 });
+        if (entity === Account) {
+          // For account balance update
+          return Promise.resolve({ id: accountId, currentBalance: 500 });
+        }
+        return Promise.resolve(null);
       });
 
       const qifTx = {
@@ -1018,8 +1025,11 @@ describe("ImportRegularProcessorService", () => {
 
       managerOf(ctx).findOne.mockImplementation((entity: any, _opts: any) => {
         if (entity === Payee) return Promise.resolve(null);
-        // For account balance update
-        return Promise.resolve({ id: accountId, currentBalance: 500 });
+        if (entity === Account) {
+          // For account balance update
+          return Promise.resolve({ id: accountId, currentBalance: 500 });
+        }
+        return Promise.resolve(null);
       });
 
       const qifTx = {
@@ -1223,15 +1233,21 @@ describe("ImportRegularProcessorService", () => {
       loanCategoryMap.set("Car Loan", "acc-loan");
       const ctx = makeContext({ loanCategoryMap });
 
-      managerOf(ctx).findOne.mockImplementation((_entity: any, opts: any) => {
-        if (opts?.where?.id === "acc-loan") {
+      managerOf(ctx).findOne.mockImplementation((entity: any, opts: any) => {
+        if (entity === Account && opts?.where?.id === "acc-loan") {
           return Promise.resolve({
             id: "acc-loan",
             currencyCode: "CAD",
           });
         }
-        // For account balance update
-        return Promise.resolve({ id: accountId, currentBalance: 500 });
+        if (entity === Account) {
+          // For account balance update
+          return Promise.resolve({ id: accountId, currentBalance: 500 });
+        }
+        if (entity === Payee) {
+          return Promise.resolve({ id: "payee-auto", name: "Auto Finance" });
+        }
+        return Promise.resolve(null);
       });
 
       const qifTx = {
@@ -2365,6 +2381,121 @@ describe("ImportRegularProcessorService", () => {
       const saveCalls = managerOf(ctx).save.mock.calls;
       expect(saveCalls.length).toBeGreaterThanOrEqual(3); // transaction + 2 splits + linked tx
       expect(ctx.importResult.imported).toBe(1);
+    });
+  });
+
+  describe("Import Identity & Idempotency", () => {
+    it("should compute deterministic importHash and set sourceTransactionId on created transaction", async () => {
+      const ctx = makeContext();
+      const qifTx = {
+        date: "2025-01-15",
+        amount: -45.5,
+        payee: "Shell Gas Station",
+        memo: "Fuel",
+        number: "REF-9876",
+        fitid: "FITID-12345",
+      };
+
+      await service.processTransaction(ctx, qifTx);
+
+      expect(ctx.importResult.imported).toBe(1);
+      expect(ctx.importResult.skipped).toBe(0);
+
+      const createCall = managerOf(ctx).create.mock.calls.find(
+        (call: any) => call[0] === Transaction,
+      );
+      expect(createCall).toBeDefined();
+      expect(createCall[1].importHash).toBeDefined();
+      expect(typeof createCall[1].importHash).toBe("string");
+      expect(createCall[1].importHash).toHaveLength(64);
+      expect(createCall[1].sourceTransactionId).toBe("FITID-12345");
+    });
+
+    it("should skip transaction when importHash already exists in the database", async () => {
+      const ctx = makeContext();
+      const qifTx = {
+        date: "2025-01-15",
+        amount: -45.5,
+        payee: "Shell Gas Station",
+        memo: "Fuel",
+        fitid: "FITID-12345",
+      };
+
+      // Mock that findOne finds an existing transaction with this importHash
+      managerOf(ctx).findOne.mockImplementation((entity: any, opts: any) => {
+        if (entity === Transaction && opts?.where?.importHash) {
+          return Promise.resolve({ id: "existing-tx-id" });
+        }
+        if (entity === Account) {
+          return Promise.resolve({ id: accountId, currentBalance: 500 });
+        }
+        return Promise.resolve(null);
+      });
+
+      await service.processTransaction(ctx, qifTx);
+
+      expect(ctx.importResult.imported).toBe(0);
+      expect(ctx.importResult.skipped).toBe(1);
+      // Ensure manager.save(Transaction) was never called
+      const txSave = managerOf(ctx).save.mock.calls.find(
+        (call: any) => call[0]?.id === "gen-" || call[0] instanceof Transaction,
+      );
+      expect(txSave).toBeUndefined();
+    });
+
+    it("should sequence identical transactions on the same date with distinct ordinals, allowing both on first run and skipping both on rerun", async () => {
+      // First import run: both rows imported with ord:1 and ord:2
+      const ctx1 = makeContext();
+      const coffee1 = {
+        date: "2025-01-15",
+        amount: -5.0,
+        payee: "Cafe Coffee Day",
+        memo: "Latte",
+      };
+      const coffee2 = {
+        date: "2025-01-15",
+        amount: -5.0,
+        payee: "Cafe Coffee Day",
+        memo: "Latte",
+      };
+
+      await service.processTransaction(ctx1, coffee1);
+      await service.processTransaction(ctx1, coffee2);
+
+      expect(ctx1.importResult.imported).toBe(2);
+      expect(ctx1.importResult.skipped).toBe(0);
+
+      const txCalls = managerOf(ctx1).create.mock.calls.filter(
+        (call: any) => call[0] === Transaction,
+      );
+      expect(txCalls).toHaveLength(2);
+      const hash1 = txCalls[0][1].importHash;
+      const hash2 = txCalls[1][1].importHash;
+      expect(hash1).toBeDefined();
+      expect(hash2).toBeDefined();
+      expect(hash1).not.toBe(hash2); // distinct ordinals produce distinct hashes
+
+      // Second import run: both rows find their respective hashes in DB and are skipped
+      const ctx2 = makeContext();
+      const existingHashes = new Set([hash1, hash2]);
+      managerOf(ctx2).findOne.mockImplementation((entity: any, opts: any) => {
+        if (
+          entity === Transaction &&
+          existingHashes.has(opts?.where?.importHash)
+        ) {
+          return Promise.resolve({ id: `existing-${opts.where.importHash}` });
+        }
+        if (entity === Account) {
+          return Promise.resolve({ id: accountId, currentBalance: 500 });
+        }
+        return Promise.resolve(null);
+      });
+
+      await service.processTransaction(ctx2, coffee1);
+      await service.processTransaction(ctx2, coffee2);
+
+      expect(ctx2.importResult.imported).toBe(0);
+      expect(ctx2.importResult.skipped).toBe(2);
     });
   });
 });

@@ -20,6 +20,11 @@ export interface ImportContext {
   /** Tracks how many QIF entries with each transfer signature have been seen in the current block,
    *  used to distinguish genuinely different transfers that share date/amount/account. */
   transferDupCounts: Map<string, number>;
+  /** Tracks how many transactions with each content signature have been seen
+   *  in the current import block, used to assign sequential ordinals (1, 2...)
+   *  to identical transactions without source IDs so they produce deterministic,
+   *  repeatable import hashes. */
+  contentDupCounts: Map<string, number>;
   /**
    * Existing payees keyed by their normalised name, so the same merchant
    * written one way by one bank and another way by the next resolves to a
