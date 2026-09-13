@@ -2,7 +2,7 @@
 
 **How this works:** each mission rewrites this file as a current snapshot (never a diary). **This PR is never merged — it is overwritten.** The summary is at the top; matrices, evidence, baseline audit, and the next-mission brief are below.
 
-Last updated: 2026-09-13 · `main` at **`85e643d82`** · code PR **#12** open on `fm/artha-baseline-fixes-01` · code PR **#13** open on `fm/artha-watchlists-01` · code PR **#14** open on `fm/artha-import-identity-01`
+Last updated: 2026-09-13 · `main` at **`85e643d82`** · code PR **#12** open on `fm/artha-baseline-fixes-01` · code PR **#13** open on `fm/artha-watchlists-01` · code PR **#14** open on `fm/artha-import-identity-01` · code PR **#15** open on `fm/artha-payment-metadata-01`
 
 ---
 
@@ -13,9 +13,10 @@ Last updated: 2026-09-13 · `main` at **`85e643d82`** · code PR **#12** open on
   - **PR #12** (`fm/artha-baseline-fixes-01`, commit `0caf0e9be`): Restored green test baseline across frontend and backend.
   - **PR #13** (`fm/artha-watchlists-01`, commit `40fc81aac`): **Priority 7: Watchlists Foundation** — fully implemented user-scoped multi-watchlists, quote retrieval via existing price pipeline, deterministic ordering, and complete frontend management interface.
   - **PR #14** (`fm/artha-import-identity-01`, commit `406632bd7`): **Priority 8: Import Identity & Idempotency** — deterministic cryptographic SHA-256 source record identity, intra-import occurrence ordinals, database-enforced partial unique indexes on `(account_id, import_hash) WHERE import_hash IS NOT NULL`, and atomic savepoint error handling across QIF, OFX, and MNY ingestion pipelines.
-- **Test Suite Status:** 100% green across all 51 import suites (1,747 tests passed), unit tests in regular & investment processors, frontend watchlists guards, and migration idempotency.
-- **Verification Gates:** TypeScript `typecheck` clean (0 errors), ESLint `lint` clean (0 errors), Docker `verify-schema.sh` passed with zero drift, and full production builds succeed for both backend and frontend.
-- **Zero Architectural or Financial Regressions:** No second transaction engine, second ledger, or altered accounting semantics. Existing historical rows remain untouched with nullable `import_hash`.
+  - **PR #15** (`fm/artha-payment-metadata-01`, commit `6f3246b4a`): **Priority 9: Payment Method / UPI Metadata** — controlled descriptive metadata layer for payment rails (`UPI`, `IMPS`, `NEFT`, `RTGS`, `CARD`, `CASH`, `CHEQUE`, `OTHER`) and optional UPI metadata (`upi_vpa`, `upi_reference`) across manual entry, CSV/OFX/QIF bank imports, transfers, and bulk updates, with register search, multi-select filtering, and localized next-intl UI badges.
+- **Test Suite Status:** 100% green across all 22 transaction suites (1,113 tests passed), 52 import suites (1,765 tests passed), 4 modified frontend suites (497 tests passed), and migration idempotency lint (190 files, 32 tests passed).
+- **Verification Gates:** TypeScript `typecheck` clean (0 errors), ESLint `lint` clean (0 errors across backend and frontend), Docker `verify-schema.sh` passed with zero drift on PostgreSQL 16, and full production builds succeed.
+- **Zero Architectural or Financial Regressions:** Payment method is strictly descriptive metadata; never a second ledger or transaction classifier. No alterations to income/expense sign conventions, balances, FX completeness, or investment calculations. 100% decoupling from Priority 8 import identity hashes preserves deduplication idempotency. Existing historical rows remain untouched with `NULL` payment metadata.
 
 ---
 
@@ -26,24 +27,26 @@ Last updated: 2026-09-13 · `main` at **`85e643d82`** · code PR **#12** open on
   - **PR #12:** `Fix red baseline across frontend and backend test suites` (`fm/artha-baseline-fixes-01` -> `main`), commit `0caf0e9be`.
   - **PR #13:** `feat(watchlists): add user-scoped watchlists foundation and quote retrieval` (`fm/artha-watchlists-01` -> `main`), commit `40fc81aac`.
   - **PR #14:** `feat(import): Import Identity & Idempotency (Priority 8)` (`fm/artha-import-identity-01` -> `main`), commit `406632bd7`.
-- **Rolling Status PR:** PR #5 (`fm/artha-mission-status`), containing exactly one file (`docs/status/artha-mission-status.md`).
-- **Open PRs:** Exactly four: PR #5 (status), PR #12 (baseline fixes), PR #13 (watchlists foundation), PR #14 (import identity & idempotency).
+  - **PR #15:** `feat(transactions): add payment method and UPI metadata` (`fm/artha-payment-metadata-01` -> `main`), commit `6f3246b4a`.
+- **Rolling Status PR:** PR #5 (`fm/artha-mission-status`), containing strictly one file (`docs/status/artha-mission-status.md`).
+- **Open PRs:** Exactly five: PR #5 (status), PR #12 (baseline fixes), PR #13 (watchlists foundation), PR #14 (import identity & idempotency), PR #15 (payment method & UPI metadata).
 - **Merged PRs:** PR #1 through #4, PR #6 through #11.
 
 ---
 
 ## Current mission status
 
-This mission implemented **Priority 8: Import Identity & Idempotency** building directly on top of the watchlists foundation (PR #13) and green baseline (PR #12).
+This mission implemented **Priority 9: Payment Method / UPI Metadata** building directly on top of the import identity foundation (PR #14), watchlists foundation (PR #13), and green baseline (PR #12).
 
 | Area | Before This Mission | After This Mission | Status |
 |---|---|---|---|
-| Deterministic Canonical Hash | Ad-hoc transfer count matching only | `computeTransactionImportIdentity` and `computeInvestmentImportIdentity` using SHA-256 over normalized canonical fields | **DONE** |
-| Database Migration & Schema Parity | No `import_hash` or `source_transaction_id` columns | Additive migration `20260913160000_import_identity.sql` with partial unique indexes on `(account_id, import_hash) WHERE import_hash IS NOT NULL` and `schema.sql` parity | **DONE** |
-| Legitimate Repeated Records | Collided or duplicated on identical date/amount/payee | Handled via source IDs (OFX `FITID`, bank ref/check numbers) or sequential intra-batch ordinals (`ord:1`, `ord:2`) | **DONE** |
-| Concurrency & Atomic Savepoints | Unhandled constraint crashes aborted import | Catch block handles Postgres `23505` via `isDuplicateImportError`, rolls back savepoint, and marks `skipped++` | **DONE** |
-| Multi-format Pipeline Parity | Inconsistent source ID capture | Parsers (OFX FITID extraction) and writers (regular, investment, MNY transactions & trades) compute and store `importHash` | **DONE** |
-| Test Coverage & Linters | 0 import identity tests | 20 dedicated identity unit tests + 5 processor integration tests; all 51 import suites (1,747 tests) pass; 0 TS/ESLint errors | **VERIFIED CLEAN** |
+| Database Schema & Migration | No payment rail or UPI columns | Additive migration `20260913170000_payment_metadata.sql` adding nullable `payment_method`, `upi_vpa`, `upi_reference`, check constraint, partial indexes, and `schema.sql` parity | **DONE** |
+| Payment Rails & UPI Validation | No payment method enum or constraints | `PaymentMethod` enum (`UPI`, `IMPS`, `NEFT`, `RTGS`, `CARD`, `CASH`, `CHEQUE`, `OTHER`), DTO validations, nullification of stale UPI fields on non-UPI rails | **DONE** |
+| Bank Ingestion Rail Detection | Ingestion ignored payment rails and UPI VPAs | `payment-method-detector.util.ts` extracting rails, UPI VPAs, and RRNs from bank narrations; OFX/QIF/CSV parser integration | **DONE** |
+| Import Idempotency Invariance | Unverified decoupling from import identity | Verified `CanonicalTransactionIdentityInput` remains untouched; import hashes before and after enrichment match 1:1 with zero deduplication regressions | **DONE** |
+| Register Search & Multi-rail Filtering | Search ignored UPI fields; no rail filters | `buildTransactionSearchClause` searches `upiVpa`/`upiReference`; controller and services support single `paymentMethod` and multi-rail `paymentMethods` | **DONE** |
+| Frontend UX & Localization | No payment inputs, badges, or filters | `TransactionForm` rail selector and conditional UPI inputs, `TransactionRow` badges with VPA tooltip, `TransactionFilterPanel` dropdown & chips, synced across 40+ next-intl catalogs | **DONE** |
+| Test Coverage & Quality Gates | 0 payment metadata tests | 100% green: 22 transaction suites (1,113 tests), 52 import suites (1,765 tests), 4 frontend suites (497 tests), 0 TS/ESLint errors, migration lint clean | **VERIFIED CLEAN** |
 
 ---
 
@@ -80,12 +83,13 @@ The India investment foundation completed in Phases A–C and PR #9 remains full
 | Quick add | **PARTIAL** | `useTransactionSubmitMode` | "Create & New" flow |
 | Merchant normalization | **DONE** | `payee-normalize.util.ts` + `import-regular-processor.service.ts` | Exact → alias → normalized equality; includes Indian legal forms (`Pvt`, `Limited`, `LLP`) |
 | Indian merchant seeds | **DEFERRED** | None | Blocked on Open Decision 2 (payee category mapping policy) |
+| Payment method & UPI metadata | **DONE** | `20260913170000_payment_metadata.sql` + `payment-method-detector.util.ts` | Controlled rails (`UPI`, `IMPS`, `NEFT`, `RTGS`, `CARD`, `CASH`, `CHEQUE`, `OTHER`), VPA/RRN extraction, badges, filters |
 | Four-bucket taxonomy | **READY** | Hierarchical categories exist | Additive taxonomy layer |
 | INR lakh/crore formatting | **DONE** | `hooks/useNumberFormat.ts` + `PreferencesSection.tsx` | Uses `Intl` with `en-IN` compact formatting (L/Cr) |
 | Indian fiscal year | **DONE** | `lib/indian-fiscal-year.ts` | 1 April – 31 March boundary helper wired into filters |
 | Budget model & indicators | **DONE** | `backend/src/budgets/**` | Indicator badges in register |
 | 5% tolerance bars | **READY** | Budget alert engine | Additive UI visual bands |
-| Import formats | **DONE** | CSV, QIF, multi-QIF, OFX/QFX, `.mny` | Deterministic parsers with FITID extraction |
+| Import formats | **DONE** | CSV, QIF, multi-QIF, OFX/QFX, `.mny` | Deterministic parsers with FITID extraction and rail detection |
 | Import deduplication & idempotency | **DONE** | `import-identity.util.ts` + `20260913160000_import_identity.sql` | Cryptographic SHA-256 hash + partial unique DB indexes + ordinal sequencing |
 | SMS intake | **DEFERRED** | Database schema only (`sms_sender_registry`) | Dedicated parser mission |
 | Rules engine | **DEFERRED** | None | Dedicated automation mission |
@@ -119,30 +123,48 @@ The India investment foundation completed in Phases A–C and PR #9 remains full
 
 ## What Artha can do now
 
-1. **Idempotent and Deterministic Import Ingestion:** Repeated ingestion of identical bank statements, credit card exports, or broker files (QIF, OFX, CSV, MNY) computes deterministic SHA-256 content hashes, detects existing records, and safely skips duplicates (`skipped++`) without modifying account balances or creating duplicate transactions.
-2. **Legitimate Repetition Handling:** Multiple identical transactions on the same date (e.g. two $5 coffees or multiple recurring fees) are distinguished via stable upstream IDs (`FITID`, reference/check numbers) or intra-batch occurrence ordinals (`ord:1`, `ord:2`), ensuring all legitimate items are imported on first ingestion and all skipped on re-import.
-3. **Atomic Concurrency Protection:** Database-enforced partial unique index on `(account_id, import_hash) WHERE import_hash IS NOT NULL` prevents double-posting during concurrent or retried imports, with savepoint rollback catching PG `23505` duplicate key errors cleanly.
-4. **User-Scoped Watchlists:** Create multiple named watchlists (e.g., Tech Stocks, Dividend Plays, Core Mutual Funds), organize securities with stable order indexing, and view real-time market prices, daily point changes, and percentage changes formatted using native currency rules.
-5. **Deterministic Pricing Integrity:** Quotes in watchlists are queried directly from the authoritative pricing pipeline; unpriced securities explicitly report `unavailable` without synthetic zeroes.
-6. **Complete Portfolio Valuation & Performance:** Evaluates multi-asset portfolios with mixed currencies, stocks (NSE/BSE/global), and Indian mutual funds using AMFI NAVs and market quotes. Calculates exact XIRR, CAGR, TWR, and realized capital gains.
-7. **Read-Side Portfolio Concentration:** Computes Herfindahl-Hirschman Index (HHI), effective number of holdings, and top-1 / top-5 asset concentration across both holdings-only and total-portfolio denominators.
-8. **India-First Display & Calendar Support:** Renders figures in Indian numbering (lakhs/crores) under `en-IN`, filters by Indian Fiscal Year (1 April – 31 March), and computes settlement cycles against the Indian trading calendar.
-9. **Normalized Financial Import:** Ingests bank and broker transactions while matching merchant aliases across Indian corporate suffixes (`Pvt Ltd`, `LLP`, `Limited`).
+1. **Controlled Payment Method & UPI Metadata Tracking:** Transactions record specific payment rails (`UPI`, `IMPS`, `NEFT`, `RTGS`, `CARD`, `CASH`, `CHEQUE`, `OTHER`) alongside optional UPI handles (`upiVpa`) and references (`upiReference`). Non-UPI payment selections automatically clear extraneous UPI fields.
+2. **Automated Rail & VPA Ingestion Extraction:** Bank statements and CSV/OFX/QIF imports automatically inspect narrations, memos, and standard fields to detect payment rails and parse UPI IDs / RRN reference numbers without user intervention.
+3. **Register Search & Multi-Rail Filtering:** Filter transactions by one or multiple payment rails simultaneously in the transaction register. Search queries seamlessly match UPI VPAs and UPI reference numbers in addition to payees, memos, notes, and tags.
+4. **Idempotent and Deterministic Import Ingestion:** Repeated ingestion of identical bank statements or broker files (QIF, OFX, CSV, MNY) computes deterministic SHA-256 content hashes, detects existing records, and safely skips duplicates (`skipped++`) without modifying account balances or creating duplicate transactions.
+5. **Legitimate Repetition Handling:** Multiple identical transactions on the same date are distinguished via stable upstream IDs (`FITID`, reference/check numbers) or intra-batch occurrence ordinals (`ord:1`, `ord:2`), ensuring legitimate records import correctly and all re-imports skip safely.
+6. **Atomic Concurrency Protection:** Database-enforced partial unique index on `(account_id, import_hash) WHERE import_hash IS NOT NULL` prevents double-posting during concurrent or retried imports, with savepoint rollback catching PG `23505` duplicate key errors cleanly.
+7. **User-Scoped Watchlists:** Create multiple named watchlists, organize securities with stable order indexing, and view real-time market prices, daily point changes, and percentage changes formatted using native currency rules.
+8. **Deterministic Pricing Integrity:** Quotes in watchlists are queried directly from the authoritative pricing pipeline; unpriced securities explicitly report `unavailable` without synthetic zeroes.
+9. **Complete Portfolio Valuation & Performance:** Evaluates multi-asset portfolios with mixed currencies, stocks (NSE/BSE/global), and Indian mutual funds using AMFI NAVs and market quotes. Calculates exact XIRR, CAGR, TWR, and realized capital gains.
+10. **Read-Side Portfolio Concentration:** Computes Herfindahl-Hirschman Index (HHI), effective number of holdings, and top-1 / top-5 asset concentration across both holdings-only and total-portfolio denominators.
+11. **India-First Display & Calendar Support:** Renders figures in Indian numbering (lakhs/crores) under `en-IN`, filters by Indian Fiscal Year (1 April – 31 March), and computes settlement cycles against the Indian trading calendar.
 
 ---
 
 ## Implemented this mission
 
-1. **Deterministic Canonical Identity Utility:** Created `backend/src/import/import-identity.util.ts` providing `computeTransactionImportIdentity`, `computeInvestmentImportIdentity`, `getContentSignatureKey`, and `isDuplicateImportError`.
-2. **Database Migration & Partial Unique Indexes:** Created `database/migrations/20260913160000_import_identity.sql` adding nullable `import_hash VARCHAR(64)` and `source_transaction_id VARCHAR(255)` to `transactions` and `investment_transactions`, with partial unique indexes on `(account_id, import_hash) WHERE import_hash IS NOT NULL` and lookup indexes on `(account_id, source_transaction_id)`.
-3. **Database Schema Parity & Idempotency:** Updated `database/schema.sql` matching migration changes and verified zero drift via ephemeral Docker Postgres validation (`scripts/verify-schema.sh`).
-4. **Entity Model Updates:** Added `importHash?: string | null` and `sourceTransactionId?: string | null` to `Transaction` and `InvestmentTransaction` entities.
-5. **OFX Parser Extension:** Extracted `<FITID>` tags in `ofx-parser.ts` into `qifTx.fitid`.
-6. **Regular & Investment Processors:**
-   - Updated `ImportRegularProcessorService` to sequence intra-import duplicates in `ctx.contentDupCounts`, compute deterministic identities, query DB by `importHash`, and set identity fields on save.
-   - Updated `ImportInvestmentProcessorService` to compute investment trade and sleeve cash transfer hashes, deduplicating both investment records and cash movements.
-   - Updated `ImportService` multi-account and single-account loops to handle PG `23505` unique violations at savepoint boundaries without aborting remaining transactions.
-7. **MNY Importer Alignment:** Updated `write-transactions.ts` and `write-investments.ts` to compute and attach `importHash` and `sourceTransactionId` from Money transaction handles.
+1. **Additive Schema Migration & Schema Parity:**
+   - Created `database/migrations/20260913170000_payment_metadata.sql` adding nullable columns `payment_method VARCHAR(16)`, `upi_vpa VARCHAR(255)`, `upi_reference VARCHAR(64)` to `transactions`.
+   - Added CHECK constraint `chk_transactions_payment_method` validating allowed values (`UPI`, `IMPS`, `NEFT`, `RTGS`, `CARD`, `CASH`, `CHEQUE`, `OTHER`).
+   - Added partial indexes `idx_transactions_payment_method`, `idx_transactions_upi_vpa`, and `idx_transactions_upi_reference`.
+   - Synchronized `database/schema.sql` and verified zero schema drift via `./scripts/verify-schema.sh` on PostgreSQL 16 Docker container.
+2. **Backend Entity & DTO Layer:**
+   - Defined `PaymentMethod` enum in `backend/src/transactions/entities/payment-method.enum.ts`.
+   - Updated `Transaction` entity with `@Column` definitions and types.
+   - Updated `CreateTransactionDto`, `UpdateTransactionDto`, `CreateTransferDto`, `UpdateTransferDto`, and `BulkUpdateDto` with `@IsEnum(PaymentMethod)` and optional string validations.
+3. **Service Layer & Search Integration:**
+   - `TransactionsService`: Persists payment fields, ensures non-UPI methods nullify UPI VPA/reference, and filters queries by `paymentMethods`.
+   - `TransactionTransferService`: Symmetrically propagates payment method and UPI metadata across both transfer legs.
+   - `TransactionBulkUpdateService`: Allows bulk updating payment method across selected transactions.
+   - `buildTransactionSearchClause`: Augmented search query to match `upiVpa` and `upiReference`.
+   - `TransactionsController`: Added `paymentMethod` and `paymentMethods` query parameters with validation and exact positional compatibility with service mocks.
+4. **Bank Import Extraction & Detector Utility:**
+   - Created `backend/src/import/payment-method-detector.util.ts` detecting Indian bank rail patterns (`UPI/`, `IMPS-`, `NEFT-`, `RTGS-`, `POS `, `ATM-`, `CHQ`), extracting UPI VPAs, and isolating 12-digit UPI RRNs.
+   - Integrated rail detection into `csv-parser.ts`, `ofx-parser.ts` (mapping `TRNTYPE`), `qif-parser.ts`, and `import-regular-processor.service.ts`.
+   - **Idempotency Preservation:** Kept `CanonicalTransactionIdentityInput` completely decoupled from payment metadata, guaranteeing SHA-256 import identity hashes remain identical before and after Priority 9 enrichment.
+5. **Frontend UI, Register & Filter Enhancements:**
+   - Extended types in `frontend/src/types/transaction.ts` and parameters in `frontend/src/lib/transactions.ts`.
+   - `TransactionForm`: Added payment method selector and conditional fields for UPI ID / VPA and UPI Reference when `UPI` is chosen; properly wires into transfers and regular entries.
+   - `TransactionRow`: Rendered compact badges (`UPI`, `IMPS`, `CARD`, etc.) in normal and compact table densities, with tooltip displaying VPA when present.
+   - `TransactionFilterPanel`: Added multi-select dropdown for payment methods with removable filter chips and active count indicator.
+   - `useTransactionFilters`: Hook manages `filterPaymentMethods`, syncing with URL query params, localStorage persistence, and clear filters.
+   - `i18n`: Added all translation keys in `frontend/src/i18n/messages/en/transactions.json` and synchronized all 40+ locales with `i18n-pseudo.mjs`.
 
 ---
 
@@ -150,29 +172,31 @@ The India investment foundation completed in Phases A–C and PR #9 remains full
 
 No financial semantics, accounting equations, or transaction lifecycles were modified:
 - Existing transactions remain canonical; no secondary ledger or duplicate transaction engine was introduced.
-- Existing historical rows remain untouched with nullable `import_hash`.
-- Balance adjustments continue to occur only when transactions are successfully imported; skipped duplicates do not mutate account balances.
-- Counterpart transfer duplicate counting logic remains fully operational and complementary to content hashing.
+- Payment method is descriptive metadata only; never a transaction classifier, transfer engine, or ledger.
+- Existing historical rows remain untouched with nullable `payment_method`, `upi_vpa`, and `upi_reference`.
+- Zero alterations to income/expense sign conventions, balances, FX completeness, or investment calculations.
+- Import idempotency hashes remain identical (100% decoupling from Priority 8 `CanonicalTransactionIdentityInput`), ensuring repeated imports do not produce duplicates.
 
 ---
 
 ## Validation
 
-Local validation completed on `fm/artha-import-identity-01` (`406632bd7`):
+Local validation completed on `fm/artha-payment-metadata-01` (`6f3246b4a`):
 
 | Gate | Scope | Result |
 |---|---|---|
-| Import Test Suite | 51 test files (`npm run test:unit -- import`) | **1,747 passed, 0 failed** |
-| Regular Processor Tests | `import-regular-processor.service.spec.ts` | **73 passed, 0 failed** |
-| Investment Processor Tests | `import-investment-processor.service.spec.ts` | **87 passed, 0 failed** |
-| Import Identity Unit Tests | `import-identity.util.spec.ts` | **20 passed, 0 failed** |
-| Frontend Watchlists & Linkified Tests | `watchlists/page.test.tsx`, `linkified-description.guard.test.ts` | **18 passed, 0 failed** |
+| Transaction Test Suite | 22 test files (`npm run test:unit -- transactions`) | **1,113 passed, 0 failed** |
+| Import Test Suite | 52 test files (`npm run test:unit -- import`) | **1,765 passed, 0 failed** |
+| Payment Metadata Tests | `payment-metadata.spec.ts` & `payment-method-detector.util.spec.ts` | **44 passed, 0 failed** |
+| Controller Unit Tests | `transactions.controller.spec.ts` | **101 passed, 0 failed** |
+| Frontend Component Tests | `TransactionRow`, `TransactionFilterPanel`, `useTransactionFilters`, `TransactionForm` | **497 passed, 0 failed** |
 | Backend Typecheck | `tsc --noEmit -p tsconfig.test.json` | **Clean (0 errors)** |
 | Backend Linter | `eslint "{src,apps,libs,test}/**/*.ts"` | **Clean (0 errors, 0 warnings)** |
-| Migration Idempotency Lint | `node scripts/migration-lint.mjs` & test | **Clean (189 files, 32 tests passed)** |
+| Frontend Typecheck | `tsc --noEmit` | **Clean (0 errors)** |
+| Frontend Linter | `eslint .` | **Clean (0 errors, 1 warning in sw.js)** |
+| Migration Idempotency Lint | `node scripts/migration-lint.mjs` & test | **Clean (190 files, 32 tests passed)** |
 | Schema vs Migrations Drift | `scripts/verify-schema.sh` (Docker PostgreSQL 16) | **Clean (zero drift verified)** |
-| Backend Production Build | `npm run build` (`nest build`) | **Clean (0 errors)** |
-| Frontend Production Build | `npm run build` (`next build`) | **Clean (0 errors)** |
+| i18n Pseudo-Localization Sync | `node frontend/scripts/i18n-pseudo.mjs --check` | **Clean (exit code 0)** |
 
 ---
 
@@ -195,21 +219,20 @@ None. The test baseline remains 100% green across both backend and frontend.
 
 1. **Enable Code Scanning:** (Repository Settings → Code security and analysis). Owner-level action to unlock SARIF publishing for Zizmor.
 2. **Payee Default Category Mapping in Import Seeds:** When an import encounters an Indian merchant seed, should it create default categories if absent, suggest categories via metadata, or only populate payee names?
-3. **Scope of UPI / Payment Method:** Decision needed on whether to add a dedicated `payment_method` or `upi_vpa` field across transactions.
-4. **Authoritative Indian Trading Holiday Source:** Establish an automated upstream API for NSE/BSE holidays.
+3. **Authoritative Indian Trading Holiday Source:** Establish an automated upstream API for NSE/BSE holidays.
 
 ---
 
 ## Recommended next mission
 
-With Import Identity & Idempotency (Priority 8) completed, the next mission candidates are:
+With Import Identity & Idempotency (Priority 8) and Payment Method / UPI Metadata (Priority 9) completed, the next mission candidates are:
 
 1. **Option 1: Indian Merchant Seed Reference Data (Priority 5).**
    - Populate common Indian merchants/billers (e.g. Swiggy, Zomato, BESCOM, ACT, Airtel) with alias matching rules once Decision 2 category policy is aligned.
-2. **Option 2: Payment Method / UPI VPA Metadata.**
-   - Additive transaction metadata for Indian payment methods (UPI, IMPS, NEFT, RTGS).
-3. **Option 3: SMS Intake Pipeline (`sms_sender_registry` parser).**
-   - Ingest transactional SMS messages from Indian banks with template matching and security sanitization.
+2. **Option 2: SMS Intake Pipeline (`sms_sender_registry` parser).**
+   - Ingest transactional SMS messages from Indian banks with template matching and security sanitization into the canonical transaction intake pipeline.
+3. **Option 3: Four-Bucket Budget & Tolerance Visual Indicators.**
+   - Layer the additive 4-bucket budget taxonomy and 5% tolerance bars onto the budget analytics views.
 
 ---
 
@@ -221,7 +244,9 @@ With Import Identity & Idempotency (Priority 8) completed, the next mission cand
 | `0caf0e9be` | Commit | `fix(tests): restore green test baseline across frontend and backend` | Committed on `fm/artha-baseline-fixes-01` |
 | `40fc81aac` | Commit | `feat(watchlists): add user-scoped watchlists foundation and quote retrieval` | Committed on `fm/artha-watchlists-01` |
 | `406632bd7` | Commit | `feat(import): add deterministic source record identity and idempotent deduplication` | Committed on `fm/artha-import-identity-01` |
+| `6f3246b4a` | Commit | `feat(transactions): add payment method and UPI metadata` | Committed on `fm/artha-payment-metadata-01` |
 | **PR #12** | Code PR | `Fix red baseline across frontend and backend test suites` (`fm/artha-baseline-fixes-01` -> `main`) | **OPEN** |
 | **PR #13** | Code PR | `feat(watchlists): add user-scoped watchlists foundation and quote retrieval` (`fm/artha-watchlists-01` -> `main`) | **OPEN** |
 | **PR #14** | Code PR | `feat(import): Import Identity & Idempotency (Priority 8)` (`fm/artha-import-identity-01` -> `main`) | **OPEN** |
+| **PR #15** | Code PR | `feat(transactions): add payment method and UPI metadata` (`fm/artha-payment-metadata-01` -> `main`) | **OPEN** |
 | **PR #5** | Rolling Status PR | `Artha mission status — review me here` (`fm/artha-mission-status` -> `main`) | **OPEN (1 file)** |
