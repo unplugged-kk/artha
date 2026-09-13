@@ -11,6 +11,7 @@
 import type { QifTransaction, QifParseResult } from "./qif-parser";
 import { escapeRegExp } from "../common/escape-regexp.util";
 import { roundToDecimals } from "../common/round.util";
+import { detectPaymentMetadata } from "./payment-method-detector.util";
 
 export interface CsvHeadersResult {
   headers: string[];
@@ -72,6 +73,9 @@ export interface CsvColumnMappingConfig {
   priceColumn?: number;
   commissionColumn?: number;
   actionKeywords?: CsvActionKeywords;
+  paymentMethodColumn?: number;
+  upiVpaColumn?: number;
+  upiReferenceColumn?: number;
 }
 
 export interface CsvTransferRule {
@@ -1377,12 +1381,37 @@ export function parseCsv(
       categoriesSet.add(category);
     }
 
+    const explicitMethod =
+      config.paymentMethodColumn !== undefined
+        ? getField(row, config.paymentMethodColumn)
+        : undefined;
+    const explicitVpa =
+      config.upiVpaColumn !== undefined
+        ? getField(row, config.upiVpaColumn)
+        : undefined;
+    const explicitReference =
+      config.upiReferenceColumn !== undefined
+        ? getField(row, config.upiReferenceColumn)
+        : undefined;
+
+    const paymentMeta = detectPaymentMetadata({
+      explicitMethod,
+      explicitVpa,
+      explicitReference,
+      memo,
+      payee,
+      number: referenceNumber,
+    });
+
     const transaction: QifTransaction = {
       date: parsedDate,
       amount,
       payee,
       memo,
       number: referenceNumber,
+      paymentMethod: paymentMeta.paymentMethod || undefined,
+      upiVpa: paymentMeta.upiVpa || undefined,
+      upiReference: paymentMeta.upiReference || undefined,
       cleared: normalizedStatus === "CLEARED",
       reconciled: normalizedStatus === "RECONCILED",
       void: normalizedStatus === "VOID",

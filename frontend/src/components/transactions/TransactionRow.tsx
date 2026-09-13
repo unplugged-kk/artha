@@ -697,9 +697,20 @@ export const TransactionRow = memo(function TransactionRow({
             </div>
           )}
         </div>
-        {density === 'normal' && transaction.referenceNumber && (
-          <div className="text-xs text-gray-500 dark:text-gray-400">
-            {t('list.row.ref', { number: transaction.referenceNumber })}
+        {density === 'normal' && (transaction.referenceNumber || transaction.paymentMethod) && (
+          <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+            {transaction.paymentMethod && (
+              <span
+                data-testid="payment-method-badge"
+                className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+                title={transaction.upiVpa ? `${transaction.paymentMethod}: ${transaction.upiVpa}` : transaction.paymentMethod}
+              >
+                {transaction.paymentMethod}
+              </span>
+            )}
+            {transaction.referenceNumber && (
+              <span>{t('list.row.ref', { number: transaction.referenceNumber })}</span>
+            )}
           </div>
         )}
       </td>
@@ -863,10 +874,23 @@ export const TransactionRow = memo(function TransactionRow({
       </td>
       <td className={`${cellPadding} text-sm text-gray-500 dark:text-gray-400 ${registerColumnClass('refNumber')}`}>
         <div
-          className={`truncate max-w-[160px] ${isVoid ? 'line-through' : ''}`}
-          title={transaction.referenceNumber || undefined}
+          className={`flex items-center gap-1.5 truncate max-w-[160px] ${isVoid ? 'line-through' : ''}`}
+          title={transaction.referenceNumber || transaction.paymentMethod || undefined}
         >
-          {transaction.referenceNumber || '-'}
+          {transaction.paymentMethod && (
+            <span
+              data-testid="payment-method-badge"
+              className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 flex-shrink-0"
+              title={transaction.upiVpa ? `${transaction.paymentMethod}: ${transaction.upiVpa}` : transaction.paymentMethod}
+            >
+              {transaction.paymentMethod}
+            </span>
+          )}
+          {transaction.referenceNumber ? (
+            <span>{transaction.referenceNumber}</span>
+          ) : !transaction.paymentMethod ? (
+            '-'
+          ) : null}
         </div>
       </td>
       <td className={`${cellPadding} text-sm ${registerColumnClass('tags')}`}>

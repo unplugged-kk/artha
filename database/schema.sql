@@ -316,8 +316,14 @@ CREATE TABLE transactions (
     linked_transaction_id UUID REFERENCES transactions(id) ON DELETE SET NULL, -- links the paired transfer transaction
     import_hash VARCHAR(64), -- SHA-256 hex digest of canonical import representation for idempotency
     source_transaction_id VARCHAR(255), -- upstream/source transaction identifier (e.g. OFX FITID, bank ref)
+    payment_method VARCHAR(20), -- 'UPI', 'IMPS', 'NEFT', 'RTGS', 'CARD', 'CASH', 'CHEQUE', 'OTHER'
+    upi_vpa VARCHAR(255), -- UPI Virtual Payment Address (e.g. user@okhdfcbank)
+    upi_reference VARCHAR(100), -- UPI reference / RRN / transaction reference ID
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT chk_transactions_payment_method CHECK (
+        payment_method IS NULL OR payment_method IN ('UPI', 'IMPS', 'NEFT', 'RTGS', 'CARD', 'CASH', 'CHEQUE', 'OTHER')
+    )
 );
 
 CREATE INDEX idx_transactions_user ON transactions(user_id);
@@ -330,6 +336,9 @@ CREATE INDEX idx_transactions_linked ON transactions(linked_transaction_id);
 CREATE INDEX idx_transactions_original_currency ON transactions(original_currency_code);
 CREATE UNIQUE INDEX idx_transactions_account_import_hash ON transactions(account_id, import_hash) WHERE import_hash IS NOT NULL;
 CREATE INDEX idx_transactions_source_id ON transactions(account_id, source_transaction_id) WHERE source_transaction_id IS NOT NULL;
+CREATE INDEX idx_transactions_account_payment_method ON transactions(account_id, payment_method) WHERE payment_method IS NOT NULL;
+CREATE INDEX idx_transactions_user_payment_method ON transactions(user_id, payment_method) WHERE payment_method IS NOT NULL;
+CREATE INDEX idx_transactions_upi_reference ON transactions(account_id, upi_reference) WHERE upi_reference IS NOT NULL;
 -- Trigram indexes accelerate the register/report search (ILIKE '%term%')
 CREATE INDEX idx_transactions_payee_name_trgm ON transactions USING gin (payee_name gin_trgm_ops);
 CREATE INDEX idx_transactions_description_trgm ON transactions USING gin (description gin_trgm_ops);

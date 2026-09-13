@@ -13,7 +13,7 @@ import { Account } from '@/types/account';
 import { Category } from '@/types/category';
 import { Payee } from '@/types/payee';
 import { Tag } from '@/types/tag';
-import { TransactionStatus } from '@/types/transaction';
+import { TransactionStatus, PaymentMethod } from '@/types/transaction';
 import { TimePeriod, TIME_PERIOD_OPTIONS, resolveTimePeriod } from '@/lib/time-periods';
 import { collectTagKeys } from '@/lib/tag-key-value';
 import { orderAccountsForPicker } from '@/lib/account-utils';
@@ -34,6 +34,7 @@ interface TransactionFilterPanelProps {
   filterAmountTo: string;
   filterTagIds: string[];
   filterStatuses: TransactionStatus[];
+  filterPaymentMethods?: PaymentMethod[];
   filterOriginalCurrencyCodes: string[];
   filterTagKey: string;
   filterTagKeyOp: TagKeyOp;
@@ -55,6 +56,7 @@ interface TransactionFilterPanelProps {
   setFilterAmountTo: (value: string) => void;
   setFilterTagIds: (value: string[]) => void;
   setFilterStatuses: (value: TransactionStatus[]) => void;
+  setFilterPaymentMethods?: (value: PaymentMethod[]) => void;
   setFilterOriginalCurrencyCodes: (value: string[]) => void;
   setFilterTagKey: (value: string) => void;
   setFilterTagKeyOp: (value: TagKeyOp) => void;
@@ -92,6 +94,7 @@ export function TransactionFilterPanel({
   filterAmountTo,
   filterTagIds,
   filterStatuses,
+  filterPaymentMethods = [],
   filterOriginalCurrencyCodes,
   filterTagKey,
   filterTagKeyOp,
@@ -113,6 +116,7 @@ export function TransactionFilterPanel({
   setFilterAmountTo,
   setFilterTagIds,
   setFilterStatuses,
+  setFilterPaymentMethods,
   setFilterOriginalCurrencyCodes,
   setFilterTagKey,
   setFilterTagKeyOp,
@@ -143,6 +147,17 @@ export function TransactionFilterPanel({
     [TransactionStatus.RECONCILED]: t('filter.statusLabels.reconciled'),
     [TransactionStatus.VOID]: t('filter.statusLabels.void'),
   };
+
+  const PAYMENT_METHOD_FILTER_OPTIONS: MultiSelectOption[] = [
+    { value: PaymentMethod.UPI, label: 'UPI' },
+    { value: PaymentMethod.IMPS, label: 'IMPS' },
+    { value: PaymentMethod.NEFT, label: 'NEFT' },
+    { value: PaymentMethod.RTGS, label: 'RTGS' },
+    { value: PaymentMethod.CARD, label: t('filter.paymentMethodOptions.card') },
+    { value: PaymentMethod.CASH, label: t('filter.paymentMethodOptions.cash') },
+    { value: PaymentMethod.CHEQUE, label: t('filter.paymentMethodOptions.cheque') },
+    { value: PaymentMethod.OTHER, label: t('filter.paymentMethodOptions.other') },
+  ];
 
   // KEY:VALUE tag keys the user actually has (e.g. "country", "sector"). The
   // whole key filter is only offered when at least one key:value tag exists.
@@ -429,6 +444,24 @@ export function TransactionFilterPanel({
                   </button>
                 </span>
               ))}
+              {/* Payment method chips - Teal */}
+              {setFilterPaymentMethods && filterPaymentMethods.map(method => (
+                <span
+                  key={`paymentMethod-${method}`}
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-teal-100 dark:bg-teal-900 text-teal-800 dark:text-teal-200 whitespace-nowrap"
+                >
+                  {method}
+                  <button
+                    onClick={() => handleArrayFilterChange(setFilterPaymentMethods, filterPaymentMethods.filter(m => m !== method))}
+                    className="ml-0.5 -mr-1 p-0.5 rounded-full inline-flex items-center justify-center hover:bg-teal-200 dark:hover:bg-teal-800"
+                    aria-label={t('filter.chips.removePaymentMethod', { name: method })}
+                  >
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </span>
+              ))}
               {/* Currency chips - Cyan */}
               {filterOriginalCurrencyCodes.map(code => (
                 <span
@@ -579,6 +612,17 @@ export function TransactionFilterPanel({
                   placeholder={t('filter.placeholders.statuses')}
                   showSearch={false}
                 />
+
+                {setFilterPaymentMethods && (
+                  <MultiSelect
+                    label={t('filter.fields.paymentMethods')}
+                    options={PAYMENT_METHOD_FILTER_OPTIONS}
+                    value={filterPaymentMethods}
+                    onChange={(values) => handleArrayFilterChange(setFilterPaymentMethods, values as PaymentMethod[])}
+                    placeholder={t('filter.placeholders.paymentMethods')}
+                    showSearch={false}
+                  />
+                )}
               </div>
 
               {/* KEY:VALUE tag key filter. Only shown when the user has at least

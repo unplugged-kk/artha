@@ -672,6 +672,9 @@ export class TransactionTransferService {
         exchangeRate: 1,
         description: description || null,
         referenceNumber,
+        paymentMethod: dto.paymentMethod ?? null,
+        upiVpa: dto.upiVpa ?? null,
+        upiReference: dto.upiReference ?? null,
         status,
         isTransfer: true,
         payeeId: fromOwnerId === userId ? payeeId || null : null,
@@ -688,6 +691,9 @@ export class TransactionTransferService {
         exchangeRate: effectiveExchangeRate,
         description: description || null,
         referenceNumber,
+        paymentMethod: dto.paymentMethod ?? null,
+        upiVpa: dto.upiVpa ?? null,
+        upiReference: dto.upiReference ?? null,
         status,
         isTransfer: true,
         payeeId: toOwnerId === userId ? payeeId || null : null,
@@ -2592,6 +2598,11 @@ export class TransactionTransferService {
       data.description = updateDto.description ?? null;
     if (updateDto.referenceNumber !== undefined)
       data.referenceNumber = updateDto.referenceNumber ?? null;
+    if (updateDto.paymentMethod !== undefined)
+      data.paymentMethod = updateDto.paymentMethod ?? null;
+    if (updateDto.upiVpa !== undefined) data.upiVpa = updateDto.upiVpa ?? null;
+    if (updateDto.upiReference !== undefined)
+      data.upiReference = updateDto.upiReference ?? null;
     if (updateDto.status !== undefined) data.status = updateDto.status;
     if (updateDto.categoryId !== undefined)
       data.categoryId = updateDto.categoryId || null;
@@ -2672,6 +2683,11 @@ export class TransactionTransferService {
       data.description = updateDto.description ?? null;
     if (updateDto.referenceNumber !== undefined)
       data.referenceNumber = updateDto.referenceNumber ?? null;
+    if (updateDto.paymentMethod !== undefined)
+      data.paymentMethod = updateDto.paymentMethod ?? null;
+    if (updateDto.upiVpa !== undefined) data.upiVpa = updateDto.upiVpa ?? null;
+    if (updateDto.upiReference !== undefined)
+      data.upiReference = updateDto.upiReference ?? null;
     if (updateDto.status !== undefined) data.status = updateDto.status;
     if (updateDto.categoryId !== undefined)
       data.categoryId = updateDto.categoryId || null;

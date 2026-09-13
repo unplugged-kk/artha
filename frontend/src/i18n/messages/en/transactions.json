@@ -246,12 +246,23 @@
       "tagKeyOp": "Condition",
       "tagKeyValue": "Value",
       "currency": "Currency",
-      "hasAttachments": "Attachments"
+      "hasAttachments": "Attachments",
+      "paymentMethods": "Payment Methods"
     },
     "hasAttachmentsOptions": {
       "any": "Any",
       "yes": "Yes",
       "no": "No"
+    },
+    "paymentMethodOptions": {
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
     },
     "placeholders": {
       "accounts": "All accounts",
@@ -259,6 +270,7 @@
       "categories": "All categories",
       "tags": "All tags",
       "statuses": "All statuses",
+      "paymentMethods": "All payment methods",
       "amountMin": "Min",
       "amountMax": "Max",
       "search": "Search payee, category, amount, tag, description, reference #...",
@@ -276,6 +288,7 @@
       "removePayee": "Remove {name} filter",
       "removeCategory": "Remove {name} filter",
       "removeTag": "Remove {name} filter",
+      "removePaymentMethod": "Remove {name} filter",
       "removeDate": "Remove date filter",
       "removeAmount": "Remove amount filter",
       "removeSearch": "Remove search filter",
@@ -366,6 +379,9 @@
       "amount": "Amount",
       "totalAmount": "Total Amount",
       "referenceNumber": "Reference Number",
+      "paymentMethod": "Payment Method",
+      "upiVpa": "UPI ID / VPA",
+      "upiReference": "UPI Reference / RRN",
       "description": "Description",
       "status": "Status",
       "tags": "Tags",
@@ -383,6 +399,8 @@
       "selectOrTypePayee": "Select or type payee name...",
       "selectOrCreateCategory": "Select or create category...",
       "referenceNumber": "Cheque #, confirmation #...",
+      "upiVpa": "e.g. name@okhdfcbank",
+      "upiReference": "12-digit reference number",
       "optionalDescription": "Optional description...",
       "selectTags": "Select tags...",
       "createNewTag": "Create new tag..."
@@ -390,6 +408,17 @@
     "splitSection": {
       "title": "Split Transaction",
       "cancelSplit": "Cancel Split"
+    },
+    "paymentMethodOptions": {
+      "none": "None",
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
     },
     "statusOptions": {
       "unreconciled": "Unreconciled",

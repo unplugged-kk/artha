@@ -15,7 +15,10 @@ import {
 } from "class-validator";
 import { Type } from "class-transformer";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { TransactionStatus } from "../entities/transaction.entity";
+import {
+  TransactionStatus,
+  PaymentMethod,
+} from "../entities/transaction.entity";
 import { SanitizeHtml } from "../../common/decorators/sanitize-html.decorator";
 import { TRANSACTION_NOTE_MAX_LENGTH } from "../../common/transaction-note";
 
@@ -145,6 +148,14 @@ export class BulkUpdateDto {
   @IsOptional()
   @IsEnum(TransactionStatus)
   status?: TransactionStatus;
+
+  @ApiPropertyOptional({
+    description: "Set payment method (null to clear)",
+    enum: PaymentMethod,
+  })
+  @IsOptional()
+  @IsEnum(PaymentMethod)
+  paymentMethod?: PaymentMethod | null;
 
   @ApiPropertyOptional({
     description: "Set tag IDs (empty array to clear all tags)",

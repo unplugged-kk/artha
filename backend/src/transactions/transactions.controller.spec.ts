@@ -1992,4 +1992,39 @@ describe("TransactionsController", () => {
       expect(mockService.getFxFeeSummary).not.toHaveBeenCalled();
     });
   });
+
+  describe("findAll() payment method filters", () => {
+    it("parses paymentMethod single rail", async () => {
+      mockService.findAll.mockResolvedValue({ data: [], total: 0 });
+
+      const args = [mockReq, ...Array(22).fill(undefined), "UPI"];
+      await (controller.findAll as (...a: unknown[]) => Promise<unknown>)(
+        ...args,
+      );
+
+      const calls = mockService.findAll.mock.calls as unknown[][];
+      const lastCall = calls[calls.length - 1];
+      expect(lastCall[lastCall.length - 1]).toEqual(["UPI"]);
+    });
+
+    it("parses paymentMethods comma-separated list", async () => {
+      mockService.findAll.mockResolvedValue({ data: [], total: 0 });
+
+      const args = [mockReq, ...Array(23).fill(undefined), "UPI,CARD,NEFT"];
+      await (controller.findAll as (...a: unknown[]) => Promise<unknown>)(
+        ...args,
+      );
+
+      const calls = mockService.findAll.mock.calls as unknown[][];
+      const lastCall = calls[calls.length - 1];
+      expect(lastCall[lastCall.length - 1]).toEqual(["UPI", "CARD", "NEFT"]);
+    });
+
+    it("rejects an invalid payment method", async () => {
+      const args = [mockReq, ...Array(22).fill(undefined), "CRYPTO"];
+      await expect(
+        (controller.findAll as (...a: unknown[]) => Promise<unknown>)(...args),
+      ).rejects.toThrow(BadRequestException);
+    });
+  });
 });

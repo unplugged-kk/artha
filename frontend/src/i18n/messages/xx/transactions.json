@@ -246,12 +246,23 @@
       "tagKeyOp": "[XX-Condition-XX]",
       "tagKeyValue": "[XX-Value-XX]",
       "currency": "[XX-Currency-XX]",
-      "hasAttachments": "[XX-Attachments-XX]"
+      "hasAttachments": "[XX-Attachments-XX]",
+      "paymentMethods": "[XX-Payment Methods-XX]"
     },
     "hasAttachmentsOptions": {
       "any": "[XX-Any-XX]",
       "yes": "[XX-Yes-XX]",
       "no": "[XX-No-XX]"
+    },
+    "paymentMethodOptions": {
+      "upi": "[XX-UPI-XX]",
+      "imps": "[XX-IMPS-XX]",
+      "neft": "[XX-NEFT-XX]",
+      "rtgs": "[XX-RTGS-XX]",
+      "card": "[XX-Card-XX]",
+      "cash": "[XX-Cash-XX]",
+      "cheque": "[XX-Cheque-XX]",
+      "other": "[XX-Other-XX]"
     },
     "placeholders": {
       "accounts": "[XX-All accounts-XX]",
@@ -259,6 +270,7 @@
       "categories": "[XX-All categories-XX]",
       "tags": "[XX-All tags-XX]",
       "statuses": "[XX-All statuses-XX]",
+      "paymentMethods": "[XX-All payment methods-XX]",
       "amountMin": "[XX-Min-XX]",
       "amountMax": "[XX-Max-XX]",
       "search": "[XX-Search payee, category, amount, tag, description, reference #...-XX]",
@@ -276,6 +288,7 @@
       "removePayee": "[XX-Remove {name} filter-XX]",
       "removeCategory": "[XX-Remove {name} filter-XX]",
       "removeTag": "[XX-Remove {name} filter-XX]",
+      "removePaymentMethod": "[XX-Remove {name} filter-XX]",
       "removeDate": "[XX-Remove date filter-XX]",
       "removeAmount": "[XX-Remove amount filter-XX]",
       "removeSearch": "[XX-Remove search filter-XX]",
@@ -366,6 +379,9 @@
       "amount": "[XX-Amount-XX]",
       "totalAmount": "[XX-Total Amount-XX]",
       "referenceNumber": "[XX-Reference Number-XX]",
+      "paymentMethod": "[XX-Payment Method-XX]",
+      "upiVpa": "[XX-UPI ID / VPA-XX]",
+      "upiReference": "[XX-UPI Reference / RRN-XX]",
       "description": "[XX-Description-XX]",
       "status": "[XX-Status-XX]",
       "tags": "[XX-Tags-XX]",
@@ -383,6 +399,8 @@
       "selectOrTypePayee": "[XX-Select or type payee name...-XX]",
       "selectOrCreateCategory": "[XX-Select or create category...-XX]",
       "referenceNumber": "[XX-Cheque #, confirmation #...-XX]",
+      "upiVpa": "[XX-e.g. name@okhdfcbank-XX]",
+      "upiReference": "[XX-12-digit reference number-XX]",
       "optionalDescription": "[XX-Optional description...-XX]",
       "selectTags": "[XX-Select tags...-XX]",
       "createNewTag": "[XX-Create new tag...-XX]"
@@ -390,6 +408,17 @@
     "splitSection": {
       "title": "[XX-Split Transaction-XX]",
       "cancelSplit": "[XX-Cancel Split-XX]"
+    },
+    "paymentMethodOptions": {
+      "none": "[XX-None-XX]",
+      "upi": "[XX-UPI-XX]",
+      "imps": "[XX-IMPS-XX]",
+      "neft": "[XX-NEFT-XX]",
+      "rtgs": "[XX-RTGS-XX]",
+      "card": "[XX-Card-XX]",
+      "cash": "[XX-Cash-XX]",
+      "cheque": "[XX-Cheque-XX]",
+      "other": "[XX-Other-XX]"
     },
     "statusOptions": {
       "unreconciled": "[XX-Unreconciled-XX]",

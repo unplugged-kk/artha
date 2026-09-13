@@ -266,6 +266,7 @@ function TransactionsContent() {
           amountFrom: parsedAmountFrom,
           amountTo: parsedAmountTo,
           statuses: filters.filterStatuses.length > 0 ? filters.filterStatuses : undefined,
+          paymentMethods: filters.filterPaymentMethods.length > 0 ? filters.filterPaymentMethods : undefined,
           originalCurrencyCodes: filters.filterOriginalCurrencyCodes.length > 0 ? filters.filterOriginalCurrencyCodes : undefined,
           tagKey: filters.filterTagKey || undefined,
           tagKeyOp: filters.filterTagKeyOp,
@@ -371,6 +372,7 @@ function TransactionsContent() {
         amountFrom: filters.filterAmountFrom,
         amountTo: filters.filterAmountTo,
         statuses: filters.filterStatuses,
+        paymentMethods: filters.filterPaymentMethods,
         originalCurrencyCodes: filters.filterOriginalCurrencyCodes,
         tagKey: filters.filterTagKey,
         tagKeyOp: filters.filterTagKeyOp,
@@ -387,7 +389,7 @@ function TransactionsContent() {
     } else {
       loadTransactions(page);
     }
-  }, [filters.currentPage, filters.filterAccountIds, filters.filterCategoryIds, filters.filterPayeeIds, filters.filterTagIds, filters.filterStartDate, filters.filterEndDate, filters.filterSearch, filters.filterAmountFrom, filters.filterAmountTo, filters.filterStatuses, filters.filterOriginalCurrencyCodes, filters.filterTagKey, filters.filterTagKeyOp, filters.filterTagKeyValue, filters.filterHasAttachments, filters.updateUrl, loadTransactions, filters.filtersInitialized, undoRedoTick]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [filters.currentPage, filters.filterAccountIds, filters.filterCategoryIds, filters.filterPayeeIds, filters.filterTagIds, filters.filterStartDate, filters.filterEndDate, filters.filterSearch, filters.filterAmountFrom, filters.filterAmountTo, filters.filterStatuses, filters.filterPaymentMethods, filters.filterOriginalCurrencyCodes, filters.filterTagKey, filters.filterTagKeyOp, filters.filterTagKeyValue, filters.filterHasAttachments, filters.updateUrl, loadTransactions, filters.filtersInitialized, undoRedoTick]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Once the deep-linked transaction is actually on the page, let the flash
   // linger briefly then clear it, so the highlight does not stick around on
@@ -1261,6 +1263,7 @@ function TransactionsContent() {
           filterAmountTo={filters.filterAmountTo}
           filterTagIds={filters.filterTagIds}
           filterStatuses={filters.filterStatuses}
+          filterPaymentMethods={filters.filterPaymentMethods}
           filterOriginalCurrencyCodes={filters.filterOriginalCurrencyCodes}
           filterTagKey={filters.filterTagKey}
           filterTagKeyOp={filters.filterTagKeyOp}
@@ -1282,6 +1285,7 @@ function TransactionsContent() {
           setFilterAmountTo={filters.setFilterAmountTo}
           setFilterTagIds={filters.setFilterTagIds}
           setFilterStatuses={filters.setFilterStatuses}
+          setFilterPaymentMethods={filters.setFilterPaymentMethods}
           setFilterOriginalCurrencyCodes={filters.setFilterOriginalCurrencyCodes}
           setFilterTagKey={filters.setFilterTagKey}
           setFilterTagKeyOp={filters.setFilterTagKeyOp}

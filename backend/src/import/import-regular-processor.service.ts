@@ -16,6 +16,7 @@ import {
   computeTransactionImportIdentity,
   getContentSignatureKey,
 } from "./import-identity.util";
+import { detectPaymentMetadata } from "./payment-method-detector.util";
 import { normalizePayeeName } from "../payees/payee-normalize.util";
 import { deletionBalanceEffect } from "../common/deletion-balance.util";
 import { tr } from "../i18n/translate";
@@ -98,6 +99,16 @@ export class ImportRegularProcessorService {
     // investment import paths cannot disagree on what the same flags mean.
     const status = statusFromQifFlags(qifTx);
 
+    // Detect payment rail and UPI metadata (Priority 9)
+    const paymentMeta = detectPaymentMetadata({
+      explicitMethod: qifTx.paymentMethod,
+      explicitVpa: qifTx.upiVpa,
+      explicitReference: qifTx.upiReference,
+      memo: qifTx.memo,
+      payee: qifTx.payee,
+      number: qifTx.number,
+    });
+
     // Create transaction (use canonical payee name if alias-matched)
     const isTransfer = !isSplit && (qifTx.isTransfer || isLoanPaymentTx);
     const transaction = ctx.manager.create(Transaction, {
@@ -109,6 +120,9 @@ export class ImportRegularProcessorService {
       payeeId: resolvedPayee.payeeId,
       description: this.buildImportDescription(qifTx),
       referenceNumber: qifTx.number,
+      paymentMethod: paymentMeta.paymentMethod ?? null,
+      upiVpa: paymentMeta.upiVpa ?? null,
+      upiReference: paymentMeta.upiReference ?? null,
       categoryId: effectiveCategoryId,
       status,
       currencyCode: ctx.account.currencyCode,
@@ -738,6 +752,9 @@ export class ImportRegularProcessorService {
         ? qifTx.payee || `Loan Payment from ${ctx.account.name}`
         : qifTx.payee || null,
       description: split.memo || qifTx.memo,
+      paymentMethod: savedTx.paymentMethod ?? null,
+      upiVpa: savedTx.upiVpa ?? null,
+      upiReference: savedTx.upiReference ?? null,
       status,
       currencyCode: ctx.account.currencyCode,
       isTransfer: true,

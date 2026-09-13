@@ -24,6 +24,8 @@ describe("buildTransactionSearchClause", () => {
     expect(clause).toContain("transaction.description ILIKE :search");
     expect(clause).toContain("transaction.payeeName ILIKE :search");
     expect(clause).toContain("transaction.referenceNumber ILIKE :search");
+    expect(clause).toContain("transaction.upiVpa ILIKE :search");
+    expect(clause).toContain("transaction.upiReference ILIKE :search");
     expect(clause).toContain("splits.memo ILIKE :search");
 
     // New fields

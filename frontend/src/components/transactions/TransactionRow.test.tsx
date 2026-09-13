@@ -1180,4 +1180,19 @@ describe('TransactionRow compact dates (the day/month view)', () => {
       expect(screen.getAllByText('-').length).toBeGreaterThan(0);
     });
   });
+
+  describe('payment method badge', () => {
+    it('renders payment method badge when paymentMethod is present', () => {
+      renderRow({}, { paymentMethod: 'UPI' as any, upiVpa: 'user@okhdfcbank' });
+      const badges = screen.getAllByTestId('payment-method-badge');
+      expect(badges.length).toBeGreaterThan(0);
+      expect(badges[0].textContent).toBe('UPI');
+      expect(badges[0].getAttribute('title')).toContain('user@okhdfcbank');
+    });
+
+    it('renders without badge when paymentMethod is null', () => {
+      renderRow({}, { paymentMethod: null, referenceNumber: null });
+      expect(screen.queryByTestId('payment-method-badge')).toBeNull();
+    });
+  });
 });
