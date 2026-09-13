@@ -1,0 +1,64 @@
+{
+  "title": "Watchlists",
+  "subtitle": "Track and monitor securities of interest without adding transactions",
+  "newWatchlist": "New Watchlist",
+  "editWatchlist": "Edit Watchlist",
+  "deleteWatchlist": "Delete Watchlist",
+  "addSecurity": "Add Security",
+  "refreshQuotes": "Refresh Quotes",
+  "emptyStateTitle": "No watchlists yet",
+  "emptyStateDescription": "Create a watchlist to track securities, quotes, and market movements.",
+  "createFirstWatchlist": "Create your first watchlist",
+  "emptyItemsTitle": "Watchlist is empty",
+  "emptyItemsDescription": "Add securities to this watchlist to monitor quotes and price changes.",
+  "addFirstSecurity": "Add Security",
+  "columns": {
+    "symbol": "Symbol",
+    "name": "Name",
+    "type": "Type",
+    "price": "Last Price",
+    "change": "24h Change",
+    "asOf": "As Of",
+    "actions": "Actions"
+  },
+  "status": {
+    "unavailable": "Unavailable"
+  },
+  "form": {
+    "nameLabel": "Watchlist Name",
+    "namePlaceholder": "e.g. Dividend Stocks, Large Cap Tech",
+    "descriptionLabel": "Description (optional)",
+    "descriptionPlaceholder": "Brief notes on this watchlist's strategy or focus",
+    "save": "Save",
+    "cancel": "Cancel",
+    "create": "Create Watchlist"
+  },
+  "addSecurityModal": {
+    "title": "Add Security to Watchlist",
+    "searchPlaceholder": "Search by symbol, name, or ISIN...",
+    "noSecurities": "No matching securities found",
+    "allAdded": "All your active securities are already in this watchlist",
+    "add": "Add to Watchlist"
+  },
+  "confirmDelete": {
+    "title": "Delete Watchlist",
+    "message": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+    "confirm": "Delete",
+    "cancel": "Cancel"
+  },
+  "confirmRemoveItem": {
+    "title": "Remove Security",
+    "message": "Are you sure you want to remove {symbol} from this watchlist?",
+    "confirm": "Remove",
+    "cancel": "Cancel"
+  },
+  "toast": {
+    "created": "Watchlist created successfully",
+    "updated": "Watchlist updated successfully",
+    "deleted": "Watchlist deleted successfully",
+    "itemAdded": "Security added to watchlist",
+    "itemRemoved": "Security removed from watchlist",
+    "reordered": "Order updated",
+    "quotesRefreshed": "Quotes refreshed"
+  }
+}

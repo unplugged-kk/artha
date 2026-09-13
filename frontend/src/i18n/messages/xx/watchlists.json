@@ -1,0 +1,64 @@
+{
+  "title": "[XX-Watchlists-XX]",
+  "subtitle": "[XX-Track and monitor securities of interest without adding transactions-XX]",
+  "newWatchlist": "[XX-New Watchlist-XX]",
+  "editWatchlist": "[XX-Edit Watchlist-XX]",
+  "deleteWatchlist": "[XX-Delete Watchlist-XX]",
+  "addSecurity": "[XX-Add Security-XX]",
+  "refreshQuotes": "[XX-Refresh Quotes-XX]",
+  "emptyStateTitle": "[XX-No watchlists yet-XX]",
+  "emptyStateDescription": "[XX-Create a watchlist to track securities, quotes, and market movements.-XX]",
+  "createFirstWatchlist": "[XX-Create your first watchlist-XX]",
+  "emptyItemsTitle": "[XX-Watchlist is empty-XX]",
+  "emptyItemsDescription": "[XX-Add securities to this watchlist to monitor quotes and price changes.-XX]",
+  "addFirstSecurity": "[XX-Add Security-XX]",
+  "columns": {
+    "symbol": "[XX-Symbol-XX]",
+    "name": "[XX-Name-XX]",
+    "type": "[XX-Type-XX]",
+    "price": "[XX-Last Price-XX]",
+    "change": "[XX-24h Change-XX]",
+    "asOf": "[XX-As Of-XX]",
+    "actions": "[XX-Actions-XX]"
+  },
+  "status": {
+    "unavailable": "[XX-Unavailable-XX]"
+  },
+  "form": {
+    "nameLabel": "[XX-Watchlist Name-XX]",
+    "namePlaceholder": "[XX-e.g. Dividend Stocks, Large Cap Tech-XX]",
+    "descriptionLabel": "[XX-Description (optional)-XX]",
+    "descriptionPlaceholder": "[XX-Brief notes on this watchlist's strategy or focus-XX]",
+    "save": "[XX-Save-XX]",
+    "cancel": "[XX-Cancel-XX]",
+    "create": "[XX-Create Watchlist-XX]"
+  },
+  "addSecurityModal": {
+    "title": "[XX-Add Security to Watchlist-XX]",
+    "searchPlaceholder": "[XX-Search by symbol, name, or ISIN...-XX]",
+    "noSecurities": "[XX-No matching securities found-XX]",
+    "allAdded": "[XX-All your active securities are already in this watchlist-XX]",
+    "add": "[XX-Add to Watchlist-XX]"
+  },
+  "confirmDelete": {
+    "title": "[XX-Delete Watchlist-XX]",
+    "message": "[XX-Are you sure you want to delete \"{name}\"? This action cannot be undone.-XX]",
+    "confirm": "[XX-Delete-XX]",
+    "cancel": "[XX-Cancel-XX]"
+  },
+  "confirmRemoveItem": {
+    "title": "[XX-Remove Security-XX]",
+    "message": "[XX-Are you sure you want to remove {symbol} from this watchlist?-XX]",
+    "confirm": "[XX-Remove-XX]",
+    "cancel": "[XX-Cancel-XX]"
+  },
+  "toast": {
+    "created": "[XX-Watchlist created successfully-XX]",
+    "updated": "[XX-Watchlist updated successfully-XX]",
+    "deleted": "[XX-Watchlist deleted successfully-XX]",
+    "itemAdded": "[XX-Security added to watchlist-XX]",
+    "itemRemoved": "[XX-Security removed from watchlist-XX]",
+    "reordered": "[XX-Order updated-XX]",
+    "quotesRefreshed": "[XX-Quotes refreshed-XX]"
+  }
+}
