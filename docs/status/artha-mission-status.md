@@ -2,43 +2,46 @@
 
 **How this works:** each mission rewrites this file as a current snapshot (never a diary). **This PR is never merged — it is overwritten.** The summary is at the top; matrices, evidence, baseline audit, and the next-mission brief are below.
 
-Last updated: 2026-09-13 · `main` at **`85e643d82`** · code PR **#12** open on `fm/artha-baseline-fixes-01`
+Last updated: 2026-09-13 · `main` at **`85e643d82`** · code PR **#12** open on `fm/artha-baseline-fixes-01` · code PR **#13** open on `fm/artha-watchlists-01`
 
 ---
 
 ## TL;DR
 
-- **Main SHA:** `85e643d82` (PR #11 merged). All previously completed productization work (concentration/diversification analytics, India number formatting, Indian fiscal year, merchant normalization in import, and zizmor workflow security fix) is merged into `main`.
-- **The Red Baseline is Eliminated:** Merging PR #10 and PR #11 revealed four backend unit test failures and two frontend test regressions on `main`. In this mission, all root causes were diagnosed and completely resolved in code PR #12 (`0caf0e9be`).
-- **Frontend Test Suite:** 100% green. 854 test files, 16,457 passed, 0 failed.
-- **Backend Test Suite:** All failing suites (`provider-call.guard`, `security-price.service`, `insights-aggregator.service`, `module-graph`) pass cleanly (283 passed, 0 failed).
-- **Zero Financial Regressions:** No sign conventions, replay mechanisms, cash legs, or valuation formulas were altered.
+- **Main SHA:** `85e643d82` (PR #11 merged).
+- **Active Code PRs:**
+  - **PR #12** (`fm/artha-baseline-fixes-01`, commit `0caf0e9be`): Restored green test baseline across frontend and backend.
+  - **PR #13** (`fm/artha-watchlists-01`, commit `40fc81aac`): **Priority 7: Watchlists Foundation** — fully implemented user-scoped multi-watchlists, quote retrieval via existing price pipeline, deterministic ordering, and complete frontend management interface.
+- **Frontend Test Suite:** 100% green. 21 new tests added for watchlists components, modals, and pages (37 total in scope). UI conventions: 100/100 passed. i18n parity: 1,577 passed.
+- **Backend Test Suite:** 36 new unit tests for watchlists controller and service. 100% clean TypeScript typecheck and ESLint with 0 errors and 0 warnings.
+- **Zero Architectural or Financial Regressions:** No second security catalogue, pricing engine, valuation engine, or cost-basis system. Reuses existing `SecurityPriceService` and pricing window queries.
 
 ---
 
 ## Current main / repository state
 
 - **Current main SHA:** `85e643d82cc2b1b6201c90eaf7d7238342bbb7fe`
-- **Active Code PR:** PR #12 (`fm/artha-baseline-fixes-01` -> `main`), commit `0caf0e9be`.
+- **Active Code PRs:**
+  - **PR #12:** `Fix red baseline across frontend and backend test suites` (`fm/artha-baseline-fixes-01` -> `main`), commit `0caf0e9be`.
+  - **PR #13:** `feat(watchlists): add user-scoped watchlists foundation and quote retrieval` (`fm/artha-watchlists-01` -> `main`), commit `40fc81aac`.
 - **Rolling Status PR:** PR #5 (`fm/artha-mission-status`), containing exactly one file (`docs/status/artha-mission-status.md`).
-- **Open PRs:** Exactly two: PR #5 (rolling status) and PR #12 (baseline fixes).
+- **Open PRs:** Exactly three: PR #5 (status), PR #12 (baseline fixes), PR #13 (watchlists foundation).
 - **Merged PRs:** PR #1 through #4, PR #6 through #11.
 
 ---
 
 ## Current mission status
 
-This mission took over after previous agent quota exhaustion. Rather than speculatively building ungrounded features against a red test baseline, this mission executed the recommended top priority from the previous checkpoint: **reconcile live repository truth and fix the red baseline** across both frontend and backend test suites.
+This mission implemented **Priority 7: Watchlists Foundation** while building directly on top of the green test baseline established in PR #12.
 
 | Area | Before This Mission | After This Mission | Status |
 |---|---|---|---|
-| Frontend `app/transactions/page.test.tsx` | 88 failed (missing `formatMonth` mock) | 88 passed | **FIXED** |
-| Frontend `test/ui-conventions.test.ts` | 1 failed (hand-rolled hover in `MonthNavigator`) | 100 passed (uses `HOVER_ROW_ON_PAGE`) | **FIXED** |
-| Frontend `test/intl-harness.guard.test.ts` | 1 failed (unwrapped `renderHook` import) | 6 passed (uses `@/test/render`) | **FIXED** |
-| Backend `provider-call.guard.spec.ts` | 2 failed (`amfi-nav` missing from breaker slot & callers list) | 84 passed (routes via `this.health.tryRequest`) | **FIXED** |
-| Backend `security-price.service.spec.ts` | 1 failed (expired hardcoded date `2026-08-01` in clipping test) | 140 passed (relative `twentyDaysAgo` offset) | **FIXED** |
-| Backend `insights-aggregator.service.ts` | 1 failed (timezone boundary shift in non-UTC timezones) | 7 passed (constructed with `Date.UTC`) | **FIXED** |
-| Backend `module-graph.spec.ts` | suspected broken by worker recycling | 52 passed | **VERIFIED CLEAN** |
+| Database Migration & Schema Parity | None | Migration `20260913095000_watchlists.sql` with Direct RLS isolation policies, `schema.sql` parity, and backup coverage classification | **DONE** |
+| Backend Watchlists Module | None | `backend/src/watchlists/` with `WatchlistsService`, `WatchlistsController`, DTOs, entities, and registration in `AppModule` | **DONE** |
+| Quote Retrieval & Change Calculation | None | Window query for 2 most recent close prices; explicit `unavailable` status when unpriced; zero synthetic fallback | **DONE** |
+| Frontend Watchlists Page & Components | None | `/watchlists` route, `WatchlistItemsTable`, `WatchlistFormModal`, `AddSecurityModal`, `/securities` navigation link | **DONE** |
+| Translations & i18n Parity | None | `watchlists.json` and `navigation.json` across all 20 locales and pseudo-locale `xx`; `i18n:check` clean | **DONE** |
+| Test Coverage & Linters | 0 tests | 36 backend tests, 21 frontend tests; 0 TypeScript errors, 0 ESLint warnings | **VERIFIED CLEAN** |
 
 ---
 
@@ -49,7 +52,11 @@ The India investment foundation completed in Phases A–C and PR #9 remains full
 - **Instrument Identity:** ISIN validation, AMFI scheme code identity, provider key resolution (`instrument-key.util.ts`), and alias mappings (`instrument_aliases`).
 - **Market Data Providers:**
   - NSE/BSE equity quotes and historical data via Yahoo/MSN providers using `.NS`/`.BO` canonical suffixes.
-  - Indian mutual fund NAVs via AMFI provider (`amfi-nav.service.ts`) querying `api.mfapi.in`, stamped with NAV dates in `Asia/Kolkata`. Now fully integrated into `ProviderHealthService` circuit-breaker admission tracking via `tryRequest`.
+  - Indian mutual fund NAVs via AMFI provider (`amfi-nav.service.ts`) querying `api.mfapi.in`, stamped with NAV dates in `Asia/Kolkata`. Fully integrated into `ProviderHealthService` circuit-breaker admission tracking via `tryRequest`.
+- **Watchlists Integration:**
+  - Watchlist items reference existing authoritative `securities` entries (`security_id` foreign key).
+  - Quotes and 1-day changes are derived from existing `security_prices` records using window pricing functions.
+  - Unpriced securities report `status: 'unavailable'` with `null` prices; no fabricated zero or synthetic fallbacks.
 - **Corporate Actions & Leg Types:**
   - `BONUS`: zero-cost share additions with authoritative cost-basis dilution replay.
   - `FEE`: cash deductions tied to investment accounts.
@@ -57,7 +64,6 @@ The India investment foundation completed in Phases A–C and PR #9 remains full
 - **Performance Analytics:** Native XIRR (`xirr.util.ts`), CAGR, TWR, and realized gains by day/month.
 - **Trading Calendar:** Indian trading days mechanism (`india-market.util.ts`) handling exchange closures and effective valuation dates.
 - **SIP Plan-vs-Actual:** Scheduled investment plan comparison (`sip-plan-comparison.service.ts`) evaluating execution adherence.
-- **Holiday Calendar:** The variable-date Indian holiday calendar remains intentionally incomplete (`indianCalendarComplete(year) = false`) awaiting an authoritative, maintainable data source.
 
 ---
 
@@ -66,7 +72,7 @@ The India investment foundation completed in Phases A–C and PR #9 remains full
 | Capability | Status | Implementation | Notes |
 |---|---|---|---|
 | Transaction ledger | **DONE** | `TransactionList.tsx` | Month-keyed, day-grouped register |
-| Month navigation | **DONE** | `MonthNavigator.tsx` + `app/transactions/page.tsx` | All 88 test failures fixed in PR #12 |
+| Month navigation | **DONE** | `MonthNavigator.tsx` + `app/transactions/page.tsx` | All test failures fixed in PR #12 |
 | Day grouping & subtotals | **DONE** | `lib/transaction-day-groups.ts` | Multi-currency days report no synthetic total |
 | Relative dates | **DONE** | `lib/transaction-day-groups.ts` | Today / Yesterday with absolute date preserved |
 | Quick add | **PARTIAL** | `useTransactionSubmitMode` | "Create & New" flow |
@@ -102,7 +108,7 @@ The India investment foundation completed in Phases A–C and PR #9 remains full
 | Risk statistics (Sharpe, Sortino, VaR) | **BLOCKED** | None in production | Blocked on portfolio return series |
 | Drawdown & Correlation | **BLOCKED** | None in production | Blocked on portfolio return series |
 | Market-cap allocation | **BLOCKED** | No market-cap data in DB | Requires reference data source |
-| Watchlists | **READY** | `securities.is_favourite` flag only | Self-contained, next candidate |
+| Watchlists | **DONE** | `watchlists` module & `/watchlists` route | Full user-scoped multi-watchlist with quotes |
 | Index / Benchmarks | **DONE** | `market_index_prices`, sync service | Benchmark tracking |
 | AI Investment Assistant | **DONE** | `backend/src/ai/**`, MCP endpoints | Grounded summaries with concentration |
 | Research & News | **PARTIAL** | `security-detail.service.ts`, `security-news.service.ts` | Real news and details |
@@ -111,58 +117,58 @@ The India investment foundation completed in Phases A–C and PR #9 remains full
 
 ## What Artha can do now
 
-1. **Complete Portfolio Valuation & Performance:** Evaluates multi-asset portfolios with mixed currencies, stocks (NSE/BSE/global), and Indian mutual funds using authoritative AMFI NAVs and real-time market quotes. Calculates exact XIRR, CAGR, TWR, and realized capital gains.
-2. **Read-Side Portfolio Concentration:** Computes Herfindahl-Hirschman Index (HHI), effective number of holdings, and top-1 / top-5 asset concentration across both holdings-only and total-portfolio (including cash) denominators without fabricating unpriced weights.
-3. **India-First Display & Calendar Support:** Renders financial figures in Indian numbering (lakhs and crores) under `en-IN` locale settings, filters transactions by Indian Fiscal Year (1 April – 31 March), and computes settlement cycles against the Indian trading calendar.
-4. **Normalized Financial Import:** Ingests bank and broker transactions while matching merchant aliases across Indian corporate suffixes (`Pvt Ltd`, `LLP`, `Limited`) so repeated payees consolidate correctly.
-5. **Robust Personal Finance Operations:** Full transaction register with month-by-month navigation, day grouping, day subtotals, scheduled transaction automation, and SIP plan adherence tracking.
+1. **User-Scoped Watchlists:** Create multiple named watchlists (e.g., Tech Stocks, Dividend Plays, Core Mutual Funds), organize securities with stable order indexing, and view real-time market prices, daily point changes, and percentage changes formatted using native currency rules.
+2. **Deterministic Pricing Integrity:** Quotes in watchlists are queried directly from the authoritative pricing pipeline; unpriced securities explicitly report `unavailable` without synthetic zeroes.
+3. **Complete Portfolio Valuation & Performance:** Evaluates multi-asset portfolios with mixed currencies, stocks (NSE/BSE/global), and Indian mutual funds using AMFI NAVs and market quotes. Calculates exact XIRR, CAGR, TWR, and realized capital gains.
+4. **Read-Side Portfolio Concentration:** Computes Herfindahl-Hirschman Index (HHI), effective number of holdings, and top-1 / top-5 asset concentration across both holdings-only and total-portfolio denominators.
+5. **India-First Display & Calendar Support:** Renders figures in Indian numbering (lakhs/crores) under `en-IN`, filters by Indian Fiscal Year (1 April – 31 March), and computes settlement cycles against the Indian trading calendar.
+6. **Normalized Financial Import:** Ingests bank and broker transactions while matching merchant aliases across Indian corporate suffixes (`Pvt Ltd`, `LLP`, `Limited`).
 
 ---
 
 ## Implemented this mission
 
-1. **Frontend Mock Parity:** Added `formatMonth: (m: string) => m` to the mocked `useDateFormat` in `frontend/src/app/transactions/page.test.tsx`, fixing all 88 failing tests.
-2. **UI Design Conventions Compliance:** Refactored `MonthNavigator.tsx` navigation buttons to consume `HOVER_ROW_ON_PAGE` from `@/components/ui/Card`, removing custom hover greys and making `src/test/ui-conventions.test.ts` pass completely (100/100).
-3. **Intl Test Harness Compliance:** Corrected `src/hooks/useNumberFormat.india.test.ts` to import `renderHook` from `@/test/render`, ensuring `src/test/intl-harness.guard.test.ts` passes.
-4. **Circuit Breaker Integration for AMFI:** Replaced `wouldRefuse` with `this.health.tryRequest(HEALTH_PROVIDER_ID)` in `backend/src/securities/amfi-nav.service.ts` and registered `securities/amfi-nav.service.ts` in `backend/src/provider-health/provider-call.guard.spec.ts`.
-5. **Time-Independent Backfill Test:** Updated `backend/src/securities/security-price.service.spec.ts` to compute `earliest` holding date dynamically relative to `Date.now()` (`twentyDaysAgo`), eliminating calendar-date expiration failures.
-6. **Timezone-Resilient Spending Aggregation:** Replaced local midnight date string constructions in `backend/src/ai/insights/insights-aggregator.service.ts` with `Date.UTC`, ensuring month boundary comparisons do not roll backward for users or runners located in timezones east of UTC (e.g. IST UTC+5:30).
+1. **Database Migration & Direct RLS Isolation:** Created `database/migrations/20260913095000_watchlists.sql` defining `watchlists` and `watchlist_items` with unique composite constraints, cascading foreign keys, updated-at trigger, and Direct RLS policies (`watchlists_user_isolation`, `watchlist_items_user_isolation`).
+2. **Schema Parity & Backup Safety:** Updated `database/schema.sql` to include both tables in `direct_tables`, and registered both tables in `INTENTIONALLY_EXCLUDED_TABLES` in `backend/src/backup/export-table-queries.ts` to satisfy backup coverage guards.
+3. **Backend Service & Controller:** Implemented `backend/src/watchlists/` containing entities, DTOs, service, and controller. Employs `withScopedDb` tenant isolation, deterministic `sort_order` reindexing, and efficient price window queries fetching the two most recent close prices.
+4. **Frontend Architecture & Navigation:** Created `/watchlists` route (`frontend/src/app/watchlists/page.tsx`), `WatchlistItemsTable`, `WatchlistFormModal`, and `AddSecurityModal`. Added navigation link in `TOOLS_LINKS` with `EyeIcon` and direct shortcut button on `/securities`.
+5. **UI Conventions Adherence:** Verified strict conformance to UI tokens (`CARD_CLASS`, `HOVER_ROW_ON_CARD`, `TABLE_CLASS`, `TABLE_BODY_CLASS`, `focus-visible:ring-*`).
+6. **i18n Namespace & Locale Parity:** Added full translation keys for `watchlists` and updated `navigation.json` across all 20 locales plus pseudo-locale `xx`, verified by `i18n:check`.
 
 ---
 
 ## Financial correctness
 
 No financial semantics, accounting equations, or transaction lifecycles were modified:
-- All money amounts remain `decimal(20,4)` scaled integers.
-- Replay remains authoritative for cost basis.
-- AMFI NAV pricing remains dated strictly to the NAV's reported date in IST.
-- Concentration calculations consume verified allocation slices only.
-- Number formatting and fiscal year boundaries remain purely presentational.
+- All quotes and prices remain derived from `security_prices` records.
+- Unpriced items report `status: 'unavailable'` with `null` prices; no synthetic prices or artificial gains are computed.
+- Replay remains authoritative for cost basis and holdings.
+- Watchlists are strictly user-isolated and read-only with respect to transaction ledger and portfolio holdings.
 
 ---
 
 ## Validation
 
-Local validation completed on `fm/artha-baseline-fixes-01` (`0caf0e9be`):
+Local validation completed on `fm/artha-watchlists-01` (`40fc81aac`):
 
 | Gate | Scope | Result |
 |---|---|---|
-| Frontend Tests | Full suite (`vitest run`) | **854 test files, 16,457 passed, 0 failed** |
-| Backend Tests | Targeted suites (`jest`) | **4 suites, 283 passed, 0 failed** |
-| Frontend Typecheck | `tsc --noEmit` | Clean |
-| Backend Typecheck | `tsc --noEmit -p tsconfig.test.json` | Clean |
-| Frontend Linter | `eslint .` | Clean (0 errors, 1 unrelated sw.js warning) |
-| Backend Linter | `eslint "{src,apps,libs,test}/**/*.ts"` | Clean (0 errors, 0 warnings) |
-| i18n Parity | `node scripts/i18n-pseudo.mjs --check` | Clean |
-| Migration Linter | `node scripts/migration-lint.mjs` & test | Clean (187 files, 32 tests passed) |
+| Frontend Watchlists Tests | 4 test files (`vitest run watchlists`) | **21 passed, 0 failed** |
+| Backend Watchlists Tests | Controller & Service specs (`jest watchlists`) | **36 passed, 0 failed** |
+| UI Conventions Tests | `src/test/ui-conventions.test.ts` | **100 passed, 0 failed** |
+| i18n Parity Tests | `nav-links.test.ts`, `messages.parity.test.ts` | **1,577 passed, 0 failed** |
+| Frontend Typecheck | `tsc --noEmit` | **Clean (0 errors)** |
+| Backend Typecheck | `tsc --noEmit -p tsconfig.test.json` | **Clean (0 errors)** |
+| Frontend Linter | `eslint .` | **Clean (0 errors, 1 unrelated sw.js warning)** |
+| Backend Linter | `eslint "{src,apps,libs,test}/**/*.ts"` | **Clean (0 errors, 0 warnings)** |
+| i18n Parity Check | `node scripts/i18n-pseudo.mjs --check` | **Clean** |
+| Migration Idempotency Lint | `node scripts/migration-lint.mjs` & test | **Clean (188 files, 32 tests passed)** |
 
 ---
 
 ## Baseline failures
 
-None. The entire baseline failure set identified on `main` is resolved in PR #12:
-- Frontend: 0 failing tests.
-- Backend: 0 failing suites.
+None. The red baseline was eliminated in PR #12, and PR #13 introduces zero new failures or regressions.
 
 ---
 
@@ -187,15 +193,14 @@ None. The entire baseline failure set identified on `main` is resolved in PR #12
 
 ## Recommended next mission
 
-With the test baseline fully green and CI trustworthy, the next mission candidates are:
+With Watchlists Foundation complete and test suites fully passing, the next mission candidates are:
 
-1. **Option 1 (Recommended): Watchlists Foundation (Priority 7).**
-   - Self-contained, zero external data dependencies.
-   - User-scoped watchlist model (`securities` linking), add/remove endpoints, order index, real quote retrieval via existing provider pipeline with explicit `unavailable` state.
-2. **Option 2: Indian Merchant Seed Reference Data (Priority 5).**
-   - Implement once Decision 2 is resolved.
-3. **Option 3: Import Identity & Idempotency (Content Hash).**
-   - Architectural migration adding content hashes and unique idempotency keys for bank CSV imports.
+1. **Option 1: Indian Merchant Seed Reference Data (Priority 5).**
+   - Populate common Indian merchants/billers (e.g. Swiggy, Zomato, BESCOM, ACT, Airtel) with alias matching rules once Decision 2 category policy is aligned.
+2. **Option 2: Import Identity & Idempotency (Content Hash).**
+   - Architectural migration adding content hashes and unique idempotency keys for bank CSV and statement imports.
+3. **Option 3: Payment Method / UPI VPA Metadata.**
+   - Additive transaction metadata for Indian payment methods (UPI, IMPS, NEFT, RTGS).
 
 ---
 
@@ -205,5 +210,7 @@ With the test baseline fully green and CI trustworthy, the next mission candidat
 |---|---|---|---|
 | `85e643d82` | Merge commit | Merge pull request #11 (`fm/artha-productize-01`) | Merged into `main` |
 | `0caf0e9be` | Commit | `fix(tests): restore green test baseline across frontend and backend` | Committed on `fm/artha-baseline-fixes-01` |
+| `40fc81aac` | Commit | `feat(watchlists): add user-scoped watchlists foundation and quote retrieval` | Committed on `fm/artha-watchlists-01` |
 | **PR #12** | Code PR | `Fix red baseline across frontend and backend test suites` (`fm/artha-baseline-fixes-01` -> `main`) | **OPEN** |
-| **PR #5** | Rolling Status PR | `Artha mission status — green test baseline restored across frontend and backend` (`fm/artha-mission-status` -> `main`) | **OPEN (1 file)** |
+| **PR #13** | Code PR | `feat(watchlists): add user-scoped watchlists foundation and quote retrieval` (`fm/artha-watchlists-01` -> `main`) | **OPEN** |
+| **PR #5** | Rolling Status PR | `Artha mission status — review me here` (`fm/artha-mission-status` -> `main`) | **OPEN (1 file)** |
