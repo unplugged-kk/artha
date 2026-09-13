@@ -2216,7 +2216,10 @@ describe("SecurityPriceService", () => {
     });
 
     it("still clips when no range is given", async () => {
-      dataSourceMock.query.mockResolvedValueOnce([{ earliest: "2026-08-01" }]);
+      const twentyDaysAgo = new Date(Date.now() - 20 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .slice(0, 10);
+      dataSourceMock.query.mockResolvedValueOnce([{ earliest: twentyDaysAgo }]);
       global.fetch = jest
         .fn()
         .mockResolvedValue(

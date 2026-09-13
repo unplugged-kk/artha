@@ -213,7 +213,8 @@ export class AmfiNavService implements QuoteProvider {
    * recorded as a failure, so an open breaker does not keep re-arming itself.
    */
   private async getJson(url: string, context: string): Promise<unknown | null> {
-    if (this.health.wouldRefuse(HEALTH_PROVIDER_ID)) {
+    const admission = this.health.tryRequest(HEALTH_PROVIDER_ID);
+    if (admission === "refused") {
       this.logger.warn(`AMFI is currently unavailable; skipping ${context}`);
       return null;
     }
