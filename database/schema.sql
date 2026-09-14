@@ -270,6 +270,22 @@ CREATE INDEX idx_payee_aliases_payee ON payee_aliases(payee_id);
 CREATE INDEX idx_payee_aliases_user ON payee_aliases(user_id);
 CREATE UNIQUE INDEX idx_payee_aliases_user_alias ON payee_aliases(user_id, LOWER(alias));
 
+-- Merchant References (global reference data for Indian merchant/biller recognition)
+CREATE TABLE merchant_references (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    canonical_name VARCHAR(255) NOT NULL,
+    normalized_name VARCHAR(255) NOT NULL,
+    aliases TEXT[] NOT NULL DEFAULT '{}',
+    category_suggestion VARCHAR(255),
+    website VARCHAR(2048),
+    country_code VARCHAR(2) NOT NULL DEFAULT 'IN',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE UNIQUE INDEX idx_merchant_references_canonical ON merchant_references(canonical_name);
+CREATE UNIQUE INDEX idx_merchant_references_normalized ON merchant_references(normalized_name);
+CREATE INDEX idx_merchant_references_country ON merchant_references(country_code);
+
 -- Financial Institutions (per-user registry of banks/brokerages). The brand
 -- icon is the website's favicon, fetched server-side and cached in logo_data so
 -- the browser never contacts a third party to render it.
@@ -3301,6 +3317,7 @@ CREATE POLICY emergency_access_contacts_isolation ON emergency_access_contacts
 -- rls-exempt: instrument_aliases
 -- rls-exempt: market_index_prices
 -- rls-exempt: market_index_sync
+-- rls-exempt: merchant_references
 -- rls-exempt: oauth_payloads
 -- rls-exempt: provider_health
 -- rls-exempt: push_chart_artifacts

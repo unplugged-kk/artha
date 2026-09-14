@@ -18,6 +18,7 @@ import {
 } from "./import-identity.util";
 import { detectPaymentMetadata } from "./payment-method-detector.util";
 import { normalizePayeeName } from "../payees/payee-normalize.util";
+import { matchMerchantReference } from "../payees/merchant-matcher.util";
 import { deletionBalanceEffect } from "../common/deletion-balance.util";
 import { tr } from "../i18n/translate";
 
@@ -446,7 +447,80 @@ export class ImportRegularProcessorService {
       }
     }
 
-    // 4. No match found - create new payee
+    // 4. Indian Merchant Reference match (Priority 10).
+    //    Enriches recognized Indian merchants/billers to their canonical name.
+    //    Follows user customization precedence: only runs if user has no existing
+    //    exact match, custom alias, or normalized match.
+    const merchantMatch = matchMerchantReference(qifTx.payee);
+    if (merchantMatch) {
+      const byNormalizedName =
+        ctx.payeeByNormalizedName ?? (await this.loadPayeeIndex(ctx));
+
+      // Check if user already has a payee with this canonical name
+      let canonicalPayee = await ctx.manager.findOne(Payee, {
+        where: { userId: ctx.userId, name: merchantMatch.canonicalName },
+      });
+
+      // Also check if user has a payee matching the merchant's normalized name
+      if (!canonicalPayee && byNormalizedName) {
+        const existingCanonical = byNormalizedName.get(
+          merchantMatch.normalizedName,
+        );
+        if (existingCanonical) {
+          canonicalPayee = await ctx.manager.findOne(Payee, {
+            where: { id: existingCanonical.id },
+          });
+        }
+      }
+
+      if (canonicalPayee) {
+        this.logger.debug(
+          `Merchant reference match: "${qifTx.payee}" -> existing payee "${canonicalPayee.name}"`,
+        );
+        return {
+          payeeId: canonicalPayee.id,
+          payeeName: canonicalPayee.name,
+          defaultCategoryId: canonicalPayee.defaultCategoryId ?? null,
+        };
+      }
+
+      // User does not yet have this merchant as a payee. Create it under canonical name.
+      // NOTE: Open Decision 2 is unresolved; we deliberately do NOT assign or create
+      // a category from categorySuggestion. defaultCategoryId remains null.
+      const newPayee = ctx.manager.create(Payee, {
+        userId: ctx.userId,
+        name: merchantMatch.canonicalName,
+        website: merchantMatch.website ?? undefined,
+      });
+      const savedPayee = await ctx.manager.save(newPayee);
+      ctx.importResult.payeesCreated++;
+
+      if (byNormalizedName) {
+        byNormalizedName.set(merchantMatch.normalizedName, {
+          id: savedPayee.id,
+          name: savedPayee.name,
+          defaultCategoryId: null,
+        });
+        if (normalized && normalized !== merchantMatch.normalizedName) {
+          byNormalizedName.set(normalized, {
+            id: savedPayee.id,
+            name: savedPayee.name,
+            defaultCategoryId: null,
+          });
+        }
+      }
+
+      this.logger.debug(
+        `Merchant reference created: "${qifTx.payee}" -> new canonical payee "${savedPayee.name}"`,
+      );
+      return {
+        payeeId: savedPayee.id,
+        payeeName: savedPayee.name,
+        defaultCategoryId: null,
+      };
+    }
+
+    // 5. No match found - create new payee with raw imported name
     const newPayee = ctx.manager.create(Payee, {
       userId: ctx.userId,
       name: qifTx.payee,

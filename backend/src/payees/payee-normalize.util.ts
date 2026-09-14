@@ -55,6 +55,7 @@ const BUSINESS_SUFFIXES: ReadonlySet<string> = new Set([
   "PRIVATE",
   "LIMITED",
   "LLP",
+  "OPC",
 ]);
 
 // Latin letters whose diacritic is an integral stroke or ligature that Unicode
@@ -130,6 +131,10 @@ const NOISE_TOKENS: ReadonlySet<string> = new Set([
   "PAYPAL",
   "SUMUP",
   "SQ",
+  "UPI",
+  "IMPS",
+  "NEFT",
+  "RTGS",
 ]);
 
 /**
