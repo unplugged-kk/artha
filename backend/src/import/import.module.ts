@@ -14,6 +14,7 @@ import { NetWorthModule } from "../net-worth/net-worth.module";
 import { SecuritiesModule } from "../securities/securities.module";
 import { CurrenciesModule } from "../currencies/currencies.module";
 import { UsersModule } from "../users/users.module";
+import { SmsIntakeModule } from "./sms/sms-intake.module";
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { UsersModule } from "../users/users.module";
     forwardRef(() => SecuritiesModule),
     forwardRef(() => CurrenciesModule),
     forwardRef(() => UsersModule),
+    forwardRef(() => SmsIntakeModule),
   ],
   controllers: [ImportController, MnyImportController],
   providers: [
@@ -36,10 +38,12 @@ import { UsersModule } from "../users/users.module";
   ],
   exports: [
     ImportService,
+    ImportRegularProcessorService,
     MnyStagingService,
     MnyParserService,
     MnyImportJobService,
     MnyImportService,
+    SmsIntakeModule,
   ],
 })
 export class ImportModule {}
