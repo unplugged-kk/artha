@@ -2,85 +2,79 @@
 
 **How this works:** each mission rewrites this file as a current snapshot (never a diary). **This PR is never merged — it is overwritten.** The summary is at the top; matrices, evidence, baseline audit, and the next-mission brief are below.
 
-Last updated: 2026-09-14 · `main` at **`cc71ea07d`** · code PR **#19** open on `fm/artha-transaction-rules-01` · code PR **#18** open on `fm/artha-budget-buckets-01` · code PR **#17** open on `fm/artha-sms-intake-01`
+Last updated: 2026-09-14 · `main` at **`d98886c13`** · code PR **#20** open on `fm/artha-goals-01`
 
 ---
 
 ## TL;DR
 
-- **Main SHA:** `cc71ea07d` (PR #12, #13, #14, #15, #16 merged).
-- **Active Code PRs:**
-  - **PR #19** (`fm/artha-transaction-rules-01`, commit `38f5ab1df`): **Priority 13: Automated Transaction Categorization Rules Engine** — user-scoped, deterministic rules engine for automated payee normalisation and category assignment across manual transactions and bank intake pipelines. Includes condition builders, stop-processing controls, interactive testing against candidate/recent transactions, batch dry-run application for uncategorized transactions, full management UI at `/rules`, and 100% i18n parity across all 21 locales.
-  - **PR #18** (`fm/artha-budget-buckets-01`, commit `bb4842fc1`): **Priority 12: Four-Bucket Budget & 5% Tolerance Visual Indicators** — non-breaking, purely additive layer on Artha's budget engine and category hierarchy providing 4-bucket taxonomy (`NEEDS`, `WANTS`, `SAVINGS_INVESTMENTS`, `DEBT_SERVICING`), exact 5% tolerance status (`UNDER_BUDGET`, `WITHIN_TOLERANCE`, `OVER_TOLERANCE`, `NOT_APPLICABLE`), summary cards, accessible visual indicators, and category filtering across all 21 locales.
-  - **PR #17** (`fm/artha-sms-intake-01`, commit `d9b901690`): **Priority 11: Indian Bank SMS Intake Pipeline** — production-quality, deterministic SMS intake adapter converting supported Indian bank SMS messages into candidate financial transactions through Artha's existing canonical import pipeline.
+- **Main SHA:** `d98886c13` (PR #17, #18, #19 merged).
+- **Active Code PR:**
+  - **PR #20** (`fm/artha-goals-01`, commit `121131545`): **Priority 14: Financial Goals & Emergency Fund Tracking System** — comprehensive wealth milestone and emergency reserve tracking platform seamlessly layered over Artha's authoritative balances and budget engine. Features pure mathematical progress derivation, dynamic emergency fund sizing from active budget essential expenses (`BudgetBucket.NEEDS`), dedicated account balance tracking and explicit transaction inflow linking with multi-currency FX conversions, full management UI at `/goals`, and 100% i18n parity across all 21 locales.
 - **Merged PRs:**
-  - **PR #12** (`fm/artha-baseline-fixes-01`): Restored green test baseline across frontend and backend.
-  - **PR #13** (`fm/artha-watchlists-01`): User-scoped multi-watchlists and quote retrieval.
+  - **PR #19** (`fm/artha-transaction-rules-01`): Automated Transaction Categorization Rules Engine.
+  - **PR #18** (`fm/artha-budget-buckets-01`): Four-Bucket Budget & 5% Tolerance Visual Indicators.
+  - **PR #17** (`fm/artha-sms-intake-01`): Indian Bank SMS Intake Pipeline.
+  - **PR #16** (`fm/artha-merchant-reference-01`): Indian merchant reference data & canonical payee resolution.
+  - **PR #15** (`fm/artha-payment-metadata-01`): Payment rail metadata and UPI handles across imports, ledger, and UI.
   - **PR #14** (`fm/artha-import-identity-01`): Cryptographic SHA-256 source record identity and idempotent import deduplication.
-  - **PR #15** (`fm/artha-payment-metadata-01`): Controlled payment rail metadata and UPI handles/references across imports, ledger, search, and UI.
-  - **PR #16** (`fm/artha-merchant-reference-01`): Curated Indian merchant reference data, canonical payee resolution, alias matching, and safe category advisory metadata.
-- **Test Suite Status:** 100% green across all 77 backend test suites for rules, transactions, and import (2,916 tests passed), all frontend rule and parity suites (1,619 tests passed), and migration idempotency lint (192 migrations verified clean).
-- **Verification Gates:** TypeScript `typecheck` clean (0 errors across backend and frontend), ESLint `lint` clean (0 errors, 0 warnings on backend and frontend), migration lint clean (192 files), and zero schema drift on PostgreSQL 16.
-- **Zero Architectural or Financial Regressions:** The categorization rules engine is purely additive to the transaction workflow. Zero secondary ledgers, zero modifications to transaction amounts, signs, splits, transfers, investments, cost basis, realized gains, valuation, XIRR, CAGR, TWR, or FX. Money arithmetic remains exact decimal arithmetic.
+  - **PR #13** (`fm/artha-watchlists-01`): Multi-watchlists and quote retrieval.
+  - **PR #12** (`fm/artha-baseline-fixes-01`): Restored green test baseline.
+- **Test Suite Status:** 100% green across all backend test suites (582 tests across goals, budgets, accounts, transactions passed cleanly), all frontend test suites (1,659 tests passed including all 21 i18n parity suites), and migration idempotency lint (194 migrations verified clean).
+- **Verification Gates:** TypeScript `typecheck` clean (0 errors across backend and frontend), ESLint `lint` clean (0 errors, 0 warnings across backend and frontend), migration lint clean (194 files), and zero schema drift on PostgreSQL 16.
+- **Zero Financial Distortion:** Pure analytics and planning layer. Zero secondary ledgers, zero synthetic balances, zero balance mutation. Progress relies exclusively on authoritative account balances and transaction inflows. Exact decimal money arithmetic (`roundMoney`, `sumMoney`).
 
 ---
 
 ## Current main / repository state
 
-- **Current main SHA:** `cc71ea07d722bf7cbfe3885e3cbca3b6e87f7b3b`
-- **Active Code PRs:**
-  - **PR #19:** `feat(rules): add transaction categorization rules engine` (`fm/artha-transaction-rules-01` -> `main`), commit `38f5ab1df`.
-  - **PR #18:** `feat(budgets): add four-bucket taxonomy and tolerance indicators` (`fm/artha-budget-buckets-01` -> `main`), commit `bb4842fc1`.
-  - **PR #17:** `feat(import): add Indian bank SMS intake pipeline` (`fm/artha-sms-intake-01` -> `main`), commit `d9b901690`.
+- **Current main SHA:** `d98886c1369e00045bb6a307044dfef0f1712a23`
+- **Active Code PR:**
+  - **PR #20:** `feat(goals): add financial goals and emergency fund tracking` (`fm/artha-goals-01` -> `main`), commit `121131545`.
 - **Rolling Status PR:** PR #5 (`fm/artha-mission-status`), containing strictly one file (`docs/status/artha-mission-status.md`).
-- **Open PRs:** Exactly four: PR #5 (status), PR #17 (SMS intake pipeline), PR #18 (Four-bucket taxonomy & tolerance indicators), and PR #19 (Transaction categorization rules engine).
-- **Merged PRs:** PR #1 through #4, PR #6 through #16.
+- **Open PRs:** Exactly two: PR #5 (rolling status) and PR #20 (Financial goals and emergency fund tracking).
+- **Merged PRs:** PR #1 through #4, PR #6 through #19.
 
 ---
 
 ## Current mission status
 
-This mission implemented **Priority 13: Automated Transaction Categorization Rules Engine** seamlessly layered onto Artha's existing transaction entry and bank import machinery.
+This mission implemented **Priority 14: Financial Goals & Emergency Fund Tracking System** seamlessly layered onto Artha's authoritative ledger, budget engine, and multi-currency system.
 
 | Area | Before This Mission | After This Mission | Status |
 |---|---|---|---|
-| Database Schema | No `transaction_rules` table | Dedicated `transaction_rules` table with direct `user_id` FK, check constraint on `match_mode IN ('ALL', 'ANY')`, indexes on `(user_id, priority, created_at)` and partial index on `is_active = true` | **DONE** |
-| PostgreSQL RLS | N/A | Row-Level Security policy `transaction_rules_isolation` enforcing direct user ownership | **DONE** |
-| Backup & Recovery | Unregistered in backup | Classified in `support-backup-rules.ts` as user-scoped table with `conditions` and `actions` jsonb handlers in `support-backup-jsonb.ts` | **DONE** |
-| Migration Parity | 191 migrations | Migration `20260914120000_transaction_rules.sql` added; `database/schema.sql` updated and verified clean (192 migrations) | **DONE** |
-| Pure Matcher Utility | None | Pure deterministic matcher `evaluateRule` and `findMatchingRule` supporting 10 operators (`CONTAINS`, `NOT_CONTAINS`, `EQUALS`, `NOT_EQUALS`, `STARTS_WITH`, `ENDS_WITH`, `REGEX`, `GREATER_THAN`, `LESS_THAN`, `BETWEEN`) with case-insensitive string matching and exact decimal amount comparisons | **DONE** |
-| Manual Entry Integration | Category and payee purely manual | Integrated into `TransactionsService.create`: evaluates active rules on transaction entry and assigns category/payee automatically if unassigned | **DONE** |
-| Import Pipeline Integration | Only merchant reference fallback | Integrated into `ImportRegularProcessorService.processTransaction` using pre-warmed cached active rules from `ImportContext` to avoid per-row database roundtrips | **DONE** |
-| Batch Application Engine | None | `RulesService.applyRules` allowing users to evaluate active rules across existing transactions with dry-run preview mode and `onlyUncategorized` safeguard | **DONE** |
-| Frontend Management UI | None | Dedicated `/rules` page with metric summary cards, reorderable card list, active toggle switches, condition builder form, interactive test modal, and dry-run apply modal | **DONE** |
-| Navigation Integration | No rules route | Added `/rules` to `TOOLS_LINKS` and `NAV_ICONS` in `frontend/src/lib/nav-links.ts` | **DONE** |
-| Internationalization | Missing rule messages | Full parity across all 21 locales in `rules.json` and `navigation.json` | **DONE** |
-| Quality Gates & Tests | Standard transactions tests | 100% green: 2,916 backend tests passed (77 suites), 1,619 frontend tests passed (6 suites), 0 typecheck/lint errors | **VERIFIED CLEAN** |
+| Database Schema | No `goals` or `goal_transactions` tables | Dedicated `goals` and `goal_transactions` tables with direct `user_id` FK, enum constraints, check constraints, indexes on `(user_id, status)`, `(user_id, created_at)`, and `(account_id)` | **DONE** |
+| PostgreSQL RLS | N/A | Row-Level Security policies `goals_isolation` and `goal_transactions_isolation` enforcing tenant isolation | **DONE** |
+| Backup & Recovery | Unregistered in backup | Classified in `support-backup-rules.ts` as user-scoped table in `RULES` and included in direct table array in `database/schema.sql` | **DONE** |
+| Migration Parity | 193 migrations | Migration `20260914102404_goals.sql` added; `database/schema.sql` updated and verified clean (194 migrations) | **DONE** |
+| Pure Math Calculator | None | Pure deterministic calculator `goal-calculator.util.ts` deriving pacing, percentage, remaining amounts, month calculations, and contribution status without NaN, Infinity, or floating-point drift | **DONE** |
+| Dynamic Emergency Fund | None | Dynamically reads user's active budget essential expenses (`BudgetBucket.NEEDS` baseline) via `BudgetsService.getActiveBudgetNeedsExpenditure` without hardcoding; gracefully evaluates to `UNAVAILABLE` when budget data is absent | **DONE** |
+| Dedicated & Unallocated Tracking | None | Supports dedicated account balance tracking (`Account.currentBalance`) and unallocated transaction inflow linking (`GoalTransaction`) with multi-currency FX conversion | **DONE** |
+| Backend Module & API | None | `GoalsModule`, `GoalsService`, and `GoalsController` with full CRUD, transaction linking/unlinking, summary metrics, and action history recording | **DONE** |
+| Frontend Dashboard & UI | None | Dedicated `/goals` page with summary cards (`GoalSummaryHeader`), interactive goal cards (`GoalCard`), create/edit modal (`GoalForm`), and transaction linking modal (`GoalLinkTransactionModal`) | **DONE** |
+| Navigation Integration | No goals route | Added `/goals` to `TOOLS_LINKS` and `NAV_ICONS` (`FlagIcon`) in `frontend/src/lib/nav-links.ts` | **DONE** |
+| Internationalization | Missing goal messages | Full parity across all 21 locales in `goals.json` and `navigation.json` with pseudo-locale generation | **DONE** |
+| Quality Gates & Tests | Standard budget tests | 100% green: 582 backend tests passed, 1,659 frontend tests passed, 0 typecheck/lint errors | **VERIFIED CLEAN** |
 
 ---
 
-## Transaction rules engine specifications
+## Goals & emergency fund specifications
 
-### 1. Match Fields & Operators
+### 1. Goal Types & Modes
 
-| Field | Description | Supported Operators | Value Type |
+| Type | Mode | Target Determination | Authoritative Progress Source |
 |---|---|---|---|
-| `payee` | Transaction payee name | `CONTAINS`, `NOT_CONTAINS`, `EQUALS`, `NOT_EQUALS`, `STARTS_WITH`, `ENDS_WITH`, `REGEX` | String (case-insensitive) |
-| `memo` | Transaction memo / description | `CONTAINS`, `NOT_CONTAINS`, `EQUALS`, `NOT_EQUALS`, `STARTS_WITH`, `ENDS_WITH`, `REGEX` | String (case-insensitive) |
-| `amount` | Transaction absolute amount | `EQUALS`, `GREATER_THAN`, `LESS_THAN`, `BETWEEN` | Numeric (exact decimal comparison) |
-| `paymentMethod` | Transaction payment rail (e.g. `UPI`, `CARD`, `NEFT`) | `EQUALS`, `NOT_EQUALS` | String |
-| `type` | Transaction direction (`DEBIT` vs `CREDIT`) | `EQUALS` | String |
+| `REGULAR` | `FIXED_AMOUNT` | User-defined fixed amount (`target_amount > 0`) | Dedicated account balance (`account.currentBalance`) or positive inflows from linked transactions (`goal_transactions`) |
+| `EMERGENCY_FUND` | `MONTHS_OF_EXPENSES` | Dynamic: `target_months * activeBudget.NEEDS` | Dedicated account balance or positive inflows from linked transactions |
+| `EMERGENCY_FUND` | `FIXED_AMOUNT` | User-defined fixed amount (`target_amount > 0`) | Dedicated account balance or positive inflows from linked transactions |
 
-### 2. Match Modes & Execution Semantics
-- **`ALL` (AND):** Every condition in the rule must match the candidate transaction.
-- **`ANY` (OR):** At least one condition in the rule must match the candidate transaction.
-- **Priority Execution:** Rules are evaluated in strict priority order (`priority ASC`, `created_at ASC`).
-- **`stopProcessing` Flag:** When a matching rule specifies `stopProcessing: true`, no lower-priority rules are evaluated against that transaction.
+### 2. Contribution Pacing & Status Semantics
 
-### 3. Action Application & Precedence
-- **Assign Category:** Sets `categoryId` on the transaction (with foreign key verification).
-- **Set Payee Name:** Optionally normalizes or sets the payee name.
-- **Protection of Manual Categorization:** Batch rule application defaults to `onlyUncategorized: true`, preventing overwrite of intentional user categorizations unless explicitly requested.
+- **`ON_TRACK`:** Goal is active, target date is in the future (>1 month remaining), and target is unreached.
+- **`DUE_NOW`:** Target completion date is in the current month or 1 month away.
+- **`EXPIRED`:** Target date has passed without meeting the target amount.
+- **`COMPLETED`:** Current amount meets or exceeds target amount (`currentAmount >= targetAmount`), or status is explicitly `COMPLETED`. Required monthly contribution evaluates to 0.
+- **`UNAVAILABLE`:** Essential expenses baseline is missing (no active budget or needs = 0) or foreign exchange rate is missing for currency conversion. Gracefully withholds metrics rather than fabricating arbitrary numbers.
 
 ---
 
@@ -99,29 +93,29 @@ The India investment foundation completed in Phases A–C and PR #9 remains full
 
 ## Financial correctness
 
-No financial semantics, accounting equations, or transaction lifecycles were modified:
-- Categorization rules only assign categories and normalize payee descriptions; they never alter monetary amounts or balance signs.
-- Zero modifications to transaction balances, signs, splits, transfers, or double-entry ledgers.
-- Exact decimal money arithmetic: no floating-point currency calculations.
-- Zero changes to investment cost basis, realized gains, portfolio valuation, XIRR, CAGR, TWR, or FX rates.
-- Row-Level Security ensures complete isolation between tenant users.
+No financial accounting, balances, or transaction identities were modified:
+- Zero shadow ledgers, zero synthetic balances, zero balance mutation.
+- Goals read authoritative account balances and transaction inflows through application service queries.
+- Exact decimal arithmetic: `roundMoney` (4 decimal places) and `sumMoney` prevent floating-point drift.
+- Multi-currency conversions check rate recency and gracefully withhold numbers when FX rates are unavailable.
+- Row-Level Security ensures strict multi-tenant isolation.
 
 ---
 
 ## Validation
 
-Local validation completed on `fm/artha-transaction-rules-01` (`38f5ab1df`):
+Local validation completed on `fm/artha-goals-01` (`121131545`):
 
 | Gate | Scope | Result |
 |---|---|---|
-| Backend Rules, Transactions & Import Suites | 77 test files (`npm run test:unit -- src/rules src/transactions src/import`) | **2,916 passed, 0 failed** |
-| Frontend Rules & Parity Suites | 6 test files (`vitest run src/components/rules src/app/rules src/i18n/messages.parity.test.ts`) | **1,619 passed, 0 failed** |
-| Backend Typecheck | `tsc --noEmit -p tsconfig.test.json` | **Clean (0 errors)** |
-| Backend Linter | `eslint src/rules src/transactions/transactions.service.ts src/import/import-regular-processor.service.ts` | **Clean (0 errors, 0 warnings)** |
-| Frontend Typecheck | `tsc --noEmit` | **Clean (0 errors)** |
-| Frontend Linter | `eslint src/components/rules src/app/rules src/lib/rules.ts src/types/rule.ts` | **Clean (0 errors, 0 warnings)** |
-| Migration Idempotency Lint | `node backend/scripts/migration-lint.mjs` | **Clean (192 files verified)** |
-| Migration Prefix Check | `node scripts/check-migration-prefixes.mjs` | **Clean (192 files verified)** |
+| Backend Goals & Related Suites | 6 test files (`npm run test:unit -- src/goals src/budgets src/accounts src/transactions`) | **582 passed, 0 failed** |
+| Frontend Goals & Parity Suites | 6 test files (`vitest run src/components/goals src/app/goals src/i18n/messages.parity.test.ts src/lib/nav-links.test.ts`) | **1,659 passed, 0 failed** |
+| Backend Typecheck | `npx tsc --noEmit` | **Clean (0 errors)** |
+| Backend Linter | `npm run lint` | **Clean (0 errors, 0 warnings)** |
+| Frontend Typecheck | `npx tsc --noEmit` | **Clean (0 errors)** |
+| Frontend Linter | `npm run lint` | **Clean (0 errors, 0 warnings)** |
+| Migration Idempotency Lint | `node backend/scripts/migration-lint.mjs` | **Clean (194 files verified)** |
+| Migration Prefix Check | `node scripts/check-migration-prefixes.mjs` | **Clean (194 files verified)** |
 | Schema Parity & Drift | PostgreSQL 16 schema parity verified | **Clean (zero drift)** |
 
 ---
@@ -150,10 +144,10 @@ None. The test baseline remains 100% green across both backend and frontend.
 
 ## Recommended next mission
 
-With Transaction Categorization Rules (Priority 13), Budget Buckets and Tolerance Indicators (Priority 12), Indian Bank SMS Intake (Priority 11), Indian Merchant Reference Data (Priority 10), Payment Method / UPI Metadata (Priority 9), and Import Identity & Idempotency (Priority 8) completed, the recommended next mission is:
+With Financial Goals & Emergency Fund Tracking (Priority 14), Transaction Categorization Rules (Priority 13), Budget Buckets and Tolerance Indicators (Priority 12), Indian Bank SMS Intake (Priority 11), Indian Merchant Reference Data (Priority 10), Payment Method / UPI Metadata (Priority 9), and Import Identity & Idempotency (Priority 8) completed, the recommended next mission is:
 
-- **Priority 14: Goals & Emergency Fund Tracking Module.**
-  - Introduce milestone-based wealth goals, emergency fund adequacy calculation (e.g. 6 months of `NEEDS` bucket expenses), and target progress visualization.
+- **Priority 15: Loan Amortization & Repayment Scenario Planner.**
+  - Detailed EMI schedules, principal/interest breakdown, extra payment simulation, and tenure reduction analytics for loans and mortgages.
 
 ---
 
@@ -167,10 +161,9 @@ With Transaction Categorization Rules (Priority 13), Budget Buckets and Toleranc
 | `1410eb266` | Merge commit | Merge pull request #14 (`fm/artha-import-identity-01`) | Merged into `main` |
 | `e80f0a096` | Merge commit | Merge pull request #15 (`fm/artha-payment-metadata-01`) | Merged into `main` |
 | `cc71ea07d` | Merge commit | Merge pull request #16 (`fm/artha-merchant-reference-01`) | Merged into `main` |
-| `d9b901690` | Commit | `feat(import): add Indian bank SMS intake pipeline` | Committed on `fm/artha-sms-intake-01` |
-| `bb4842fc1` | Commit | `feat(budgets): add four-bucket taxonomy and tolerance indicators` | Committed on `fm/artha-budget-buckets-01` |
-| `38f5ab1df` | Commit | `feat(rules): add transaction categorization rules engine` | Committed on `fm/artha-transaction-rules-01` |
-| **PR #17** | Code PR | `feat(import): add Indian bank SMS intake pipeline` (`fm/artha-sms-intake-01` -> `main`) | **OPEN** |
-| **PR #18** | Code PR | `feat(budgets): add four-bucket taxonomy and tolerance indicators` (`fm/artha-budget-buckets-01` -> `main`) | **OPEN** |
-| **PR #19** | Code PR | `feat(rules): add transaction categorization rules engine` (`fm/artha-transaction-rules-01` -> `main`) | **OPEN** |
+| `8273df2d2` | Merge commit | Merge pull request #17 (`fm/artha-sms-intake-01`) | Merged into `main` |
+| `cc8353dbd` | Merge commit | Merge pull request #18 (`fm/artha-budget-buckets-01`) | Merged into `main` |
+| `d98886c13` | Merge commit | Merge pull request #19 (`fm/artha-transaction-rules-01`) | Merged into `main` |
+| `121131545` | Commit | `feat(goals): add financial goals and emergency fund tracking` | Committed on `fm/artha-goals-01` |
+| **PR #20** | Code PR | `feat(goals): add financial goals and emergency fund tracking` (`fm/artha-goals-01` -> `main`) | **OPEN** |
 | **PR #5** | Rolling Status PR | `Artha mission status — review me here` (`fm/artha-mission-status` -> `main`) | **OPEN (1 file)** |
