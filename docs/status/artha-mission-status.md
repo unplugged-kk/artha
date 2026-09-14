@@ -2,7 +2,7 @@
 
 **How this works:** each mission rewrites this file as a current snapshot (never a diary). **This PR is never merged — it is overwritten.** The summary is at the top; matrices, evidence, baseline audit, and the next-mission brief are below.
 
-Last updated: 2026-09-14 · `main` at **`d98886c13`** · code PR **#20** open on `fm/artha-goals-01`
+Last updated: 2026-09-14 · `main` at **`d98886c13`** · code PR **#20** open on `fm/artha-goals-01` (commit `68eff5993`)
 
 ---
 
@@ -10,7 +10,7 @@ Last updated: 2026-09-14 · `main` at **`d98886c13`** · code PR **#20** open on
 
 - **Main SHA:** `d98886c13` (PR #17, #18, #19 merged).
 - **Active Code PR:**
-  - **PR #20** (`fm/artha-goals-01`, commit `121131545`): **Priority 14: Financial Goals & Emergency Fund Tracking System** — comprehensive wealth milestone and emergency reserve tracking platform seamlessly layered over Artha's authoritative balances and budget engine. Features pure mathematical progress derivation, dynamic emergency fund sizing from active budget essential expenses (`BudgetBucket.NEEDS`), dedicated account balance tracking and explicit transaction inflow linking with multi-currency FX conversions, full management UI at `/goals`, and 100% i18n parity across all 21 locales.
+  - **PR #20** (`fm/artha-goals-01`, commit `68eff5993`): **Priority 14: Financial Goals & Emergency Fund Tracking System** — comprehensive wealth milestone and emergency reserve tracking platform seamlessly layered over Artha's authoritative balances and budget engine. Features pure mathematical progress derivation, dynamic emergency fund sizing from active budget essential expenses (`BudgetBucket.NEEDS`), dedicated account balance tracking and explicit transaction inflow linking with multi-currency FX conversions, full management UI at `/goals`, and 100% i18n parity across all 21 locales. Includes full architectural and convention repairs: migration ordering (`20260914130000_goals.sql`), strict zero-drift schema parity via two-pass replay verification, query cache prefix classification (`goals:`) with money movement invalidation, and strict UI convention conformance (`NumericInput`, `CurrencyInput`, `DateInput`, `Badge`, `Button`).
 - **Merged PRs:**
   - **PR #19** (`fm/artha-transaction-rules-01`): Automated Transaction Categorization Rules Engine.
   - **PR #18** (`fm/artha-budget-buckets-01`): Four-Bucket Budget & 5% Tolerance Visual Indicators.
@@ -30,7 +30,7 @@ Last updated: 2026-09-14 · `main` at **`d98886c13`** · code PR **#20** open on
 
 - **Current main SHA:** `d98886c1369e00045bb6a307044dfef0f1712a23`
 - **Active Code PR:**
-  - **PR #20:** `feat(goals): add financial goals and emergency fund tracking` (`fm/artha-goals-01` -> `main`), commit `121131545`.
+  - **PR #20:** `feat(goals): add financial goals and emergency fund tracking` (`fm/artha-goals-01` -> `main`), commit `68eff5993`.
 - **Rolling Status PR:** PR #5 (`fm/artha-mission-status`), containing strictly one file (`docs/status/artha-mission-status.md`).
 - **Open PRs:** Exactly two: PR #5 (rolling status) and PR #20 (Financial goals and emergency fund tracking).
 - **Merged PRs:** PR #1 through #4, PR #6 through #19.
@@ -46,7 +46,7 @@ This mission implemented **Priority 14: Financial Goals & Emergency Fund Trackin
 | Database Schema | No `goals` or `goal_transactions` tables | Dedicated `goals` and `goal_transactions` tables with direct `user_id` FK, enum constraints, check constraints, indexes on `(user_id, status)`, `(user_id, created_at)`, and `(account_id)` | **DONE** |
 | PostgreSQL RLS | N/A | Row-Level Security policies `goals_isolation` and `goal_transactions_isolation` enforcing tenant isolation | **DONE** |
 | Backup & Recovery | Unregistered in backup | Classified in `support-backup-rules.ts` as user-scoped table in `RULES` and included in direct table array in `database/schema.sql` | **DONE** |
-| Migration Parity | 193 migrations | Migration `20260914102404_goals.sql` added; `database/schema.sql` updated and verified clean (194 migrations) | **DONE** |
+| Migration Parity | 193 migrations | Migration `20260914130000_goals.sql` added; `database/schema.sql` updated and verified clean (194 migrations) with two-pass replay parity | **DONE** |
 | Pure Math Calculator | None | Pure deterministic calculator `goal-calculator.util.ts` deriving pacing, percentage, remaining amounts, month calculations, and contribution status without NaN, Infinity, or floating-point drift | **DONE** |
 | Dynamic Emergency Fund | None | Dynamically reads user's active budget essential expenses (`BudgetBucket.NEEDS` baseline) via `BudgetsService.getActiveBudgetNeedsExpenditure` without hardcoding; gracefully evaluates to `UNAVAILABLE` when budget data is absent | **DONE** |
 | Dedicated & Unallocated Tracking | None | Supports dedicated account balance tracking (`Account.currentBalance`) and unallocated transaction inflow linking (`GoalTransaction`) with multi-currency FX conversion | **DONE** |
@@ -104,19 +104,24 @@ No financial accounting, balances, or transaction identities were modified:
 
 ## Validation
 
-Local validation completed on `fm/artha-goals-01` (`121131545`):
+Local validation completed on `fm/artha-goals-01` (`68eff5993`):
 
 | Gate | Scope | Result |
 |---|---|---|
 | Backend Goals & Related Suites | 6 test files (`npm run test:unit -- src/goals src/budgets src/accounts src/transactions`) | **582 passed, 0 failed** |
 | Frontend Goals & Parity Suites | 6 test files (`vitest run src/components/goals src/app/goals src/i18n/messages.parity.test.ts src/lib/nav-links.test.ts`) | **1,659 passed, 0 failed** |
+| UI Convention Guards | `src/test/ui-conventions.test.ts` | **124 passed, 0 failed** |
+| Number Locale & Linkified Guards | `src/test/number-locale.guard.test.ts`, `src/test/linkified-description.guard.test.ts` | **Passed, 0 failed** |
+| Cache Prefix Classification Guard | `src/lib/cache-prefix-classification.guard.test.ts` & `src/lib/apiCache.test.ts` | **30 passed, 0 failed** |
+| Backend Production Build | `npm run build` (Nest build) | **Clean (0 errors)** |
+| Frontend Production Build | `npm run build` (Next.js 16 build) | **Clean (0 errors)** |
 | Backend Typecheck | `npx tsc --noEmit` | **Clean (0 errors)** |
 | Backend Linter | `npm run lint` | **Clean (0 errors, 0 warnings)** |
 | Frontend Typecheck | `npx tsc --noEmit` | **Clean (0 errors)** |
 | Frontend Linter | `npm run lint` | **Clean (0 errors, 0 warnings)** |
 | Migration Idempotency Lint | `node backend/scripts/migration-lint.mjs` | **Clean (194 files verified)** |
 | Migration Prefix Check | `node scripts/check-migration-prefixes.mjs` | **Clean (194 files verified)** |
-| Schema Parity & Drift | PostgreSQL 16 schema parity verified | **Clean (zero drift)** |
+| Schema Parity Replay Check | `scripts/verify-schema.sh` | **Clean (2 replay passes, zero drift against schema.sql)** |
 
 ---
 
@@ -165,5 +170,6 @@ With Financial Goals & Emergency Fund Tracking (Priority 14), Transaction Catego
 | `cc8353dbd` | Merge commit | Merge pull request #18 (`fm/artha-budget-buckets-01`) | Merged into `main` |
 | `d98886c13` | Merge commit | Merge pull request #19 (`fm/artha-transaction-rules-01`) | Merged into `main` |
 | `121131545` | Commit | `feat(goals): add financial goals and emergency fund tracking` | Committed on `fm/artha-goals-01` |
-| **PR #20** | Code PR | `feat(goals): add financial goals and emergency fund tracking` (`fm/artha-goals-01` -> `main`) | **OPEN** |
+| `68eff5993` | Commit | `fix(goals): resolve convention guards, cache prefix policy, and migration schema parity` | Committed on `fm/artha-goals-01` |
+| **PR #20** | Code PR | `feat(goals): add financial goals and emergency fund tracking` (`fm/artha-goals-01` -> `main`) | **OPEN (Repaired & Validated)** |
 | **PR #5** | Rolling Status PR | `Artha mission status — review me here` (`fm/artha-mission-status` -> `main`) | **OPEN (1 file)** |
