@@ -3,6 +3,7 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { useDateFormat } from '@/hooks/useDateFormat';
+import { HOVER_ROW_ON_PAGE } from '@/components/ui/Card';
 
 /**
  * Month-browsing for the register.
@@ -64,7 +65,7 @@ export function MonthNavigator({
   const isCurrentMonth = month === currentMonth;
 
   const arrowClass =
-    'p-1.5 rounded text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-blue-500';
+    `p-1.5 rounded text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 ${HOVER_ROW_ON_PAGE} focus-visible:outline-2 focus-visible:outline-blue-500`;
 
   return (
     <div className="flex items-center gap-2" data-testid="month-navigator">

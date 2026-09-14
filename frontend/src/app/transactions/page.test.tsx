@@ -444,8 +444,11 @@ vi.mock('@/hooks/useLocalStorage', () => ({
 }));
 
 vi.mock('@/hooks/useDateFormat', () => ({
-  useDateFormat: () => ({ dateFormat: 'browser', datePattern: 'YYYY-MM-DD',
+  useDateFormat: () => ({
+    dateFormat: 'browser',
+    datePattern: 'YYYY-MM-DD',
     formatDate: (d: string) => d,
+    formatMonth: (m: string) => m,
   }),
 }));
 

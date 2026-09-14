@@ -52,13 +52,21 @@ export class InsightsAggregatorService {
     currency: string,
   ): Promise<SpendingAggregates> {
     const now = new Date();
-    const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1)
+    const currentMonthStart = new Date(
+      Date.UTC(now.getFullYear(), now.getMonth(), 1),
+    )
       .toISOString()
       .substring(0, 10);
-    const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 6, 1)
+    const sixMonthsAgo = new Date(
+      Date.UTC(now.getFullYear(), now.getMonth() - 6, 1),
+    )
       .toISOString()
       .substring(0, 10);
-    const today = now.toISOString().substring(0, 10);
+    const today = new Date(
+      Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()),
+    )
+      .toISOString()
+      .substring(0, 10);
 
     const [categorySpending, monthlySpending, recurringCharges] =
       await Promise.all([
@@ -129,13 +137,13 @@ export class InsightsAggregatorService {
   ): Promise<CategorySpending[]> {
     const now = new Date();
     const previousMonthStart = new Date(
-      now.getFullYear(),
-      now.getMonth() - 1,
-      1,
+      Date.UTC(now.getFullYear(), now.getMonth() - 1, 1),
     )
       .toISOString()
       .substring(0, 10);
-    const previousMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0)
+    const previousMonthEnd = new Date(
+      Date.UTC(now.getFullYear(), now.getMonth(), 0),
+    )
       .toISOString()
       .substring(0, 10);
 
