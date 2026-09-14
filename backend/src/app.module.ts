@@ -62,6 +62,7 @@ import { MonteCarloModule } from "./monte-carlo/monte-carlo.module";
 import { StrategiesModule } from "./strategies/strategies.module";
 import { DelegationModule } from "./delegation/delegation.module";
 import { EmergencyAccessModule } from "./emergency-access/emergency-access.module";
+import { WatchlistsModule } from "./watchlists/watchlists.module";
 import { I18nModule } from "./i18n/i18n.module";
 
 @Module({
@@ -174,6 +175,7 @@ import { I18nModule } from "./i18n/i18n.module";
     StrategiesModule,
     DelegationModule,
     EmergencyAccessModule,
+    WatchlistsModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: GlobalExceptionFilter },

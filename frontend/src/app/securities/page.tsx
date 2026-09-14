@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { EyeIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/Button';
 import { PageLayout } from '@/components/layout/PageLayout';
@@ -349,7 +351,17 @@ function SecuritiesContent() {
           title={t('page.title')}
           subtitle={t('page.subtitle')}
           helpUrl="https://github.com/kenlasko/monize/wiki/Investments"
-          actions={<Button onClick={handleCreateNew}>{t('page.newSecurity')}</Button>}
+          actions={
+            <div className="flex items-center gap-2">
+              <Link href="/watchlists">
+                <Button variant="outline">
+                  <EyeIcon className="h-4 w-4 mr-1.5" />
+                  Watchlists
+                </Button>
+              </Link>
+              <Button onClick={handleCreateNew}>{t('page.newSecurity')}</Button>
+            </div>
+          }
         />
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">

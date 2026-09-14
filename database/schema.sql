@@ -660,6 +660,36 @@ CREATE TABLE security_tags (
 CREATE INDEX idx_security_tags_tag ON security_tags(tag_id);
 CREATE INDEX idx_security_tags_security ON security_tags(security_id);
 
+-- Watchlists (Priority 7)
+CREATE TABLE watchlists (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    sort_order INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT uq_watchlists_user_name UNIQUE (user_id, name)
+);
+
+CREATE INDEX idx_watchlists_user_sort ON watchlists(user_id, sort_order);
+
+CREATE TRIGGER update_watchlists_updated_at BEFORE UPDATE ON watchlists FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TABLE watchlist_items (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    watchlist_id UUID NOT NULL REFERENCES watchlists(id) ON DELETE CASCADE,
+    security_id UUID NOT NULL REFERENCES securities(id) ON DELETE CASCADE,
+    sort_order INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT uq_watchlist_items_watchlist_security UNIQUE (watchlist_id, security_id)
+);
+
+CREATE INDEX idx_watchlist_items_watchlist_sort ON watchlist_items(watchlist_id, sort_order);
+CREATE INDEX idx_watchlist_items_user_id ON watchlist_items(user_id);
+CREATE INDEX idx_watchlist_items_security_id ON watchlist_items(security_id);
+
 -- Scheduled Transactions (recurring payments / bills & deposits)
 CREATE TABLE scheduled_transactions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -2689,7 +2719,9 @@ DECLARE
         'securities',
         'sms_sender_registry',
         'transaction_attachments',
-        'user_currency_preferences'
+        'user_currency_preferences',
+        'watchlist_items',
+        'watchlists'
     ];
 BEGIN
     FOREACH t IN ARRAY direct_tables LOOP

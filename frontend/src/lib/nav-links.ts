@@ -13,6 +13,7 @@ import {
   ChatBubbleLeftRightIcon,
   Cog6ToothIcon,
   CurrencyDollarIcon,
+  EyeIcon,
   HashtagIcon,
   LightBulbIcon,
   ShieldCheckIcon,
@@ -53,6 +54,7 @@ export const TOOLS_LINKS: NavLinkDef[] = [
   { href: '/institutions', labelKey: 'institutions' },
   { href: '/tags', labelKey: 'tags' },
   { href: '/securities', labelKey: 'securities' },
+  { href: '/watchlists', labelKey: 'watchlists' },
   { href: '/currencies', labelKey: 'currencies' },
   { href: '/import', labelKey: 'import' },
 ];
@@ -88,6 +90,7 @@ export const NAV_ICONS: Record<string, NavIcon> = {
   '/institutions': BuildingOffice2Icon,
   '/tags': HashtagIcon,
   '/securities': BanknotesIcon,
+  '/watchlists': EyeIcon,
   '/currencies': CurrencyDollarIcon,
   '/import': ArrowDownTrayIcon,
   '/admin/users': ShieldCheckIcon,
