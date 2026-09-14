@@ -64,6 +64,7 @@ import { DelegationModule } from "./delegation/delegation.module";
 import { EmergencyAccessModule } from "./emergency-access/emergency-access.module";
 import { WatchlistsModule } from "./watchlists/watchlists.module";
 import { RulesModule } from "./rules/rules.module";
+import { GoalsModule } from "./goals/goals.module";
 import { I18nModule } from "./i18n/i18n.module";
 
 @Module({
@@ -178,6 +179,7 @@ import { I18nModule } from "./i18n/i18n.module";
     EmergencyAccessModule,
     WatchlistsModule,
     RulesModule,
+    GoalsModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: GlobalExceptionFilter },
