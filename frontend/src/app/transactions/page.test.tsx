@@ -2109,7 +2109,7 @@ describe('TransactionsPage', () => {
 
       const [filename, headers, rows] = mockExportToCsv.mock.calls[0];
 
-      expect(filename).toMatch(/^Monize_Transactions_\d{4}-\d{2}-\d{2}_\d{6}\.csv$/);
+      expect(filename).toMatch(/^Artha_Transactions_\d{4}-\d{2}-\d{2}_\d{6}\.csv$/);
       expect(headers).toEqual(['Date', 'Account', 'Payee', 'Category', 'Description', 'Tags', 'Amount', 'Currency', 'Status']);
       expect(rows).toHaveLength(2);
       expect(rows[0]).toEqual(['2026-02-01', 'Checking', 'Store', 'Groceries', 'Weekly shop', 'Essential', -50, 'USD', 'UNRECONCILED']);
@@ -2199,7 +2199,7 @@ describe('TransactionsPage', () => {
       expect(mockExportToCsv).not.toHaveBeenCalled();
     });
 
-    it('generates filename starting with Monize', async () => {
+    it('generates filename starting with Artha', async () => {
       const exportTransactions = [
         { id: 'tx-1', transactionDate: '2026-02-01', amount: -50, status: 'UNRECONCILED', payee: null, payeeName: null, category: null, account: { id: 'acc-1', name: 'Checking' }, description: null, tags: [], currencyCode: 'USD', isTransfer: false },
       ];
@@ -2223,7 +2223,7 @@ describe('TransactionsPage', () => {
       });
 
       const [filename] = mockExportToCsv.mock.calls[0];
-      expect(filename).toMatch(/^Monize/);
+      expect(filename).toMatch(/^Artha/);
       expect(filename).toMatch(/\.csv$/);
     });
 

@@ -41,12 +41,12 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'Monize - Personal Finance Manager',
+  title: 'Artha - Personal Finance Manager',
   description: 'Track your finances with ease',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Monize',
+    title: 'Artha',
   },
   icons: {
     icon: [

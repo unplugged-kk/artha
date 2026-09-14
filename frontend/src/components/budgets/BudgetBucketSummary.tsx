@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { Card, HOVER_ROW_ON_CARD } from '@/components/ui/Card';
 import { BudgetProgressBar } from './BudgetProgressBar';
 import { BudgetToleranceIndicator } from './BudgetToleranceIndicator';
 import { useNumberFormat } from '@/hooks/useNumberFormat';
@@ -55,7 +56,7 @@ export function BudgetBucketSummary({
   );
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/50 p-4 sm:p-6 space-y-4">
+    <Card padding="md" className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
           <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
@@ -87,7 +88,7 @@ export function BudgetBucketSummary({
               className={`p-4 rounded-lg border transition-all ${
                 isSelected
                   ? 'ring-2 ring-blue-500 bg-blue-50/50 dark:bg-blue-950/20'
-                  : 'hover:bg-gray-50 dark:hover:bg-gray-700/40'
+                  : HOVER_ROW_ON_CARD
               } ${colors.border}`}
             >
               <div className="flex items-center justify-between gap-2 mb-2">
@@ -146,7 +147,7 @@ export function BudgetBucketSummary({
               <button
                 key={item.bucket}
                 type="button"
-                className="text-left w-full focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg"
+                className="text-left w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg"
                 onClick={() => onSelectBucket(isSelected ? null : item.bucket)}
               >
                 {content}
@@ -157,6 +158,6 @@ export function BudgetBucketSummary({
           return <div key={item.bucket}>{content}</div>;
         })}
       </div>
-    </div>
+    </Card>
   );
 }

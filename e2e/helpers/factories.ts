@@ -1,4 +1,4 @@
-import { ApiClient, uniqueId } from './api';
+import { ApiClient, uniqueId } from "./api";
 
 // Typed factories that seed data through the real backend API. Payload shapes
 // mirror the frontend lib modules (e.g. frontend/src/lib/tags.ts). Each returns
@@ -16,7 +16,7 @@ export function createTag(
   api: ApiClient,
   data: { name?: string; color?: string; icon?: string } = {},
 ): Promise<CreatedTag> {
-  return api.post<CreatedTag>('/tags', {
+  return api.post<CreatedTag>("/tags", {
     name: data.name ?? `E2E Tag ${uniqueId()}`,
     ...(data.color !== undefined ? { color: data.color } : {}),
     ...(data.icon !== undefined ? { icon: data.icon } : {}),
@@ -39,11 +39,13 @@ export function createCategory(
     description?: string;
   } = {},
 ): Promise<CreatedCategory> {
-  return api.post<CreatedCategory>('/categories', {
+  return api.post<CreatedCategory>("/categories", {
     name: data.name ?? `E2E Category ${uniqueId()}`,
     isIncome: data.isIncome ?? false,
     ...(data.parentId !== undefined ? { parentId: data.parentId } : {}),
-    ...(data.description !== undefined ? { description: data.description } : {}),
+    ...(data.description !== undefined
+      ? { description: data.description }
+      : {}),
   });
 }
 
@@ -58,7 +60,7 @@ export function createPayee(
   api: ApiClient,
   data: { name?: string; defaultCategoryId?: string; notes?: string } = {},
 ): Promise<CreatedPayee> {
-  return api.post<CreatedPayee>('/payees', {
+  return api.post<CreatedPayee>("/payees", {
     name: data.name ?? `E2E Payee ${uniqueId()}`,
     ...(data.defaultCategoryId !== undefined
       ? { defaultCategoryId: data.defaultCategoryId }
@@ -68,12 +70,7 @@ export function createPayee(
 }
 
 export type AccountType =
-  | 'CHEQUING'
-  | 'SAVINGS'
-  | 'CREDIT_CARD'
-  | 'CASH'
-  | 'LINE_OF_CREDIT'
-  | 'OTHER';
+  "CHEQUING" | "SAVINGS" | "CREDIT_CARD" | "CASH" | "LINE_OF_CREDIT" | "OTHER";
 
 export interface CreatedAccount {
   id: string;
@@ -93,10 +90,10 @@ export function createAccount(
   } = {},
 ): Promise<CreatedAccount> {
   // A fresh user's default currency is USD (user_preference default).
-  return api.post<CreatedAccount>('/accounts', {
+  return api.post<CreatedAccount>("/accounts", {
     name: data.name ?? `E2E Account ${uniqueId()}`,
-    accountType: data.accountType ?? 'CHEQUING',
-    currencyCode: data.currencyCode ?? 'USD',
+    accountType: data.accountType ?? "CHEQUING",
+    currencyCode: data.currencyCode ?? "USD",
     openingBalance: data.openingBalance ?? 0,
   });
 }
@@ -122,12 +119,13 @@ export function createTransaction(
     status?: string;
   },
 ): Promise<CreatedTransaction> {
-  return api.post<CreatedTransaction>('/transactions', {
+  return api.post<CreatedTransaction>("/transactions", {
     accountId: data.accountId,
     amount: data.amount ?? -10,
     payeeName: data.payeeName ?? `E2E Txn ${uniqueId()}`,
-    transactionDate: data.transactionDate ?? new Date().toISOString().slice(0, 10),
-    currencyCode: data.currencyCode ?? 'USD',
+    transactionDate:
+      data.transactionDate ?? new Date().toISOString().slice(0, 10),
+    currencyCode: data.currencyCode ?? "USD",
     ...(data.payeeId !== undefined ? { payeeId: data.payeeId } : {}),
     ...(data.categoryId !== undefined ? { categoryId: data.categoryId } : {}),
     ...(data.status !== undefined ? { status: data.status } : {}),
@@ -152,12 +150,12 @@ export function createScheduledTransaction(
     currencyCode?: string;
   },
 ): Promise<CreatedScheduledTransaction> {
-  return api.post<CreatedScheduledTransaction>('/scheduled-transactions', {
+  return api.post<CreatedScheduledTransaction>("/scheduled-transactions", {
     accountId: data.accountId,
     name: data.name ?? `E2E Schedule ${uniqueId()}`,
     amount: data.amount ?? -100,
-    currencyCode: data.currencyCode ?? 'USD',
-    frequency: data.frequency ?? 'MONTHLY',
+    currencyCode: data.currencyCode ?? "USD",
+    frequency: data.frequency ?? "MONTHLY",
     nextDueDate: data.nextDueDate ?? new Date().toISOString().slice(0, 10),
   });
 }
@@ -173,9 +171,14 @@ export interface CreatedCurrency {
 // "ZQA") that won't collide with the seeded real currencies.
 export function createCurrency(
   api: ApiClient,
-  data: { code: string; name?: string; symbol?: string; decimalPlaces?: number },
+  data: {
+    code: string;
+    name?: string;
+    symbol?: string;
+    decimalPlaces?: number;
+  },
 ): Promise<CreatedCurrency> {
-  return api.post<CreatedCurrency>('/currencies', {
+  return api.post<CreatedCurrency>("/currencies", {
     code: data.code,
     name: data.name ?? `E2E Currency ${data.code}`,
     symbol: data.symbol ?? data.code.slice(0, 2),
@@ -208,11 +211,11 @@ export function createSecurity(
     currencyCode?: string;
   } = {},
 ): Promise<CreatedSecurity> {
-  return api.post<CreatedSecurity>('/securities', {
+  return api.post<CreatedSecurity>("/securities", {
     symbol: data.symbol ?? `E${uniqueId().slice(-6).toUpperCase()}`,
     name: data.name ?? `E2E Security ${uniqueId()}`,
-    securityType: data.securityType ?? 'STOCK',
-    currencyCode: data.currencyCode ?? 'USD',
+    securityType: data.securityType ?? "STOCK",
+    currencyCode: data.currencyCode ?? "USD",
     ...(data.exchange !== undefined ? { exchange: data.exchange } : {}),
   });
 }
@@ -230,27 +233,27 @@ export function createInvestmentAccountPair(
   api: ApiClient,
   data: { name?: string; currencyCode?: string; openingBalance?: number } = {},
 ): Promise<CreatedInvestmentPair> {
-  return api.post<CreatedInvestmentPair>('/accounts', {
+  return api.post<CreatedInvestmentPair>("/accounts", {
     name: data.name ?? `E2E Brokerage ${uniqueId()}`,
-    accountType: 'INVESTMENT',
-    currencyCode: data.currencyCode ?? 'USD',
+    accountType: "INVESTMENT",
+    currencyCode: data.currencyCode ?? "USD",
     openingBalance: data.openingBalance ?? 10000,
     createInvestmentPair: true,
   });
 }
 
 export type InvestmentAction =
-  | 'BUY'
-  | 'SELL'
-  | 'DIVIDEND'
-  | 'INTEREST'
-  | 'CAPITAL_GAIN'
-  | 'SPLIT'
-  | 'TRANSFER_IN'
-  | 'TRANSFER_OUT'
-  | 'REINVEST'
-  | 'ADD_SHARES'
-  | 'REMOVE_SHARES';
+  | "BUY"
+  | "SELL"
+  | "DIVIDEND"
+  | "INTEREST"
+  | "CAPITAL_GAIN"
+  | "SPLIT"
+  | "TRANSFER_IN"
+  | "TRANSFER_OUT"
+  | "REINVEST"
+  | "ADD_SHARES"
+  | "REMOVE_SHARES";
 
 export interface CreatedInvestmentTransaction {
   id: string;
@@ -274,9 +277,9 @@ export function createInvestmentTransaction(
     transactionDate?: string;
   },
 ): Promise<CreatedInvestmentTransaction> {
-  return api.post<CreatedInvestmentTransaction>('/investment-transactions', {
+  return api.post<CreatedInvestmentTransaction>("/investment-transactions", {
     accountId: data.accountId,
-    action: data.action ?? 'BUY',
+    action: data.action ?? "BUY",
     transactionDate:
       data.transactionDate ?? new Date().toISOString().slice(0, 10),
     ...(data.securityId !== undefined ? { securityId: data.securityId } : {}),
@@ -306,19 +309,19 @@ export function createBudget(
     name?: string;
     periodStart?: string;
     currencyCode?: string;
-    budgetType?: 'MONTHLY' | 'ANNUAL' | 'PAY_PERIOD';
-    strategy?: 'FIXED' | 'ROLLOVER' | 'ZERO_BASED' | 'FIFTY_THIRTY_TWENTY';
+    budgetType?: "MONTHLY" | "ANNUAL" | "PAY_PERIOD";
+    strategy?: "FIXED" | "ROLLOVER" | "ZERO_BASED" | "FIFTY_THIRTY_TWENTY";
     baseIncome?: number;
   } = {},
 ): Promise<CreatedBudget> {
   const now = new Date();
-  const firstOfMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
-  return api.post<CreatedBudget>('/budgets', {
+  const firstOfMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
+  return api.post<CreatedBudget>("/budgets", {
     name: data.name ?? `E2E Budget ${uniqueId()}`,
     periodStart: data.periodStart ?? firstOfMonth,
-    currencyCode: data.currencyCode ?? 'USD',
-    budgetType: data.budgetType ?? 'MONTHLY',
-    strategy: data.strategy ?? 'FIXED',
+    currencyCode: data.currencyCode ?? "USD",
+    budgetType: data.budgetType ?? "MONTHLY",
+    strategy: data.strategy ?? "FIXED",
     ...(data.baseIncome !== undefined ? { baseIncome: data.baseIncome } : {}),
   });
 }
@@ -355,7 +358,7 @@ export function createDelegate(
   api: ApiClient,
   data: { email: string; password: string },
 ): Promise<CreatedDelegate> {
-  return api.post<CreatedDelegate>('/delegation/delegates', {
+  return api.post<CreatedDelegate>("/delegation/delegates", {
     email: data.email,
     password: data.password,
   });
@@ -393,7 +396,68 @@ export function createCustomReport(
   api: ApiClient,
   data: { name?: string } = {},
 ): Promise<CreatedCustomReport> {
-  return api.post<CreatedCustomReport>('/reports/custom', {
+  return api.post<CreatedCustomReport>("/reports/custom", {
     name: data.name ?? `E2E Report ${uniqueId()}`,
+  });
+}
+
+export interface CreatedWatchlist {
+  id: string;
+  name: string;
+  description: string | null;
+  items?: Array<{ id: string; securityId: string }>;
+}
+
+export function createWatchlist(
+  api: ApiClient,
+  data: { name?: string; description?: string } = {},
+): Promise<CreatedWatchlist> {
+  return api.post<CreatedWatchlist>("/watchlists", {
+    name: data.name ?? `E2E Watchlist ${uniqueId()}`,
+    ...(data.description !== undefined
+      ? { description: data.description }
+      : {}),
+  });
+}
+
+export interface CreatedRule {
+  id: string;
+  name: string;
+  isActive: boolean;
+  matchMode: "ALL" | "ANY";
+  priority: number;
+  conditions: Array<{ field: string; operator: string; value: any }>;
+  actions: {
+    setCategoryId?: string | null;
+    setPayeeName?: string | null;
+    stopProcessing?: boolean;
+  };
+}
+
+export function createRule(
+  api: ApiClient,
+  data: {
+    name?: string;
+    isActive?: boolean;
+    matchMode?: "ALL" | "ANY";
+    conditions?: Array<{ field: string; operator: string; value: any }>;
+    actions?: {
+      setCategoryId?: string | null;
+      setPayeeName?: string | null;
+      stopProcessing?: boolean;
+    };
+  } = {},
+): Promise<CreatedRule> {
+  return api.post<CreatedRule>("/rules", {
+    name: data.name ?? `E2E Rule ${uniqueId()}`,
+    isActive: data.isActive ?? true,
+    matchMode: data.matchMode ?? "ALL",
+    conditions: data.conditions ?? [
+      { field: "payee", operator: "CONTAINS", value: "Swiggy" },
+    ],
+    actions: data.actions ?? {
+      setPayeeName: "Swiggy Food",
+      stopProcessing: true,
+    },
   });
 }

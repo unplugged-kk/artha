@@ -967,7 +967,7 @@ function TransactionsContent() {
       const now = new Date();
       const datePart = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
       const timePart = `${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
-      const filename = `Monize_Transactions_${datePart}_${timePart}.csv`;
+      const filename = `Artha_Transactions_${datePart}_${timePart}.csv`;
 
       exportToCsv(filename, headers, rows);
       toast.success(t('toasts.exported', { count: allTransactions.length }));

@@ -83,10 +83,10 @@ describe('AppHeader', () => {
     };
   });
 
-  it('renders the Monize logo and brand name', () => {
+  it('renders the Artha logo and brand name', () => {
     render(<AppHeader />);
-    expect(screen.getByText('Monize')).toBeInTheDocument();
-    expect(screen.getByAltText('Monize')).toBeInTheDocument();
+    expect(screen.getByText('Artha')).toBeInTheDocument();
+    expect(screen.getByAltText('Artha')).toBeInTheDocument();
   });
 
   it('renders main navigation links in desktop nav', () => {
@@ -202,7 +202,7 @@ describe('AppHeader', () => {
 
   it('navigates to dashboard when logo is clicked', () => {
     render(<AppHeader />);
-    const logoButton = screen.getByText('Monize');
+    const logoButton = screen.getByText('Artha');
     fireEvent.click(logoButton);
     expect(mockPush).toHaveBeenCalledWith('/dashboard');
   });

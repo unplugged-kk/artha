@@ -113,7 +113,7 @@ export function RuleTestModal({ rule, isOpen, onClose }: RuleTestModalProps) {
                 {t('fields.amount')}
               </label>
               <Input
-                type="number"
+                inputMode="decimal"
                 value={sampleAmount}
                 onChange={(e) => setSampleAmount(e.target.value)}
                 placeholder="e.g. -450.00"
