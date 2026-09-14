@@ -229,6 +229,7 @@ export class BudgetGeneratorService {
               amount: cat.amount,
               isIncome: cat.isIncome ?? false,
               categoryGroup: cat.categoryGroup ?? null,
+              budgetBucket: cat.budgetBucket ?? null,
               rolloverType: cat.rolloverType,
               rolloverCap: cat.rolloverCap ?? null,
               flexGroup: cat.flexGroup ?? null,

@@ -246,7 +246,8 @@
       "tagKeyOp": "Điều kiện",
       "tagKeyValue": "Giá trị",
       "currency": "Tiền tệ",
-      "hasAttachments": "Tệp đính kèm"
+      "hasAttachments": "Tệp đính kèm",
+      "paymentMethods": "Payment Methods"
     },
     "hasAttachmentsOptions": {
       "any": "Bất kỳ",
@@ -262,7 +263,8 @@
       "amountMin": "Tối thiểu",
       "amountMax": "Tối đa",
       "search": "Tìm kiếm người nhận, danh mục, số tiền, thẻ, mô tả, số tham chiếu...",
-      "tagKeyValue": "ví dụ: usa"
+      "tagKeyValue": "ví dụ: usa",
+      "paymentMethods": "All payment methods"
     },
     "tagKeyNone": "Bất kỳ (không lọc theo khóa)",
     "tagKeyOps": {
@@ -286,7 +288,8 @@
       "removeCurrency": "Xóa bộ lọc tiền tệ {name}",
       "hasAttachments": "Có tệp đính kèm",
       "noAttachments": "Không có tệp đính kèm",
-      "removeAttachments": "Xóa bộ lọc tệp đính kèm"
+      "removeAttachments": "Xóa bộ lọc tệp đính kèm",
+      "removePaymentMethod": "Remove {name} filter"
     },
     "bulkUpdate": "Cập nhật hàng loạt",
     "cancelBulk": "Hủy hàng loạt",
@@ -312,6 +315,16 @@
       "thisFiscalYear": "This financial year (Apr-Mar)",
       "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "Tùy chọn"
+    },
+    "paymentMethodOptions": {
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
     }
   },
   "bulk": {
@@ -375,7 +388,10 @@
       "transferAmountWithCurrency": "Số tiền chuyển ({currency})",
       "amountReceived": "Số tiền nhận ({currency})",
       "payeeOptional": "Người nhận (tùy chọn)",
-      "categoryOptional": "Danh mục (Tùy chọn)"
+      "categoryOptional": "Danh mục (Tùy chọn)",
+      "paymentMethod": "Payment Method",
+      "upiVpa": "UPI ID / VPA",
+      "upiReference": "UPI Reference / RRN"
     },
     "placeholders": {
       "selectAccount": "Chọn tài khoản...",
@@ -385,7 +401,9 @@
       "referenceNumber": "Số séc, số xác nhận...",
       "optionalDescription": "Mô tả tùy chọn...",
       "selectTags": "Chọn thẻ...",
-      "createNewTag": "Tạo thẻ mới..."
+      "createNewTag": "Tạo thẻ mới...",
+      "upiVpa": "e.g. name@okhdfcbank",
+      "upiReference": "12-digit reference number"
     },
     "splitSection": {
       "title": "Chia giao tác",
@@ -470,7 +488,18 @@
       },
       "feeCaption": "Bao gồm phí giao dịch nước ngoài {percent}% ({fee})."
     },
-    "jointSplitDisabled": "Chỉ chủ sở hữu mới có thể quản lý giao dịch tách trong tài khoản được chia sẻ"
+    "jointSplitDisabled": "Chỉ chủ sở hữu mới có thể quản lý giao dịch tách trong tài khoản được chia sẻ",
+    "paymentMethodOptions": {
+      "none": "None",
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
+    }
   },
   "splitEditor": {
     "header": "Chi tiết phần chia",

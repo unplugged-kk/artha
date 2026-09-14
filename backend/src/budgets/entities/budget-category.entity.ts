@@ -8,7 +8,10 @@ import {
   JoinColumn,
 } from "typeorm";
 import { Budget } from "./budget.entity";
-import { Category } from "../../categories/entities/category.entity";
+import {
+  Category,
+  BudgetBucket,
+} from "../../categories/entities/category.entity";
 import { Account } from "../../accounts/entities/account.entity";
 
 const decimalTransformer = {
@@ -68,6 +71,14 @@ export class BudgetCategory {
     nullable: true,
   })
   categoryGroup: CategoryGroup | null;
+
+  @Column({
+    type: "varchar",
+    length: 32,
+    name: "budget_bucket",
+    nullable: true,
+  })
+  budgetBucket?: BudgetBucket | null;
 
   @Column({
     type: "decimal",

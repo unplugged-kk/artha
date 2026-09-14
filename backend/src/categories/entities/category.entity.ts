@@ -8,6 +8,7 @@ import {
   JoinColumn,
 } from "typeorm";
 import { User } from "../../users/entities/user.entity";
+import { BudgetBucket } from "../constants/budget-bucket.enum";
 
 @Entity("categories")
 export class Category {
@@ -51,6 +52,16 @@ export class Category {
   @Column({ name: "is_system", default: false })
   isSystem: boolean;
 
+  @Column({
+    type: "varchar",
+    length: 32,
+    name: "budget_bucket",
+    nullable: true,
+  })
+  budgetBucket?: BudgetBucket | null;
+
   @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
 }
+
+export { BudgetBucket } from "../constants/budget-bucket.enum";

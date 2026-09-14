@@ -1,9 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import { BudgetSummaryCards } from './BudgetSummaryCards';
 import { BudgetHealthGauge } from './BudgetHealthGauge';
 import { BudgetVelocityWidget } from './BudgetVelocityWidget';
 import { BudgetCategoryList } from './BudgetCategoryList';
+import { BudgetBucketSummary } from './BudgetBucketSummary';
 import { BudgetFlexGroupCard } from './BudgetFlexGroupCard';
 import { BudgetUpcomingBills } from './BudgetUpcomingBills';
 import { BudgetHeatmap } from './BudgetHeatmap';
@@ -12,7 +14,7 @@ import { BudgetZeroBasedBar } from './BudgetZeroBasedBar';
 import { Budget503020Summary } from './Budget503020Summary';
 import { BudgetScenarioPlanner } from './BudgetScenarioPlanner';
 import { STRATEGY_LABELS, STRATEGY_DESCRIPTIONS } from './utils/budget-labels';
-import type { BudgetSummary, BudgetVelocity } from '@/types/budget';
+import type { BudgetSummary, BudgetVelocity, BudgetBucket } from '@/types/budget';
 import type { ScheduledTransaction } from '@/types/scheduled-transaction';
 
 interface DailySpending {
@@ -71,6 +73,7 @@ export function BudgetDashboard({
       : 0;
 
   const strategy = summary.budget.strategy;
+  const [selectedBucket, setSelectedBucket] = useState<BudgetBucket | 'UNCLASSIFIED' | null>(null);
 
   return (
     <div className="space-y-6">
@@ -94,6 +97,16 @@ export function BudgetDashboard({
         daysRemaining={velocity.daysRemaining}
         formatCurrency={formatCurrency}
       />
+
+      {/* Four-Bucket Budget Overview */}
+      {summary.bucketSummary && summary.bucketSummary.length > 0 && (
+        <BudgetBucketSummary
+          bucketSummary={summary.bucketSummary}
+          formatCurrency={formatCurrency}
+          selectedBucket={selectedBucket}
+          onSelectBucket={setSelectedBucket}
+        />
+      )}
 
       {/* Strategy-specific widgets */}
       {strategy === 'ZERO_BASED' && (
@@ -128,6 +141,8 @@ export function BudgetDashboard({
         formatCurrency={formatCurrency}
         pacePercent={pacePercent}
         onCategoryClick={onCategoryClick}
+        selectedBucket={selectedBucket}
+        onSelectBucket={setSelectedBucket}
       />
 
       {/* Flex Groups */}

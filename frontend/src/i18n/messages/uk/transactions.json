@@ -246,7 +246,8 @@
       "tagKeyOp": "Умова",
       "tagKeyValue": "Значення",
       "currency": "Валюта",
-      "hasAttachments": "Вкладення"
+      "hasAttachments": "Вкладення",
+      "paymentMethods": "Payment Methods"
     },
     "hasAttachmentsOptions": {
       "any": "Будь-які",
@@ -262,7 +263,8 @@
       "amountMin": "Мін",
       "amountMax": "Макс",
       "search": "Пошук за одержувачем, категорією, сумою, тегом, описом, реф. №...",
-      "tagKeyValue": "напр. usa"
+      "tagKeyValue": "напр. usa",
+      "paymentMethods": "All payment methods"
     },
     "tagKeyNone": "Будь-який (без фільтра за ключем)",
     "tagKeyOps": {
@@ -286,7 +288,8 @@
       "removeCurrency": "Видалити фільтр за валютою {name}",
       "hasAttachments": "З вкладеннями",
       "noAttachments": "Без вкладень",
-      "removeAttachments": "Прибрати фільтр вкладень"
+      "removeAttachments": "Прибрати фільтр вкладень",
+      "removePaymentMethod": "Remove {name} filter"
     },
     "bulkUpdate": "Масове оновлення",
     "cancelBulk": "Скасувати масове",
@@ -312,6 +315,16 @@
       "thisFiscalYear": "This financial year (Apr-Mar)",
       "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "Довільний"
+    },
+    "paymentMethodOptions": {
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
     }
   },
   "bulk": {
@@ -375,7 +388,10 @@
       "transferAmountWithCurrency": "Сума переказу ({currency})",
       "amountReceived": "Отримана сума ({currency})",
       "payeeOptional": "Одержувач платежу (необов'язково)",
-      "categoryOptional": "Категорія (необов'язково)"
+      "categoryOptional": "Категорія (необов'язково)",
+      "paymentMethod": "Payment Method",
+      "upiVpa": "UPI ID / VPA",
+      "upiReference": "UPI Reference / RRN"
     },
     "placeholders": {
       "selectAccount": "Оберіть рахунок...",
@@ -385,7 +401,9 @@
       "referenceNumber": "Номер чека, підтвердження №...",
       "optionalDescription": "Необов'язковий опис...",
       "selectTags": "Оберіть теги...",
-      "createNewTag": "Створити новий тег..."
+      "createNewTag": "Створити новий тег...",
+      "upiVpa": "e.g. name@okhdfcbank",
+      "upiReference": "12-digit reference number"
     },
     "splitSection": {
       "title": "Розподіл транзакції",
@@ -470,7 +488,18 @@
       },
       "feeCaption": "Включає комісію за закордонну операцію {percent}% ({fee})."
     },
-    "jointSplitDisabled": "Розділеними транзакціями на спільному рахунку може керувати лише власник"
+    "jointSplitDisabled": "Розділеними транзакціями на спільному рахунку може керувати лише власник",
+    "paymentMethodOptions": {
+      "none": "None",
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
+    }
   },
   "splitEditor": {
     "header": "Деталі розподілу",

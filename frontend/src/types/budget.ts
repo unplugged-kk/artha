@@ -1,9 +1,29 @@
+import type { BudgetBucket } from './category';
+export type { BudgetBucket };
+
 export type BudgetType = 'MONTHLY' | 'ANNUAL' | 'PAY_PERIOD';
 export type BudgetStrategy = 'FIXED' | 'ROLLOVER' | 'ZERO_BASED' | 'FIFTY_THIRTY_TWENTY';
 export type RolloverType = 'NONE' | 'MONTHLY' | 'QUARTERLY' | 'ANNUAL';
 export type CategoryGroup = 'NEED' | 'WANT' | 'SAVING';
 export type PeriodStatus = 'OPEN' | 'CLOSED' | 'PROJECTED';
 export type BudgetProfile = 'COMFORTABLE' | 'ON_TRACK' | 'AGGRESSIVE';
+
+export type BudgetToleranceStatus =
+  | 'UNDER_BUDGET'
+  | 'WITHIN_TOLERANCE'
+  | 'OVER_TOLERANCE'
+  | 'NOT_APPLICABLE';
+
+export interface BudgetBucketSummaryItem {
+  bucket: BudgetBucket | 'UNCLASSIFIED';
+  budgeted: number;
+  spent: number;
+  remaining: number;
+  percentUsed: number;
+  varianceRatio: number | null;
+  toleranceStatus: BudgetToleranceStatus;
+  categoryCount: number;
+}
 
 export interface BudgetConfig {
   includeTransfers?: boolean;
@@ -55,6 +75,7 @@ export interface BudgetCategory {
   } | null;
   isTransfer: boolean;
   categoryGroup: CategoryGroup | null;
+  budgetBucket?: BudgetBucket | null;
   amount: number;
   isIncome: boolean;
   rolloverType: RolloverType;
@@ -165,6 +186,7 @@ export interface ApplyBudgetCategoryData {
   amount: number;
   isIncome?: boolean;
   categoryGroup?: CategoryGroup;
+  budgetBucket?: BudgetBucket | null;
   rolloverType?: RolloverType;
   rolloverCap?: number;
   flexGroup?: string;
@@ -206,6 +228,7 @@ export interface UpdateBudgetData extends Partial<CreateBudgetData> {}
 export interface CreateBudgetCategoryData {
   categoryId: string;
   categoryGroup?: CategoryGroup;
+  budgetBucket?: BudgetBucket | null;
   amount: number;
   isIncome?: boolean;
   rolloverType?: RolloverType;
@@ -229,6 +252,9 @@ export interface CategoryBreakdown {
   percentUsed: number;
   isIncome: boolean;
   percentage: number | null;
+  budgetBucket?: BudgetBucket | null;
+  toleranceStatus?: BudgetToleranceStatus;
+  varianceRatio?: number | null;
 }
 
 export interface BudgetSummary {
@@ -241,6 +267,7 @@ export interface BudgetSummary {
   incomeLinked: boolean;
   actualIncome: number | null;
   categoryBreakdown: CategoryBreakdown[];
+  bucketSummary?: BudgetBucketSummaryItem[];
 }
 
 export interface UpcomingBill {

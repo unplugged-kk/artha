@@ -246,7 +246,8 @@
       "tagKeyOp": "Voorwaarde",
       "tagKeyValue": "Waarde",
       "currency": "Valuta",
-      "hasAttachments": "Bijlagen"
+      "hasAttachments": "Bijlagen",
+      "paymentMethods": "Payment Methods"
     },
     "hasAttachmentsOptions": {
       "any": "Alle",
@@ -262,7 +263,8 @@
       "amountMin": "Min",
       "amountMax": "Max",
       "search": "Zoek op begunstigde, categorie, bedrag, label, omschrijving, referentie #...",
-      "tagKeyValue": "bijv. usa"
+      "tagKeyValue": "bijv. usa",
+      "paymentMethods": "All payment methods"
     },
     "tagKeyNone": "Alle (geen sleutelfilter)",
     "tagKeyOps": {
@@ -286,7 +288,8 @@
       "removeCurrency": "Valutafilter {name} verwijderen",
       "hasAttachments": "Met bijlagen",
       "noAttachments": "Zonder bijlagen",
-      "removeAttachments": "Bijlagenfilter verwijderen"
+      "removeAttachments": "Bijlagenfilter verwijderen",
+      "removePaymentMethod": "Remove {name} filter"
     },
     "bulkUpdate": "Bulk bijwerken",
     "cancelBulk": "Bulk annuleren",
@@ -312,6 +315,16 @@
       "thisFiscalYear": "This financial year (Apr-Mar)",
       "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "Aangepast"
+    },
+    "paymentMethodOptions": {
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
     }
   },
   "bulk": {
@@ -375,7 +388,10 @@
       "transferAmountWithCurrency": "Overboekingsbedrag ({currency})",
       "amountReceived": "Ontvangen bedrag ({currency})",
       "payeeOptional": "Begunstigde (optioneel)",
-      "categoryOptional": "Categorie (optioneel)"
+      "categoryOptional": "Categorie (optioneel)",
+      "paymentMethod": "Payment Method",
+      "upiVpa": "UPI ID / VPA",
+      "upiReference": "UPI Reference / RRN"
     },
     "placeholders": {
       "selectAccount": "Selecteer rekening...",
@@ -385,7 +401,9 @@
       "referenceNumber": "Chequenummer, bevestigingsnummer...",
       "optionalDescription": "Optionele omschrijving...",
       "selectTags": "Selecteer labels...",
-      "createNewTag": "Nieuw label aanmaken..."
+      "createNewTag": "Nieuw label aanmaken...",
+      "upiVpa": "e.g. name@okhdfcbank",
+      "upiReference": "12-digit reference number"
     },
     "splitSection": {
       "title": "Transactie splitsen",
@@ -470,7 +488,18 @@
       },
       "feeCaption": "Inclusief {percent}% kosten voor buitenlandse transactie ({fee})."
     },
-    "jointSplitDisabled": "Gesplitste transacties in een gedeelde rekening kunnen alleen door de eigenaar worden beheerd"
+    "jointSplitDisabled": "Gesplitste transacties in een gedeelde rekening kunnen alleen door de eigenaar worden beheerd",
+    "paymentMethodOptions": {
+      "none": "None",
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
+    }
   },
   "splitEditor": {
     "header": "Splitsingsdetails",

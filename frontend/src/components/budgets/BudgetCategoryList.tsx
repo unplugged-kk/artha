@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { BudgetCategoryRow } from './BudgetCategoryRow';
-import type { CategoryBreakdown, BudgetCategory } from '@/types/budget';
+import type { CategoryBreakdown, BudgetCategory, BudgetBucket } from '@/types/budget';
 
 type SortField = 'name' | 'spent' | 'remaining' | 'percentUsed';
 type SortDirection = 'asc' | 'desc';
@@ -14,6 +14,8 @@ interface BudgetCategoryListProps {
   formatCurrency: (amount: number) => string;
   pacePercent?: number;
   onCategoryClick?: (budgetCategoryId: string) => void;
+  selectedBucket?: BudgetBucket | 'UNCLASSIFIED' | null;
+  onSelectBucket?: (bucket: BudgetBucket | 'UNCLASSIFIED' | null) => void;
 }
 
 export function BudgetCategoryList({
@@ -22,8 +24,14 @@ export function BudgetCategoryList({
   formatCurrency,
   pacePercent,
   onCategoryClick,
+  selectedBucket: externalSelectedBucket,
+  onSelectBucket: externalOnSelectBucket,
 }: BudgetCategoryListProps) {
   const t = useTranslations('budgets');
+  const [internalSelectedBucket, setInternalSelectedBucket] = useState<BudgetBucket | 'UNCLASSIFIED' | null>(null);
+  const selectedBucket = externalSelectedBucket !== undefined ? externalSelectedBucket : internalSelectedBucket;
+  const onSelectBucket = externalOnSelectBucket ?? setInternalSelectedBucket;
+
   const [sortField, setSortField] = useState<SortField>('percentUsed');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
 
@@ -32,8 +40,16 @@ export function BudgetCategoryList({
     [categories],
   );
 
+  const filteredCategories = useMemo(() => {
+    if (!selectedBucket) return expenseCategories;
+    return expenseCategories.filter((c) => {
+      const b = c.budgetBucket ?? 'UNCLASSIFIED';
+      return b === selectedBucket;
+    });
+  }, [expenseCategories, selectedBucket]);
+
   const sortedCategories = useMemo(() => {
-    const sorted = [...expenseCategories];
+    const sorted = [...filteredCategories];
     sorted.sort((a, b) => {
       let comparison = 0;
       switch (sortField) {
@@ -53,7 +69,7 @@ export function BudgetCategoryList({
       return sortDirection === 'asc' ? comparison : -comparison;
     });
     return sorted;
-  }, [expenseCategories, sortField, sortDirection]);
+  }, [filteredCategories, sortField, sortDirection]);
 
   const budgetCategoryMap = useMemo(() => {
     const map = new Map<string, BudgetCategory>();
@@ -98,7 +114,25 @@ export function BudgetCategoryList({
         <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
           {t('categoryList.title')}
         </h2>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <select
+            value={selectedBucket ?? ''}
+            onChange={(e) =>
+              onSelectBucket(
+                e.target.value ? (e.target.value as BudgetBucket | 'UNCLASSIFIED') : null,
+              )
+            }
+            className="text-sm border border-gray-300 dark:border-gray-600 rounded-md px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            aria-label={t('bucketSummary.filterByBucket')}
+          >
+            <option value="">{t('bucketSummary.allBuckets')}</option>
+            <option value="NEEDS">{t('fourBuckets.NEEDS')}</option>
+            <option value="WANTS">{t('fourBuckets.WANTS')}</option>
+            <option value="SAVINGS_INVESTMENTS">{t('fourBuckets.SAVINGS_INVESTMENTS')}</option>
+            <option value="DEBT_SERVICING">{t('fourBuckets.DEBT_SERVICING')}</option>
+            <option value="UNCLASSIFIED">{t('fourBuckets.UNCLASSIFIED')}</option>
+          </select>
+
           <span className="text-sm text-gray-500 dark:text-gray-400">{t('categoryList.sort')}</span>
           <select
             value={sortField}
