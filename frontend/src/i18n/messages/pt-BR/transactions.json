@@ -246,7 +246,8 @@
       "tagKeyOp": "Condição",
       "tagKeyValue": "Valor",
       "currency": "Moeda",
-      "hasAttachments": "Anexos"
+      "hasAttachments": "Anexos",
+      "paymentMethods": "Payment Methods"
     },
     "hasAttachmentsOptions": {
       "any": "Qualquer",
@@ -262,7 +263,8 @@
       "amountMin": "Mín",
       "amountMax": "Máx",
       "search": "Pesquisar beneficiário, categoria, valor, etiqueta, descrição, referência #...",
-      "tagKeyValue": "ex.: usa"
+      "tagKeyValue": "ex.: usa",
+      "paymentMethods": "All payment methods"
     },
     "tagKeyNone": "Qualquer (sem filtro de chave)",
     "tagKeyOps": {
@@ -286,7 +288,8 @@
       "removeCurrency": "Remover o filtro de moeda {name}",
       "hasAttachments": "Com anexos",
       "noAttachments": "Sem anexos",
-      "removeAttachments": "Remover filtro de anexos"
+      "removeAttachments": "Remover filtro de anexos",
+      "removePaymentMethod": "Remove {name} filter"
     },
     "bulkUpdate": "Atualização em Massa",
     "cancelBulk": "Cancelar Massa",
@@ -312,6 +315,16 @@
       "thisFiscalYear": "This financial year (Apr-Mar)",
       "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "Personalizado"
+    },
+    "paymentMethodOptions": {
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
     }
   },
   "bulk": {
@@ -375,7 +388,10 @@
       "transferAmountWithCurrency": "Valor da Transferência ({currency})",
       "amountReceived": "Valor Recebido ({currency})",
       "payeeOptional": "Beneficiário (Opcional)",
-      "categoryOptional": "Categoria (opcional)"
+      "categoryOptional": "Categoria (opcional)",
+      "paymentMethod": "Payment Method",
+      "upiVpa": "UPI ID / VPA",
+      "upiReference": "UPI Reference / RRN"
     },
     "placeholders": {
       "selectAccount": "Selecionar conta...",
@@ -385,7 +401,9 @@
       "referenceNumber": "N.º cheque, n.º confirmação...",
       "optionalDescription": "Descrição opcional...",
       "selectTags": "Selecionar etiquetas...",
-      "createNewTag": "Criar nova etiqueta..."
+      "createNewTag": "Criar nova etiqueta...",
+      "upiVpa": "e.g. name@okhdfcbank",
+      "upiReference": "12-digit reference number"
     },
     "splitSection": {
       "title": "Dividir Transação",
@@ -470,7 +488,18 @@
       },
       "feeCaption": "Inclui uma taxa de transação no exterior de {percent}% ({fee})."
     },
-    "jointSplitDisabled": "Transações divididas em uma conta compartilhada só podem ser gerenciadas pelo proprietário"
+    "jointSplitDisabled": "Transações divididas em uma conta compartilhada só podem ser gerenciadas pelo proprietário",
+    "paymentMethodOptions": {
+      "none": "None",
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
+    }
   },
   "splitEditor": {
     "header": "Detalhes das Divisões",

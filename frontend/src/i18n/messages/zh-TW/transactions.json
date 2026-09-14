@@ -246,7 +246,8 @@
       "tagKeyOp": "條件",
       "tagKeyValue": "值",
       "currency": "幣別",
-      "hasAttachments": "附件"
+      "hasAttachments": "附件",
+      "paymentMethods": "Payment Methods"
     },
     "hasAttachmentsOptions": {
       "any": "任何",
@@ -262,7 +263,8 @@
       "amountMin": "最小",
       "amountMax": "最大",
       "search": "搜尋收款人、類別、金額、標籤、描述、參考號碼...",
-      "tagKeyValue": "例如 usa"
+      "tagKeyValue": "例如 usa",
+      "paymentMethods": "All payment methods"
     },
     "tagKeyNone": "任意（無鍵篩選）",
     "tagKeyOps": {
@@ -286,7 +288,8 @@
       "removeCurrency": "移除 {name} 幣別篩選",
       "hasAttachments": "有附件",
       "noAttachments": "無附件",
-      "removeAttachments": "移除附件篩選"
+      "removeAttachments": "移除附件篩選",
+      "removePaymentMethod": "Remove {name} filter"
     },
     "bulkUpdate": "批次更新",
     "cancelBulk": "取消批次",
@@ -312,6 +315,16 @@
       "thisFiscalYear": "This financial year (Apr-Mar)",
       "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "自訂"
+    },
+    "paymentMethodOptions": {
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
     }
   },
   "bulk": {
@@ -375,7 +388,10 @@
       "transferAmountWithCurrency": "轉帳金額（{currency}）",
       "amountReceived": "收到金額（{currency}）",
       "payeeOptional": "收款人（選填）",
-      "categoryOptional": "類別（選填）"
+      "categoryOptional": "類別（選填）",
+      "paymentMethod": "Payment Method",
+      "upiVpa": "UPI ID / VPA",
+      "upiReference": "UPI Reference / RRN"
     },
     "placeholders": {
       "selectAccount": "選擇科目...",
@@ -385,7 +401,9 @@
       "referenceNumber": "支票號碼、確認號碼...",
       "optionalDescription": "選填描述...",
       "selectTags": "選擇標籤...",
-      "createNewTag": "建立新標籤..."
+      "createNewTag": "建立新標籤...",
+      "upiVpa": "e.g. name@okhdfcbank",
+      "upiReference": "12-digit reference number"
     },
     "splitSection": {
       "title": "分割交易",
@@ -470,7 +488,18 @@
       },
       "feeCaption": "包含 {percent}% 境外交易手續費（{fee}）。"
     },
-    "jointSplitDisabled": "共享帳戶中的分割交易只能由擁有者管理"
+    "jointSplitDisabled": "共享帳戶中的分割交易只能由擁有者管理",
+    "paymentMethodOptions": {
+      "none": "None",
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
+    }
   },
   "splitEditor": {
     "header": "分割詳情",

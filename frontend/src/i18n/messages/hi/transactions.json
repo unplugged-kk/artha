@@ -246,7 +246,8 @@
       "tagKeyOp": "शर्त",
       "tagKeyValue": "मान",
       "currency": "मुद्रा",
-      "hasAttachments": "अटैचमेंट"
+      "hasAttachments": "अटैचमेंट",
+      "paymentMethods": "Payment Methods"
     },
     "hasAttachmentsOptions": {
       "any": "कोई भी",
@@ -262,7 +263,8 @@
       "amountMin": "न्यूनतम",
       "amountMax": "अधिकतम",
       "search": "भुगतानकर्ता, श्रेणी, राशि, टैग, विवरण, संदर्भ # खोजें...",
-      "tagKeyValue": "जैसे usa"
+      "tagKeyValue": "जैसे usa",
+      "paymentMethods": "All payment methods"
     },
     "tagKeyNone": "कोई भी (कुंजी फ़िल्टर नहीं)",
     "tagKeyOps": {
@@ -286,7 +288,8 @@
       "removeCurrency": "{name} मुद्रा फ़िल्टर हटाएँ",
       "hasAttachments": "अटैचमेंट हैं",
       "noAttachments": "कोई अटैचमेंट नहीं",
-      "removeAttachments": "अटैचमेंट फ़िल्टर हटाएं"
+      "removeAttachments": "अटैचमेंट फ़िल्टर हटाएं",
+      "removePaymentMethod": "Remove {name} filter"
     },
     "bulkUpdate": "बल्क अपडेट",
     "cancelBulk": "बल्क रद्द करें",
@@ -312,6 +315,16 @@
       "thisFiscalYear": "This financial year (Apr-Mar)",
       "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "कस्टम"
+    },
+    "paymentMethodOptions": {
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
     }
   },
   "bulk": {
@@ -375,7 +388,10 @@
       "transferAmountWithCurrency": "ट्रांसफर राशि ({currency})",
       "amountReceived": "प्राप्त राशि ({currency})",
       "payeeOptional": "भुगतानकर्ता (वैकल्पिक)",
-      "categoryOptional": "श्रेणी (वैकल्पिक)"
+      "categoryOptional": "श्रेणी (वैकल्पिक)",
+      "paymentMethod": "Payment Method",
+      "upiVpa": "UPI ID / VPA",
+      "upiReference": "UPI Reference / RRN"
     },
     "placeholders": {
       "selectAccount": "खाता चुनें...",
@@ -385,7 +401,9 @@
       "referenceNumber": "चेक #, पुष्टि #...",
       "optionalDescription": "वैकल्पिक विवरण...",
       "selectTags": "टैग चुनें...",
-      "createNewTag": "नया टैग बनाएं..."
+      "createNewTag": "नया टैग बनाएं...",
+      "upiVpa": "e.g. name@okhdfcbank",
+      "upiReference": "12-digit reference number"
     },
     "splitSection": {
       "title": "लेन-देन विभाजित करें",
@@ -470,7 +488,18 @@
       },
       "feeCaption": "इसमें {percent}% विदेशी लेनदेन शुल्क ({fee}) शामिल है।"
     },
-    "jointSplitDisabled": "साझा खाते में विभाजित लेनदेन केवल स्वामी ही प्रबंधित कर सकता है"
+    "jointSplitDisabled": "साझा खाते में विभाजित लेनदेन केवल स्वामी ही प्रबंधित कर सकता है",
+    "paymentMethodOptions": {
+      "none": "None",
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
+    }
   },
   "splitEditor": {
     "header": "विभाजन विवरण",

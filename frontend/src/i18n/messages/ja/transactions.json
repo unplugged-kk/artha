@@ -246,7 +246,8 @@
       "tagKeyOp": "条件",
       "tagKeyValue": "値",
       "currency": "通貨",
-      "hasAttachments": "添付ファイル"
+      "hasAttachments": "添付ファイル",
+      "paymentMethods": "Payment Methods"
     },
     "hasAttachmentsOptions": {
       "any": "すべて",
@@ -262,7 +263,8 @@
       "amountMin": "最小",
       "amountMax": "最大",
       "search": "支払先、カテゴリ、金額、タグ、説明、参照番号で検索...",
-      "tagKeyValue": "例: usa"
+      "tagKeyValue": "例: usa",
+      "paymentMethods": "All payment methods"
     },
     "tagKeyNone": "すべて（キーフィルターなし）",
     "tagKeyOps": {
@@ -286,7 +288,8 @@
       "removeCurrency": "{name} の通貨フィルターを削除",
       "hasAttachments": "添付ファイルあり",
       "noAttachments": "添付ファイルなし",
-      "removeAttachments": "添付ファイルフィルターを削除"
+      "removeAttachments": "添付ファイルフィルターを削除",
+      "removePaymentMethod": "Remove {name} filter"
     },
     "bulkUpdate": "一括更新",
     "cancelBulk": "一括操作をキャンセル",
@@ -312,6 +315,16 @@
       "thisFiscalYear": "This financial year (Apr-Mar)",
       "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "カスタム"
+    },
+    "paymentMethodOptions": {
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
     }
   },
   "bulk": {
@@ -375,7 +388,10 @@
       "transferAmountWithCurrency": "振替金額（{currency}）",
       "amountReceived": "受取金額（{currency}）",
       "payeeOptional": "支払先（任意）",
-      "categoryOptional": "カテゴリ（任意）"
+      "categoryOptional": "カテゴリ（任意）",
+      "paymentMethod": "Payment Method",
+      "upiVpa": "UPI ID / VPA",
+      "upiReference": "UPI Reference / RRN"
     },
     "placeholders": {
       "selectAccount": "口座を選択...",
@@ -385,7 +401,9 @@
       "referenceNumber": "小切手番号、確認番号...",
       "optionalDescription": "任意の説明...",
       "selectTags": "タグを選択...",
-      "createNewTag": "新しいタグを作成..."
+      "createNewTag": "新しいタグを作成...",
+      "upiVpa": "e.g. name@okhdfcbank",
+      "upiReference": "12-digit reference number"
     },
     "splitSection": {
       "title": "取引を分割",
@@ -470,7 +488,18 @@
       },
       "feeCaption": "{percent}% の外貨取引手数料（{fee}）が含まれます。"
     },
-    "jointSplitDisabled": "共有口座の分割取引を管理できるのは所有者のみです"
+    "jointSplitDisabled": "共有口座の分割取引を管理できるのは所有者のみです",
+    "paymentMethodOptions": {
+      "none": "None",
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
+    }
   },
   "splitEditor": {
     "header": "分割の詳細",

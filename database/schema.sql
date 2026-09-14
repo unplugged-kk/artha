@@ -202,12 +202,14 @@ CREATE TABLE categories (
     color VARCHAR(7), -- hex color
     is_income BOOLEAN DEFAULT false,
     is_system BOOLEAN DEFAULT false, -- system categories can't be deleted
+    budget_bucket VARCHAR(32) CHECK (budget_bucket IS NULL OR budget_bucket IN ('NEEDS', 'WANTS', 'SAVINGS_INVESTMENTS', 'DEBT_SERVICING')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id, name, parent_id)
 );
 
 CREATE INDEX idx_categories_user ON categories(user_id);
 CREATE INDEX idx_categories_parent ON categories(parent_id);
+CREATE INDEX idx_categories_budget_bucket ON categories(budget_bucket) WHERE budget_bucket IS NOT NULL;
 CREATE INDEX idx_categories_name_trgm ON categories USING gin (name gin_trgm_ops);
 
 -- Payees
@@ -1776,6 +1778,7 @@ CREATE TABLE budget_categories (
     transfer_account_id UUID REFERENCES accounts(id) ON DELETE SET NULL,
     is_transfer BOOLEAN DEFAULT false,
     category_group VARCHAR(20),
+    budget_bucket VARCHAR(32) CHECK (budget_bucket IS NULL OR budget_bucket IN ('NEEDS', 'WANTS', 'SAVINGS_INVESTMENTS', 'DEBT_SERVICING')),
     amount NUMERIC(20, 4) NOT NULL,
     is_income BOOLEAN DEFAULT false,
     rollover_type VARCHAR(20) DEFAULT 'NONE',
@@ -1791,6 +1794,8 @@ CREATE TABLE budget_categories (
 
 CREATE INDEX idx_budget_categories_budget ON budget_categories(budget_id);
 CREATE INDEX idx_budget_categories_category ON budget_categories(category_id);
+CREATE INDEX idx_budget_categories_budget_bucket ON budget_categories(budget_bucket)
+    WHERE budget_bucket IS NOT NULL;
 CREATE INDEX idx_budget_categories_transfer_account ON budget_categories(transfer_account_id)
     WHERE transfer_account_id IS NOT NULL;
 CREATE INDEX idx_budget_categories_flex ON budget_categories(budget_id, flex_group)

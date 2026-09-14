@@ -2,12 +2,14 @@ import {
   IsString,
   IsOptional,
   IsBoolean,
+  IsEnum,
   IsUUID,
   MaxLength,
   Matches,
 } from "class-validator";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { SanitizeHtml } from "../../common/decorators/sanitize-html.decorator";
+import { BudgetBucket } from "../constants/budget-bucket.enum";
 
 export class CreateCategoryDto {
   @ApiProperty({ description: "Category name" })
@@ -52,4 +54,12 @@ export class CreateCategoryDto {
   @IsOptional()
   @IsUUID()
   parentId?: string;
+
+  @ApiPropertyOptional({
+    description: "Four-bucket budget taxonomy classification",
+    enum: BudgetBucket,
+  })
+  @IsOptional()
+  @IsEnum(BudgetBucket)
+  budgetBucket?: BudgetBucket | null;
 }

@@ -246,7 +246,8 @@
       "tagKeyOp": "Warunek",
       "tagKeyValue": "Wartość",
       "currency": "Waluta",
-      "hasAttachments": "Załączniki"
+      "hasAttachments": "Załączniki",
+      "paymentMethods": "Payment Methods"
     },
     "hasAttachmentsOptions": {
       "any": "Dowolne",
@@ -262,7 +263,8 @@
       "amountMin": "Min",
       "amountMax": "Maks",
       "search": "Szukaj odbiorcy, kategorii, kwoty, tagu, opisu, nr referencyjnego...",
-      "tagKeyValue": "np. usa"
+      "tagKeyValue": "np. usa",
+      "paymentMethods": "All payment methods"
     },
     "tagKeyNone": "Dowolny (bez filtra klucza)",
     "tagKeyOps": {
@@ -286,7 +288,8 @@
       "removeCurrency": "Usuń filtr waluty {name}",
       "hasAttachments": "Z załącznikami",
       "noAttachments": "Bez załączników",
-      "removeAttachments": "Usuń filtr załączników"
+      "removeAttachments": "Usuń filtr załączników",
+      "removePaymentMethod": "Remove {name} filter"
     },
     "bulkUpdate": "Aktualizacja zbiorcza",
     "cancelBulk": "Anuluj zbiorczą",
@@ -312,6 +315,16 @@
       "thisFiscalYear": "This financial year (Apr-Mar)",
       "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "Niestandardowy"
+    },
+    "paymentMethodOptions": {
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
     }
   },
   "bulk": {
@@ -375,7 +388,10 @@
       "transferAmountWithCurrency": "Kwota przelewu ({currency})",
       "amountReceived": "Kwota otrzymana ({currency})",
       "payeeOptional": "Odbiorca (opcjonalnie)",
-      "categoryOptional": "Kategoria (opcjonalnie)"
+      "categoryOptional": "Kategoria (opcjonalnie)",
+      "paymentMethod": "Payment Method",
+      "upiVpa": "UPI ID / VPA",
+      "upiReference": "UPI Reference / RRN"
     },
     "placeholders": {
       "selectAccount": "Wybierz konto...",
@@ -385,7 +401,9 @@
       "referenceNumber": "Nr czeku, nr potwierdzenia...",
       "optionalDescription": "Opcjonalny opis...",
       "selectTags": "Wybierz tagi...",
-      "createNewTag": "Utwórz nowy tag..."
+      "createNewTag": "Utwórz nowy tag...",
+      "upiVpa": "e.g. name@okhdfcbank",
+      "upiReference": "12-digit reference number"
     },
     "splitSection": {
       "title": "Podziel transakcję",
@@ -470,7 +488,18 @@
       },
       "feeCaption": "Zawiera opłatę za transakcję zagraniczną {percent}% ({fee})."
     },
-    "jointSplitDisabled": "Transakcjami podzielonymi na wspólnym koncie może zarządzać tylko właściciel"
+    "jointSplitDisabled": "Transakcjami podzielonymi na wspólnym koncie może zarządzać tylko właściciel",
+    "paymentMethodOptions": {
+      "none": "None",
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
+    }
   },
   "splitEditor": {
     "header": "Szczegóły podziału",

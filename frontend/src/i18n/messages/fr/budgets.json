@@ -527,5 +527,31 @@
   "categoryValidation": {
     "amountMin": "Le montant doit être égal ou supérieur à 0",
     "mustBeNumber": "Doit être un nombre"
+  },
+  "tolerance": {
+    "underBudget": "Under budget",
+    "onTarget": "On target",
+    "withinTolerance": "Within 5% tolerance",
+    "overTolerance": "Over tolerance",
+    "notApplicable": "N/A"
+  },
+  "fourBuckets": {
+    "NEEDS": "Needs",
+    "WANTS": "Wants",
+    "SAVINGS_INVESTMENTS": "Savings / Investments",
+    "DEBT_SERVICING": "Debt Servicing",
+    "UNCLASSIFIED": "Unclassified"
+  },
+  "bucketSummary": {
+    "title": "Four-Bucket Overview",
+    "description": "Spending categorized into Needs, Wants, Savings/Investments, and Debt Servicing",
+    "empty": "No category data available for four-bucket breakdown.",
+    "categoriesCount": "{count, plural, =1 {1 category} other {# categories}}",
+    "variance": "Variance: {variance}",
+    "budgeted": "Budgeted: {amount}",
+    "spent": "Spent: {amount}",
+    "remaining": "Remaining: {amount}",
+    "filterByBucket": "Filter by Bucket",
+    "allBuckets": "All Buckets"
   }
 }

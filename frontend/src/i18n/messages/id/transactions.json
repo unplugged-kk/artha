@@ -246,7 +246,8 @@
       "tagKeyOp": "Kondisi",
       "tagKeyValue": "Nilai",
       "currency": "Mata uang",
-      "hasAttachments": "Lampiran"
+      "hasAttachments": "Lampiran",
+      "paymentMethods": "Payment Methods"
     },
     "hasAttachmentsOptions": {
       "any": "Semua",
@@ -262,7 +263,8 @@
       "amountMin": "Min",
       "amountMax": "Maks",
       "search": "Cari penerima, kategori, jumlah, tag, keterangan, referensi #...",
-      "tagKeyValue": "mis. usa"
+      "tagKeyValue": "mis. usa",
+      "paymentMethods": "All payment methods"
     },
     "tagKeyNone": "Semua (tanpa filter kunci)",
     "tagKeyOps": {
@@ -286,7 +288,8 @@
       "removeCurrency": "Hapus filter mata uang {name}",
       "hasAttachments": "Ada lampiran",
       "noAttachments": "Tanpa lampiran",
-      "removeAttachments": "Hapus filter lampiran"
+      "removeAttachments": "Hapus filter lampiran",
+      "removePaymentMethod": "Remove {name} filter"
     },
     "bulkUpdate": "Perbarui Massal",
     "cancelBulk": "Batalkan Massal",
@@ -312,6 +315,16 @@
       "thisFiscalYear": "This financial year (Apr-Mar)",
       "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "Kustom"
+    },
+    "paymentMethodOptions": {
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
     }
   },
   "bulk": {
@@ -375,7 +388,10 @@
       "transferAmountWithCurrency": "Jumlah Transfer ({currency})",
       "amountReceived": "Jumlah Diterima ({currency})",
       "payeeOptional": "Penerima (Opsional)",
-      "categoryOptional": "Kategori (Opsional)"
+      "categoryOptional": "Kategori (Opsional)",
+      "paymentMethod": "Payment Method",
+      "upiVpa": "UPI ID / VPA",
+      "upiReference": "UPI Reference / RRN"
     },
     "placeholders": {
       "selectAccount": "Pilih akun...",
@@ -385,7 +401,9 @@
       "referenceNumber": "Nomor cek, nomor konfirmasi #...",
       "optionalDescription": "Keterangan opsional...",
       "selectTags": "Pilih tag...",
-      "createNewTag": "Buat tag baru..."
+      "createNewTag": "Buat tag baru...",
+      "upiVpa": "e.g. name@okhdfcbank",
+      "upiReference": "12-digit reference number"
     },
     "splitSection": {
       "title": "Transaksi Terbagi",
@@ -470,7 +488,18 @@
       },
       "feeCaption": "Termasuk biaya transaksi luar negeri {percent}% ({fee})."
     },
-    "jointSplitDisabled": "Transaksi split di akun bersama hanya dapat dikelola oleh pemilik"
+    "jointSplitDisabled": "Transaksi split di akun bersama hanya dapat dikelola oleh pemilik",
+    "paymentMethodOptions": {
+      "none": "None",
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
+    }
   },
   "splitEditor": {
     "header": "Detail Pembagian",

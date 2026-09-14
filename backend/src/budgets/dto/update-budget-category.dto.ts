@@ -15,6 +15,7 @@ import {
   RolloverType,
   CategoryGroup,
 } from "../entities/budget-category.entity";
+import { BudgetBucket } from "../../categories/entities/category.entity";
 
 export class UpdateBudgetCategoryDto {
   @ApiPropertyOptional({
@@ -24,6 +25,14 @@ export class UpdateBudgetCategoryDto {
   @IsOptional()
   @IsEnum(CategoryGroup)
   categoryGroup?: CategoryGroup | null;
+
+  @ApiPropertyOptional({
+    description: "Four-bucket budget taxonomy classification",
+    enum: BudgetBucket,
+  })
+  @IsOptional()
+  @IsEnum(BudgetBucket)
+  budgetBucket?: BudgetBucket | null;
 
   @ApiPropertyOptional({
     description: "Monthly target amount (or percentage if income-linked)",

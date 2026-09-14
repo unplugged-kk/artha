@@ -1,3 +1,9 @@
+export type BudgetBucket =
+  | 'NEEDS'
+  | 'WANTS'
+  | 'SAVINGS_INVESTMENTS'
+  | 'DEBT_SERVICING';
+
 export interface Category {
   id: string;
   userId: string;
@@ -8,6 +14,7 @@ export interface Category {
   description: string | null;
   icon: string | null;
   color: string | null;
+  budgetBucket?: BudgetBucket | null;
   /**
    * The colour and icon actually shown: this category's own, or the nearest
    * ancestor's when it sets none. Resolved server-side in one walk up the

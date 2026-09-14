@@ -246,7 +246,8 @@
       "tagKeyOp": "조건",
       "tagKeyValue": "값",
       "currency": "통화",
-      "hasAttachments": "첨부 파일"
+      "hasAttachments": "첨부 파일",
+      "paymentMethods": "Payment Methods"
     },
     "hasAttachmentsOptions": {
       "any": "전체",
@@ -262,7 +263,8 @@
       "amountMin": "최소",
       "amountMax": "최대",
       "search": "수취인, 카테고리, 금액, 태그, 설명, 참조 번호 검색...",
-      "tagKeyValue": "예: usa"
+      "tagKeyValue": "예: usa",
+      "paymentMethods": "All payment methods"
     },
     "tagKeyNone": "모두(키 필터 없음)",
     "tagKeyOps": {
@@ -286,7 +288,8 @@
       "removeCurrency": "{name} 통화 필터 제거",
       "hasAttachments": "첨부 파일 있음",
       "noAttachments": "첨부 파일 없음",
-      "removeAttachments": "첨부 파일 필터 제거"
+      "removeAttachments": "첨부 파일 필터 제거",
+      "removePaymentMethod": "Remove {name} filter"
     },
     "bulkUpdate": "일괄 업데이트",
     "cancelBulk": "일괄 취소",
@@ -312,6 +315,16 @@
       "thisFiscalYear": "This financial year (Apr-Mar)",
       "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "사용자 정의"
+    },
+    "paymentMethodOptions": {
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
     }
   },
   "bulk": {
@@ -375,7 +388,10 @@
       "transferAmountWithCurrency": "이체 금액 ({currency})",
       "amountReceived": "수령 금액 ({currency})",
       "payeeOptional": "수취인 (선택 사항)",
-      "categoryOptional": "카테고리(선택사항)"
+      "categoryOptional": "카테고리(선택사항)",
+      "paymentMethod": "Payment Method",
+      "upiVpa": "UPI ID / VPA",
+      "upiReference": "UPI Reference / RRN"
     },
     "placeholders": {
       "selectAccount": "계정 선택...",
@@ -385,7 +401,9 @@
       "referenceNumber": "수표 번호, 확인 번호...",
       "optionalDescription": "선택적 설명...",
       "selectTags": "태그 선택...",
-      "createNewTag": "새 태그 만들기..."
+      "createNewTag": "새 태그 만들기...",
+      "upiVpa": "e.g. name@okhdfcbank",
+      "upiReference": "12-digit reference number"
     },
     "splitSection": {
       "title": "분할 거래",
@@ -470,7 +488,18 @@
       },
       "feeCaption": "{percent}% 해외 거래 수수료({fee})가 포함됩니다."
     },
-    "jointSplitDisabled": "공유 계좌의 분할 거래는 소유자만 관리할 수 있습니다"
+    "jointSplitDisabled": "공유 계좌의 분할 거래는 소유자만 관리할 수 있습니다",
+    "paymentMethodOptions": {
+      "none": "None",
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
+    }
   },
   "splitEditor": {
     "header": "분할 세부 정보",

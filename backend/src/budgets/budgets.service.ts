@@ -16,7 +16,13 @@ import {
 import { NotificationDispatchService } from "../notifications/notification-dispatch.service";
 import { Transaction } from "../transactions/entities/transaction.entity";
 import { TransactionSplit } from "../transactions/entities/transaction-split.entity";
-import { Category } from "../categories/entities/category.entity";
+import { Category, BudgetBucket } from "../categories/entities/category.entity";
+import { BudgetToleranceStatus } from "./constants/budget-tolerance.enum";
+import { calculateBudgetTolerance } from "./utils/budget-tolerance.util";
+import {
+  computeBucketSummaries,
+  BudgetBucketSummaryItem,
+} from "./utils/budget-bucket-summary.util";
 import { ScheduledOccurrenceService } from "../scheduled-transactions/scheduled-occurrence.service";
 import { CreateBudgetDto } from "./dto/create-budget.dto";
 import { UpdateBudgetDto } from "./dto/update-budget.dto";
@@ -89,6 +95,9 @@ export class BudgetsService {
           percentUsed: number;
           isIncome: boolean;
           percentage: number | null;
+          budgetBucket: BudgetBucket | null;
+          varianceRatio: number | null;
+          toleranceStatus: BudgetToleranceStatus;
         }>
       >;
       timestamp: number;
@@ -307,6 +316,8 @@ export class BudgetsService {
 
     if (dto.categoryGroup !== undefined)
       budgetCategory.categoryGroup = dto.categoryGroup;
+    if (dto.budgetBucket !== undefined)
+      budgetCategory.budgetBucket = dto.budgetBucket;
     if (dto.amount !== undefined) budgetCategory.amount = dto.amount;
     if (dto.isIncome !== undefined) budgetCategory.isIncome = dto.isIncome;
     if (dto.rolloverType !== undefined)
@@ -418,7 +429,11 @@ export class BudgetsService {
       percentUsed: number;
       isIncome: boolean;
       percentage: number | null;
+      budgetBucket: BudgetBucket | null;
+      varianceRatio: number | null;
+      toleranceStatus: BudgetToleranceStatus;
     }>;
+    bucketSummary: BudgetBucketSummaryItem[];
   }> {
     const budget = await this.findOne(userId, budgetId);
 
@@ -448,6 +463,8 @@ export class BudgetsService {
       actualIncome = totalIncome;
     }
 
+    const bucketSummary = computeBucketSummaries(categoryBreakdown);
+
     return {
       budget,
       totalBudgeted,
@@ -458,6 +475,7 @@ export class BudgetsService {
       incomeLinked: budget.incomeLinked,
       actualIncome,
       categoryBreakdown,
+      bucketSummary,
     };
   }
 
@@ -1096,6 +1114,9 @@ export class BudgetsService {
       percentUsed: number;
       isIncome: boolean;
       percentage: number | null;
+      budgetBucket: BudgetBucket | null;
+      varianceRatio: number | null;
+      toleranceStatus: BudgetToleranceStatus;
     }>
   > {
     const budgetCategories = budget.categories || [];
@@ -1148,6 +1169,19 @@ export class BudgetsService {
       const percentUsed =
         budgeted > 0 ? Math.round((spent / budgeted) * 10000) / 100 : 0;
 
+      const resolvedBucket: BudgetBucket | null =
+        bc.budgetBucket ??
+        bc.category?.budgetBucket ??
+        bc.category?.parent?.budgetBucket ??
+        null;
+
+      const { varianceRatio, toleranceStatus } = calculateBudgetTolerance(
+        budgeted,
+        spent,
+        bc.isIncome,
+        resolvedBucket,
+      );
+
       return {
         budgetCategoryId: bc.id,
         categoryId: bc.categoryId,
@@ -1158,6 +1192,9 @@ export class BudgetsService {
         percentUsed,
         isIncome: bc.isIncome,
         percentage,
+        budgetBucket: resolvedBucket,
+        varianceRatio,
+        toleranceStatus,
       };
     });
   }
