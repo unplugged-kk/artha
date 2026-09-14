@@ -4,7 +4,7 @@ import {
   InvestmentAction,
   InvestmentTransaction,
 } from "../securities/entities/investment-transaction.entity";
-import { AccountSubType } from "../accounts/entities/account.entity";
+import { Account, AccountSubType } from "../accounts/entities/account.entity";
 import { TransactionStatus } from "../transactions/entities/transaction.entity";
 
 import { Security } from "../securities/entities/security.entity";
@@ -83,6 +83,7 @@ describe("ImportInvestmentProcessorService", () => {
       affectedAccountIds: new Set(),
       importResult: makeImportResult(),
       transferDupCounts: new Map(),
+      contentDupCounts: new Map(),
       ...overrides,
     };
   };
@@ -2138,10 +2139,15 @@ describe("ImportInvestmentProcessorService", () => {
         return qb;
       });
 
-      managerOf(ctx).findOne.mockResolvedValue({
-        id: "acc-chequing",
-        currencyCode: "USD",
-        currentBalance: 0,
+      managerOf(ctx).findOne.mockImplementation((entity: any) => {
+        if (entity === Account) {
+          return Promise.resolve({
+            id: "acc-chequing",
+            currencyCode: "USD",
+            currentBalance: 0,
+          });
+        }
+        return Promise.resolve(null);
       });
 
       const qifTx = {
@@ -2386,6 +2392,77 @@ describe("ImportInvestmentProcessorService", () => {
       const created = managerOf(ctx).create.mock.calls[0][1];
       expect(created.amount).toBe(500);
       expect(created.status).toBe(TransactionStatus.VOID);
+    });
+  });
+
+  describe("Investment Import Identity & Idempotency", () => {
+    it("should compute deterministic importHash and set sourceTransactionId on created InvestmentTransaction", async () => {
+      const securityMap = new Map<string, string | null>();
+      securityMap.set("AAPL", "sec-aapl");
+      const ctx = makeContext({ securityMap });
+
+      const qifTx = {
+        action: "Buy",
+        date: "2025-01-15",
+        security: "AAPL",
+        quantity: 10,
+        price: 150,
+        amount: 1500,
+        memo: "Buy 10 AAPL",
+        fitid: "INV-FITID-999",
+      };
+
+      await service.processTransaction(ctx, qifTx);
+
+      expect(ctx.importResult.imported).toBe(1);
+      expect(ctx.importResult.skipped).toBe(0);
+
+      const savedInvTx = managerOf(ctx).save.mock.calls.find(
+        (call: any) => call[0] instanceof InvestmentTransaction,
+      );
+      expect(savedInvTx).toBeDefined();
+      expect(savedInvTx[0].importHash).toBeDefined();
+      expect(typeof savedInvTx[0].importHash).toBe("string");
+      expect(savedInvTx[0].importHash).toHaveLength(64);
+      expect(savedInvTx[0].sourceTransactionId).toBe("INV-FITID-999");
+    });
+
+    it("should skip investment transaction when importHash already exists in the database", async () => {
+      const securityMap = new Map<string, string | null>();
+      securityMap.set("AAPL", "sec-aapl");
+      const ctx = makeContext({ securityMap });
+
+      const qifTx = {
+        action: "Buy",
+        date: "2025-01-15",
+        security: "AAPL",
+        quantity: 10,
+        price: 150,
+        amount: 1500,
+        memo: "Buy 10 AAPL",
+        fitid: "INV-FITID-999",
+      };
+
+      managerOf(ctx).findOne.mockImplementation((entity: any, opts: any) => {
+        if (entity === InvestmentTransaction && opts?.where?.importHash) {
+          return Promise.resolve({ id: "existing-inv-tx" });
+        }
+        if (entity === Account) {
+          return Promise.resolve({ id: accountId, currentBalance: 5000 });
+        }
+        return Promise.resolve(null);
+      });
+
+      await service.processTransaction(ctx, qifTx);
+
+      expect(ctx.importResult.imported).toBe(0);
+      expect(ctx.importResult.skipped).toBe(1);
+
+      // Verify no InvestmentTransaction was saved
+      const savedInvTx = managerOf(ctx).save.mock.calls.find(
+        (call: any) => call[0] instanceof InvestmentTransaction,
+      );
+      expect(savedInvTx).toBeUndefined();
     });
   });
 });

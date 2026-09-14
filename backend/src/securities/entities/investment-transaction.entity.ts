@@ -229,6 +229,22 @@ export class InvestmentTransaction {
   })
   status: TransactionStatus;
 
+  @Column({
+    type: "varchar",
+    name: "import_hash",
+    length: 64,
+    nullable: true,
+  })
+  importHash?: string | null;
+
+  @Column({
+    type: "varchar",
+    name: "source_transaction_id",
+    length: 255,
+    nullable: true,
+  })
+  sourceTransactionId?: string | null;
+
   @ManyToOne(() => Account)
   @JoinColumn({ name: "account_id" })
   account: Account;

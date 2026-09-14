@@ -5,6 +5,7 @@ import { InvestmentTransaction } from "../../../securities/entities/investment-t
 import { Transaction } from "../../../transactions/entities/transaction.entity";
 import { roundMoney } from "../../../common/round.util";
 import { formatInvestmentCashPayeeName } from "../../../securities/investment-cash-payee.util";
+import { computeInvestmentImportIdentity } from "../../import-identity.util";
 import {
   MappedInvestmentTransaction,
   MappedSecurity,
@@ -282,6 +283,20 @@ export async function writeInvestments(
         });
       }
 
+      const investmentSourceId =
+        transaction.handle !== null ? String(transaction.handle) : null;
+      const investmentIdentity = computeInvestmentImportIdentity({
+        accountId,
+        date: transaction.transactionDate,
+        amount: Number(transaction.totalAmount) || 0,
+        action: transaction.action,
+        securitySymbol: symbol,
+        quantity: transaction.quantity,
+        price: transaction.price,
+        memo: description,
+        sourceId: investmentSourceId,
+      });
+
       investmentRows.push({
         id: transaction.id,
         userId,
@@ -305,6 +320,8 @@ export async function writeInvestments(
         // claimed not to have moved. Rows with no cash leg (splits, share
         // transfers) keep their status here too instead of dropping it.
         status: transaction.status,
+        importHash: investmentIdentity.hash,
+        sourceTransactionId: investmentIdentity.sourceId,
         // Set by the back-patch pass: the column is a self-referencing FK, so
         // the partner leg may not exist yet.
         linkedTransactionId: null,

@@ -12,6 +12,10 @@ import { PayeeAlias } from "../payees/entities/payee-alias.entity";
 import { TransactionTag } from "../tags/entities/transaction-tag.entity";
 import { TransactionSplitTag } from "../tags/entities/transaction-split-tag.entity";
 import { ImportContext, updateAccountBalance } from "./import-context";
+import {
+  computeTransactionImportIdentity,
+  getContentSignatureKey,
+} from "./import-identity.util";
 import { normalizePayeeName } from "../payees/payee-normalize.util";
 import { deletionBalanceEffect } from "../common/deletion-balance.util";
 import { tr } from "../i18n/translate";
@@ -30,6 +34,42 @@ export class ImportRegularProcessorService {
     // Check for pending cross-currency transfers to update
     if (await this.matchPendingTransfer(ctx, qifTx)) {
       ctx.importResult.imported++;
+      return;
+    }
+
+    // Deterministic import identity and idempotency check
+    const contentKey = getContentSignatureKey({
+      date: qifTx.date,
+      amount: qifTx.amount,
+      payee: qifTx.payee,
+      memo: qifTx.memo,
+      sourceId: qifTx.fitid || qifTx.number,
+      isTransfer: qifTx.isTransfer,
+    });
+    const seenCount = (ctx.contentDupCounts.get(contentKey) || 0) + 1;
+    ctx.contentDupCounts.set(contentKey, seenCount);
+
+    const identity = computeTransactionImportIdentity({
+      accountId: ctx.accountId,
+      date: qifTx.date,
+      amount: qifTx.amount,
+      payee: qifTx.payee,
+      memo: qifTx.memo,
+      sourceId: qifTx.fitid || qifTx.number,
+      isTransfer: qifTx.isTransfer,
+      ordinal: seenCount,
+    });
+
+    const existingTx = await ctx.manager.findOne(Transaction, {
+      where: {
+        accountId: ctx.accountId,
+        importHash: identity.hash,
+      },
+      select: ["id"],
+    });
+
+    if (existingTx) {
+      ctx.importResult.skipped++;
       return;
     }
 
@@ -75,6 +115,8 @@ export class ImportRegularProcessorService {
       isSplit,
       isTransfer,
       createdAt: baseTime,
+      importHash: identity.hash,
+      sourceTransactionId: identity.sourceId,
     });
 
     const savedTx = await ctx.manager.save(transaction);

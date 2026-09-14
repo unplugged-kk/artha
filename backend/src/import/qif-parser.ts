@@ -54,6 +54,8 @@ export interface QifTransaction {
   isTransfer: boolean;
   transferAccount: string;
   splits: QifSplit[];
+  /** Upstream Financial Institution Transaction ID (from OFX STMTTRN FITID) */
+  fitid?: string;
   // Investment-specific fields
   security: string;
   action: string;

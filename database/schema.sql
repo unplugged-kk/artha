@@ -314,6 +314,8 @@ CREATE TABLE transactions (
     parent_transaction_id UUID REFERENCES transactions(id) ON DELETE CASCADE, -- for split children
     is_transfer BOOLEAN DEFAULT false, -- indicates this is part of an account-to-account transfer
     linked_transaction_id UUID REFERENCES transactions(id) ON DELETE SET NULL, -- links the paired transfer transaction
+    import_hash VARCHAR(64), -- SHA-256 hex digest of canonical import representation for idempotency
+    source_transaction_id VARCHAR(255), -- upstream/source transaction identifier (e.g. OFX FITID, bank ref)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -326,6 +328,8 @@ CREATE INDEX idx_transactions_category ON transactions(category_id);
 CREATE INDEX idx_transactions_parent ON transactions(parent_transaction_id);
 CREATE INDEX idx_transactions_linked ON transactions(linked_transaction_id);
 CREATE INDEX idx_transactions_original_currency ON transactions(original_currency_code);
+CREATE UNIQUE INDEX idx_transactions_account_import_hash ON transactions(account_id, import_hash) WHERE import_hash IS NOT NULL;
+CREATE INDEX idx_transactions_source_id ON transactions(account_id, source_transaction_id) WHERE source_transaction_id IS NOT NULL;
 -- Trigram indexes accelerate the register/report search (ILIKE '%term%')
 CREATE INDEX idx_transactions_payee_name_trgm ON transactions USING gin (payee_name gin_trgm_ops);
 CREATE INDEX idx_transactions_description_trgm ON transactions USING gin (description gin_trgm_ops);
@@ -673,8 +677,6 @@ CREATE TABLE watchlists (
 );
 
 CREATE INDEX idx_watchlists_user_sort ON watchlists(user_id, sort_order);
-
-CREATE TRIGGER update_watchlists_updated_at BEFORE UPDATE ON watchlists FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TABLE watchlist_items (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -1042,6 +1044,8 @@ CREATE TABLE investment_transactions (
     exchange_rate NUMERIC(20, 10) NOT NULL DEFAULT 1,
     description TEXT,
     status VARCHAR(20) NOT NULL DEFAULT 'UNRECONCILED', -- 'UNRECONCILED', 'CLEARED', 'RECONCILED', 'VOID'
+    import_hash VARCHAR(64), -- SHA-256 hex digest of canonical import representation for idempotency
+    source_transaction_id VARCHAR(255), -- upstream/source transaction identifier (e.g. OFX FITID, bank ref)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -1050,6 +1054,8 @@ CREATE INDEX idx_investment_transactions_user ON investment_transactions(user_id
 CREATE INDEX idx_investment_transactions_status ON investment_transactions(status);
 CREATE INDEX idx_investment_transactions_account ON investment_transactions(account_id);
 CREATE INDEX idx_investment_transactions_security ON investment_transactions(security_id);
+CREATE UNIQUE INDEX idx_investment_transactions_account_import_hash ON investment_transactions(account_id, import_hash) WHERE import_hash IS NOT NULL;
+CREATE INDEX idx_investment_transactions_source_id ON investment_transactions(account_id, source_transaction_id) WHERE source_transaction_id IS NOT NULL;
 
 -- scheduled_transaction_postings is declared earlier, so its link to the row a
 -- posting created is constrained here. SET NULL, not CASCADE: deleting the money
@@ -1516,6 +1522,7 @@ CREATE TRIGGER update_trusted_devices_updated_at BEFORE UPDATE ON trusted_device
 CREATE TRIGGER update_refresh_tokens_updated_at BEFORE UPDATE ON refresh_tokens FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_custom_reports_updated_at BEFORE UPDATE ON custom_reports FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_investment_reports_updated_at BEFORE UPDATE ON investment_reports FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_watchlists_updated_at BEFORE UPDATE ON watchlists FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- NOTE: Account balances (current_balance) are managed by application code
 -- (accounts.service.ts, transactions.service.ts, import.service.ts) via updateBalance() calls.

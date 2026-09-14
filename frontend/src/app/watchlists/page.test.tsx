@@ -209,7 +209,7 @@ describe('WatchlistsPage', () => {
       expect(screen.getByRole('button', { name: 'Tech Giants' })).toBeInTheDocument();
     });
 
-    const deleteButton = screen.getByTitle('Delete Watchlist');
+    const deleteButton = await screen.findByTitle('Delete Watchlist');
     fireEvent.click(deleteButton);
 
     await waitFor(() => {
