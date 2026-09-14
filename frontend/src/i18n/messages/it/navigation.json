@@ -33,5 +33,6 @@
     "label": "Cerca transazioni",
     "open": "Apri ricerca",
     "submit": "Cerca"
-  }
+  },
+  "rules": "Rules"
 }

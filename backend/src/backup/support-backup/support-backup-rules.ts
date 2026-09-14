@@ -776,6 +776,18 @@ export const RULES: Record<string, TableRules> = {
     executed_at: keep,
     created_at: keep,
   },
+  transaction_rules: {
+    id: keep,
+    user_id: keep,
+    name: mask,
+    priority: keep,
+    is_active: keep,
+    match_mode: keep,
+    conditions: jsonb("transactionRuleConditions"),
+    actions: jsonb("transactionRuleActions"),
+    created_at: keep,
+    updated_at: keep,
+  },
 };
 
 /**

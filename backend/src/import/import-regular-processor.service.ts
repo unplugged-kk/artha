@@ -21,6 +21,8 @@ import { normalizePayeeName } from "../payees/payee-normalize.util";
 import { matchMerchantReference } from "../payees/merchant-matcher.util";
 import { deletionBalanceEffect } from "../common/deletion-balance.util";
 import { tr } from "../i18n/translate";
+import { TransactionRule } from "../rules/entities/transaction-rule.entity";
+import { evaluateRules } from "../rules/utils/rule-matcher.util";
 
 @Injectable()
 export class ImportRegularProcessorService {
@@ -85,10 +87,48 @@ export class ImportRegularProcessorService {
     const { categoryId, isLoanPaymentTx, transferAccountId } =
       this.resolveTransactionTarget(ctx, qifTx, isSplit);
 
-    // If payee has a default category and no category was resolved from the import, use the payee's default
+    // Detect payment rail and UPI metadata (Priority 9)
+    const paymentMeta = detectPaymentMetadata({
+      explicitMethod: qifTx.paymentMethod,
+      explicitVpa: qifTx.upiVpa,
+      explicitReference: qifTx.upiReference,
+      memo: qifTx.memo,
+      payee: qifTx.payee,
+      number: qifTx.number,
+    });
+
+    // Evaluate automated transaction categorization rules (Priority 13)
+    let ruleCategoryId: string | null = null;
+    if (!isSplit && !categoryId) {
+      if (ctx.activeRules === undefined) {
+        try {
+          ctx.activeRules = await ctx.manager.find(TransactionRule, {
+            where: { userId: ctx.userId, isActive: true },
+            order: { priority: "ASC", createdAt: "ASC" },
+          });
+        } catch {
+          ctx.activeRules = [];
+        }
+      }
+
+      if (ctx.activeRules && ctx.activeRules.length > 0) {
+        const match = evaluateRules(ctx.activeRules, {
+          payee: resolvedPayee.payeeName || qifTx.payee,
+          memo: qifTx.memo,
+          amount: qifTx.amount,
+          accountId: ctx.accountId,
+          paymentMethod: paymentMeta.paymentMethod,
+        });
+        if (match?.actions.setCategoryId) {
+          ruleCategoryId = match.actions.setCategoryId;
+        }
+      }
+    }
+
+    // If payee has a default category and no category was resolved from the import or rules, use the payee's default
     const effectiveCategoryId = isSplit
       ? null
-      : categoryId || resolvedPayee.defaultCategoryId || null;
+      : categoryId || ruleCategoryId || resolvedPayee.defaultCategoryId || null;
 
     // Generate unique createdAt timestamp
     const counter = ctx.dateCounters.get(qifTx.date) || 0;
@@ -99,16 +139,6 @@ export class ImportRegularProcessorService {
     // Determine status through the one shared derivation, so the regular and
     // investment import paths cannot disagree on what the same flags mean.
     const status = statusFromQifFlags(qifTx);
-
-    // Detect payment rail and UPI metadata (Priority 9)
-    const paymentMeta = detectPaymentMetadata({
-      explicitMethod: qifTx.paymentMethod,
-      explicitVpa: qifTx.upiVpa,
-      explicitReference: qifTx.upiReference,
-      memo: qifTx.memo,
-      payee: qifTx.payee,
-      number: qifTx.number,
-    });
 
     // Create transaction (use canonical payee name if alias-matched)
     const isTransfer = !isSplit && (qifTx.isTransfer || isLoanPaymentTx);

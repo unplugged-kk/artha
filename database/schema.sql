@@ -612,6 +612,23 @@ CREATE TABLE transaction_split_tags (
 CREATE INDEX idx_transaction_split_tags_tag ON transaction_split_tags(tag_id);
 CREATE INDEX idx_transaction_split_tags_split ON transaction_split_tags(transaction_split_id);
 
+-- Transaction Rules (Priority 13 - Automated Categorization Rules Engine)
+CREATE TABLE transaction_rules (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    priority INTEGER NOT NULL DEFAULT 0,
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    match_mode VARCHAR(16) NOT NULL DEFAULT 'ALL' CHECK (match_mode IN ('ALL', 'ANY')),
+    conditions JSONB NOT NULL DEFAULT '[]'::jsonb,
+    actions JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_transaction_rules_user_priority ON transaction_rules(user_id, priority ASC, created_at ASC);
+CREATE INDEX idx_transaction_rules_active ON transaction_rules(user_id) WHERE is_active = true;
+
 -- Securities (stocks, bonds, mutual funds, ETFs)
 -- Defined before scheduled_transactions because that table (and others below)
 -- carry inline FKs to securities(id); the FK target must exist first when the
@@ -1550,6 +1567,7 @@ CREATE TRIGGER update_refresh_tokens_updated_at BEFORE UPDATE ON refresh_tokens 
 CREATE TRIGGER update_custom_reports_updated_at BEFORE UPDATE ON custom_reports FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_investment_reports_updated_at BEFORE UPDATE ON investment_reports FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_watchlists_updated_at BEFORE UPDATE ON watchlists FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_transaction_rules_updated_at BEFORE UPDATE ON transaction_rules FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- NOTE: Account balances (current_balance) are managed by application code
 -- (accounts.service.ts, transactions.service.ts, import.service.ts) via updateBalance() calls.
@@ -2756,6 +2774,7 @@ DECLARE
         'securities',
         'sms_sender_registry',
         'transaction_attachments',
+        'transaction_rules',
         'user_currency_preferences',
         'watchlist_items',
         'watchlists'

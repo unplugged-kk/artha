@@ -33,5 +33,6 @@
     "label": "搜尋交易",
     "open": "開啟搜尋",
     "submit": "搜尋"
-  }
+  },
+  "rules": "Rules"
 }
