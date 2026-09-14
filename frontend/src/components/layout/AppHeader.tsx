@@ -339,13 +339,13 @@ export function AppHeader() {
             >
               <Image
                 src="/icons/monize-logo-transparent.svg"
-                alt="Monize"
+                alt="Artha"
                 width={32}
                 height={32}
                 className="rounded"
                 priority
               />
-              <span className="hidden xl:inline">Monize</span>
+              <span className="hidden xl:inline">Artha</span>
             </button>
             {(!isDelegateView ||
               visibleNavLinks.length > 0 ||

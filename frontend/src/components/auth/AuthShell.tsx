@@ -54,7 +54,7 @@ export function AuthShell({
         <div className="text-center">
           <Image
             src="/icons/monize-logo-transparent.svg"
-            alt="Monize"
+            alt="Artha"
             width={88}
             height={88}
             className="mx-auto"

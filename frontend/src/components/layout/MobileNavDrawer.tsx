@@ -104,13 +104,13 @@ export function MobileNavDrawer({
           >
             <Image
               src="/icons/monize-logo-transparent.svg"
-              alt="Monize"
+              alt="Artha"
               width={28}
               height={28}
               className="rounded"
               priority
             />
-            <span>Monize</span>
+            <span>Artha</span>
           </button>
           <button
             onClick={onClose}

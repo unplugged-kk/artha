@@ -40,8 +40,8 @@ export function buildManifest(
     // The manifest URL varies with the theme query string, so the app's
     // identity is pinned explicitly -- every variant is the same app.
     id: '/',
-    name: 'Monize - Personal Finance Manager',
-    short_name: 'Monize',
+    name: 'Artha - Personal Finance Manager',
+    short_name: 'Artha',
     description: 'Track your finances, manage budgets, and monitor investments',
     start_url: '/',
     display: 'standalone',

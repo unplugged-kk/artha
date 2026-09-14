@@ -1,12 +1,13 @@
 'use client';
 
-import { Suspense, useEffect, useRef } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { UploadStep } from '@/components/import/UploadStep';
+import { SmsIntakeStep } from '@/components/import/SmsIntakeStep';
 import { SelectAccountStep } from '@/components/import/SelectAccountStep';
 import { CsvColumnMappingStep } from '@/components/import/CsvColumnMappingStep';
 import { MapCategoriesStep } from '@/components/import/MapCategoriesStep';
@@ -93,6 +94,7 @@ function ImportContent() {
   // An OIDC account confirms the optional wipe by re-authenticating with its
   // provider rather than by typing a password.
   const user = useAuthStore((state) => state.user);
+  const [importMode, setImportMode] = useState<'file' | 'sms'>('file');
   useSharedFilesHandoff(wizard.handleFiles, wizard.dataLoaded, user?.id);
 
   const renderStep = () => {
@@ -338,69 +340,109 @@ function ImportContent() {
           subtitle={t('page.subtitle')}
           helpUrl="https://github.com/kenlasko/monize/wiki/Importing-from-Microsoft-Money"
         />
-        {/* Progress indicator */}
-        <div className="mb-8">
-          <div className="flex items-center justify-center space-x-4">
-            {(() => {
-              const stepOrder = ['upload', 'csvColumnMapping', 'selectAccount', 'mapCategories', 'mapSecurities', 'mapAccounts', 'review', 'multiAccountReview', 'complete'];
-              const currentIndex = stepOrder.indexOf(wizard.step);
 
-              // Filter to only visible steps
-              const visibleSteps = stepOrder.filter((s) => {
-                if (s === 'csvColumnMapping' && wizard.fileType !== 'csv') return false;
-                if (s === 'mapCategories' && wizard.categoryMappings.length === 0) return false;
-                if (s === 'mapSecurities' && wizard.securityMappings.length === 0) return false;
-                if (s === 'mapAccounts' && !wizard.shouldShowMapAccounts) return false;
-                if (s === 'multiAccountReview' && !wizard.multiAccountData) return false;
-                if (wizard.multiAccountData && ['selectAccount', 'mapCategories', 'mapAccounts', 'review'].includes(s)) return false;
-                if (wizard.multiAccountData && s === 'mapSecurities' && wizard.securityMappings.length === 0) return false;
-                return true;
-              });
-
-              return visibleSteps.map((s, visibleIndex) => {
-                const stepIndex = stepOrder.indexOf(s);
-                const isActive = s === wizard.step;
-                const isComplete = stepIndex < currentIndex;
-                const isLastStep = visibleIndex === visibleSteps.length - 1;
-
-                return (
-                  <div key={s} className="flex items-center">
-                    <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                        isComplete
-                          ? 'bg-blue-600 text-white'
-                          : isActive
-                          ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 border-2 border-blue-600'
-                          : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
-                      }`}
-                    >
-                      {isComplete ? (
-                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      ) : (
-                        visibleIndex + 1
-                      )}
-                    </div>
-                    {!isLastStep && (
-                      <div
-                        className={`w-12 h-1 ${
-                          isComplete ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
-                        }`}
-                      />
-                    )}
-                  </div>
-                );
-              });
-            })()}
+        {wizard.step === 'upload' && (
+          <div className="flex justify-center mb-6">
+            <div className="inline-flex rounded-md p-1 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+              <button
+                type="button"
+                onClick={() => setImportMode('file')}
+                className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                  importMode === 'file'
+                    ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
+                }`}
+              >
+                {t('smsIntake.tabFile')}
+              </button>
+              <button
+                type="button"
+                onClick={() => setImportMode('sms')}
+                className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                  importMode === 'sms'
+                    ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
+                }`}
+              >
+                {t('smsIntake.tabSms')}
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
-        {renderStep()}
+        {wizard.step === 'upload' && importMode === 'sms' ? (
+          <SmsIntakeStep
+            accounts={wizard.accounts}
+            categories={wizard.categories}
+            preselectedAccount={wizard.preselectedAccount}
+          />
+        ) : (
+          <>
+            {/* Progress indicator */}
+            <div className="mb-8">
+              <div className="flex items-center justify-center space-x-4">
+                {(() => {
+                  const stepOrder = ['upload', 'csvColumnMapping', 'selectAccount', 'mapCategories', 'mapSecurities', 'mapAccounts', 'review', 'multiAccountReview', 'complete'];
+                  const currentIndex = stepOrder.indexOf(wizard.step);
+
+                  // Filter to only visible steps
+                  const visibleSteps = stepOrder.filter((s) => {
+                    if (s === 'csvColumnMapping' && wizard.fileType !== 'csv') return false;
+                    if (s === 'mapCategories' && wizard.categoryMappings.length === 0) return false;
+                    if (s === 'mapSecurities' && wizard.securityMappings.length === 0) return false;
+                    if (s === 'mapAccounts' && !wizard.shouldShowMapAccounts) return false;
+                    if (s === 'multiAccountReview' && !wizard.multiAccountData) return false;
+                    if (wizard.multiAccountData && ['selectAccount', 'mapCategories', 'mapAccounts', 'review'].includes(s)) return false;
+                    if (wizard.multiAccountData && s === 'mapSecurities' && wizard.securityMappings.length === 0) return false;
+                    return true;
+                  });
+
+                  return visibleSteps.map((s, visibleIndex) => {
+                    const stepIndex = stepOrder.indexOf(s);
+                    const isActive = s === wizard.step;
+                    const isComplete = stepIndex < currentIndex;
+                    const isLastStep = visibleIndex === visibleSteps.length - 1;
+
+                    return (
+                      <div key={s} className="flex items-center">
+                        <div
+                          className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                            isComplete
+                              ? 'bg-blue-600 text-white'
+                              : isActive
+                              ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 border-2 border-blue-600'
+                              : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
+                          }`}
+                        >
+                          {isComplete ? (
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                              <path
+                                fillRule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          ) : (
+                            visibleIndex + 1
+                          )}
+                        </div>
+                        {!isLastStep && (
+                          <div
+                            className={`w-12 h-1 ${
+                              isComplete ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
+                            }`}
+                          />
+                        )}
+                      </div>
+                    );
+                  });
+                })()}
+              </div>
+            </div>
+
+            {renderStep()}
+          </>
+        )}
       </main>
     </PageLayout>
   );
