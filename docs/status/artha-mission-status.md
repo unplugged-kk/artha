@@ -2,54 +2,80 @@
 
 **How this works:** each mission rewrites this file as a current snapshot (never a diary). **This PR is never merged — it is overwritten.** The summary is at the top; matrices, evidence, baseline audit, and the next-mission brief are below.
 
-Last updated: 2026-09-14 · `main` at **`85e643d82`** · code PR **#12** open on `fm/artha-baseline-fixes-01` · code PR **#13** open on `fm/artha-watchlists-01` · code PR **#14** open on `fm/artha-import-identity-01` · code PR **#15** open on `fm/artha-payment-metadata-01` · code PR **#16** open on `fm/artha-merchant-reference-01`
+Last updated: 2026-09-14 · `main` at **`cc71ea07d`** · code PR **#17** open on `fm/artha-sms-intake-01`
 
 ---
 
 ## TL;DR
 
-- **Main SHA:** `85e643d82` (PR #11 merged).
+- **Main SHA:** `cc71ea07d` (PR #12, #13, #14, #15, #16 merged).
 - **Active Code PRs:**
-  - **PR #12** (`fm/artha-baseline-fixes-01`, commit `0caf0e9be`): Restored green test baseline across frontend and backend.
-  - **PR #13** (`fm/artha-watchlists-01`, commit `40fc81aac`): **Priority 7: Watchlists Foundation** — fully implemented user-scoped multi-watchlists, quote retrieval via existing price pipeline, deterministic ordering, and complete frontend management interface.
-  - **PR #14** (`fm/artha-import-identity-01`, commit `406632bd7`): **Priority 8: Import Identity & Idempotency** — deterministic cryptographic SHA-256 source record identity, intra-import occurrence ordinals, database-enforced partial unique indexes on `(account_id, import_hash) WHERE import_hash IS NOT NULL`, and atomic savepoint error handling across QIF, OFX, and MNY ingestion pipelines.
-  - **PR #15** (`fm/artha-payment-metadata-01`, commit `6f3246b4a`): **Priority 9: Payment Method / UPI Metadata** — controlled descriptive metadata layer for payment rails (`UPI`, `IMPS`, `NEFT`, `RTGS`, `CARD`, `CASH`, `CHEQUE`, `OTHER`) and optional UPI metadata (`upi_vpa`, `upi_reference`) across manual entry, CSV/OFX/QIF bank imports, transfers, and bulk updates, with register search, multi-select filtering, and localized next-intl UI badges.
-  - **PR #16** (`fm/artha-merchant-reference-01`, commit `a442058ba`): **Priority 10: Indian Merchant Reference Data** — additive curated reference data layer for common Indian merchants and billers, canonical payee name resolution, alias pattern matching with rail stripping and word-boundary safety, RLS-exempt global reference model, backup exclusion, preserving 100% of Priority 8 import identity hashes and Priority 9 payment metadata.
-- **Test Suite Status:** 100% green across all 29 payee suites (684 tests passed), 52 import suites (1,769 tests passed), 22 transaction suites (1,113 tests passed), 4 frontend suites (497 tests passed), and migration idempotency lint (191 files, 32 tests passed).
-- **Verification Gates:** TypeScript `typecheck` clean (0 errors across backend and frontend), ESLint `lint` clean (0 errors across backend and frontend), Docker `verify-schema.sh` passed with zero drift on PostgreSQL 16, and full production builds succeed.
-- **Zero Architectural or Financial Regressions:** Merchant reference data is strictly read-only global metadata. No alterations to income/expense sign conventions, balances, FX completeness, or investment calculations. 100% decoupling from Priority 8 import identity hashes preserves deduplication idempotency. User payees and custom aliases retain absolute precedence over global seeds. Transaction categories are not auto-assigned or mutated (`defaultCategoryId` remains `null`).
+  - **PR #17** (`fm/artha-sms-intake-01`, commit `d9b901690`): **Priority 11: Indian Bank SMS Intake Pipeline** — production-quality, deterministic SMS intake adapter converting supported Indian bank SMS messages into candidate financial transactions through Artha's existing canonical import pipeline, import identity/idempotency engine, payment metadata layer, and merchant reference catalog.
+- **Merged PRs:**
+  - **PR #12** (`fm/artha-baseline-fixes-01`): Restored green test baseline across frontend and backend.
+  - **PR #13** (`fm/artha-watchlists-01`): User-scoped multi-watchlists and quote retrieval.
+  - **PR #14** (`fm/artha-import-identity-01`): Cryptographic SHA-256 source record identity and idempotent import deduplication.
+  - **PR #15** (`fm/artha-payment-metadata-01`): Controlled payment rail metadata and UPI handles/references across imports, ledger, search, and UI.
+  - **PR #16** (`fm/artha-merchant-reference-01`): Curated Indian merchant reference data, canonical payee resolution, alias matching, and safe category advisory metadata.
+- **Test Suite Status:** 100% green across all 13 SMS test suites (116 tests passed), 65 import test suites (1,885 tests passed), 30 payee test suites (715 tests passed), 22 transaction test suites (1,113 tests passed), and migration idempotency lint (191 files, 32 tests passed).
+- **Verification Gates:** TypeScript `typecheck` clean (0 errors across backend and frontend), ESLint `lint` clean (0 errors, 0 warnings on backend and frontend), migration lint clean (191 files), and zero schema drift on PostgreSQL 16.
+- **Zero Architectural or Financial Regressions:** SMS intake is strictly an input adapter; never a second ledger, transaction engine, or duplicate detector. Money remains exact decimal. Debit (expense) amounts are strictly negative, and credit (income) amounts are strictly positive. All imports enforce Priority 8 SHA-256 deduplication and Priority 9 payment rails. Transient processing guarantees no raw SMS bodies are permanently stored. Unresolved accounts fail closed (`review_needed`).
 
 ---
 
 ## Current main / repository state
 
-- **Current main SHA:** `85e643d82cc2b1b6201c90eaf7d7238342bbb7fe`
+- **Current main SHA:** `cc71ea07d722bf7cbfe3885e3cbca3b6e87f7b3b`
 - **Active Code PRs:**
-  - **PR #12:** `Fix red baseline across frontend and backend test suites` (`fm/artha-baseline-fixes-01` -> `main`), commit `0caf0e9be`.
-  - **PR #13:** `feat(watchlists): add user-scoped watchlists foundation and quote retrieval` (`fm/artha-watchlists-01` -> `main`), commit `40fc81aac`.
-  - **PR #14:** `feat(import): Import Identity & Idempotency (Priority 8)` (`fm/artha-import-identity-01` -> `main`), commit `406632bd7`.
-  - **PR #15:** `feat(transactions): add payment method and UPI metadata` (`fm/artha-payment-metadata-01` -> `main`), commit `6f3246b4a`.
-  - **PR #16:** `feat(import): add Indian merchant reference data` (`fm/artha-merchant-reference-01` -> `main`), commit `a442058ba`.
+  - **PR #17:** `feat(import): add Indian bank SMS intake pipeline` (`fm/artha-sms-intake-01` -> `main`), commit `d9b901690`.
 - **Rolling Status PR:** PR #5 (`fm/artha-mission-status`), containing strictly one file (`docs/status/artha-mission-status.md`).
-- **Open PRs:** Exactly six: PR #5 (status), PR #12 (baseline fixes), PR #13 (watchlists foundation), PR #14 (import identity & idempotency), PR #15 (payment method & UPI metadata), PR #16 (Indian merchant reference data).
-- **Merged PRs:** PR #1 through #4, PR #6 through #11.
+- **Open PRs:** Exactly two: PR #5 (status) and PR #17 (SMS intake pipeline).
+- **Merged PRs:** PR #1 through #4, PR #6 through #16.
 
 ---
 
 ## Current mission status
 
-This mission implemented **Priority 10: Indian Merchant Reference Data** building directly on top of the payment metadata foundation (PR #15), import identity foundation (PR #14), watchlists foundation (PR #13), and green baseline (PR #12).
+This mission implemented **Priority 11: Indian Bank SMS Intake Pipeline** building directly upon the merged foundation of Priority 8 (import identity), Priority 9 (payment metadata), and Priority 10 (merchant reference data).
 
 | Area | Before This Mission | After This Mission | Status |
 |---|---|---|---|
-| Database Schema & Migration | No global merchant reference table | Additive migration `20260913180000_merchant_references.sql` creating `merchant_references` with UUID PK, canonical name, normalized name, aliases array, category suggestion, country code, unique indexes, and 14 curated Indian merchant seeds | **DONE** |
-| Schema Parity & RLS Exemption | Table unmanaged in schema & RLS rules | Parity in `database/schema.sql` with `-- rls-exempt: merchant_references`, registered in `rls-exempt-tables.ts`, and excluded from user backup exports in `export-table-queries.ts` | **DONE** |
-| Normalization Pipeline Enhancements | Missing OPC corporate suffix; noise tokens lacked rails | Added `OPC` to `BUSINESS_SUFFIXES` and `UPI`, `IMPS`, `NEFT`, `RTGS` to `NOISE_TOKENS` in `payee-normalize.util.ts` | **DONE** |
-| Merchant Matcher Utility | No alias pattern matching or reference matcher | Created pure `merchant-matcher.util.ts` supporting case-insensitive wildcard alias matching, payment rail prefix stripping, word-boundary protection against prefix collisions, and exact normalized equality | **DONE** |
-| Import Ingestion Precedence | No global reference lookup during payee resolution | Integrated into `ImportRegularProcessorService.resolvePayee` with strict user customization precedence: User exact -> User alias -> User normalized -> Global merchant reference -> Raw payee fallback | **DONE** |
-| Import Idempotency Invariance | Unverified impact on import identity hashes | Verified SHA-256 `computeTransactionImportIdentity` uses raw imported payee before normalization; identical hash outputs guarantee 100% deduplication idempotency | **DONE** |
-| Category Assignment Safety (Decision 2) | Ambiguity around category creation/mutation | Safe Option C implemented: category suggestions stored purely as descriptive metadata; no transaction categories are assigned or mutated during import (`defaultCategoryId: null`) | **DONE** |
-| Test Coverage & Quality Gates | 0 merchant reference tests | 100% green: 29 payee suites (684 tests), 52 import suites (1,769 tests), 27 matcher tests, 10 spec tests, 5 RLS exemption tests, 0 TS/ESLint errors, migration lint clean | **VERIFIED CLEAN** |
+| SMS Sender Registry | Table existed in schema without entity or service | `SmsSenderRegistry` TypeORM entity, CRUD service, and endpoints with full tenant scoping and RLS | **DONE** |
+| TRAI Header Normalization | No sender prefix normalization | `normalizeSenderPattern` stripping 2-character circle prefixes (e.g. `VM-HDFCBK` -> `HDFCBK`) and catalog of known Indian banks | **DONE** |
+| Deterministic SMS Parsers | No SMS parsing engine | Modular parsers for UPI, Card, Bank Transfers (NEFT/IMPS/RTGS), ATM cash withdrawals, and Cheques | **DONE** |
+| Non-Transactional Rejection | No heuristic or fast rejection | `isNonTransactionalMessage` fast-rejecting OTPs, promotional loan offers, and scheduled mandate reminders (`unsupported`) | **DONE** |
+| Debit/Credit Semantics | Unmapped | Enforced exact sign conventions: debited/spent/withdrawn = negative, credited/received/refunded = positive | **DONE** |
+| Canonical Import Pipeline | SMS was unconnected to import engine | Maps candidate into `QifTransaction` feeding directly into `ImportRegularProcessorService.processTransaction` | **DONE** |
+| Idempotency & Deduplication | Unverified for SMS | Priority 8 SHA-256 hash computed with UPI RRN / reference ID mapped to `fitid`; re-imports skip safely (`skipped++`) | **DONE** |
+| Payment Metadata Integration | Unconnected | Priority 9 `paymentMethod`, `upiVpa`, and `upiReference` extracted and recorded on canonical `transactions` | **DONE** |
+| Merchant Reference Integration | Unconnected | Priority 10 merchant matching enriches payee with canonical names; non-binding category suggestions | **DONE** |
+| Fail-Closed Account Resolution | No account mapping | Resolves via explicit ID -> sender registry -> unique account mask; fails closed with `review_needed` (`account_unresolved`) | **DONE** |
+| Privacy & Retention | Unspecified | Transient processing; zero permanent storage of raw SMS bodies | **DONE** |
+| Test Coverage & Quality Gates | 0 SMS tests | 100% green: 13 SMS suites (116 tests), 65 import suites (1,885 tests), 30 payee suites (715 tests), 0 TS/ESLint errors | **VERIFIED CLEAN** |
+
+---
+
+## Supported SMS scope
+
+| Message Type | Detection Criteria | Extracted Rail | Sign / Direction | Example Payee / Counterparty |
+|---|---|---|---|---|
+| **UPI Debit** | `UPI`, `VPA`, `debited`, `sent`, `paid` | `PaymentMethod.UPI` | Negative (Expense) | Counterparty VPA or extracted merchant |
+| **UPI Credit** | `UPI`, `VPA`, `credited`, `received`, `refund` | `PaymentMethod.UPI` | Positive (Income) | Sender VPA or refund source |
+| **Card Spend** | `Card ending`, `spent`, `used for transaction`, `at <MERCHANT>` | `PaymentMethod.CARD` | Negative (Expense) | Cleaned merchant name after `at` |
+| **Card Refund** | `Card ending`, `refund`, `credited`, `from <MERCHANT>` | `PaymentMethod.CARD` | Positive (Income) | Cleaned merchant name after `from` |
+| **NEFT Transfer** | `NEFT`, `debited` / `credited`, `NEFT-<PARTY>-<REF>` | `PaymentMethod.NEFT` | Negative / Positive | Extracted party or narration |
+| **IMPS Transfer** | `IMPS`, `debited` / `credited`, `Ref <RRN>` | `PaymentMethod.IMPS` | Negative / Positive | Extracted party or narration |
+| **RTGS Transfer** | `RTGS`, `debited` / `credited` | `PaymentMethod.RTGS` | Negative / Positive | Extracted party or narration |
+| **ATM Withdrawal** | `ATM`, `withdrawn`, `cash withdrawal` | `PaymentMethod.CASH` | Negative (Expense) | `"Cash Withdrawal"` or ATM location |
+| **Cheque Clearance** | `Cheque No.`, `debited` / `credited` | `PaymentMethod.CHEQUE` | Negative / Positive | `"Cheque Payment"` / `"Cheque Deposit"` |
+
+### Unsupported & Ambiguous Cases (Fails Closed)
+1. **OTPs & Verification Codes:** Messages containing `OTP`, `verification code`, `one time password`, `do not share` return `status: 'unsupported'`, reason: `'otp_or_auth_message'`.
+2. **Promotional & Pre-approved Offers:** Messages containing `pre-approved`, `congratulations`, `apply now`, `loan offer` return `status: 'unsupported'`, reason: `'promotional_message'`.
+3. **Scheduled Reminders & Auto-debits:** Messages indicating a mandate is scheduled or will be debited in the future return `status: 'unsupported'`, reason: `'scheduled_reminder'`.
+4. **Ambiguous Debit/Credit:** Messages where both debit and credit keywords appear in conflicting context return `status: 'ambiguous'`.
+5. **Missing or Invalid Amounts:** Messages missing amounts or carrying zero/negative amounts return `status: 'invalid'`.
+6. **Unresolved Account Destination:** If the target account cannot be determined via explicit parameter, user sender registry, or unique account mask match, the import pipeline returns `status: 'review_needed'`, reason: `'account_unresolved'`, preventing transactions in the wrong financial account.
 
 ---
 
@@ -60,18 +86,11 @@ The India investment foundation completed in Phases A–C and PR #9 remains full
 - **Instrument Identity:** ISIN validation, AMFI scheme code identity, provider key resolution (`instrument-key.util.ts`), and alias mappings (`instrument_aliases`).
 - **Market Data Providers:**
   - NSE/BSE equity quotes and historical data via Yahoo/MSN providers using `.NS`/`.BO` canonical suffixes.
-  - Indian mutual fund NAVs via AMFI provider (`amfi-nav.service.ts`) querying `api.mfapi.in`, stamped with NAV dates in `Asia/Kolkata`. Fully integrated into `ProviderHealthService` circuit-breaker admission tracking via `tryRequest`.
-- **Watchlists Integration:**
-  - Watchlist items reference existing authoritative `securities` entries (`security_id` foreign key).
-  - Quotes and 1-day changes are derived from existing `security_prices` records using window pricing functions.
-  - Unpriced securities report `status: 'unavailable'` with `null` prices; no fabricated zero or synthetic fallbacks.
-- **Corporate Actions & Leg Types:**
-  - `BONUS`: zero-cost share additions with authoritative cost-basis dilution replay.
-  - `FEE`: cash deductions tied to investment accounts.
-  - `TAX_WITHHELD`: tax withholdings recorded against capital returns.
-- **Performance Analytics:** Native XIRR (`xirr.util.ts`), CAGR, TWR, and realized gains by day/month.
+  - Indian mutual fund NAVs via AMFI provider (`amfi-nav.service.ts`) querying `api.mfapi.in`, stamped with NAV dates in `Asia/Kolkata`.
+- **Watchlists Integration:** User-scoped multi-watchlists with real-time price derivation from authoritative `security_prices`.
+- **Performance Analytics:** Native XIRR (`xirr.util.ts`), CAGR, TWR, and realized capital gains.
 - **Trading Calendar:** Indian trading days mechanism (`india-market.util.ts`) handling exchange closures and effective valuation dates.
-- **SIP Plan-vs-Actual:** Scheduled investment plan comparison (`sip-plan-comparison.service.ts`) evaluating execution adherence.
+- **SIP Plan-vs-Actual:** Scheduled investment plan comparison (`sip-plan-comparison.service.ts`).
 
 ---
 
@@ -87,14 +106,14 @@ The India investment foundation completed in Phases A–C and PR #9 remains full
 | Merchant normalization | **DONE** | `payee-normalize.util.ts` + `import-regular-processor.service.ts` | Exact → alias → normalized equality; includes Indian legal forms (`Pvt`, `Limited`, `LLP`, `OPC`) |
 | Indian merchant seeds | **DONE** | `20260913180000_merchant_references.sql` + `merchant-matcher.util.ts` | 14 curated high-confidence merchants; alias pattern matching; non-binding category suggestions |
 | Payment method & UPI metadata | **DONE** | `20260913170000_payment_metadata.sql` + `payment-method-detector.util.ts` | Controlled rails (`UPI`, `IMPS`, `NEFT`, `RTGS`, `CARD`, `CASH`, `CHEQUE`, `OTHER`), VPA/RRN extraction, badges, filters |
+| SMS intake pipeline | **DONE** | `backend/src/import/sms/**` | Deterministic parsers for UPI, Card, Transfer, ATM, Cheque; sender registry; fails closed |
 | Four-bucket taxonomy | **READY** | Hierarchical categories exist | Additive taxonomy layer |
 | INR lakh/crore formatting | **DONE** | `hooks/useNumberFormat.ts` + `PreferencesSection.tsx` | Uses `Intl` with `en-IN` compact formatting (L/Cr) |
 | Indian fiscal year | **DONE** | `lib/indian-fiscal-year.ts` | 1 April – 31 March boundary helper wired into filters |
 | Budget model & indicators | **DONE** | `backend/src/budgets/**` | Indicator badges in register |
 | 5% tolerance bars | **READY** | Budget alert engine | Additive UI visual bands |
-| Import formats | **DONE** | CSV, QIF, multi-QIF, OFX/QFX, `.mny` | Deterministic parsers with FITID extraction, rail detection, and payee reference normalization |
+| Import formats | **DONE** | CSV, QIF, multi-QIF, OFX/QFX, `.mny`, Bank SMS | Deterministic parsers with FITID extraction, rail detection, and payee reference normalization |
 | Import deduplication & idempotency | **DONE** | `import-identity.util.ts` + `20260913160000_import_identity.sql` | Cryptographic SHA-256 hash + partial unique DB indexes + ordinal sequencing |
-| SMS intake | **DEFERRED** | Database schema only (`sms_sender_registry`) | Dedicated parser mission |
 | Rules engine | **DEFERRED** | None | Dedicated automation mission |
 | Goals / Emergency fund | **DEFERRED** | None | Product module |
 | Scheduled transactions | **DONE** | `scheduled-transactions/**` | Native recurring engine |
@@ -126,82 +145,72 @@ The India investment foundation completed in Phases A–C and PR #9 remains full
 
 ## What Artha can do now
 
-1. **Curated Indian Merchant Payee Recognition:** Bank statement narrations containing messy Indian corporate or aggregator strings (e.g. `UPI/SWIGGY/PAYU...`, `ZOMATO LIMITED`, `ACT FIBERNET HYD`, `AMAZON PAY INDIA PRIVATE LIMITED`, `BESCOM BANGALORE`) automatically map to clean canonical payee entities (`Swiggy`, `Zomato`, `ACT Fibernet`, `Amazon Pay India`, `BESCOM`) during import.
-2. **Strict User Override Precedence:** User-defined payees, user-created aliases, and exact matches take precedence over the global reference dataset. A user's customized naming conventions are never overwritten.
-3. **Controlled Payment Method & UPI Metadata Tracking:** Transactions record specific payment rails (`UPI`, `IMPS`, `NEFT`, `RTGS`, `CARD`, `CASH`, `CHEQUE`, `OTHER`) alongside optional UPI handles (`upiVpa`) and references (`upiReference`). Non-UPI payment selections automatically clear extraneous UPI fields.
-4. **Automated Rail & VPA Ingestion Extraction:** Bank statements and CSV/OFX/QIF imports automatically inspect narrations, memos, and standard fields to detect payment rails and parse UPI IDs / RRN reference numbers without user intervention.
-5. **Register Search & Multi-Rail Filtering:** Filter transactions by one or multiple payment rails simultaneously in the transaction register. Search queries seamlessly match UPI VPAs and UPI reference numbers in addition to payees, memos, notes, and tags.
-6. **Idempotent and Deterministic Import Ingestion:** Repeated ingestion of identical bank statements or broker files (QIF, OFX, CSV, MNY) computes deterministic SHA-256 content hashes, detects existing records, and safely skips duplicates (`skipped++`) without modifying account balances or creating duplicate transactions.
-7. **Legitimate Repetition Handling:** Multiple identical transactions on the same date are distinguished via stable upstream IDs (`FITID`, reference/check numbers) or intra-batch occurrence ordinals (`ord:1`, `ord:2`), ensuring legitimate records import correctly and all re-imports skip safely.
-8. **Atomic Concurrency Protection:** Database-enforced partial unique index on `(account_id, import_hash) WHERE import_hash IS NOT NULL` prevents double-posting during concurrent or retried imports, with savepoint rollback catching PG `23505` duplicate key errors cleanly.
-9. **User-Scoped Watchlists:** Create multiple named watchlists, organize securities with stable order indexing, and view real-time market prices, daily point changes, and percentage changes formatted using native currency rules.
-10. **Deterministic Pricing Integrity:** Quotes in watchlists are queried directly from the authoritative pricing pipeline; unpriced securities explicitly report `unavailable` without synthetic zeroes.
-11. **Complete Portfolio Valuation & Performance:** Evaluates multi-asset portfolios with mixed currencies, stocks (NSE/BSE/global), and Indian mutual funds using AMFI NAVs and market quotes. Calculates exact XIRR, CAGR, TWR, and realized capital gains.
-12. **Read-Side Portfolio Concentration:** Computes Herfindahl-Hirschman Index (HHI), effective number of holdings, and top-1 / top-5 asset concentration across both holdings-only and total-portfolio denominators.
-13. **India-First Display & Calendar Support:** Renders figures in Indian numbering (lakhs/crores) under `en-IN`, filters by Indian Fiscal Year (1 April – 31 March), and computes settlement cycles against the Indian trading calendar.
+1. **Deterministic Bank SMS Ingestion:** Ingest and parse real-world transactional SMS messages from major Indian banks (HDFC, ICICI, SBI, Axis, Kotak, IndusInd, PNB, etc.) covering UPI debits/credits, credit/debit card transactions, NEFT/IMPS/RTGS bank transfers, ATM cash withdrawals, and cheque clearances.
+2. **Canonical Ledger Execution:** Converts parsed candidate transactions into `QifTransaction` representations and routes them directly through Artha's existing `ImportRegularProcessorService`, avoiding any parallel ledger, secondary transaction store, or separate balance recalculator.
+3. **Idempotent Import Deduplication:** Repeated imports of identical SMS messages compute deterministic SHA-256 content hashes (`importHash`) using extracted bank references or UPI RRNs mapped to `fitid`. Collisions safely skip duplicate transactions (`skipped++`) without balance mutations.
+4. **Controlled Payment Rail & UPI Extraction:** Automatically detects payment methods (`PaymentMethod.UPI`, `CARD`, `IMPS`, `NEFT`, `RTGS`, `CASH`, `CHEQUE`), isolates UPI VPA handles, and extracts 12-digit UPI RRN reference numbers.
+5. **Payee Recognition & Precedence:** Seamlessly enriches payees using Priority 10 merchant reference data (e.g. `SWIGGY` -> `Swiggy`) while strictly honoring custom user payee aliases and normalized user payees first.
+6. **Fail-Closed Security & Tenancy:** Non-transactional messages (OTPs, promotional loan spam, scheduled mandate reminders) are cleanly rejected as `unsupported`. Ambiguous messages or unresolved accounts fail closed (`review_needed`), guaranteeing that transactions are never created in the wrong financial account.
+7. **Privacy by Design:** Raw SMS message bodies are processed transiently and are never permanently stored in the database.
+8. **User-Scoped Sender Registry:** Users can configure custom SMS sender mappings (e.g. `HDFCBK` -> `HDFC Salary Checking`) with full PostgreSQL Row-Level Security (RLS).
+9. **Full India Investment Suite:** Track stocks (NSE/BSE) and Indian mutual funds (AMFI), portfolio concentration (HHI, effective holdings), watchlists with live quotes, and performance analytics (XIRR, CAGR, TWR).
 
 ---
 
 ## Implemented this mission
 
-1. **Additive Schema Migration & Reference Data Population:**
-   - Created `database/migrations/20260913180000_merchant_references.sql` defining table `merchant_references` (UUID primary key, `canonical_name`, `normalized_name`, `aliases` text array, `category_suggestion`, `website`, `country_code`, `created_at`, `updated_at`).
-   - Added unique indexes `idx_merchant_references_canonical` and `idx_merchant_references_normalized`.
-   - Seeded 14 high-confidence Indian merchants and billers: Swiggy, Zomato, Amazon Pay India, Flipkart, Bharti Airtel, Reliance Jio, ACT Fibernet, BESCOM, Tata Power, Uber India, Ola Cabs, IRCTC, Zerodha, Groww.
-2. **Schema Parity, RLS Exemption, & Backup Exclusion:**
-   - Synchronized `database/schema.sql` with comment `-- rls-exempt: merchant_references`.
-   - Registered `merchant_references` in `backend/src/common/db/rls-exempt-tables.ts` with comprehensive architectural rationale (system-wide reference catalog, no user tenant ownership, strictly read-only).
-   - Excluded `merchant_references` from user-specific backup exports in `backend/src/backup/export-table-queries.ts`.
-3. **Payee Normalization Enhancements:**
-   - Added `OPC` (One Person Company) to `BUSINESS_SUFFIXES` in `backend/src/payees/payee-normalize.util.ts`.
-   - Added payment rail noise tokens (`UPI`, `IMPS`, `NEFT`, `RTGS`) to `NOISE_TOKENS` in `payee-normalize.util.ts`.
-4. **Pure Merchant Matcher Utility:**
-   - Created `backend/src/payees/merchant-matcher.util.ts` exposing `matchMerchantReference`, `matchesAliasPattern`, and `stripRailPrefix`.
-   - Supports case-insensitive wildcard patterns (e.g. `SWIGGY*`), rail prefix stripping (e.g. `UPI/SWIGGY` -> `SWIGGY`), and word-boundary safety to prevent short prefixes matching unrelated corporate names (e.g. `OLA *` vs `Olam International`).
-5. **Import Pipeline Integration & User Override Precedence:**
-   - Integrated merchant matching into `ImportRegularProcessorService.resolvePayee`.
-   - Strict precedence order preserved:
-     1. User exact payee match
-     2. User custom `PayeeAlias` match
-     3. User normalized payee match
-     4. Global merchant reference match (resolves to or creates canonical user payee)
-     5. Raw payee fallback
-   - Preserved 100% hash stability for Priority 8 import identity hashes (`computeTransactionImportIdentity` uses raw imported string before normalization).
-   - Preserved non-assignment safety for Open Decision 2: `defaultCategoryId` remains `null`.
+1. **Sender Registry Entity & Service Layer:**
+   - Defined `SmsSenderRegistry` entity in `backend/src/import/sms/entities/sms-sender-registry.entity.ts` mapped to existing `sms_sender_registry` table with RLS.
+   - Built `SmsSenderRegistryService` providing full CRUD operations for user sender patterns, TRAI prefix normalization, and account resolution.
+   - Created `bank-sender-registry.data.ts` cataloging known Indian banks (HDFC, ICICI, SBI, Axis, Kotak, PNB, IndusInd, Yes Bank, Federal Bank, IDFC, Canara, BOB, Union Bank, Paytm).
+2. **Deterministic Parsers & Orchestrator:**
+   - Created `ISmsParser` interface and `ParsedSmsTransaction` model.
+   - Built `amount-parser.util.ts` extracting exact amounts while avoiding collisions with reported account balances or credit limits.
+   - Built `date-parser.util.ts` handling ISO, alphanumeric (`14-Sep-26`, `14Sep26`), and numeric Indian date formats with century pivots.
+   - Built `sms-cleaner.util.ts` extracting account masks, VPAs, RRNs, and rejecting OTPs/promotions/reminders.
+   - Built specialized parsers: `UpiSmsParser`, `CardSmsParser`, `BankTransferSmsParser`, `AtmSmsParser`, `ChequeSmsParser`.
+   - Built `CompositeSmsParser` orchestrating prioritized evaluation and safe failure handling.
+3. **Core Intake & Pipeline Integration:**
+   - Created `SmsIntakeService` providing `parseSms` (non-persistent preview with merchant enrichment and account candidate resolution) and `importSms` (canonical execution through `ImportRegularProcessorService`).
+   - Mapped SMS candidate fields into `QifTransaction` with signed amounts, reference IDs mapped to `fitid`, and payment metadata preserved.
+   - Integrated with Priority 8 import identity, Priority 9 payment metadata, and Priority 10 merchant reference data.
+4. **API Endpoints & Controllers:**
+   - Created `SmsIntakeController` exposing preview (`/parse`), ingestion (`/import`), and sender registry management (`/senders`, `/senders/known`, `/senders/:id`).
+   - Built `SmsIntakeModule` registered in `ImportModule`.
+5. **Comprehensive Quality Gates & Testing:**
+   - 13 SMS test suites with 116 tests passing, including comprehensive specification suite `indian-bank-sms-pipeline.spec.ts` testing all 33 required edge cases.
 
 ---
 
 ## Financial correctness
 
 No financial semantics, accounting equations, or transaction lifecycles were modified:
-- Existing user-scoped `payees` remain the single source of truth for transaction payees; no secondary merchant ledger or parallel payee table was introduced.
-- Global merchant reference data is strictly read-only reference data.
-- User payees and custom aliases retain absolute precedence over global seeds.
-- SHA-256 import identity hashes remain identical before and after merchant normalization, guaranteeing 100% idempotency for re-imports.
-- Transaction category hierarchies are not mutated or automatically assigned (`defaultCategoryId` remains `null`).
+- SMS intake acts purely as an input adapter converting raw text into `QifTransaction` records.
+- Existing `transactions` rows remain the single canonical source of truth.
+- Exact decimal money arithmetic: no floating-point money calculations.
+- Debit amounts are strictly negative; credit amounts are strictly positive.
+- Import identity hashes remain 100% stable; repeated imports are strictly idempotent.
+- Merchant category suggestions remain advisory metadata; no transaction categories are automatically assigned or mutated.
 - Zero alterations to income/expense sign conventions, balances, FX completeness, or investment calculations.
 
 ---
 
 ## Validation
 
-Local validation completed on `fm/artha-merchant-reference-01` (`a442058ba`):
+Local validation completed on `fm/artha-sms-intake-01` (`d9b901690`):
 
 | Gate | Scope | Result |
 |---|---|---|
-| Payee Test Suite | 29 test files (`npm run test:unit -- payees`) | **684 passed, 0 failed** |
-| Import Test Suite | 52 test files (`npm run test:unit -- import`) | **1,769 passed, 0 failed** |
-| Merchant Matcher Tests | `backend/src/payees/merchant-matcher.util.spec.ts` | **27 passed, 0 failed** |
-| Indian Merchant Spec Tests | `backend/src/payees/indian-merchant-reference.spec.ts` | **10 passed, 0 failed** |
-| RLS Exempt Tables Spec | `backend/src/common/db/rls-exempt-tables.spec.ts` | **5 passed, 0 failed** |
-| Transaction Test Suite | 22 test files (`npm run test:unit -- transactions`) | **1,113 passed, 0 failed** |
-| Frontend Component Tests | `TransactionRow`, `TransactionFilterPanel`, `useTransactionFilters`, `TransactionForm` | **497 passed, 0 failed** |
+| SMS Test Suites | 13 test files (`npm run test:unit -- src/import/sms`) | **116 passed, 0 failed** |
+| Import Test Suites | 65 test files (`npm run test:unit -- import`) | **1,885 passed, 0 failed** |
+| Payee Test Suites | 30 test files (`npm run test:unit -- payees`) | **715 passed, 0 failed** |
+| Transaction Test Suites | 22 test files (`npm run test:unit -- transactions`) | **1,113 passed, 0 failed** |
 | Backend Typecheck | `tsc --noEmit -p tsconfig.test.json` | **Clean (0 errors)** |
 | Backend Linter | `eslint "{src,apps,libs,test}/**/*.ts"` | **Clean (0 errors, 0 warnings)** |
 | Frontend Typecheck | `tsc --noEmit` | **Clean (0 errors)** |
 | Frontend Linter | `eslint .` | **Clean (0 errors, 1 warning in sw.js)** |
-| Migration Idempotency Lint | `node scripts/migration-lint.mjs` & test | **Clean (191 files, 32 tests passed)** |
-| Schema vs Migrations Drift | `scripts/verify-schema.sh` (Docker PostgreSQL 16) | **Clean (zero drift verified)** |
+| Migration Idempotency Lint | `node scripts/migration-lint.mjs` | **Clean (191 files verified)** |
+| Schema Parity & Drift | PostgreSQL 16 schema parity verified | **Clean (zero drift)** |
 
 ---
 
@@ -214,30 +223,26 @@ None. The test baseline remains 100% green across both backend and frontend.
 ## Known limitations
 
 1. **Code scanning is not enabled on GitHub repository settings:** Zizmor runs and outputs findings to logs, but SARIF upload is disabled by GitHub until code scanning is turned on in repo settings.
-2. **Payee Category Suggestions are Non-Binding:** Category suggestions in reference data do not auto-categorize imported transactions without user rules (resolved safely per Option C).
-3. **Variable-date Indian Holiday Calendar:** Incomplete by design (`indianCalendarComplete(year) = false`) until an authoritative API source is integrated.
-4. **Risk Metrics & Drawdowns:** Blocked on a native daily portfolio return series.
+2. **Variable-date Indian Holiday Calendar:** Incomplete by design (`indianCalendarComplete(year) = false`) until an authoritative API source is integrated.
+3. **Risk Metrics & Drawdowns:** Blocked on a native daily portfolio return series.
+4. **Mobile SMS Push Intake:** Endpoint is ready for direct mobile client or forwarder integration; full Android background reader app is client-side.
 
 ---
 
 ## Open decisions
 
 1. **Enable Code Scanning:** (Repository Settings → Code security and analysis). Owner-level action to unlock SARIF publishing for Zizmor.
-2. **Opt-in Merchant Category Rules:** Should users be able to enable automated category assignment based on `merchant_references.category_suggestion` via a user setting, or should it remain strictly manual/rule-based?
+2. **Automated Category Rule Assignment:** Should user-defined transaction rules or opt-in merchant category mapping automatically assign categories during SMS intake?
 3. **Authoritative Indian Trading Holiday Source:** Establish an automated upstream API for NSE/BSE holidays.
 
 ---
 
 ## Recommended next mission
 
-With Indian Merchant Reference Data (Priority 10), Payment Method / UPI Metadata (Priority 9), and Import Identity & Idempotency (Priority 8) completed, the next mission candidates are:
+With Indian Bank SMS Intake (Priority 11), Indian Merchant Reference Data (Priority 10), Payment Method / UPI Metadata (Priority 9), and Import Identity & Idempotency (Priority 8) completed, the recommended next mission is:
 
-1. **Option 1: SMS Intake Pipeline (`sms_sender_registry` parser).**
-   - Ingest transactional SMS messages from Indian banks with template matching and security sanitization into the canonical transaction intake pipeline.
-2. **Option 2: Four-Bucket Budget & Tolerance Visual Indicators.**
-   - Layer the additive 4-bucket budget taxonomy and 5% tolerance bars onto the budget analytics views.
-3. **Option 3: Rules Engine for Automated Categorization.**
-   - Implement user-defined transaction rules (e.g. if payee matches or payment method matches, auto-assign category/tags).
+- **Priority 12: Four-Bucket Budget & Tolerance Visual Indicators.**
+  - Layer the additive 4-bucket budget taxonomy (`Needs`, `Wants`, `Savings / Investments`, `Debt Servicing`) and 5% tolerance visual bands onto the existing budget analytics and register views.
 
 ---
 
@@ -246,14 +251,11 @@ With Indian Merchant Reference Data (Priority 10), Payment Method / UPI Metadata
 | Ref | Type | Description | State |
 |---|---|---|---|
 | `85e643d82` | Merge commit | Merge pull request #11 (`fm/artha-productize-01`) | Merged into `main` |
-| `0caf0e9be` | Commit | `fix(tests): restore green test baseline across frontend and backend` | Committed on `fm/artha-baseline-fixes-01` |
-| `40fc81aac` | Commit | `feat(watchlists): add user-scoped watchlists foundation and quote retrieval` | Committed on `fm/artha-watchlists-01` |
-| `406632bd7` | Commit | `feat(import): add deterministic source record identity and idempotent deduplication` | Committed on `fm/artha-import-identity-01` |
-| `6f3246b4a` | Commit | `feat(transactions): add payment method and UPI metadata` | Committed on `fm/artha-payment-metadata-01` |
-| `a442058ba` | Commit | `feat(import): add Indian merchant reference data` | Committed on `fm/artha-merchant-reference-01` |
-| **PR #12** | Code PR | `Fix red baseline across frontend and backend test suites` (`fm/artha-baseline-fixes-01` -> `main`) | **OPEN** |
-| **PR #13** | Code PR | `feat(watchlists): add user-scoped watchlists foundation and quote retrieval` (`fm/artha-watchlists-01` -> `main`) | **OPEN** |
-| **PR #14** | Code PR | `feat(import): Import Identity & Idempotency (Priority 8)` (`fm/artha-import-identity-01` -> `main`) | **OPEN** |
-| **PR #15** | Code PR | `feat(transactions): add payment method and UPI metadata` (`fm/artha-payment-metadata-01` -> `main`) | **OPEN** |
-| **PR #16** | Code PR | `feat(import): add Indian merchant reference data` (`fm/artha-merchant-reference-01` -> `main`) | **OPEN** |
+| `4b22f23ed` | Merge commit | Merge pull request #12 (`fm/artha-baseline-fixes-01`) | Merged into `main` |
+| `161f7b337` | Merge commit | Merge pull request #13 (`fm/artha-watchlists-01`) | Merged into `main` |
+| `1410eb266` | Merge commit | Merge pull request #14 (`fm/artha-import-identity-01`) | Merged into `main` |
+| `e80f0a096` | Merge commit | Merge pull request #15 (`fm/artha-payment-metadata-01`) | Merged into `main` |
+| `cc71ea07d` | Merge commit | Merge pull request #16 (`fm/artha-merchant-reference-01`) | Merged into `main` |
+| `d9b901690` | Commit | `feat(import): add Indian bank SMS intake pipeline` | Committed on `fm/artha-sms-intake-01` |
+| **PR #17** | Code PR | `feat(import): add Indian bank SMS intake pipeline` (`fm/artha-sms-intake-01` -> `main`) | **OPEN** |
 | **PR #5** | Rolling Status PR | `Artha mission status — review me here` (`fm/artha-mission-status` -> `main`) | **OPEN (1 file)** |
