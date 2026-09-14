@@ -4,6 +4,10 @@ import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Goal, GoalType, GoalStatus, GoalTargetMode } from '@/types/goal';
 import { Modal } from '@/components/ui/Modal';
+import { NumericInput } from '@/components/ui/NumericInput';
+import { CurrencyInput } from '@/components/ui/CurrencyInput';
+import { DateInput } from '@/components/ui/DateInput';
+import { Button } from '@/components/ui/Button';
 
 interface GoalFormProps {
   isOpen: boolean;
@@ -238,55 +242,49 @@ export function GoalForm({
         {/* Target Amount / Target Months */}
         {type === 'EMERGENCY_FUND' && targetMode === 'MONTHS_OF_EXPENSES' ? (
           <div>
-            <label htmlFor="goal-target-months" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label htmlFor="goal-target-months" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               {t('fields.targetMonths')} *
             </label>
-            <input
+            <NumericInput
               id="goal-target-months"
-              type="number"
-              step="0.5"
-              min="0.5"
-              required
-              value={targetMonths}
-              onChange={(e) => setTargetMonths(e.target.value)}
+              min={1}
+              decimalPlaces={0}
+              value={targetMonths ? parseFloat(targetMonths) : undefined}
+              onChange={(val) => setTargetMonths(val !== undefined ? String(val) : '')}
               placeholder={t('fields.targetMonthsPlaceholder')}
-              className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 py-2 px-3 text-sm focus:border-blue-500 focus:outline-none dark:text-white"
             />
           </div>
         ) : (
           <div>
-            <label htmlFor="goal-target-amount" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label htmlFor="goal-target-amount" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               {t('fields.targetAmount')} *
             </label>
-            <input
+            <CurrencyInput
               id="goal-target-amount"
-              type="number"
-              step="0.01"
-              min="0.01"
-              required
-              value={targetAmount}
-              onChange={(e) => setTargetAmount(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 py-2 px-3 text-sm focus:border-blue-500 focus:outline-none dark:text-white"
+              prefix={currency}
+              allowNegative={false}
+              value={targetAmount ? parseFloat(targetAmount) : undefined}
+              onChange={(val) => setTargetAmount(val !== undefined ? String(val) : '')}
             />
           </div>
         )}
 
         {/* Target Date */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label htmlFor="goal-target-date" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             {t('fields.targetDate')}
           </label>
-          <input
-            type="date"
+          <DateInput
+            id="goal-target-date"
             value={targetDate}
+            onDateChange={(val) => setTargetDate(val)}
             onChange={(e) => setTargetDate(e.target.value)}
-            className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 py-2 px-3 text-sm focus:border-blue-500 focus:outline-none dark:text-white"
           />
         </div>
 
         {/* Dedicated Account */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             {t('fields.linkedAccount')}
           </label>
           <select
@@ -306,7 +304,7 @@ export function GoalForm({
         {/* Status (when editing) */}
         {goal && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               {t('fields.status')}
             </label>
             <select
@@ -323,21 +321,21 @@ export function GoalForm({
 
         {/* Action Buttons */}
         <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-          <button
+          <Button
             type="button"
+            variant="outline"
             onClick={onClose}
             disabled={loading}
-            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
           >
             {t('actions.cancel')}
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
-            disabled={loading}
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors disabled:opacity-50"
+            variant="primary"
+            isLoading={loading}
           >
             {loading ? t('actions.saving') : t('actions.save')}
-          </button>
+          </Button>
         </div>
       </form>
     </Modal>

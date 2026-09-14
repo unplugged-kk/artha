@@ -202,7 +202,7 @@ CREATE TABLE categories (
     color VARCHAR(7), -- hex color
     is_income BOOLEAN DEFAULT false,
     is_system BOOLEAN DEFAULT false, -- system categories can't be deleted
-    budget_bucket VARCHAR(32) CHECK (budget_bucket IS NULL OR budget_bucket IN ('NEEDS', 'WANTS', 'SAVINGS_INVESTMENTS', 'DEBT_SERVICING')),
+    budget_bucket VARCHAR(32) CONSTRAINT chk_categories_budget_bucket CHECK (budget_bucket IS NULL OR budget_bucket IN ('NEEDS', 'WANTS', 'SAVINGS_INVESTMENTS', 'DEBT_SERVICING')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id, name, parent_id)
 );
@@ -1831,7 +1831,7 @@ CREATE TABLE budget_categories (
     transfer_account_id UUID REFERENCES accounts(id) ON DELETE SET NULL,
     is_transfer BOOLEAN DEFAULT false,
     category_group VARCHAR(20),
-    budget_bucket VARCHAR(32) CHECK (budget_bucket IS NULL OR budget_bucket IN ('NEEDS', 'WANTS', 'SAVINGS_INVESTMENTS', 'DEBT_SERVICING')),
+    budget_bucket VARCHAR(32) CONSTRAINT chk_budget_categories_budget_bucket CHECK (budget_bucket IS NULL OR budget_bucket IN ('NEEDS', 'WANTS', 'SAVINGS_INVESTMENTS', 'DEBT_SERVICING')),
     amount NUMERIC(20, 4) NOT NULL,
     is_income BOOLEAN DEFAULT false,
     rollover_type VARCHAR(20) DEFAULT 'NONE',

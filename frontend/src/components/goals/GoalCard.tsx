@@ -11,6 +11,9 @@ import {
 } from '@heroicons/react/24/outline';
 import { Goal } from '@/types/goal';
 import { CARD_CLASS } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
+import { useNumberFormat } from '@/hooks/useNumberFormat';
 
 interface GoalCardProps {
   goal: Goal;
@@ -28,41 +31,22 @@ export function GoalCard({
   onManageTransactions,
 }: GoalCardProps) {
   const t = useTranslations('goals');
+  const { formatPercent } = useNumberFormat();
   const { progress } = goal;
 
   const getStatusBadge = () => {
     switch (progress.contributionStatus) {
       case 'COMPLETED':
-        return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300">
-            {t('progress.statusCompleted')}
-          </span>
-        );
+        return <Badge variant="green">{t('progress.statusCompleted')}</Badge>;
       case 'DUE_NOW':
-        return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300">
-            {t('progress.statusDueNow')}
-          </span>
-        );
+        return <Badge variant="amber">{t('progress.statusDueNow')}</Badge>;
       case 'EXPIRED':
-        return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300">
-            {t('progress.statusExpired')}
-          </span>
-        );
+        return <Badge variant="red">{t('progress.statusExpired')}</Badge>;
       case 'UNAVAILABLE':
-        return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300">
-            {t('progress.statusUnavailable')}
-          </span>
-        );
+        return <Badge variant="gray">{t('progress.statusUnavailable')}</Badge>;
       case 'ON_TRACK':
       default:
-        return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300">
-            {t('progress.statusOnTrack')}
-          </span>
-        );
+        return <Badge variant="blue">{t('progress.statusOnTrack')}</Badge>;
     }
   };
 
@@ -155,7 +139,7 @@ export function GoalCard({
           <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
             <span>
               {progress.percentage !== null
-                ? `${progress.percentage.toFixed(1)}%`
+                ? formatPercent(progress.percentage, 1)
                 : '—'}
             </span>
             {progress.remainingAmount !== null && progress.remainingAmount > 0 && (
@@ -225,20 +209,26 @@ export function GoalCard({
 
       {/* Card Actions */}
       <div className="pt-3 border-t border-gray-100 dark:border-gray-800 flex items-center justify-end space-x-2">
-        <button
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={() => onEdit(goal)}
-          className="p-1.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           title={t('actions.save')}
+          aria-label={t('actions.save')}
+          className="p-1.5 h-auto"
         >
           <PencilSquareIcon className="w-4 h-4" />
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={() => onDelete(goal)}
-          className="p-1.5 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
           title={t('actions.delete')}
+          aria-label={t('actions.delete')}
+          className="p-1.5 h-auto text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
         >
           <TrashIcon className="w-4 h-4" />
-        </button>
+        </Button>
       </div>
     </div>
   );

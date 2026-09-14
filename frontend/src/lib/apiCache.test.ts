@@ -71,6 +71,8 @@ describe('invalidateBalanceCaches', () => {
     'budgets:dashboard',
     'budgets:cat-status:cat-1,cat-2',
     'budgets:all',
+    'goals:all',
+    'goals:summary',
   ])('drops %s', (key) => {
     setCache(key, 'stale', 120_000);
     invalidateBalanceCaches();

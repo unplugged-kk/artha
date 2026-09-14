@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { Modal } from '@/components/ui/Modal';
+import { Button } from '@/components/ui/Button';
+import { HOVER_ROW_ON_CARD } from '@/components/ui/Card';
 import { Goal } from '@/types/goal';
 import { goalsApi } from '@/lib/goals';
 import apiClient from '@/lib/api';
@@ -24,28 +26,28 @@ export function GoalLinkTransactionModal({
   onUpdated,
 }: GoalLinkTransactionModalProps) {
   const t = useTranslations('goals');
+  const [loading, setLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
   const [linkedTxs, setLinkedTxs] = useState<any[]>([]);
   const [availableTxs, setAvailableTxs] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
   const [selectedTxId, setSelectedTxId] = useState('');
-  const [actionLoading, setActionLoading] = useState(false);
 
   const loadData = useCallback(async () => {
     if (!goal) return;
     setLoading(true);
     try {
-      const [linked, allTxsResponse] = await Promise.all([
+      const [txsRes, unlinkedRes] = await Promise.all([
         goalsApi.getTransactions(goal.id),
-        apiClient.get('/transactions', { params: { limit: 50 } }),
+        apiClient.get('/transactions', { params: { limit: 50, type: 'INCOME' } }),
       ]);
-      setLinkedTxs(linked || []);
-
-      const linkedIds = new Set((linked || []).map((t: any) => t.id));
-      const candidates = (allTxsResponse.data?.data || allTxsResponse.data || [])
-        .filter((tx: any) => !linkedIds.has(tx.id) && tx.amount > 0);
+      setLinkedTxs(txsRes);
+      const currentLinkedIds = new Set(txsRes.map((tx: any) => tx.id));
+      const candidates = (unlinkedRes.data?.data || unlinkedRes.data || []).filter(
+        (tx: any) => !currentLinkedIds.has(tx.id),
+      );
       setAvailableTxs(candidates);
     } catch (err) {
-      console.error('Failed to load goal transactions:', err);
+      console.error('Failed to load transactions for goal:', err);
     } finally {
       setLoading(false);
     }
@@ -54,6 +56,7 @@ export function GoalLinkTransactionModal({
   useEffect(() => {
     if (isOpen && goal) {
       loadData();
+      setSelectedTxId('');
     }
   }, [isOpen, goal, loadData]);
 
@@ -62,8 +65,8 @@ export function GoalLinkTransactionModal({
     setActionLoading(true);
     try {
       const updated = await goalsApi.linkTransaction(goal.id, selectedTxId);
-      setSelectedTxId('');
       onUpdated(updated);
+      setSelectedTxId('');
       await loadData();
     } catch (err) {
       console.error('Failed to link transaction:', err);
@@ -113,14 +116,16 @@ export function GoalLinkTransactionModal({
                 </option>
               ))}
             </select>
-            <button
+            <Button
+              variant="primary"
+              size="sm"
               onClick={handleLink}
               disabled={!selectedTxId || actionLoading}
-              className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md disabled:opacity-50 transition-colors"
+              isLoading={actionLoading}
             >
-              <PlusIcon className="w-4 h-4" />
+              <PlusIcon className="w-4 h-4 mr-1" />
               {t('actions.linkTransaction')}
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -141,7 +146,7 @@ export function GoalLinkTransactionModal({
               {linkedTxs.map((tx) => (
                 <div
                   key={tx.id}
-                  className="flex items-center justify-between p-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-800/40"
+                  className={`flex items-center justify-between p-2.5 text-sm ${HOVER_ROW_ON_CARD}`}
                 >
                   <div>
                     <span className="font-medium text-gray-900 dark:text-gray-100">
@@ -155,14 +160,17 @@ export function GoalLinkTransactionModal({
                     <span className="font-medium text-green-600 dark:text-green-400">
                       {formatCurrency(tx.amount, tx.currencyCode)}
                     </span>
-                    <button
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       onClick={() => handleUnlink(tx.id)}
                       disabled={actionLoading}
-                      className="text-red-500 hover:text-red-700 p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20"
+                      className="p-1 h-auto text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
                       title={t('actions.unlink')}
+                      aria-label={t('actions.unlink')}
                     >
                       <TrashIcon className="w-4 h-4" />
-                    </button>
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -171,12 +179,12 @@ export function GoalLinkTransactionModal({
         </div>
 
         <div className="flex justify-end pt-2 border-t border-gray-200 dark:border-gray-700">
-          <button
+          <Button
+            variant="outline"
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
           >
             {t('actions.cancel')}
-          </button>
+          </Button>
         </div>
       </div>
     </Modal>

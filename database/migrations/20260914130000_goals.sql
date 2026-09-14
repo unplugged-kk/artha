@@ -1,4 +1,4 @@
--- Migration: 20260914102404_goals.sql
+-- Migration: 20260914130000_goals.sql
 -- Description: Financial Goals and Emergency Fund Tracking System
 
 -- 1. Create goals table
@@ -30,18 +30,12 @@ CREATE INDEX IF NOT EXISTS idx_goals_user_created ON goals(user_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_goals_account ON goals(account_id) WHERE account_id IS NOT NULL;
 
 -- Enable Row-Level Security
-ALTER TABLE goals ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS goals_isolation ON goals;
+CREATE POLICY goals_isolation ON goals
+    USING (user_id = (SELECT app_current_user_id()) OR (SELECT app_bypass_rls()))
+    WITH CHECK (user_id = (SELECT app_current_user_id()) OR (SELECT app_bypass_rls()));
 
-DO $$
-BEGIN
-    IF NOT EXISTS (
-        SELECT 1 FROM pg_policies WHERE tablename = 'goals' AND policyname = 'goals_isolation'
-    ) THEN
-        CREATE POLICY goals_isolation ON goals
-            FOR ALL
-            USING (user_id = current_setting('app.current_user_id', true)::uuid);
-    END IF;
-END $$;
+ALTER TABLE goals ENABLE ROW LEVEL SECURITY;
 
 -- Trigger to maintain updated_at on goals
 DO $$
@@ -70,15 +64,9 @@ CREATE INDEX IF NOT EXISTS idx_goal_transactions_user_goal ON goal_transactions(
 CREATE INDEX IF NOT EXISTS idx_goal_transactions_tx ON goal_transactions(transaction_id);
 
 -- Enable Row-Level Security for goal_transactions
-ALTER TABLE goal_transactions ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS goal_transactions_isolation ON goal_transactions;
+CREATE POLICY goal_transactions_isolation ON goal_transactions
+    USING (user_id = (SELECT app_current_user_id()) OR (SELECT app_bypass_rls()))
+    WITH CHECK (user_id = (SELECT app_current_user_id()) OR (SELECT app_bypass_rls()));
 
-DO $$
-BEGIN
-    IF NOT EXISTS (
-        SELECT 1 FROM pg_policies WHERE tablename = 'goal_transactions' AND policyname = 'goal_transactions_isolation'
-    ) THEN
-        CREATE POLICY goal_transactions_isolation ON goal_transactions
-            FOR ALL
-            USING (user_id = current_setting('app.current_user_id', true)::uuid);
-    END IF;
-END $$;
+ALTER TABLE goal_transactions ENABLE ROW LEVEL SECURITY;

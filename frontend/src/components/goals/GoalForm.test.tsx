@@ -72,7 +72,7 @@ describe('GoalForm', () => {
 
     // Target months input should be visible with default 6
     const monthsInput = screen.getByPlaceholderText(/e\.g\., 3, 6, 12/);
-    expect(monthsInput).toHaveValue(6);
+    expect(monthsInput).toHaveValue('6');
     fireEvent.change(monthsInput, { target: { value: '9' } });
 
     // Submit
