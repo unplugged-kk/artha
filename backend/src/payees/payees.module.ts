@@ -5,6 +5,7 @@ import { PayeeAlias } from "./entities/payee-alias.entity";
 import { Transaction } from "../transactions/entities/transaction.entity";
 import { ScheduledTransaction } from "../scheduled-transactions/entities/scheduled-transaction.entity";
 import { Category } from "../categories/entities/category.entity";
+import { MerchantReference } from "./entities/merchant-reference.entity";
 import { PayeesService } from "./payees.service";
 import { PayeeDetailService } from "./payee-detail.service";
 import { PayeeToolPrepService } from "./payee-tool-prep.service";
@@ -19,6 +20,7 @@ import { PayeeContactLookupModule } from "./lookup/payee-contact-lookup.module";
     TypeOrmModule.forFeature([
       Payee,
       PayeeAlias,
+      MerchantReference,
       Transaction,
       ScheduledTransaction,
       Category,

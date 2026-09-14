@@ -6,6 +6,7 @@ import {
 } from "../transactions/entities/transaction.entity";
 import { Account, AccountType } from "../accounts/entities/account.entity";
 import { Payee } from "../payees/entities/payee.entity";
+import { PayeeAlias } from "../payees/entities/payee-alias.entity";
 import { SplitKind } from "../transactions/entities/split-kind.enum";
 import { ImportResultDto } from "./dto/import.dto";
 
@@ -2496,6 +2497,168 @@ describe("ImportRegularProcessorService", () => {
 
       expect(ctx2.importResult.imported).toBe(0);
       expect(ctx2.importResult.skipped).toBe(2);
+    });
+  });
+
+  describe("Indian merchant reference recognition during import (Priority 10)", () => {
+    it("recognizes corporate legal entity Bundl Technologies and enriches payee to Swiggy", async () => {
+      const ctx = makeContext();
+      const rawTx = {
+        date: "2026-09-13",
+        amount: -450.0,
+        payee: "Bundl Technologies Pvt Ltd",
+        memo: "Dinner order",
+      };
+
+      await service.processTransaction(ctx, rawTx);
+
+      expect(ctx.importResult.imported).toBe(1);
+      expect(ctx.importResult.payeesCreated).toBe(1);
+
+      // Verify Payee created with canonical merchant name
+      const payeeCalls = managerOf(ctx).create.mock.calls.filter(
+        (call: any) => call[0] === Payee,
+      );
+      expect(payeeCalls).toHaveLength(1);
+      expect(payeeCalls[0][1].name).toBe("Swiggy");
+      expect(payeeCalls[0][1].website).toBe("https://www.swiggy.com");
+
+      // Verify Transaction assigned the canonical payeeName and null categoryId
+      const txCalls = managerOf(ctx).create.mock.calls.filter(
+        (call: any) => call[0] === Transaction,
+      );
+      expect(txCalls).toHaveLength(1);
+      expect(txCalls[0][1].payeeName).toBe("Swiggy");
+      expect(txCalls[0][1].categoryId).toBeNull(); // no category assigned (Open Decision 2 safety)
+    });
+
+    it("reuses canonical payee for subsequent variations of the same merchant in import", async () => {
+      const ctx = makeContext();
+      let createdPayee: any = null;
+
+      managerOf(ctx).save.mockImplementation((entity: any) => {
+        if (!entity.id) {
+          entity.id = `payee-${entity.name}`;
+        }
+        if (entity.name === "Swiggy") {
+          createdPayee = entity;
+        }
+        return Promise.resolve(entity);
+      });
+
+      managerOf(ctx).findOne.mockImplementation((entity: any, opts: any) => {
+        if (entity === Payee && opts?.where?.name === "Swiggy") {
+          return Promise.resolve(createdPayee);
+        }
+        if (entity === Account) {
+          return Promise.resolve({ id: accountId, currentBalance: 500 });
+        }
+        return Promise.resolve(null);
+      });
+
+      // First transaction: Bundl Technologies
+      await service.processTransaction(ctx, {
+        date: "2026-09-13",
+        amount: -300.0,
+        payee: "Bundl Technologies Pvt Ltd",
+      });
+
+      // Second transaction: Swiggy Bangalore
+      await service.processTransaction(ctx, {
+        date: "2026-09-14",
+        amount: -250.0,
+        payee: "SWIGGY BANGALORE 560001",
+      });
+
+      // Exactly 1 Payee created across both transactions
+      expect(ctx.importResult.imported).toBe(2);
+      expect(ctx.importResult.payeesCreated).toBe(1);
+
+      const txCalls = managerOf(ctx).create.mock.calls.filter(
+        (call: any) => call[0] === Transaction,
+      );
+      expect(txCalls).toHaveLength(2);
+      expect(txCalls[0][1].payeeName).toBe("Swiggy");
+      expect(txCalls[1][1].payeeName).toBe("Swiggy");
+    });
+
+    it("respects user custom alias precedence over global merchant reference", async () => {
+      const ctx = makeContext();
+
+      // User has custom alias "SWIGGY*" mapped to "My Custom Swiggy"
+      const customPayee = {
+        id: "custom-swiggy-id",
+        name: "My Custom Swiggy",
+        defaultCategoryId: "cat-123",
+      };
+      const customAlias = {
+        id: "alias-1",
+        alias: "SWIGGY*",
+        payee: customPayee,
+      };
+
+      managerOf(ctx).find.mockImplementation((entity: any) => {
+        if (entity === PayeeAlias) {
+          return Promise.resolve([customAlias]);
+        }
+        return Promise.resolve([]);
+      });
+
+      await service.processTransaction(ctx, {
+        date: "2026-09-13",
+        amount: -500.0,
+        payee: "SWIGGY BANGALORE",
+      });
+
+      expect(ctx.importResult.imported).toBe(1);
+      expect(ctx.importResult.payeesCreated).toBe(0); // no new payee created
+
+      const txCalls = managerOf(ctx).create.mock.calls.filter(
+        (call: any) => call[0] === Transaction,
+      );
+      expect(txCalls[0][1].payeeName).toBe("My Custom Swiggy");
+      expect(txCalls[0][1].payeeId).toBe("custom-swiggy-id");
+      expect(txCalls[0][1].categoryId).toBe("cat-123");
+    });
+
+    it("respects user exact payee match precedence over global merchant reference", async () => {
+      const ctx = makeContext();
+
+      // User has explicitly created a payee named "Bundl Technologies Pvt Ltd"
+      const explicitPayee = {
+        id: "explicit-payee-id",
+        name: "Bundl Technologies Pvt Ltd",
+        defaultCategoryId: "cat-custom",
+      };
+
+      managerOf(ctx).findOne.mockImplementation((entity: any, opts: any) => {
+        if (
+          entity === Payee &&
+          opts?.where?.name === "Bundl Technologies Pvt Ltd"
+        ) {
+          return Promise.resolve(explicitPayee);
+        }
+        if (entity === Account) {
+          return Promise.resolve({ id: accountId, currentBalance: 500 });
+        }
+        return Promise.resolve(null);
+      });
+
+      await service.processTransaction(ctx, {
+        date: "2026-09-13",
+        amount: -450.0,
+        payee: "Bundl Technologies Pvt Ltd",
+      });
+
+      expect(ctx.importResult.imported).toBe(1);
+      expect(ctx.importResult.payeesCreated).toBe(0);
+
+      const txCalls = managerOf(ctx).create.mock.calls.filter(
+        (call: any) => call[0] === Transaction,
+      );
+      expect(txCalls[0][1].payeeName).toBe("Bundl Technologies Pvt Ltd");
+      expect(txCalls[0][1].payeeId).toBe("explicit-payee-id");
+      expect(txCalls[0][1].categoryId).toBe("cat-custom");
     });
   });
 });

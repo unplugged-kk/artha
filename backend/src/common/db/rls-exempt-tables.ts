@@ -34,6 +34,8 @@ export const RLS_EXEMPT_TABLES: Readonly<Record<string, string>> = {
     "Global market reference data with no owner column; one index close serves every user.",
   market_index_sync:
     "Sync bookkeeping for the market-index refresh; same ownership story as market_index_prices.",
+  merchant_references:
+    "Global reference data for merchant recognition and payee normalization; no owner column.",
   oauth_payloads:
     "OIDC provider artifacts keyed by opaque id/model/grant_id/uid, with no owner column to policy on.",
   provider_health:

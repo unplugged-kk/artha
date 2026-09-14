@@ -166,6 +166,7 @@ export const INTENTIONALLY_EXCLUDED_TABLES: ReadonlySet<string> = new Set([
   "india_holdings_ext",
   "tax_rules",
   "broker_import_layouts",
+  "merchant_references", // global reference data for Indian merchant recognition
   // Watchlists foundation tables (Priority 7).
   "watchlists",
   "watchlist_items",
