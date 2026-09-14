@@ -34,6 +34,11 @@ export interface ImportContext {
    * themselves here, so a spelling first seen in row 3 is matched in row 300.
    */
   payeeByNormalizedName?: Map<string, ImportedPayeeRef>;
+  /**
+   * Pre-warmed active transaction categorization rules for the user,
+   * evaluated in priority order for imported transactions.
+   */
+  activeRules?: any[];
 }
 
 /** What the import matching needs to know about an existing payee. */

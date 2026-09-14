@@ -18,6 +18,8 @@ import { InvestmentTransaction } from "../securities/entities/investment-transac
 import { UserPreference } from "../users/entities/user-preference.entity";
 import { TransactionAttachment } from "../attachments/entities/transaction-attachment.entity";
 import { primaryAttachmentSql } from "../attachments/primary-attachment.util";
+import { TransactionRule } from "../rules/entities/transaction-rule.entity";
+import { evaluateRules } from "../rules/utils/rule-matcher.util";
 import { CreateTransactionDto } from "./dto/create-transaction.dto";
 import { UpdateTransactionDto } from "./dto/update-transaction.dto";
 import { CreateTransactionSplitDto } from "./dto/create-transaction-split.dto";
@@ -346,14 +348,43 @@ export class TransactionsService {
     }
 
     let categoryId = transactionData.categoryId;
-    if (!hasSplits && !categoryId && resolvedPayeeId) {
+    if (!hasSplits && !categoryId) {
+      // Priority 13: Automated Categorization Rules Engine
       try {
-        const payee = await this.payeesService.findOne(userId, resolvedPayeeId);
-        if (payee.defaultCategoryId) {
-          categoryId = payee.defaultCategoryId;
+        const rules = await withScopedDb(this.dataSource, (m) =>
+          m.getRepository(TransactionRule).find({
+            where: { userId, isActive: true },
+            order: { priority: "ASC", createdAt: "ASC" },
+          }),
+        );
+        if (rules && rules.length > 0) {
+          const match = evaluateRules(rules, {
+            payee: resolvedPayeeName,
+            memo: transactionData.description,
+            amount: transactionData.amount,
+            accountId: transactionData.accountId,
+            paymentMethod: transactionData.paymentMethod,
+          });
+          if (match?.actions.setCategoryId) {
+            categoryId = match.actions.setCategoryId;
+          }
         }
       } catch {
-        // Payee already validated above; this is for default category lookup
+        // Non-fatal rule evaluation
+      }
+
+      if (!categoryId && resolvedPayeeId) {
+        try {
+          const payee = await this.payeesService.findOne(
+            userId,
+            resolvedPayeeId,
+          );
+          if (payee.defaultCategoryId) {
+            categoryId = payee.defaultCategoryId;
+          }
+        } catch {
+          // Payee already validated above; this is for default category lookup
+        }
       }
     }
 

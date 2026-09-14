@@ -246,7 +246,8 @@
       "tagKeyOp": "Bedingung",
       "tagKeyValue": "Wert",
       "currency": "Währung",
-      "hasAttachments": "Anhänge"
+      "hasAttachments": "Anhänge",
+      "paymentMethods": "Payment Methods"
     },
     "hasAttachmentsOptions": {
       "any": "Beliebig",
@@ -262,7 +263,8 @@
       "amountMin": "Min.",
       "amountMax": "Max.",
       "search": "Zahlungsempfänger, Kategorie, Betrag, Tag, Beschreibung, Referenz-Nr. suchen...",
-      "tagKeyValue": "z. B. usa"
+      "tagKeyValue": "z. B. usa",
+      "paymentMethods": "All payment methods"
     },
     "tagKeyNone": "Beliebig (kein Schlüsselfilter)",
     "tagKeyOps": {
@@ -286,7 +288,8 @@
       "removeCurrency": "Währungsfilter {name} entfernen",
       "hasAttachments": "Mit Anhängen",
       "noAttachments": "Ohne Anhänge",
-      "removeAttachments": "Anhangsfilter entfernen"
+      "removeAttachments": "Anhangsfilter entfernen",
+      "removePaymentMethod": "Remove {name} filter"
     },
     "bulkUpdate": "Massenaktualisierung",
     "cancelBulk": "Massenauswahl abbrechen",
@@ -312,6 +315,16 @@
       "thisFiscalYear": "This financial year (Apr-Mar)",
       "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "Benutzerdefiniert"
+    },
+    "paymentMethodOptions": {
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
     }
   },
   "bulk": {
@@ -375,7 +388,10 @@
       "transferAmountWithCurrency": "Überweisungsbetrag ({currency})",
       "amountReceived": "Erhaltener Betrag ({currency})",
       "payeeOptional": "Zahlungsempfänger (optional)",
-      "categoryOptional": "Kategorie (optional)"
+      "categoryOptional": "Kategorie (optional)",
+      "paymentMethod": "Payment Method",
+      "upiVpa": "UPI ID / VPA",
+      "upiReference": "UPI Reference / RRN"
     },
     "placeholders": {
       "selectAccount": "Konto auswählen...",
@@ -385,7 +401,9 @@
       "referenceNumber": "Scheck-Nr., Bestätigungs-Nr....",
       "optionalDescription": "Optionale Beschreibung...",
       "selectTags": "Tags auswählen...",
-      "createNewTag": "Neuen Tag erstellen..."
+      "createNewTag": "Neuen Tag erstellen...",
+      "upiVpa": "e.g. name@okhdfcbank",
+      "upiReference": "12-digit reference number"
     },
     "splitSection": {
       "title": "Buchung aufteilen",
@@ -470,7 +488,18 @@
       },
       "feeCaption": "Enthält eine Fremdwährungsgebühr von {percent}% ({fee})."
     },
-    "jointSplitDisabled": "Splitbuchungen in einem geteilten Konto kann nur der Eigentümer verwalten"
+    "jointSplitDisabled": "Splitbuchungen in einem geteilten Konto kann nur der Eigentümer verwalten",
+    "paymentMethodOptions": {
+      "none": "None",
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
+    }
   },
   "splitEditor": {
     "header": "Details der Buchungsteile",

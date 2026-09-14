@@ -246,7 +246,8 @@
       "tagKeyOp": "Условие",
       "tagKeyValue": "Значение",
       "currency": "Валюта",
-      "hasAttachments": "Вложения"
+      "hasAttachments": "Вложения",
+      "paymentMethods": "Payment Methods"
     },
     "hasAttachmentsOptions": {
       "any": "Любые",
@@ -262,7 +263,8 @@
       "amountMin": "Мин.",
       "amountMax": "Макс.",
       "search": "Поиск получателя, категории, суммы, тега, описания, реф. номера...",
-      "tagKeyValue": "например, usa"
+      "tagKeyValue": "например, usa",
+      "paymentMethods": "All payment methods"
     },
     "tagKeyNone": "Любой (без фильтра по ключу)",
     "tagKeyOps": {
@@ -286,7 +288,8 @@
       "removeCurrency": "Удалить фильтр по валюте {name}",
       "hasAttachments": "С вложениями",
       "noAttachments": "Без вложений",
-      "removeAttachments": "Убрать фильтр вложений"
+      "removeAttachments": "Убрать фильтр вложений",
+      "removePaymentMethod": "Remove {name} filter"
     },
     "bulkUpdate": "Массовое обновление",
     "cancelBulk": "Отменить массовое",
@@ -312,6 +315,16 @@
       "thisFiscalYear": "This financial year (Apr-Mar)",
       "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "Произвольный"
+    },
+    "paymentMethodOptions": {
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
     }
   },
   "bulk": {
@@ -375,7 +388,10 @@
       "transferAmountWithCurrency": "Сумма перевода ({currency})",
       "amountReceived": "Полученная сумма ({currency})",
       "payeeOptional": "Получатель (необязательно)",
-      "categoryOptional": "Категория (необязательно)"
+      "categoryOptional": "Категория (необязательно)",
+      "paymentMethod": "Payment Method",
+      "upiVpa": "UPI ID / VPA",
+      "upiReference": "UPI Reference / RRN"
     },
     "placeholders": {
       "selectAccount": "Выберите счёт...",
@@ -385,7 +401,9 @@
       "referenceNumber": "Номер чека, подтверждения...",
       "optionalDescription": "Необязательное описание...",
       "selectTags": "Выберите теги...",
-      "createNewTag": "Создать новый тег..."
+      "createNewTag": "Создать новый тег...",
+      "upiVpa": "e.g. name@okhdfcbank",
+      "upiReference": "12-digit reference number"
     },
     "splitSection": {
       "title": "Разделить проводку",
@@ -470,7 +488,18 @@
       },
       "feeCaption": "Включает комиссию за зарубежную операцию {percent}% ({fee})."
     },
-    "jointSplitDisabled": "Разделёнными операциями на совместном счёте может управлять только владелец"
+    "jointSplitDisabled": "Разделёнными операциями на совместном счёте может управлять только владелец",
+    "paymentMethodOptions": {
+      "none": "None",
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
+    }
   },
   "splitEditor": {
     "header": "Детали разбивки",

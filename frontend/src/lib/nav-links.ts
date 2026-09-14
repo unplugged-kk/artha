@@ -1,5 +1,6 @@
 import type { ComponentType, SVGProps } from 'react';
 import {
+  AdjustmentsHorizontalIcon,
   ArrowDownTrayIcon,
   ArrowTrendingUpIcon,
   ArrowsRightLeftIcon,
@@ -56,6 +57,7 @@ export const TOOLS_LINKS: NavLinkDef[] = [
   { href: '/securities', labelKey: 'securities' },
   { href: '/watchlists', labelKey: 'watchlists' },
   { href: '/currencies', labelKey: 'currencies' },
+  { href: '/rules', labelKey: 'rules' },
   { href: '/import', labelKey: 'import' },
 ];
 
@@ -92,6 +94,7 @@ export const NAV_ICONS: Record<string, NavIcon> = {
   '/securities': BanknotesIcon,
   '/watchlists': EyeIcon,
   '/currencies': CurrencyDollarIcon,
+  '/rules': AdjustmentsHorizontalIcon,
   '/import': ArrowDownTrayIcon,
   '/admin/users': ShieldCheckIcon,
   '/admin/notifications': BellAlertIcon,

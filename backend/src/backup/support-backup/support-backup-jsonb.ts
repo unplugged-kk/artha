@@ -15,7 +15,9 @@ export type JsonbHandlerName =
   | "lumpSums"
   | "reportFilters"
   | "assetWeightings"
-  | "gemMomentum";
+  | "gemMomentum"
+  | "transactionRuleConditions"
+  | "transactionRuleActions";
 
 type JsonbHandler = (value: unknown, multiplier: number) => unknown;
 
@@ -107,6 +109,33 @@ const gemMomentum: JsonbHandler = (value) => {
   return out;
 };
 
+/** `transaction_rules.conditions`: [{ field, operator, value }]. */
+const transactionRuleConditions: JsonbHandler = (value) => {
+  if (!Array.isArray(value)) return [];
+  return value.map((cond) => {
+    if (!isRecord(cond)) return {};
+    return {
+      field: cond.field,
+      operator: cond.operator,
+      value: typeof cond.value === "string" ? maskText(cond.value) : cond.value,
+    };
+  });
+};
+
+/** `transaction_rules.actions`: { setCategoryId, setPayeeId, setPayeeName, addTagIds, stopProcessing }. */
+const transactionRuleActions: JsonbHandler = (value) => {
+  if (!isRecord(value)) return {};
+  const out: Record<string, unknown> = {};
+  if ("setCategoryId" in value) out.setCategoryId = value.setCategoryId;
+  if ("setPayeeId" in value) out.setPayeeId = value.setPayeeId;
+  if ("setPayeeName" in value && typeof value.setPayeeName === "string") {
+    out.setPayeeName = maskText(value.setPayeeName);
+  }
+  if ("addTagIds" in value) out.addTagIds = value.addTagIds;
+  if ("stopProcessing" in value) out.stopProcessing = value.stopProcessing;
+  return out;
+};
+
 const HANDLERS: Record<JsonbHandlerName, JsonbHandler> = {
   transferRules,
   overrideSplits,
@@ -114,6 +143,8 @@ const HANDLERS: Record<JsonbHandlerName, JsonbHandler> = {
   reportFilters,
   assetWeightings,
   gemMomentum,
+  transactionRuleConditions,
+  transactionRuleActions,
 };
 
 export function applyJsonbHandler(

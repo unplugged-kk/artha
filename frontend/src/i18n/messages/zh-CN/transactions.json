@@ -246,7 +246,8 @@
       "tagKeyOp": "条件",
       "tagKeyValue": "值",
       "currency": "币种",
-      "hasAttachments": "附件"
+      "hasAttachments": "附件",
+      "paymentMethods": "Payment Methods"
     },
     "hasAttachmentsOptions": {
       "any": "任意",
@@ -262,7 +263,8 @@
       "amountMin": "最小",
       "amountMax": "最大",
       "search": "搜索收款人、分类、金额、标签、描述、参考编号...",
-      "tagKeyValue": "例如 usa"
+      "tagKeyValue": "例如 usa",
+      "paymentMethods": "All payment methods"
     },
     "tagKeyNone": "任意（无键筛选）",
     "tagKeyOps": {
@@ -286,7 +288,8 @@
       "removeCurrency": "移除 {name} 币种筛选",
       "hasAttachments": "有附件",
       "noAttachments": "无附件",
-      "removeAttachments": "移除附件筛选"
+      "removeAttachments": "移除附件筛选",
+      "removePaymentMethod": "Remove {name} filter"
     },
     "bulkUpdate": "批量更新",
     "cancelBulk": "取消批量",
@@ -312,6 +315,16 @@
       "thisFiscalYear": "This financial year (Apr-Mar)",
       "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "自定义"
+    },
+    "paymentMethodOptions": {
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
     }
   },
   "bulk": {
@@ -375,7 +388,10 @@
       "transferAmountWithCurrency": "转账金额（{currency}）",
       "amountReceived": "收到金额（{currency}）",
       "payeeOptional": "收款人（可选）",
-      "categoryOptional": "类别（可选）"
+      "categoryOptional": "类别（可选）",
+      "paymentMethod": "Payment Method",
+      "upiVpa": "UPI ID / VPA",
+      "upiReference": "UPI Reference / RRN"
     },
     "placeholders": {
       "selectAccount": "选择账户...",
@@ -385,7 +401,9 @@
       "referenceNumber": "支票编号、确认编号...",
       "optionalDescription": "可选描述...",
       "selectTags": "选择标签...",
-      "createNewTag": "创建新标签..."
+      "createNewTag": "创建新标签...",
+      "upiVpa": "e.g. name@okhdfcbank",
+      "upiReference": "12-digit reference number"
     },
     "splitSection": {
       "title": "拆分交易",
@@ -470,7 +488,18 @@
       },
       "feeCaption": "包含 {percent}% 境外交易手续费（{fee}）。"
     },
-    "jointSplitDisabled": "共享账户中的拆分交易只能由所有者管理"
+    "jointSplitDisabled": "共享账户中的拆分交易只能由所有者管理",
+    "paymentMethodOptions": {
+      "none": "None",
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
+    }
   },
   "splitEditor": {
     "header": "拆分详情",

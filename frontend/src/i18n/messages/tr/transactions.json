@@ -246,7 +246,8 @@
       "tagKeyOp": "Koşul",
       "tagKeyValue": "Değer",
       "currency": "Para birimi",
-      "hasAttachments": "Ekler"
+      "hasAttachments": "Ekler",
+      "paymentMethods": "Payment Methods"
     },
     "hasAttachmentsOptions": {
       "any": "Herhangi biri",
@@ -262,7 +263,8 @@
       "amountMin": "Min",
       "amountMax": "Maks",
       "search": "Alacaklı, kategori, tutar, etiket, açıklama, referans # ara...",
-      "tagKeyValue": "örn. usa"
+      "tagKeyValue": "örn. usa",
+      "paymentMethods": "All payment methods"
     },
     "tagKeyNone": "Herhangi (anahtar filtresi yok)",
     "tagKeyOps": {
@@ -286,7 +288,8 @@
       "removeCurrency": "{name} para birimi filtresini kaldır",
       "hasAttachments": "Ekleri var",
       "noAttachments": "Ek yok",
-      "removeAttachments": "Ek filtresini kaldır"
+      "removeAttachments": "Ek filtresini kaldır",
+      "removePaymentMethod": "Remove {name} filter"
     },
     "bulkUpdate": "Toplu Güncelle",
     "cancelBulk": "Toplu İptal",
@@ -312,6 +315,16 @@
       "thisFiscalYear": "This financial year (Apr-Mar)",
       "lastFiscalYear": "Last financial year (Apr-Mar)",
       "custom": "Özel"
+    },
+    "paymentMethodOptions": {
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
     }
   },
   "bulk": {
@@ -375,7 +388,10 @@
       "transferAmountWithCurrency": "Transfer Tutarı ({currency})",
       "amountReceived": "Alınan Tutar ({currency})",
       "payeeOptional": "Alacaklı (İsteğe Bağlı)",
-      "categoryOptional": "Kategori (İsteğe bağlı)"
+      "categoryOptional": "Kategori (İsteğe bağlı)",
+      "paymentMethod": "Payment Method",
+      "upiVpa": "UPI ID / VPA",
+      "upiReference": "UPI Reference / RRN"
     },
     "placeholders": {
       "selectAccount": "Hesap seçin...",
@@ -385,7 +401,9 @@
       "referenceNumber": "Çek #, onay #...",
       "optionalDescription": "İsteğe bağlı açıklama...",
       "selectTags": "Etiket seçin...",
-      "createNewTag": "Yeni etiket oluştur..."
+      "createNewTag": "Yeni etiket oluştur...",
+      "upiVpa": "e.g. name@okhdfcbank",
+      "upiReference": "12-digit reference number"
     },
     "splitSection": {
       "title": "İşlemi Böl",
@@ -470,7 +488,18 @@
       },
       "feeCaption": "%{percent} yurt dışı işlem ücreti ({fee}) içerir."
     },
-    "jointSplitDisabled": "Paylaşılan bir hesaptaki bölünmüş işlemleri yalnızca sahibi yönetebilir"
+    "jointSplitDisabled": "Paylaşılan bir hesaptaki bölünmüş işlemleri yalnızca sahibi yönetebilir",
+    "paymentMethodOptions": {
+      "none": "None",
+      "upi": "UPI",
+      "imps": "IMPS",
+      "neft": "NEFT",
+      "rtgs": "RTGS",
+      "card": "Card",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "other": "Other"
+    }
   },
   "splitEditor": {
     "header": "Bölüm Ayrıntıları",
