@@ -106,6 +106,7 @@ export function invalidateBalanceCaches(): void {
   invalidateCache('accounts:');
   invalidateCache('investments:');
   invalidateCache('budgets:');
+  invalidateCache('goals:');
 }
 
 /**

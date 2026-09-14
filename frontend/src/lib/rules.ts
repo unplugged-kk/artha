@@ -8,7 +8,7 @@ import {
   ApplyRulesDto,
   ApplyRulesResult,
 } from '@/types/rule';
-import { dedupe, invalidateCache } from './apiCache';
+import { dedupe, invalidateBalanceCaches, invalidateCache } from './apiCache';
 
 export const rulesApi = {
   getAll: async (): Promise<TransactionRule[]> => {
@@ -57,7 +57,7 @@ export const rulesApi = {
 
   apply: async (data: ApplyRulesDto): Promise<ApplyRulesResult> => {
     const response = await apiClient.post<ApplyRulesResult>('/rules/apply', data);
-    invalidateCache('transactions:');
+    invalidateBalanceCaches();
     invalidateCache('categories:');
     return response.data;
   },

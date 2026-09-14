@@ -788,6 +788,29 @@ export const RULES: Record<string, TableRules> = {
     created_at: keep,
     updated_at: keep,
   },
+  goals: {
+    id: keep,
+    user_id: keep,
+    name: mask,
+    description: mask,
+    type: keep,
+    status: keep,
+    target_mode: keep,
+    target_amount: scale,
+    target_months: keep,
+    currency: keep,
+    target_date: keep,
+    account_id: keep,
+    created_at: keep,
+    updated_at: keep,
+  },
+  goal_transactions: {
+    id: keep,
+    user_id: keep,
+    goal_id: keep,
+    transaction_id: keep,
+    created_at: keep,
+  },
 };
 
 /**
