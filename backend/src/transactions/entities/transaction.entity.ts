@@ -18,8 +18,9 @@ import { TransactionSplit } from "./transaction-split.entity";
 import { User } from "../../users/entities/user.entity";
 
 import { TransactionStatus } from "./transaction-status.enum";
+import { PaymentMethod } from "./payment-method.enum";
 
-export { TransactionStatus };
+export { TransactionStatus, PaymentMethod };
 
 @Entity("transactions")
 export class Transaction {
@@ -146,6 +147,30 @@ export class Transaction {
     nullable: true,
   })
   sourceTransactionId?: string | null;
+
+  @Column({
+    type: "varchar",
+    name: "payment_method",
+    length: 20,
+    nullable: true,
+  })
+  paymentMethod?: PaymentMethod | null;
+
+  @Column({
+    type: "varchar",
+    name: "upi_vpa",
+    length: 255,
+    nullable: true,
+  })
+  upiVpa?: string | null;
+
+  @Column({
+    type: "varchar",
+    name: "upi_reference",
+    length: 100,
+    nullable: true,
+  })
+  upiReference?: string | null;
 
   @Column({
     type: "varchar",

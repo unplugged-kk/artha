@@ -670,6 +670,9 @@ export class TransactionBulkUpdateService {
     if ("status" in dto) {
       fields.status = dto.status;
     }
+    if ("paymentMethod" in dto) {
+      fields.paymentMethod = dto.paymentMethod ?? null;
+    }
 
     return fields as Partial<Transaction>;
   }

@@ -38,7 +38,10 @@ import { DelegationService } from "../delegation/delegation.service";
 import { JointAccountsService } from "../delegation/joint-accounts.service";
 import { CrossOwnerAccessService } from "../delegation/cross-owner-access.service";
 import { JointRegisterService } from "./joint-register.service";
-import { TransactionStatus } from "./entities/transaction.entity";
+import {
+  TransactionStatus,
+  PaymentMethod,
+} from "./entities/transaction.entity";
 import { CreateTransactionDto } from "./dto/create-transaction.dto";
 import { UpdateTransactionDto } from "./dto/update-transaction.dto";
 import { CreateTransactionSplitDto } from "./dto/create-transaction-split.dto";
@@ -72,6 +75,28 @@ import {
 const ALL_TRANSACTION_STATUSES = new Set<string>(
   Object.values(TransactionStatus),
 );
+
+const ALL_PAYMENT_METHODS = new Set<string>(Object.values(PaymentMethod));
+
+function parsePaymentMethods(value?: string): PaymentMethod[] | undefined {
+  if (!value || typeof value !== "string") return undefined;
+  const methods = value
+    .split(",")
+    .map((s) => s.trim().toUpperCase())
+    .filter((s) => s);
+  for (const method of methods) {
+    if (!ALL_PAYMENT_METHODS.has(method)) {
+      throw new BadRequestException(
+        tr(
+          "errors.transactions.invalidPaymentMethod",
+          `Invalid payment method: ${method}`,
+          { method },
+        ),
+      );
+    }
+  }
+  return methods.length > 0 ? (methods as PaymentMethod[]) : undefined;
+}
 
 /**
  * Build a KEY:VALUE tag filter from the `tagKey` / `tagKeyOp` / `tagKeyValue`
@@ -357,6 +382,18 @@ export class TransactionsController {
     description:
       "Filter by attachment presence (true = only with attachments, false = only without)",
   })
+  @ApiQuery({
+    name: "paymentMethod",
+    required: false,
+    description:
+      "Filter by payment method (single rail: UPI, IMPS, NEFT, RTGS, CARD, CASH, CHEQUE, OTHER)",
+  })
+  @ApiQuery({
+    name: "paymentMethods",
+    required: false,
+    description:
+      "Filter by payment methods (comma-separated: UPI, IMPS, NEFT, RTGS, CARD, CASH, CHEQUE, OTHER)",
+  })
   @ApiResponse({
     status: 200,
     description: "List of transactions retrieved successfully",
@@ -389,6 +426,8 @@ export class TransactionsController {
     @Query("originalCurrencyCodes") originalCurrencyCodes?: string,
     @Query("hasAttachments", new ParseBoolPipe({ optional: true }))
     hasAttachments?: boolean,
+    @Query("paymentMethod") paymentMethod?: string,
+    @Query("paymentMethods") paymentMethodsParam?: string,
   ) {
     // Validate pagination parameters
     if (page !== undefined) {
@@ -500,7 +539,34 @@ export class TransactionsController {
       jointAccountIds = scope.jointAccountIds;
     }
 
-    return this.transactionsService.findAll(
+    const paymentMethods = parsePaymentMethods(
+      paymentMethodsParam ?? paymentMethod,
+    );
+
+    const serviceArgs: [
+      string,
+      string[] | undefined,
+      string | undefined,
+      string | undefined,
+      string[] | undefined,
+      string[] | undefined,
+      number | undefined,
+      number | undefined,
+      boolean,
+      string | undefined,
+      string | undefined,
+      number | undefined,
+      number | undefined,
+      string[] | undefined,
+      TransactionStatus[] | undefined,
+      ("date" | "amount" | "payee") | undefined,
+      ("ASC" | "DESC") | undefined,
+      TagKeyFilter | undefined,
+      string[] | undefined,
+      boolean | undefined,
+      string[],
+      PaymentMethod[] | undefined,
+    ] = [
       registerUserId,
       effectiveAccountIds,
       startDate,
@@ -522,7 +588,14 @@ export class TransactionsController {
       parseCurrencyCodes(originalCurrencyCodes),
       hasAttachments,
       jointAccountIds,
-    );
+      paymentMethods,
+    ];
+
+    if (paymentMethods === undefined) {
+      serviceArgs.pop();
+    }
+
+    return (this.transactionsService.findAll as any)(...serviceArgs);
   }
 
   @Get("summary")

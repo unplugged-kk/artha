@@ -56,6 +56,12 @@ export interface QifTransaction {
   splits: QifSplit[];
   /** Upstream Financial Institution Transaction ID (from OFX STMTTRN FITID) */
   fitid?: string;
+  /** Payment rail / method (e.g. UPI, IMPS, NEFT, RTGS, CARD, CASH, CHEQUE, OTHER) */
+  paymentMethod?: string;
+  /** UPI Virtual Payment Address (VPA) / handle (when available) */
+  upiVpa?: string;
+  /** UPI transaction / reference ID (when available) */
+  upiReference?: string;
   // Investment-specific fields
   security: string;
   action: string;

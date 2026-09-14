@@ -20,6 +20,7 @@
 
 import type { QifTransaction, QifParseResult } from "./qif-parser";
 import { roundMoney } from "../common/round.util";
+import { detectPaymentMetadata } from "./payment-method-detector.util";
 
 // Strip HTML angle brackets to prevent stored XSS.
 function stripHtml(value: string): string {
@@ -219,6 +220,20 @@ export function parseOfx(content: string): QifParseResult {
     const payee = truncate(name || memo || "", 255);
     const memoText = truncate(name && memo && name !== memo ? memo : "", 5000);
 
+    const paymentMeta = detectPaymentMetadata({
+      explicitMethod:
+        trnType === "CHECK"
+          ? "CHEQUE"
+          : trnType === "POS"
+            ? "CARD"
+            : trnType === "CASH"
+              ? "CASH"
+              : undefined,
+      memo: memoText,
+      payee,
+      number: checkNum,
+    });
+
     const tx: QifTransaction = {
       date,
       amount: roundMoney(amount),
@@ -226,6 +241,9 @@ export function parseOfx(content: string): QifParseResult {
       memo: memoText,
       number: truncate(checkNum, 100),
       fitid: truncate(fitid, 255) || undefined,
+      paymentMethod: paymentMeta.paymentMethod || undefined,
+      upiVpa: paymentMeta.upiVpa || undefined,
+      upiReference: paymentMeta.upiReference || undefined,
       cleared: isCleared,
       reconciled: false,
       category: "",

@@ -16,7 +16,10 @@ import {
 import { Type } from "class-transformer";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { CreateTransactionSplitDto } from "./create-transaction-split.dto";
-import { TransactionStatus } from "../entities/transaction.entity";
+import {
+  TransactionStatus,
+  PaymentMethod,
+} from "../entities/transaction.entity";
 import { SanitizeHtml } from "../../common/decorators/sanitize-html.decorator";
 import { IsCurrencyCode } from "../../common/validators/is-currency-code.validator";
 import { TRANSACTION_NOTE_MAX_LENGTH } from "../../common/transaction-note";
@@ -104,6 +107,33 @@ export class CreateTransactionDto {
   @MaxLength(100)
   @SanitizeHtml()
   referenceNumber?: string;
+
+  @ApiPropertyOptional({
+    description: "Payment method / rail",
+    enum: PaymentMethod,
+  })
+  @IsOptional()
+  @IsEnum(PaymentMethod)
+  paymentMethod?: PaymentMethod | null;
+
+  @ApiPropertyOptional({
+    description:
+      "UPI Virtual Payment Address (VPA) / handle (e.g., user@okhdfcbank)",
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  @SanitizeHtml()
+  upiVpa?: string | null;
+
+  @ApiPropertyOptional({
+    description: "UPI transaction / reference ID (e.g., 12-digit UPI RRN)",
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  @SanitizeHtml()
+  upiReference?: string | null;
 
   @ApiPropertyOptional({
     description: "Transaction status",

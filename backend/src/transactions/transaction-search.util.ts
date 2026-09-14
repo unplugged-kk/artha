@@ -56,6 +56,8 @@ export function buildTransactionSearchClause(
     `(${t}.description ILIKE :${p}` +
     ` OR ${t}.payeeName ILIKE :${p}` +
     ` OR ${t}.referenceNumber ILIKE :${p}` +
+    ` OR ${t}.upiVpa ILIKE :${p}` +
+    ` OR ${t}.upiReference ILIKE :${p}` +
     ` OR ${s}.memo ILIKE :${p}` +
     ` OR CAST(${t}.amount AS TEXT) ILIKE :${p}` +
     ` OR CAST(${s}.amount AS TEXT) ILIKE :${p}` +

@@ -3,6 +3,7 @@ import {
   Transaction,
   TransactionSplit,
   TransactionStatus,
+  PaymentMethod,
   CreateTransactionData,
   UpdateTransactionData,
   CreateSplitData,
@@ -36,6 +37,8 @@ function buildFilterParams(params?: {
   payeeIds?: string[];
   tagIds?: string[];
   originalCurrencyCodes?: string[];
+  paymentMethod?: PaymentMethod;
+  paymentMethods?: PaymentMethod[];
 }): Record<string, string | undefined> {
   const result: Record<string, string | undefined> = {};
 
@@ -65,6 +68,12 @@ function buildFilterParams(params?: {
     result.originalCurrencyCodes = params.originalCurrencyCodes.join(',');
   }
 
+  if (params?.paymentMethods && params.paymentMethods.length > 0) {
+    result.paymentMethods = params.paymentMethods.join(',');
+  } else if (params?.paymentMethod) {
+    result.paymentMethod = params.paymentMethod;
+  }
+
   return result;
 }
 
@@ -85,6 +94,8 @@ export interface TransactionsGetAllParams {
   amountTo?: number;
   tagIds?: string[];
   statuses?: TransactionStatus[];
+  paymentMethod?: PaymentMethod;
+  paymentMethods?: PaymentMethod[];
   /** Filter to transactions entered in these currencies (foreign-entry only). */
   originalCurrencyCodes?: string[];
   /** KEY:VALUE tag filter: the key to filter on (e.g. "country"). */

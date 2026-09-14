@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import toast from 'react-hot-toast';
 import { Select } from '@/components/ui/Select';
+import { Input } from '@/components/ui/Input';
 import { SplitEditor, SplitRow, createEmptySplits, toSplitRows, toCreateSplitData } from './SplitEditor';
 import { NormalTransactionFields } from './NormalTransactionFields';
 import { SplitTransactionFields } from './SplitTransactionFields';
@@ -43,7 +44,7 @@ import { createCategoryFromInput } from '@/lib/category-create';
 import { accountsApi } from '@/lib/accounts';
 import { delegationApi, JointReferenceData } from '@/lib/delegation';
 import { tagsApi } from '@/lib/tags';
-import { Transaction, TransactionStatus } from '@/types/transaction';
+import { Transaction, TransactionStatus, PaymentMethod } from '@/types/transaction';
 import { Payee } from '@/types/payee';
 import { Category } from '@/types/category';
 import { Account, TransferCandidate } from '@/types/account';
@@ -85,6 +86,9 @@ const buildTransactionSchema = (t: (key: string) => string) => z.object({
   currencyCode: z.string().default('CAD'),
   description: optionalString,
   referenceNumber: optionalString,
+  paymentMethod: z.nativeEnum(PaymentMethod).nullish(),
+  upiVpa: optionalString,
+  upiReference: optionalString,
   status: z.nativeEnum(TransactionStatus).default(TransactionStatus.UNRECONCILED),
 });
 
@@ -353,6 +357,9 @@ function TransactionFormFields({ transaction, duplicateFrom, defaultAccountId, d
           currencyCode: initSource.currencyCode,
           description: initSource.description || '',
           referenceNumber: initSource.referenceNumber || '',
+          paymentMethod: initSource.paymentMethod || null,
+          upiVpa: initSource.upiVpa || '',
+          upiReference: initSource.upiReference || '',
           status: duplicateFrom ? TransactionStatus.UNRECONCILED : (initSource.status || TransactionStatus.UNRECONCILED),
         }
       : {
@@ -360,6 +367,9 @@ function TransactionFormFields({ transaction, duplicateFrom, defaultAccountId, d
           categoryId: defaultCategoryId || '',
           transactionDate: getRememberedTransactionDate(LAST_TRANSACTION_DATE_KEY),
           currencyCode: defaultCurrency,
+          paymentMethod: null,
+          upiVpa: '',
+          upiReference: '',
           status: TransactionStatus.UNRECONCILED,
         },
   });
@@ -375,6 +385,7 @@ function TransactionFormFields({ transaction, duplicateFrom, defaultAccountId, d
   // in a draft is reachable without saving first.
   const watchedDescription = watch('description');
   const watchedDate = watch('transactionDate');
+  const watchedPaymentMethod = watch('paymentMethod');
 
   // Foreign-currency entry is active only for non-transfer transactions whose
   // entry currency differs from the account currency. Transfers already have
@@ -639,6 +650,9 @@ function TransactionFormFields({ transaction, duplicateFrom, defaultAccountId, d
     setValue('amount', amount, { shouldDirty: true, shouldValidate: true });
     setValue('description', source.description || '', { shouldDirty: true });
     setValue('referenceNumber', '', { shouldDirty: true });
+    setValue('paymentMethod', source.paymentMethod || null, { shouldDirty: true });
+    setValue('upiVpa', source.upiVpa || '', { shouldDirty: true });
+    setValue('upiReference', source.upiReference || '', { shouldDirty: true });
     setValue('status', TransactionStatus.UNRECONCILED, { shouldDirty: true });
 
     setSelectedPayeeId(source.payeeId || '');
@@ -1258,6 +1272,9 @@ function TransactionFormFields({ transaction, duplicateFrom, defaultAccountId, d
           toCurrencyCode: toCurrencyCode,
           description: data.description ?? null,
           referenceNumber: data.referenceNumber ?? null,
+          paymentMethod: data.paymentMethod || null,
+          upiVpa: data.paymentMethod === PaymentMethod.UPI ? (data.upiVpa?.trim() || null) : null,
+          upiReference: data.paymentMethod === PaymentMethod.UPI ? (data.upiReference?.trim() || null) : null,
           status: data.status,
           payeeId: transferPayeeId || null,
           payeeName: transferPayeeName || null,
@@ -1354,6 +1371,9 @@ function TransactionFormFields({ transaction, duplicateFrom, defaultAccountId, d
         // so the backend knows to clear them rather than ignoring the field
         description: data.description ?? null,
         referenceNumber: data.referenceNumber ?? null,
+        paymentMethod: data.paymentMethod || null,
+        upiVpa: data.paymentMethod === PaymentMethod.UPI ? (data.upiVpa?.trim() || null) : null,
+        upiReference: data.paymentMethod === PaymentMethod.UPI ? (data.upiReference?.trim() || null) : null,
       };
 
       if (transaction) {
@@ -1725,6 +1745,45 @@ function TransactionFormFields({ transaction, duplicateFrom, defaultAccountId, d
           onCancel={() => setShowTagForm(false)}
         />
       </Modal>
+
+      {/* Payment Method */}
+      <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Select
+            label={t('form.fields.paymentMethod')}
+            options={[
+              { value: '', label: t('form.paymentMethodOptions.none') },
+              { value: PaymentMethod.UPI, label: t('form.paymentMethodOptions.upi') },
+              { value: PaymentMethod.IMPS, label: t('form.paymentMethodOptions.imps') },
+              { value: PaymentMethod.NEFT, label: t('form.paymentMethodOptions.neft') },
+              { value: PaymentMethod.RTGS, label: t('form.paymentMethodOptions.rtgs') },
+              { value: PaymentMethod.CARD, label: t('form.paymentMethodOptions.card') },
+              { value: PaymentMethod.CASH, label: t('form.paymentMethodOptions.cash') },
+              { value: PaymentMethod.CHEQUE, label: t('form.paymentMethodOptions.cheque') },
+              { value: PaymentMethod.OTHER, label: t('form.paymentMethodOptions.other') },
+            ]}
+            {...register('paymentMethod')}
+          />
+        </div>
+        {watchedPaymentMethod === PaymentMethod.UPI && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              label={t('form.fields.upiVpa')}
+              type="text"
+              placeholder={t('form.placeholders.upiVpa')}
+              error={errors.upiVpa?.message as string | undefined}
+              {...register('upiVpa')}
+            />
+            <Input
+              label={t('form.fields.upiReference')}
+              type="text"
+              placeholder={t('form.placeholders.upiReference')}
+              error={errors.upiReference?.message as string | undefined}
+              {...register('upiReference')}
+            />
+          </div>
+        )}
+      </div>
 
       {/* Description - only shown when not in split mode (split mode has it inline with Reference Number) */}
       {!isSplitMode && (

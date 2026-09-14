@@ -11,6 +11,17 @@ export enum TransactionStatus {
   VOID = 'VOID',
 }
 
+export enum PaymentMethod {
+  UPI = 'UPI',
+  IMPS = 'IMPS',
+  NEFT = 'NEFT',
+  RTGS = 'RTGS',
+  CARD = 'CARD',
+  CASH = 'CASH',
+  CHEQUE = 'CHEQUE',
+  OTHER = 'OTHER',
+}
+
 export type SplitKind = 'category' | 'transfer' | 'investment';
 
 export interface InvestmentSplitDetails {
@@ -80,6 +91,9 @@ export interface Transaction {
   originalCurrencyCode: string | null;
   description: string | null;
   referenceNumber: string | null;
+  paymentMethod?: PaymentMethod | null;
+  upiVpa?: string | null;
+  upiReference?: string | null;
   status: TransactionStatus;
   // Computed properties for backwards compatibility
   isCleared: boolean;
@@ -134,6 +148,9 @@ export interface CreateTransactionData {
   originalCurrencyCode?: string | null;
   description?: string | null;
   referenceNumber?: string | null;
+  paymentMethod?: PaymentMethod | null;
+  upiVpa?: string | null;
+  upiReference?: string | null;
   status?: TransactionStatus;
   reconciledDate?: string;
   isSplit?: boolean;
@@ -207,6 +224,8 @@ export interface TransactionFilters {
   endDate?: string;
   payeeId?: string;
   categoryId?: string;
+  paymentMethod?: PaymentMethod;
+  paymentMethods?: PaymentMethod[];
   status?: TransactionStatus;
 }
 
@@ -236,6 +255,9 @@ export interface CreateTransferData {
   exchangeRate?: number;
   description?: string;
   referenceNumber?: string;
+  paymentMethod?: PaymentMethod | null;
+  upiVpa?: string | null;
+  upiReference?: string | null;
   status?: TransactionStatus;
   /** Optional category; surfaces the transfer in the monthly category breakdown without counting as income/expense. null clears it. */
   categoryId?: string | null;
@@ -311,6 +333,7 @@ export interface BulkUpdateFilters {
   amountFrom?: number;
   amountTo?: number;
   tagIds?: string[];
+  paymentMethods?: PaymentMethod[];
 }
 
 export interface BulkUpdateData {
@@ -322,6 +345,7 @@ export interface BulkUpdateData {
   payeeName?: string | null;
   categoryId?: string | null;
   description?: string | null;
+  paymentMethod?: PaymentMethod | null;
   tagIds?: string[];
   status?: TransactionStatus;
   /**

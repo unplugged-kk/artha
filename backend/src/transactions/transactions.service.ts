@@ -7,7 +7,11 @@ import {
   Logger,
 } from "@nestjs/common";
 import { Brackets, EntityManager, In, DataSource } from "typeorm";
-import { Transaction, TransactionStatus } from "./entities/transaction.entity";
+import {
+  Transaction,
+  TransactionStatus,
+  PaymentMethod,
+} from "./entities/transaction.entity";
 import { TransactionSplit } from "./entities/transaction-split.entity";
 import { Category } from "../categories/entities/category.entity";
 import { InvestmentTransaction } from "../securities/entities/investment-transaction.entity";
@@ -387,6 +391,9 @@ export class TransactionsService {
           exchangeRate: transactionData.exchangeRate || 1,
           originalAmount: fx.originalAmount,
           originalCurrencyCode: fx.originalCurrencyCode,
+          paymentMethod: transactionData.paymentMethod ?? null,
+          upiVpa: transactionData.upiVpa ?? null,
+          upiReference: transactionData.upiReference ?? null,
         });
 
         const savedTransaction = await m.save(transaction);
@@ -897,6 +904,7 @@ export class TransactionsService {
     originalCurrencyCodes?: string[],
     hasAttachments?: boolean,
     jointAccountIds: string[] = [],
+    paymentMethods?: PaymentMethod[],
   ): Promise<PaginatedTransactions> {
     const clamped = clampPagination(page, limit);
     const safeLimit = clamped.limit;
@@ -1036,6 +1044,13 @@ export class TransactionsService {
         queryBuilder.andWhere(
           "transaction.original_currency_code IN (:...originalCurrencyCodes)",
           { originalCurrencyCodes },
+        );
+      }
+
+      if (paymentMethods && paymentMethods.length > 0) {
+        queryBuilder.andWhere(
+          "transaction.payment_method IN (:...paymentMethods)",
+          { paymentMethods },
         );
       }
 
@@ -2301,6 +2316,12 @@ export class TransactionsService {
       if ("referenceNumber" in updateData)
         transactionUpdateData.referenceNumber =
           updateData.referenceNumber ?? null;
+      if ("paymentMethod" in updateData)
+        transactionUpdateData.paymentMethod = updateData.paymentMethod ?? null;
+      if ("upiVpa" in updateData)
+        transactionUpdateData.upiVpa = updateData.upiVpa ?? null;
+      if ("upiReference" in updateData)
+        transactionUpdateData.upiReference = updateData.upiReference ?? null;
       if ("status" in updateData)
         transactionUpdateData.status = updateData.status;
       if ("reconciledDate" in updateData)
