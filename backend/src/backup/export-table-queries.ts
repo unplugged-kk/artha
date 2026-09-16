@@ -313,6 +313,14 @@ export function buildExportTableQueries(
             WHERE t.user_id = $1`,
     },
     {
+      // The user's categorization rules. `conditions` and `actions` are JSONB
+      // and classified per key by the support backup
+      // (`transactionRuleConditions`, `transactionRuleActions`); the only
+      // foreign key on the table is `user_id`.
+      key: "transaction_rules",
+      sql: "SELECT * FROM transaction_rules WHERE user_id = $1",
+    },
+    {
       key: "scheduled_transactions",
       sql: "SELECT * FROM scheduled_transactions WHERE user_id = $1",
     },

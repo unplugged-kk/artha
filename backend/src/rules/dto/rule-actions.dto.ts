@@ -3,6 +3,7 @@ import {
   IsUUID,
   IsString,
   IsArray,
+  ArrayMaxSize,
   IsBoolean,
 } from "class-validator";
 import { ApiPropertyOptional } from "@nestjs/swagger";
@@ -38,6 +39,7 @@ export class RuleActionsDto {
   })
   @IsOptional()
   @IsArray()
+  @ArrayMaxSize(100)
   @IsUUID(undefined, { each: true })
   addTagIds?: string[];
 

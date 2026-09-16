@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsUUID } from "class-validator";
+import { ArrayMaxSize, IsArray, IsUUID } from "class-validator";
 
 export class ReorderWatchlistsDto {
   @ApiProperty({
@@ -11,6 +11,7 @@ export class ReorderWatchlistsDto {
     ],
   })
   @IsArray()
+  @ArrayMaxSize(500)
   @IsUUID(undefined, { each: true })
   watchlistIds: string[];
 }

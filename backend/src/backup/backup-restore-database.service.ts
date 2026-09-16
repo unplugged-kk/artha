@@ -206,6 +206,11 @@ export class BackupRestoreDatabaseService {
       [userId],
     );
 
+    // Categorization rules (references users only)
+    await manager.query("DELETE FROM transaction_rules WHERE user_id = $1", [
+      userId,
+    ]);
+
     // Transactions
     await manager.query("DELETE FROM transactions WHERE user_id = $1", [
       userId,

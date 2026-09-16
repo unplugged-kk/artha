@@ -45,6 +45,7 @@ const REFERENCE_DATA: ReadonlyArray<[string, string]> = [
   ['categories:', 'category tree'],
   ['institutions:', 'institution records'],
   ['tags:', 'tag records'],
+  ['rules:', 'transaction categorization rules; a transaction referencing one does not change it'],
   [
     'scheduled:',
     'schedule definitions plus their #1167 FX-derived forecast fields. A transaction write does not touch it, so it stays out of invalidateBalanceCaches; its own writers invalidate it, and an FX-input change (rate refresh, account/security currency edit) drops it via invalidateScheduledFxReadModel',

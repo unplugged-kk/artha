@@ -1,6 +1,7 @@
 import {
   IsOptional,
   IsArray,
+  ArrayMaxSize,
   IsUUID,
   IsBoolean,
   IsDateString,
@@ -15,6 +16,7 @@ export class ApplyRulesDto {
   })
   @IsOptional()
   @IsArray()
+  @ArrayMaxSize(500)
   @IsUUID(undefined, { each: true })
   ruleIds?: string[];
 

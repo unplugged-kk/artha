@@ -152,6 +152,13 @@ export const RESTORE_PLAN: ReadonlyArray<RestoreStep> = [
     scopeToUser: false,
   },
   {
+    // References users only; `conditions`/`actions` are JSONB, so there is no
+    // forward reference to defer.
+    table: "transaction_rules",
+    countKey: "transactionRules",
+    scopeToUser: true,
+  },
+  {
     table: "investment_transactions",
     countKey: "investmentTransactions",
     scopeToUser: true,

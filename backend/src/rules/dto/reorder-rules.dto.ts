@@ -1,4 +1,4 @@
-import { IsArray, IsUUID } from "class-validator";
+import { ArrayMaxSize, IsArray, IsUUID } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class ReorderRulesDto {
@@ -10,6 +10,7 @@ export class ReorderRulesDto {
     ],
   })
   @IsArray()
+  @ArrayMaxSize(500)
   @IsUUID(undefined, { each: true })
   ruleIds: string[];
 }

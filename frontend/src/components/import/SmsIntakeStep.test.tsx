@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
+import { render } from '@/test/render';
 import { SmsIntakeStep } from './SmsIntakeStep';
 import { smsIntakeApi } from '@/lib/sms-intake';
 import { Account, AccountType } from '@/types/account';
@@ -9,18 +10,6 @@ vi.mock('@/lib/sms-intake', () => ({
     parse: vi.fn(),
     import: vi.fn(),
     getKnownSenders: vi.fn(),
-  },
-}));
-
-vi.mock('next-intl', () => ({
-  useTranslations: () => (key: string, params?: Record<string, any>) => {
-    if (params) {
-      return Object.entries(params).reduce(
-        (acc, [k, v]) => acc.replace(`{${k}}`, String(v)),
-        key,
-      );
-    }
-    return key;
   },
 }));
 
@@ -50,8 +39,8 @@ describe('SmsIntakeStep', () => {
   it('renders input fields and parse button', () => {
     render(<SmsIntakeStep accounts={mockAccounts} />);
 
-    expect(screen.getByLabelText(/smsIntake.messageLabel/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /smsIntake.parseButton/i })).toBeInTheDocument();
+    expect(screen.getByLabelText(/SMS Message/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Parse SMS/i })).toBeInTheDocument();
   });
 
   it('parses valid SMS and displays parsed candidate transaction', async () => {
@@ -73,10 +62,10 @@ describe('SmsIntakeStep', () => {
 
     render(<SmsIntakeStep accounts={mockAccounts} />);
 
-    const textarea = screen.getByLabelText(/smsIntake.messageLabel/i);
+    const textarea = screen.getByLabelText(/SMS Message/i);
     fireEvent.change(textarea, { target: { value: 'Rs 1250 debited for Swiggy UPI' } });
 
-    const parseBtn = screen.getByRole('button', { name: /smsIntake.parseButton/i });
+    const parseBtn = screen.getByRole('button', { name: /Parse SMS/i });
     fireEvent.click(parseBtn);
 
     await waitFor(() => {
@@ -93,7 +82,7 @@ describe('SmsIntakeStep', () => {
       expect(screen.getByText('UPI')).toBeInTheDocument();
     });
 
-    expect(screen.getByRole('button', { name: /smsIntake.importButton/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Import Transaction/i })).toBeInTheDocument();
   });
 
   it('imports candidate transaction into ledger', async () => {
@@ -119,16 +108,16 @@ describe('SmsIntakeStep', () => {
 
     render(<SmsIntakeStep accounts={mockAccounts} />);
 
-    const textarea = screen.getByLabelText(/smsIntake.messageLabel/i);
+    const textarea = screen.getByLabelText(/SMS Message/i);
     fireEvent.change(textarea, { target: { value: 'Rs 1250 debited' } });
 
-    fireEvent.click(screen.getByRole('button', { name: /smsIntake.parseButton/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Parse SMS/i }));
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /smsIntake.importButton/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /Import Transaction/i })).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /smsIntake.importButton/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Import Transaction/i }));
 
     await waitFor(() => {
       expect(smsIntakeApi.import).toHaveBeenCalledWith({

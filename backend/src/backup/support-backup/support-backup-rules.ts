@@ -1,4 +1,14 @@
-import { JsonbHandlerName } from "./support-backup-jsonb";
+import {
+  TableRules,
+  drop,
+  jsonb,
+  keep,
+  konst,
+  mask,
+  scale,
+  scaleQty,
+} from "./support-backup-column-rules";
+import { SECURITIES_RULES } from "./support-backup-securities-rules";
 
 /**
  * Per-column de-identification rules for the support backup. This registry is
@@ -7,28 +17,13 @@ import { JsonbHandlerName } from "./support-backup-jsonb";
  * golden test (support-backup-coverage) fails when the live schema gains a
  * column this registry does not classify -- so a future migration cannot
  * silently start leaking a new field.
+ *
+ * The rule vocabulary lives in `support-backup-column-rules.ts` and the
+ * securities/holdings group in `support-backup-securities-rules.ts`; both are
+ * re-exported or folded in below so this file stays the one place a reader
+ * looks for "what happens to column X".
  */
-export type ColumnRule =
-  | { t: "keep" } // structure, dates, enums, flags, FKs, public reference values
-  | { t: "mask" } // free text / names: keep first+last 2 chars, star the middle
-  | { t: "drop" } // set to null (highest-risk free text, secrets, bulk blobs)
-  | { t: "const"; value: unknown } // fixed replacement for NOT NULL dropped fields
-  | { t: "scale" } // private money magnitude x M (4 dp)
-  | { t: "scaleQty" } // private quantity x M (8 dp)
-  | { t: "jsonb"; handler: JsonbHandlerName }; // per-key handler for a JSON blob
-
-const keep: ColumnRule = { t: "keep" };
-const mask: ColumnRule = { t: "mask" };
-const drop: ColumnRule = { t: "drop" };
-const scale: ColumnRule = { t: "scale" };
-const scaleQty: ColumnRule = { t: "scaleQty" };
-const konst = (value: unknown): ColumnRule => ({ t: "const", value });
-const jsonb = (handler: JsonbHandlerName): ColumnRule => ({
-  t: "jsonb",
-  handler,
-});
-
-export type TableRules = Record<string, ColumnRule>;
+export { ColumnRule, TableRules } from "./support-backup-column-rules";
 
 /**
  * Tables never written to a support backup regardless of section selection.
@@ -119,6 +114,7 @@ export const RULES: Record<string, TableRules> = {
     color: keep,
     is_income: keep,
     is_system: keep,
+    budget_bucket: keep, // one of the four taxonomy buckets
     created_at: keep,
   },
   payees: {
@@ -242,6 +238,17 @@ export const RULES: Record<string, TableRules> = {
     exchange_rate: keep, // public FX rate
     description: drop,
     reference_number: drop,
+    // Import and payment metadata. The import hash is a fingerprint of the
+    // canonical import representation, which is built from fields this registry
+    // drops or scales -- keeping it would let the dropped description be
+    // confirmed by guessing at a known format. The source id, the VPA and the
+    // UPI reference are external identifiers that name the account or the
+    // person, the same call as `accounts.account_number`.
+    import_hash: drop,
+    source_transaction_id: drop,
+    payment_method: keep, // an enum: which rail the payment used
+    upi_vpa: drop,
+    upi_reference: drop,
     reconciled_date: keep,
     status: keep,
     is_split: keep,
@@ -355,104 +362,7 @@ export const RULES: Record<string, TableRules> = {
     scheduled_transaction_split_id: keep,
     tag_id: keep,
   },
-  securities: {
-    id: keep,
-    user_id: keep,
-    symbol: mask,
-    name: mask,
-    security_type: keep,
-    exchange: keep,
-    currency_code: keep,
-    description: drop,
-    is_active: keep,
-    is_favourite: keep,
-    skip_price_updates: keep,
-    price_alert_percent: keep,
-    price_chart_enabled: keep,
-    sector: keep,
-    industry: keep,
-    sector_weightings: keep, // public weightings
-    country_weightings: keep,
-    asset_weightings: jsonb("assetWeightings"), // free-text class names
-    sector_data_updated_at: keep,
-    quote_provider: keep,
-    // The exchange's regular session, from the provider. Public reference data
-    // about the venue, not the holder, and far too coarse to undo the symbol
-    // mask -- 09:30-16:00 America/New_York names an exchange, not an instrument.
-    market_timezone: keep,
-    market_open_time: keep,
-    market_close_time: keep,
-    website: drop, // a public URL names the instrument the masked symbol hides
-    ir_website: drop,
-    msn_instrument_id: drop, // would identify a masked ticker
-    // Identity codes: an ISIN or an AMFI scheme code names the exact instrument
-    // the masked symbol and name are hiding, so both are dropped for the same
-    // reason as the provider id above.
-    isin: drop,
-    amfi_scheme_code: drop,
-    historical_backfill_attempted_at: keep,
-    created_at: keep,
-    updated_at: keep,
-  },
-  security_prices: {
-    id: keep,
-    security_id: keep,
-    price_date: keep,
-    open_price: keep,
-    high_price: keep,
-    low_price: keep,
-    close_price: keep,
-    adjusted_close: keep,
-    volume: keep,
-    source: keep,
-    quoted_at: keep, // when the quote was struck; price_date beside it is kept too
-    created_at: keep,
-  },
-  security_documents: {
-    id: keep,
-    user_id: keep,
-    security_id: keep,
-    document_type: keep, // a factsheet is a factsheet
-    name: mask, // the user's own wording, and it can name them
-    document_date: keep,
-    url: drop, // an address can identify the holder or the account it came from
-    notes: drop, // free text
-    created_at: keep,
-    updated_at: keep,
-  },
-  holdings: {
-    id: keep,
-    account_id: keep,
-    security_id: keep,
-    quantity: scaleQty,
-    average_cost: keep, // per-unit cost stays public
-    created_at: keep,
-    updated_at: keep,
-  },
-  investment_transactions: {
-    id: keep,
-    user_id: keep,
-    account_id: keep,
-    transaction_id: keep,
-    transaction_split_id: keep,
-    linked_transaction_id: keep,
-    security_id: keep,
-    funding_account_id: keep,
-    action: keep,
-    transaction_date: keep,
-    quantity: scaleQty,
-    price: keep, // public per-unit price
-    commission: scale,
-    total_amount: scale,
-    exchange_rate: keep,
-    description: drop,
-    // An enum flag, like transactions.status: it re-identifies nobody, and a
-    // support backup that dropped it could not reproduce a VOID row's
-    // exclusion from holdings and balances.
-    status: keep,
-    created_at: keep,
-    updated_at: keep,
-  },
+  ...SECURITIES_RULES,
   loan_rate_changes: {
     id: keep,
     user_id: keep,
@@ -508,6 +418,7 @@ export const RULES: Record<string, TableRules> = {
     transfer_account_id: keep,
     is_transfer: keep,
     category_group: keep,
+    budget_bucket: keep, // one of the four taxonomy buckets
     amount: scale,
     is_income: keep,
     rollover_type: keep,

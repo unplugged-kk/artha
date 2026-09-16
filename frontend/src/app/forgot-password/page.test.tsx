@@ -134,10 +134,10 @@ describe('ForgotPasswordPage', () => {
     });
   });
 
-  it('renders the Monize logo', async () => {
+  it('renders the Artha logo', async () => {
     render(<ForgotPasswordPage />);
     await waitFor(() => {
-      expect(screen.getByAltText('Monize')).toBeInTheDocument();
+      expect(screen.getByAltText('Artha')).toBeInTheDocument();
     });
   });
 
