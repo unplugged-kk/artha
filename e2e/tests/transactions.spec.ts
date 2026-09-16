@@ -19,9 +19,17 @@ test.describe('Transactions', () => {
     await dialog.getByLabel(/amount/i).first().fill('987.65');
     await dialog.getByRole('button', { name: /create transaction/i }).click();
 
-    await expect(page.locator('tr', { hasText: '987.65' })).toBeVisible();
+    // Exclude the day-group header rows: they carry the day's total, so a lone
+    // transaction's amount appears on two `tr`s and a bare `tr` locator is a
+    // strict-mode violation. See `TransactionList.tsx`'s
+    // `data-testid="day-group-<date>"`.
+    const transactionRow = page.locator(
+      'tr:not([data-testid^="day-group-"])',
+      { hasText: '987.65' },
+    );
+    await expect(transactionRow).toBeVisible();
     await page.reload();
-    await expect(page.locator('tr', { hasText: '987.65' })).toBeVisible();
+    await expect(transactionRow).toBeVisible();
   });
 
   test('lists transactions seeded via the API', async ({ authedPage: page, api }) => {
