@@ -1,16 +1,33 @@
 import { test, expect } from "../fixtures";
-import { createAccount } from "../helpers/factories";
-import { uniqueId } from "../helpers/api";
+import { createAccount, createCurrency } from "../helpers/factories";
+import { type ApiClient, uniqueId } from "../helpers/api";
+
+/**
+ * An INR account, with the currency set up the way a user would.
+ *
+ * A fresh instance seeds no currencies -- the catalogue is built on demand from
+ * the user's first use of one (`CurrenciesService.ensureSystemCurrency`), and a
+ * new user's list holds only their default. Creating an account whose currency
+ * has no row yet fails its `currency_code` foreign key, so the currency comes
+ * first. Idempotent across the tests here: each runs as its own user, and the
+ * second call takes the "currency already exists, add it to my list" branch.
+ */
+async function createInrAccount(api: ApiClient, name: string) {
+  await createCurrency(api, {
+    code: "INR",
+    name: "Indian Rupee",
+    symbol: "₹",
+    decimalPlaces: 2,
+  });
+  return createAccount(api, { name, currencyCode: "INR" });
+}
 
 test.describe("Indian Bank SMS Intake", () => {
   test("parses and imports a bank SMS end-to-end", async ({
     authedPage: page,
     api,
   }) => {
-    const account = await createAccount(api, {
-      name: `HDFC Salary ${uniqueId()}`,
-      currencyCode: "INR",
-    });
+    const account = await createInrAccount(api, `HDFC Salary ${uniqueId()}`);
 
     const upiRef = `4257${uniqueId().slice(-8).padStart(8, "0")}`;
     const sms = `Rs.450.00 debited from HDFC Bank A/C **1234 on 14-09-26 to VPA swiggy@icici (UPI Ref No ${upiRef}). Avl Bal: Rs.25,000.00.`;
@@ -57,10 +74,10 @@ test.describe("Indian Bank SMS Intake", () => {
     authedPage: page,
     api,
   }) => {
-    const account = await createAccount(api, {
-      name: `HDFC Checking ${uniqueId()}`,
-      currencyCode: "INR",
-    });
+    const account = await createInrAccount(
+      api,
+      `HDFC Checking ${uniqueId()}`,
+    );
 
     const upiRef = `9999${uniqueId().slice(-8).padStart(8, "0")}`;
     const sms = `Rs.250.00 debited from HDFC Bank A/C **1234 on 14-09-26 to VPA zomato@icici (UPI Ref No ${upiRef}). Avl Bal: Rs.20,000.00.`;
