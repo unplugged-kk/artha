@@ -7,6 +7,11 @@ import {
 } from "@nestjs/common";
 import { DataSource } from "typeorm";
 import { withScopedDb } from "../common/db/scoped-db";
+import { todayYMD } from "../common/date-utils";
+import {
+  BOUNDARY_LAG_DAYS,
+  withLeadDays,
+} from "../common/time-series/price-boundary.util";
 import { Watchlist } from "./entities/watchlist.entity";
 import { WatchlistItem } from "./entities/watchlist-item.entity";
 import { Security } from "../securities/entities/security.entity";
@@ -156,7 +161,12 @@ export class WatchlistsService {
 
       const securityIds = items.map((item) => item.securityId);
 
-      // Query the two most recent close prices per security in a single window query.
+      // Query the two most recent close prices per security in a single window
+      // query. The read is bounded by the shared staleness window
+      // (`docs/time-series-contract.md` 2.1): a quote older than the window is
+      // not "the current price", it is a stale one, and the item reports
+      // `unavailable` rather than carrying it forward.
+      const priceFloor = withLeadDays(todayYMD(), BOUNDARY_LAG_DAYS);
       const priceRows: Array<{
         security_id: string;
         close_price: string;
@@ -168,10 +178,11 @@ export class WatchlistsService {
                   ROW_NUMBER() OVER (PARTITION BY security_id ORDER BY price_date DESC) as rn
            FROM security_prices
            WHERE security_id = ANY($1::uuid[])
+             AND price_date >= $2::date
          ) sub
          WHERE rn <= 2
          ORDER BY security_id, rn`,
-        [securityIds],
+        [securityIds, priceFloor],
       );
 
       const priceMap = new Map<
@@ -475,7 +486,10 @@ export class WatchlistsService {
 
       const saved = await itemRepo.save(item);
 
-      // 5. Query quote for this security
+      // 5. Query quote for this security, under the same staleness window the
+      // list read uses -- a quote outside it reports `unavailable` instead of
+      // being presented as the current price.
+      const quoteFloor = withLeadDays(todayYMD(), BOUNDARY_LAG_DAYS);
       const priceRows: Array<{
         close_price: string;
         price_date: string | Date;
@@ -486,10 +500,11 @@ export class WatchlistsService {
                   ROW_NUMBER() OVER (ORDER BY price_date DESC) as rn
            FROM security_prices
            WHERE security_id = $1::uuid
+             AND price_date >= $2::date
          ) sub
          WHERE rn <= 2
          ORDER BY rn`,
-        [dto.securityId],
+        [dto.securityId, quoteFloor],
       );
 
       const latest = priceRows.find((r) => r.rn === "1");

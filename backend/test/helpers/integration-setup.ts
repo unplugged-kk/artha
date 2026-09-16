@@ -18,6 +18,7 @@ import type { TypeOrmModuleOptions } from "@nestjs/typeorm";
 import * as bcrypt from "bcryptjs";
 import { applyRlsPolicies } from "./rls-setup";
 import { settlePendingPriceWrites } from "@/securities/security-price.service";
+import { settlePendingActionHistoryWrites } from "@/action-history/action-history.service";
 
 /**
  * Shared PostgreSQL connection options for integration suites. Specs that need
@@ -197,7 +198,13 @@ export async function cleanTables(
   // So the tables are only emptied once the database is quiet. This waits on
   // work that has started, not on a duration, so it costs nothing when there
   // is none.
+  //
+  // `ActionHistoryService.record` is the other writer in the same position: it
+  // is never awaited by its callers, so a write started before this call can
+  // land after the truncate has emptied `users` and fail its `user_id` foreign
+  // key. Draining it here is the same remedy for the same shape.
   await settlePendingPriceWrites();
+  await settlePendingActionHistoryWrites();
   const tables = tableNames.join(", ");
   await dataSource.query(`TRUNCATE ${tables} CASCADE`);
 }
