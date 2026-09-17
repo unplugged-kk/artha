@@ -44,19 +44,19 @@ describe('SmsIntakeStep', () => {
   });
 
   it('parses valid SMS and displays parsed candidate transaction', async () => {
+    // The payload the API really sends (`ParsedSmsResponseDto`), so this spec
+    // fails if the frontend and backend contracts drift apart again.
     vi.mocked(smsIntakeApi.parse).mockResolvedValueOnce({
-      status: 'PARSED',
-      confidence: 0.95,
-      detectedBank: 'HDFC Bank',
-      rawMessage: 'Rs 1250 debited for Swiggy UPI',
-      parsedTransaction: {
-        amount: 1250,
-        type: 'EXPENSE',
+      status: 'parsed',
+      candidate: {
         date: '2026-09-14',
-        merchant: 'Swiggy',
-        paymentRail: 'UPI',
-        upiRefNumber: '425812345678',
-        accountNumberMask: '**1234',
+        amount: -1250,
+        type: 'debit',
+        payee: 'Swiggy',
+        paymentMethod: 'UPI',
+        upiReference: '425812345678',
+        accountMask: '1234',
+        bankName: 'HDFC Bank',
       },
     });
 
@@ -71,7 +71,7 @@ describe('SmsIntakeStep', () => {
     await waitFor(() => {
       expect(smsIntakeApi.parse).toHaveBeenCalledWith({
         message: 'Rs 1250 debited for Swiggy UPI',
-        senderHeader: undefined,
+        sender: undefined,
       });
     });
 
@@ -87,23 +87,20 @@ describe('SmsIntakeStep', () => {
 
   it('imports candidate transaction into ledger', async () => {
     vi.mocked(smsIntakeApi.parse).mockResolvedValueOnce({
-      status: 'PARSED',
-      confidence: 0.95,
-      detectedBank: 'HDFC Bank',
-      rawMessage: 'Rs 1250 debited',
-      parsedTransaction: {
-        amount: 1250,
-        type: 'EXPENSE',
+      status: 'parsed',
+      candidate: {
         date: '2026-09-14',
-        merchant: 'Swiggy',
-        paymentRail: 'UPI',
+        amount: -1250,
+        type: 'debit',
+        payee: 'Swiggy',
+        paymentMethod: 'UPI',
+        bankName: 'HDFC Bank',
       },
     });
 
     vi.mocked(smsIntakeApi.import).mockResolvedValueOnce({
-      status: 'IMPORTED',
+      status: 'imported',
       transactionId: 'tx-123',
-      message: 'Transaction successfully imported',
     });
 
     render(<SmsIntakeStep accounts={mockAccounts} />);
@@ -122,14 +119,16 @@ describe('SmsIntakeStep', () => {
     await waitFor(() => {
       expect(smsIntakeApi.import).toHaveBeenCalledWith({
         message: 'Rs 1250 debited',
-        senderHeader: undefined,
+        sender: undefined,
         accountId: 'acc-1',
         categoryId: undefined,
       });
     });
 
     await waitFor(() => {
-      expect(screen.getByText(/Transaction successfully imported/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Transaction imported successfully into/i),
+      ).toBeInTheDocument();
     });
   });
 });

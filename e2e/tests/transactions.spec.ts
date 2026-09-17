@@ -1,6 +1,18 @@
-import { test, expect } from "../fixtures";
+import { test, expect, type Page } from "../fixtures";
 import { createAccount, createTransaction } from "../helpers/factories";
 import { uniqueId } from "../helpers/api";
+
+/**
+ * A register row matching `text`, excluding the day-group header rows.
+ *
+ * The headers carry the day's total, so a lone transaction's amount appears on
+ * two `tr`s and a bare `tr` locator resolves to both -- and `.first()` would
+ * match the header, letting an assertion pass without the row existing. See
+ * `TransactionList.tsx`'s `data-testid="day-group-<date>"`.
+ */
+function registerRow(page: Page, text: string) {
+  return page.locator('tr:not([data-testid^="day-group-"])', { hasText: text });
+}
 
 // Transactions run through a tabbed normal/split/transfer form. The payee field
 // is a custom-value combobox that's awkward to drive, so create/edit identify
@@ -30,14 +42,7 @@ test.describe("Transactions", () => {
       .fill("987.65");
     await dialog.getByRole("button", { name: /create transaction/i }).click();
 
-    // Exclude the day-group header rows. They carry the day's total, so a lone
-    // transaction's amount is on two `tr`s and a bare `tr` locator resolves to
-    // both -- and `.first()` would match the header, letting the assertion pass
-    // without the transaction row existing. See `TransactionList.tsx`'s
-    // `data-testid="day-group-<date>"`.
-    const transactionRow = page.locator('tr:not([data-testid^="day-group-"])', {
-      hasText: "987.65",
-    });
+    const transactionRow = registerRow(page, "987.65");
     await expect(transactionRow).toBeVisible();
     await page.reload();
     await expect(transactionRow).toBeVisible();
@@ -186,16 +191,14 @@ test.describe("Transactions", () => {
       .first()
       .fill("350.00");
 
-    await dialog.getByRole("button", { name: /create transaction/i }).click();
+    // The submit button is `t('form.submitCreate', { mode })`, so the transfer
+    // tab's reads "Create Transfer", not "Create Transaction".
+    await dialog.getByRole("button", { name: /create transfer/i }).click();
 
-    // Verify transfer row appears in transaction list
-    await expect(page.locator("tr", { hasText: "350.00" }).first()).toBeVisible(
-      { timeout: 10000 },
-    );
+    // Both legs of the transfer land in the register, one per account.
+    await expect(registerRow(page, "350.00")).toHaveCount(2, { timeout: 10000 });
     await page.reload();
-    await expect(
-      page.locator("tr", { hasText: "350.00" }).first(),
-    ).toBeVisible();
+    await expect(registerRow(page, "350.00")).toHaveCount(2);
   });
 
   test("creates a transaction with UPI payment method and VPA", async ({
@@ -220,14 +223,16 @@ test.describe("Transactions", () => {
       .fill("175.50");
 
     await dialog.getByLabel(/payment method/i).selectOption({ value: "UPI" });
-    await dialog.getByPlaceholder(/user@bank/i).fill("merchant@okhdfcbank");
+    await dialog
+      .getByPlaceholder(/name@okhdfcbank/i)
+      .fill("merchant@okhdfcbank");
 
     await dialog.getByRole("button", { name: /create transaction/i }).click();
 
-    await expect(page.locator("tr", { hasText: "175.50" })).toBeVisible({
+    await expect(registerRow(page, "175.50")).toBeVisible({
       timeout: 10000,
     });
     await page.reload();
-    await expect(page.locator("tr", { hasText: "175.50" })).toBeVisible();
+    await expect(registerRow(page, "175.50")).toBeVisible();
   });
 });

@@ -21,7 +21,12 @@ test.describe("Transaction Rules", () => {
 
     await dialog.getByPlaceholder(/e\.g\. Swiggy & Zomato/i).fill(ruleName);
     await dialog.getByPlaceholder(/value to match/i).fill(matchVal);
-    await dialog.getByPlaceholder(/e\.g\. Swiggy/i).fill("Zomato Food");
+    // Exact, because the rule-name placeholder above ("e.g. Swiggy & Zomato ->
+    // Food & Dining") also contains "e.g. Swiggy" and a loose match is a
+    // strict-mode violation.
+    await dialog
+      .getByPlaceholder("e.g. Swiggy", { exact: true })
+      .fill("Zomato Food");
 
     await dialog.getByRole("button", { name: /create rule/i }).click();
 

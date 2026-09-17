@@ -41,7 +41,7 @@ export function SmsIntakeStep({
   const { formatCurrency } = useNumberFormat();
 
   const [message, setMessage] = useState('');
-  const [senderHeader, setSenderHeader] = useState('');
+  const [sender, setSender] = useState('');
   const [isParsing, setIsParsing] = useState(false);
   const [parseResult, setParseResult] = useState<ParsedSmsResponse | null>(null);
   const [selectedAccountId, setSelectedAccountId] = useState<string>('');
@@ -61,8 +61,8 @@ export function SmsIntakeStep({
 
   // Try to match account by mask when parsed
   useEffect(() => {
-    if (parseResult?.parsedTransaction?.accountNumberMask && accounts.length > 0) {
-      const mask = parseResult.parsedTransaction.accountNumberMask.replace(/\D/g, '');
+    if (parseResult?.candidate?.accountMask && accounts.length > 0) {
+      const mask = parseResult.candidate.accountMask.replace(/\D/g, '');
       if (mask) {
         const matched = accounts.find((acc) => acc.name.includes(mask));
         if (matched) {
@@ -106,16 +106,21 @@ export function SmsIntakeStep({
     try {
       const result = await smsIntakeApi.parse({
         message: message.trim(),
-        senderHeader: senderHeader.trim() || undefined,
+        sender: sender.trim() || undefined,
       });
       setParseResult(result);
 
-      if (result.status !== 'PARSED') {
-        let msg = t('smsIntake.unsupportedFormat');
-        if (result.status === 'NON_TRANSACTIONAL') msg = t('smsIntake.nonTransactional');
-        if (result.status === 'AMBIGUOUS') msg = t('smsIntake.ambiguous');
-        if (result.status === 'SPAM') msg = t('smsIntake.spam');
-        setParseError(msg);
+      if (result.status !== 'parsed') {
+        // `ambiguous` has its own copy; everything else the backend reports
+        // (`unsupported`, `invalid`) is "we could not read this", and its
+        // `reason` says which. A non-transactional or spam message arrives as
+        // `unsupported` with the classifier's reason, so both are covered.
+        setParseError(
+          result.reason ||
+            (result.status === 'ambiguous'
+              ? t('smsIntake.ambiguous')
+              : t('smsIntake.unsupportedFormat')),
+        );
       }
     } catch (err: unknown) {
       logger.error('Failed to parse SMS', err);
@@ -128,7 +133,7 @@ export function SmsIntakeStep({
   };
 
   const handleImport = async () => {
-    if (!parseResult || parseResult.status !== 'PARSED' || !selectedAccountId) {
+    if (!parseResult || parseResult.status !== 'parsed' || !selectedAccountId) {
       return;
     }
 
@@ -136,19 +141,21 @@ export function SmsIntakeStep({
     try {
       const res = await smsIntakeApi.import({
         message: message.trim(),
-        senderHeader: senderHeader.trim() || undefined,
+        sender: sender.trim() || undefined,
         accountId: selectedAccountId,
         categoryId: selectedCategoryId || undefined,
       });
       setImportResult(res);
 
-      if (res.status === 'IMPORTED') {
+      if (res.status === 'imported') {
         const accName = accounts.find((a) => a.id === selectedAccountId)?.name || 'Account';
         toast.success(t('smsIntake.importedSuccess', { account: accName }));
-      } else if (res.status === 'SKIPPED_DUPLICATE') {
-        toast(res.message, { icon: 'ℹ️' });
+      } else if (res.status === 'skipped') {
+        toast(t('smsIntake.skippedDuplicate', { reason: res.reason || '' }), {
+          icon: 'ℹ️',
+        });
       } else {
-        toast.error(res.message || t('smsIntake.failed', { error: 'Unknown' }));
+        toast.error(res.reason || t('smsIntake.failed', { error: 'Unknown' }));
       }
     } catch (err: unknown) {
       logger.error('Failed to import SMS', err);
@@ -161,13 +168,13 @@ export function SmsIntakeStep({
 
   const handleReset = () => {
     setMessage('');
-    setSenderHeader('');
+    setSender('');
     setParseResult(null);
     setImportResult(null);
     setParseError(null);
   };
 
-  const parsed = parseResult?.parsedTransaction;
+  const parsed = parseResult?.candidate;
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
@@ -192,8 +199,8 @@ export function SmsIntakeStep({
             <input
               id="sms-sender-header"
               type="text"
-              value={senderHeader}
-              onChange={(e) => setSenderHeader(e.target.value)}
+              value={sender}
+              onChange={(e) => setSender(e.target.value)}
               placeholder={t('smsIntake.senderHeaderPlaceholder')}
               className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-750 text-gray-900 dark:text-gray-100 shadow-sm focus:outline-none focus-visible:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500 text-sm p-2 border"
             />
@@ -265,19 +272,19 @@ export function SmsIntakeStep({
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                 {t('smsIntake.candidateTitle')}
               </h3>
-              {parseResult?.detectedBank && (
+              {parsed.bankName && (
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {t('smsIntake.detectedBank')}: <span className="font-medium text-gray-800 dark:text-gray-200">{parseResult.detectedBank}</span>
+                  {t('smsIntake.detectedBank')}: <span className="font-medium text-gray-800 dark:text-gray-200">{parsed.bankName}</span>
                 </p>
               )}
             </div>
             <div className="flex items-center gap-2">
-              <Badge variant={parsed.type === 'INCOME' ? 'green' : 'gray'}>
+              <Badge variant={parsed.type === 'credit' ? 'green' : 'gray'}>
                 {parsed.type}
               </Badge>
-              {parsed.paymentRail && (
+              {parsed.paymentMethod && (
                 <Badge variant="blue">
-                  {parsed.paymentRail}
+                  {parsed.paymentMethod}
                 </Badge>
               )}
             </div>
@@ -287,31 +294,33 @@ export function SmsIntakeStep({
             <div>
               <span className="text-gray-500 dark:text-gray-400">{t('smsIntake.amount')}:</span>
               <div className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                {formatCurrency(parsed.amount, 'INR')}
+                {/* The badge above carries the direction, so the figure is the
+                    magnitude: the wire amount is signed. */}
+                {formatCurrency(Math.abs(parsed.amount), 'INR')}
               </div>
             </div>
 
             <div>
               <span className="text-gray-500 dark:text-gray-400">{t('smsIntake.merchant')}:</span>
               <div className="font-medium text-gray-900 dark:text-gray-100">
-                {parsed.merchant || parsed.cleanPayee || parsed.rawPayee || '—'}
+                {parsed.payee || '—'}
               </div>
             </div>
 
-            {parsed.accountNumberMask && (
+            {parsed.accountMask && (
               <div>
                 <span className="text-gray-500 dark:text-gray-400">{t('smsIntake.accountDigits')}:</span>
                 <div className="font-mono text-gray-900 dark:text-gray-100">
-                  {parsed.accountNumberMask}
+                  {parsed.accountMask}
                 </div>
               </div>
             )}
 
-            {(parsed.upiRefNumber || parsed.referenceNumber) && (
+            {(parsed.upiReference || parsed.referenceNumber) && (
               <div>
                 <span className="text-gray-500 dark:text-gray-400">{t('smsIntake.reference')}:</span>
                 <div className="font-mono text-gray-900 dark:text-gray-100">
-                  {parsed.upiRefNumber || parsed.referenceNumber}
+                  {parsed.upiReference || parsed.referenceNumber}
                 </div>
               </div>
             )}
@@ -363,43 +372,49 @@ export function SmsIntakeStep({
         <Card
           padding="md"
           className={
-            importResult.status === 'IMPORTED'
+            importResult.status === 'imported'
               ? 'border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/20'
-              : importResult.status === 'SKIPPED_DUPLICATE'
+              : importResult.status === 'skipped'
               ? 'border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/20'
               : 'border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/20'
           }
         >
           <div className="flex items-start gap-3">
-            {importResult.status === 'IMPORTED' ? (
+            {importResult.status === 'imported' ? (
               <CheckCircleIcon className="w-6 h-6 text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0" />
-            ) : importResult.status === 'SKIPPED_DUPLICATE' ? (
+            ) : importResult.status === 'skipped' ? (
               <InformationCircleIcon className="w-6 h-6 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
             ) : (
               <ExclamationTriangleIcon className="w-6 h-6 text-red-600 dark:text-red-400 mt-0.5 shrink-0" />
             )}
             <div className="space-y-2 flex-1">
               <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-                {importResult.status === 'IMPORTED'
+                {importResult.status === 'imported'
                   ? t('smsIntake.importedSuccess', {
                       account:
                         accounts.find((a) => a.id === selectedAccountId)?.name || 'Account',
                     })
-                  : importResult.status === 'SKIPPED_DUPLICATE'
+                  : importResult.status === 'skipped'
                   ? t('smsIntake.skippedDuplicate', {
-                      reason: importResult.duplicateReason || importResult.message,
+                      reason: importResult.reason || '',
                     })
-                  : t('smsIntake.failed', { error: importResult.message })}
+                  : importResult.status === 'review_needed'
+                  ? t('smsIntake.needsReview', {
+                      message: importResult.reason || '',
+                    })
+                  : t('smsIntake.failed', { error: importResult.reason || '' })}
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                {importResult.message}
-              </p>
+              {importResult.reason && (
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                  {importResult.reason}
+                </p>
+              )}
 
               <div className="flex flex-wrap gap-3 pt-2">
                 <Button variant="outline" onClick={handleReset}>
                   {t('smsIntake.parseAnother')}
                 </Button>
-                {importResult.status === 'IMPORTED' && (
+                {importResult.status === 'imported' && (
                   <Link href="/transactions">
                     <Button variant="primary">
                       {t('smsIntake.viewInTransactions')}
