@@ -50,7 +50,7 @@ describe('MobileNavDrawer', () => {
 
   it('renders the brand, Dashboard, nav, AI, Tools and Settings entries', () => {
     renderDrawer();
-    expect(screen.getByText('Monize')).toBeInTheDocument();
+    expect(screen.getByText('Artha')).toBeInTheDocument();
     expect(screen.getByText('Dashboard')).toBeInTheDocument();
     expect(screen.getByText('Transactions')).toBeInTheDocument();
     expect(screen.getByText('Accounts')).toBeInTheDocument();
@@ -93,7 +93,7 @@ describe('MobileNavDrawer', () => {
 
   it('navigates to the dashboard from the brand button', () => {
     const { onNavigate } = renderDrawer();
-    fireEvent.click(screen.getByText('Monize'));
+    fireEvent.click(screen.getByText('Artha'));
     expect(onNavigate).toHaveBeenCalledWith('/dashboard');
   });
 

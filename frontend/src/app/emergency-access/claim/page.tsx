@@ -208,7 +208,7 @@ export default function EmergencyClaimPage() {
         <div>
           <Image
             src="/icons/monize-logo-transparent.svg"
-            alt="Monize"
+            alt="Artha"
             width={96}
             height={96}
             className="mx-auto rounded-xl"

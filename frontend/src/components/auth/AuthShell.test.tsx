@@ -19,7 +19,7 @@ describe('AuthShell', () => {
     expect(getByText('form body')).toBeInTheDocument();
     // The boxed logo bakes in a white background rect and renders as a white
     // square in dark mode; the shell must use the transparent mark.
-    const logo = getByAltText('Monize') as HTMLImageElement;
+    const logo = getByAltText('Artha') as HTMLImageElement;
     expect(logo.src).toContain('monize-logo-transparent');
   });
 

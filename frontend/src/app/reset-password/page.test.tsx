@@ -104,9 +104,9 @@ describe('ResetPasswordPage', () => {
     expect(screen.getByText('Enter your new password below.')).toBeInTheDocument();
   });
 
-  it('renders the Monize logo', () => {
+  it('renders the Artha logo', () => {
     render(<ResetPasswordPage />);
-    expect(screen.getByAltText('Monize')).toBeInTheDocument();
+    expect(screen.getByAltText('Artha')).toBeInTheDocument();
   });
 
   it('renders the new password field when token is present', () => {

@@ -186,9 +186,9 @@ describe('ChangePasswordPage', () => {
     expect(screen.getByText('Change Password')).toBeInTheDocument();
   });
 
-  it('renders the Monize logo', () => {
+  it('renders the Artha logo', () => {
     render(<ChangePasswordPage />);
-    expect(screen.getByAltText('Monize')).toBeInTheDocument();
+    expect(screen.getByAltText('Artha')).toBeInTheDocument();
   });
 
   it('redirects to dashboard if user does not need to change password', () => {

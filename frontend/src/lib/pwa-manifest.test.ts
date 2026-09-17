@@ -41,8 +41,8 @@ describe('buildManifest', () => {
     const dark = buildManifest('dark', 'midnight');
 
     expect(light.id).toBe('/');
-    expect(light.name).toBe('Monize - Personal Finance Manager');
-    expect(light.short_name).toBe('Monize');
+    expect(light.name).toBe('Artha - Personal Finance Manager');
+    expect(light.short_name).toBe('Artha');
     expect(light.start_url).toBe('/');
     expect(light.display).toBe('standalone');
     expect(light.icons).toHaveLength(4);

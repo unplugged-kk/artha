@@ -1,10 +1,10 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { Card, HOVER_ROW_ON_CARD } from '@/components/ui/Card';
 import { BudgetProgressBar } from './BudgetProgressBar';
 import { BudgetToleranceIndicator } from './BudgetToleranceIndicator';
 import { useNumberFormat } from '@/hooks/useNumberFormat';
-import { Card, HOVER_ROW_ON_CARD } from '@/components/ui/Card';
 import type { BudgetBucketSummaryItem, BudgetBucket } from '@/types/budget';
 
 interface BudgetBucketSummaryProps {

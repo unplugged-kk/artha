@@ -273,7 +273,8 @@ export function RuleForm({
                   </select>
                 ) : (
                   <input
-                    type={isNumeric ? 'number' : 'text'}
+                    type="text"
+                    inputMode={isNumeric ? 'decimal' : 'text'}
                     value={cond.value as string}
                     onChange={(e) =>
                       handleConditionChange(

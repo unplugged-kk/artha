@@ -1,34 +1,39 @@
-import { test, expect } from '../fixtures';
+import { test, expect } from "../fixtures";
 import {
   createBudget,
   addBudgetCategory,
   createCategory,
   createAccount,
   createTransaction,
-} from '../helpers/factories';
-import { uniqueId } from '../helpers/api';
+} from "../helpers/factories";
+import { uniqueId } from "../helpers/api";
 
 // Budgets. The create flow is a spending-analysis wizard (deferred -- see
 // ROADMAP Phase 2.2), so budgets are seeded via the API and the UI is used to
 // list, inspect actuals-vs-budget, and delete. The detail page loads a summary
 // (categoryBreakdown), so each detail/delete test seeds at least one category.
-test.describe('Budgets', () => {
-  test('lists budgets seeded via the API', async ({ authedPage: page, api }) => {
+test.describe("Budgets", () => {
+  test("lists budgets seeded via the API", async ({
+    authedPage: page,
+    api,
+  }) => {
     const a = await createBudget(api, { name: `Household ${uniqueId()}` });
     const b = await createBudget(api, { name: `Vacation ${uniqueId()}` });
 
-    await page.goto('/budgets');
+    await page.goto("/budgets");
 
-    await expect(page.getByRole('heading', { name: a.name })).toBeVisible();
-    await expect(page.getByRole('heading', { name: b.name })).toBeVisible();
+    await expect(page.getByRole("heading", { name: a.name })).toBeVisible();
+    await expect(page.getByRole("heading", { name: b.name })).toBeVisible();
   });
 
-  test('shows actuals against the budget for the current period', async ({
+  test("shows actuals against the budget for the current period", async ({
     authedPage: page,
     api,
   }) => {
     const budget = await createBudget(api, { name: `Spending ${uniqueId()}` });
-    const category = await createCategory(api, { name: `Groceries ${uniqueId()}` });
+    const category = await createCategory(api, {
+      name: `Groceries ${uniqueId()}`,
+    });
     await addBudgetCategory(api, budget.id, {
       categoryId: category.id,
       amount: 500,
@@ -45,7 +50,7 @@ test.describe('Budgets', () => {
 
     await page.goto(`/budgets/${budget.id}`);
 
-    await expect(page.getByRole('heading', { name: budget.name })).toBeVisible({
+    await expect(page.getByRole("heading", { name: budget.name })).toBeVisible({
       timeout: 15000,
     });
     // The category appears with its budgeted target.
@@ -58,29 +63,67 @@ test.describe('Budgets', () => {
     // on a single reload landing after the recompute.
     await expect(async () => {
       await page.reload();
-      await expect(page.getByText(/\$120/).first()).toBeVisible({ timeout: 5000 });
+      await expect(page.getByText(/\$120/).first()).toBeVisible({
+        timeout: 5000,
+      });
     }).toPass({ timeout: 30000 });
   });
 
-  test('deletes a budget through the UI', async ({ authedPage: page, api }) => {
-    const budget = await createBudget(api, { name: `Delete Me ${uniqueId()}` });
-    const category = await createCategory(api, { name: `Cat ${uniqueId()}` });
-    await addBudgetCategory(api, budget.id, { categoryId: category.id, amount: 200 });
+  test("displays Four-Bucket overview on budget detail", async ({
+    authedPage: page,
+    api,
+  }) => {
+    const budget = await createBudget(api, {
+      name: `Four Bucket ${uniqueId()}`,
+    });
+    const category = await createCategory(api, {
+      name: `Groceries Needs ${uniqueId()}`,
+    });
+    await addBudgetCategory(api, budget.id, {
+      categoryId: category.id,
+      amount: 600,
+    });
 
     await page.goto(`/budgets/${budget.id}`);
-    await expect(page.getByRole('heading', { name: budget.name })).toBeVisible({
+    await expect(page.getByRole("heading", { name: budget.name })).toBeVisible({
       timeout: 15000,
     });
 
-    await page.getByRole('button', { name: 'Delete', exact: true }).click();
+    // The Four-Bucket Overview component should be visible
+    await expect(page.getByText(/four-bucket overview/i)).toBeVisible({
+      timeout: 10000,
+    });
+    await expect(
+      page.getByText(/spending categorized into needs, wants/i),
+    ).toBeVisible();
+  });
+
+  test("deletes a budget through the UI", async ({ authedPage: page, api }) => {
+    const budget = await createBudget(api, { name: `Delete Me ${uniqueId()}` });
+    const category = await createCategory(api, { name: `Cat ${uniqueId()}` });
+    await addBudgetCategory(api, budget.id, {
+      categoryId: category.id,
+      amount: 200,
+    });
+
+    await page.goto(`/budgets/${budget.id}`);
+    await expect(page.getByRole("heading", { name: budget.name })).toBeVisible({
+      timeout: 15000,
+    });
+
+    await page.getByRole("button", { name: "Delete", exact: true }).click();
     await page
-      .getByRole('dialog')
-      .getByRole('button', { name: 'Delete', exact: true })
+      .getByRole("dialog")
+      .getByRole("button", { name: "Delete", exact: true })
       .click();
 
     await page.waitForURL(/\/budgets$/);
-    await expect(page.getByRole('heading', { name: budget.name })).toHaveCount(0);
+    await expect(page.getByRole("heading", { name: budget.name })).toHaveCount(
+      0,
+    );
     await page.reload();
-    await expect(page.getByRole('heading', { name: budget.name })).toHaveCount(0);
+    await expect(page.getByRole("heading", { name: budget.name })).toHaveCount(
+      0,
+    );
   });
 });
