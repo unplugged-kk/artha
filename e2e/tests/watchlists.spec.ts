@@ -53,8 +53,11 @@ test.describe("Watchlists", () => {
     // Select the newly created watchlist if multiple exist
     await page.getByRole("button", { name: watchlist.name }).click();
 
-    // Click Add Security
-    await page.getByRole("button", { name: /add security/i }).click();
+    // Click Add Security. `.first()`: an empty watchlist renders the same
+    // control twice -- the header action (`watchlists.addSecurity`) and the
+    // empty state (`watchlists.addFirstSecurity`), which share the copy "Add
+    // Security" -- and both open the same modal.
+    await page.getByRole("button", { name: /add security/i }).first().click();
 
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible();
@@ -62,9 +65,13 @@ test.describe("Watchlists", () => {
     // Search for the security
     await dialog.locator('input[type="text"]').fill(symbol);
 
-    // Click Add next to the found security
-    const row = dialog.locator("div", { hasText: symbol }).last();
-    await row.getByRole("button", { name: /add/i }).click();
+    // Click Add next to the found security. The search is the symbol the test
+    // just invented, so exactly one row matches -- and the row's Add button is
+    // a SIBLING of the text block that carries the symbol, so scoping by
+    // `hasText` alone would land on the text column and find no button.
+    await dialog
+      .getByRole("button", { name: /add to watchlist/i })
+      .click();
 
     // Verify security is listed in the items table
     await expect(page.locator("table", { hasText: symbol })).toBeVisible({
