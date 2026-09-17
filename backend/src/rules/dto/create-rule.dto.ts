@@ -6,6 +6,7 @@ import {
   IsBoolean,
   IsEnum,
   IsArray,
+  ArrayMaxSize,
   ValidateNested,
 } from "class-validator";
 import { Type } from "class-transformer";
@@ -53,6 +54,7 @@ export class CreateRuleDto {
     type: [RuleConditionDto],
   })
   @IsArray()
+  @ArrayMaxSize(50)
   @ValidateNested({ each: true })
   @Type(() => RuleConditionDto)
   conditions: RuleConditionDto[];

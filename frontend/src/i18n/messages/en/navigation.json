@@ -34,5 +34,6 @@
     "label": "Search transactions",
     "open": "Open search",
     "submit": "Search"
-  }
+  },
+  "goals": "Goals"
 }

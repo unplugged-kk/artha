@@ -24,6 +24,7 @@ import { UserMaintenanceService } from "@/common/jobs/user-maintenance.service";
 import { createTestUserDirect } from "../helpers/integration-setup";
 import { applyRlsPolicies } from "../helpers/rls-setup";
 import { withUserContext } from "@/common/db/with-context";
+import { settlePendingActionHistoryWrites } from "@/action-history/action-history.service";
 
 /**
  * Full backup -> restore round-trip against a real PostgreSQL database.
@@ -143,6 +144,11 @@ describe("Backup export/restore round-trip (integration)", () => {
   });
 
   beforeEach(async () => {
+    // Wait for detached action-history writes before emptying `users`: this
+    // truncate cascades to `action_history`, and a write still in flight lands
+    // afterwards with a `user_id` that no longer exists. See
+    // `settlePendingActionHistoryWrites`.
+    await settlePendingActionHistoryWrites();
     await dataSource.query(`
       TRUNCATE transaction_tags, transaction_splits, transactions, tags,
         payees, accounts, institutions, categories, user_preferences,

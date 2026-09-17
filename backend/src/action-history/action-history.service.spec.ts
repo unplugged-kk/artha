@@ -2,7 +2,10 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { NotFoundException, ConflictException, Logger } from "@nestjs/common";
 import { DataSource } from "typeorm";
 import { createScopedDbMocks } from "../test-helpers/scoped-db-testing";
-import { ActionHistoryService } from "./action-history.service";
+import {
+  ActionHistoryService,
+  settlePendingActionHistoryWrites,
+} from "./action-history.service";
 import { ActionHistory } from "./entities/action-history.entity";
 
 jest.mock("../common/db/scoped-db", () =>
@@ -125,6 +128,49 @@ describe("ActionHistoryService", () => {
         }),
       );
       expect(mockRepository.save).toHaveBeenCalled();
+    });
+
+    /**
+     * Invariant: a history write nobody awaited is still visible to something
+     * that needs the database quiet.
+     * Canonical adversarial input: an operation outliving the request that
+     * started it (testing contract, concurrency).
+     * Minimal mutation: return `this.recordEntry(...)` directly from `record`
+     * instead of registering it in `pendingHistoryWrites`.
+     * Test that fails under it: this one -- `settlePendingActionHistoryWrites`
+     * returns before the insert has run, which in an integration suite is the
+     * `users` truncate racing the action_history insert that reads its
+     * `user_id` foreign key.
+     */
+    it("is visible to settlePendingActionHistoryWrites until it finishes", async () => {
+      let writes = 0;
+      mockRepository.delete.mockResolvedValue({ affected: 0 });
+      mockRepository.create.mockReturnValue(mockAction);
+      mockRepository.count.mockResolvedValue(1);
+      mockRepository.save.mockImplementation(async () => {
+        // A write that really crosses a timer boundary, so a settle which does
+        // not wait on it cannot observe the increment below.
+        await new Promise((resolve) => setTimeout(resolve, 1));
+        writes += 1;
+        return mockAction;
+      });
+
+      // Started and deliberately not awaited, exactly as every caller does it.
+      const recording = service.record(userId, {
+        entityType: "transaction",
+        entityId: "tx-1",
+        action: "create",
+        description: "Created a transaction",
+      });
+      const writesWhenSettled = settlePendingActionHistoryWrites().then(
+        () => writes,
+      );
+
+      expect(await writesWhenSettled).toBeGreaterThan(0);
+
+      await recording;
+      // The register is empty again, so the next suite's teardown is free.
+      await expect(settlePendingActionHistoryWrites()).resolves.toBeUndefined();
     });
 
     it("should persist the localization key and params", async () => {

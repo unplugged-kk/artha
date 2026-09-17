@@ -202,7 +202,7 @@ CREATE TABLE categories (
     color VARCHAR(7), -- hex color
     is_income BOOLEAN DEFAULT false,
     is_system BOOLEAN DEFAULT false, -- system categories can't be deleted
-    budget_bucket VARCHAR(32) CHECK (budget_bucket IS NULL OR budget_bucket IN ('NEEDS', 'WANTS', 'SAVINGS_INVESTMENTS', 'DEBT_SERVICING')),
+    budget_bucket VARCHAR(32) CONSTRAINT chk_categories_budget_bucket CHECK (budget_bucket IS NULL OR budget_bucket IN ('NEEDS', 'WANTS', 'SAVINGS_INVESTMENTS', 'DEBT_SERVICING')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id, name, parent_id)
 );
@@ -628,6 +628,40 @@ CREATE TABLE transaction_rules (
 
 CREATE INDEX idx_transaction_rules_user_priority ON transaction_rules(user_id, priority ASC, created_at ASC);
 CREATE INDEX idx_transaction_rules_active ON transaction_rules(user_id) WHERE is_active = true;
+
+-- Financial Goals & Emergency Fund (Priority 14)
+CREATE TABLE goals (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    type VARCHAR(32) NOT NULL DEFAULT 'REGULAR' CHECK (type IN ('REGULAR', 'EMERGENCY_FUND')),
+    status VARCHAR(32) NOT NULL DEFAULT 'ACTIVE' CHECK (status IN ('ACTIVE', 'COMPLETED', 'ARCHIVED')),
+    target_mode VARCHAR(32) NOT NULL DEFAULT 'FIXED_AMOUNT' CHECK (target_mode IN ('FIXED_AMOUNT', 'MONTHS_OF_EXPENSES')),
+    target_amount DECIMAL(20, 4) CHECK (target_amount IS NULL OR target_amount > 0),
+    target_months NUMERIC(5, 2) CHECK (target_months IS NULL OR target_months > 0),
+    currency VARCHAR(3) NOT NULL,
+    target_date DATE,
+    account_id UUID REFERENCES accounts(id) ON DELETE SET NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_goals_user_status ON goals(user_id, status);
+CREATE INDEX idx_goals_user_created ON goals(user_id, created_at);
+CREATE INDEX idx_goals_account ON goals(account_id) WHERE account_id IS NOT NULL;
+
+CREATE TABLE goal_transactions (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    goal_id UUID NOT NULL REFERENCES goals(id) ON DELETE CASCADE,
+    transaction_id UUID NOT NULL REFERENCES transactions(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT uq_goal_transactions_goal_tx UNIQUE (goal_id, transaction_id)
+);
+
+CREATE INDEX idx_goal_transactions_user_goal ON goal_transactions(user_id, goal_id);
+CREATE INDEX idx_goal_transactions_tx ON goal_transactions(transaction_id);
 
 -- Securities (stocks, bonds, mutual funds, ETFs)
 -- Defined before scheduled_transactions because that table (and others below)
@@ -1568,6 +1602,7 @@ CREATE TRIGGER update_custom_reports_updated_at BEFORE UPDATE ON custom_reports 
 CREATE TRIGGER update_investment_reports_updated_at BEFORE UPDATE ON investment_reports FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_watchlists_updated_at BEFORE UPDATE ON watchlists FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_transaction_rules_updated_at BEFORE UPDATE ON transaction_rules FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_goals_updated_at BEFORE UPDATE ON goals FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- NOTE: Account balances (current_balance) are managed by application code
 -- (accounts.service.ts, transactions.service.ts, import.service.ts) via updateBalance() calls.
@@ -1796,7 +1831,7 @@ CREATE TABLE budget_categories (
     transfer_account_id UUID REFERENCES accounts(id) ON DELETE SET NULL,
     is_transfer BOOLEAN DEFAULT false,
     category_group VARCHAR(20),
-    budget_bucket VARCHAR(32) CHECK (budget_bucket IS NULL OR budget_bucket IN ('NEEDS', 'WANTS', 'SAVINGS_INVESTMENTS', 'DEBT_SERVICING')),
+    budget_bucket VARCHAR(32) CONSTRAINT chk_budget_categories_budget_bucket CHECK (budget_bucket IS NULL OR budget_bucket IN ('NEEDS', 'WANTS', 'SAVINGS_INVESTMENTS', 'DEBT_SERVICING')),
     amount NUMERIC(20, 4) NOT NULL,
     is_income BOOLEAN DEFAULT false,
     rollover_type VARCHAR(20) DEFAULT 'NONE',
@@ -2752,6 +2787,8 @@ DECLARE
         'gem_strategy_accounts',
         'gem_strategy_assets',
         'gem_strategy_signals',
+        'goals',
+        'goal_transactions',
         'import_column_mappings',
         'import_jobs',
         'import_staged_files',

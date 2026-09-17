@@ -97,6 +97,8 @@ const PLAIN: Record<string, string> = {
     'a menu option label inside a button, and composed by the app besides',
   '/src/app/watchlists/page.tsx':
     "a watchlist's own description, not a transaction's",
+  '/src/components/goals/GoalCard.tsx':
+    "a goal's own description, not a transaction's",
 };
 
 /**

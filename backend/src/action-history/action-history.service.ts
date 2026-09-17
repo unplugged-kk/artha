@@ -235,13 +235,60 @@ const ALLOWED_COLUMNS: Record<string, Set<string>> = {
 };
 const MAX_HISTORY_AGE_DAYS = 30;
 
+/**
+ * `record` calls that have been started and not yet finished.
+ *
+ * Every caller invokes `record` without awaiting it -- that is the contract, not
+ * an oversight: an audit entry must never delay or fail the operation that
+ * produced it. The consequence is that the write outlives the request that
+ * caused it, and can land after a teardown has already emptied `users`. The
+ * insert then fails its `user_id` foreign key, which `record` swallows by design,
+ * so it leaves a log line and nothing else.
+ *
+ * The same shape as `settlePendingPriceWrites` beside the price backfill, and it
+ * exists for the same reason: cleanup has to be able to wait for work that has
+ * *started* rather than guess at a duration. `settlePendingActionHistoryWrites`
+ * is what `cleanTables` calls before it truncates.
+ */
+const pendingHistoryWrites = new Set<Promise<unknown>>();
+
+/**
+ * Resolves once every `record` call started so far has finished, in either
+ * direction. Call this before truncating or dropping the tables a write reads.
+ *
+ * Settled, not successful: a rejected write has also stopped touching the
+ * database, which is the only property a teardown needs.
+ */
+export async function settlePendingActionHistoryWrites(): Promise<void> {
+  // Snapshotted because a settling promise removes itself from the set, and a
+  // caller may start another write before this finishes.
+  while (pendingHistoryWrites.size > 0) {
+    await Promise.allSettled([...pendingHistoryWrites]);
+  }
+}
+
 @Injectable()
 export class ActionHistoryService {
   private readonly logger = new Logger(ActionHistoryService.name);
 
   constructor(private dataSource: DataSource) {}
 
-  async record(
+  /**
+   * Records an undo entry, best-effort. Tracked so a teardown can wait for it;
+   * see `settlePendingActionHistoryWrites`.
+   */
+  record(
+    userId: string,
+    params: RecordActionParams,
+  ): Promise<ActionHistory | null> {
+    const work = this.recordEntry(userId, params);
+    pendingHistoryWrites.add(work);
+    // `finally` keeps the returned promise's own settlement untouched, so a
+    // caller that does await this still sees the original result.
+    return work.finally(() => pendingHistoryWrites.delete(work));
+  }
+
+  private async recordEntry(
     userId: string,
     params: RecordActionParams,
   ): Promise<ActionHistory | null> {

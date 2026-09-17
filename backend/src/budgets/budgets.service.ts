@@ -938,6 +938,62 @@ export class BudgetsService {
     };
   }
 
+  async getActiveBudgetNeedsExpenditure(
+    userId: string,
+  ): Promise<{ monthlyNeeds: number; currency: string } | null> {
+    const budgets = await withScopedDb(this.dataSource, (m) =>
+      m.getRepository(Budget).find({
+        where: { userId, isActive: true },
+        relations: [
+          "categories",
+          "categories.category",
+          "categories.category.parent",
+          "categories.transferAccount",
+        ],
+        order: { createdAt: "DESC" },
+      }),
+    );
+
+    if (budgets.length === 0) {
+      return null;
+    }
+
+    const budget = budgets[0];
+    const { periodStart, periodEnd } = this.getCurrentPeriodDates(budget);
+
+    const categoryBreakdown = await this.getCachedCategoryActuals(
+      userId,
+      budget,
+      periodStart,
+      periodEnd,
+    );
+
+    const bucketSummary = computeBucketSummaries(categoryBreakdown);
+    const needsBucket = bucketSummary.find(
+      (b) => b.bucket === BudgetBucket.NEEDS,
+    );
+
+    if (!needsBucket) {
+      return null;
+    }
+
+    const monthlyNeeds =
+      needsBucket.budgeted > 0
+        ? needsBucket.budgeted
+        : needsBucket.spent > 0
+          ? needsBucket.spent
+          : 0;
+
+    if (monthlyNeeds <= 0) {
+      return null;
+    }
+
+    return {
+      monthlyNeeds,
+      currency: budget.currencyCode,
+    };
+  }
+
   async getCategoryBudgetStatus(
     userId: string,
     categoryIds: string[],

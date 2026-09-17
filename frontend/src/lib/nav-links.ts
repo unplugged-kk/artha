@@ -15,6 +15,7 @@ import {
   Cog6ToothIcon,
   CurrencyDollarIcon,
   EyeIcon,
+  FlagIcon,
   HashtagIcon,
   LightBulbIcon,
   ShieldCheckIcon,
@@ -58,6 +59,7 @@ export const TOOLS_LINKS: NavLinkDef[] = [
   { href: '/watchlists', labelKey: 'watchlists' },
   { href: '/currencies', labelKey: 'currencies' },
   { href: '/rules', labelKey: 'rules' },
+  { href: '/goals', labelKey: 'goals' },
   { href: '/import', labelKey: 'import' },
 ];
 
@@ -95,6 +97,7 @@ export const NAV_ICONS: Record<string, NavIcon> = {
   '/watchlists': EyeIcon,
   '/currencies': CurrencyDollarIcon,
   '/rules': AdjustmentsHorizontalIcon,
+  '/goals': FlagIcon,
   '/import': ArrowDownTrayIcon,
   '/admin/users': ShieldCheckIcon,
   '/admin/notifications': BellAlertIcon,
