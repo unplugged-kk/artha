@@ -321,6 +321,17 @@ export function buildExportTableQueries(
       sql: "SELECT * FROM transaction_rules WHERE user_id = $1",
     },
     {
+      // Financial goals and emergency funds.
+      key: "goals",
+      sql: "SELECT * FROM goals WHERE user_id = $1",
+    },
+    {
+      // Which transactions count towards which goal. Carries its own
+      // `user_id`, so it is read directly rather than joined through `goals`.
+      key: "goal_transactions",
+      sql: "SELECT * FROM goal_transactions WHERE user_id = $1",
+    },
+    {
       key: "scheduled_transactions",
       sql: "SELECT * FROM scheduled_transactions WHERE user_id = $1",
     },

@@ -288,6 +288,21 @@ const REFS: Record<string, RefRule[]> = {
     },
     { column: "category_id", refTable: "categories", onMissing: "null" },
   ],
+  // A goal outlives the account it was funded from (the column is
+  // ON DELETE SET NULL and nullable, and the target is a target either way), so
+  // the row survives with the link cleared.
+  goals: [{ column: "account_id", refTable: "accounts", onMissing: "null" }],
+  goal_transactions: [
+    // Junction rows, both NOT NULL and both ON DELETE CASCADE: a link whose
+    // goal or transaction is gone says nothing, and keeping it with a null
+    // would violate the column.
+    { column: "goal_id", refTable: "goals", onMissing: "dropRow" },
+    {
+      column: "transaction_id",
+      refTable: "transactions",
+      onMissing: "dropRow",
+    },
+  ],
   notifications: [
     { column: "budget_id", refTable: "budgets", onMissing: "null" },
     {

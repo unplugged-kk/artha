@@ -85,7 +85,7 @@ export function BudgetBucketSummary({
 
           const content = (
             <div
-              className={`p-4 rounded-lg border transition-all ${
+              className={`p-4 rounded-lg border ${
                 isSelected
                   ? 'ring-2 ring-blue-500 bg-blue-50/50 dark:bg-blue-950/20'
                   : HOVER_ROW_ON_CARD

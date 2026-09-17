@@ -158,6 +158,14 @@ export const RESTORE_PLAN: ReadonlyArray<RestoreStep> = [
     countKey: "transactionRules",
     scopeToUser: true,
   },
+  // goal_transactions references goals(id) and transactions(id); both are
+  // inserted above, and goals references accounts(id), also above.
+  { table: "goals", countKey: "goals", scopeToUser: true },
+  {
+    table: "goal_transactions",
+    countKey: "goalTransactions",
+    scopeToUser: true,
+  },
   {
     table: "investment_transactions",
     countKey: "investmentTransactions",

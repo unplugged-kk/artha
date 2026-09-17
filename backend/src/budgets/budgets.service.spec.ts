@@ -23,7 +23,7 @@ import {
 } from "../notification-center/entities/notification.entity";
 import { Transaction } from "../transactions/entities/transaction.entity";
 import { TransactionSplit } from "../transactions/entities/transaction-split.entity";
-import { Category } from "../categories/entities/category.entity";
+import { Category, BudgetBucket } from "../categories/entities/category.entity";
 import { ScheduledTransaction } from "../scheduled-transactions/entities/scheduled-transaction.entity";
 import { ScheduledTransactionOverride } from "../scheduled-transactions/entities/scheduled-transaction-override.entity";
 import { ActionHistoryService } from "../action-history/action-history.service";
@@ -1745,6 +1745,52 @@ describe("BudgetsService", () => {
       expect(result!.totalBudgeted).toBe(0);
       expect(result!.percentUsed).toBe(0);
       expect(result!.topCategories).toHaveLength(0);
+    });
+  });
+
+  describe("getActiveBudgetNeedsExpenditure", () => {
+    it("returns null if no active budgets exist", async () => {
+      budgetsRepository.find.mockResolvedValue([]);
+
+      const result = await service.getActiveBudgetNeedsExpenditure("user-1");
+
+      expect(result).toBeNull();
+    });
+
+    it("returns monthly needs and currency when active budget has NEEDS bucket", async () => {
+      const budgetWithNeeds = {
+        ...mockBudget,
+        currencyCode: "USD",
+        categories: [
+          {
+            ...mockBudgetCategory,
+            id: "bc-1",
+            categoryId: "cat-1",
+            amount: 2500,
+            isIncome: false,
+            category: { name: "Housing", budgetBucket: BudgetBucket.NEEDS },
+          },
+        ],
+      };
+      budgetsRepository.find.mockResolvedValue([budgetWithNeeds]);
+
+      const directQb = createMockQueryBuilder({
+        getRawMany: jest
+          .fn()
+          .mockResolvedValue([{ categoryId: "cat-1", total: "-2000" }]),
+      });
+      const splitQb = createMockQueryBuilder({
+        getRawMany: jest.fn().mockResolvedValue([]),
+      });
+      transactionsRepository.createQueryBuilder.mockReturnValue(directQb);
+      splitsRepository.createQueryBuilder.mockReturnValue(splitQb);
+
+      const result = await service.getActiveBudgetNeedsExpenditure("user-1");
+
+      expect(result).toEqual({
+        monthlyNeeds: 2500,
+        currency: "USD",
+      });
     });
   });
 

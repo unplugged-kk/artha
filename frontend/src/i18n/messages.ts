@@ -33,6 +33,7 @@ const NAMESPACES = [
   "currencies",
   "dashboard",
   "emergencyAccess",
+  "goals",
   "import",
   "insights",
   "institutions",

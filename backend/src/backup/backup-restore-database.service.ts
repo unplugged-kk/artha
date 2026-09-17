@@ -211,6 +211,11 @@ export class BackupRestoreDatabaseService {
       userId,
     ]);
 
+    // Goal links (references goals and transactions, both deleted below)
+    await manager.query("DELETE FROM goal_transactions WHERE user_id = $1", [
+      userId,
+    ]);
+
     // Transactions
     await manager.query("DELETE FROM transactions WHERE user_id = $1", [
       userId,
@@ -282,6 +287,9 @@ export class BackupRestoreDatabaseService {
     await manager.query("DELETE FROM loan_scenarios WHERE user_id = $1", [
       userId,
     ]);
+
+    // Financial goals (reference accounts, deleted below)
+    await manager.query("DELETE FROM goals WHERE user_id = $1", [userId]);
 
     // Clear account FK references to categories before deleting accounts
     await manager.query(

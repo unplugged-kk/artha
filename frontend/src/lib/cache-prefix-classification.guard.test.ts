@@ -37,6 +37,10 @@ const TRANSACTION_DERIVED: ReadonlyArray<[string, string]> = [
     'budgets:',
     'dashboard progress and per-category status are sums of categorised transactions',
   ],
+  [
+    'goals:',
+    'goal progress and current amounts follow linked accounts and transaction inflows',
+  ],
 ];
 
 /** Kept -- a transaction write cannot change these. */
