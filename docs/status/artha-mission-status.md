@@ -20,7 +20,7 @@ Last updated: 2026-09-20 · `main` at **`9df296b58`** · **Mission 1 COMPLETED (
 ## Current main / repository state
 
 - **main SHA:** `9df296b58` — `Merge pull request #21`.
-- **Active Code PR:** PR #22 (`fm/artha-productization-01`, head `4da72c42a` → `main`) — `feat: complete initial Artha productization`.
+- **Active Code PR:** PR #22 (`fm/artha-productization-01`, head `a85bb23e5` → `main`) — `feat: complete initial Artha productization`.
 - **Rolling Status PR:** PR #5 (`fm/artha-mission-status`), containing strictly one file (`docs/status/artha-mission-status.md`).
 - **Merged PRs:** PR #1 – #4, PR #6 – #21.
 
@@ -76,7 +76,8 @@ Last updated: 2026-09-20 · `main` at **`9df296b58`** · **Mission 1 COMPLETED (
 | Ref | Type | Description | State |
 |---|---|---|---|
 | `9df296b58` | Merge commit | Base `main` containing merged PR #20 and PR #21 | Merged |
-| `4da72c42a` | Commit | `feat: complete initial Artha productization` on branch `fm/artha-productization-01` | Committed & Pushed |
+| `4da72c42a` | Commit | `feat: complete initial Artha productization` | Committed |
+| `a85bb23e5` | Commit | `test: align joint accounts integration and frontend test expectations with Artha copy and INR default` | Committed & Pushed |
 | **PR #22** | Code PR | `feat: complete initial Artha productization` (`fm/artha-productization-01` → `main`) | **OPEN** — Ready for owner merge |
 | **PR #5** | Rolling Status PR | `Artha mission status` (`fm/artha-mission-status` → `main`) | **OPEN — 1 file** (`docs/status/artha-mission-status.md`) |
 
