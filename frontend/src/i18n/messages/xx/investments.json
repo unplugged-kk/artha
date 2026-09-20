@@ -224,7 +224,7 @@
     "statusLockedToParent": "[XX-This transaction is part of a split. Change the split transaction's status instead, so both sides change together.-XX]",
     "descriptionPlaceholder": "[XX-Optional notes-XX]",
     "splitRatio": "[XX-Split ratio-XX]",
-    "noSplitRatioWarning": "[XX-No split ratio is set on this transaction. Enter the ratio as it was announced before saving — Monize won't assume one for you.-XX]",
+    "noSplitRatioWarning": "[XX-No split ratio is set on this transaction. Enter the ratio as it was announced before saving — Artha won't assume one for you.-XX]",
     "newShares": "[XX-New shares-XX]",
     "oldShares": "[XX-Old shares-XX]",
     "splitRatioHelp": "[XX-Enter the ratio as it was announced. For a 2-for-1 split use 2 new and 1 old; for a 1-for-2 reverse split use 1 new and 2 old. Effective ratio:-XX]",

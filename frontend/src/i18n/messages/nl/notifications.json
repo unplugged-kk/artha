@@ -97,7 +97,7 @@
     },
     "smtpFailure": {
       "title": "E-mailbezorging mislukt",
-      "message": "Monize kon geen e-mail verzenden: {error}. Meldingen en herinneringen worden niet bezorgd."
+      "message": "Artha kon geen e-mail verzenden: {error}. Meldingen en herinneringen worden niet bezorgd."
     },
     "providerOutage": {
       "title": "{provider} reageert niet",

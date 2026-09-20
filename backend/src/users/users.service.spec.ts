@@ -433,7 +433,7 @@ describe("UsersService", () => {
       // both finding no row used to mean one got a unique violation.
       expect(preferencesRow.insertAttempts()).toHaveLength(1);
       expect(result.userId).toBe("user-1");
-      expect(result.defaultCurrency).toBe("USD");
+      expect(result.defaultCurrency).toBe("INR");
       expect(result.dateFormat).toBe("browser");
       expect(result.theme).toBe("system");
       expect(result.favouriteReportIds).toEqual([]);

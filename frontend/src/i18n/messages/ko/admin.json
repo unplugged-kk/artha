@@ -107,9 +107,9 @@
   },
   "notificationsPage": {
     "title": "알림",
-    "subtitle": "이 Monize 인스턴스가 제공하는 전달 채널과 그 뒤의 푸시 ID입니다.",
+    "subtitle": "이 Artha 인스턴스가 제공하는 전달 채널과 그 뒤의 푸시 ID입니다.",
     "loading": "알림 설정을 불러오는 중...",
-    "loadUnavailable": "Monize가 서버에서 알림 설정을 읽지 못했습니다. 페이지를 새로고침해 다시 시도하세요.",
+    "loadUnavailable": "Artha가 서버에서 알림 설정을 읽지 못했습니다. 페이지를 새로고침해 다시 시도하세요.",
     "channelsHeading": "전달 채널",
     "identityHeading": "Web Push ID",
     "perAccountNote": "기기, 테스트 알림, 알림 환경설정은 각 계정의 것이며 설정에서 관리합니다. 관리자는 인스턴스를 구성할 뿐, 다른 사람의 알림을 보내거나 보지 않습니다.",
@@ -126,9 +126,9 @@
       },
       "webPush": {
         "name": "브라우저 푸시",
-        "description": "Monize를 닫아 두어도 휴대폰이나 데스크톱으로 전달되는 알림입니다. Firebase, Google Play, Apple Developer 계정이 필요 없습니다.",
+        "description": "Artha를 닫아 두어도 휴대폰이나 데스크톱으로 전달되는 알림입니다. Firebase, Google Play, Apple Developer 계정이 필요 없습니다.",
         "toggleLabel": "이 인스턴스에서 브라우저 푸시 사용",
-        "missingKeys": "이 인스턴스에는 푸시 키 쌍이 없습니다. ENCRYPTION_KEY를 설정하고 다시 시작하세요. 다음 시작 때 Monize가 키 쌍을 직접 생성합니다.",
+        "missingKeys": "이 인스턴스에는 푸시 키 쌍이 없습니다. ENCRYPTION_KEY를 설정하고 다시 시작하세요. 다음 시작 때 Artha가 키 쌍을 직접 생성합니다.",
         "keyUnreadable": "이 인스턴스는 저장된 푸시 키 쌍을 복호화할 수 없어 아무것도 전달되지 않습니다. 아래에서 키 쌍을 교체하면 복구됩니다.",
         "serverKeyMissing": "이 인스턴스에는 ENCRYPTION_KEY가 없어 저장된 푸시 키 쌍을 열 수 없습니다. 배포에 ENCRYPTION_KEY를 설정하고 재시작하세요. 키가 없는 동안에는 교체로 해결할 수 없습니다."
       },
@@ -136,7 +136,7 @@
         "name": "이메일",
         "description": "청구 알림, 예산 요약, 시스템 경고를 각 계정의 이메일 주소로 보냅니다.",
         "missingSmtp": "메일 서버가 구성되지 않았습니다. 이메일을 사용하려면 SMTP 환경 변수를 설정하세요.",
-        "statusUnavailable": "Monize가 메일 서버 상태를 읽지 못했습니다."
+        "statusUnavailable": "Artha가 메일 서버 상태를 읽지 못했습니다."
       },
       "ntfy": {
         "name": "ntfy 및 UnifiedPush",
@@ -152,7 +152,7 @@
       "rotateDescription": "교체하면 이 인스턴스의 키 쌍이 바뀝니다. 등록된 모든 기기에 더 이상 도달할 수 없게 되고 푸시를 다시 켜야 하므로, 키가 노출되었을 수 있을 때만 교체하세요.",
       "rotateButton": "키 쌍 교체",
       "rotatingButton": "교체 중...",
-      "missingEncryptionKey": "ENCRYPTION_KEY가 설정되지 않아 개인 키를 암호화하지 않고 저장해야 하므로, 이 인스턴스에는 푸시 키 쌍이 없습니다. 설정 후 다시 시작하면 Monize가 키 쌍을 직접 생성합니다.",
+      "missingEncryptionKey": "ENCRYPTION_KEY가 설정되지 않아 개인 키를 암호화하지 않고 저장해야 하므로, 이 인스턴스에는 푸시 키 쌍이 없습니다. 설정 후 다시 시작하면 Artha가 키 쌍을 직접 생성합니다.",
       "keyUnreadable": "이 인스턴스는 더 이상 복호화할 수 없는 푸시 키 쌍을 보관하고 있어 아무것도 전달되지 않습니다. 운영 중인 데이터베이스에서 ENCRYPTION_KEY가 바뀌었거나 백업을 다른 인스턴스로 복원했을 때 발생합니다. 키 쌍을 교체하면 복구되며, 모든 기기가 다시 등록합니다.",
       "serverKeyMissing": "이 인스턴스에는 ENCRYPTION_KEY가 설정되어 있지 않아 저장된 푸시 키 쌍을 열 수 없습니다. 키가 없는 동안에는 교체해도 해결되지 않습니다. 배포에 ENCRYPTION_KEY를 설정하고 재시작하면 기존 기기로 푸시가 다시 작동합니다."
     },

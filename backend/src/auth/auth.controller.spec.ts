@@ -374,7 +374,7 @@ describe("AuthController", () => {
 
       expect(emailService.sendMail).toHaveBeenCalledWith(
         "verify@example.com",
-        "Verify your Monize email",
+        "Verify your Artha email",
         expect.stringContaining("/verify-email?token=raw-verify-token"),
       );
       expect(res.cookie).not.toHaveBeenCalled();
@@ -746,7 +746,7 @@ describe("AuthController", () => {
 
       expect(emailService.sendMail).toHaveBeenCalledWith(
         "test@example.com",
-        "Monize Password Reset",
+        "Artha Password Reset",
         expect.any(String),
       );
       expect(result.message).toContain("If an account exists");
@@ -892,7 +892,7 @@ describe("AuthController", () => {
 
       expect(emailService.sendMail).toHaveBeenCalledWith(
         "verify@example.com",
-        "Verify your Monize email",
+        "Verify your Artha email",
         expect.stringContaining("/verify-email?token=raw-verify-token"),
       );
       expect(result.message).toContain("If an account exists");

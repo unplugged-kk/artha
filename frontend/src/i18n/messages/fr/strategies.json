@@ -271,7 +271,7 @@
       "workingTotal": "Total",
       "workingUnknown": "La part ne peut être calculée tant que les positions ne sont pas valorisées.",
       "basisComposition": "L’exposition est estimée à partir du contenu de chaque instrument, comparé par {dimension}. C’est une estimation à côté de l’allocation, pas une part de celle-ci : seul l’instrument cible lui-même compte comme détention de la cible.",
-      "basisInstrument": "L’exposition au marché ne peut pas être estimée, car {target} n’a pas de structure géographique ({dimension}) enregistrée dans Monize. La conformité au signal reste calculée exactement, par instrument.",
+      "basisInstrument": "L’exposition au marché ne peut pas être estimée, car {target} n’a pas de structure géographique ({dimension}) enregistrée dans Artha. La conformité au signal reste calculée exactement, par instrument.",
       "basisPartialData": "{count, plural, one {# position n’a} other {# positions n’ont}} pas de structure enregistrée : l’estimation pour le portefeuille n’est pas disponible.",
       "isTarget": "instrument cible",
       "notInStrategy": "hors stratégie",

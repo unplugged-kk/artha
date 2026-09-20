@@ -265,7 +265,7 @@
     "readRequiredForWrite": "L'accès LECTURE est requis pour CRÉER, MODIFIER ou SUPPRIMER",
     "accountsNotOwned": "Un ou plusieurs comptes ne vous appartiennent pas",
     "cannotResetSsoPassword": "Impossible de réinitialiser le mot de passe d'un compte délégué SSO",
-    "delegateManagesOwnPassword": "Ce délégué gère son propre mot de passe (il possède son propre compte Monize ou un accès délégué ailleurs). Seul lui peut le modifier.",
+    "delegateManagesOwnPassword": "Ce délégué gère son propre mot de passe (il possède son propre compte Artha ou un accès délégué ailleurs). Seul lui peut le modifier.",
     "accountIdsMustBeArray": "accountIds doit être un tableau",
     "actionNotAvailableAsDelegate": "Cette action n'est pas disponible lorsque vous agissez au nom d'un autre utilisateur. Seul le titulaire du compte peut effectuer cette action.",
     "capabilityNotGranted": "Le titulaire du compte ne vous a pas accordé la permission de {{ operation }} {{ resource }}. Demandez-lui d'activer cela dans vos paramètres d'accès délégué.",
@@ -276,7 +276,7 @@
     "jointAccountTypeReadOnly": "Ce type de compte est partagé en lecture seule ; seul le propriétaire peut modifier ses transactions.",
     "jointOwnAccountNetWorth": "Pour vos propres comptes, utilisez le réglage de valeur nette du compte.",
     "jointRequiresRead": "L'accès en LECTURE est requis pour marquer un compte comme joint",
-    "jointRequiresFullAccount": "Les comptes joints ne peuvent être partagés qu'avec des utilisateurs disposant de leur propre compte Monize",
+    "jointRequiresFullAccount": "Les comptes joints ne peuvent être partagés qu'avec des utilisateurs disposant de leur propre compte Artha",
     "jointPayeeCreateNotGranted": "Le propriétaire du compte ne vous a pas autorisé à créer des bénéficiaires. Choisissez plutôt un de ses bénéficiaires existants.",
     "jointCategoryCreateNotGranted": "Le propriétaire du compte ne vous a pas autorisé à créer des catégories. Choisissez plutôt une de ses catégories existantes.",
     "jointTagsNotAllowed": "Les étiquettes sont personnelles ; elles ne peuvent pas être définies sur les transactions d'un compte partagé.",
@@ -315,7 +315,7 @@
     "mnyNoFile": "Aucun fichier Money n'a été envoyé",
     "mnyFileTruncated": "Ce fichier Money semble incomplet. L'envoi a peut-être été interrompu -- réessayez.",
     "mnyNotAMoneyFile": "Ce fichier n'est pas un fichier Microsoft Money (.mny)",
-    "mnyUnsupportedVersion": "Ce fichier a été créé avec Money 97 ou 98, que Monize ne peut pas lire. Ouvrez-le et enregistrez-le une fois dans l'édition gratuite Money Plus Sunset, puis importez le résultat.",
+    "mnyUnsupportedVersion": "Ce fichier a été créé avec Money 97 ou 98, que Artha ne peut pas lire. Ouvrez-le et enregistrez-le une fois dans l'édition gratuite Money Plus Sunset, puis importez le résultat.",
     "mnyPasswordRequired": "Ce fichier Money est protégé par un mot de passe. Saisissez-le pour continuer.",
     "mnyPasswordIncorrect": "Ce mot de passe n'ouvre pas le fichier Money. Vérifiez-le et réessayez.",
     "mnyUnreadableDatabase": "Ce fichier Money a été déchiffré mais son contenu n'a pas pu être lu. Il est peut-être endommagé.",
@@ -347,8 +347,8 @@
     "reminderOnReminder": "Un rappel ne peut pas être défini sur la notification d'un rappel. Définissez-le sur la notification d'origine."
   },
   "push": {
-    "channelUnavailable": "Les notifications push ne sont pas disponibles sur cette instance Monize.",
-    "endpointClaimed": "Ce navigateur est déjà associé à un autre compte Monize. Déconnectez-vous de ce compte dans ce navigateur puis réessayez.",
+    "channelUnavailable": "Les notifications push ne sont pas disponibles sur cette instance Artha.",
+    "endpointClaimed": "Ce navigateur est déjà associé à un autre compte Artha. Déconnectez-vous de ce compte dans ce navigateur puis réessayez.",
     "deviceNotFound": "Appareil push introuvable.",
     "noDevices": "Aucun appareil push n'est enregistré pour ce compte. Activez d'abord les notifications push dans ce navigateur.",
     "rotationUnavailable": "ENCRYPTION_KEY n'est pas définie : la nouvelle clé privée n'a pas pu être stockée chiffrée. Définissez-la et redémarrez avant d'effectuer une rotation.",
@@ -613,6 +613,6 @@
     "capReached": "La limite de requêtes Google Places de ce mois est atteinte.",
     "testFailed": "Le test de connexion à Google Places a échoué.",
     "referrerRestricted": "Cette clé est restreinte par référent HTTP, mais cette installation n'a pas de PUBLIC_APP_URL définie : aucun référent n'est envoyé et aucune liste d'autorisation ne peut correspondre. Définissez PUBLIC_APP_URL, ou restreignez la clé par adresse IP, l'option qui protège réellement une clé côté serveur.",
-    "referrerRejected": "Google a rejeté la restriction de référent HTTP de cette clé. Monize envoie « {referer} » (depuis PUBLIC_APP_URL) ; ajoutez exactement cette valeur aux référents autorisés, en notant qu'un motif tel que *.example.com/* ne correspond pas à un simple example.com. Restreindre la clé par adresse IP est l'option qui protège réellement une clé côté serveur."
+    "referrerRejected": "Google a rejeté la restriction de référent HTTP de cette clé. Artha envoie « {referer} » (depuis PUBLIC_APP_URL) ; ajoutez exactement cette valeur aux référents autorisés, en notant qu'un motif tel que *.example.com/* ne correspond pas à un simple example.com. Restreindre la clé par adresse IP est l'option qui protège réellement une clé côté serveur."
   }
 }

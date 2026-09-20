@@ -37,7 +37,7 @@
     "description": "Percorra as funcionalidades do aplicativo passo a passo.",
     "backLink": "Voltar às Configurações",
     "pageTitle": "Tours guiados",
-    "pageSubtitle": "Todos os tours que o Monize oferece, em um só lugar. Comece um quando quiser — você pode sair de um tour com Escape e retomá-lo por aqui.",
+    "pageSubtitle": "Todos os tours que o Artha oferece, em um só lugar. Comece um quando quiser — você pode sair de um tour com Escape e retomá-lo por aqui.",
     "meta": "{steps} · {status}",
     "metaWithRelease": "{steps} · {release} · {status}",
     "stepCount": "{count, plural, one {# etapa} other {# etapas}}",
@@ -59,10 +59,10 @@
   },
   "intro": {
     "basics": {
-      "title": "Introdução ao Monize",
+      "title": "Introdução ao Artha",
       "steps": {
         "welcome": {
-          "title": "Bem-vindo ao Monize",
+          "title": "Bem-vindo ao Artha",
           "body": "Este tour rápido apresenta o essencial do aplicativo. Você pode sair a qualquer momento pressionando **Escape** ou **Encerrar tour**."
         },
         "dashboard": {
@@ -103,7 +103,7 @@
         },
         "currencyField": {
           "title": "Valor e moeda",
-          "body": "Informe aqui o valor da transação. Pagou em outra moeda? Defina a moeda ao lado do valor e informe-o como foi cobrado — o Monize converte para a moeda da conta automaticamente."
+          "body": "Informe aqui o valor da transação. Pagou em outra moeda? Defina a moeda ao lado do valor e informe-o como foi cobrado — o Artha converte para a moeda da conta automaticamente."
         },
         "closeForm": {
           "title": "Feche o formulário para continuar",
@@ -147,7 +147,7 @@
           },
           "fxFeePercent": {
             "title": "Defina a taxa de conversão",
-            "body": "Informe aqui a taxa de transação em moeda estrangeira da conta em porcentagem — 2,5, por exemplo. O Monize a incorpora ao valor convertido de cada compra no exterior, de modo que a taxa fica registrada para você."
+            "body": "Informe aqui a taxa de transação em moeda estrangeira da conta em porcentagem — 2,5, por exemplo. O Artha a incorpora ao valor convertido de cada compra no exterior, de modo que a taxa fica registrada para você."
           },
           "closeAccountForm": {
             "title": "Salvar e fechar",
@@ -171,7 +171,7 @@
           },
           "enterAmount": {
             "title": "Informe o valor cobrado",
-            "body": "Digite o total exatamente como aparece na sua fatura. O Monize consulta a **taxa de câmbio** para a data da transação, mostra o total convertido ao lado e incorpora a **taxa de transação em moeda estrangeira** que você definiu na conta — a legenda abaixo detalha as duas. O banco arredondou de outro jeito? Edite a taxa ou o total convertido para bater centavo a centavo."
+            "body": "Digite o total exatamente como aparece na sua fatura. O Artha consulta a **taxa de câmbio** para a data da transação, mostra o total convertido ao lado e incorpora a **taxa de transação em moeda estrangeira** que você definiu na conta — a legenda abaixo detalha as duas. O banco arredondou de outro jeito? Edite a taxa ou o total convertido para bater centavo a centavo."
           },
           "closeTransactionForm": {
             "title": "Feche o formulário",
@@ -192,7 +192,7 @@
             "fallbackBody": "O relatório **Taxas em moeda estrangeira** reúne as compras no exterior de todas as suas contas e moedas em um só lugar. Ele não está à vista agora — uma busca ou um filtro de categoria pode escondê-lo — mas você o encontra em **Relatórios**."
           },
           "finish": {
-            "title": "Isso é moeda estrangeira no Monize",
+            "title": "Isso é moeda estrangeira no Artha",
             "body": "Defina a taxa uma vez, registre as compras como foram cobradas, e as taxas se acompanham sozinhas. Você pode refazer este tour quando quiser na seção **Tours guiados** das **Configurações**."
           }
         }
@@ -221,7 +221,7 @@
         "steps": {
           "welcome": {
             "title": "Cada ativo em uma só página",
-            "body": "Os ativos ficavam antes espalhados por três janelas. Agora cada um tem a sua página, que reúne tudo: o que você tem, como se comportou e tudo o que o Monize sabe sobre ele. Esta é a versão curta."
+            "body": "Os ativos ficavam antes espalhados por três janelas. Agora cada um tem a sua página, que reúne tudo: o que você tem, como se comportou e tudo o que o Artha sabe sobre ele. Esta é a versão curta."
           },
           "openDetail": {
             "title": "Abrir um ativo",
@@ -238,7 +238,7 @@
           },
           "keyInfo": {
             "title": "O que é o instrumento",
-            "body": "Ao lado do gráfico: tipo de ativo, bolsa, moeda, o fornecedor de cotações que o Monize usa e o último preço registrado. Abaixo, o cartão **Composição** mostra do que um fundo é feito: alterne entre a composição por setor, por país e por classe de ativos."
+            "body": "Ao lado do gráfico: tipo de ativo, bolsa, moeda, o fornecedor de cotações que o Artha usa e o último preço registrado. Abaixo, o cartão **Composição** mostra do que um fundo é feito: alterne entre a composição por setor, por país e por classe de ativos."
           },
           "tabs": {
             "title": "O detalhe mais abaixo",
@@ -259,7 +259,7 @@
           },
           "findReport": {
             "title": "Encontre a GEM em Relatórios",
-            "body": "Abra aqui o relatório **Estratégia GEM**. Ele fica na categoria **Investimentos**. O relatório está disponível mesmo que você ainda não tenha instrumentos de investimento nem posições registradas no Monize.",
+            "body": "Abra aqui o relatório **Estratégia GEM**. Ele fica na categoria **Investimentos**. O relatório está disponível mesmo que você ainda não tenha instrumentos de investimento nem posições registradas no Artha.",
             "fallbackBody": "O cartão do relatório não está visível agora, normalmente por causa de um filtro. Escolha **Avançar** e o tour abrirá o relatório GEM diretamente. Depois você o encontra em **Relatórios**, na categoria **Investimentos**."
           },
           "page": {
@@ -272,7 +272,7 @@
           },
           "action": {
             "title": "Uma sugestão, não uma ordem automática",
-            "body": "O gráfico compara os instrumentos atribuídos. **O que eu devo fazer?** traduz o sinal em uma possível operação de venda e compra e estima imposto e corretagem quando há dados suficientes. O Monize nunca envia uma ordem para sua corretora. Depois de operar de verdade pela sua corretora, registre os lançamentos no Monize; então use **Marcar como executada** apenas como anotação de que você cumpriu o sinal."
+            "body": "O gráfico compara os instrumentos atribuídos. **O que eu devo fazer?** traduz o sinal em uma possível operação de venda e compra e estima imposto e corretagem quando há dados suficientes. O Artha nunca envia uma ordem para sua corretora. Depois de operar de verdade pela sua corretora, registre os lançamentos no Artha; então use **Marcar como executada** apenas como anotação de que você cumpriu o sinal."
           },
           "reasoning": {
             "title": "Por que a GEM escolheu isso?",
@@ -296,7 +296,7 @@
           },
           "addInstruments": {
             "title": "Ainda sem instrumentos? Comece aqui",
-            "body": "A GEM precisa de um instrumento em cada papel para poder decidir algo. Quando um papel está vazio, o cartão **Papéis e instrumentos** oferece um atalho que adiciona ETFs de exemplo. Primeiro, em **Cotações a adicionar**, escolha a região em que sua corretora realmente opera: **Américas** ou **Europa (UCITS)**. O botão de adicionar cria os registros dos instrumentos no Monize na hora, antes de você salvar a configuração da GEM; isso não compra nada. Só os papéis vazios são preenchidos, e um instrumento equivalente que já esteja na sua lista pode ser reaproveitado. Confira cada símbolo, cada bolsa e cada moeda. Estes exemplos não são uma recomendação. Se o atalho não aparecer, seus papéis já estão preenchidos e você pode revisá-los abaixo.",
+            "body": "A GEM precisa de um instrumento em cada papel para poder decidir algo. Quando um papel está vazio, o cartão **Papéis e instrumentos** oferece um atalho que adiciona ETFs de exemplo. Primeiro, em **Cotações a adicionar**, escolha a região em que sua corretora realmente opera: **Américas** ou **Europa (UCITS)**. O botão de adicionar cria os registros dos instrumentos no Artha na hora, antes de você salvar a configuração da GEM; isso não compra nada. Só os papéis vazios são preenchidos, e um instrumento equivalente que já esteja na sua lista pode ser reaproveitado. Confira cada símbolo, cada bolsa e cada moeda. Estes exemplos não são uma recomendação. Se o atalho não aparecer, seus papéis já estão preenchidos e você pode revisá-los abaixo.",
             "fallbackBody": "O formulário de configurações não carregou, então o tour não consegue apontar para o cartão dos papéis. Nenhuma configuração foi alterada. Use a opção de tentar de novo da página, ou refaça o tour mais tarde em **Tours guiados** nas **Configurações**."
           },
           "roles": {
@@ -305,11 +305,11 @@
           },
           "save": {
             "title": "Revise antes de salvar",
-            "body": "Confira a lista de contas, cada cotação e as moedas, e então **Salvar configuração** para guardar o cenário e recalcular o relatório a partir do histórico de preços disponível. É o salvamento que dá aos próximos passos algo para mostrar. Continua sem enviar nenhuma ordem, e você não precisa salvar para terminar este tour. Se faltarem preços ou eles estiverem muito antigos, o Monize mostra que o sinal não está disponível em vez de adivinhar."
+            "body": "Confira a lista de contas, cada cotação e as moedas, e então **Salvar configuração** para guardar o cenário e recalcular o relatório a partir do histórico de preços disponível. É o salvamento que dá aos próximos passos algo para mostrar. Continua sem enviar nenhuma ordem, e você não precisa salvar para terminar este tour. Se faltarem preços ou eles estiverem muito antigos, o Artha mostra que o sinal não está disponível em vez de adivinhar."
           },
           "finish": {
             "title": "Volte na próxima avaliação",
-            "body": "A GEM toma uma decisão por período, e a data da próxima está no topo do relatório. Até esse dia não há nada a fazer. Quando chegar, verifique se o sinal mudou; se mudou, execute as operações pela sua corretora e registre-as no Monize, para que a comparação da carteira continue batendo. Você pode refazer este tour quando quiser em **Tours guiados** nas **Configurações**."
+            "body": "A GEM toma uma decisão por período, e a data da próxima está no topo do relatório. Até esse dia não há nada a fazer. Quando chegar, verifique se o sinal mudou; se mudou, execute as operações pela sua corretora e registre-as no Artha, para que a comparação da carteira continue batendo. Você pode refazer este tour quando quiser em **Tours guiados** nas **Configurações**."
           }
         }
       }
@@ -319,12 +319,12 @@
         "title": "Notificações",
         "steps": {
           "welcome": {
-            "title": "O Monize já pode te avisar",
+            "title": "O Artha já pode te avisar",
             "body": "Uma conta vencendo, um orçamento estourando, um saldo cruzando um limite que você definiu, um backup que falhou. Este tour mostra onde isso chega e como você escolhe o que te alcança por e-mail ou no celular."
           },
           "bell": {
             "title": "O sino é o registro",
-            "body": "Toda notificação que o Monize gera é escrita aqui, independentemente do que você ligue ou desligue. E-mail e push são cópias enviadas depois; esta lista é o original, e o número no sino conta o que você ainda não leu."
+            "body": "Toda notificação que o Artha gera é escrita aqui, independentemente do que você ligue ou desligue. E-mail e push são cópias enviadas depois; esta lista é o original, e o número no sino conta o que você ainda não leu."
           },
           "panel": {
             "title": "O que uma notificação carrega",
@@ -344,7 +344,7 @@
           },
           "push": {
             "title": "Seus dispositivos",
-            "body": "Registre um navegador aqui e o Monize consegue alcançá-lo com o aplicativo fechado. Ele assina as próprias mensagens, então não há conta do Google nem da Apple no meio. Cada dispositivo pode ser testado e removido separadamente, e um dispositivo que deixa de ser alcançável diz o motivo. No iPhone isso funciona depois de adicionar o Monize à tela de início; se o seu administrador não tiver ligado o push nesta instância, é isso que aparece aqui."
+            "body": "Registre um navegador aqui e o Artha consegue alcançá-lo com o aplicativo fechado. Ele assina as próprias mensagens, então não há conta do Google nem da Apple no meio. Cada dispositivo pode ser testado e removido separadamente, e um dispositivo que deixa de ser alcançável diz o motivo. No iPhone isso funciona depois de adicionar o Artha à tela de início; se o seu administrador não tiver ligado o push nesta instância, é isso que aparece aqui."
           },
           "portfolio": {
             "title": "Movimento dos investimentos",

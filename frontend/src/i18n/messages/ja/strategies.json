@@ -271,7 +271,7 @@
       "workingTotal": "合計",
       "workingUnknown": "保有を評価できるまで、この割合は計算できません。",
       "basisComposition": "エクスポージャーは各銘柄の中身から{dimension}で比較して推定します。配分の隣に置いた推定値であって、その一部ではありません。目標を保有しているとみなされるのは目標銘柄そのものだけです。",
-      "basisInstrument": "Monizeに{target}の地域構成（{dimension}）が登録されていないため、市場エクスポージャーは推定できません。シグナルとの一致は引き続き銘柄単位で正確に計算されます。",
+      "basisInstrument": "Arthaに{target}の地域構成（{dimension}）が登録されていないため、市場エクスポージャーは推定できません。シグナルとの一致は引き続き銘柄単位で正確に計算されます。",
       "basisPartialData": "{count}件の保有に構成が登録されていないため、ポートフォリオ全体の推定は利用できません。",
       "isTarget": "目標銘柄",
       "notInStrategy": "戦略に含まれない",

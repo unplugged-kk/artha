@@ -6,7 +6,7 @@
   "backToSignIn": "Volver al inicio de sesión",
   "ownerFallback": "el titular de la cuenta",
   "ownerFirstNameFallback": "el titular",
-  "intro": "Hola {contactName}, fuiste designado como contacto de emergencia en la cuenta de Monize de <b>{ownerName}</b>.",
+  "intro": "Hola {contactName}, fuiste designado como contacto de emergencia en la cuenta de Artha de <b>{ownerName}</b>.",
   "introDetail": "Establecer una contraseña aquí te iniciará sesión como titular de la cuenta y te dará acceso completo a la misma. Las sesiones existentes se revocan y las credenciales anteriores se reemplazan.",
   "messageHeading": "Mensaje de {name}",
   "newPasswordLabel": "Nueva contraseña",

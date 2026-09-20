@@ -15,7 +15,7 @@
     "showNextLogin": "次回ログイン時に表示",
     "close": "閉じる",
     "unavailable": "このバージョンのリリースノートはありません。",
-    "englishOnly": "以下のリリースノートは英語のみです。ガイドツアーを含む Monize 本体は言語設定に従います。"
+    "englishOnly": "以下のリリースノートは英語のみです。ガイドツアーを含む Artha 本体は言語設定に従います。"
   },
   "transferPayee": "{direction, select, to {{name}への振替} other {{name}からの振替}}",
   "save": "保存",

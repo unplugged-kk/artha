@@ -97,7 +97,7 @@
     },
     "smtpFailure": {
       "title": "O envio de email está a falhar",
-      "message": "O Monize não conseguiu enviar email: {error}. As notificações e os lembretes não estão a ser entregues."
+      "message": "O Artha não conseguiu enviar email: {error}. As notificações e os lembretes não estão a ser entregues."
     },
     "providerOutage": {
       "title": "{provider} não responde",

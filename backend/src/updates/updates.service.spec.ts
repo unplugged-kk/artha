@@ -288,7 +288,7 @@ describe("UpdatesService", () => {
         "https://api.github.com/repos/kenlasko/monize/releases/latest",
         expect.objectContaining({
           headers: expect.objectContaining({
-            "User-Agent": "Monize-UpdateCheck",
+            "User-Agent": "Artha-UpdateCheck",
           }),
         }),
       );

@@ -541,7 +541,7 @@ describe('PushDevicesPanel', () => {
         configured: false,
         keyUnreadable: false,
       },
-      /not available on this Monize instance/i,
+      /not available on this Artha instance/i,
     ],
     [
       'the key pair cannot be read',
@@ -641,7 +641,7 @@ describe('PushDevicesPanel', () => {
     render(<PushDevicesPanel />);
 
     expect(
-      await screen.findByText(/Notifications are blocked for Monize/i),
+      await screen.findByText(/Notifications are blocked for Artha/i),
     ).toBeInTheDocument();
 
     mockGetPushSupport.mockReturnValue({ supported: true });
@@ -658,7 +658,7 @@ describe('PushDevicesPanel', () => {
     mockGetPushSupport.mockReturnValue({ supported: false, reason: 'denied' });
 
     render(<PushDevicesPanel />);
-    await screen.findByText(/Notifications are blocked for Monize/i);
+    await screen.findByText(/Notifications are blocked for Artha/i);
 
     const readsWhileVisible = mockGetPushSupport.mock.calls.length;
     const visibility = vi
@@ -702,7 +702,7 @@ describe('PushDevicesPanel', () => {
     render(<PushDevicesPanel />);
 
     expect(
-      await screen.findByText(/blocked for Monize in this browser/i),
+      await screen.findByText(/blocked for Artha in this browser/i),
     ).toBeInTheDocument();
   });
 
@@ -722,7 +722,7 @@ describe('PushDevicesPanel', () => {
   });
 
   it.each([
-    ['denied', /blocking notifications for Monize/i],
+    ['denied', /blocking notifications for Artha/i],
     ['dismissed', /Choose Allow when the browser asks/i],
   ])('reports a %s permission in its own words', async (reason, expected) => {
     mockEnable.mockRejectedValue(

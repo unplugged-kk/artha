@@ -92,7 +92,7 @@ describe('LoginPage', () => {
     render(<LoginPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('Sign in to Monize')).toBeInTheDocument();
+      expect(screen.getByText('Sign in to Artha')).toBeInTheDocument();
     });
   });
 

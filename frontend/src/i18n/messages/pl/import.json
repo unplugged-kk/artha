@@ -396,7 +396,7 @@
       "importPricesHint": "Zapis Money o tym, ile każdy papier był wart dzień po dniu. Wyłącz, jeśli wolisz zacząć od bieżących notowań.",
       "importExchangeRates": "Importuj kursy walut",
       "importExchangeRatesHint": "Historyczne kursy między walutami z Twojego pliku, aby dawne operacje walutowe przeliczały się tak, jak przeliczał je Money.",
-      "wipeExistingData": "Zacznij od nowa: najpierw usuń moje istniejące dane Monize",
+      "wipeExistingData": "Zacznij od nowa: najpierw usuń moje istniejące dane Artha",
       "wipeExistingDataHint": "Przed importem wykonuje tę samą operację Usuń moje dane co w Ustawieniach. Zostaniesz poproszony o potwierdzenie. Zostaw wyłączone, aby dodać plik Money do tego, co już masz."
     },
     "warningsHeading": "Uwagi dotyczące tego pliku",
@@ -420,7 +420,7 @@
       "transfer": "Przelew",
       "investment": "Inwestycja",
       "splits": "{count, plural, one {# podział} few {# podziały} many {# podziałów} other {# podziałów}}",
-      "approximate": "Najbliższa częstotliwość Monize"
+      "approximate": "Najbliższa częstotliwość Artha"
     }
   },
   "mnyWipe": {
@@ -478,15 +478,15 @@
     "existingDataRemoved": "Twoje dotychczasowe dane zostały usunięte przed tym importem, zgodnie z prośbą.",
     "verificationHeading": "Weryfikacja sald",
     "holdingsHeading": "Weryfikacja pozycji",
-    "holdingsExplainer": "Udziały, które Monize ma teraz, wobec otwartych partii podatkowych zapisanych w pliku Money. Sam Money uzgadnia się względem tych partii, więc to one są wartością wiarygodną.",
+    "holdingsExplainer": "Udziały, które Artha ma teraz, wobec otwartych partii podatkowych zapisanych w pliku Money. Sam Money uzgadnia się względem tych partii, więc to one są wartością wiarygodną.",
     "table": {
       "account": "Konto",
       "security": "Papier wartościowy",
       "transactions": "Transakcje",
       "expected": "Z pliku Money",
-      "imported": "W Monize",
+      "imported": "W Artha",
       "lotShares": "Udziały w Money",
-      "importedShares": "Udziały w Monize",
+      "importedShares": "Udziały w Artha",
       "delta": "Różnica",
       "check": "Sprawdź"
     },
@@ -497,7 +497,7 @@
   "mnyWarnings": {
     "missingTable": "Ta wersja Money nie ma {count, plural, one {# tabeli} few {# tabel} many {# tabel} other {# tabeli}} używanych przez import.",
     "missingField": "{count, plural, one {# pole nie istniało} few {# pola nie istniały} many {# pól nie istniało} other {# pola nie istniało}} w tej wersji Money i przyjęły wartość domyślną.",
-    "unknownAccountType": "{count, plural, one {# konto miało} few {# konta miały} many {# kont miało} other {# konta miało}} typ konta nieznany w Monize i zostały pominięte.",
+    "unknownAccountType": "{count, plural, one {# konto miało} few {# konta miały} many {# kont miało} other {# konta miało}} typ konta nieznany w Artha i zostały pominięte.",
     "duplicateAccountName": "{count, plural, one {# konto miało} few {# konta miały} many {# kont miało} other {# konta miało}} taką samą nazwę jak inne i zostały przemianowane.",
     "unknownCurrency": "{count, plural, one {# konto odwołuje się} few {# konta odwołują się} many {# kont odwołuje się} other {# konta odwołuje się}} do waluty niezdefiniowanej w pliku i używają waluty bazowej.",
     "categoryFlattened": "{count, plural, one {# kategoria była} few {# kategorie były} many {# kategorii było} other {# kategorii było}} głębsze niż dwa poziomy i zostały spłaszczone do kategorii nadrzędnej.",
@@ -511,7 +511,7 @@
     "balanceMismatch": "{count, plural, one {# konto zakończyło się} few {# konta zakończyły się} many {# kont zakończyło się} other {# kont zakończyło się}} saldem innym niż w pliku Money.",
     "duplicateSecuritySymbol": "{count, plural, one {# papier wartościowy dzieli} few {# papiery wartościowe dzielą} many {# papierów wartościowych dzieli} other {# papierów wartościowych dzieli}} symbol z innym; późniejsze zmieniono nazwy, aby pozostały osobne.",
     "generatedSecuritySymbol": "{count, plural, one {# papier wartościowy nie ma} few {# papiery wartościowe nie mają} many {# papierów wartościowych nie ma} other {# papierów wartościowych nie ma}} symbolu w Money, więc utworzono symbol zastępczy i pozostawiono wyłączone aktualizacje cen.",
-    "unknownInvestmentAction": "{count, plural, one {# transakcja inwestycyjna użyła} few {# transakcje inwestycyjne użyły} many {# transakcji inwestycyjnych użyło} other {# transakcji inwestycyjnych użyło}} akcji nieznanej w Monize i zostały pominięte.",
+    "unknownInvestmentAction": "{count, plural, one {# transakcja inwestycyjna użyła} few {# transakcje inwestycyjne użyły} many {# transakcji inwestycyjnych użyło} other {# transakcji inwestycyjnych użyło}} akcji nieznanej w Artha i zostały pominięte.",
     "unconfirmedInvestmentAction": "{count, plural, one {# transakcja inwestycyjna użyła} few {# transakcje inwestycyjne użyły} many {# transakcji inwestycyjnych użyło} other {# transakcji inwestycyjnych użyło}} akcji Money, której znaczenie jest wywnioskowane, a nie udokumentowane; sprawdź je w Money.",
     "missingInvestmentDetail": "{count, plural, one {# transakcja inwestycyjna nie miała} few {# transakcje inwestycyjne nie miały} many {# transakcji inwestycyjnych nie miało} other {# transakcji inwestycyjnych nie miało}} w pliku szczegółów udziałów i zaimportowano je tylko z kwotą gotówkową.",
     "investmentAccountMismatch": "{count, plural, one {# transakcja inwestycyjna była} few {# transakcje inwestycyjne były} many {# transakcji inwestycyjnych było} other {# transakcji inwestycyjnych było}} na koncie, które nie jest kontem inwestycyjnym, i zostały pominięte.",
@@ -519,7 +519,7 @@
     "holdingsMismatch": "{count, plural, one {# pozycja nie zgadza się} few {# pozycje nie zgadzają się} many {# pozycji nie zgadza się} other {# pozycji nie zgadza się}} z udziałami zapisanymi w pliku Money.",
     "billTemplateMissing": "{count, plural, one {# zaplanowany rachunek nie miał} few {# zaplanowane rachunki nie miały} many {# zaplanowanych rachunków nie miało} other {# zaplanowanych rachunków nie miało}} transakcji szablonowej w pliku i zostały pominięte.",
     "unusableBill": "{count, plural, one {# zaplanowany rachunek nie miał} few {# zaplanowane rachunki nie miały} many {# zaplanowanych rachunków nie miało} other {# zaplanowanych rachunków nie miało}} konta, użytecznej daty ani rozpoznanej cykliczności i zostały pominięte.",
-    "billFrequencyApproximated": "{count, plural, one {# zaplanowany rachunek używa} few {# zaplanowane rachunki używają} many {# zaplanowanych rachunków używa} other {# zaplanowanych rachunków używa}} interwału powtarzania, którego Monize nie potrafi wyrazić dokładnie, więc użyto najbliższego krótszego.",
+    "billFrequencyApproximated": "{count, plural, one {# zaplanowany rachunek używa} few {# zaplanowane rachunki używają} many {# zaplanowanych rachunków używa} other {# zaplanowanych rachunków używa}} interwału powtarzania, którego Artha nie potrafi wyrazić dokładnie, więc użyto najbliższego krótszego.",
     "loanInterestCategoryUnclear": "{count, plural, one {# spłata pożyczki obejmowała} few {# spłaty pożyczki obejmowały} many {# spłat pożyczki obejmowało} other {# spłaty pożyczki obejmowało}} wiele kategorii innych niż kapitał, więc kategoria odsetek pożyczki pozostała nieustawiona. Sprawdź, czy spłata obejmuje depozyt zabezpieczający (escrow), i ustaw kategorię odsetek po imporcie.",
     "showTransactions": "{count, plural, one {Pokaż # transakcję} few {Pokaż # transakcje} many {Pokaż # transakcji} other {Pokaż # transakcji}}",
     "hideTransactions": "Ukryj transakcje",

@@ -288,7 +288,7 @@ describe('GEM strategy tour copy', () => {
     // The fill-missing shortcut creates security rows immediately. A user who
     // reads that as "GEM bought this for me" has been actively misled.
     expect(steps.addInstruments.body).toMatch(
-      /creates instrument records in Monize (immediately|straight away)/i,
+      /creates instrument records in Artha (immediately|straight away)/i,
     );
     // And that they land before the configuration is saved, which is the part
     // users are surprised by.

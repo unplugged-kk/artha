@@ -224,7 +224,7 @@
     "statusLockedToParent": "Giao dịch này là một phần của giao dịch được chia nhỏ. Hãy thay đổi trạng thái của giao dịch được chia nhỏ, để cả hai bên thay đổi cùng nhau.",
     "descriptionPlaceholder": "Ghi chú tùy chọn",
     "splitRatio": "Tỷ lệ tách",
-    "noSplitRatioWarning": "Không có tỷ lệ tách nào được đặt trong giao dịch này. Nhập tỷ lệ như đã công bố trước khi lưu — Monize sẽ không tự giả định cho bạn.",
+    "noSplitRatioWarning": "Không có tỷ lệ tách nào được đặt trong giao dịch này. Nhập tỷ lệ như đã công bố trước khi lưu — Artha sẽ không tự giả định cho bạn.",
     "newShares": "Cổ phiếu mới",
     "oldShares": "Cổ phiếu cũ",
     "splitRatioHelp": "Nhập tỷ lệ như đã công bố. Để tách 2 đổi 1, dùng 2 mới và 1 cũ; để tách ngược 1 đổi 2, dùng 1 mới và 2 cũ. Tỷ lệ hiệu lực:",

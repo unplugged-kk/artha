@@ -97,7 +97,7 @@
     },
     "smtpFailure": {
       "title": "Pengiriman email gagal",
-      "message": "Monize tidak dapat mengirim email: {error}. Notifikasi dan pengingat tidak terkirim."
+      "message": "Artha tidak dapat mengirim email: {error}. Notifikasi dan pengingat tidak terkirim."
     },
     "providerOutage": {
       "title": "{provider} tidak merespons",

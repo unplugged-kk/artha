@@ -271,7 +271,7 @@
       "workingTotal": "合计",
       "workingUnknown": "在持仓能够估值之前，无法算出这个比例。",
       "basisComposition": "敞口是按 {dimension} 比较各标的的持仓内容估算出来的。它只是配置旁边的估计值，不是配置的一部分：只有目标标的本身才算持有目标。",
-      "basisInstrument": "无法估计市场敞口，因为 Monize 中没有记录 {target} 的地域结构（{dimension}）。与信号的一致程度仍按标的精确计算。",
+      "basisInstrument": "无法估计市场敞口，因为 Artha 中没有记录 {target} 的地域结构（{dimension}）。与信号的一致程度仍按标的精确计算。",
       "basisPartialData": "有 {count} 笔持仓没有记录结构，因此无法给出整个组合的估计值。",
       "isTarget": "目标标的",
       "notInStrategy": "不属于策略",

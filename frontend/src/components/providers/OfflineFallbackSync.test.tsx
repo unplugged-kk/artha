@@ -54,7 +54,7 @@ describe('OfflineFallbackSync', () => {
         foreground: 'rgb(243, 244, 246)',
         title: 'Unable to connect',
         message:
-          'Monize could not reach the server. Check your connection and try again.',
+          'Artha could not reach the server. Check your connection and try again.',
         retry: 'Try again',
       },
     });

@@ -531,8 +531,8 @@ async function bootstrap() {
   // Swagger documentation (disabled in production)
   if (process.env.NODE_ENV !== "production") {
     const config = new DocumentBuilder()
-      .setTitle("Monize API")
-      .setDescription("API for managing your personal finances via Monize")
+      .setTitle("Artha API")
+      .setDescription("API for managing your personal finances via Artha")
       .setVersion("1.0")
       .addBearerAuth()
       .build();

@@ -25,7 +25,7 @@ export class PasswordBreachService {
       const suffix = sha1.substring(5);
 
       const response = await fetch(`${this.HIBP_API}${prefix}`, {
-        headers: { "User-Agent": "Monize-PasswordCheck" },
+        headers: { "User-Agent": "Artha-PasswordCheck" },
       });
 
       if (!response.ok) {

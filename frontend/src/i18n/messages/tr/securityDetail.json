@@ -164,7 +164,7 @@
     "sectorTab": "Sektör",
     "countryTab": "Ülke",
     "assetClassTab": "Varlık sınıfı",
-    "sectorEmpty": "Sektör dağılımı kayıtlı değil. Monize bunu fonlar ve ETF'ler için sağlayıcıdan doldurur.",
+    "sectorEmpty": "Sektör dağılımı kayıtlı değil. Artha bunu fonlar ve ETF'ler için sağlayıcıdan doldurur.",
     "countryEmpty": "Ülke dağılımı kayıtlı değil. Menkul kıymeti düzenlerken girebilirsin.",
     "assetClassEmpty": "Varlık sınıfı dağılımı henüz kayıtlı değil.",
     "remainder": "{percent} sınıflandırılmamış"

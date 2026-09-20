@@ -271,7 +271,7 @@
       "workingTotal": "Total",
       "workingUnknown": "The share cannot be worked out until the holdings can be priced.",
       "basisComposition": "Exposure is estimated from what each instrument holds, compared by {dimension}. It is an estimate beside the allocation, not part of it: only the target instrument itself counts as holding the target.",
-      "basisInstrument": "Market exposure cannot be estimated, because {target} has no {dimension} structure recorded in Monize. Compliance with the signal is still calculated exactly, by instrument.",
+      "basisInstrument": "Market exposure cannot be estimated, because {target} has no {dimension} structure recorded in Artha. Compliance with the signal is still calculated exactly, by instrument.",
       "basisPartialData": "{count, plural, one {# holding has} other {# holdings have}} no structure recorded, so the estimate for the portfolio is unavailable.",
       "isTarget": "target instrument",
       "notInStrategy": "not part of the strategy",

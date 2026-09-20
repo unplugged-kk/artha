@@ -1,32 +1,32 @@
 {
   "test": {
-    "title": "Monize test bildirimi",
+    "title": "Artha test bildirimi",
     "body": "Anlık bildirimler bu cihazda çalışıyor."
   },
   "notification": {
     "payments": {
       "title": "Ödeme hatırlatması",
-      "body": "Bir fatura veya planlanmış ödeme ilginizi bekliyor. Ayrıntılar için Monize'i açın."
+      "body": "Bir fatura veya planlanmış ödeme ilginizi bekliyor. Ayrıntılar için Artha'i açın."
     },
     "budgets": {
       "title": "Bütçe uyarısı",
-      "body": "Bütçelerinizden biri ilginizi bekliyor. Ayrıntılar için Monize'i açın."
+      "body": "Bütçelerinizden biri ilginizi bekliyor. Ayrıntılar için Artha'i açın."
     },
     "system": {
       "title": "Sistem bildirimi",
-      "body": "Monize'in sizin için bir sistem bildirimi var. Ayrıntılar için uygulamayı açın."
+      "body": "Artha'in sizin için bir sistem bildirimi var. Ayrıntılar için uygulamayı açın."
     },
     "balances": {
       "title": "Bakiye uyarısı",
-      "body": "Bir hesap bakiyesi belirlediğiniz eşiği aştı. Ayrıntılar için Monize'i açın."
+      "body": "Bir hesap bakiyesi belirlediğiniz eşiği aştı. Ayrıntılar için Artha'i açın."
     },
     "investments": {
       "title": "Yatırım hareketi",
-      "body": "Yatırımlarınız bugün hareket etti. Ayrıntılar için Monize'i açın."
+      "body": "Yatırımlarınız bugün hareket etti. Ayrıntılar için Artha'i açın."
     },
     "strategies": {
       "title": "Strateji sinyali",
-      "body": "Stratejilerinizden biri önerisini değiştirdi. Ayrıntılar için Monize'i açın."
+      "body": "Stratejilerinizden biri önerisini değiştirdi. Ayrıntılar için Artha'i açın."
     }
   },
   "actions": {

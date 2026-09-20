@@ -164,7 +164,7 @@
     "sectorTab": "섹터",
     "countryTab": "국가",
     "assetClassTab": "자산군",
-    "sectorEmpty": "섹터 구성이 저장되어 있지 않습니다. Monize는 펀드와 ETF에 대해 제공처에서 채워 넣습니다.",
+    "sectorEmpty": "섹터 구성이 저장되어 있지 않습니다. Artha는 펀드와 ETF에 대해 제공처에서 채워 넣습니다.",
     "countryEmpty": "국가 구성이 저장되어 있지 않습니다. 종목을 편집할 때 입력할 수 있습니다.",
     "assetClassEmpty": "자산군 구성이 아직 저장되어 있지 않습니다.",
     "remainder": "{percent} 미분류"

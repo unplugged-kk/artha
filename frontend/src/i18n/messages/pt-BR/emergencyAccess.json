@@ -6,7 +6,7 @@
   "backToSignIn": "Voltar ao login",
   "ownerFallback": "o proprietário da conta",
   "ownerFirstNameFallback": "o proprietário",
-  "intro": "Olá {contactName}, você foi designado(a) como contato de emergência na conta Monize de <b>{ownerName}</b>.",
+  "intro": "Olá {contactName}, você foi designado(a) como contato de emergência na conta Artha de <b>{ownerName}</b>.",
   "introDetail": "Definir uma senha aqui permitirá entrar como titular da conta e você terá acesso total à mesma. As sessões existentes serão revogadas e as credenciais anteriores substituídas.",
   "messageHeading": "Mensagem de {name}",
   "newPasswordLabel": "Nova senha",

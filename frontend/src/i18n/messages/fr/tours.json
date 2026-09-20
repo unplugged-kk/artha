@@ -37,7 +37,7 @@
     "description": "Découvrez les fonctionnalités de l'application étape par étape.",
     "backLink": "Retour aux paramètres",
     "pageTitle": "Visites guidées",
-    "pageSubtitle": "Toutes les visites proposées par Monize, au même endroit. Lancez-en une à tout moment : vous pouvez quitter une visite avec Échap et la reprendre ici.",
+    "pageSubtitle": "Toutes les visites proposées par Artha, au même endroit. Lancez-en une à tout moment : vous pouvez quitter une visite avec Échap et la reprendre ici.",
     "meta": "{steps} · {status}",
     "metaWithRelease": "{steps} · {release} · {status}",
     "stepCount": "{count, plural, one {# étape} other {# étapes}}",
@@ -59,10 +59,10 @@
   },
   "intro": {
     "basics": {
-      "title": "Introduction à Monize",
+      "title": "Introduction à Artha",
       "steps": {
         "welcome": {
-          "title": "Bienvenue dans Monize",
+          "title": "Bienvenue dans Artha",
           "body": "Cette visite rapide vous fait découvrir l'essentiel de l'application. Vous pouvez la quitter à tout moment en appuyant sur **Échap** ou en cliquant sur **Terminer la visite**."
         },
         "dashboard": {
@@ -103,7 +103,7 @@
         },
         "currencyField": {
           "title": "Montant et devise",
-          "body": "Saisissez ici le montant de la transaction. Payé dans une autre devise ? Définissez la devise à côté du montant et saisissez-le tel que facturé — Monize le convertit pour vous dans la devise du compte."
+          "body": "Saisissez ici le montant de la transaction. Payé dans une autre devise ? Définissez la devise à côté du montant et saisissez-le tel que facturé — Artha le convertit pour vous dans la devise du compte."
         },
         "closeForm": {
           "title": "Fermez le formulaire pour continuer",
@@ -147,7 +147,7 @@
           },
           "fxFeePercent": {
             "title": "Définissez les frais de conversion",
-            "body": "Saisissez ici les frais de transaction à l'étranger du compte en pourcentage — 2,5 par exemple. Monize les intègre au montant converti de chaque achat à l'étranger, de sorte que les frais sont enregistrés pour vous."
+            "body": "Saisissez ici les frais de transaction à l'étranger du compte en pourcentage — 2,5 par exemple. Artha les intègre au montant converti de chaque achat à l'étranger, de sorte que les frais sont enregistrés pour vous."
           },
           "closeAccountForm": {
             "title": "Enregistrer et fermer",
@@ -171,7 +171,7 @@
           },
           "enterAmount": {
             "title": "Saisissez le montant qui vous a été facturé",
-            "body": "Tapez le total exactement tel qu'il figure sur votre relevé. Monize recherche le **taux de change** à la date de la transaction, affiche le total converti à côté et y intègre les **frais de transaction à l'étranger** que vous avez définis sur le compte — la légende ci-dessous détaille les deux. Votre banque a arrondi différemment ? Modifiez le taux ou le total converti au centime près."
+            "body": "Tapez le total exactement tel qu'il figure sur votre relevé. Artha recherche le **taux de change** à la date de la transaction, affiche le total converti à côté et y intègre les **frais de transaction à l'étranger** que vous avez définis sur le compte — la légende ci-dessous détaille les deux. Votre banque a arrondi différemment ? Modifiez le taux ou le total converti au centime près."
           },
           "closeTransactionForm": {
             "title": "Fermez le formulaire",
@@ -192,7 +192,7 @@
             "fallbackBody": "Le rapport **Frais de devises étrangères** rassemble les achats à l'étranger de tous vos comptes et devises en un seul endroit. Il n'est pas affiché pour le moment — une recherche ou un filtre de catégorie peut le masquer — mais vous le trouverez dans **Rapports**."
           },
           "finish": {
-            "title": "Voilà pour les devises étrangères dans Monize",
+            "title": "Voilà pour les devises étrangères dans Artha",
             "body": "Définissez les frais une fois, saisissez les achats tels qu'ils sont facturés, et les frais se suivent tout seuls. Vous pouvez refaire cette visite à tout moment depuis la section **Visites guidées** des **Paramètres**."
           }
         }
@@ -221,7 +221,7 @@
         "steps": {
           "welcome": {
             "title": "Chaque titre sur une seule page",
-            "body": "Les titres étaient auparavant répartis dans trois boîtes de dialogue. Chacun a désormais sa page, qui rassemble le tout : ce que vous détenez, comment il a évolué et tout ce que Monize sait de lui. Voici la version courte."
+            "body": "Les titres étaient auparavant répartis dans trois boîtes de dialogue. Chacun a désormais sa page, qui rassemble le tout : ce que vous détenez, comment il a évolué et tout ce que Artha sait de lui. Voici la version courte."
           },
           "openDetail": {
             "title": "Ouvrir un titre",
@@ -238,7 +238,7 @@
           },
           "keyInfo": {
             "title": "Ce qu'est l'instrument",
-            "body": "À côté du graphique : type de titre, place de cotation, devise, le fournisseur de cours utilisé par Monize et le dernier cours enregistré. En dessous, la carte **Répartition** montre de quoi un fonds est composé — basculez entre les répartitions sectorielle, par pays et par classe d'actifs."
+            "body": "À côté du graphique : type de titre, place de cotation, devise, le fournisseur de cours utilisé par Artha et le dernier cours enregistré. En dessous, la carte **Répartition** montre de quoi un fonds est composé — basculez entre les répartitions sectorielle, par pays et par classe d'actifs."
           },
           "tabs": {
             "title": "Le détail en dessous",
@@ -259,7 +259,7 @@
           },
           "findReport": {
             "title": "Trouver GEM dans Rapports",
-            "body": "Ouvrez ici le rapport **Stratégie GEM**. Il se trouve dans la catégorie **Investissement**. Le rapport est disponible même si vous n'avez encore aucun instrument de placement ni position enregistrée dans Monize.",
+            "body": "Ouvrez ici le rapport **Stratégie GEM**. Il se trouve dans la catégorie **Investissement**. Le rapport est disponible même si vous n'avez encore aucun instrument de placement ni position enregistrée dans Artha.",
             "fallbackBody": "La carte du rapport n'est pas visible pour le moment, le plus souvent à cause d'un filtre. Choisissez **Suivant** et la visite ouvrira directement le rapport GEM. Vous le retrouverez plus tard dans **Rapports**, catégorie **Investissement**."
           },
           "page": {
@@ -272,7 +272,7 @@
           },
           "action": {
             "title": "Une suggestion, pas un ordre automatique",
-            "body": "Le graphique compare les instruments affectés. **Que dois-je faire ?** traduit le signal en une opération possible de vente puis d'achat et estime l'impôt et les frais lorsque les données suffisent. Monize n'envoie jamais d'ordre à votre courtier. Après avoir réellement passé un ordre chez votre courtier, enregistrez les écritures dans Monize ; n'utilisez ensuite **Marquer comme exécutée** que comme note indiquant que vous avez appliqué le signal."
+            "body": "Le graphique compare les instruments affectés. **Que dois-je faire ?** traduit le signal en une opération possible de vente puis d'achat et estime l'impôt et les frais lorsque les données suffisent. Artha n'envoie jamais d'ordre à votre courtier. Après avoir réellement passé un ordre chez votre courtier, enregistrez les écritures dans Artha ; n'utilisez ensuite **Marquer comme exécutée** que comme note indiquant que vous avez appliqué le signal."
           },
           "reasoning": {
             "title": "Pourquoi GEM a-t-il choisi cela ?",
@@ -296,7 +296,7 @@
           },
           "addInstruments": {
             "title": "Pas encore d'instruments ? Commencez ici",
-            "body": "GEM a besoin d'un instrument dans chaque rôle pour pouvoir décider quoi que ce soit. Lorsqu'un rôle est vide, la carte **Rôles et instruments** propose un raccourci qui ajoute des ETF donnés en exemple. Choisissez d'abord, dans **Cotations à ajouter**, la région que votre courtier peut réellement négocier : **Amériques** ou **Europe (UCITS)**. Le bouton d'ajout crée les fiches d'instruments dans Monize immédiatement, avant même que vous enregistriez la configuration GEM ; cela n'achète rien. Seuls les rôles vides sont remplis, et un instrument correspondant déjà dans votre liste peut être réutilisé. Vérifiez chaque code, chaque place de cotation et chaque devise. Ces exemples ne sont pas une recommandation. Si le raccourci n'apparaît pas, vos rôles sont déjà remplis et vous pouvez les relire ci-dessous.",
+            "body": "GEM a besoin d'un instrument dans chaque rôle pour pouvoir décider quoi que ce soit. Lorsqu'un rôle est vide, la carte **Rôles et instruments** propose un raccourci qui ajoute des ETF donnés en exemple. Choisissez d'abord, dans **Cotations à ajouter**, la région que votre courtier peut réellement négocier : **Amériques** ou **Europe (UCITS)**. Le bouton d'ajout crée les fiches d'instruments dans Artha immédiatement, avant même que vous enregistriez la configuration GEM ; cela n'achète rien. Seuls les rôles vides sont remplis, et un instrument correspondant déjà dans votre liste peut être réutilisé. Vérifiez chaque code, chaque place de cotation et chaque devise. Ces exemples ne sont pas une recommandation. Si le raccourci n'apparaît pas, vos rôles sont déjà remplis et vous pouvez les relire ci-dessous.",
             "fallbackBody": "Le formulaire de paramètres ne s'est pas chargé, la visite ne peut donc pas désigner la carte des rôles. Aucun réglage n'a été modifié. Utilisez la commande de nouvelle tentative de la page, ou reprenez la visite plus tard depuis **Visites guidées** dans les **Paramètres**."
           },
           "roles": {
@@ -305,11 +305,11 @@
           },
           "save": {
             "title": "Vérifier avant d'enregistrer",
-            "body": "Contrôlez la liste des comptes, chaque cotation et les devises, puis **Enregistrer la configuration** pour conserver le scénario et recalculer le rapport à partir de l'historique de cours disponible. C'est l'enregistrement qui donne matière aux étapes suivantes. Cela ne passe toujours aucun ordre, et vous n'avez pas besoin d'enregistrer pour terminer cette visite. Si des cours manquent ou sont trop anciens, Monize indique que le signal est indisponible au lieu de le deviner."
+            "body": "Contrôlez la liste des comptes, chaque cotation et les devises, puis **Enregistrer la configuration** pour conserver le scénario et recalculer le rapport à partir de l'historique de cours disponible. C'est l'enregistrement qui donne matière aux étapes suivantes. Cela ne passe toujours aucun ordre, et vous n'avez pas besoin d'enregistrer pour terminer cette visite. Si des cours manquent ou sont trop anciens, Artha indique que le signal est indisponible au lieu de le deviner."
           },
           "finish": {
             "title": "Revenez à la prochaine évaluation",
-            "body": "GEM prend une décision par période, et la date de la prochaine figure en haut du rapport. D'ici là, il n'y a rien à faire. Le moment venu, vérifiez si le signal a changé ; si oui, passez les ordres chez votre courtier et enregistrez les écritures dans Monize pour que la comparaison de portefeuille reste juste. Vous pouvez reprendre cette visite à tout moment depuis **Visites guidées** dans les **Paramètres**."
+            "body": "GEM prend une décision par période, et la date de la prochaine figure en haut du rapport. D'ici là, il n'y a rien à faire. Le moment venu, vérifiez si le signal a changé ; si oui, passez les ordres chez votre courtier et enregistrez les écritures dans Artha pour que la comparaison de portefeuille reste juste. Vous pouvez reprendre cette visite à tout moment depuis **Visites guidées** dans les **Paramètres**."
           }
         }
       }
@@ -319,12 +319,12 @@
         "title": "Notifications",
         "steps": {
           "welcome": {
-            "title": "Monize peut désormais vous prévenir",
+            "title": "Artha peut désormais vous prévenir",
             "body": "Une facture qui arrive à échéance, un budget dépassé, un solde qui franchit un seuil que vous avez fixé, une sauvegarde en échec. Cette visite montre où tout cela arrive et comment vous choisissez ce qui vous atteint par e-mail ou sur votre téléphone."
           },
           "bell": {
             "title": "La cloche fait foi",
-            "body": "Toute notification émise par Monize est écrite ici, quoi que vous activiez ou désactiviez par ailleurs. L’e-mail et le push sont des copies envoyées ensuite ; cette liste est l’original, et le nombre sur la cloche compte ce que vous n’avez pas encore lu."
+            "body": "Toute notification émise par Artha est écrite ici, quoi que vous activiez ou désactiviez par ailleurs. L’e-mail et le push sont des copies envoyées ensuite ; cette liste est l’original, et le nombre sur la cloche compte ce que vous n’avez pas encore lu."
           },
           "panel": {
             "title": "Ce que porte une notification",
@@ -344,7 +344,7 @@
           },
           "push": {
             "title": "Vos appareils",
-            "body": "Enregistrez un navigateur ici et Monize pourra l’atteindre même l’application fermée. Monize signe ses propres messages : aucun compte Google ni Apple au milieu. Chaque appareil se teste et se retire séparément, et un appareil devenu injoignable en dit la raison. Sur iPhone, cela fonctionne une fois Monize ajouté à l’écran d’accueil ; si votre administrateur n’a pas activé le push sur cette instance, ce bloc l’indique."
+            "body": "Enregistrez un navigateur ici et Artha pourra l’atteindre même l’application fermée. Artha signe ses propres messages : aucun compte Google ni Apple au milieu. Chaque appareil se teste et se retire séparément, et un appareil devenu injoignable en dit la raison. Sur iPhone, cela fonctionne une fois Artha ajouté à l’écran d’accueil ; si votre administrateur n’a pas activé le push sur cette instance, ce bloc l’indique."
           },
           "portfolio": {
             "title": "Mouvement des placements",

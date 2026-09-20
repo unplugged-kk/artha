@@ -97,7 +97,7 @@
     },
     "smtpFailure": {
       "title": "E-Mail-Zustellung schlägt fehl",
-      "message": "Monize konnte keine E-Mail senden: {error}. Benachrichtigungen und Erinnerungen werden nicht zugestellt."
+      "message": "Artha konnte keine E-Mail senden: {error}. Benachrichtigungen und Erinnerungen werden nicht zugestellt."
     },
     "providerOutage": {
       "title": "{provider} antwortet nicht",

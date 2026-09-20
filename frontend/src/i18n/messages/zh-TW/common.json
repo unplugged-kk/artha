@@ -15,7 +15,7 @@
     "showNextLogin": "下次登入時顯示",
     "close": "關閉",
     "unavailable": "此版本的版本說明無法使用。",
-    "englishOnly": "以下版本說明僅提供英文。Monize 本身（包括導覽教學）會依照你的語言設定。"
+    "englishOnly": "以下版本說明僅提供英文。Artha 本身（包括導覽教學）會依照你的語言設定。"
   },
   "transferPayee": "{direction, select, to {轉帳至 {name}} other {自 {name} 轉入}}",
   "save": "儲存",

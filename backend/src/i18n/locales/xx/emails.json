@@ -1,13 +1,13 @@
 {
   "test": {
-    "subject": "[XX-Monize Test Email-XX]",
-    "heading": "[XX-Monize Test Email-XX]",
+    "subject": "[XX-Artha Test Email-XX]",
+    "heading": "[XX-Artha Test Email-XX]",
     "greeting": "[XX-Hi {{ name }},-XX]",
-    "body": "[XX-This is a test email from Monize. If you received this, your email notifications are working correctly.-XX]"
+    "body": "[XX-This is a test email from Artha. If you received this, your email notifications are working correctly.-XX]"
   },
   "billReminder": {
-    "subjectOne": "[XX-Monize: 1 upcoming bill needs attention-XX]",
-    "subjectMany": "[XX-Monize: {{ count }} upcoming bills need attention-XX]",
+    "subjectOne": "[XX-Artha: 1 upcoming bill needs attention-XX]",
+    "subjectMany": "[XX-Artha: {{ count }} upcoming bills need attention-XX]",
     "heading": "[XX-Upcoming Bill Reminder-XX]",
     "greeting": "[XX-Hi {{ name }},-XX]",
     "introOne": "[XX-You have 1 upcoming bill that needs attention:-XX]",
@@ -23,8 +23,8 @@
     "button": "[XX-View Bills &amp; Deposits-XX]"
   },
   "mortgageReminder": {
-    "subject": "[XX-Monize: 1 upcoming mortgage renewal-XX]",
-    "subjectPlural": "[XX-Monize: {{ count }} upcoming mortgage renewals-XX]",
+    "subject": "[XX-Artha: 1 upcoming mortgage renewal-XX]",
+    "subjectPlural": "[XX-Artha: {{ count }} upcoming mortgage renewals-XX]",
     "heading": "[XX-Mortgage Renewal Reminder-XX]",
     "greeting": "[XX-Hi {{ name }},-XX]",
     "introOne": "[XX-You have 1 mortgage with an upcoming term renewal. Contact your lender to discuss renewal options before the term ends:-XX]",
@@ -43,8 +43,8 @@
     "info": "[XX-Info-XX]"
   },
   "budgetAlertImmediate": {
-    "subject": "[XX-Monize: Alert - {{ title }}-XX]",
-    "subjectPlural": "[XX-Monize: {{ count }} alerts need attention-XX]",
+    "subject": "[XX-Artha: Alert - {{ title }}-XX]",
+    "subjectPlural": "[XX-Artha: {{ count }} alerts need attention-XX]",
     "heading": "[XX-Alert-XX]",
     "greeting": "[XX-Hi {{ name }},-XX]",
     "intro": "[XX-Your budget needs attention:-XX]",
@@ -54,7 +54,7 @@
     "button": "[XX-View Budget-XX]"
   },
   "budgetWeeklyDigest": {
-    "subject": "[XX-Monize: Your weekly budget summary-XX]",
+    "subject": "[XX-Artha: Your weekly budget summary-XX]",
     "heading": "[XX-Weekly Budget Summary-XX]",
     "greeting": "[XX-Hi {{ name }},-XX]",
     "intro": "[XX-Here is your weekly budget summary for: <strong>{{ budgets }}</strong>-XX]",
@@ -72,8 +72,8 @@
     "button": "[XX-View Budget Dashboard-XX]"
   },
   "budgetMonthlySummary": {
-    "subject": "[XX-Monize: Monthly budget summary - {{ period }}-XX]",
-    "subjectPlural": "[XX-Monize: Monthly budget summary for {{ count }} budgets-XX]",
+    "subject": "[XX-Artha: Monthly budget summary - {{ period }}-XX]",
+    "subjectPlural": "[XX-Artha: Monthly budget summary for {{ count }} budgets-XX]",
     "heading": "[XX-Monthly Budget Summary-XX]",
     "greeting": "[XX-Hi {{ name }},-XX]",
     "intro": "[XX-Here is your monthly budget summary for the period that just closed:-XX]",
@@ -87,10 +87,10 @@
     "button": "[XX-View Budget Dashboard-XX]"
   },
   "oidcLink": {
-    "subject": "[XX-Monize: Confirm SSO Account Link-XX]",
+    "subject": "[XX-Artha: Confirm SSO Account Link-XX]",
     "heading": "[XX-Link Your SSO Account-XX]",
     "greeting": "[XX-Hi {{ name }},-XX]",
-    "intro": "[XX-Someone attempted to sign in via SSO with an email that matches your existing Monize account. To link your SSO identity to this account, click the button below:-XX]",
+    "intro": "[XX-Someone attempted to sign in via SSO with an email that matches your existing Artha account. To link your SSO identity to this account, click the button below:-XX]",
     "button": "[XX-Confirm Account Link-XX]",
     "disclaimer": "[XX-If you did not initiate this request, you can safely ignore this email. The link expires in 1 hour.-XX]"
   },
@@ -98,11 +98,11 @@
     "subject": "[XX-Account Temporarily Locked-XX]",
     "heading": "[XX-Account Temporarily Locked-XX]",
     "greeting": "[XX-Hi {{ name }},-XX]",
-    "body1": "[XX-Your Monize account has been temporarily locked due to multiple failed login attempts. This is a security measure to protect your account.-XX]",
+    "body1": "[XX-Your Artha account has been temporarily locked due to multiple failed login attempts. This is a security measure to protect your account.-XX]",
     "body2": "[XX-The lock will expire automatically. If you did not attempt to log in, we recommend resetting your password immediately.-XX]"
   },
   "passwordReset": {
-    "subject": "[XX-Monize Password Reset-XX]",
+    "subject": "[XX-Artha Password Reset-XX]",
     "heading": "[XX-Password Reset Request-XX]",
     "greeting": "[XX-Hi {{ name }},-XX]",
     "intro": "[XX-We received a request to reset your password. Click the button below to set a new password:-XX]",
@@ -110,54 +110,54 @@
     "disclaimer": "[XX-This link will expire in 1 hour. If you did not request a password reset, you can safely ignore this email.-XX]"
   },
   "emailVerification": {
-    "subject": "[XX-Verify your Monize email-XX]",
+    "subject": "[XX-Verify your Artha email-XX]",
     "heading": "[XX-Verify your email address-XX]",
     "greeting": "[XX-Hi {{ name }},-XX]",
-    "intro": "[XX-Thanks for signing up for Monize. Please confirm your email address to activate your account and sign in:-XX]",
+    "intro": "[XX-Thanks for signing up for Artha. Please confirm your email address to activate your account and sign in:-XX]",
     "button": "[XX-Verify Email-XX]",
-    "disclaimer": "[XX-This link will expire in 24 hours. If you did not create a Monize account, you can safely ignore this email.-XX]"
+    "disclaimer": "[XX-This link will expire in 24 hours. If you did not create a Artha account, you can safely ignore this email.-XX]"
   },
   "accountInvite": {
-    "subject": "[XX-Your Monize account is ready-XX]",
-    "heading": "[XX-Your Monize account is ready-XX]",
+    "subject": "[XX-Your Artha account is ready-XX]",
+    "heading": "[XX-Your Artha account is ready-XX]",
     "greeting": "[XX-Hi {{ name }},-XX]",
-    "intro": "[XX-An administrator has created a Monize account for you. Click the button below to set your password and sign in:-XX]",
+    "intro": "[XX-An administrator has created a Artha account for you. Click the button below to set your password and sign in:-XX]",
     "button": "[XX-Set Your Password-XX]",
     "disclaimer": "[XX-This link will expire in 24 hours. If you were not expecting this, you can safely ignore this email.-XX]"
   },
   "delegateInvite": {
-    "subject": "[XX-You have been invited to Monize-XX]",
-    "heading": "[XX-You have been invited to Monize-XX]",
+    "subject": "[XX-You have been invited to Artha-XX]",
+    "heading": "[XX-You have been invited to Artha-XX]",
     "greeting": "[XX-Hi {{ name }},-XX]",
-    "intro": "[XX-{{ owner }} has invited you to access their Monize account as a delegate. Click the button below to set your password and get started:-XX]",
+    "intro": "[XX-{{ owner }} has invited you to access their Artha account as a delegate. Click the button below to set your password and get started:-XX]",
     "button": "[XX-Set Your Password-XX]",
     "disclaimer": "[XX-This link will expire in 24 hours. If you were not expecting this invitation, you can safely ignore this email.-XX]"
   },
   "emergencyAccessReminder": {
-    "subjectOne": "[XX-Monize: your account has been inactive for 1 day-XX]",
-    "subjectMany": "[XX-Monize: your account has been inactive for {{ daysSinceLogin }} days-XX]",
-    "heading": "[XX-Monize Emergency Access Reminder-XX]",
+    "subjectOne": "[XX-Artha: your account has been inactive for 1 day-XX]",
+    "subjectMany": "[XX-Artha: your account has been inactive for {{ daysSinceLogin }} days-XX]",
+    "heading": "[XX-Artha Emergency Access Reminder-XX]",
     "greeting": "[XX-Hi {{ name }},-XX]",
     "grantPhraseToday": "[XX-today-XX]",
     "grantPhraseFutureOne": "[XX-in 1 day-XX]",
     "grantPhraseFutureMany": "[XX-in {{ count }} days-XX]",
-    "bodyOne": "[XX-You have not signed in to Monize for <strong>1 day</strong>. If you remain inactive, your designated emergency contacts will be granted full access to your account {{ grantPhrase }}.-XX]",
-    "bodyMany": "[XX-You have not signed in to Monize for <strong>{{ daysSinceLogin }} days</strong>. If you remain inactive, your designated emergency contacts will be granted full access to your account {{ grantPhrase }}.-XX]",
+    "bodyOne": "[XX-You have not signed in to Artha for <strong>1 day</strong>. If you remain inactive, your designated emergency contacts will be granted full access to your account {{ grantPhrase }}.-XX]",
+    "bodyMany": "[XX-You have not signed in to Artha for <strong>{{ daysSinceLogin }} days</strong>. If you remain inactive, your designated emergency contacts will be granted full access to your account {{ grantPhrase }}.-XX]",
     "contactsLabel": "[XX-Designated contacts:-XX]",
     "button": "[XX-Sign in now-XX]",
     "footer": "[XX-Signing in resets the timer. If you no longer want this feature enabled, you can disable it from Settings → Emergency Access.-XX]"
   },
   "emergencyAccessGrant": {
-    "subject": "[XX-You have been granted emergency access to {{ owner }}'s Monize account-XX]",
+    "subject": "[XX-You have been granted emergency access to {{ owner }}'s Artha account-XX]",
     "heading": "[XX-Emergency Access Granted-XX]",
     "greeting": "[XX-Hi {{ name }},-XX]",
-    "body": "[XX-<strong>{{ owner }}</strong> previously designated you as an emergency contact on their Monize account. Because they have not signed in for an extended period, you are now being granted full access to take over the account.-XX]",
+    "body": "[XX-<strong>{{ owner }}</strong> previously designated you as an emergency contact on their Artha account. Because they have not signed in for an extended period, you are now being granted full access to take over the account.-XX]",
     "claimIntro": "[XX-To claim access, click the link below and set a new password. You will be signed in as the account holder.-XX]",
     "button": "[XX-Claim Emergency Access-XX]",
     "expiry": "[XX-This link is valid until <strong>{{ expiry }}</strong> and can only be used once. If multiple contacts received this email, the first to claim will take over the account.-XX]"
   },
   "emergencyAccessGrantRevoked": {
-    "subject": "[XX-Monize: emergency access was granted while you were away-XX]",
+    "subject": "[XX-Artha: emergency access was granted while you were away-XX]",
     "heading": "[XX-Emergency Access Was Granted While You Were Away-XX]",
     "greeting": "[XX-Hi {{ name }},-XX]",
     "body1": "[XX-Because your account had been inactive, your designated emergency contacts were sent links to take over your account. You have now signed back in, so <strong>those links have been revoked</strong> and the safeguard has been re-armed.-XX]",
@@ -165,39 +165,39 @@
     "button": "[XX-Review Emergency Access-XX]"
   },
   "providerOutage": {
-    "subject": "[XX-Monize: {{ provider }} is not responding-XX]",
+    "subject": "[XX-Artha: {{ provider }} is not responding-XX]",
     "heading": "[XX-Market data provider unavailable-XX]",
     "greeting": "[XX-Hi {{ name }},-XX]",
-    "intro": "[XX-Monize has not been able to reach <strong>{{ provider }}</strong> since {{ since }} ({{ duration }}). Requests to it are suspended for now and retried at widening intervals.-XX]",
+    "intro": "[XX-Artha has not been able to reach <strong>{{ provider }}</strong> since {{ since }} ({{ duration }}). Requests to it are suspended for now and retried at widening intervals.-XX]",
     "labelFailures": "[XX-Failed attempts-XX]",
     "labelLastError": "[XX-Last error-XX]",
     "labelLastSuccess": "[XX-Last successful response-XX]",
     "valueNever": "[XX-never-XX]",
     "valueUnknown": "[XX-unknown-XX]",
-    "impact": "[XX-Prices, charts and index comparisons that depend on this provider may be missing or out of date until it answers again. Nothing recorded in Monize has been lost.-XX]",
+    "impact": "[XX-Prices, charts and index comparisons that depend on this provider may be missing or out of date until it answers again. Nothing recorded in Artha has been lost.-XX]",
     "whatToCheck": "[XX-If the provider itself is up, check this server's outbound network access and DNS -- a container that cannot resolve or reach the provider fails exactly this way.-XX]",
     "throttleNote": "[XX-You will get one more email when it recovers. Alerts about the same provider are sent at most once every {{ hours }} hours, so a provider that keeps flapping cannot fill your inbox.-XX]",
     "durationMinutes": "[XX-{{ minutes }} min-XX]",
     "durationHoursMinutes": "[XX-{{ hours }} h {{ minutes }} min-XX]"
   },
   "providerRecovery": {
-    "subject": "[XX-Monize: {{ provider }} is answering again-XX]",
+    "subject": "[XX-Artha: {{ provider }} is answering again-XX]",
     "heading": "[XX-Market data provider is answering again-XX]",
     "greeting": "[XX-Hi {{ name }},-XX]",
     "intro": "[XX-<strong>{{ provider }}</strong> answered again at {{ restoredAt }}. The outage lasted {{ duration }}.-XX]",
     "backfill": "[XX-Prices and index history missed during the outage are picked up by the next scheduled refresh; no action is needed.-XX]"
   },
   "systemAlert": {
-    "subject": "[XX-Monize: {{ title }}-XX]",
+    "subject": "[XX-Artha: {{ title }}-XX]",
     "heading": "[XX-System alert-XX]",
     "greeting": "[XX-Hi {{ name }},-XX]",
-    "intro": "[XX-An issue on your Monize deployment needs an administrator's attention.-XX]",
+    "intro": "[XX-An issue on your Artha deployment needs an administrator's attention.-XX]",
     "footer": "[XX-This alert is also shown in the app's notification bell. It is raised at most once per occurrence, however many server replicas noticed it.-XX]"
   },
   "notificationImmediate": {
-    "subject": "[XX-You have a new Monize notification-XX]",
-    "eyebrow": "[XX-Monize notification-XX]",
-    "button": "[XX-Open in Monize-XX]",
+    "subject": "[XX-You have a new Artha notification-XX]",
+    "eyebrow": "[XX-Artha notification-XX]",
+    "button": "[XX-Open in Artha-XX]",
     "footer": "[XX-You are receiving this because immediate email is on for this notification type. Change it in Settings, Notifications.-XX]"
   },
   "notificationCopy": {
@@ -254,7 +254,7 @@
       },
       "smtpFailure": {
         "title": "[XX-Email delivery is failing-XX]",
-        "message": "[XX-Monize could not send email: {{ error }}. Notifications and reminders are not being delivered.-XX]"
+        "message": "[XX-Artha could not send email: {{ error }}. Notifications and reminders are not being delivered.-XX]"
       },
       "providerOutage": {
         "title": "[XX-{{ provider }} is not responding-XX]",

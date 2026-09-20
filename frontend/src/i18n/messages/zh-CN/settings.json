@@ -2,7 +2,7 @@
   "language": {
     "label": "语言",
     "browserOption": "使用浏览器语言（自动检测为 {locale}）",
-    "helpText": "选择整个 Monize 界面使用的语言。数字和日期格式在下方单独设置。",
+    "helpText": "选择整个 Artha 界面使用的语言。数字和日期格式在下方单独设置。",
     "saved": "语言已更新",
     "saveFailed": "保存语言失败"
   },
@@ -124,7 +124,7 @@
     "preferredExchangesHelp": "按优先顺序选择最多 3 个交易所。查询证券时将优先使用这些交易所。",
     "exchangePriorityPlaceholder": "优先级 {n}",
     "defaultQuoteProviderLabel": "默认行情提供商",
-    "defaultQuoteProviderHelp": "当证券没有提供商覆盖时使用。如果所选提供商失败，Monize 将自动尝试另一个。",
+    "defaultQuoteProviderHelp": "当证券没有提供商覆盖时使用。如果所选提供商失败，Artha 将自动尝试另一个。",
     "msnNoIntradayNote": "注意：MSN Money 不提供日内行情数据，因此对于 MSN 追踪的持仓，投资组合价值走势图的 1D/1W/1M 时间范围不可用。",
     "msnNotConfigured": "MSN 已选为默认行情提供商，但服务器未配置 MSN_API_KEY。在管理员设置环境变量并重启后端之前，MSN 行情将失败。",
     "dateFormatLabel": "日期格式",
@@ -133,11 +133,11 @@
     "timezonePlaceholder": "搜索时区...",
     "weekStartsOnLabel": "一周开始于",
     "showCreatedAtLabel": "在交易表单中显示创建日期",
-    "showCreatedAtTooltip": "在交易表单中显示交易最初创建的日期和时间。这与交易日期不同，可帮助您了解条目实际添加到 Monize 的时间。",
+    "showCreatedAtTooltip": "在交易表单中显示交易最初创建的日期和时间。这与交易日期不同，可帮助您了解条目实际添加到 Artha 的时间。",
     "showWhatsNewLabel": "升级后显示更新内容",
-    "showWhatsNewTooltip": "在 Monize 更新到新版本后，您首次登录时显示版本说明摘要。您随时可以通过点击本页面底部或登录界面上的版本号重新打开它。",
+    "showWhatsNewTooltip": "在 Artha 更新到新版本后，您首次登录时显示版本说明摘要。您随时可以通过点击本页面底部或登录界面上的版本号重新打开它。",
     "lockReconciledLabel": "锁定已对账交易",
-    "lockReconciledTooltip": "关闭时，如果某项修改会改变已对账交易的日期或金额，Monize 会先提醒你，然后仍允许修改。开启时，已对账交易完全不能编辑、删除或取消对账。要更正请再次关闭。",
+    "lockReconciledTooltip": "关闭时，如果某项修改会改变已对账交易的日期或金额，Artha 会先提醒你，然后仍允许修改。开启时，已对账交易完全不能编辑、删除或取消对账。要更正请再次关闭。",
     "timeFormatLabel": "时间格式",
     "timeFormatOptions": {
       "h24": "24 小时制 (14:30)",
@@ -250,13 +250,13 @@
       "collapsedDevicesUnavailable": "设备列表不可用",
       "diagnostics": {
         "summary": "通知诊断",
-        "intro": "此浏览器和设备向 Monize 报告的通知相关信息。更改设置后请刷新，然后用“复制报告”发送完整报告。",
+        "intro": "此浏览器和设备向 Artha 报告的通知相关信息。更改设置后请刷新，然后用“复制报告”发送完整报告。",
         "refresh": "刷新",
         "copy": "复制报告",
         "copied": "已将诊断复制到剪贴板"
       },
-      "description": "注册此设备，Monize 即可在应用关闭时也送达通知。目前通过这条通道送达的只有测试通知，其余仍然出现在铃铛里。",
-      "androidNotify": "在 Android 上，仅授予权限还不够：系统仍可能隐藏通知。长按主屏幕上的 Monize 图标，点按“应用信息”，然后“通知”，并确保已开启。",
+      "description": "注册此设备，Artha 即可在应用关闭时也送达通知。目前通过这条通道送达的只有测试通知，其余仍然出现在铃铛里。",
+      "androidNotify": "在 Android 上，仅授予权限还不够：系统仍可能隐藏通知。长按主屏幕上的 Artha 图标，点按“应用信息”，然后“通知”，并确保已开启。",
       "permissionHint": "开启后，浏览器会请求显示通知的权限。在你允许之前不会发送任何内容。",
       "enableButton": "在此设备上启用",
       "enablingButton": "正在启用...",
@@ -267,16 +267,16 @@
       "unifiedpushBadge": "UnifiedPush",
       "unnamedDevice": "未命名设备",
       "noLiveDevices": "尚未注册任何设备。请在此设备上启用推送后再发送测试。",
-      "notConfigured": "此 Monize 实例不提供浏览器推送。管理员可以在 Admin 区域启用。",
-      "disabledByAdmin": "管理员已为此 Monize 实例关闭浏览器推送。",
-      "keyUnreadable": "Monize 无法读取此实例的推送密钥对，因此无法投递任何通知。管理员可在 Admin 区域轮换密钥对以恢复。",
-      "serverKeyMissing": "此 Monize 实例缺少打开推送密钥对所需的加密密钥，因此无法投递任何内容。需要管理员在部署中设置该密钥并重启。",
-      "statusUnavailable": "Monize 无法确认浏览器推送是否可用。请重新加载页面后重试。",
-      "devicesUnavailable": "Monize 无法加载你已注册的设备。本页其他功能仍可使用；请重新加载后重试。",
+      "notConfigured": "此 Artha 实例不提供浏览器推送。管理员可以在 Admin 区域启用。",
+      "disabledByAdmin": "管理员已为此 Artha 实例关闭浏览器推送。",
+      "keyUnreadable": "Artha 无法读取此实例的推送密钥对，因此无法投递任何通知。管理员可在 Admin 区域轮换密钥对以恢复。",
+      "serverKeyMissing": "此 Artha 实例缺少打开推送密钥对所需的加密密钥，因此无法投递任何内容。需要管理员在部署中设置该密钥并重启。",
+      "statusUnavailable": "Artha 无法确认浏览器推送是否可用。请重新加载页面后重试。",
+      "devicesUnavailable": "Artha 无法加载你已注册的设备。本页其他功能仍可使用；请重新加载后重试。",
       "unsupported": {
         "unsupported": "此浏览器无法接收推送通知。",
-        "denied": "此浏览器已阻止 Monize 的通知。请在浏览器的网站设置中允许通知，然后重新加载本页。",
-        "ios-browser": "在 iPhone 和 iPad 上，只有将 Monize 添加到主屏幕后推送通知才会生效。请使用“分享”，然后选择“添加到主屏幕”，并从那里打开 Monize。"
+        "denied": "此浏览器已阻止 Artha 的通知。请在浏览器的网站设置中允许通知，然后重新加载本页。",
+        "ios-browser": "在 iPhone 和 iPad 上，只有将 Artha 添加到主屏幕后推送通知才会生效。请使用“分享”，然后选择“添加到主屏幕”，并从那里打开 Artha。"
       },
       "disabledReason": {
         "GONE": "已无法送达。请在该浏览器中重新启用推送。",
@@ -286,10 +286,10 @@
       "toasts": {
         "enabled": "已在此设备上启用推送通知",
         "enableFailed": "无法启用推送通知",
-        "permissionDenied": "此浏览器正在阻止 Monize 的通知。请在网站设置中允许后重试。",
-        "permissionDeniedIos": "Monize 的通知已被阻止。请打开 iOS“设置”，然后“通知”，再选择 Monize 以允许。",
+        "permissionDenied": "此浏览器正在阻止 Artha 的通知。请在网站设置中允许后重试。",
+        "permissionDeniedIos": "Artha 的通知已被阻止。请打开 iOS“设置”，然后“通知”，再选择 Artha 以允许。",
         "permissionDismissed": "未启用通知。浏览器询问时请选择“允许”。",
-        "permissionNoPrompt": "通知未开启，也没有出现任何请求。请打开 iOS“设置”，然后“通知”，再选择 Monize 并允许。如果列表中没有 Monize，请从主屏幕移除后重新添加（“分享”，然后“添加到主屏幕”），再试一次。",
+        "permissionNoPrompt": "通知未开启，也没有出现任何请求。请打开 iOS“设置”，然后“通知”，再选择 Artha 并允许。如果列表中没有 Artha，请从主屏幕移除后重新添加（“分享”，然后“添加到主屏幕”），再试一次。",
         "removed": "已移除设备",
         "removeFailed": "无法移除设备",
         "testSent": "{count, plural, other {测试通知已发送至 # 台设备}}",
@@ -325,7 +325,7 @@
     },
     "preferences": {
       "heading": "如何通知我",
-      "description": "选择 Monize 通过邮件或推送发送哪些类型，以及发送频率。",
+      "description": "选择 Artha 通过邮件或推送发送哪些类型，以及发送频率。",
       "categoryHeader": "通知",
       "channels": {
         "emailReport": "邮件（报告）",
@@ -394,7 +394,7 @@
   "about": {
     "heading": "关于",
     "description": "此实例正在运行的版本，以及版本说明、许可证和安全政策的位置。",
-    "appName": "Monize",
+    "appName": "Artha",
     "tagline": "自托管的个人财务管理。",
     "versionLabel": "版本",
     "versionUnknown": "未知",
@@ -417,7 +417,7 @@
     },
     "license": {
       "label": "许可证",
-      "description": "Monize 是遵循 GNU AGPL v3 的自由软件。"
+      "description": "Artha 是遵循 GNU AGPL v3 的自由软件。"
     },
     "securityPolicy": {
       "label": "安全政策",
@@ -595,7 +595,7 @@
   },
   "autoBackup": {
     "heading": "自动备份",
-    "description": "按计划自动将数据备份到文件夹。由于 Monize 在 Docker 中运行，您必须将主机文件夹作为卷映射到容器中（例如：-v /host/backups:/data/backups）。",
+    "description": "按计划自动将数据备份到文件夹。由于 Artha 在 Docker 中运行，您必须将主机文件夹作为卷映射到容器中（例如：-v /host/backups:/data/backups）。",
     "adminManagedNote": "只有管理员可以更改这些设置。其他所有用户都会按照相同的计划和保留策略自动备份到各自的文件夹中。",
     "loadingText": "加载中...",
     "enableLabel": "启用自动备份",
@@ -756,20 +756,20 @@
     "sharedDataLabel": "共享数据：{count}",
     "editAccessButton": "编辑访问权限",
     "resetPasswordButton": "重置密码",
-    "resetPasswordDisabledTitle": "此人自行管理密码（他们有自己的 Monize 账户或在其他地方拥有委托访问权限）。",
+    "resetPasswordDisabledTitle": "此人自行管理密码（他们有自己的 Artha 账户或在其他地方拥有委托访问权限）。",
     "removeButton": "移除",
     "createModal": {
       "title": "添加委托人",
       "description": "授予他人对您账户的范围访问权限。",
       "emailLabel": "电子邮件",
       "emailPlaceholder": "委托人电子邮件",
-      "checkingEmail": "正在将此电子邮件与现有 Monize 账户进行核对……",
+      "checkingEmail": "正在将此电子邮件与现有 Artha 账户进行核对……",
       "retryEmailCheck": "重新检查",
       "firstNameLabel": "名字",
       "firstNamePlaceholder": "名字（可选）",
       "lastNameLabel": "姓氏",
       "lastNamePlaceholder": "姓氏（可选）",
-      "existingAccountNotice": "此人已有 Monize 登录账户。他们将保留自己的凭据并被授予额外的共享访问权限——无需密码或邀请。",
+      "existingAccountNotice": "此人已有 Artha 登录账户。他们将保留自己的凭据并被授予额外的共享访问权限——无需密码或邀请。",
       "sendInviteLabel": "发送邮件邀请而不是设置密码",
       "passwordLabel": "密码",
       "passwordPlaceholder": "设置密码",
@@ -777,7 +777,7 @@
     },
     "revokeDialog": {
       "title": "移除委托人",
-      "message": "移除此委托人？他们将失去对您账户的访问权限。如果他们没有其他共享访问权限，也没有将此电子邮件作为自己的 Monize 账户，则由所有者管理的登录也将被移除。",
+      "message": "移除此委托人？他们将失去对您账户的访问权限。如果他们没有其他共享访问权限，也没有将此电子邮件作为自己的 Artha 账户，则由所有者管理的登录也将被移除。",
       "removingButton": "移除中...",
       "removeButton": "移除"
     },
@@ -801,7 +801,7 @@
       "revokeFailed": "撤销委托人失败",
       "resetPasswordFailed": "重置密码失败",
       "copyFailed": "无法复制到剪贴板",
-      "lookupFailed": "无法将此电子邮件与现有 Monize 账户进行核对。在该核对成功之前，添加委托人已暂停，以免误覆盖现有密码。"
+      "lookupFailed": "无法将此电子邮件与现有 Artha 账户进行核对。在该核对成功之前，添加委托人已暂停，以免误覆盖现有密码。"
     },
     "jointLabel": "{count, plural, other {# 个联名账户}}"
   },
@@ -818,7 +818,7 @@
     "accounts": {
       "noAccounts": "无账户可授权。",
       "grantAll": "授权全部",
-      "jointRequiresFullAccount": "联名账户只能与拥有自己 Monize 账户的用户共享"
+      "jointRequiresFullAccount": "联名账户只能与拥有自己 Artha 账户的用户共享"
     },
     "shared": {
       "description": "收款人、分类和标签的读取权限始终允许。这些控制创建/编辑/删除权限。"
@@ -859,7 +859,7 @@
     },
     "toursCard": {
       "title": "引导式导览",
-      "description": "Monize 提供的所有导览，以及你已经看过的部分。可以开始或重新查看其中任意一个。"
+      "description": "Artha 提供的所有导览，以及你已经看过的部分。可以开始或重新查看其中任意一个。"
     },
     "emergencyAccessCard": {
       "title": "紧急访问",
@@ -904,7 +904,7 @@
       "how": {
         "intro": "启用后，AI 聊天不会调用服务器端 LLM。而是：",
         "step1": "您在自己的计算机上运行一个 MCP 代理（例如 Claude CLI），并登录到您的订阅。",
-        "step2": "代理对 Monize 进行长轮询以获取您在聊天中输入的提示，并使用 Monize 工具回答它们。",
+        "step2": "代理对 Artha 进行长轮询以获取您在聊天中输入的提示，并使用 Artha 工具回答它们。",
         "step3": "回答会流式传输回聊天。状态点显示您的代理是否已连接。",
         "note": "在您的代理连接并侦听之前，不会运行任何内容。聊天会显示连接说明。"
       }
@@ -1200,7 +1200,7 @@
       "keyUnreadable": "本服务器无法读取已保存的 API 密钥。将备份恢复到其他实例，或加密密钥变更后会出现这种情况。请重新输入密钥以修复。",
       "encryptionUnavailable": "本服务器未配置加密密钥，因此无法安全保存 API 密钥。请让管理员配置一个。",
       "modalTitle": "Google Places",
-      "modalSubtitle": "Monize 会将收款方名称和你已有的地址发送给 Google，不会在 Google 存储任何内容。",
+      "modalSubtitle": "Artha 会将收款方名称和你已有的地址发送给 Google，不会在 Google 存储任何内容。",
       "apiKeyLabel": "API 密钥",
       "apiKeyPlaceholder": "粘贴你的 Google Places API 密钥",
       "apiKeyHelp": "在 Google Cloud 控制台创建密钥并启用 Places API (New)。留空则保留已保存的密钥。",

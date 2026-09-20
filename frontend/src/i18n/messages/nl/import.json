@@ -396,7 +396,7 @@
       "importPricesHint": "De eigen registratie van Money van wat elk effect dag na dag waard was. Zet dit uit als u liever met actuele koersen begint.",
       "importExchangeRates": "Wisselkoersen importeren",
       "importExchangeRatesHint": "Historische koersen tussen de valuta's in uw bestand, zodat oude transacties in vreemde valuta net zo worden omgerekend als Money ze omrekende.",
-      "wipeExistingData": "Opnieuw beginnen: verwijder eerst mijn bestaande Monize-gegevens",
+      "wipeExistingData": "Opnieuw beginnen: verwijder eerst mijn bestaande Artha-gegevens",
       "wipeExistingDataHint": "Voert vóór het importeren dezelfde bewerking Mijn gegevens verwijderen uit als in Instellingen. Er wordt om bevestiging gevraagd. Laat dit uit om het Money-bestand toe te voegen aan wat u al hebt."
     },
     "warningsHeading": "Opmerkingen over dit bestand",
@@ -420,7 +420,7 @@
       "transfer": "Overboeking",
       "investment": "Belegging",
       "splits": "{count, plural, one {# splitsing} other {# splitsingen}}",
-      "approximate": "Dichtstbijzijnde Monize-frequentie"
+      "approximate": "Dichtstbijzijnde Artha-frequentie"
     }
   },
   "mnyWipe": {
@@ -478,15 +478,15 @@
     "existingDataRemoved": "Uw bestaande gegevens zijn vóór deze import verwijderd, zoals gevraagd.",
     "verificationHeading": "Saldoverificatie",
     "holdingsHeading": "Positiecontrole",
-    "holdingsExplainer": "De aandelen die Monize nu aanhoudt, tegenover de open fiscale lots in uw Money-bestand. Money stemt zelf af op die lots, dus dat is het getal om op te vertrouwen.",
+    "holdingsExplainer": "De aandelen die Artha nu aanhoudt, tegenover de open fiscale lots in uw Money-bestand. Money stemt zelf af op die lots, dus dat is het getal om op te vertrouwen.",
     "table": {
       "account": "Rekening",
       "security": "Waardepapier",
       "transactions": "Transacties",
       "expected": "Uit Money-bestand",
-      "imported": "In Monize",
+      "imported": "In Artha",
       "lotShares": "Aandelen in Money",
-      "importedShares": "Aandelen in Monize",
+      "importedShares": "Aandelen in Artha",
       "delta": "Verschil",
       "check": "Nakijken"
     },
@@ -497,7 +497,7 @@
   "mnyWarnings": {
     "missingTable": "Deze Money-versie heeft {count, plural, one {# tabel} other {# tabellen}} niet die de import gebruikt.",
     "missingField": "{count, plural, one {# veld zat} other {# velden zaten}} niet in deze Money-versie en kregen een standaardwaarde.",
-    "unknownAccountType": "{count, plural, one {# rekening had} other {# rekeningen hadden}} een rekeningtype dat Monize niet kent en zijn overgeslagen.",
+    "unknownAccountType": "{count, plural, one {# rekening had} other {# rekeningen hadden}} een rekeningtype dat Artha niet kent en zijn overgeslagen.",
     "duplicateAccountName": "{count, plural, one {# rekening had} other {# rekeningen hadden}} dezelfde naam als een andere en zijn hernoemd.",
     "unknownCurrency": "{count, plural, one {# rekening verwijst} other {# rekeningen verwijzen}} naar een valuta die het bestand niet definieert en gebruiken de basisvaluta.",
     "categoryFlattened": "{count, plural, one {# categorie was} other {# categorieën waren}} dieper dan twee niveaus en zijn samengevoegd in hun hoofdcategorie.",
@@ -511,7 +511,7 @@
     "balanceMismatch": "{count, plural, one {# rekening eindigde} other {# rekeningen eindigden}} met een saldo dat afwijkt van het Money-bestand.",
     "duplicateSecuritySymbol": "{count, plural, one {# effect deelt} other {# effecten delen}} een symbool met een ander; de latere zijn hernoemd zodat ze gescheiden blijven.",
     "generatedSecuritySymbol": "{count, plural, one {# effect heeft} other {# effecten hebben}} geen symbool in Money, dus is er een tijdelijk symbool gemaakt en zijn koersupdates uit gelaten.",
-    "unknownInvestmentAction": "{count, plural, one {# beleggingstransactie gebruikte} other {# beleggingstransacties gebruikten}} een actie die Monize niet herkent en zijn overgeslagen.",
+    "unknownInvestmentAction": "{count, plural, one {# beleggingstransactie gebruikte} other {# beleggingstransacties gebruikten}} een actie die Artha niet herkent en zijn overgeslagen.",
     "unconfirmedInvestmentAction": "{count, plural, one {# beleggingstransactie gebruikte} other {# beleggingstransacties gebruikten}} een Money-actie waarvan de betekenis is afgeleid en niet gedocumenteerd; controleer ze tegen Money.",
     "missingInvestmentDetail": "{count, plural, one {# beleggingstransactie had} other {# beleggingstransacties hadden}} geen aandelengegevens in het bestand en zijn alleen op hun geldbedrag geïmporteerd.",
     "investmentAccountMismatch": "{count, plural, one {# beleggingstransactie stond} other {# beleggingstransacties stonden}} op een rekening die geen beleggingsrekening is en zijn overgeslagen.",
@@ -519,7 +519,7 @@
     "holdingsMismatch": "{count, plural, one {# positie komt} other {# posities komen}} niet overeen met de aandelen in uw Money-bestand.",
     "billTemplateMissing": "{count, plural, one {# geplande rekening had} other {# geplande rekeningen hadden}} geen sjabloontransactie in het bestand en zijn overgeslagen.",
     "unusableBill": "{count, plural, one {# geplande rekening had} other {# geplande rekeningen hadden}} geen rekening, geen bruikbare datum of een onbekende herhaling en zijn overgeslagen.",
-    "billFrequencyApproximated": "{count, plural, one {# geplande rekening gebruikt} other {# geplande rekeningen gebruiken}} een herhalingsinterval dat Monize niet exact kan weergeven, dus het dichtstbijzijnde kortere interval is gebruikt.",
+    "billFrequencyApproximated": "{count, plural, one {# geplande rekening gebruikt} other {# geplande rekeningen gebruiken}} een herhalingsinterval dat Artha niet exact kan weergeven, dus het dichtstbijzijnde kortere interval is gebruikt.",
     "loanInterestCategoryUnclear": "{count, plural, one {# leningbetaling bevatte} other {# leningbetalingen bevatten}} meerdere categorieën naast de aflossing, dus de rentecategorie van de lening is niet ingesteld. Controleer of de betaling escrow bevat en stel de rentecategorie na het importeren in.",
     "showTransactions": "{count, plural, one {De # transactie tonen} other {De # transacties tonen}}",
     "hideTransactions": "Transacties verbergen",

@@ -164,7 +164,7 @@
     "sectorTab": "Sektor",
     "countryTab": "Negara",
     "assetClassTab": "Kelas aset",
-    "sectorEmpty": "Rincian sektor tidak tersimpan. Monize mengisinya dari penyedia untuk reksa dana dan ETF.",
+    "sectorEmpty": "Rincian sektor tidak tersimpan. Artha mengisinya dari penyedia untuk reksa dana dan ETF.",
     "countryEmpty": "Rincian negara tidak tersimpan. Anda dapat memasukkannya saat mengubah efek.",
     "assetClassEmpty": "Rincian kelas aset belum tersimpan.",
     "remainder": "{percent} tidak terklasifikasi"

@@ -2,7 +2,7 @@
   "language": {
     "label": "Ngôn ngữ",
     "browserOption": "Dùng ngôn ngữ trình duyệt (tự động nhận dạng: {locale})",
-    "helpText": "Chọn ngôn ngữ sử dụng trong giao diện Monize. Định dạng số và ngày được kiểm soát riêng bên dưới.",
+    "helpText": "Chọn ngôn ngữ sử dụng trong giao diện Artha. Định dạng số và ngày được kiểm soát riêng bên dưới.",
     "saved": "Đã cập nhật ngôn ngữ",
     "saveFailed": "Không thể lưu ngôn ngữ"
   },
@@ -124,7 +124,7 @@
     "preferredExchangesHelp": "Chọn tối đa 3 sàn giao dịch theo thứ tự ưu tiên. Chúng sẽ được ưu tiên khi tra cứu giấy chứng khoán.",
     "exchangePriorityPlaceholder": "Ưu tiên {n}",
     "defaultQuoteProviderLabel": "Nhà cung cấp báo giá cổ phiếu mặc định",
-    "defaultQuoteProviderHelp": "Được sử dụng khi giấy chứng khoán không có ghi đè nhà cung cấp. Nếu nhà cung cấp được chọn thất bại, Monize tự động thử nhà cung cấp khác.",
+    "defaultQuoteProviderHelp": "Được sử dụng khi giấy chứng khoán không có ghi đè nhà cung cấp. Nếu nhà cung cấp được chọn thất bại, Artha tự động thử nhà cung cấp khác.",
     "msnNoIntradayNote": "Lưu ý: MSN Money không cung cấp dữ liệu báo giá trong ngày, vì vậy phạm vi 1N / 1T / 1Th trên biểu đồ Giá trị danh mục đầu tư theo thời gian không có sẵn cho các chứng khoán được theo dõi bởi MSN.",
     "msnNotConfigured": "MSN được chọn làm nhà cung cấp báo giá mặc định, nhưng MSN_API_KEY chưa được cấu hình trên máy chủ. Báo giá MSN sẽ thất bại cho đến khi quản trị viên đặt biến môi trường và khởi động lại backend.",
     "dateFormatLabel": "Định dạng ngày",
@@ -133,11 +133,11 @@
     "timezonePlaceholder": "Tìm kiếm múi giờ...",
     "weekStartsOnLabel": "Tuần bắt đầu vào",
     "showCreatedAtLabel": "Hiển thị ngày tạo trong biểu mẫu giao tác",
-    "showCreatedAtTooltip": "Hiển thị ngày và giờ giao tác được tạo ban đầu trên biểu mẫu giao tác. Điều này khác với ngày giao tác và có thể giúp bạn biết khi nào mục nhập thực sự được thêm vào Monize.",
+    "showCreatedAtTooltip": "Hiển thị ngày và giờ giao tác được tạo ban đầu trên biểu mẫu giao tác. Điều này khác với ngày giao tác và có thể giúp bạn biết khi nào mục nhập thực sự được thêm vào Artha.",
     "showWhatsNewLabel": "Hiển thị Có gì mới sau khi nâng cấp",
-    "showWhatsNewTooltip": "Hiển thị bản tóm tắt ghi chú phát hành trong lần đầu tiên bạn đăng nhập sau khi Monize cập nhật lên phiên bản mới. Bạn luôn có thể mở lại bằng cách nhấp vào số phiên bản ở cuối trang này hoặc trên màn hình đăng nhập.",
+    "showWhatsNewTooltip": "Hiển thị bản tóm tắt ghi chú phát hành trong lần đầu tiên bạn đăng nhập sau khi Artha cập nhật lên phiên bản mới. Bạn luôn có thể mở lại bằng cách nhấp vào số phiên bản ở cuối trang này hoặc trên màn hình đăng nhập.",
     "lockReconciledLabel": "Khóa giao dịch đã đối soát",
-    "lockReconciledTooltip": "Khi tùy chọn này tắt, Monize cảnh báo trước khi có chỉnh sửa làm thay đổi ngày hoặc số tiền của một giao dịch đã đối soát, rồi vẫn cho phép. Khi bật, giao dịch đã đối soát hoàn toàn không thể chỉnh sửa, xóa hay hủy đối soát. Hãy tắt lại để thực hiện chỉnh sửa.",
+    "lockReconciledTooltip": "Khi tùy chọn này tắt, Artha cảnh báo trước khi có chỉnh sửa làm thay đổi ngày hoặc số tiền của một giao dịch đã đối soát, rồi vẫn cho phép. Khi bật, giao dịch đã đối soát hoàn toàn không thể chỉnh sửa, xóa hay hủy đối soát. Hãy tắt lại để thực hiện chỉnh sửa.",
     "timeFormatLabel": "Định dạng giờ",
     "timeFormatOptions": {
       "h24": "24 giờ (14:30)",
@@ -250,13 +250,13 @@
       "collapsedDevicesUnavailable": "Không tải được danh sách thiết bị",
       "diagnostics": {
         "summary": "Chẩn đoán thông báo",
-        "intro": "Những gì trình duyệt và thiết bị này báo cáo cho Monize về thông báo. Hãy làm mới sau khi thay đổi một cài đặt, rồi dùng Sao chép để gửi báo cáo đầy đủ.",
+        "intro": "Những gì trình duyệt và thiết bị này báo cáo cho Artha về thông báo. Hãy làm mới sau khi thay đổi một cài đặt, rồi dùng Sao chép để gửi báo cáo đầy đủ.",
         "refresh": "Làm mới",
         "copy": "Sao chép báo cáo",
         "copied": "Đã sao chép chẩn đoán vào bảng nhớ tạm"
       },
-      "description": "Đăng ký thiết bị này để Monize có thể gửi tới nó ngay cả khi ứng dụng đã đóng. Hiện chỉ có thông báo thử nghiệm được gửi theo đường này; mọi thứ khác vẫn đến ở chuông.",
-      "androidNotify": "Trên Android, chỉ cấp quyền là chưa đủ: hệ thống vẫn có thể ẩn thông báo. Nhấn giữ biểu tượng Monize trên màn hình chính, chạm Thông tin ứng dụng, rồi Thông báo, và đảm bảo chúng đang bật.",
+      "description": "Đăng ký thiết bị này để Artha có thể gửi tới nó ngay cả khi ứng dụng đã đóng. Hiện chỉ có thông báo thử nghiệm được gửi theo đường này; mọi thứ khác vẫn đến ở chuông.",
+      "androidNotify": "Trên Android, chỉ cấp quyền là chưa đủ: hệ thống vẫn có thể ẩn thông báo. Nhấn giữ biểu tượng Artha trên màn hình chính, chạm Thông tin ứng dụng, rồi Thông báo, và đảm bảo chúng đang bật.",
       "permissionHint": "Khi bạn bật, trình duyệt sẽ xin quyền hiển thị thông báo. Không có gì được gửi trước khi bạn cho phép.",
       "enableButton": "Bật trên thiết bị này",
       "enablingButton": "Đang bật...",
@@ -267,16 +267,16 @@
       "unifiedpushBadge": "UnifiedPush",
       "unnamedDevice": "Thiết bị chưa đặt tên",
       "noLiveDevices": "Chưa có thiết bị nào được đăng ký. Hãy bật đẩy trên thiết bị này để gửi thử nghiệm.",
-      "notConfigured": "Đẩy từ trình duyệt không khả dụng trên phiên bản Monize này. Quản trị viên có thể bật trong khu vực Admin.",
-      "disabledByAdmin": "Quản trị viên đã tắt đẩy từ trình duyệt cho phiên bản Monize này.",
-      "keyUnreadable": "Monize không đọc được cặp khóa đẩy của phiên bản này nên không có gì được gửi đi. Quản trị viên có thể khôi phục bằng cách xoay cặp khóa trong khu vực Admin.",
-      "serverKeyMissing": "Phiên bản Monize này thiếu khóa mã hóa cần để mở cặp khóa push, nên không thể gửi được gì. Quản trị viên phải đặt khóa đó trong bản triển khai và khởi động lại.",
-      "statusUnavailable": "Monize không kiểm tra được đẩy từ trình duyệt có khả dụng hay không. Hãy tải lại trang để thử lại.",
-      "devicesUnavailable": "Monize không tải được các thiết bị đã đăng ký của bạn. Mọi thứ khác trên trang này vẫn hoạt động; hãy tải lại để thử lại.",
+      "notConfigured": "Đẩy từ trình duyệt không khả dụng trên phiên bản Artha này. Quản trị viên có thể bật trong khu vực Admin.",
+      "disabledByAdmin": "Quản trị viên đã tắt đẩy từ trình duyệt cho phiên bản Artha này.",
+      "keyUnreadable": "Artha không đọc được cặp khóa đẩy của phiên bản này nên không có gì được gửi đi. Quản trị viên có thể khôi phục bằng cách xoay cặp khóa trong khu vực Admin.",
+      "serverKeyMissing": "Phiên bản Artha này thiếu khóa mã hóa cần để mở cặp khóa push, nên không thể gửi được gì. Quản trị viên phải đặt khóa đó trong bản triển khai và khởi động lại.",
+      "statusUnavailable": "Artha không kiểm tra được đẩy từ trình duyệt có khả dụng hay không. Hãy tải lại trang để thử lại.",
+      "devicesUnavailable": "Artha không tải được các thiết bị đã đăng ký của bạn. Mọi thứ khác trên trang này vẫn hoạt động; hãy tải lại để thử lại.",
       "unsupported": {
         "unsupported": "Trình duyệt này không thể nhận thông báo đẩy.",
-        "denied": "Thông báo cho Monize đang bị chặn trong trình duyệt này. Hãy cho phép trong cài đặt trang web rồi tải lại trang.",
-        "ios-browser": "Trên iPhone và iPad, thông báo đẩy chỉ hoạt động sau khi cài Monize vào Màn hình chính. Chọn Chia sẻ, rồi Thêm vào Màn hình chính, và mở Monize từ đó."
+        "denied": "Thông báo cho Artha đang bị chặn trong trình duyệt này. Hãy cho phép trong cài đặt trang web rồi tải lại trang.",
+        "ios-browser": "Trên iPhone và iPad, thông báo đẩy chỉ hoạt động sau khi cài Artha vào Màn hình chính. Chọn Chia sẻ, rồi Thêm vào Màn hình chính, và mở Artha từ đó."
       },
       "disabledReason": {
         "GONE": "Không còn tiếp cận được. Hãy bật lại đẩy trong trình duyệt đó.",
@@ -286,10 +286,10 @@
       "toasts": {
         "enabled": "Đã bật thông báo đẩy trên thiết bị này",
         "enableFailed": "Không thể bật thông báo đẩy",
-        "permissionDenied": "Trình duyệt này đang chặn thông báo của Monize. Hãy cho phép trong cài đặt trang web rồi thử lại.",
-        "permissionDeniedIos": "Thông báo đang bị chặn với Monize. Mở Cài đặt iOS, rồi Thông báo, rồi Monize để cho phép.",
+        "permissionDenied": "Trình duyệt này đang chặn thông báo của Artha. Hãy cho phép trong cài đặt trang web rồi thử lại.",
+        "permissionDeniedIos": "Thông báo đang bị chặn với Artha. Mở Cài đặt iOS, rồi Thông báo, rồi Artha để cho phép.",
         "permissionDismissed": "Thông báo chưa được bật. Hãy chọn Cho phép khi trình duyệt hỏi.",
-        "permissionNoPrompt": "Thông báo chưa được bật và không có hộp thoại nào xuất hiện. Mở Cài đặt iOS, rồi Thông báo, rồi Monize, và cho phép ở đó. Nếu không thấy Monize trong danh sách, hãy xóa khỏi Màn hình chính, thêm lại (Chia sẻ, rồi Thêm vào Màn hình chính) và thử lần nữa.",
+        "permissionNoPrompt": "Thông báo chưa được bật và không có hộp thoại nào xuất hiện. Mở Cài đặt iOS, rồi Thông báo, rồi Artha, và cho phép ở đó. Nếu không thấy Artha trong danh sách, hãy xóa khỏi Màn hình chính, thêm lại (Chia sẻ, rồi Thêm vào Màn hình chính) và thử lần nữa.",
         "removed": "Đã xóa thiết bị",
         "removeFailed": "Không thể xóa thiết bị",
         "testSent": "{count, plural, other {Đã gửi thông báo thử nghiệm tới # thiết bị}}",
@@ -325,7 +325,7 @@
     },
     "preferences": {
       "heading": "Cách thông báo cho tôi",
-      "description": "Chọn những loại mà Monize gửi qua email hoặc push, và tần suất gửi.",
+      "description": "Chọn những loại mà Artha gửi qua email hoặc push, và tần suất gửi.",
       "categoryHeader": "Thông báo",
       "channels": {
         "emailReport": "Email (báo cáo)",
@@ -394,7 +394,7 @@
   "about": {
     "heading": "Giới thiệu",
     "description": "Phiên bản đang chạy trên máy chủ này, cùng nơi tìm ghi chú phát hành, giấy phép và chính sách bảo mật.",
-    "appName": "Monize",
+    "appName": "Artha",
     "tagline": "Quản lý tài chính cá nhân tự lưu trữ.",
     "versionLabel": "Phiên bản",
     "versionUnknown": "Không rõ",
@@ -417,7 +417,7 @@
     },
     "license": {
       "label": "Giấy phép",
-      "description": "Monize là phần mềm tự do theo giấy phép GNU AGPL v3."
+      "description": "Artha là phần mềm tự do theo giấy phép GNU AGPL v3."
     },
     "securityPolicy": {
       "label": "Chính sách bảo mật",
@@ -595,7 +595,7 @@
   },
   "autoBackup": {
     "heading": "Sao lưu tự động",
-    "description": "Tự động sao lưu dữ liệu của bạn vào một thư mục theo lịch. Vì Monize chạy trong Docker, bạn phải ánh xạ một thư mục máy chủ vào container dưới dạng volume (VD: -v /host/backups:/data/backups).",
+    "description": "Tự động sao lưu dữ liệu của bạn vào một thư mục theo lịch. Vì Artha chạy trong Docker, bạn phải ánh xạ một thư mục máy chủ vào container dưới dạng volume (VD: -v /host/backups:/data/backups).",
     "adminManagedNote": "Chỉ quản trị viên mới có thể thay đổi các cài đặt này. Tất cả người dùng khác được sao lưu tự động theo cùng lịch trình và chính sách lưu giữ, mỗi người vào một thư mục riêng.",
     "loadingText": "Đang tải...",
     "enableLabel": "Bật sao lưu tự động",
@@ -756,20 +756,20 @@
     "sharedDataLabel": "Dữ liệu chia sẻ: {count}",
     "editAccessButton": "Chỉnh sửa quyền truy cập",
     "resetPasswordButton": "Đặt lại mật khẩu",
-    "resetPasswordDisabledTitle": "Người này tự quản lý mật khẩu của họ (họ có tài khoản Monize riêng hoặc quyền truy cập được ủy quyền ở nơi khác).",
+    "resetPasswordDisabledTitle": "Người này tự quản lý mật khẩu của họ (họ có tài khoản Artha riêng hoặc quyền truy cập được ủy quyền ở nơi khác).",
     "removeButton": "Xóa",
     "createModal": {
       "title": "Thêm đại diện",
       "description": "Cấp cho người khác quyền truy cập có phạm vi vào tài khoản của bạn.",
       "emailLabel": "Email",
       "emailPlaceholder": "Email đại diện",
-      "checkingEmail": "Đang đối chiếu email này với các tài khoản Monize hiện có…",
+      "checkingEmail": "Đang đối chiếu email này với các tài khoản Artha hiện có…",
       "retryEmailCheck": "Kiểm tra lại",
       "firstNameLabel": "Tên",
       "firstNamePlaceholder": "Tên (tùy chọn)",
       "lastNameLabel": "Họ",
       "lastNamePlaceholder": "Họ (tùy chọn)",
-      "existingAccountNotice": "Người này đã có đăng nhập Monize. Họ sẽ giữ thông tin xác thực của riêng họ và chỉ được cấp thêm quyền truy cập chia sẻ - không cần mật khẩu hoặc lời mời.",
+      "existingAccountNotice": "Người này đã có đăng nhập Artha. Họ sẽ giữ thông tin xác thực của riêng họ và chỉ được cấp thêm quyền truy cập chia sẻ - không cần mật khẩu hoặc lời mời.",
       "sendInviteLabel": "Gửi lời mời qua email thay vì đặt mật khẩu",
       "passwordLabel": "Mật khẩu",
       "passwordPlaceholder": "Đặt mật khẩu",
@@ -777,7 +777,7 @@
     },
     "revokeDialog": {
       "title": "Xóa đại diện",
-      "message": "Xóa đại diện này? Họ mất quyền truy cập vào tài khoản của bạn. Nếu họ không có quyền truy cập chia sẻ nào khác và chưa bao giờ nhận email này làm tài khoản Monize của riêng họ, đăng nhập được quản lý bởi chủ tài khoản của họ cũng bị xóa.",
+      "message": "Xóa đại diện này? Họ mất quyền truy cập vào tài khoản của bạn. Nếu họ không có quyền truy cập chia sẻ nào khác và chưa bao giờ nhận email này làm tài khoản Artha của riêng họ, đăng nhập được quản lý bởi chủ tài khoản của họ cũng bị xóa.",
       "removingButton": "Đang xóa...",
       "removeButton": "Xóa"
     },
@@ -801,7 +801,7 @@
       "revokeFailed": "Không thể thu hồi đại diện",
       "resetPasswordFailed": "Không thể đặt lại mật khẩu",
       "copyFailed": "Không thể sao chép vào clipboard",
-      "lookupFailed": "Không thể đối chiếu email này với các tài khoản Monize hiện có. Việc thêm người được ủy quyền tạm dừng cho đến khi lần đối chiếu đó thành công, để không bao giờ ghi đè nhầm một mật khẩu hiện có."
+      "lookupFailed": "Không thể đối chiếu email này với các tài khoản Artha hiện có. Việc thêm người được ủy quyền tạm dừng cho đến khi lần đối chiếu đó thành công, để không bao giờ ghi đè nhầm một mật khẩu hiện có."
     },
     "jointLabel": "{count, plural, other {# tài khoản chung}}"
   },
@@ -818,7 +818,7 @@
     "accounts": {
       "noAccounts": "Không có tài khoản nào để cấp.",
       "grantAll": "Cấp tất cả",
-      "jointRequiresFullAccount": "Tài khoản chung chỉ có thể được chia sẻ với người dùng có tài khoản Monize riêng"
+      "jointRequiresFullAccount": "Tài khoản chung chỉ có thể được chia sẻ với người dùng có tài khoản Artha riêng"
     },
     "shared": {
       "description": "Đọc người nhận, danh mục và thẻ luôn được phép. Đây là các điều khiển tạo/chỉnh sửa/xóa."
@@ -859,7 +859,7 @@
     },
     "toursCard": {
       "title": "Hướng dẫn sử dụng",
-      "description": "Tất cả phần hướng dẫn Monize cung cấp, kèm những phần bạn đã xem. Bắt đầu hoặc xem lại bất kỳ phần nào."
+      "description": "Tất cả phần hướng dẫn Artha cung cấp, kèm những phần bạn đã xem. Bắt đầu hoặc xem lại bất kỳ phần nào."
     },
     "emergencyAccessCard": {
       "title": "Truy cập khẩn cấp",
@@ -904,7 +904,7 @@
       "how": {
         "intro": "Khi bật, trò chuyện AI không gọi LLM phía máy chủ. Thay vào đó:",
         "step1": "Bạn chạy một tác nhân MCP (ví dụ Claude CLI) trên máy của riêng bạn, đã đăng nhập vào gói đăng ký của bạn.",
-        "step2": "Tác nhân thực hiện long-polling tới Monize để lấy các lời nhắc bạn nhập trong trò chuyện và trả lời chúng bằng các công cụ của Monize.",
+        "step2": "Tác nhân thực hiện long-polling tới Artha để lấy các lời nhắc bạn nhập trong trò chuyện và trả lời chúng bằng các công cụ của Artha.",
         "step3": "Câu trả lời được truyền trở lại trò chuyện. Một chấm trạng thái cho biết tác nhân của bạn đã kết nối hay chưa.",
         "note": "Không có gì chạy cho đến khi tác nhân của bạn được kết nối và lắng nghe. Trò chuyện hiển thị hướng dẫn kết nối."
       }
@@ -1200,7 +1200,7 @@
       "keyUnreadable": "Máy chủ này không đọc được khóa API đã lưu. Điều này xảy ra khi bản sao lưu được khôi phục sang máy chủ khác, hoặc sau khi khóa mã hóa thay đổi. Hãy nhập lại khóa để khắc phục.",
       "encryptionUnavailable": "Máy chủ này chưa cấu hình khóa mã hóa nên không thể lưu khóa API an toàn. Hãy đề nghị quản trị viên thiết lập một khóa.",
       "modalTitle": "Google Places",
-      "modalSubtitle": "Monize gửi tên người nhận và địa chỉ bạn đã có tới Google, và không lưu gì tại đó.",
+      "modalSubtitle": "Artha gửi tên người nhận và địa chỉ bạn đã có tới Google, và không lưu gì tại đó.",
       "apiKeyLabel": "Khóa API",
       "apiKeyPlaceholder": "Dán khóa API Google Places của bạn",
       "apiKeyHelp": "Tạo khóa trong Google Cloud console với Places API (New) đã bật. Để trống để giữ khóa đã lưu.",

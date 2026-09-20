@@ -107,9 +107,9 @@
   },
   "notificationsPage": {
     "title": "Notifications",
-    "subtitle": "Delivery channels this Monize instance offers, and the push identity behind them.",
+    "subtitle": "Delivery channels this Artha instance offers, and the push identity behind them.",
     "loading": "Loading notification settings...",
-    "loadUnavailable": "Monize could not read the notification settings from the server. Reload the page to try again.",
+    "loadUnavailable": "Artha could not read the notification settings from the server. Reload the page to try again.",
     "channelsHeading": "Delivery channels",
     "identityHeading": "Web Push identity",
     "perAccountNote": "Devices, test notifications and per-notification preferences belong to each account and are managed in Settings. An administrator configures the instance and never sends to, or sees, another person’s notifications.",
@@ -126,9 +126,9 @@
       },
       "webPush": {
         "name": "Browser push",
-        "description": "Notifications delivered to a phone or desktop even when Monize is closed. Needs no Firebase, Google Play or Apple Developer account.",
+        "description": "Notifications delivered to a phone or desktop even when Artha is closed. Needs no Firebase, Google Play or Apple Developer account.",
         "toggleLabel": "Enable browser push for this instance",
-        "missingKeys": "This instance has no push key pair. Set ENCRYPTION_KEY and restart: Monize generates the pair itself on the next start.",
+        "missingKeys": "This instance has no push key pair. Set ENCRYPTION_KEY and restart: Artha generates the pair itself on the next start.",
         "keyUnreadable": "This instance cannot decrypt its stored push key pair, so nothing can be delivered. Rotate the key pair below to recover.",
         "serverKeyMissing": "This instance has no ENCRYPTION_KEY, so it cannot open the push key pair it stored. Set ENCRYPTION_KEY in the deployment and restart — rotating cannot help while the key is missing."
       },
@@ -136,7 +136,7 @@
         "name": "Email",
         "description": "Bill reminders, budget digests and system alerts sent to each account’s email address.",
         "missingSmtp": "No mail server is configured. Set the SMTP environment variables to enable email.",
-        "statusUnavailable": "Monize could not read the mail server status."
+        "statusUnavailable": "Artha could not read the mail server status."
       },
       "ntfy": {
         "name": "ntfy and UnifiedPush",
@@ -152,7 +152,7 @@
       "rotateDescription": "Rotating replaces this instance’s key pair. Every registered device stops being reachable and has to turn push on again, so rotate only if the key may have been exposed.",
       "rotateButton": "Rotate key pair",
       "rotatingButton": "Rotating...",
-      "missingEncryptionKey": "This instance has no push key pair, because ENCRYPTION_KEY is not set and the private key would have to be stored unencrypted. Set it and restart: Monize generates the pair itself.",
+      "missingEncryptionKey": "This instance has no push key pair, because ENCRYPTION_KEY is not set and the private key would have to be stored unencrypted. Set it and restart: Artha generates the pair itself.",
       "keyUnreadable": "This instance holds a push key pair it can no longer decrypt, so nothing can be delivered. It happens when ENCRYPTION_KEY changes under a live database, or when a backup is restored onto a different instance. Rotate the key pair to recover; every device will register again.",
       "serverKeyMissing": "This instance has no ENCRYPTION_KEY set, so it cannot open the push key pair it stored. Rotating will not help while the key is missing: set ENCRYPTION_KEY in the deployment and restart, and push works again with the existing devices."
     },

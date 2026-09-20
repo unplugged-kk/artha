@@ -306,7 +306,7 @@ export class ProviderOutageAlertService {
         return {
           subject: t(
             "emails.providerOutage.subject",
-            `Monize: ${label} is not responding`,
+            `Artha: ${label} is not responding`,
             { provider: label },
           ),
           html,
@@ -400,7 +400,7 @@ export class ProviderOutageAlertService {
         return {
           subject: t(
             "emails.providerRecovery.subject",
-            `Monize: ${label} is answering again`,
+            `Artha: ${label} is answering again`,
             { provider: label },
           ),
           html,

@@ -271,7 +271,7 @@
       "workingTotal": "Totale",
       "workingUnknown": "La quota non è calcolabile finché le posizioni non hanno un prezzo.",
       "basisComposition": "L’esposizione è stimata dal contenuto di ciascuno strumento, confrontato per {dimension}. È una stima accanto all’allocazione, non una sua parte: come possesso dell’obiettivo conta solo lo strumento obiettivo stesso.",
-      "basisInstrument": "Non è possibile stimare l’esposizione al mercato perché {target} non ha una struttura geografica ({dimension}) registrata in Monize. La conformità al segnale continua a essere calcolata in modo esatto, per strumento.",
+      "basisInstrument": "Non è possibile stimare l’esposizione al mercato perché {target} non ha una struttura geografica ({dimension}) registrata in Artha. La conformità al segnale continua a essere calcolata in modo esatto, per strumento.",
       "basisPartialData": "{count, plural, one {# posizione non ha} other {# posizioni non hanno}} una struttura registrata, quindi la stima per il portafoglio non è disponibile.",
       "isTarget": "strumento obiettivo",
       "notInStrategy": "non fa parte della strategia",

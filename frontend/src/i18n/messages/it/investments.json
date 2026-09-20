@@ -224,7 +224,7 @@
     "statusLockedToParent": "Questa transazione fa parte di una transazione suddivisa. Modifica invece lo stato della transazione suddivisa, in modo che entrambi i lati cambino insieme.",
     "descriptionPlaceholder": "Note facoltative",
     "splitRatio": "Rapporto di suddivisione",
-    "noSplitRatioWarning": "Nessun rapporto di suddivisione impostato per questa transazione. Inserisci il rapporto come annunciato prima di salvare — Monize non ne assumerà uno per te.",
+    "noSplitRatioWarning": "Nessun rapporto di suddivisione impostato per questa transazione. Inserisci il rapporto come annunciato prima di salvare — Artha non ne assumerà uno per te.",
     "newShares": "Nuove azioni",
     "oldShares": "Vecchie azioni",
     "splitRatioHelp": "Inserisci il rapporto come annunciato. Per un frazionamento 2 a 1 usa 2 nuove e 1 vecchia; per un raggruppamento 1 a 2 usa 1 nuova e 2 vecchie. Rapporto effettivo:",

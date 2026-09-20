@@ -107,9 +107,9 @@
   },
   "notificationsPage": {
     "title": "Thông báo",
-    "subtitle": "Các kênh gửi mà phiên bản Monize này cung cấp, cùng danh tính đẩy phía sau chúng.",
+    "subtitle": "Các kênh gửi mà phiên bản Artha này cung cấp, cùng danh tính đẩy phía sau chúng.",
     "loading": "Đang tải cài đặt thông báo...",
-    "loadUnavailable": "Monize không đọc được cài đặt thông báo từ máy chủ. Hãy tải lại trang để thử lại.",
+    "loadUnavailable": "Artha không đọc được cài đặt thông báo từ máy chủ. Hãy tải lại trang để thử lại.",
     "channelsHeading": "Kênh gửi",
     "identityHeading": "Danh tính Web Push",
     "perAccountNote": "Thiết bị, thông báo thử nghiệm và tùy chọn thông báo thuộc về từng tài khoản và được quản lý trong Cài đặt. Quản trị viên cấu hình phiên bản này và không bao giờ gửi hay xem thông báo của người khác.",
@@ -126,9 +126,9 @@
       },
       "webPush": {
         "name": "Đẩy từ trình duyệt",
-        "description": "Thông báo được gửi tới điện thoại hoặc máy tính ngay cả khi Monize đã đóng. Không cần Firebase, Google Play hay tài khoản Apple Developer.",
+        "description": "Thông báo được gửi tới điện thoại hoặc máy tính ngay cả khi Artha đã đóng. Không cần Firebase, Google Play hay tài khoản Apple Developer.",
         "toggleLabel": "Bật đẩy từ trình duyệt cho phiên bản này",
-        "missingKeys": "Phiên bản này chưa có cặp khóa đẩy. Hãy đặt ENCRYPTION_KEY rồi khởi động lại: Monize sẽ tự tạo cặp khóa ở lần khởi động sau.",
+        "missingKeys": "Phiên bản này chưa có cặp khóa đẩy. Hãy đặt ENCRYPTION_KEY rồi khởi động lại: Artha sẽ tự tạo cặp khóa ở lần khởi động sau.",
         "keyUnreadable": "Phiên bản này không giải mã được cặp khóa đẩy đã lưu, nên không có gì được gửi đi. Hãy xoay cặp khóa bên dưới để khôi phục.",
         "serverKeyMissing": "Phiên bản này không có ENCRYPTION_KEY nên không thể mở cặp khóa push đã lưu. Hãy đặt ENCRYPTION_KEY trong bản triển khai và khởi động lại — luân chuyển khóa không giúp được khi khóa còn thiếu."
       },
@@ -136,7 +136,7 @@
         "name": "Email",
         "description": "Nhắc hóa đơn, bản tóm tắt ngân sách và cảnh báo hệ thống gửi tới địa chỉ email của từng tài khoản.",
         "missingSmtp": "Chưa cấu hình máy chủ thư. Hãy đặt các biến môi trường SMTP để bật email.",
-        "statusUnavailable": "Monize không đọc được trạng thái máy chủ thư."
+        "statusUnavailable": "Artha không đọc được trạng thái máy chủ thư."
       },
       "ntfy": {
         "name": "ntfy và UnifiedPush",
@@ -152,7 +152,7 @@
       "rotateDescription": "Xoay khóa sẽ thay cặp khóa của phiên bản này. Mọi thiết bị đã đăng ký sẽ không còn nhận được thông báo và phải bật đẩy lại, vì vậy chỉ xoay khi khóa có thể đã bị lộ.",
       "rotateButton": "Xoay cặp khóa",
       "rotatingButton": "Đang xoay...",
-      "missingEncryptionKey": "Phiên bản này chưa có cặp khóa đẩy vì ENCRYPTION_KEY chưa được đặt và khóa riêng sẽ phải lưu ở dạng không mã hóa. Hãy đặt biến này rồi khởi động lại: Monize sẽ tự tạo cặp khóa.",
+      "missingEncryptionKey": "Phiên bản này chưa có cặp khóa đẩy vì ENCRYPTION_KEY chưa được đặt và khóa riêng sẽ phải lưu ở dạng không mã hóa. Hãy đặt biến này rồi khởi động lại: Artha sẽ tự tạo cặp khóa.",
       "keyUnreadable": "Phiên bản này giữ một cặp khóa đẩy mà nó không còn giải mã được, nên không có gì được gửi đi. Điều này xảy ra khi ENCRYPTION_KEY thay đổi trên cơ sở dữ liệu đang chạy, hoặc khi bản sao lưu được khôi phục sang phiên bản khác. Hãy xoay cặp khóa để khôi phục; mọi thiết bị sẽ đăng ký lại.",
       "serverKeyMissing": "Phiên bản này chưa đặt ENCRYPTION_KEY nên không thể mở cặp khóa push đã lưu. Việc luân chuyển khóa sẽ không giúp gì khi khóa còn thiếu: hãy đặt ENCRYPTION_KEY trong bản triển khai và khởi động lại, push sẽ hoạt động lại với các thiết bị hiện có."
     },

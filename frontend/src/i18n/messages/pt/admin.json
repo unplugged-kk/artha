@@ -107,9 +107,9 @@
   },
   "notificationsPage": {
     "title": "Notificações",
-    "subtitle": "Canais de entrega oferecidos por esta instância do Monize e a identidade push que os suporta.",
+    "subtitle": "Canais de entrega oferecidos por esta instância do Artha e a identidade push que os suporta.",
     "loading": "A carregar as definições de notificações...",
-    "loadUnavailable": "O Monize não conseguiu ler as definições de notificações do servidor. Recarregue a página para tentar novamente.",
+    "loadUnavailable": "O Artha não conseguiu ler as definições de notificações do servidor. Recarregue a página para tentar novamente.",
     "channelsHeading": "Canais de entrega",
     "identityHeading": "Identidade Web Push",
     "perAccountNote": "Dispositivos, notificações de teste e preferências pertencem a cada conta e são geridos nas Definições. Um administrador configura a instância e nunca envia nem vê as notificações de outra pessoa.",
@@ -126,9 +126,9 @@
       },
       "webPush": {
         "name": "Push do navegador",
-        "description": "Notificações entregues no telemóvel ou no computador mesmo com o Monize fechado. Não requer Firebase nem conta Google Play ou Apple Developer.",
+        "description": "Notificações entregues no telemóvel ou no computador mesmo com o Artha fechado. Não requer Firebase nem conta Google Play ou Apple Developer.",
         "toggleLabel": "Ativar o push do navegador nesta instância",
-        "missingKeys": "Esta instância não tem par de chaves push. Defina ENCRYPTION_KEY e reinicie: o Monize gera o par no arranque seguinte.",
+        "missingKeys": "Esta instância não tem par de chaves push. Defina ENCRYPTION_KEY e reinicie: o Artha gera o par no arranque seguinte.",
         "keyUnreadable": "Esta instância não consegue decifrar o par de chaves push guardado, por isso nada é entregue. Rode o par de chaves abaixo para recuperar.",
         "serverKeyMissing": "Esta instância não tem ENCRYPTION_KEY, por isso não consegue abrir o par de chaves push que guardou. Defina ENCRYPTION_KEY no deployment e reinicie — rodar as chaves não ajuda enquanto a chave estiver ausente."
       },
@@ -136,7 +136,7 @@
         "name": "E-mail",
         "description": "Lembretes de contas, resumos de orçamento e alertas do sistema enviados para o endereço de cada conta.",
         "missingSmtp": "Não há servidor de e-mail configurado. Defina as variáveis de ambiente SMTP para ativar o e-mail.",
-        "statusUnavailable": "O Monize não conseguiu ler o estado do servidor de e-mail."
+        "statusUnavailable": "O Artha não conseguiu ler o estado do servidor de e-mail."
       },
       "ntfy": {
         "name": "ntfy e UnifiedPush",
@@ -152,7 +152,7 @@
       "rotateDescription": "A rotação substitui o par de chaves desta instância. Todos os dispositivos registados deixam de ser alcançáveis e terão de ativar o push novamente, por isso rode apenas se a chave puder ter sido exposta.",
       "rotateButton": "Rodar par de chaves",
       "rotatingButton": "A rodar...",
-      "missingEncryptionKey": "Esta instância não tem par de chaves push porque ENCRYPTION_KEY não está definida e a chave privada teria de ser guardada sem cifra. Defina-a e reinicie: o Monize gera o par sozinho.",
+      "missingEncryptionKey": "Esta instância não tem par de chaves push porque ENCRYPTION_KEY não está definida e a chave privada teria de ser guardada sem cifra. Defina-a e reinicie: o Artha gera o par sozinho.",
       "keyUnreadable": "Esta instância tem um par de chaves push que já não consegue decifrar, por isso nada é entregue. Acontece quando ENCRYPTION_KEY muda com a base de dados em funcionamento, ou quando uma cópia é restaurada noutra instância. Rode o par de chaves para recuperar; todos os dispositivos voltarão a registar-se.",
       "serverKeyMissing": "Esta instância não tem ENCRYPTION_KEY definida, por isso não consegue abrir o par de chaves push que guardou. Rodar as chaves não ajuda enquanto a chave estiver ausente: defina ENCRYPTION_KEY no deployment e reinicie, e as notificações push voltam a funcionar com os dispositivos existentes."
     },

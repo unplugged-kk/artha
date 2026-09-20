@@ -162,7 +162,7 @@ describe('SecuritySummaryCards', () => {
       );
       // Repeating the code beside every figure on the reader's own screen is
       // noise, not information.
-      expect(screen.getByText('$15,000.00')).toBeInTheDocument();
+      expect(screen.getByText(/[₹$]15,000\.00/)).toBeInTheDocument();
       expect(screen.queryByText(READER_CURRENCY)).not.toBeInTheDocument();
     });
   });
@@ -309,7 +309,7 @@ describe('SecuritySummaryCards in the reader s own currency', () => {
     render(<SecuritySummaryCards detail={detail()} />);
 
     // 15,000 EUR at 1.5 = 22,500 in the reader's currency.
-    expect(screen.getByText(/~\s*\$22,500\.00/)).toBeInTheDocument();
+    expect(screen.getByText(/~\s*[₹$]22,500\.00/)).toBeInTheDocument();
     // ...and the figure itself still reads in the security's own currency.
     expect(screen.getByText('€15,000.00 EUR')).toBeInTheDocument();
   });
@@ -319,8 +319,8 @@ describe('SecuritySummaryCards in the reader s own currency', () => {
     render(<SecuritySummaryCards detail={detail()} />);
     // 12,000 -> 18,000 and 3,000 -> 4,500: one rate throughout, so the three
     // converted figures still add up the way the originals do.
-    expect(screen.getByText(/~\s*\$18,000\.00/)).toBeInTheDocument();
-    expect(screen.getByText(/~\s*\$4,500\.00/)).toBeInTheDocument();
+    expect(screen.getByText(/~\s*[₹$]18,000\.00/)).toBeInTheDocument();
+    expect(screen.getByText(/~\s*[₹$]4,500\.00/)).toBeInTheDocument();
   });
 
   it('shows nothing rather than an unconverted figure under the wrong symbol', () => {

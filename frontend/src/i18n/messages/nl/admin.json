@@ -107,9 +107,9 @@
   },
   "notificationsPage": {
     "title": "Meldingen",
-    "subtitle": "Bezorgkanalen die deze Monize-instantie biedt, en de push-identiteit erachter.",
+    "subtitle": "Bezorgkanalen die deze Artha-instantie biedt, en de push-identiteit erachter.",
     "loading": "Meldingsinstellingen laden...",
-    "loadUnavailable": "Monize kon de meldingsinstellingen niet van de server lezen. Herlaad de pagina om het opnieuw te proberen.",
+    "loadUnavailable": "Artha kon de meldingsinstellingen niet van de server lezen. Herlaad de pagina om het opnieuw te proberen.",
     "channelsHeading": "Bezorgkanalen",
     "identityHeading": "Web Push-identiteit",
     "perAccountNote": "Apparaten, testmeldingen en meldingsvoorkeuren horen bij elk account en worden beheerd in Instellingen. Een beheerder configureert de instantie en verstuurt of ziet nooit de meldingen van iemand anders.",
@@ -126,9 +126,9 @@
       },
       "webPush": {
         "name": "Browserpush",
-        "description": "Meldingen op telefoon of desktop, ook als Monize gesloten is. Vereist geen Firebase, Google Play- of Apple Developer-account.",
+        "description": "Meldingen op telefoon of desktop, ook als Artha gesloten is. Vereist geen Firebase, Google Play- of Apple Developer-account.",
         "toggleLabel": "Browserpush inschakelen voor deze instantie",
-        "missingKeys": "Deze instantie heeft geen pushsleutelpaar. Stel ENCRYPTION_KEY in en start opnieuw: Monize genereert het paar bij de volgende start zelf.",
+        "missingKeys": "Deze instantie heeft geen pushsleutelpaar. Stel ENCRYPTION_KEY in en start opnieuw: Artha genereert het paar bij de volgende start zelf.",
         "keyUnreadable": "Deze instantie kan haar opgeslagen pushsleutelpaar niet ontsleutelen, dus er wordt niets bezorgd. Vervang het sleutelpaar hieronder om te herstellen.",
         "serverKeyMissing": "Deze instantie heeft geen ENCRYPTION_KEY en kan het opgeslagen push-sleutelpaar dus niet openen. Stel ENCRYPTION_KEY in de deployment in en start opnieuw op — roteren helpt niet zolang de sleutel ontbreekt."
       },
@@ -136,7 +136,7 @@
         "name": "E-mail",
         "description": "Factuurherinneringen, budgetsamenvattingen en systeemwaarschuwingen naar het e-mailadres van elk account.",
         "missingSmtp": "Er is geen mailserver geconfigureerd. Stel de SMTP-omgevingsvariabelen in om e-mail in te schakelen.",
-        "statusUnavailable": "Monize kon de status van de mailserver niet lezen."
+        "statusUnavailable": "Artha kon de status van de mailserver niet lezen."
       },
       "ntfy": {
         "name": "ntfy en UnifiedPush",
@@ -152,7 +152,7 @@
       "rotateDescription": "Vervangen wisselt het sleutelpaar van deze instantie. Elk geregistreerd apparaat is daarna onbereikbaar en moet push opnieuw inschakelen; vervang dus alleen als de sleutel mogelijk is gelekt.",
       "rotateButton": "Sleutelpaar vervangen",
       "rotatingButton": "Vervangen...",
-      "missingEncryptionKey": "Deze instantie heeft geen pushsleutelpaar, omdat ENCRYPTION_KEY niet is ingesteld en de privésleutel onversleuteld opgeslagen zou moeten worden. Stel de variabele in en start opnieuw: Monize genereert het paar zelf.",
+      "missingEncryptionKey": "Deze instantie heeft geen pushsleutelpaar, omdat ENCRYPTION_KEY niet is ingesteld en de privésleutel onversleuteld opgeslagen zou moeten worden. Stel de variabele in en start opnieuw: Artha genereert het paar zelf.",
       "keyUnreadable": "Deze instantie heeft een pushsleutelpaar dat ze niet meer kan ontsleutelen, dus er wordt niets bezorgd. Dat gebeurt als ENCRYPTION_KEY verandert bij een draaiende database, of als een back-up op een andere instantie wordt teruggezet. Vervang het sleutelpaar om te herstellen; elk apparaat registreert zich opnieuw.",
       "serverKeyMissing": "Voor deze instantie is geen ENCRYPTION_KEY ingesteld, waardoor het opgeslagen push-sleutelpaar niet geopend kan worden. Roteren helpt niet zolang de sleutel ontbreekt: stel ENCRYPTION_KEY in de deployment in en start opnieuw op, dan werkt push weer met de bestaande apparaten."
     },

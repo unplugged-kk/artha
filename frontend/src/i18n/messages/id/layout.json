@@ -27,8 +27,8 @@
     "dismissAriaLabel": "Tutup peringatan HTTPS"
   },
   "updateBanner": {
-    "availableWithVersion": "Monize v{version} tersedia",
-    "availableGeneric": "Versi baru Monize tersedia",
+    "availableWithVersion": "Artha v{version} tersedia",
+    "availableGeneric": "Versi baru Artha tersedia",
     "runningVersion": "(menjalankan v{version})",
     "releaseNotes": "Catatan rilis",
     "dismiss": "Tutup",
@@ -134,29 +134,29 @@
     "redonePrefix": "Diulangi: {description}"
   },
   "pageHeader": {
-    "helpAriaLabel": "Buka wiki Monize untuk bantuan dengan bagian ini",
-    "helpTooltip": "Buka wiki Monize untuk bantuan dengan bagian ini"
+    "helpAriaLabel": "Buka wiki Artha untuk bantuan dengan bagian ini",
+    "helpTooltip": "Buka wiki Artha untuk bantuan dengan bagian ini"
   },
   "bootSplash": {
-    "loading": "Memuat Monize",
+    "loading": "Memuat Artha",
     "slowMessage": "Ini memakan waktu lebih lama dari yang diharapkan. Periksa koneksi Anda.",
     "reload": "Muat ulang aplikasi"
   },
   "offlineFallback": {
     "title": "Tidak dapat terhubung",
-    "message": "Monize tidak dapat menjangkau server. Periksa koneksi Anda dan coba lagi.",
+    "message": "Artha tidak dapat menjangkau server. Periksa koneksi Anda dan coba lagi.",
     "retry": "Coba lagi"
   },
   "pushBanner": {
     "enableTitle": "Aktifkan notifikasi?",
-    "enableBody": "Monize dapat mengingatkan tagihan dan batas anggaran di perangkat ini, bahkan saat aplikasi tertutup. Peramban akan meminta izin Anda.",
+    "enableBody": "Artha dapat mengingatkan tagihan dan batas anggaran di perangkat ini, bahkan saat aplikasi tertutup. Peramban akan meminta izin Anda.",
     "enableButton": "Aktifkan",
     "enabling": "Mengaktifkan…",
-    "installIosTitle": "Tambahkan Monize ke Layar Utama terlebih dahulu.",
-    "installIosBody": "Di iPhone dan iPad, notifikasi hanya berfungsi dari aplikasi yang terpasang. Ketuk Bagikan, lalu Tambah ke Layar Utama, dan buka Monize dari sana.",
-    "blockedTitle": "Notifikasi diblokir untuk Monize.",
-    "blockedBody": "Izinkan di pengaturan situs peramban Anda untuk halaman ini. Monize tidak dapat bertanya lagi dengan sendirinya.",
-    "blockedIosBody": "Buka Pengaturan iOS, lalu Notifikasi, lalu Monize, dan izinkan di sana. Jika Monize tidak ada dalam daftar, hapus dari Layar Utama lalu tambahkan kembali.",
+    "installIosTitle": "Tambahkan Artha ke Layar Utama terlebih dahulu.",
+    "installIosBody": "Di iPhone dan iPad, notifikasi hanya berfungsi dari aplikasi yang terpasang. Ketuk Bagikan, lalu Tambah ke Layar Utama, dan buka Artha dari sana.",
+    "blockedTitle": "Notifikasi diblokir untuk Artha.",
+    "blockedBody": "Izinkan di pengaturan situs peramban Anda untuk halaman ini. Artha tidak dapat bertanya lagi dengan sendirinya.",
+    "blockedIosBody": "Buka Pengaturan iOS, lalu Notifikasi, lalu Artha, dan izinkan di sana. Jika Artha tidak ada dalam daftar, hapus dari Layar Utama lalu tambahkan kembali.",
     "dismiss": "Nanti saja"
   }
 }

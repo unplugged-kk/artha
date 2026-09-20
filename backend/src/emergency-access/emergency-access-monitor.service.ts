@@ -427,7 +427,7 @@ export class EmergencyAccessMonitorService {
           contact.email,
           t(
             "emails.emergencyAccessGrant.subject",
-            `You have been granted emergency access to ${ownerFullName}'s Monize account`,
+            `You have been granted emergency access to ${ownerFullName}'s Artha account`,
             { owner: ownerFullName },
           ),
           html,
@@ -898,11 +898,11 @@ export class EmergencyAccessMonitorService {
           daysSinceLogin === 1
             ? reminderT(
                 "emails.emergencyAccessReminder.subjectOne",
-                "Monize: your account has been inactive for 1 day",
+                "Artha: your account has been inactive for 1 day",
               )
             : reminderT(
                 "emails.emergencyAccessReminder.subjectMany",
-                `Monize: your account has been inactive for ${daysSinceLogin} days`,
+                `Artha: your account has been inactive for ${daysSinceLogin} days`,
                 { daysSinceLogin },
               ),
           html,
@@ -1030,7 +1030,7 @@ export class EmergencyAccessMonitorService {
         owner.email,
         revokedT(
           "emails.emergencyAccessGrantRevoked.subject",
-          "Monize: emergency access was granted while you were away",
+          "Artha: emergency access was granted while you were away",
         ),
         html,
       );

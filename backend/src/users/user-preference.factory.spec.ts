@@ -23,7 +23,7 @@ describe("buildDefaultPreferences", () => {
 
   it("applies the standard non-locale defaults", () => {
     const prefs = buildDefaultPreferences("user-1");
-    expect(prefs.defaultCurrency).toBe("USD");
+    expect(prefs.defaultCurrency).toBe("INR");
     expect(prefs.notificationEmail).toBe(true);
     expect(prefs).not.toHaveProperty("notificationBrowser");
     expect(prefs.twoFactorEnabled).toBe(false);

@@ -6,7 +6,7 @@
   "backToSignIn": "Terug naar inloggen",
   "ownerFallback": "de rekeninghouder",
   "ownerFirstNameFallback": "de eigenaar",
-  "intro": "Hoi {contactName}, je bent aangewezen als noodcontact op het Monize-account van <b>{ownerName}</b>.",
+  "intro": "Hoi {contactName}, je bent aangewezen als noodcontact op het Artha-account van <b>{ownerName}</b>.",
   "introDetail": "Door hier een wachtwoord in te stellen, word je ingelogd als de rekeninghouder en krijg je volledige toegang tot het account. Bestaande sessies worden ingetrokken en de vorige inloggegevens worden vervangen.",
   "messageHeading": "Bericht van {name}",
   "newPasswordLabel": "Nieuw wachtwoord",

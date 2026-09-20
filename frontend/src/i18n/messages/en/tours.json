@@ -37,7 +37,7 @@
     "description": "Walk through the app's features step by step.",
     "backLink": "Back to Settings",
     "pageTitle": "Guided tours",
-    "pageSubtitle": "Every walkthrough Monize offers, in one place. Start one anytime — you can leave a tour with Escape and pick it up again from here.",
+    "pageSubtitle": "Every walkthrough Artha offers, in one place. Start one anytime — you can leave a tour with Escape and pick it up again from here.",
     "meta": "{steps} · {status}",
     "metaWithRelease": "{steps} · {release} · {status}",
     "stepCount": "{count, plural, one {# step} other {# steps}}",
@@ -59,10 +59,10 @@
   },
   "intro": {
     "basics": {
-      "title": "Introduction to Monize",
+      "title": "Introduction to Artha",
       "steps": {
         "welcome": {
-          "title": "Welcome to Monize",
+          "title": "Welcome to Artha",
           "body": "This quick tour shows you around the core of the app. You can leave anytime by pressing **Escape** or **End tour**."
         },
         "dashboard": {
@@ -103,7 +103,7 @@
         },
         "currencyField": {
           "title": "Amount and currency",
-          "body": "Enter what the transaction cost here. Paid in another currency? Set the entry currency beside the amount and type it as charged — Monize converts it to the account currency for you."
+          "body": "Enter what the transaction cost here. Paid in another currency? Set the entry currency beside the amount and type it as charged — Artha converts it to the account currency for you."
         },
         "closeForm": {
           "title": "Close the form to continue",
@@ -147,7 +147,7 @@
           },
           "fxFeePercent": {
             "title": "Set the conversion fee",
-            "body": "Enter the account's foreign-transaction fee here as a percentage — 2.5, say. Monize folds it into the converted amount of every foreign purchase, so the fee is captured for you."
+            "body": "Enter the account's foreign-transaction fee here as a percentage — 2.5, say. Artha folds it into the converted amount of every foreign purchase, so the fee is captured for you."
           },
           "closeAccountForm": {
             "title": "Save and close",
@@ -171,7 +171,7 @@
           },
           "enterAmount": {
             "title": "Enter the amount you were charged",
-            "body": "Type the total exactly as it appears on your statement. Monize looks up the **exchange rate** for the transaction's date, shows the converted total beside it, and folds in the **foreign-transaction fee** you set on the account — the caption below spells out both. Bank rounded differently? Edit the rate or the converted total to match to the cent."
+            "body": "Type the total exactly as it appears on your statement. Artha looks up the **exchange rate** for the transaction's date, shows the converted total beside it, and folds in the **foreign-transaction fee** you set on the account — the caption below spells out both. Bank rounded differently? Edit the rate or the converted total to match to the cent."
           },
           "closeTransactionForm": {
             "title": "Close the form",
@@ -192,7 +192,7 @@
             "fallbackBody": "The **Foreign-Currency Fees** report gathers foreign purchases across all your accounts and currencies in one place. It is not on screen right now — a search or a category filter can hide it — but you will find it in **Reports**."
           },
           "finish": {
-            "title": "That's foreign currency in Monize",
+            "title": "That's foreign currency in Artha",
             "body": "Set a fee once, enter purchases as charged, and the fees track themselves. You can retake this tour anytime from the **Guided tours** section in **Settings**."
           }
         }
@@ -221,7 +221,7 @@
         "steps": {
           "welcome": {
             "title": "Every security on one page",
-            "body": "Securities used to be three separate dialogs. There is now a page per security that gathers the lot: what you hold, what it has done, and everything Monize knows about it. Here is the quick version."
+            "body": "Securities used to be three separate dialogs. There is now a page per security that gathers the lot: what you hold, what it has done, and everything Artha knows about it. Here is the quick version."
           },
           "openDetail": {
             "title": "Open a security",
@@ -238,7 +238,7 @@
           },
           "keyInfo": {
             "title": "What the instrument is",
-            "body": "Beside the chart: security type, exchange, currency, the quote provider Monize uses, and the price it last recorded. Underneath, the **Breakdown** card shows what a fund is made of — switch between its sector, country and asset-class splits."
+            "body": "Beside the chart: security type, exchange, currency, the quote provider Artha uses, and the price it last recorded. Underneath, the **Breakdown** card shows what a fund is made of — switch between its sector, country and asset-class splits."
           },
           "tabs": {
             "title": "The detail underneath",
@@ -259,7 +259,7 @@
           },
           "findReport": {
             "title": "Find GEM under Reports",
-            "body": "Open the **GEM Strategy** report here. It lives in the **Investment** category. The report is available even when you have no investment instruments or brokerage holdings in Monize yet.",
+            "body": "Open the **GEM Strategy** report here. It lives in the **Investment** category. The report is available even when you have no investment instruments or brokerage holdings in Artha yet.",
             "fallbackBody": "The report card is not visible right now, usually because of a filter. Choose **Next** and the tour will open the GEM report directly. You can find it later under **Reports** in the **Investment** category."
           },
           "page": {
@@ -272,7 +272,7 @@
           },
           "action": {
             "title": "A suggestion, not an automatic order",
-            "body": "The chart compares the assigned instruments. **What should I do?** turns the signal into a possible sell-and-buy operation and estimates tax and commission when enough data is available. Monize never sends an order to your broker. After making a real trade through your broker, record the transactions in Monize; then use **Mark as executed** only as a note that you carried out the signal."
+            "body": "The chart compares the assigned instruments. **What should I do?** turns the signal into a possible sell-and-buy operation and estimates tax and commission when enough data is available. Artha never sends an order to your broker. After making a real trade through your broker, record the transactions in Artha; then use **Mark as executed** only as a note that you carried out the signal."
           },
           "reasoning": {
             "title": "Why did GEM choose this?",
@@ -296,7 +296,7 @@
           },
           "addInstruments": {
             "title": "No instruments yet? Start here",
-            "body": "GEM needs an instrument in each role before it can decide anything. When a role is empty, this **Roles and instruments** card offers a shortcut that adds example ETFs. First use **Listings to add** to pick the region your broker can actually trade: **Americas** or **Europe (UCITS)**. The add button creates instrument records in Monize straight away, before you save the GEM configuration; it does not buy anything. It fills only empty roles and may reuse a matching instrument already in your list. Check every symbol, exchange, and currency. These examples are not a recommendation. If the shortcut is not shown, your roles are already filled and you can review them below.",
+            "body": "GEM needs an instrument in each role before it can decide anything. When a role is empty, this **Roles and instruments** card offers a shortcut that adds example ETFs. First use **Listings to add** to pick the region your broker can actually trade: **Americas** or **Europe (UCITS)**. The add button creates instrument records in Artha straight away, before you save the GEM configuration; it does not buy anything. It fills only empty roles and may reuse a matching instrument already in your list. Check every symbol, exchange, and currency. These examples are not a recommendation. If the shortcut is not shown, your roles are already filled and you can review them below.",
             "fallbackBody": "The settings form has not loaded, so the tour cannot point to the roles card. No settings were changed. Use the page's retry control, or retake the tour later from **Guided tours** in **Settings**."
           },
           "roles": {
@@ -305,11 +305,11 @@
           },
           "save": {
             "title": "Review before saving",
-            "body": "Check the account list, each listing, and the currencies, then **Save configuration** to store the scenario and recalculate the report from the available price history. Saving is what gives the next few steps something to show. It still does not place a trade, and you do not have to save to finish this tour. If prices are missing or too old, Monize shows that the signal is unavailable instead of guessing."
+            "body": "Check the account list, each listing, and the currencies, then **Save configuration** to store the scenario and recalculate the report from the available price history. Saving is what gives the next few steps something to show. It still does not place a trade, and you do not have to save to finish this tour. If prices are missing or too old, Artha shows that the signal is unavailable instead of guessing."
           },
           "finish": {
             "title": "Come back at the next evaluation",
-            "body": "GEM makes one decision per period, and the date of the next one is at the top of the report. There is nothing to do until then. When it arrives, check whether the signal changed; if it did, place the trades through your broker and record them in Monize so the portfolio comparison keeps adding up. You can retake this tour anytime from **Guided tours** in **Settings**."
+            "body": "GEM makes one decision per period, and the date of the next one is at the top of the report. There is nothing to do until then. When it arrives, check whether the signal changed; if it did, place the trades through your broker and record them in Artha so the portfolio comparison keeps adding up. You can retake this tour anytime from **Guided tours** in **Settings**."
           }
         }
       }
@@ -319,12 +319,12 @@
         "title": "Notifications",
         "steps": {
           "welcome": {
-            "title": "Monize can tell you things now",
+            "title": "Artha can tell you things now",
             "body": "A bill falling due, a budget going over, a balance crossing a line you set, a backup that failed. This walkthrough covers where those arrive, and how you choose which ones reach you by email or on your phone."
           },
           "bell": {
             "title": "The bell is the record",
-            "body": "Every notification Monize raises is written here, whatever else you switch on or off. Email and push are copies sent onward; this list is the original, and the number on the bell counts what you have not read yet."
+            "body": "Every notification Artha raises is written here, whatever else you switch on or off. Email and push are copies sent onward; this list is the original, and the number on the bell counts what you have not read yet."
           },
           "panel": {
             "title": "What a notification carries",
@@ -344,7 +344,7 @@
           },
           "push": {
             "title": "Your devices",
-            "body": "Register a browser here and Monize can reach it while the app is closed. It signs its own messages, so there is no Google or Apple account in the middle. Each device can be tested and removed on its own, and a device that stops being reachable says why. On an iPhone this works once Monize is added to the Home Screen; if your administrator has not switched push on for this instance, this block says so instead."
+            "body": "Register a browser here and Artha can reach it while the app is closed. It signs its own messages, so there is no Google or Apple account in the middle. Each device can be tested and removed on its own, and a device that stops being reachable says why. On an iPhone this works once Artha is added to the Home Screen; if your administrator has not switched push on for this instance, this block says so instead."
           },
           "portfolio": {
             "title": "Investment movement",

@@ -396,7 +396,7 @@
       "importPricesHint": "Money 自己记录的每只证券逐日价值。若您更愿意从当前行情开始，请关闭此项。",
       "importExchangeRates": "导入汇率",
       "importExchangeRatesHint": "文件中各币种之间的历史汇率，让过去的外币交易按 Money 当时的方式换算。",
-      "wipeExistingData": "从零开始：先删除我现有的 Monize 数据",
+      "wipeExistingData": "从零开始：先删除我现有的 Artha 数据",
       "wipeExistingDataHint": "导入前执行与设置中相同的“删除我的数据”操作。系统会要求确认。保持关闭可将 Money 文件添加到现有数据中。"
     },
     "warningsHeading": "关于此文件的说明",
@@ -420,7 +420,7 @@
       "transfer": "转账",
       "investment": "投资",
       "splits": "{count, plural, other {# 条拆分}}",
-      "approximate": "最接近的 Monize 频率"
+      "approximate": "最接近的 Artha 频率"
     }
   },
   "mnyWipe": {
@@ -478,15 +478,15 @@
     "existingDataRemoved": "已按您的要求，在本次导入前删除了原有数据。",
     "verificationHeading": "余额校验",
     "holdingsHeading": "持仓核对",
-    "holdingsExplainer": "Monize 当前持有的股数，与 Money 文件记录的未平仓税务批次对照。Money 自身就以这些批次核对，因此它们是可信的数字。",
+    "holdingsExplainer": "Artha 当前持有的股数，与 Money 文件记录的未平仓税务批次对照。Money 自身就以这些批次核对，因此它们是可信的数字。",
     "table": {
       "account": "账户",
       "security": "证券",
       "transactions": "交易",
       "expected": "来自 Money 文件",
-      "imported": "Monize 中",
+      "imported": "Artha 中",
       "lotShares": "Money 中的股数",
-      "importedShares": "Monize 中的股数",
+      "importedShares": "Artha 中的股数",
       "delta": "差额",
       "check": "待核对"
     },
@@ -497,7 +497,7 @@
   "mnyWarnings": {
     "missingTable": "此 Money 版本缺少导入所需的 {count, plural, other {# 张表}}。",
     "missingField": "此 Money 版本中缺少 {count, plural, other {# 个字段}}，已使用默认值。",
-    "unknownAccountType": "{count, plural, other {# 个账户}}的账户类型 Monize 无法识别，已跳过。",
+    "unknownAccountType": "{count, plural, other {# 个账户}}的账户类型 Artha 无法识别，已跳过。",
     "duplicateAccountName": "{count, plural, other {# 个账户}}与其他账户同名，已重命名。",
     "unknownCurrency": "{count, plural, other {# 个账户}}引用了文件中未定义的货币，将使用基准货币。",
     "categoryFlattened": "{count, plural, other {# 个类别}}层级超过两层，已合并到其父类别。",
@@ -511,7 +511,7 @@
     "balanceMismatch": "{count, plural, other {# 个账户}}的最终余额与 Money 文件不一致。",
     "duplicateSecuritySymbol": "{count, plural, other {# 只证券}}与另一只共用代码；为保持区分，后出现的已重命名。",
     "generatedSecuritySymbol": "{count, plural, other {# 只证券}}在 Money 中没有代码，因此生成了占位代码，并保持价格更新为关闭。",
-    "unknownInvestmentAction": "{count, plural, other {# 笔投资交易}}使用了 Monize 无法识别的操作，已跳过。",
+    "unknownInvestmentAction": "{count, plural, other {# 笔投资交易}}使用了 Artha 无法识别的操作，已跳过。",
     "unconfirmedInvestmentAction": "{count, plural, other {# 笔投资交易}}使用了含义靠推断而非有据可查的 Money 操作，请与 Money 核对。",
     "missingInvestmentDetail": "{count, plural, other {# 笔投资交易}}在文件中没有股数明细，仅按其现金金额导入。",
     "investmentAccountMismatch": "{count, plural, other {# 笔投资交易}}位于非投资账户中，已跳过。",
@@ -519,7 +519,7 @@
     "holdingsMismatch": "{count, plural, other {# 项持仓}}与 Money 文件记录的股数不符。",
     "billTemplateMissing": "{count, plural, other {# 个定期账单}}在文件中没有模板交易，已跳过。",
     "unusableBill": "{count, plural, other {# 个定期账单}}没有账户、可用日期或可识别的重复周期，已跳过。",
-    "billFrequencyApproximated": "{count, plural, other {# 个定期账单}}使用了 Monize 无法精确表达的重复间隔，因此采用了最接近的较短间隔。",
+    "billFrequencyApproximated": "{count, plural, other {# 个定期账单}}使用了 Artha 无法精确表达的重复间隔，因此采用了最接近的较短间隔。",
     "loanInterestCategoryUnclear": "{count, plural, other {# 笔贷款还款}}包含了本金以外的多个类别，因此贷款的利息类别未设置。请检查还款是否包含托管款项（escrow），并在导入后设置利息类别。",
     "showTransactions": "显示{count, plural, other {# 笔交易}}",
     "hideTransactions": "隐藏交易",

@@ -97,7 +97,7 @@
     },
     "smtpFailure": {
       "title": "L'invio delle email non funziona",
-      "message": "Monize non è riuscito a inviare email: {error}. Notifiche e promemoria non vengono recapitati."
+      "message": "Artha non è riuscito a inviare email: {error}. Notifiche e promemoria non vengono recapitati."
     },
     "providerOutage": {
       "title": "{provider} non risponde",

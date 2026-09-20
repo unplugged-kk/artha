@@ -97,7 +97,7 @@
     },
     "smtpFailure": {
       "title": "邮件发送失败",
-      "message": "Monize 无法发送邮件：{error}。通知和提醒未能送达。"
+      "message": "Artha 无法发送邮件：{error}。通知和提醒未能送达。"
     },
     "providerOutage": {
       "title": "{provider} 无响应",

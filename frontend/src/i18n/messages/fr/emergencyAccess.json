@@ -6,7 +6,7 @@
   "backToSignIn": "Retour à la connexion",
   "ownerFallback": "le titulaire du compte",
   "ownerFirstNameFallback": "le titulaire",
-  "intro": "Bonjour {contactName}, vous avez été désigné(e) comme contact d'urgence sur le compte Monize de <b>{ownerName}</b>.",
+  "intro": "Bonjour {contactName}, vous avez été désigné(e) comme contact d'urgence sur le compte Artha de <b>{ownerName}</b>.",
   "introDetail": "La définition d'un mot de passe ici vous connectera en tant que titulaire du compte et vous donnera un accès complet au compte. Les sessions existantes sont révoquées et les informations d'identification précédentes sont remplacées.",
   "messageHeading": "Message de {name}",
   "newPasswordLabel": "Nouveau mot de passe",

@@ -107,9 +107,9 @@
   },
   "notificationsPage": {
     "title": "Notifiche",
-    "subtitle": "Canali di consegna offerti da questa istanza di Monize e l'identità push che li sostiene.",
+    "subtitle": "Canali di consegna offerti da questa istanza di Artha e l'identità push che li sostiene.",
     "loading": "Caricamento delle impostazioni di notifica...",
-    "loadUnavailable": "Monize non è riuscito a leggere le impostazioni di notifica dal server. Ricarica la pagina per riprovare.",
+    "loadUnavailable": "Artha non è riuscito a leggere le impostazioni di notifica dal server. Ricarica la pagina per riprovare.",
     "channelsHeading": "Canali di consegna",
     "identityHeading": "Identità Web Push",
     "perAccountNote": "Dispositivi, notifiche di prova e preferenze appartengono a ciascun account e si gestiscono in Impostazioni. L'amministratore configura l'istanza e non invia né vede mai le notifiche di altre persone.",
@@ -126,9 +126,9 @@
       },
       "webPush": {
         "name": "Push del browser",
-        "description": "Notifiche consegnate a telefono o desktop anche con Monize chiuso. Non richiede Firebase né un account Google Play o Apple Developer.",
+        "description": "Notifiche consegnate a telefono o desktop anche con Artha chiuso. Non richiede Firebase né un account Google Play o Apple Developer.",
         "toggleLabel": "Attiva il push del browser per questa istanza",
-        "missingKeys": "Questa istanza non ha una coppia di chiavi push. Imposta ENCRYPTION_KEY e riavvia: Monize genera la coppia da sé al prossimo avvio.",
+        "missingKeys": "Questa istanza non ha una coppia di chiavi push. Imposta ENCRYPTION_KEY e riavvia: Artha genera la coppia da sé al prossimo avvio.",
         "keyUnreadable": "Questa istanza non riesce a decifrare la coppia di chiavi push memorizzata, quindi non viene consegnato nulla. Ruota la coppia di chiavi qui sotto per recuperare.",
         "serverKeyMissing": "Questa istanza non ha ENCRYPTION_KEY, quindi non puo aprire la coppia di chiavi push memorizzata. Imposta ENCRYPTION_KEY nel deployment e riavvia: la rotazione non puo aiutare se la chiave manca."
       },
@@ -136,7 +136,7 @@
         "name": "Email",
         "description": "Promemoria delle bollette, riepiloghi di budget e avvisi di sistema inviati all'indirizzo email di ciascun account.",
         "missingSmtp": "Nessun server di posta configurato. Imposta le variabili d'ambiente SMTP per attivare l'email.",
-        "statusUnavailable": "Monize non è riuscito a leggere lo stato del server di posta."
+        "statusUnavailable": "Artha non è riuscito a leggere lo stato del server di posta."
       },
       "ntfy": {
         "name": "ntfy e UnifiedPush",
@@ -152,7 +152,7 @@
       "rotateDescription": "La rotazione sostituisce la coppia di chiavi di questa istanza. Ogni dispositivo registrato diventa irraggiungibile e dovrà riattivare il push: ruota solo se la chiave potrebbe essere stata esposta.",
       "rotateButton": "Ruota coppia di chiavi",
       "rotatingButton": "Rotazione...",
-      "missingEncryptionKey": "Questa istanza non ha una coppia di chiavi push perché ENCRYPTION_KEY non è impostata e la chiave privata dovrebbe essere memorizzata in chiaro. Impostala e riavvia: Monize genera la coppia da sé.",
+      "missingEncryptionKey": "Questa istanza non ha una coppia di chiavi push perché ENCRYPTION_KEY non è impostata e la chiave privata dovrebbe essere memorizzata in chiaro. Impostala e riavvia: Artha genera la coppia da sé.",
       "keyUnreadable": "Questa istanza possiede una coppia di chiavi push che non riesce più a decifrare, quindi non viene consegnato nulla. Succede quando ENCRYPTION_KEY cambia con il database in funzione, o quando un backup viene ripristinato su un'altra istanza. Ruota la coppia di chiavi per recuperare; ogni dispositivo si registrerà di nuovo.",
       "serverKeyMissing": "Questa istanza non ha ENCRYPTION_KEY impostata, quindi non puo aprire la coppia di chiavi push memorizzata. La rotazione non aiuta se la chiave manca: imposta ENCRYPTION_KEY nel deployment e riavvia, e le notifiche push torneranno a funzionare con i dispositivi esistenti."
     },

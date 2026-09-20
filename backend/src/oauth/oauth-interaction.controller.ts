@@ -335,7 +335,7 @@ export class OAuthInteractionController {
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="robots" content="noindex" />
-<title>Authorization window closed — Monize</title>
+<title>Authorization window closed — Artha</title>
 <style>
   :root {
     --bg: #f8fafc; --card: #ffffff; --text: #0f172a;
@@ -360,10 +360,10 @@ export class OAuthInteractionController {
 </head>
 <body>
   <main class="card">
-    <div class="brand">Monize</div>
+    <div class="brand">Artha</div>
     <h1>This authorization window is no longer active</h1>
     <p>The sign-in attempt this window belonged to has already finished or expired.</p>
-    <p style="margin-top:12px">If the application that requested access now shows Monize as connected, you are done — close this window. If it is still waiting, close this window and start the connection again from that application; a fresh approval prompt will appear.</p>
+    <p style="margin-top:12px">If the application that requested access now shows Artha as connected, you are done — close this window. If it is still waiting, close this window and start the connection again from that application; a fresh approval prompt will appear.</p>
   </main>
 </body>
 </html>`);

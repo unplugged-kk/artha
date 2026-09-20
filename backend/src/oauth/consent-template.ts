@@ -55,7 +55,7 @@ export function renderConsentPage(params: ConsentParams): string {
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="robots" content="noindex" />
-<title>Authorize ${escapeHtml(clientName)} — Monize</title>
+<title>Authorize ${escapeHtml(clientName)} — Artha</title>
 <style>
   :root {
     --primary: #0284c7;
@@ -150,9 +150,9 @@ export function renderConsentPage(params: ConsentParams): string {
 </head>
 <body>
   <main class="card">
-    <div class="brand">Monize</div>
+    <div class="brand">Artha</div>
     <h1>Authorize ${clientLink}</h1>
-    <p class="subtitle">${clientLink} is requesting access to your Monize account.</p>
+    <p class="subtitle">${clientLink} is requesting access to your Artha account.</p>
     <p class="user">Signed in as <strong>${escapeHtml(userEmail)}</strong></p>
 
     <form method="POST" action="/api/v1/oauth-consent/${escapeHtml(uid)}/confirm" autocomplete="off">

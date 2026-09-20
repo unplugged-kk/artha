@@ -95,7 +95,7 @@ describe('TourHost', () => {
     await start(CENTERED);
 
     await waitFor(() =>
-      expect(screen.getByText('Welcome to Monize')).toBeInTheDocument(),
+      expect(screen.getByText('Welcome to Artha')).toBeInTheDocument(),
     );
 
     await act(async () => {
@@ -123,7 +123,7 @@ describe('TourHost', () => {
     await mountHost();
     await start(CENTERED);
     await waitFor(() =>
-      expect(screen.getByText('Welcome to Monize')).toBeInTheDocument(),
+      expect(screen.getByText('Welcome to Artha')).toBeInTheDocument(),
     );
 
     await act(async () => {
@@ -233,7 +233,7 @@ describe('TourHost', () => {
     await mountHost();
     await start(tour);
     await waitFor(() =>
-      expect(screen.getByText('Welcome to Monize')).toBeInTheDocument(),
+      expect(screen.getByText('Welcome to Artha')).toBeInTheDocument(),
     );
 
     // No dimming overlay at all: the page behind stays fully visible/usable.
@@ -270,7 +270,7 @@ describe('TourHost', () => {
       await mountHost();
       await start(GATED);
       await waitFor(() =>
-        expect(screen.getByText('Welcome to Monize')).toBeInTheDocument(),
+        expect(screen.getByText('Welcome to Artha')).toBeInTheDocument(),
       );
 
       await act(async () => {
@@ -293,7 +293,7 @@ describe('TourHost', () => {
       await mountHost();
       await start(GATED);
       await waitFor(() =>
-        expect(screen.getByText('Welcome to Monize')).toBeInTheDocument(),
+        expect(screen.getByText('Welcome to Artha')).toBeInTheDocument(),
       );
 
       await act(async () => {
@@ -324,7 +324,7 @@ describe('TourHost', () => {
     await start(tour);
 
     await waitFor(() =>
-      expect(screen.getByText('Welcome to Monize')).toBeInTheDocument(),
+      expect(screen.getByText('Welcome to Artha')).toBeInTheDocument(),
     );
     // No navigation for the route-agnostic step; the tour is not dismissed.
     expect(routerPush).not.toHaveBeenCalled();
@@ -617,7 +617,7 @@ describe('TourHost', () => {
     });
     await waitFor(() =>
       expect(
-        screen.getByText("That's foreign currency in Monize"),
+        screen.getByText("That's foreign currency in Artha"),
       ).toBeInTheDocument(),
     );
   });

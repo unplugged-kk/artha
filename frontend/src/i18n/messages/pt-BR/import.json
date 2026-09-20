@@ -396,7 +396,7 @@
       "importPricesHint": "O registro que o Money mantém do valor de cada título, dia a dia. Desative se preferir começar pelas cotações atuais.",
       "importExchangeRates": "Importar as taxas de câmbio",
       "importExchangeRatesHint": "Taxas históricas entre as moedas do seu arquivo, para que as operações antigas em moeda estrangeira sejam convertidas como o Money as convertia.",
-      "wipeExistingData": "Começar do zero: remover primeiro meus dados existentes do Monize",
+      "wipeExistingData": "Começar do zero: remover primeiro meus dados existentes do Artha",
       "wipeExistingDataHint": "Executa a mesma operação Excluir meus dados das Configurações antes de importar. Será solicitada uma confirmação. Deixe desativado para adicionar o arquivo do Money ao que você já tem."
     },
     "warningsHeading": "Observações sobre este arquivo",
@@ -420,7 +420,7 @@
       "transfer": "Transferência",
       "investment": "Investimento",
       "splits": "{count, plural, one {# divisão} other {# divisões}}",
-      "approximate": "Frequência do Monize mais próxima"
+      "approximate": "Frequência do Artha mais próxima"
     }
   },
   "mnyWipe": {
@@ -478,15 +478,15 @@
     "existingDataRemoved": "Seus dados existentes foram removidos antes desta importação, conforme solicitado.",
     "verificationHeading": "Verificação de saldos",
     "holdingsHeading": "Verificação de posições",
-    "holdingsExplainer": "As ações que o Monize tem agora, comparadas com os lotes fiscais abertos registrados no seu arquivo do Money. O próprio Money concilia com esses lotes, então são o número de referência.",
+    "holdingsExplainer": "As ações que o Artha tem agora, comparadas com os lotes fiscais abertos registrados no seu arquivo do Money. O próprio Money concilia com esses lotes, então são o número de referência.",
     "table": {
       "account": "Conta",
       "security": "Título",
       "transactions": "Transações",
       "expected": "Do arquivo do Money",
-      "imported": "No Monize",
+      "imported": "No Artha",
       "lotShares": "Ações no Money",
-      "importedShares": "Ações no Monize",
+      "importedShares": "Ações no Artha",
       "delta": "Diferença",
       "check": "Verificar"
     },
@@ -497,7 +497,7 @@
   "mnyWarnings": {
     "missingTable": "Esta versão do Money não tem {count, plural, one {# tabela} other {# tabelas}} que a importação usa.",
     "missingField": "{count, plural, one {# campo não existia} other {# campos não existiam}} nesta versão do Money e assumiram um valor padrão.",
-    "unknownAccountType": "{count, plural, one {# conta tinha} other {# contas tinham}} um tipo de conta que o Monize não reconhece e foram ignoradas.",
+    "unknownAccountType": "{count, plural, one {# conta tinha} other {# contas tinham}} um tipo de conta que o Artha não reconhece e foram ignoradas.",
     "duplicateAccountName": "{count, plural, one {# conta tinha} other {# contas tinham}} o mesmo nome de outra e foram renomeadas.",
     "unknownCurrency": "{count, plural, one {# conta faz} other {# contas fazem}} referência a uma moeda que o arquivo não define e usam a moeda base.",
     "categoryFlattened": "{count, plural, one {# categoria passava} other {# categorias passavam}} de dois níveis e foram agrupadas na categoria principal.",
@@ -511,7 +511,7 @@
     "balanceMismatch": "{count, plural, one {# conta terminou} other {# contas terminaram}} com saldo diferente do arquivo do Money.",
     "duplicateSecuritySymbol": "{count, plural, one {# título compartilha} other {# títulos compartilham}} o símbolo com outro; os posteriores foram renomeados para continuarem separados.",
     "generatedSecuritySymbol": "{count, plural, one {# título não tem} other {# títulos não têm}} símbolo no Money, então foi gerado um marcador e as atualizações de preço ficaram desativadas.",
-    "unknownInvestmentAction": "{count, plural, one {# transação de investimento usou} other {# transações de investimento usaram}} uma ação que o Monize não reconhece e foram ignoradas.",
+    "unknownInvestmentAction": "{count, plural, one {# transação de investimento usou} other {# transações de investimento usaram}} uma ação que o Artha não reconhece e foram ignoradas.",
     "unconfirmedInvestmentAction": "{count, plural, one {# transação de investimento usou} other {# transações de investimento usaram}} uma ação do Money cujo significado é deduzido e não documentado; confira no Money.",
     "missingInvestmentDetail": "{count, plural, one {# transação de investimento não tinha} other {# transações de investimento não tinham}} detalhe de ações no arquivo e foram importadas apenas pelo valor em dinheiro.",
     "investmentAccountMismatch": "{count, plural, one {# transação de investimento estava} other {# transações de investimento estavam}} em uma conta que não é de investimento e foram ignoradas.",
@@ -519,7 +519,7 @@
     "holdingsMismatch": "{count, plural, one {# posição não corresponde} other {# posições não correspondem}} às ações registradas no seu arquivo do Money.",
     "billTemplateMissing": "{count, plural, one {# conta agendada não tinha} other {# contas agendadas não tinham}} transação de modelo no arquivo e foram ignoradas.",
     "unusableBill": "{count, plural, one {# conta agendada não tinha} other {# contas agendadas não tinham}} conta, data utilizável nem periodicidade reconhecida e foram ignoradas.",
-    "billFrequencyApproximated": "{count, plural, one {# conta agendada usa} other {# contas agendadas usam}} um intervalo de repetição que o Monize não consegue expressar exatamente, então foi usado o mais curto mais próximo.",
+    "billFrequencyApproximated": "{count, plural, one {# conta agendada usa} other {# contas agendadas usam}} um intervalo de repetição que o Artha não consegue expressar exatamente, então foi usado o mais curto mais próximo.",
     "loanInterestCategoryUnclear": "{count, plural, one {# pagamento de empréstimo incluía} other {# pagamentos de empréstimo incluíam}} várias categorias além do principal, então a categoria de juros do empréstimo ficou sem definição. Verifique se o pagamento inclui uma conta de garantia (escrow) e defina a categoria de juros após a importação.",
     "showTransactions": "{count, plural, one {Mostrar a # transação} other {Mostrar as # transações}}",
     "hideTransactions": "Ocultar transações",

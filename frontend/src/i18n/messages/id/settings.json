@@ -2,7 +2,7 @@
   "language": {
     "label": "Bahasa",
     "browserOption": "Gunakan lokal browser (deteksi otomatis: {locale})",
-    "helpText": "Pilih bahasa yang digunakan di seluruh antarmuka Monize. Format angka dan tanggal dikendalikan secara terpisah di bawah.",
+    "helpText": "Pilih bahasa yang digunakan di seluruh antarmuka Artha. Format angka dan tanggal dikendalikan secara terpisah di bawah.",
     "saved": "Bahasa diperbarui",
     "saveFailed": "Gagal menyimpan bahasa"
   },
@@ -124,7 +124,7 @@
     "preferredExchangesHelp": "Pilih hingga 3 bursa dalam urutan prioritas. Ini akan diprioritaskan saat mencari keamanan dokumen.",
     "exchangePriorityPlaceholder": "Prioritas {n}",
     "defaultQuoteProviderLabel": "Penyedia Kuotasi Saham Bawaan",
-    "defaultQuoteProviderHelp": "Digunakan saat keamanan dokumen tidak memiliki penggantian penyedia. Jika penyedia yang dipilih gagal, Monize secara otomatis mencoba yang lain.",
+    "defaultQuoteProviderHelp": "Digunakan saat keamanan dokumen tidak memiliki penggantian penyedia. Jika penyedia yang dipilih gagal, Artha secara otomatis mencoba yang lain.",
     "msnNoIntradayNote": "Catatan: MSN Money tidak menyediakan data kuotasi intraday, sehingga rentang 1D / 1W / 1M pada grafik Nilai Portofolio Dari Waktu ke Waktu tidak tersedia untuk kepemilikan yang dilacak MSN.",
     "msnNotConfigured": "MSN dipilih sebagai penyedia kuotasi bawaan, tetapi MSN_API_KEY tidak dikonfigurasi di server. Kuotasi MSN akan gagal hingga administrator menetapkan variabel lingkungan dan memulai ulang backend.",
     "dateFormatLabel": "Format Tanggal",
@@ -133,11 +133,11 @@
     "timezonePlaceholder": "Cari zona waktu...",
     "weekStartsOnLabel": "Minggu dimulai pada",
     "showCreatedAtLabel": "Tampilkan Tanggal Dibuat di formulir transaksi",
-    "showCreatedAtTooltip": "Menampilkan tanggal dan waktu transaksi pertama kali dibuat pada formulir transaksi. Ini terpisah dari tanggal transaksi dan dapat membantu Anda mengetahui kapan entri sebenarnya ditambahkan ke Monize.",
+    "showCreatedAtTooltip": "Menampilkan tanggal dan waktu transaksi pertama kali dibuat pada formulir transaksi. Ini terpisah dari tanggal transaksi dan dapat membantu Anda mengetahui kapan entri sebenarnya ditambahkan ke Artha.",
     "showWhatsNewLabel": "Tampilkan Yang Baru setelah pembaruan",
-    "showWhatsNewTooltip": "Menampilkan ringkasan catatan rilis saat pertama kali Anda masuk setelah Monize diperbarui ke versi baru. Anda selalu dapat membukanya kembali dengan mengeklik nomor versi di bagian bawah halaman ini atau di layar masuk.",
+    "showWhatsNewTooltip": "Menampilkan ringkasan catatan rilis saat pertama kali Anda masuk setelah Artha diperbarui ke versi baru. Anda selalu dapat membukanya kembali dengan mengeklik nomor versi di bagian bawah halaman ini atau di layar masuk.",
     "lockReconciledLabel": "Kunci transaksi yang direkonsiliasi",
-    "lockReconciledTooltip": "Saat ini nonaktif, Monize memperingatkan Anda sebelum perubahan yang akan menggeser tanggal atau jumlah transaksi yang direkonsiliasi, lalu mengizinkannya. Saat aktif, transaksi yang direkonsiliasi sama sekali tidak dapat diedit, dihapus, atau dibatalkan rekonsiliasinya. Nonaktifkan lagi untuk melakukan koreksi.",
+    "lockReconciledTooltip": "Saat ini nonaktif, Artha memperingatkan Anda sebelum perubahan yang akan menggeser tanggal atau jumlah transaksi yang direkonsiliasi, lalu mengizinkannya. Saat aktif, transaksi yang direkonsiliasi sama sekali tidak dapat diedit, dihapus, atau dibatalkan rekonsiliasinya. Nonaktifkan lagi untuk melakukan koreksi.",
     "timeFormatLabel": "Format Waktu",
     "timeFormatOptions": {
       "h24": "24 jam (14:30)",
@@ -250,13 +250,13 @@
       "collapsedDevicesUnavailable": "Daftar perangkat tidak tersedia",
       "diagnostics": {
         "summary": "Diagnostik notifikasi",
-        "intro": "Apa yang dilaporkan peramban dan perangkat ini ke Monize tentang notifikasi. Segarkan setelah mengubah pengaturan, lalu gunakan Salin untuk mengirim laporan lengkap.",
+        "intro": "Apa yang dilaporkan peramban dan perangkat ini ke Artha tentang notifikasi. Segarkan setelah mengubah pengaturan, lalu gunakan Salin untuk mengirim laporan lengkap.",
         "refresh": "Segarkan",
         "copy": "Salin laporan",
         "copied": "Diagnostik disalin ke papan klip"
       },
-      "description": "Daftarkan perangkat ini agar Monize dapat menghubunginya bahkan saat aplikasi ditutup. Untuk saat ini hanya notifikasi uji yang dikirim lewat jalur ini; sisanya tetap masuk ke bel.",
-      "androidNotify": "Di Android, izin yang diberikan saja tidak cukup: sistem masih dapat menyembunyikan notifikasi. Tekan dan tahan ikon Monize di layar utama, ketuk Info aplikasi, lalu Notifikasi, dan pastikan semuanya aktif.",
+      "description": "Daftarkan perangkat ini agar Artha dapat menghubunginya bahkan saat aplikasi ditutup. Untuk saat ini hanya notifikasi uji yang dikirim lewat jalur ini; sisanya tetap masuk ke bel.",
+      "androidNotify": "Di Android, izin yang diberikan saja tidak cukup: sistem masih dapat menyembunyikan notifikasi. Tekan dan tahan ikon Artha di layar utama, ketuk Info aplikasi, lalu Notifikasi, dan pastikan semuanya aktif.",
       "permissionHint": "Saat Anda mengaktifkannya, peramban akan meminta izin untuk menampilkan notifikasi. Tidak ada yang dikirim sebelum Anda mengizinkan.",
       "enableButton": "Aktifkan di perangkat ini",
       "enablingButton": "Mengaktifkan...",
@@ -267,16 +267,16 @@
       "unifiedpushBadge": "UnifiedPush",
       "unnamedDevice": "Perangkat tanpa nama",
       "noLiveDevices": "Belum ada perangkat terdaftar. Aktifkan push di perangkat ini untuk mengirim uji coba.",
-      "notConfigured": "Push peramban tidak tersedia di instans Monize ini. Administrator dapat mengaktifkannya di area Admin.",
-      "disabledByAdmin": "Administrator telah mematikan push peramban untuk instans Monize ini.",
-      "keyUnreadable": "Monize tidak dapat membaca pasangan kunci push instans ini, sehingga tidak ada yang terkirim. Administrator dapat memulihkannya dengan merotasi pasangan kunci di area Admin.",
-      "serverKeyMissing": "Instance Monize ini tidak memiliki kunci enkripsi yang dibutuhkan untuk membuka pasangan kunci push-nya, sehingga tidak ada yang dapat dikirim. Administrator harus menyetelnya di deployment dan memulai ulang.",
-      "statusUnavailable": "Monize tidak dapat memeriksa apakah push peramban tersedia. Muat ulang halaman untuk mencoba lagi.",
-      "devicesUnavailable": "Monize tidak dapat memuat perangkat terdaftar Anda. Semua hal lain di halaman ini tetap berfungsi; muat ulang untuk mencoba lagi.",
+      "notConfigured": "Push peramban tidak tersedia di instans Artha ini. Administrator dapat mengaktifkannya di area Admin.",
+      "disabledByAdmin": "Administrator telah mematikan push peramban untuk instans Artha ini.",
+      "keyUnreadable": "Artha tidak dapat membaca pasangan kunci push instans ini, sehingga tidak ada yang terkirim. Administrator dapat memulihkannya dengan merotasi pasangan kunci di area Admin.",
+      "serverKeyMissing": "Instance Artha ini tidak memiliki kunci enkripsi yang dibutuhkan untuk membuka pasangan kunci push-nya, sehingga tidak ada yang dapat dikirim. Administrator harus menyetelnya di deployment dan memulai ulang.",
+      "statusUnavailable": "Artha tidak dapat memeriksa apakah push peramban tersedia. Muat ulang halaman untuk mencoba lagi.",
+      "devicesUnavailable": "Artha tidak dapat memuat perangkat terdaftar Anda. Semua hal lain di halaman ini tetap berfungsi; muat ulang untuk mencoba lagi.",
       "unsupported": {
         "unsupported": "Peramban ini tidak dapat menerima notifikasi push.",
-        "denied": "Notifikasi diblokir untuk Monize di peramban ini. Izinkan di pengaturan situs peramban, lalu muat ulang halaman ini.",
-        "ios-browser": "Di iPhone dan iPad, notifikasi push hanya berfungsi setelah Monize dipasang ke Layar Utama. Gunakan Bagikan, lalu Tambahkan ke Layar Utama, dan buka Monize dari sana."
+        "denied": "Notifikasi diblokir untuk Artha di peramban ini. Izinkan di pengaturan situs peramban, lalu muat ulang halaman ini.",
+        "ios-browser": "Di iPhone dan iPad, notifikasi push hanya berfungsi setelah Artha dipasang ke Layar Utama. Gunakan Bagikan, lalu Tambahkan ke Layar Utama, dan buka Artha dari sana."
       },
       "disabledReason": {
         "GONE": "Tidak dapat dijangkau lagi. Aktifkan kembali push di peramban tersebut.",
@@ -286,10 +286,10 @@
       "toasts": {
         "enabled": "Notifikasi push diaktifkan di perangkat ini",
         "enableFailed": "Tidak dapat mengaktifkan notifikasi push",
-        "permissionDenied": "Peramban ini memblokir notifikasi Monize. Izinkan di pengaturan situs lalu coba lagi.",
-        "permissionDeniedIos": "Notifikasi diblokir untuk Monize. Buka Pengaturan iOS, lalu Notifikasi, lalu Monize, untuk mengizinkannya.",
+        "permissionDenied": "Peramban ini memblokir notifikasi Artha. Izinkan di pengaturan situs lalu coba lagi.",
+        "permissionDeniedIos": "Notifikasi diblokir untuk Artha. Buka Pengaturan iOS, lalu Notifikasi, lalu Artha, untuk mengizinkannya.",
         "permissionDismissed": "Notifikasi tidak diaktifkan. Pilih Izinkan saat peramban bertanya.",
-        "permissionNoPrompt": "Notifikasi tidak diaktifkan dan tidak ada permintaan yang muncul. Buka Pengaturan iOS, lalu Notifikasi, lalu Monize, dan izinkan di sana. Jika Monize tidak ada dalam daftar, hapus dari Layar Utama, tambahkan kembali (Bagikan, lalu Tambah ke Layar Utama) lalu coba sekali lagi.",
+        "permissionNoPrompt": "Notifikasi tidak diaktifkan dan tidak ada permintaan yang muncul. Buka Pengaturan iOS, lalu Notifikasi, lalu Artha, dan izinkan di sana. Jika Artha tidak ada dalam daftar, hapus dari Layar Utama, tambahkan kembali (Bagikan, lalu Tambah ke Layar Utama) lalu coba sekali lagi.",
         "removed": "Perangkat dihapus",
         "removeFailed": "Tidak dapat menghapus perangkat",
         "testSent": "{count, plural, other {Notifikasi uji coba dikirim ke # perangkat}}",
@@ -325,7 +325,7 @@
     },
     "preferences": {
       "heading": "Cara memberi tahu saya",
-      "description": "Pilih jenis mana yang dikirim Monize lewat email atau push, dan seberapa sering.",
+      "description": "Pilih jenis mana yang dikirim Artha lewat email atau push, dan seberapa sering.",
       "categoryHeader": "Notifikasi",
       "channels": {
         "emailReport": "Email (laporan)",
@@ -394,7 +394,7 @@
   "about": {
     "heading": "Tentang",
     "description": "Apa yang dijalankan instans ini, serta di mana menemukan catatan rilis, lisensi, dan kebijakan keamanan.",
-    "appName": "Monize",
+    "appName": "Artha",
     "tagline": "Manajemen keuangan pribadi yang di-host sendiri.",
     "versionLabel": "Versi",
     "versionUnknown": "Tidak diketahui",
@@ -417,7 +417,7 @@
     },
     "license": {
       "label": "Lisensi",
-      "description": "Monize adalah perangkat lunak bebas di bawah GNU AGPL v3."
+      "description": "Artha adalah perangkat lunak bebas di bawah GNU AGPL v3."
     },
     "securityPolicy": {
       "label": "Kebijakan keamanan",
@@ -595,7 +595,7 @@
   },
   "autoBackup": {
     "heading": "Pencadangan Otomatis",
-    "description": "Cadangkan data Anda secara otomatis ke folder sesuai jadwal. Karena Monize berjalan di Docker, Anda harus memetakan folder host ke dalam kontainer sebagai volume (misalnya, -v /host/backups:/data/backups).",
+    "description": "Cadangkan data Anda secara otomatis ke folder sesuai jadwal. Karena Artha berjalan di Docker, Anda harus memetakan folder host ke dalam kontainer sebagai volume (misalnya, -v /host/backups:/data/backups).",
     "adminManagedNote": "Hanya administrator yang dapat mengubah pengaturan ini. Semua pengguna lain dicadangkan secara otomatis dengan jadwal dan kebijakan retensi yang sama, masing-masing ke folder sendiri.",
     "loadingText": "Memuat...",
     "enableLabel": "Aktifkan pencadangan otomatis",
@@ -756,20 +756,20 @@
     "sharedDataLabel": "Data bersama: {count}",
     "editAccessButton": "Edit akses",
     "resetPasswordButton": "Atur ulang kata sandi",
-    "resetPasswordDisabledTitle": "Orang ini mengelola kata sandi mereka sendiri (mereka memiliki akun Monize sendiri atau akses delegasi di tempat lain).",
+    "resetPasswordDisabledTitle": "Orang ini mengelola kata sandi mereka sendiri (mereka memiliki akun Artha sendiri atau akses delegasi di tempat lain).",
     "removeButton": "Hapus",
     "createModal": {
       "title": "Tambah delegasi",
       "description": "Berikan akses terbatas kepada orang lain ke akun Anda.",
       "emailLabel": "Surel",
       "emailPlaceholder": "Surel delegasi",
-      "checkingEmail": "Memeriksa email ini terhadap akun Monize yang sudah ada…",
+      "checkingEmail": "Memeriksa email ini terhadap akun Artha yang sudah ada…",
       "retryEmailCheck": "Periksa lagi",
       "firstNameLabel": "Nama depan",
       "firstNamePlaceholder": "Nama depan (opsional)",
       "lastNameLabel": "Nama belakang",
       "lastNamePlaceholder": "Nama belakang (opsional)",
-      "existingAccountNotice": "Orang ini sudah memiliki login Monize. Mereka akan menyimpan kredensial mereka sendiri dan hanya diberikan akses bersama tambahan — tidak diperlukan kata sandi atau undangan.",
+      "existingAccountNotice": "Orang ini sudah memiliki login Artha. Mereka akan menyimpan kredensial mereka sendiri dan hanya diberikan akses bersama tambahan — tidak diperlukan kata sandi atau undangan.",
       "sendInviteLabel": "Kirim undangan surel alih-alih menetapkan kata sandi",
       "passwordLabel": "Kata Sandi",
       "passwordPlaceholder": "Tetapkan kata sandi",
@@ -777,7 +777,7 @@
     },
     "revokeDialog": {
       "title": "Hapus delegasi",
-      "message": "Hapus delegasi ini? Mereka kehilangan akses ke akun Anda. Jika mereka tidak memiliki akses bersama lain dan tidak pernah mengklaim surel ini sebagai akun Monize mereka sendiri, login yang dikelola pemilik juga dihapus.",
+      "message": "Hapus delegasi ini? Mereka kehilangan akses ke akun Anda. Jika mereka tidak memiliki akses bersama lain dan tidak pernah mengklaim surel ini sebagai akun Artha mereka sendiri, login yang dikelola pemilik juga dihapus.",
       "removingButton": "Menghapus...",
       "removeButton": "Hapus"
     },
@@ -801,7 +801,7 @@
       "revokeFailed": "Gagal mencabut delegasi",
       "resetPasswordFailed": "Gagal mengatur ulang kata sandi",
       "copyFailed": "Tidak dapat menyalin ke papan klip",
-      "lookupFailed": "Tidak dapat memeriksa email ini terhadap akun Monize yang sudah ada. Penambahan delegasi ditunda sampai pemeriksaan itu berhasil, sehingga kata sandi yang sudah ada tidak pernah tertimpa secara keliru."
+      "lookupFailed": "Tidak dapat memeriksa email ini terhadap akun Artha yang sudah ada. Penambahan delegasi ditunda sampai pemeriksaan itu berhasil, sehingga kata sandi yang sudah ada tidak pernah tertimpa secara keliru."
     },
     "jointLabel": "{count, plural, other {# akun bersama}}"
   },
@@ -818,7 +818,7 @@
     "accounts": {
       "noAccounts": "Tidak ada akun untuk diberikan.",
       "grantAll": "Berikan semua",
-      "jointRequiresFullAccount": "Akun bersama hanya dapat dibagikan dengan pengguna yang memiliki akun Monize sendiri"
+      "jointRequiresFullAccount": "Akun bersama hanya dapat dibagikan dengan pengguna yang memiliki akun Artha sendiri"
     },
     "shared": {
       "description": "BACA penerima, kategori dan tag selalu diizinkan. Ini mengendalikan buat/edit/hapus."
@@ -859,7 +859,7 @@
     },
     "toursCard": {
       "title": "Tur Berpandu",
-      "description": "Semua tur yang ditawarkan Monize, lengkap dengan yang sudah Anda lihat. Mulai atau ulangi salah satunya."
+      "description": "Semua tur yang ditawarkan Artha, lengkap dengan yang sudah Anda lihat. Mulai atau ulangi salah satunya."
     },
     "emergencyAccessCard": {
       "title": "Akses Darurat",
@@ -904,7 +904,7 @@
       "how": {
         "intro": "Saat diaktifkan, obrolan AI tidak memanggil LLM sisi server. Sebagai gantinya:",
         "step1": "Anda menjalankan agen MCP (mis. Claude CLI) di mesin Anda sendiri, masuk ke langganan Anda.",
-        "step2": "Agen melakukan long-polling ke Monize untuk perintah yang Anda ketik di obrolan dan menjawabnya menggunakan alat Monize.",
+        "step2": "Agen melakukan long-polling ke Artha untuk perintah yang Anda ketik di obrolan dan menjawabnya menggunakan alat Artha.",
         "step3": "Jawaban dialirkan kembali ke obrolan. Titik status menunjukkan apakah agen Anda terhubung.",
         "note": "Tidak ada yang berjalan hingga agen Anda terhubung dan mendengarkan. Obrolan menampilkan instruksi koneksi."
       }
@@ -1200,7 +1200,7 @@
       "keyUnreadable": "Server ini tidak dapat membaca kunci API yang tersimpan. Ini terjadi saat cadangan dipulihkan ke instance lain, atau setelah kunci enkripsi berubah. Masukkan kembali kuncinya untuk memperbaikinya.",
       "encryptionUnavailable": "Server ini tidak memiliki kunci enkripsi, jadi kunci API tidak dapat disimpan dengan aman. Minta administrator Anda menyiapkannya.",
       "modalTitle": "Google Places",
-      "modalSubtitle": "Monize mengirim nama penerima dan alamat yang sudah Anda miliki ke Google, dan tidak menyimpan apa pun di sana.",
+      "modalSubtitle": "Artha mengirim nama penerima dan alamat yang sudah Anda miliki ke Google, dan tidak menyimpan apa pun di sana.",
       "apiKeyLabel": "Kunci API",
       "apiKeyPlaceholder": "Tempel kunci API Google Places Anda",
       "apiKeyHelp": "Buat kunci di konsol Google Cloud dengan Places API (New) diaktifkan. Biarkan kosong untuk mempertahankan kunci yang sudah disimpan.",

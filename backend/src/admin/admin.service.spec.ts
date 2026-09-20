@@ -289,7 +289,7 @@ describe("AdminService", () => {
       expect(result.temporaryPassword).toBeUndefined();
       expect(emailService.sendMail).toHaveBeenCalledWith(
         "invitee@example.com",
-        "Your Monize account is ready",
+        "Your Artha account is ready",
         expect.stringContaining("reset-password?token="),
       );
     });

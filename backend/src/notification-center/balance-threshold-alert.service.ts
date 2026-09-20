@@ -218,8 +218,8 @@ export function buildBalanceNotification(
         : `${row.name} is above its threshold`,
     message:
       kind === "low"
-        ? `${row.name} dropped to ${Number(row.current_balance)} ${row.currency_code}, below your ${Number(row.threshold)} ${row.currency_code} threshold. Open Monize for the details.`
-        : `${row.name} rose to ${Number(row.current_balance)} ${row.currency_code}, above your ${Number(row.threshold)} ${row.currency_code} threshold. Open Monize for the details.`,
+        ? `${row.name} dropped to ${Number(row.current_balance)} ${row.currency_code}, below your ${Number(row.threshold)} ${row.currency_code} threshold. Open Artha for the details.`
+        : `${row.name} rose to ${Number(row.current_balance)} ${row.currency_code}, above your ${Number(row.threshold)} ${row.currency_code} threshold. Open Artha for the details.`,
     data: {
       accountId,
       accountName: row.name,

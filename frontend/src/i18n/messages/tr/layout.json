@@ -27,8 +27,8 @@
     "dismissAriaLabel": "HTTPS uyarısını kapat"
   },
   "updateBanner": {
-    "availableWithVersion": "Monize v{version} mevcut",
-    "availableGeneric": "Monize'nin yeni bir sürümü mevcut",
+    "availableWithVersion": "Artha v{version} mevcut",
+    "availableGeneric": "Artha'nin yeni bir sürümü mevcut",
     "runningVersion": "(çalışan v{version})",
     "releaseNotes": "Sürüm notları",
     "dismiss": "Kapat",
@@ -134,29 +134,29 @@
     "redonePrefix": "Yeniden Yapıldı: {description}"
   },
   "pageHeader": {
-    "helpAriaLabel": "Bu bölümde yardım için Monize wiki'yi açın",
-    "helpTooltip": "Bu bölümde yardım için Monize wiki'yi açın"
+    "helpAriaLabel": "Bu bölümde yardım için Artha wiki'yi açın",
+    "helpTooltip": "Bu bölümde yardım için Artha wiki'yi açın"
   },
   "bootSplash": {
-    "loading": "Monize yükleniyor",
+    "loading": "Artha yükleniyor",
     "slowMessage": "Bu beklenenden uzun sürüyor. Bağlantınızı kontrol edin.",
     "reload": "Uygulamayı yeniden yükle"
   },
   "offlineFallback": {
     "title": "Bağlanılamıyor",
-    "message": "Monize sunucuya ulaşamadı. Bağlantınızı kontrol edip yeniden deneyin.",
+    "message": "Artha sunucuya ulaşamadı. Bağlantınızı kontrol edip yeniden deneyin.",
     "retry": "Yeniden dene"
   },
   "pushBanner": {
     "enableTitle": "Bildirimler açılsın mı?",
-    "enableBody": "Monize bu cihazda faturaları ve bütçe sınırlarını, uygulama kapalıyken de hatırlatabilir. Tarayıcınız izin isteyecek.",
+    "enableBody": "Artha bu cihazda faturaları ve bütçe sınırlarını, uygulama kapalıyken de hatırlatabilir. Tarayıcınız izin isteyecek.",
     "enableButton": "Aç",
     "enabling": "Açılıyor…",
-    "installIosTitle": "Önce Monize'yi ana ekrana ekleyin.",
-    "installIosBody": "iPhone ve iPad'de bildirimler yalnızca kurulu uygulamadan çalışır. Paylaş'a, sonra Ana Ekrana Ekle'ye dokunun ve Monize'yi oradan açın.",
-    "blockedTitle": "Monize için bildirimler engellenmiş.",
-    "blockedBody": "Bu sayfa için tarayıcınızın site ayarlarından izin verin. Monize kendiliğinden yeniden soramaz.",
-    "blockedIosBody": "iOS Ayarlar'ı açın, sonra Bildirimler, sonra Monize, ve orada izin verin. Monize listede yoksa ana ekrandan kaldırıp yeniden ekleyin.",
+    "installIosTitle": "Önce Artha'yi ana ekrana ekleyin.",
+    "installIosBody": "iPhone ve iPad'de bildirimler yalnızca kurulu uygulamadan çalışır. Paylaş'a, sonra Ana Ekrana Ekle'ye dokunun ve Artha'yi oradan açın.",
+    "blockedTitle": "Artha için bildirimler engellenmiş.",
+    "blockedBody": "Bu sayfa için tarayıcınızın site ayarlarından izin verin. Artha kendiliğinden yeniden soramaz.",
+    "blockedIosBody": "iOS Ayarlar'ı açın, sonra Bildirimler, sonra Artha, ve orada izin verin. Artha listede yoksa ana ekrandan kaldırıp yeniden ekleyin.",
     "dismiss": "Şimdi değil"
   }
 }

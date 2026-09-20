@@ -124,7 +124,7 @@ export class UpdatesService implements OnModuleInit {
       const response = await fetch(GITHUB_LATEST_RELEASE_URL, {
         headers: {
           Accept: "application/vnd.github+json",
-          "User-Agent": "Monize-UpdateCheck",
+          "User-Agent": "Artha-UpdateCheck",
         },
         signal: controller.signal,
       });

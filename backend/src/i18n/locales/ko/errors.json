@@ -265,7 +265,7 @@
     "readRequiredForWrite": "생성, 편집 또는 삭제에는 읽기 권한이 필요합니다",
     "accountsNotOwned": "하나 이상의 계정이 귀하의 소유가 아닙니다",
     "cannotResetSsoPassword": "SSO 대리인 계정의 비밀번호는 재설정할 수 없습니다",
-    "delegateManagesOwnPassword": "이 대리인은 자신의 비밀번호를 직접 관리합니다 (자신의 Monize 계정이 있거나 다른 곳에서 위임 접근 권한을 가지고 있습니다). 본인만 변경할 수 있습니다.",
+    "delegateManagesOwnPassword": "이 대리인은 자신의 비밀번호를 직접 관리합니다 (자신의 Artha 계정이 있거나 다른 곳에서 위임 접근 권한을 가지고 있습니다). 본인만 변경할 수 있습니다.",
     "accountIdsMustBeArray": "accountIds는 배열이어야 합니다",
     "actionNotAvailableAsDelegate": "다른 사용자를 대신하여 작업하는 동안에는 이 작업을 사용할 수 없습니다. 계정 소유자만 수행할 수 있습니다.",
     "capabilityNotGranted": "계정 소유자가 {{ resource }}을(를) {{ operation }}할 권한을 부여하지 않았습니다. 위임 접근 설정에서 이를 활성화하도록 요청하세요.",
@@ -276,7 +276,7 @@
     "jointAccountTypeReadOnly": "이 계좌 유형은 읽기 전용으로 공유됩니다. 거래는 소유자만 변경할 수 있습니다.",
     "jointOwnAccountNetWorth": "본인 계좌에는 해당 계좌의 순자산 설정을 사용하세요.",
     "jointRequiresRead": "계좌를 공동으로 표시하려면 읽기 권한이 필요합니다",
-    "jointRequiresFullAccount": "공동 계좌는 자신의 Monize 계정이 있는 사용자와만 공유할 수 있습니다",
+    "jointRequiresFullAccount": "공동 계좌는 자신의 Artha 계정이 있는 사용자와만 공유할 수 있습니다",
     "jointPayeeCreateNotGranted": "계좌 소유자가 수취인 생성 권한을 부여하지 않았습니다. 기존 수취인 중에서 선택하세요.",
     "jointCategoryCreateNotGranted": "계좌 소유자가 카테고리 생성 권한을 부여하지 않았습니다. 기존 카테고리 중에서 선택하세요.",
     "jointTagsNotAllowed": "태그는 개인용이므로 공유 계좌의 거래에는 설정할 수 없습니다.",
@@ -315,7 +315,7 @@
     "mnyNoFile": "업로드된 Money 파일이 없습니다",
     "mnyFileTruncated": "이 Money 파일은 불완전해 보입니다. 업로드가 중단되었을 수 있습니다. 다시 시도하세요.",
     "mnyNotAMoneyFile": "이 파일은 Microsoft Money(.mny) 파일이 아닙니다",
-    "mnyUnsupportedVersion": "이 파일은 Monize가 읽을 수 없는 Money 97 또는 98로 작성되었습니다. 무료 Money Plus Sunset 버전에서 한 번 열어 저장한 뒤 그 결과를 가져오세요.",
+    "mnyUnsupportedVersion": "이 파일은 Artha가 읽을 수 없는 Money 97 또는 98로 작성되었습니다. 무료 Money Plus Sunset 버전에서 한 번 열어 저장한 뒤 그 결과를 가져오세요.",
     "mnyPasswordRequired": "이 Money 파일은 암호로 보호되어 있습니다. 계속하려면 암호를 입력하세요.",
     "mnyPasswordIncorrect": "이 암호로는 Money 파일을 열 수 없습니다. 확인 후 다시 시도하세요.",
     "mnyUnreadableDatabase": "이 Money 파일은 복호화되었지만 내용을 읽을 수 없습니다. 손상되었을 수 있습니다.",
@@ -347,8 +347,8 @@
     "reminderOnReminder": "알림이 생성한 알림에는 리마인더를 설정할 수 없습니다. 원래 알림에 설정하세요."
   },
   "push": {
-    "channelUnavailable": "이 Monize 인스턴스에서는 푸시 알림을 사용할 수 없습니다.",
-    "endpointClaimed": "이 브라우저는 이미 다른 Monize 계정에 등록되어 있습니다. 이 브라우저에서 해당 계정을 로그아웃한 뒤 다시 시도하세요.",
+    "channelUnavailable": "이 Artha 인스턴스에서는 푸시 알림을 사용할 수 없습니다.",
+    "endpointClaimed": "이 브라우저는 이미 다른 Artha 계정에 등록되어 있습니다. 이 브라우저에서 해당 계정을 로그아웃한 뒤 다시 시도하세요.",
     "deviceNotFound": "푸시 기기를 찾을 수 없습니다.",
     "noDevices": "이 계정에 등록된 푸시 기기가 없습니다. 먼저 이 브라우저에서 푸시 알림을 켜세요.",
     "rotationUnavailable": "ENCRYPTION_KEY가 설정되지 않아 새 개인 키를 암호화해 저장할 수 없습니다. 교체하기 전에 설정하고 다시 시작하세요.",
@@ -613,6 +613,6 @@
     "capReached": "이번 달 Google Places 요청 한도에 도달했습니다.",
     "testFailed": "Google Places 연결 테스트에 실패했습니다.",
     "referrerRestricted": "이 키는 HTTP 리퍼러로 제한되어 있지만 이 배포에는 PUBLIC_APP_URL이 설정되어 있지 않아 리퍼러가 전송되지 않으며 어떤 허용 목록과도 일치할 수 없습니다. PUBLIC_APP_URL을 설정하거나, 서버 측 키를 실제로 보호하는 IP 주소 제한을 사용하세요.",
-    "referrerRejected": "Google가 이 키의 HTTP 리퍼러 제한을 거부했습니다. Monize는 \"{referer}\"를 전송합니다(PUBLIC_APP_URL 기준). 해당 값을 그대로 키의 허용 리퍼러에 추가하세요. *.example.com/* 같은 패턴은 순수한 example.com과 일치하지 않습니다. 서버 측 키를 실제로 보호하는 것은 IP 주소 제한입니다."
+    "referrerRejected": "Google가 이 키의 HTTP 리퍼러 제한을 거부했습니다. Artha는 \"{referer}\"를 전송합니다(PUBLIC_APP_URL 기준). 해당 값을 그대로 키의 허용 리퍼러에 추가하세요. *.example.com/* 같은 패턴은 순수한 example.com과 일치하지 않습니다. 서버 측 키를 실제로 보호하는 것은 IP 주소 제한입니다."
   }
 }

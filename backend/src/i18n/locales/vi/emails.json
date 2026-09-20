@@ -1,13 +1,13 @@
 {
   "test": {
-    "subject": "Email thử nghiệm từ Monize",
-    "heading": "Email thử nghiệm từ Monize",
+    "subject": "Email thử nghiệm từ Artha",
+    "heading": "Email thử nghiệm từ Artha",
     "greeting": "Xin chào {{ name }},",
-    "body": "Đây là email thử nghiệm từ Monize. Nếu bạn nhận được email này, thông báo qua email của bạn đang hoạt động bình thường."
+    "body": "Đây là email thử nghiệm từ Artha. Nếu bạn nhận được email này, thông báo qua email của bạn đang hoạt động bình thường."
   },
   "billReminder": {
-    "subjectOne": "Monize: 1 hóa đơn sắp tới cần chú ý",
-    "subjectMany": "Monize: {{ count }} hóa đơn sắp tới cần chú ý",
+    "subjectOne": "Artha: 1 hóa đơn sắp tới cần chú ý",
+    "subjectMany": "Artha: {{ count }} hóa đơn sắp tới cần chú ý",
     "heading": "Nhắc nhở hóa đơn sắp tới",
     "greeting": "Xin chào {{ name }},",
     "introOne": "Bạn có 1 hóa đơn sắp tới cần chú ý:",
@@ -23,8 +23,8 @@
     "button": "Xem hóa đơn &amp; tiền gửi"
   },
   "mortgageReminder": {
-    "subject": "Monize: 1 hợp đồng thế chấp sắp gia hạn",
-    "subjectPlural": "Monize: {{ count }} hợp đồng thế chấp sắp gia hạn",
+    "subject": "Artha: 1 hợp đồng thế chấp sắp gia hạn",
+    "subjectPlural": "Artha: {{ count }} hợp đồng thế chấp sắp gia hạn",
     "heading": "Nhắc nhở gia hạn thế chấp",
     "greeting": "Xin chào {{ name }},",
     "introOne": "Bạn có 1 khoản thế chấp sắp gia hạn kỳ hạn. Liên hệ với người cho vay để thảo luận về các lựa chọn gia hạn trước khi kỳ hạn kết thúc:",
@@ -43,8 +43,8 @@
     "info": "Thông tin"
   },
   "budgetAlertImmediate": {
-    "subject": "Monize: Cảnh báo - {{ title }}",
-    "subjectPlural": "Monize: {{ count }} cảnh báo cần chú ý",
+    "subject": "Artha: Cảnh báo - {{ title }}",
+    "subjectPlural": "Artha: {{ count }} cảnh báo cần chú ý",
     "heading": "Cảnh báo",
     "greeting": "Xin chào {{ name }},",
     "intro": "Ngân sách của bạn cần chú ý:",
@@ -54,7 +54,7 @@
     "button": "Xem ngân sách"
   },
   "budgetWeeklyDigest": {
-    "subject": "Monize: Tóm tắt ngân sách hàng tuần của bạn",
+    "subject": "Artha: Tóm tắt ngân sách hàng tuần của bạn",
     "heading": "Tóm tắt ngân sách hàng tuần",
     "greeting": "Xin chào {{ name }},",
     "intro": "Đây là tóm tắt ngân sách hàng tuần của bạn cho: <strong>{{ budgets }}</strong>",
@@ -72,8 +72,8 @@
     "button": "Xem bảng điều khiển ngân sách"
   },
   "budgetMonthlySummary": {
-    "subject": "Monize: Tóm tắt ngân sách tháng - {{ period }}",
-    "subjectPlural": "Monize: Tóm tắt ngân sách tháng cho {{ count }} ngân sách",
+    "subject": "Artha: Tóm tắt ngân sách tháng - {{ period }}",
+    "subjectPlural": "Artha: Tóm tắt ngân sách tháng cho {{ count }} ngân sách",
     "heading": "Tóm tắt ngân sách tháng",
     "greeting": "Xin chào {{ name }},",
     "intro": "Đây là tóm tắt ngân sách tháng của bạn cho kỳ vừa kết thúc:",
@@ -87,10 +87,10 @@
     "button": "Xem bảng điều khiển ngân sách"
   },
   "oidcLink": {
-    "subject": "Monize: Xác nhận liên kết tài khoản SSO",
+    "subject": "Artha: Xác nhận liên kết tài khoản SSO",
     "heading": "Liên kết tài khoản SSO của bạn",
     "greeting": "Xin chào {{ name }},",
-    "intro": "Ai đó đã cố gắng đăng nhập qua SSO bằng email trùng với tài khoản Monize hiện có của bạn. Để liên kết danh tính SSO với tài khoản này, hãy nhấp vào nút bên dưới:",
+    "intro": "Ai đó đã cố gắng đăng nhập qua SSO bằng email trùng với tài khoản Artha hiện có của bạn. Để liên kết danh tính SSO với tài khoản này, hãy nhấp vào nút bên dưới:",
     "button": "Xác nhận liên kết tài khoản",
     "disclaimer": "Nếu bạn không khởi tạo yêu cầu này, bạn có thể bỏ qua email này một cách an toàn. Liên kết sẽ hết hạn sau 1 giờ."
   },
@@ -98,11 +98,11 @@
     "subject": "Tài khoản tạm thời bị khóa",
     "heading": "Tài khoản tạm thời bị khóa",
     "greeting": "Xin chào {{ name }},",
-    "body1": "Tài khoản Monize của bạn đã tạm thời bị khóa do nhiều lần đăng nhập thất bại. Đây là biện pháp bảo mật để bảo vệ tài khoản của bạn.",
+    "body1": "Tài khoản Artha của bạn đã tạm thời bị khóa do nhiều lần đăng nhập thất bại. Đây là biện pháp bảo mật để bảo vệ tài khoản của bạn.",
     "body2": "Khóa sẽ tự động hết hạn. Nếu bạn không thực hiện đăng nhập, chúng tôi khuyên bạn nên đặt lại mật khẩu ngay lập tức."
   },
   "passwordReset": {
-    "subject": "Đặt lại mật khẩu Monize",
+    "subject": "Đặt lại mật khẩu Artha",
     "heading": "Yêu cầu đặt lại mật khẩu",
     "greeting": "Xin chào {{ name }},",
     "intro": "Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu của bạn. Nhấp vào nút bên dưới để đặt mật khẩu mới:",
@@ -110,54 +110,54 @@
     "disclaimer": "Liên kết này sẽ hết hạn sau 1 giờ. Nếu bạn không yêu cầu đặt lại mật khẩu, bạn có thể bỏ qua email này một cách an toàn."
   },
   "emailVerification": {
-    "subject": "Xác minh email Monize của bạn",
+    "subject": "Xác minh email Artha của bạn",
     "heading": "Xác minh địa chỉ email của bạn",
     "greeting": "Xin chào {{ name }},",
-    "intro": "Cảm ơn bạn đã đăng ký Monize. Vui lòng xác nhận địa chỉ email của bạn để kích hoạt tài khoản và đăng nhập:",
+    "intro": "Cảm ơn bạn đã đăng ký Artha. Vui lòng xác nhận địa chỉ email của bạn để kích hoạt tài khoản và đăng nhập:",
     "button": "Xác minh email",
-    "disclaimer": "Liên kết này sẽ hết hạn sau 24 giờ. Nếu bạn không tạo tài khoản Monize, bạn có thể bỏ qua email này một cách an toàn."
+    "disclaimer": "Liên kết này sẽ hết hạn sau 24 giờ. Nếu bạn không tạo tài khoản Artha, bạn có thể bỏ qua email này một cách an toàn."
   },
   "accountInvite": {
-    "subject": "Tài khoản Monize của bạn đã sẵn sàng",
-    "heading": "Tài khoản Monize của bạn đã sẵn sàng",
+    "subject": "Tài khoản Artha của bạn đã sẵn sàng",
+    "heading": "Tài khoản Artha của bạn đã sẵn sàng",
     "greeting": "Xin chào {{ name }},",
-    "intro": "Quản trị viên đã tạo tài khoản Monize cho bạn. Nhấp vào nút bên dưới để đặt mật khẩu và đăng nhập:",
+    "intro": "Quản trị viên đã tạo tài khoản Artha cho bạn. Nhấp vào nút bên dưới để đặt mật khẩu và đăng nhập:",
     "button": "Đặt mật khẩu của bạn",
     "disclaimer": "Liên kết này sẽ hết hạn sau 24 giờ. Nếu bạn không mong đợi điều này, bạn có thể bỏ qua email này một cách an toàn."
   },
   "delegateInvite": {
-    "subject": "Bạn đã được mời vào Monize",
-    "heading": "Bạn đã được mời vào Monize",
+    "subject": "Bạn đã được mời vào Artha",
+    "heading": "Bạn đã được mời vào Artha",
     "greeting": "Xin chào {{ name }},",
-    "intro": "{{ owner }} đã mời bạn truy cập vào tài khoản Monize của họ với tư cách là người được ủy quyền. Nhấp vào nút bên dưới để đặt mật khẩu và bắt đầu:",
+    "intro": "{{ owner }} đã mời bạn truy cập vào tài khoản Artha của họ với tư cách là người được ủy quyền. Nhấp vào nút bên dưới để đặt mật khẩu và bắt đầu:",
     "button": "Đặt mật khẩu của bạn",
     "disclaimer": "Liên kết này sẽ hết hạn sau 24 giờ. Nếu bạn không mong đợi lời mời này, bạn có thể bỏ qua email này một cách an toàn."
   },
   "emergencyAccessReminder": {
-    "subjectOne": "Monize: tài khoản của bạn đã không hoạt động 1 ngày",
-    "subjectMany": "Monize: tài khoản của bạn đã không hoạt động {{ daysSinceLogin }} ngày",
-    "heading": "Nhắc nhở truy cập khẩn cấp Monize",
+    "subjectOne": "Artha: tài khoản của bạn đã không hoạt động 1 ngày",
+    "subjectMany": "Artha: tài khoản của bạn đã không hoạt động {{ daysSinceLogin }} ngày",
+    "heading": "Nhắc nhở truy cập khẩn cấp Artha",
     "greeting": "Xin chào {{ name }},",
     "grantPhraseToday": "hôm nay",
     "grantPhraseFutureOne": "sau 1 ngày",
     "grantPhraseFutureMany": "sau {{ count }} ngày",
-    "bodyOne": "Bạn đã không đăng nhập vào Monize trong <strong>1 ngày</strong>. Nếu bạn vẫn không hoạt động, các liên hệ khẩn cấp được chỉ định của bạn sẽ được cấp quyền truy cập đầy đủ vào tài khoản của bạn {{ grantPhrase }}.",
-    "bodyMany": "Bạn đã không đăng nhập vào Monize trong <strong>{{ daysSinceLogin }} ngày</strong>. Nếu bạn vẫn không hoạt động, các liên hệ khẩn cấp được chỉ định của bạn sẽ được cấp quyền truy cập đầy đủ vào tài khoản của bạn {{ grantPhrase }}.",
+    "bodyOne": "Bạn đã không đăng nhập vào Artha trong <strong>1 ngày</strong>. Nếu bạn vẫn không hoạt động, các liên hệ khẩn cấp được chỉ định của bạn sẽ được cấp quyền truy cập đầy đủ vào tài khoản của bạn {{ grantPhrase }}.",
+    "bodyMany": "Bạn đã không đăng nhập vào Artha trong <strong>{{ daysSinceLogin }} ngày</strong>. Nếu bạn vẫn không hoạt động, các liên hệ khẩn cấp được chỉ định của bạn sẽ được cấp quyền truy cập đầy đủ vào tài khoản của bạn {{ grantPhrase }}.",
     "contactsLabel": "Các liên hệ được chỉ định:",
     "button": "Đăng nhập ngay",
     "footer": "Đăng nhập sẽ đặt lại bộ đếm thời gian. Nếu bạn không muốn tính năng này được bật nữa, bạn có thể tắt nó từ Cài đặt → Truy cập khẩn cấp."
   },
   "emergencyAccessGrant": {
-    "subject": "Bạn đã được cấp quyền truy cập khẩn cấp vào tài khoản Monize của {{ owner }}",
+    "subject": "Bạn đã được cấp quyền truy cập khẩn cấp vào tài khoản Artha của {{ owner }}",
     "heading": "Đã cấp quyền truy cập khẩn cấp",
     "greeting": "Xin chào {{ name }},",
-    "body": "<strong>{{ owner }}</strong> trước đây đã chỉ định bạn là liên hệ khẩn cấp trên tài khoản Monize của họ. Vì họ đã không đăng nhập trong một thời gian dài, bạn hiện đang được cấp quyền truy cập đầy đủ để tiếp quản tài khoản.",
+    "body": "<strong>{{ owner }}</strong> trước đây đã chỉ định bạn là liên hệ khẩn cấp trên tài khoản Artha của họ. Vì họ đã không đăng nhập trong một thời gian dài, bạn hiện đang được cấp quyền truy cập đầy đủ để tiếp quản tài khoản.",
     "claimIntro": "Để yêu cầu quyền truy cập, nhấp vào liên kết bên dưới và đặt mật khẩu mới. Bạn sẽ được đăng nhập với tư cách là chủ tài khoản.",
     "button": "Yêu cầu truy cập khẩn cấp",
     "expiry": "Liên kết này có giá trị đến <strong>{{ expiry }}</strong> và chỉ có thể sử dụng một lần. Nếu nhiều liên hệ nhận được email này, người đầu tiên yêu cầu sẽ tiếp quản tài khoản."
   },
   "emergencyAccessGrantRevoked": {
-    "subject": "Monize: quyền truy cập khẩn cấp đã được cấp khi bạn vắng mặt",
+    "subject": "Artha: quyền truy cập khẩn cấp đã được cấp khi bạn vắng mặt",
     "heading": "Quyền truy cập khẩn cấp đã được cấp khi bạn vắng mặt",
     "greeting": "Xin chào {{ name }},",
     "body1": "Do tài khoản của bạn không hoạt động, các liên hệ khẩn cấp được chỉ định của bạn đã được gửi liên kết để tiếp quản tài khoản của bạn. Bạn hiện đã đăng nhập lại, vì vậy <strong>các liên kết đó đã bị thu hồi</strong> và biện pháp bảo vệ đã được tái kích hoạt.",
@@ -165,39 +165,39 @@
     "button": "Xem lại truy cập khẩn cấp"
   },
   "providerOutage": {
-    "subject": "Monize: {{ provider }} không phản hồi",
+    "subject": "Artha: {{ provider }} không phản hồi",
     "heading": "Nhà cung cấp dữ liệu thị trường không khả dụng",
     "greeting": "Xin chào {{ name }},",
-    "intro": "Monize không thể kết nối tới <strong>{{ provider }}</strong> kể từ {{ since }} ({{ duration }}). Các yêu cầu tới nhà cung cấp này tạm dừng và sẽ được thử lại với khoảng cách ngày càng dài.",
+    "intro": "Artha không thể kết nối tới <strong>{{ provider }}</strong> kể từ {{ since }} ({{ duration }}). Các yêu cầu tới nhà cung cấp này tạm dừng và sẽ được thử lại với khoảng cách ngày càng dài.",
     "labelFailures": "Số lần thất bại",
     "labelLastError": "Lỗi gần nhất",
     "labelLastSuccess": "Phản hồi thành công gần nhất",
     "valueNever": "chưa bao giờ",
     "valueUnknown": "không rõ",
-    "impact": "Giá, biểu đồ và so sánh chỉ số phụ thuộc vào nhà cung cấp này có thể bị thiếu hoặc lỗi thời cho đến khi nhà cung cấp phản hồi lại. Không có dữ liệu nào đã lưu trong Monize bị mất.",
+    "impact": "Giá, biểu đồ và so sánh chỉ số phụ thuộc vào nhà cung cấp này có thể bị thiếu hoặc lỗi thời cho đến khi nhà cung cấp phản hồi lại. Không có dữ liệu nào đã lưu trong Artha bị mất.",
     "whatToCheck": "Nếu nhà cung cấp vẫn hoạt động, hãy kiểm tra quyền truy cập mạng đi ra và DNS của máy chủ này -- một container không phân giải hoặc không kết nối được tới nhà cung cấp sẽ lỗi đúng theo cách này.",
     "throttleNote": "Bạn sẽ nhận thêm một email nữa khi nhà cung cấp hoạt động lại. Cảnh báo về cùng một nhà cung cấp được gửi nhiều nhất {{ hours }} giờ một lần, để một nhà cung cấp không ổn định không làm đầy hộp thư của bạn.",
     "durationMinutes": "{{ minutes }} phút",
     "durationHoursMinutes": "{{ hours }} giờ {{ minutes }} phút"
   },
   "providerRecovery": {
-    "subject": "Monize: {{ provider }} đã phản hồi lại",
+    "subject": "Artha: {{ provider }} đã phản hồi lại",
     "heading": "Nhà cung cấp dữ liệu thị trường đã phản hồi lại",
     "greeting": "Xin chào {{ name }},",
     "intro": "<strong>{{ provider }}</strong> đã phản hồi lại vào {{ restoredAt }}. Sự cố kéo dài {{ duration }}.",
     "backfill": "Giá và lịch sử chỉ số bị thiếu trong thời gian sự cố sẽ được lấy ở lần làm mới định kỳ tiếp theo; bạn không cần làm gì."
   },
   "systemAlert": {
-    "subject": "Monize: {{ title }}",
+    "subject": "Artha: {{ title }}",
     "heading": "Cảnh báo hệ thống",
     "greeting": "Xin chào {{ name }},",
-    "intro": "Một sự cố trong bản cài đặt Monize của bạn cần quản trị viên xử lý.",
+    "intro": "Một sự cố trong bản cài đặt Artha của bạn cần quản trị viên xử lý.",
     "footer": "Cảnh báo này cũng hiển thị ở chuông thông báo của ứng dụng. Nó chỉ được tạo tối đa một lần cho mỗi sự cố, bất kể bao nhiêu bản sao máy chủ phát hiện ra."
   },
   "notificationImmediate": {
-    "subject": "Bạn có một thông báo Monize mới",
-    "eyebrow": "Thông báo Monize",
-    "button": "Mở trong Monize",
+    "subject": "Bạn có một thông báo Artha mới",
+    "eyebrow": "Thông báo Artha",
+    "button": "Mở trong Artha",
     "footer": "Bạn nhận được email này vì email tức thì đang bật cho loại thông báo này. Thay đổi trong Cài đặt, Thông báo."
   },
   "notificationCopy": {
@@ -254,7 +254,7 @@
       },
       "smtpFailure": {
         "title": "Gửi email đang thất bại",
-        "message": "Monize không thể gửi email: {{ error }}. Thông báo và lời nhắc không được gửi đi."
+        "message": "Artha không thể gửi email: {{ error }}. Thông báo và lời nhắc không được gửi đi."
       },
       "providerOutage": {
         "title": "{{ provider }} không phản hồi",

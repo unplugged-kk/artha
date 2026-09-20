@@ -6,7 +6,7 @@
   "backToSignIn": "Back to sign in",
   "ownerFallback": "the account owner",
   "ownerFirstNameFallback": "the owner",
-  "intro": "Hi {contactName}, you were designated as an emergency contact on <b>{ownerName}</b>'s Monize account.",
+  "intro": "Hi {contactName}, you were designated as an emergency contact on <b>{ownerName}</b>'s Artha account.",
   "introDetail": "Setting a password here will sign you in as the account holder and give you full access to the account. Existing sessions are revoked and the previous credentials are replaced.",
   "messageHeading": "Message from {name}",
   "newPasswordLabel": "New Password",

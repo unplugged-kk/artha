@@ -27,8 +27,8 @@
     "dismissAriaLabel": "Dispensar aviso HTTPS"
   },
   "updateBanner": {
-    "availableWithVersion": "Monize v{version} disponível",
-    "availableGeneric": "Uma nova versão do Monize está disponível",
+    "availableWithVersion": "Artha v{version} disponível",
+    "availableGeneric": "Uma nova versão do Artha está disponível",
     "runningVersion": "(executando v{version})",
     "releaseNotes": "Notas de versão",
     "dismiss": "Dispensar",
@@ -134,29 +134,29 @@
     "redonePrefix": "Refeito: {description}"
   },
   "pageHeader": {
-    "helpAriaLabel": "Abrir a wiki do Monize para obter ajuda com esta seção",
-    "helpTooltip": "Abrir a wiki do Monize para obter ajuda com esta seção"
+    "helpAriaLabel": "Abrir a wiki do Artha para obter ajuda com esta seção",
+    "helpTooltip": "Abrir a wiki do Artha para obter ajuda com esta seção"
   },
   "bootSplash": {
-    "loading": "Carregando o Monize",
+    "loading": "Carregando o Artha",
     "slowMessage": "Isso está demorando mais que o esperado. Verifique sua conexão.",
     "reload": "Recarregar o aplicativo"
   },
   "offlineFallback": {
     "title": "Não foi possível conectar",
-    "message": "O Monize não conseguiu contatar o servidor. Verifique sua conexão e tente novamente.",
+    "message": "O Artha não conseguiu contatar o servidor. Verifique sua conexão e tente novamente.",
     "retry": "Tentar novamente"
   },
   "pushBanner": {
     "enableTitle": "Ativar as notificações?",
-    "enableBody": "O Monize pode lembrar você de contas e limites de orçamento neste dispositivo, mesmo com o aplicativo fechado. Seu navegador vai pedir permissão.",
+    "enableBody": "O Artha pode lembrar você de contas e limites de orçamento neste dispositivo, mesmo com o aplicativo fechado. Seu navegador vai pedir permissão.",
     "enableButton": "Ativar",
     "enabling": "Ativando…",
-    "installIosTitle": "Adicione o Monize à tela de início primeiro.",
-    "installIosBody": "No iPhone e no iPad as notificações só funcionam pelo aplicativo instalado. Toque em Compartilhar, depois em Adicionar à Tela de Início, e abra o Monize por ali.",
-    "blockedTitle": "As notificações estão bloqueadas para o Monize.",
-    "blockedBody": "Permita-as nas configurações do site do seu navegador para esta página. O Monize não pode pedir de novo por conta própria.",
-    "blockedIosBody": "Abra Ajustes do iOS, depois Notificações, depois Monize, e permita ali. Se o Monize não aparecer na lista, remova-o da tela de início e adicione novamente.",
+    "installIosTitle": "Adicione o Artha à tela de início primeiro.",
+    "installIosBody": "No iPhone e no iPad as notificações só funcionam pelo aplicativo instalado. Toque em Compartilhar, depois em Adicionar à Tela de Início, e abra o Artha por ali.",
+    "blockedTitle": "As notificações estão bloqueadas para o Artha.",
+    "blockedBody": "Permita-as nas configurações do site do seu navegador para esta página. O Artha não pode pedir de novo por conta própria.",
+    "blockedIosBody": "Abra Ajustes do iOS, depois Notificações, depois Artha, e permita ali. Se o Artha não aparecer na lista, remova-o da tela de início e adicione novamente.",
     "dismiss": "Agora não"
   }
 }

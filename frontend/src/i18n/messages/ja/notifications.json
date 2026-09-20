@@ -97,7 +97,7 @@
     },
     "smtpFailure": {
       "title": "メール送信に失敗しています",
-      "message": "Monize はメールを送信できませんでした: {error}。通知やリマインダーが配信されていません。"
+      "message": "Artha はメールを送信できませんでした: {error}。通知やリマインダーが配信されていません。"
     },
     "providerOutage": {
       "title": "{provider} が応答していません",

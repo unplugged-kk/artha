@@ -224,7 +224,7 @@
     "statusLockedToParent": "Bu işlem, bölünmüş bir işlemin parçasıdır. İki tarafın birlikte değişmesi için bunun yerine bölünmüş işlemin durumunu değiştirin.",
     "descriptionPlaceholder": "İsteğe bağlı notlar",
     "splitRatio": "Bölünme oranı",
-    "noSplitRatioWarning": "Bu işlemde bölünme oranı belirlenmemiş. Kaydetmeden önce duyurulduğu şekilde oranı girin — Monize sizin için bir oran varsaymaz.",
+    "noSplitRatioWarning": "Bu işlemde bölünme oranı belirlenmemiş. Kaydetmeden önce duyurulduğu şekilde oranı girin — Artha sizin için bir oran varsaymaz.",
     "newShares": "Yeni hisseler",
     "oldShares": "Eski hisseler",
     "splitRatioHelp": "Duyurulduğu şekilde oranı girin. 2'ye 1 bölünme için 2 yeni ve 1 eski; 1'e 2 ters bölünme için 1 yeni ve 2 eski kullanın. Etkin oran:",

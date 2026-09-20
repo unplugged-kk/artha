@@ -15,7 +15,7 @@
     "showNextLogin": "Mostra al prossimo accesso",
     "close": "Chiudi",
     "unavailable": "Le note di rilascio per questa versione non sono disponibili.",
-    "englishOnly": "Le note di rilascio qui sotto sono solo in inglese. Monize, comprese le visite guidate, segue le tue impostazioni della lingua."
+    "englishOnly": "Le note di rilascio qui sotto sono solo in inglese. Artha, comprese le visite guidate, segue le tue impostazioni della lingua."
   },
   "transferPayee": "{direction, select, to {Trasferimento a {name}} other {Trasferimento da {name}}}",
   "save": "Salva",

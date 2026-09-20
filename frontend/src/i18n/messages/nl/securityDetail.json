@@ -164,7 +164,7 @@
     "sectorTab": "Sector",
     "countryTab": "Land",
     "assetClassTab": "Beleggingscategorie",
-    "sectorEmpty": "Er is geen sectoropbouw opgeslagen. Monize vult die voor fondsen en ETF's aan via de aanbieder.",
+    "sectorEmpty": "Er is geen sectoropbouw opgeslagen. Artha vult die voor fondsen en ETF's aan via de aanbieder.",
     "countryEmpty": "Er is geen landenopbouw opgeslagen. Je kunt die invoeren bij het bewerken van het effect.",
     "assetClassEmpty": "Er is nog geen opbouw naar beleggingscategorie opgeslagen.",
     "remainder": "{percent} niet ingedeeld"

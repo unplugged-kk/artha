@@ -41,27 +41,27 @@ export const PUSH_CATEGORY_COPY: Readonly<
 > = {
   [NotificationCategory.PAYMENTS]: {
     title: "Payment reminder",
-    body: "A bill or scheduled payment needs your attention. Open Monize for the details.",
+    body: "A bill or scheduled payment needs your attention. Open Artha for the details.",
   },
   [NotificationCategory.BUDGETS]: {
     title: "Budget alert",
-    body: "One of your budgets needs your attention. Open Monize for the details.",
+    body: "One of your budgets needs your attention. Open Artha for the details.",
   },
   [NotificationCategory.SYSTEM]: {
     title: "System notice",
-    body: "Monize has a system notice for you. Open the app for the details.",
+    body: "Artha has a system notice for you. Open the app for the details.",
   },
   [NotificationCategory.BALANCES]: {
     title: "Balance alert",
-    body: "An account balance crossed a threshold you set. Open Monize for the details.",
+    body: "An account balance crossed a threshold you set. Open Artha for the details.",
   },
   [NotificationCategory.INVESTMENTS]: {
     title: "Investment movement",
-    body: "Your investments moved today. Open Monize for the details.",
+    body: "Your investments moved today. Open Artha for the details.",
   },
   [NotificationCategory.STRATEGIES]: {
     title: "Strategy signal",
-    body: "One of your strategies changed its recommendation. Open Monize for the details.",
+    body: "One of your strategies changed its recommendation. Open Artha for the details.",
   },
 };
 
@@ -456,7 +456,7 @@ export class NotificationDispatchService {
     );
     const subject = t(
       "emails.notificationImmediate.subject",
-      "You have a new Monize notification",
+      "You have a new Artha notification",
     );
     await this.email.sendMail(recipient.email, subject, html);
   }

@@ -107,9 +107,9 @@
   },
   "notificationsPage": {
     "title": "Powiadomienia",
-    "subtitle": "Kanały dostarczania dostępne w tej instancji Monize i tożsamość push, która za nimi stoi.",
+    "subtitle": "Kanały dostarczania dostępne w tej instancji Artha i tożsamość push, która za nimi stoi.",
     "loading": "Wczytywanie ustawień powiadomień...",
-    "loadUnavailable": "Monize nie odczytał ustawień powiadomień z serwera. Odśwież stronę, aby spróbować ponownie.",
+    "loadUnavailable": "Artha nie odczytał ustawień powiadomień z serwera. Odśwież stronę, aby spróbować ponownie.",
     "channelsHeading": "Kanały dostarczania",
     "identityHeading": "Tożsamość Web Push",
     "perAccountNote": "Urządzenia, powiadomienia testowe i preferencje należą do każdego konta i są zarządzane w Ustawieniach. Administrator konfiguruje instancję i nigdy nie wysyła ani nie widzi cudzych powiadomień.",
@@ -126,9 +126,9 @@
       },
       "webPush": {
         "name": "Push w przeglądarce",
-        "description": "Powiadomienia docierające na telefon lub komputer nawet przy zamkniętym Monize. Nie wymaga Firebase ani konta Google Play czy Apple Developer.",
+        "description": "Powiadomienia docierające na telefon lub komputer nawet przy zamkniętym Artha. Nie wymaga Firebase ani konta Google Play czy Apple Developer.",
         "toggleLabel": "Włącz push w przeglądarce dla tej instancji",
-        "missingKeys": "Ta instancja nie ma pary kluczy push. Ustaw ENCRYPTION_KEY i uruchom ponownie: przy następnym starcie Monize sam wygeneruje parę.",
+        "missingKeys": "Ta instancja nie ma pary kluczy push. Ustaw ENCRYPTION_KEY i uruchom ponownie: przy następnym starcie Artha sam wygeneruje parę.",
         "keyUnreadable": "Ta instancja nie potrafi odszyfrować zapisanej pary kluczy push, więc nic nie jest dostarczane. Wymień parę kluczy poniżej, aby odzyskać kanał.",
         "serverKeyMissing": "Ta instancja nie ma ENCRYPTION_KEY, więc nie może otworzyć zapisanej pary kluczy push. Ustaw ENCRYPTION_KEY we wdrożeniu i zrestartuj — rotacja nie pomoże, dopóki brakuje klucza."
       },
@@ -136,7 +136,7 @@
         "name": "E-mail",
         "description": "Przypomnienia o rachunkach, podsumowania budżetu i alerty systemowe wysyłane na adres e-mail każdego konta.",
         "missingSmtp": "Nie skonfigurowano serwera poczty. Ustaw zmienne środowiskowe SMTP, aby włączyć e-mail.",
-        "statusUnavailable": "Monize nie odczytał stanu serwera poczty."
+        "statusUnavailable": "Artha nie odczytał stanu serwera poczty."
       },
       "ntfy": {
         "name": "ntfy i UnifiedPush",
@@ -152,7 +152,7 @@
       "rotateDescription": "Wymiana zastępuje parę kluczy tej instancji. Każde zarejestrowane urządzenie przestaje być osiągalne i musi ponownie włączyć push, więc wymieniaj klucze tylko wtedy, gdy klucz mógł zostać ujawniony.",
       "rotateButton": "Wymień parę kluczy",
       "rotatingButton": "Wymiana...",
-      "missingEncryptionKey": "Ta instancja nie ma pary kluczy push, ponieważ nie ustawiono ENCRYPTION_KEY, a klucz prywatny musiałby zostać zapisany bez szyfrowania. Ustaw ją i uruchom ponownie: Monize sam wygeneruje parę.",
+      "missingEncryptionKey": "Ta instancja nie ma pary kluczy push, ponieważ nie ustawiono ENCRYPTION_KEY, a klucz prywatny musiałby zostać zapisany bez szyfrowania. Ustaw ją i uruchom ponownie: Artha sam wygeneruje parę.",
       "keyUnreadable": "Ta instancja ma parę kluczy push, której nie potrafi już odszyfrować, więc nic nie jest dostarczane. Dzieje się tak, gdy ENCRYPTION_KEY zmieni się przy działającej bazie albo gdy kopia zapasowa zostanie przywrócona na inną instancję. Wymień parę kluczy, aby odzyskać kanał; każde urządzenie zarejestruje się ponownie.",
       "serverKeyMissing": "Ta instancja nie ma ustawionego ENCRYPTION_KEY, więc nie może otworzyć zapisanej pary kluczy push. Rotacja nie pomoże, dopóki brakuje klucza: ustaw ENCRYPTION_KEY we wdrożeniu i zrestartuj — powiadomienia push zadziałają z dotychczasowymi urządzeniami."
     },

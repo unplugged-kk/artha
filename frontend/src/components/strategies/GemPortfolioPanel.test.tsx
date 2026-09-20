@@ -381,7 +381,7 @@ describe("GemPortfolioPanel", () => {
     // geographic structure rather than the holding, which is fully described.
     expect(
       screen.getByText(
-        /Market exposure cannot be estimated, because EMIM has no country structure recorded in Monize/,
+        /Market exposure cannot be estimated, because EMIM has no country structure recorded in Artha/,
       ),
     ).toBeInTheDocument();
     expect(
@@ -467,7 +467,7 @@ describe("GemPortfolioPanel", () => {
     // "country, asset class or sector" would send the reader to fill in one
     // that cannot decide an equity role.
     expect(
-      screen.getByText(/EMIM has no country structure recorded in Monize/),
+      screen.getByText(/EMIM has no country structure recorded in Artha/),
     ).toBeInTheDocument();
     expect(
       screen.getByText("Fill in the instrument’s geographic structure"),

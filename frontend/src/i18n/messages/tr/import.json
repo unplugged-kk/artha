@@ -396,7 +396,7 @@
       "importPricesHint": "Money'nin her menkul kıymetin gün gün ne ettiğine dair kendi kaydı. Güncel kotasyonlarla başlamayı tercih ediyorsanız bunu kapatın.",
       "importExchangeRates": "Döviz kurlarını içe aktar",
       "importExchangeRatesHint": "Dosyanızdaki para birimleri arasındaki geçmiş kurlar; böylece eski yabancı para işlemleri Money'nin çevirdiği gibi çevrilir.",
-      "wipeExistingData": "Sıfırdan başla: önce mevcut Monize verilerimi kaldır",
+      "wipeExistingData": "Sıfırdan başla: önce mevcut Artha verilerimi kaldır",
       "wipeExistingDataHint": "İçe aktarmadan önce Ayarlar'daki Verilerimi Sil işleminin aynısını çalıştırır. Onaylamanız istenir. Money dosyasını mevcut verilerinize eklemek için kapalı bırakın."
     },
     "warningsHeading": "Bu dosyayla ilgili notlar",
@@ -420,7 +420,7 @@
       "transfer": "Transfer",
       "investment": "Yatırım",
       "splits": "{count, plural, other {# bölme}}",
-      "approximate": "En yakın Monize sıklığı"
+      "approximate": "En yakın Artha sıklığı"
     }
   },
   "mnyWipe": {
@@ -478,15 +478,15 @@
     "existingDataRemoved": "Mevcut verileriniz, istediğiniz gibi bu içe aktarmadan önce kaldırıldı.",
     "verificationHeading": "Bakiye doğrulaması",
     "holdingsHeading": "Pozisyon doğrulaması",
-    "holdingsExplainer": "Monize'nin şu anda tuttuğu hisseler ile Money dosyanızdaki açık vergi lotları. Money'nin kendisi de bu lotlarla mutabakat yapar, dolayısıyla güvenilecek sayı onlardır.",
+    "holdingsExplainer": "Artha'nin şu anda tuttuğu hisseler ile Money dosyanızdaki açık vergi lotları. Money'nin kendisi de bu lotlarla mutabakat yapar, dolayısıyla güvenilecek sayı onlardır.",
     "table": {
       "account": "Hesap",
       "security": "Menkul kıymet",
       "transactions": "İşlemler",
       "expected": "Money dosyasından",
-      "imported": "Monize'da",
+      "imported": "Artha'da",
       "lotShares": "Money'deki hisse",
-      "importedShares": "Monize'deki hisse",
+      "importedShares": "Artha'deki hisse",
       "delta": "Fark",
       "check": "Kontrol et"
     },
@@ -497,7 +497,7 @@
   "mnyWarnings": {
     "missingTable": "Bu Money sürümünde, içe aktarmanın kullandığı {count, plural, other {# tablo}} yok.",
     "missingField": "Bu Money sürümünde {count, plural, other {# alan}} bulunmadığı için varsayılan değer aldı.",
-    "unknownAccountType": "{count, plural, other {# hesap}} Monize'ın tanımadığı bir hesap türüne sahipti ve atlandı.",
+    "unknownAccountType": "{count, plural, other {# hesap}} Artha'ın tanımadığı bir hesap türüne sahipti ve atlandı.",
     "duplicateAccountName": "{count, plural, other {# hesap}} başka bir hesapla aynı adı taşıdığı için yeniden adlandırıldı.",
     "unknownCurrency": "{count, plural, other {# hesap}} dosyada tanımlı olmayan bir para birimine başvuruyor ve temel para birimini kullanıyor.",
     "categoryFlattened": "{count, plural, other {# kategori}} iki düzeyden daha derindi ve üst kategorisine düzleştirildi.",
@@ -511,7 +511,7 @@
     "balanceMismatch": "{count, plural, other {# hesap}} Money dosyasından farklı bir bakiyeyle sonuçlandı.",
     "duplicateSecuritySymbol": "{count, plural, other {# menkul kıymet}} sembolünü bir başkasıyla paylaşıyordu; ayrı kalsınlar diye sonrakiler yeniden adlandırıldı.",
     "generatedSecuritySymbol": "{count, plural, other {# menkul kıymetin}} Money'de sembolü yok; bu yüzden bir yer tutucu üretildi ve fiyat güncellemeleri kapalı bırakıldı.",
-    "unknownInvestmentAction": "{count, plural, other {# yatırım işlemi}} Monize'nin tanımadığı bir eylem kullandı ve atlandı.",
+    "unknownInvestmentAction": "{count, plural, other {# yatırım işlemi}} Artha'nin tanımadığı bir eylem kullandı ve atlandı.",
     "unconfirmedInvestmentAction": "{count, plural, other {# yatırım işlemi}} anlamı belgelenmiş değil çıkarsanmış bir Money eylemi kullandı; bunları Money ile karşılaştırın.",
     "missingInvestmentDetail": "{count, plural, other {# yatırım işleminin}} dosyada hisse ayrıntısı yoktu ve yalnızca nakit tutarıyla içe aktarıldı.",
     "investmentAccountMismatch": "{count, plural, other {# yatırım işlemi}} yatırım hesabı olmayan bir hesaptaydı ve atlandı.",
@@ -519,7 +519,7 @@
     "holdingsMismatch": "{count, plural, other {# pozisyon}} Money dosyanızda kayıtlı hisse adediyle uyuşmuyor.",
     "billTemplateMissing": "{count, plural, other {# planlanmış faturanın}} dosyada şablon işlemi yoktu ve atlandı.",
     "unusableBill": "{count, plural, other {# planlanmış faturanın}} hesabı, kullanılabilir tarihi veya tanınan bir yinelenmesi yoktu ve atlandı.",
-    "billFrequencyApproximated": "{count, plural, other {# planlanmış fatura}} Monize'ın tam olarak ifade edemediği bir yineleme aralığı kullanıyor; en yakın daha kısa aralık kullanıldı.",
+    "billFrequencyApproximated": "{count, plural, other {# planlanmış fatura}} Artha'ın tam olarak ifade edemediği bir yineleme aralığı kullanıyor; en yakın daha kısa aralık kullanıldı.",
     "loanInterestCategoryUnclear": "{count, plural, other {# kredi ödemesi}} ana para dışında birden fazla kategori içeriyordu, bu yüzden kredinin faiz kategorisi ayarlanmadı. Ödemenin emanet (escrow) içerip içermediğini kontrol edin ve içe aktarmadan sonra faiz kategorisini ayarlayın.",
     "showTransactions": "{count, plural, other {# işlemi}} göster",
     "hideTransactions": "İşlemleri gizle",

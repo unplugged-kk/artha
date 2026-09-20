@@ -37,7 +37,7 @@
     "description": "Doorloop de functies van de app stap voor stap.",
     "backLink": "Terug naar instellingen",
     "pageTitle": "Begeleide rondleidingen",
-    "pageSubtitle": "Alle rondleidingen die Monize biedt, op één plek. Start er wanneer je wilt een — je kunt een rondleiding met Escape verlaten en hier weer oppakken.",
+    "pageSubtitle": "Alle rondleidingen die Artha biedt, op één plek. Start er wanneer je wilt een — je kunt een rondleiding met Escape verlaten en hier weer oppakken.",
     "meta": "{steps} · {status}",
     "metaWithRelease": "{steps} · {release} · {status}",
     "stepCount": "{count, plural, one {# stap} other {# stappen}}",
@@ -59,10 +59,10 @@
   },
   "intro": {
     "basics": {
-      "title": "Introductie tot Monize",
+      "title": "Introductie tot Artha",
       "steps": {
         "welcome": {
-          "title": "Welkom bij Monize",
+          "title": "Welkom bij Artha",
           "body": "Deze korte rondleiding laat u de kern van de app zien. U kunt op elk moment stoppen door op **Escape** te drukken of op **Rondleiding beëindigen** te klikken."
         },
         "dashboard": {
@@ -103,7 +103,7 @@
         },
         "currencyField": {
           "title": "Bedrag en valuta",
-          "body": "Voer hier het bedrag van de transactie in. In een andere valuta betaald? Stel naast het bedrag de valuta in en voer het in zoals het in rekening is gebracht — Monize rekent dit om naar de valuta van de rekening."
+          "body": "Voer hier het bedrag van de transactie in. In een andere valuta betaald? Stel naast het bedrag de valuta in en voer het in zoals het in rekening is gebracht — Artha rekent dit om naar de valuta van de rekening."
         },
         "closeForm": {
           "title": "Sluit het formulier om verder te gaan",
@@ -147,7 +147,7 @@
           },
           "fxFeePercent": {
             "title": "Stel de omrekenkosten in",
-            "body": "Voer hier de transactiekosten voor vreemde valuta van de rekening in als percentage — bijvoorbeeld 2,5. Monize verwerkt ze in het omgerekende bedrag van elke buitenlandse aankoop, zodat de kosten automatisch worden vastgelegd."
+            "body": "Voer hier de transactiekosten voor vreemde valuta van de rekening in als percentage — bijvoorbeeld 2,5. Artha verwerkt ze in het omgerekende bedrag van elke buitenlandse aankoop, zodat de kosten automatisch worden vastgelegd."
           },
           "closeAccountForm": {
             "title": "Opslaan en sluiten",
@@ -171,7 +171,7 @@
           },
           "enterAmount": {
             "title": "Voer het in rekening gebrachte bedrag in",
-            "body": "Typ het totaal precies zoals het op uw afschrift staat. Monize zoekt de **wisselkoers** op voor de datum van de transactie, toont het omgerekende totaal ernaast en verwerkt de **transactiekosten voor vreemde valuta** die u op de rekening hebt ingesteld — het bijschrift eronder benoemt beide. Rondde uw bank anders af? Pas de koers of het omgerekende totaal aan tot op de cent."
+            "body": "Typ het totaal precies zoals het op uw afschrift staat. Artha zoekt de **wisselkoers** op voor de datum van de transactie, toont het omgerekende totaal ernaast en verwerkt de **transactiekosten voor vreemde valuta** die u op de rekening hebt ingesteld — het bijschrift eronder benoemt beide. Rondde uw bank anders af? Pas de koers of het omgerekende totaal aan tot op de cent."
           },
           "closeTransactionForm": {
             "title": "Sluit het formulier",
@@ -192,7 +192,7 @@
             "fallbackBody": "Het rapport **Kosten vreemde valuta** brengt buitenlandse aankopen van al uw rekeningen en valuta's samen. Het is nu niet in beeld — een zoekopdracht of een categoriefilter kan het verbergen — maar u vindt het bij **Rapporten**."
           },
           "finish": {
-            "title": "Dit was vreemde valuta in Monize",
+            "title": "Dit was vreemde valuta in Artha",
             "body": "Stel de kosten één keer in, voer aankopen in zoals ze in rekening zijn gebracht, en de kosten houden zichzelf bij. U kunt deze rondleiding altijd opnieuw doen via **Begeleide rondleidingen** in **Instellingen**."
           }
         }
@@ -221,7 +221,7 @@
         "steps": {
           "welcome": {
             "title": "Elk effect op één pagina",
-            "body": "Effecten zaten eerder in drie losse dialoogvensters. Nu heeft elk een eigen pagina die alles samenbrengt: wat je aanhoudt, hoe het is gegaan en alles wat Monize erover weet. Hier de korte versie."
+            "body": "Effecten zaten eerder in drie losse dialoogvensters. Nu heeft elk een eigen pagina die alles samenbrengt: wat je aanhoudt, hoe het is gegaan en alles wat Artha erover weet. Hier de korte versie."
           },
           "openDetail": {
             "title": "Een effect openen",
@@ -238,7 +238,7 @@
           },
           "keyInfo": {
             "title": "Wat het instrument is",
-            "body": "Naast de grafiek: soort effect, beurs, valuta, de koersaanbieder die Monize gebruikt en de laatst vastgelegde koers. Daaronder laat de kaart **Opbouw** zien waaruit een fonds bestaat: wissel tussen de opbouw per sector, per land en per beleggingscategorie."
+            "body": "Naast de grafiek: soort effect, beurs, valuta, de koersaanbieder die Artha gebruikt en de laatst vastgelegde koers. Daaronder laat de kaart **Opbouw** zien waaruit een fonds bestaat: wissel tussen de opbouw per sector, per land en per beleggingscategorie."
           },
           "tabs": {
             "title": "De details eronder",
@@ -259,7 +259,7 @@
           },
           "findReport": {
             "title": "GEM vinden onder Rapporten",
-            "body": "Open hier het rapport **GEM-strategie**. Het staat in de categorie **Beleggingen**. Het rapport is ook beschikbaar wanneer je nog geen beleggingsinstrumenten of posities in Monize hebt vastgelegd.",
+            "body": "Open hier het rapport **GEM-strategie**. Het staat in de categorie **Beleggingen**. Het rapport is ook beschikbaar wanneer je nog geen beleggingsinstrumenten of posities in Artha hebt vastgelegd.",
             "fallbackBody": "De rapportkaart is nu niet zichtbaar, meestal door een filter. Kies **Volgende** en de rondleiding opent het GEM-rapport direct. Later vind je het onder **Rapporten** in de categorie **Beleggingen**."
           },
           "page": {
@@ -272,7 +272,7 @@
           },
           "action": {
             "title": "Een suggestie, geen automatische order",
-            "body": "De grafiek vergelijkt de toegewezen instrumenten. **Wat moet ik doen?** zet het signaal om in een mogelijke verkoop en aankoop en schat belasting en kosten wanneer er genoeg gegevens zijn. Monize stuurt nooit een order naar je broker. Nadat je echt via je broker hebt gehandeld, leg je de boekingen vast in Monize; gebruik **Markeren als uitgevoerd** daarna alleen als aantekening dat je het signaal hebt uitgevoerd."
+            "body": "De grafiek vergelijkt de toegewezen instrumenten. **Wat moet ik doen?** zet het signaal om in een mogelijke verkoop en aankoop en schat belasting en kosten wanneer er genoeg gegevens zijn. Artha stuurt nooit een order naar je broker. Nadat je echt via je broker hebt gehandeld, leg je de boekingen vast in Artha; gebruik **Markeren als uitgevoerd** daarna alleen als aantekening dat je het signaal hebt uitgevoerd."
           },
           "reasoning": {
             "title": "Waarom koos GEM dit?",
@@ -296,7 +296,7 @@
           },
           "addInstruments": {
             "title": "Nog geen instrumenten? Begin hier",
-            "body": "GEM heeft in elke rol een instrument nodig om iets te kunnen beslissen. Is een rol leeg, dan biedt de kaart **Rollen en instrumenten** een snelkoppeling die voorbeeld-ETF's toevoegt. Kies eerst bij **Toe te voegen noteringen** de regio waar je broker echt kan handelen: **Amerika** of **Europa (UCITS)**. De toevoegknop maakt de instrumentgegevens direct aan in Monize, nog voordat je de GEM-configuratie opslaat; er wordt niets gekocht. Alleen lege rollen worden gevuld, en een passend instrument dat al in je lijst staat kan opnieuw worden gebruikt. Controleer elk symbool, elke beurs en elke valuta. Deze voorbeelden zijn geen aanbeveling. Staat de snelkoppeling er niet, dan zijn je rollen al gevuld en kun je ze hieronder nalopen.",
+            "body": "GEM heeft in elke rol een instrument nodig om iets te kunnen beslissen. Is een rol leeg, dan biedt de kaart **Rollen en instrumenten** een snelkoppeling die voorbeeld-ETF's toevoegt. Kies eerst bij **Toe te voegen noteringen** de regio waar je broker echt kan handelen: **Amerika** of **Europa (UCITS)**. De toevoegknop maakt de instrumentgegevens direct aan in Artha, nog voordat je de GEM-configuratie opslaat; er wordt niets gekocht. Alleen lege rollen worden gevuld, en een passend instrument dat al in je lijst staat kan opnieuw worden gebruikt. Controleer elk symbool, elke beurs en elke valuta. Deze voorbeelden zijn geen aanbeveling. Staat de snelkoppeling er niet, dan zijn je rollen al gevuld en kun je ze hieronder nalopen.",
             "fallbackBody": "Het instellingenformulier is niet geladen, dus de rondleiding kan de rollenkaart niet aanwijzen. Er is geen instelling gewijzigd. Gebruik de opnieuw-proberen-optie op de pagina, of doe de rondleiding later opnieuw via **Begeleide rondleidingen** in **Instellingen**."
           },
           "roles": {
@@ -305,11 +305,11 @@
           },
           "save": {
             "title": "Nakijken voordat je opslaat",
-            "body": "Controleer de rekeninglijst, elke notering en de valuta's, en dan **Instellingen opslaan** om het scenario te bewaren en het rapport opnieuw te berekenen op basis van de beschikbare koershistorie. Opslaan is wat de volgende stappen iets te tonen geeft. Er wordt daarmee nog steeds geen order geplaatst, en je hoeft niet op te slaan om deze rondleiding af te ronden. Ontbreken koersen of zijn ze te oud, dan meldt Monize dat het signaal niet beschikbaar is in plaats van te gokken."
+            "body": "Controleer de rekeninglijst, elke notering en de valuta's, en dan **Instellingen opslaan** om het scenario te bewaren en het rapport opnieuw te berekenen op basis van de beschikbare koershistorie. Opslaan is wat de volgende stappen iets te tonen geeft. Er wordt daarmee nog steeds geen order geplaatst, en je hoeft niet op te slaan om deze rondleiding af te ronden. Ontbreken koersen of zijn ze te oud, dan meldt Artha dat het signaal niet beschikbaar is in plaats van te gokken."
           },
           "finish": {
             "title": "Kom terug bij de volgende evaluatie",
-            "body": "GEM neemt één beslissing per periode, en de datum van de volgende staat boven aan het rapport. Tot die dag hoef je niets te doen. Is het zover, kijk dan of het signaal veranderd is; zo ja, handel via je broker en leg de boekingen vast in Monize, zodat de portefeuillevergelijking blijft kloppen. Je kunt deze rondleiding altijd opnieuw doen via **Begeleide rondleidingen** in **Instellingen**."
+            "body": "GEM neemt één beslissing per periode, en de datum van de volgende staat boven aan het rapport. Tot die dag hoef je niets te doen. Is het zover, kijk dan of het signaal veranderd is; zo ja, handel via je broker en leg de boekingen vast in Artha, zodat de portefeuillevergelijking blijft kloppen. Je kunt deze rondleiding altijd opnieuw doen via **Begeleide rondleidingen** in **Instellingen**."
           }
         }
       }
@@ -319,12 +319,12 @@
         "title": "Meldingen",
         "steps": {
           "welcome": {
-            "title": "Monize kan het je nu laten weten",
+            "title": "Artha kan het je nu laten weten",
             "body": "Een rekening die vervalt, een budget dat eroverheen gaat, een saldo dat een grens passeert die jij hebt gezet, een mislukte back-up. Deze rondleiding laat zien waar dat binnenkomt en hoe je kiest wat je per e-mail of op je telefoon bereikt."
           },
           "bell": {
             "title": "De bel is het origineel",
-            "body": "Elke melding die Monize maakt, wordt hier vastgelegd — wat je verder ook aan of uit zet. E-mail en push zijn kopieën die daarna verstuurd worden; deze lijst is het origineel, en het getal op de bel telt wat je nog niet gelezen hebt."
+            "body": "Elke melding die Artha maakt, wordt hier vastgelegd — wat je verder ook aan of uit zet. E-mail en push zijn kopieën die daarna verstuurd worden; deze lijst is het origineel, en het getal op de bel telt wat je nog niet gelezen hebt."
           },
           "panel": {
             "title": "Wat een melding meebrengt",
@@ -344,7 +344,7 @@
           },
           "push": {
             "title": "Je apparaten",
-            "body": "Registreer hier een browser en Monize kan die bereiken terwijl de app dicht is. Monize ondertekent zijn eigen berichten, dus er zit geen Google- of Apple-account tussen. Elk apparaat is apart te testen en te verwijderen, en een apparaat dat niet meer bereikbaar is, zegt waarom. Op een iPhone werkt dit zodra Monize op het beginscherm staat; heeft je beheerder push niet aangezet voor deze installatie, dan staat dat hier in plaats daarvan."
+            "body": "Registreer hier een browser en Artha kan die bereiken terwijl de app dicht is. Artha ondertekent zijn eigen berichten, dus er zit geen Google- of Apple-account tussen. Elk apparaat is apart te testen en te verwijderen, en een apparaat dat niet meer bereikbaar is, zegt waarom. Op een iPhone werkt dit zodra Artha op het beginscherm staat; heeft je beheerder push niet aangezet voor deze installatie, dan staat dat hier in plaats daarvan."
           },
           "portfolio": {
             "title": "Beweging van beleggingen",

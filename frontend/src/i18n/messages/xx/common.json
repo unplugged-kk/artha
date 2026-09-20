@@ -15,7 +15,7 @@
     "showNextLogin": "[XX-Show at next login-XX]",
     "close": "[XX-Close-XX]",
     "unavailable": "[XX-Release notes for this version aren't available.-XX]",
-    "englishOnly": "[XX-The release notes below are in English only. Monize itself, including the guided tours, follows your language setting.-XX]"
+    "englishOnly": "[XX-The release notes below are in English only. Artha itself, including the guided tours, follows your language setting.-XX]"
   },
   "transferPayee": "[XX-{direction, select, to {Transfer to {name}} other {Transfer from {name}}}-XX]",
   "save": "[XX-Save-XX]",

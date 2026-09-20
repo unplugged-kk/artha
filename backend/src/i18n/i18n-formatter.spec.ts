@@ -7,8 +7,8 @@ describe("i18nFormatter", () => {
 
   it("substitutes numeric values via String coercion", () => {
     expect(
-      i18nFormatter("Monize: {{ count }} alerts need attention", { count: 3 }),
-    ).toBe("Monize: 3 alerts need attention");
+      i18nFormatter("Artha: {{ count }} alerts need attention", { count: 3 }),
+    ).toBe("Artha: 3 alerts need attention");
   });
 
   it("substitutes multiple placeholders in one template", () => {

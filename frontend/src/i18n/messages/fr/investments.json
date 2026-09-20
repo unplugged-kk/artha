@@ -224,7 +224,7 @@
     "statusLockedToParent": "Cette transaction fait partie d'une transaction fractionnée. Modifiez plutôt le statut de la transaction fractionnée, afin que les deux côtés changent ensemble.",
     "descriptionPlaceholder": "Notes facultatives",
     "splitRatio": "Ratio de division",
-    "noSplitRatioWarning": "Aucun ratio de division n'est défini pour cette transaction. Saisissez le ratio tel qu'il a été annoncé avant d'enregistrer — Monize n'en supposera pas un pour vous.",
+    "noSplitRatioWarning": "Aucun ratio de division n'est défini pour cette transaction. Saisissez le ratio tel qu'il a été annoncé avant d'enregistrer — Artha n'en supposera pas un pour vous.",
     "newShares": "Nouvelles parts",
     "oldShares": "Anciennes parts",
     "splitRatioHelp": "Saisissez le ratio tel qu'il a été annoncé. Pour une division 2 pour 1, utilisez 2 nouvelles et 1 ancienne ; pour un regroupement 1 pour 2, utilisez 1 nouvelle et 2 anciennes. Ratio effectif :",

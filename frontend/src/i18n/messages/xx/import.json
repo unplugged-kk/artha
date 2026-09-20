@@ -396,7 +396,7 @@
       "importPricesHint": "[XX-Money's own record of what each security was worth, day by day. Turn this off if you would rather start from live quotes.-XX]",
       "importExchangeRates": "[XX-Import exchange rates-XX]",
       "importExchangeRatesHint": "[XX-Historical rates between the currencies in your file, so past foreign-currency transactions convert the way Money converted them.-XX]",
-      "wipeExistingData": "[XX-Start fresh: remove my existing Monize data first-XX]",
+      "wipeExistingData": "[XX-Start fresh: remove my existing Artha data first-XX]",
       "wipeExistingDataHint": "[XX-Runs the same Delete My Data operation as Settings before importing. You will be asked to confirm. Leave this off to add the Money file to what you already have.-XX]"
     },
     "warningsHeading": "[XX-Notes about this file-XX]",
@@ -420,7 +420,7 @@
       "transfer": "[XX-Transfer-XX]",
       "investment": "[XX-Investment-XX]",
       "splits": "[XX-{count, plural, one {# split} other {# splits}}-XX]",
-      "approximate": "[XX-Closest Monize frequency-XX]"
+      "approximate": "[XX-Closest Artha frequency-XX]"
     }
   },
   "mnyWipe": {
@@ -478,15 +478,15 @@
     "existingDataRemoved": "[XX-Your existing data was removed before this import, as requested.-XX]",
     "verificationHeading": "[XX-Balance verification-XX]",
     "holdingsHeading": "[XX-Holdings verification-XX]",
-    "holdingsExplainer": "[XX-Shares Monize now holds, against the open tax lots your Money file records. Money reconciles against those lots itself, so they are the number to trust.-XX]",
+    "holdingsExplainer": "[XX-Shares Artha now holds, against the open tax lots your Money file records. Money reconciles against those lots itself, so they are the number to trust.-XX]",
     "table": {
       "account": "[XX-Account-XX]",
       "security": "[XX-Security-XX]",
       "transactions": "[XX-Transactions-XX]",
       "expected": "[XX-From Money file-XX]",
-      "imported": "[XX-In Monize-XX]",
+      "imported": "[XX-In Artha-XX]",
       "lotShares": "[XX-Shares in Money-XX]",
-      "importedShares": "[XX-Shares in Monize-XX]",
+      "importedShares": "[XX-Shares in Artha-XX]",
       "delta": "[XX-Difference-XX]",
       "check": "[XX-Check-XX]"
     },
@@ -497,7 +497,7 @@
   "mnyWarnings": {
     "missingTable": "[XX-This Money version has no {count, plural, one {# table} other {# tables}} the import uses.-XX]",
     "missingField": "[XX-{count, plural, one {# field} other {# fields}} were not in this Money version and took a default.-XX]",
-    "unknownAccountType": "[XX-{count, plural, one {# account} other {# accounts}} had an account type Monize does not recognize and were skipped.-XX]",
+    "unknownAccountType": "[XX-{count, plural, one {# account} other {# accounts}} had an account type Artha does not recognize and were skipped.-XX]",
     "duplicateAccountName": "[XX-{count, plural, one {# account} other {# accounts}} shared a name with another and were renamed.-XX]",
     "unknownCurrency": "[XX-{count, plural, one {# account} other {# accounts}} referenced a currency the file does not define, and use the base currency.-XX]",
     "categoryFlattened": "[XX-{count, plural, one {# category} other {# categories}} were deeper than two levels and were flattened into their parent.-XX]",
@@ -511,7 +511,7 @@
     "balanceMismatch": "[XX-{count, plural, one {# account} other {# accounts}} ended with a balance that differs from the Money file.-XX]",
     "duplicateSecuritySymbol": "[XX-{count, plural, one {# security shares} other {# securities share}} a symbol with another; the later ones were renamed so they stay separate.-XX]",
     "generatedSecuritySymbol": "[XX-{count, plural, one {# security has} other {# securities have}} no symbol in Money, so a placeholder was generated and price updates left off.-XX]",
-    "unknownInvestmentAction": "[XX-{count, plural, one {# investment transaction} other {# investment transactions}} used an action Monize does not recognize and were skipped.-XX]",
+    "unknownInvestmentAction": "[XX-{count, plural, one {# investment transaction} other {# investment transactions}} used an action Artha does not recognize and were skipped.-XX]",
     "unconfirmedInvestmentAction": "[XX-{count, plural, one {# investment transaction} other {# investment transactions}} used a Money action whose meaning is inferred rather than documented; check them against Money.-XX]",
     "missingInvestmentDetail": "[XX-{count, plural, one {# investment transaction} other {# investment transactions}} had no share detail in the file and were imported for their cash amount only.-XX]",
     "investmentAccountMismatch": "[XX-{count, plural, one {# investment transaction} other {# investment transactions}} sat in an account that is not an investment account and were skipped.-XX]",
@@ -519,7 +519,7 @@
     "holdingsMismatch": "[XX-{count, plural, one {# holding does} other {# holdings do}} not match the shares your Money file records.-XX]",
     "billTemplateMissing": "[XX-{count, plural, one {# scheduled bill} other {# scheduled bills}} had no template transaction in the file and were skipped.-XX]",
     "unusableBill": "[XX-{count, plural, one {# scheduled bill} other {# scheduled bills}} had no account, no usable date or an unrecognized recurrence, and were skipped.-XX]",
-    "billFrequencyApproximated": "[XX-{count, plural, one {# scheduled bill uses} other {# scheduled bills use}} a repeat interval Monize cannot express exactly, so the closest shorter one was used.-XX]",
+    "billFrequencyApproximated": "[XX-{count, plural, one {# scheduled bill uses} other {# scheduled bills use}} a repeat interval Artha cannot express exactly, so the closest shorter one was used.-XX]",
     "loanInterestCategoryUnclear": "[XX-{count, plural, one {# loan payment} other {# loan payments}} included multiple non-principal categories, so the loan's interest category was left unset. Check whether the payment includes escrow and set the interest category after import.-XX]",
     "showTransactions": "[XX-Show {count, plural, one {the # transaction} other {the # transactions}}-XX]",
     "hideTransactions": "[XX-Hide transactions-XX]",

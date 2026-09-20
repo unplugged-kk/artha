@@ -275,7 +275,7 @@
     "readRequiredForWrite": "[XX-READ access is required for CREATE, EDIT or DELETE-XX]",
     "accountsNotOwned": "[XX-One or more accounts do not belong to you-XX]",
     "cannotResetSsoPassword": "[XX-Cannot reset password for an SSO delegate account-XX]",
-    "delegateManagesOwnPassword": "[XX-This delegate manages their own password (they have their own Monize account or delegated access elsewhere). Only they can change it.-XX]",
+    "delegateManagesOwnPassword": "[XX-This delegate manages their own password (they have their own Artha account or delegated access elsewhere). Only they can change it.-XX]",
     "accountIdsMustBeArray": "[XX-accountIds must be an array-XX]",
     "actionNotAvailableAsDelegate": "[XX-This action isn't available while you're acting on behalf of another user. Only the account owner can do this.-XX]",
     "capabilityNotGranted": "[XX-The account owner has not granted you permission to {{ operation }} {{ resource }}. Ask them to enable this in your delegated-access settings.-XX]",
@@ -286,7 +286,7 @@
     "jointAccountTypeReadOnly": "[XX-This account type is shared read-only; only the owner can change its transactions.-XX]",
     "jointOwnAccountNetWorth": "[XX-Use the account's own net-worth setting for accounts you own.-XX]",
     "jointRequiresRead": "[XX-READ access is required to mark an account as joint-XX]",
-    "jointRequiresFullAccount": "[XX-Joint accounts can only be shared with users who have their own Monize account-XX]",
+    "jointRequiresFullAccount": "[XX-Joint accounts can only be shared with users who have their own Artha account-XX]",
     "jointPayeeCreateNotGranted": "[XX-The account owner has not granted you permission to create payees. Pick one of their existing payees instead.-XX]",
     "jointCategoryCreateNotGranted": "[XX-The account owner has not granted you permission to create categories. Pick one of their existing categories instead.-XX]",
     "jointTagsNotAllowed": "[XX-Tags are personal, so they cannot be set on a shared account's transactions.-XX]",
@@ -325,7 +325,7 @@
     "mnyNoFile": "[XX-No Money file was uploaded-XX]",
     "mnyFileTruncated": "[XX-That Money file looks incomplete. The upload may have been interrupted -- try again.-XX]",
     "mnyNotAMoneyFile": "[XX-That file is not a Microsoft Money (.mny) file-XX]",
-    "mnyUnsupportedVersion": "[XX-That file was written by Money 97 or 98, which Monize cannot read. Open and save it once in the free Money Plus Sunset edition, then import the result.-XX]",
+    "mnyUnsupportedVersion": "[XX-That file was written by Money 97 or 98, which Artha cannot read. Open and save it once in the free Money Plus Sunset edition, then import the result.-XX]",
     "mnyPasswordRequired": "[XX-That Money file is password protected. Enter its password to continue.-XX]",
     "mnyPasswordIncorrect": "[XX-That password does not open the Money file. Check it and try again.-XX]",
     "mnyUnreadableDatabase": "[XX-That Money file was decrypted but its contents could not be read. It may be damaged.-XX]",
@@ -357,8 +357,8 @@
     "reminderOnReminder": "[XX-A reminder cannot be set on a reminder's own notification. Set it on the original notification instead.-XX]"
   },
   "push": {
-    "channelUnavailable": "[XX-Push notifications are not available on this Monize instance.-XX]",
-    "endpointClaimed": "[XX-This browser is already registered to a different Monize account. Sign out of that account in this browser and try again.-XX]",
+    "channelUnavailable": "[XX-Push notifications are not available on this Artha instance.-XX]",
+    "endpointClaimed": "[XX-This browser is already registered to a different Artha account. Sign out of that account in this browser and try again.-XX]",
     "deviceNotFound": "[XX-Push device not found.-XX]",
     "noDevices": "[XX-No push devices are registered for this account. Enable push notifications in this browser first.-XX]",
     "rotationUnavailable": "[XX-ENCRYPTION_KEY is not set, so a new private key could not be stored encrypted. Set it and restart before rotating.-XX]",
@@ -613,6 +613,6 @@
     "capReached": "[XX-This month's Google Places request limit has been reached.-XX]",
     "testFailed": "[XX-The Google Places connection test failed.-XX]",
     "referrerRestricted": "[XX-This key is restricted by HTTP referrer, but this deployment has no PUBLIC_APP_URL set, so it sends no referrer and no allow-list can match it. Set PUBLIC_APP_URL, or restrict the key by IP address instead, which is the option that actually protects a server-side key.-XX]",
-    "referrerRejected": "[XX-Google rejected this key's HTTP referrer restriction. Monize sends \"{referer}\" (from PUBLIC_APP_URL); add exactly that to the key's allowed referrers, remembering that a pattern like *.example.com/* does not match a bare example.com. Restricting the key by IP address instead is the option that actually protects a server-side key.-XX]"
+    "referrerRejected": "[XX-Google rejected this key's HTTP referrer restriction. Artha sends \"{referer}\" (from PUBLIC_APP_URL); add exactly that to the key's allowed referrers, remembering that a pattern like *.example.com/* does not match a bare example.com. Restricting the key by IP address instead is the option that actually protects a server-side key.-XX]"
   }
 }

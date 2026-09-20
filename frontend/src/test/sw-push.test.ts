@@ -170,13 +170,13 @@ describe('service worker push handling', () => {
 
     await sw.dispatchPush({
       type: 'TEST',
-      title: 'Monize test notification',
+      title: 'Artha test notification',
       body: 'Push notifications are working on this device.',
       target: '/settings',
     });
 
     expect(sw.shown).toHaveLength(1);
-    expect(sw.shown[0].title).toBe('Monize test notification');
+    expect(sw.shown[0].title).toBe('Artha test notification');
     expect(sw.shown[0].options.body).toBe(
       'Push notifications are working on this device.',
     );
@@ -346,7 +346,7 @@ describe('service worker push handling', () => {
       await sw.dispatchPush(payload, { malformed });
 
       expect(sw.shown).toHaveLength(1);
-      expect(sw.shown[0].title).toBe('Monize');
+      expect(sw.shown[0].title).toBe('Artha');
       expect(sw.shown[0].options.data.target).toBe('/');
     },
   );
@@ -356,7 +356,7 @@ describe('service worker push handling', () => {
 
     await sw.dispatchPush({ title: 42, body: '', target: '/x' });
 
-    expect(sw.shown[0].title).toBe('Monize');
+    expect(sw.shown[0].title).toBe('Artha');
     expect(sw.shown[0].options.body).toContain('notification');
   });
 

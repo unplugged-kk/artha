@@ -25,7 +25,7 @@ export class UserPreference {
   @PrimaryColumn("uuid", { name: "user_id" })
   userId: string;
 
-  @Column({ name: "default_currency", length: 3, default: "USD" })
+  @Column({ name: "default_currency", length: 3, default: "INR" })
   defaultCurrency: string;
 
   @Column({ name: "date_format", default: "YYYY-MM-DD" })

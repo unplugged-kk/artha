@@ -376,7 +376,7 @@ describe("BillReminderService", () => {
         expect(emailService.sendMail).toHaveBeenCalledTimes(1);
         expect(emailService.sendMail).toHaveBeenCalledWith(
           "user1@example.com",
-          "Monize: 1 upcoming bill needs attention",
+          "Artha: 1 upcoming bill needs attention",
           expect.any(String),
         );
       });
@@ -435,7 +435,7 @@ describe("BillReminderService", () => {
         expect(emailService.sendMail).toHaveBeenCalledTimes(1);
         expect(emailService.sendMail).toHaveBeenCalledWith(
           "user1@example.com",
-          "Monize: 2 upcoming bills need attention",
+          "Artha: 2 upcoming bills need attention",
           expect.any(String),
         );
       });
@@ -1071,7 +1071,7 @@ describe("BillReminderService", () => {
             expect(emailService.sendMail).toHaveBeenCalledTimes(1);
             expect(emailService.sendMail).toHaveBeenCalledWith(
               "user1@example.com",
-              "Monize: 1 upcoming bill needs attention",
+              "Artha: 1 upcoming bill needs attention",
               expect.any(String),
             );
             expect(jobClaims.markDelivered).toHaveBeenCalled();
@@ -1205,7 +1205,7 @@ describe("BillReminderService", () => {
           // Counted from the body, not from what pass one selected.
           expect(emailService.sendMail).toHaveBeenCalledWith(
             "user1@example.com",
-            "Monize: 1 upcoming bill needs attention",
+            "Artha: 1 upcoming bill needs attention",
             expect.any(String),
           );
           const html = String(emailService.sendMail.mock.calls[0][2]);
@@ -1254,7 +1254,7 @@ describe("BillReminderService", () => {
           expect(emailService.sendMail).toHaveBeenCalledTimes(1);
           expect(emailService.sendMail).toHaveBeenCalledWith(
             "user1@example.com",
-            "Monize: 2 upcoming bills need attention",
+            "Artha: 2 upcoming bills need attention",
             expect.any(String),
           );
         });

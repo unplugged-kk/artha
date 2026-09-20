@@ -97,7 +97,7 @@
     },
     "smtpFailure": {
       "title": "Gửi email đang thất bại",
-      "message": "Monize không thể gửi email: {error}. Thông báo và lời nhắc không được gửi đi."
+      "message": "Artha không thể gửi email: {error}. Thông báo và lời nhắc không được gửi đi."
     },
     "providerOutage": {
       "title": "{provider} không phản hồi",

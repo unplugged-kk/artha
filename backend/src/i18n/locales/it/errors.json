@@ -265,7 +265,7 @@
     "readRequiredForWrite": "L'accesso in LETTURA è obbligatorio per CREAZIONE, MODIFICA o ELIMINAZIONE",
     "accountsNotOwned": "Uno o più conti non ti appartengono",
     "cannotResetSsoPassword": "Impossibile reimpostare la password per un account delegato SSO",
-    "delegateManagesOwnPassword": "Questo delegato gestisce la propria password (ha il proprio account Monize o accesso delegato altrove). Solo lui può cambiarla.",
+    "delegateManagesOwnPassword": "Questo delegato gestisce la propria password (ha il proprio account Artha o accesso delegato altrove). Solo lui può cambiarla.",
     "accountIdsMustBeArray": "accountIds deve essere un array",
     "actionNotAvailableAsDelegate": "Questa azione non è disponibile mentre agisci per conto di un altro utente. Solo il titolare dell'account può farlo.",
     "capabilityNotGranted": "Il titolare dell'account non ti ha concesso il permesso di {{ operation }} {{ resource }}. Chiedigli di abilitarlo nelle impostazioni di accesso delegato.",
@@ -276,7 +276,7 @@
     "jointAccountTypeReadOnly": "Questo tipo di conto è condiviso in sola lettura; solo il proprietario può modificarne le transazioni.",
     "jointOwnAccountNetWorth": "Per i conti di tua proprietà usa l'impostazione patrimonio netto del conto stesso.",
     "jointRequiresRead": "L'accesso in LETTURA è necessario per contrassegnare un conto come cointestato",
-    "jointRequiresFullAccount": "I conti cointestati possono essere condivisi solo con utenti che hanno un proprio account Monize",
+    "jointRequiresFullAccount": "I conti cointestati possono essere condivisi solo con utenti che hanno un proprio account Artha",
     "jointPayeeCreateNotGranted": "Il proprietario del conto non ti ha concesso il permesso di creare beneficiari. Scegli uno dei suoi beneficiari esistenti.",
     "jointCategoryCreateNotGranted": "Il proprietario del conto non ti ha concesso il permesso di creare categorie. Scegli una delle sue categorie esistenti.",
     "jointTagsNotAllowed": "I tag sono personali, quindi non possono essere impostati sulle transazioni di un conto condiviso.",
@@ -315,7 +315,7 @@
     "mnyNoFile": "Nessun file Money è stato caricato",
     "mnyFileTruncated": "Questo file Money sembra incompleto. Il caricamento potrebbe essere stato interrotto: riprova.",
     "mnyNotAMoneyFile": "Questo file non è un file Microsoft Money (.mny)",
-    "mnyUnsupportedVersion": "Questo file è stato creato con Money 97 o 98, che Monize non è in grado di leggere. Aprilo e salvalo una volta nella versione gratuita Money Plus Sunset, poi importa il risultato.",
+    "mnyUnsupportedVersion": "Questo file è stato creato con Money 97 o 98, che Artha non è in grado di leggere. Aprilo e salvalo una volta nella versione gratuita Money Plus Sunset, poi importa il risultato.",
     "mnyPasswordRequired": "Questo file Money è protetto da password. Inseriscila per continuare.",
     "mnyPasswordIncorrect": "Questa password non apre il file Money. Controllala e riprova.",
     "mnyUnreadableDatabase": "Questo file Money è stato decifrato ma non è stato possibile leggerne il contenuto. Potrebbe essere danneggiato.",
@@ -347,8 +347,8 @@
     "reminderOnReminder": "Non è possibile impostare un promemoria sulla notifica di un promemoria. Impostalo sulla notifica originale."
   },
   "push": {
-    "channelUnavailable": "Le notifiche push non sono disponibili su questa istanza di Monize.",
-    "endpointClaimed": "Questo browser è già registrato su un altro account Monize. Esci da quell'account in questo browser e riprova.",
+    "channelUnavailable": "Le notifiche push non sono disponibili su questa istanza di Artha.",
+    "endpointClaimed": "Questo browser è già registrato su un altro account Artha. Esci da quell'account in questo browser e riprova.",
     "deviceNotFound": "Dispositivo push non trovato.",
     "noDevices": "Nessun dispositivo push è registrato per questo account. Attiva prima le notifiche push in questo browser.",
     "rotationUnavailable": "ENCRYPTION_KEY non è impostata, quindi la nuova chiave privata non può essere memorizzata cifrata. Impostala e riavvia prima di ruotare.",
@@ -613,6 +613,6 @@
     "capReached": "Il limite di richieste Google Places di questo mese è stato raggiunto.",
     "testFailed": "Il test di connessione a Google Places non è riuscito.",
     "referrerRestricted": "Questa chiave è limitata dal referrer HTTP, ma questa installazione non ha PUBLIC_APP_URL impostata, quindi non invia alcun referrer e nessun elenco di autorizzazioni può corrispondere. Imposta PUBLIC_APP_URL, oppure limita la chiave per indirizzo IP, l'opzione che protegge davvero una chiave lato server.",
-    "referrerRejected": "Google ha rifiutato la restrizione per referrer HTTP di questa chiave. Monize invia \"{referer}\" (da PUBLIC_APP_URL); aggiungi esattamente quel valore ai referrer consentiti, tenendo presente che un pattern come *.example.com/* non corrisponde a un semplice example.com. Limitare la chiave per indirizzo IP è l'opzione che protegge davvero una chiave lato server."
+    "referrerRejected": "Google ha rifiutato la restrizione per referrer HTTP di questa chiave. Artha invia \"{referer}\" (da PUBLIC_APP_URL); aggiungi esattamente quel valore ai referrer consentiti, tenendo presente che un pattern come *.example.com/* non corrisponde a un semplice example.com. Limitare la chiave per indirizzo IP è l'opzione che protegge davvero una chiave lato server."
   }
 }

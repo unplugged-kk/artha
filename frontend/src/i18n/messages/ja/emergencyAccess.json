@@ -6,7 +6,7 @@
   "backToSignIn": "サインイン画面に戻る",
   "ownerFallback": "アカウント所有者",
   "ownerFirstNameFallback": "所有者",
-  "intro": "{contactName} さん、あなたは <b>{ownerName}</b> の Monize アカウントで緊急連絡先に指定されています。",
+  "intro": "{contactName} さん、あなたは <b>{ownerName}</b> の Artha アカウントで緊急連絡先に指定されています。",
   "introDetail": "ここでパスワードを設定すると、アカウント保有者としてサインインし、アカウントへのフルアクセスが付与されます。既存のセッションは無効化され、以前の認証情報は置き換えられます。",
   "messageHeading": "{name} からのメッセージ",
   "newPasswordLabel": "新しいパスワード",

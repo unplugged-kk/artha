@@ -1431,7 +1431,7 @@ describe("BudgetAlertService", () => {
 
       expect(emailService.sendMail).toHaveBeenCalledWith(
         "user@test.com",
-        "Monize: Your weekly budget summary",
+        "Artha: Your weekly budget summary",
         expect.any(String),
       );
     });

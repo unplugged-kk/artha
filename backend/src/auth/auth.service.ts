@@ -916,7 +916,7 @@ export class AuthService {
       const html = oidcLinkTemplate(user.firstName || "", confirmUrl, t);
       await this.emailService.sendMail(
         user.email,
-        t("emails.oidcLink.subject", "Monize: Confirm SSO Account Link"),
+        t("emails.oidcLink.subject", "Artha: Confirm SSO Account Link"),
         html,
       );
     } catch (err) {

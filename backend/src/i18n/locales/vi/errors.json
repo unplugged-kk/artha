@@ -265,7 +265,7 @@
     "readRequiredForWrite": "Quyền ĐỌC là bắt buộc cho TẠO, SỬA hoặc XÓA",
     "accountsNotOwned": "Một hoặc nhiều tài khoản không thuộc sở hữu của bạn",
     "cannotResetSsoPassword": "Không thể đặt lại mật khẩu cho tài khoản ủy quyền SSO",
-    "delegateManagesOwnPassword": "Người được ủy quyền này tự quản lý mật khẩu của họ (họ có tài khoản Monize riêng hoặc quyền truy cập được ủy quyền ở nơi khác). Chỉ họ mới có thể thay đổi mật khẩu.",
+    "delegateManagesOwnPassword": "Người được ủy quyền này tự quản lý mật khẩu của họ (họ có tài khoản Artha riêng hoặc quyền truy cập được ủy quyền ở nơi khác). Chỉ họ mới có thể thay đổi mật khẩu.",
     "accountIdsMustBeArray": "accountIds phải là một mảng",
     "actionNotAvailableAsDelegate": "Hành động này không khả dụng khi bạn đang thay mặt người dùng khác. Chỉ chủ tài khoản mới có thể thực hiện điều này.",
     "capabilityNotGranted": "Chủ tài khoản chưa cấp cho bạn quyền {{ operation }} {{ resource }}. Hãy yêu cầu họ bật tính năng này trong cài đặt quyền truy cập được ủy quyền.",
@@ -276,7 +276,7 @@
     "jointAccountTypeReadOnly": "Loại tài khoản này được chia sẻ ở chế độ chỉ đọc; chỉ chủ sở hữu mới có thể thay đổi giao dịch.",
     "jointOwnAccountNetWorth": "Với tài khoản của bạn, hãy dùng cài đặt giá trị tài sản ròng của chính tài khoản đó.",
     "jointRequiresRead": "Cần quyền ĐỌC để đánh dấu tài khoản là tài khoản chung",
-    "jointRequiresFullAccount": "Tài khoản chung chỉ có thể được chia sẻ với người dùng có tài khoản Monize riêng",
+    "jointRequiresFullAccount": "Tài khoản chung chỉ có thể được chia sẻ với người dùng có tài khoản Artha riêng",
     "jointPayeeCreateNotGranted": "Chủ tài khoản chưa cấp cho bạn quyền tạo người nhận. Hãy chọn một người nhận hiện có.",
     "jointCategoryCreateNotGranted": "Chủ tài khoản chưa cấp cho bạn quyền tạo danh mục. Hãy chọn một danh mục hiện có.",
     "jointTagsNotAllowed": "Thẻ là của cá nhân nên không thể gắn vào giao dịch của tài khoản được chia sẻ.",
@@ -315,7 +315,7 @@
     "mnyNoFile": "Chưa tải lên tệp Money nào",
     "mnyFileTruncated": "Tệp Money này có vẻ chưa hoàn chỉnh. Quá trình tải lên có thể đã bị ngắt -- hãy thử lại.",
     "mnyNotAMoneyFile": "Tệp đó không phải là tệp Microsoft Money (.mny)",
-    "mnyUnsupportedVersion": "Tệp đó được tạo bởi Money 97 hoặc 98, mà Monize không thể đọc. Hãy mở và lưu tệp một lần trong bản Money Plus Sunset miễn phí, rồi nhập kết quả.",
+    "mnyUnsupportedVersion": "Tệp đó được tạo bởi Money 97 hoặc 98, mà Artha không thể đọc. Hãy mở và lưu tệp một lần trong bản Money Plus Sunset miễn phí, rồi nhập kết quả.",
     "mnyPasswordRequired": "Tệp Money đó được bảo vệ bằng mật khẩu. Hãy nhập mật khẩu để tiếp tục.",
     "mnyPasswordIncorrect": "Mật khẩu đó không mở được tệp Money. Hãy kiểm tra lại và thử lần nữa.",
     "mnyUnreadableDatabase": "Tệp Money đó đã được giải mã nhưng không thể đọc nội dung. Tệp có thể đã bị hỏng.",
@@ -347,8 +347,8 @@
     "reminderOnReminder": "Không thể đặt nhắc nhở trên thông báo do nhắc nhở tạo ra. Hãy đặt trên thông báo gốc."
   },
   "push": {
-    "channelUnavailable": "Thông báo đẩy không khả dụng trên phiên bản Monize này.",
-    "endpointClaimed": "Trình duyệt này đã được đăng ký cho một tài khoản Monize khác. Hãy đăng xuất khỏi tài khoản đó trong trình duyệt này rồi thử lại.",
+    "channelUnavailable": "Thông báo đẩy không khả dụng trên phiên bản Artha này.",
+    "endpointClaimed": "Trình duyệt này đã được đăng ký cho một tài khoản Artha khác. Hãy đăng xuất khỏi tài khoản đó trong trình duyệt này rồi thử lại.",
     "deviceNotFound": "Không tìm thấy thiết bị nhận thông báo đẩy.",
     "noDevices": "Chưa có thiết bị nhận thông báo đẩy nào cho tài khoản này. Hãy bật thông báo đẩy trong trình duyệt này trước.",
     "rotationUnavailable": "Chưa đặt ENCRYPTION_KEY nên không thể lưu khóa riêng mới ở dạng mã hóa. Hãy đặt biến này và khởi động lại trước khi xoay khóa.",
@@ -613,6 +613,6 @@
     "capReached": "Đã đạt giới hạn yêu cầu Google Places của tháng này.",
     "testFailed": "Kiểm tra kết nối Google Places thất bại.",
     "referrerRestricted": "Khóa này bị giới hạn theo HTTP referrer, nhưng bản triển khai này chưa đặt PUBLIC_APP_URL nên không gửi referrer nào và không danh sách cho phép nào có thể khớp. Hãy đặt PUBLIC_APP_URL, hoặc giới hạn khóa theo địa chỉ IP — tùy chọn thực sự bảo vệ một khóa phía máy chủ.",
-    "referrerRejected": "Google đã từ chối giới hạn HTTP referrer của khóa này. Monize gửi \"{referer}\" (từ PUBLIC_APP_URL); hãy thêm đúng giá trị đó vào danh sách referrer được phép, lưu ý rằng mẫu như *.example.com/* không khớp với example.com trần. Giới hạn khóa theo địa chỉ IP mới là tùy chọn thực sự bảo vệ một khóa phía máy chủ."
+    "referrerRejected": "Google đã từ chối giới hạn HTTP referrer của khóa này. Artha gửi \"{referer}\" (từ PUBLIC_APP_URL); hãy thêm đúng giá trị đó vào danh sách referrer được phép, lưu ý rằng mẫu như *.example.com/* không khớp với example.com trần. Giới hạn khóa theo địa chỉ IP mới là tùy chọn thực sự bảo vệ một khóa phía máy chủ."
   }
 }

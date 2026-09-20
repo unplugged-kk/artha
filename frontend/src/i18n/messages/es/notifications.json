@@ -97,7 +97,7 @@
     },
     "smtpFailure": {
       "title": "El envío de correo está fallando",
-      "message": "Monize no pudo enviar correo: {error}. Las notificaciones y los recordatorios no se están entregando."
+      "message": "Artha no pudo enviar correo: {error}. Las notificaciones y los recordatorios no se están entregando."
     },
     "providerOutage": {
       "title": "{provider} no responde",

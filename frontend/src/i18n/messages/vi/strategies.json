@@ -271,7 +271,7 @@
       "workingTotal": "Tổng",
       "workingUnknown": "Chưa thể tính tỷ lệ này cho tới khi định giá được các khoản nắm giữ.",
       "basisComposition": "Mức tiếp xúc được ước tính từ nội dung của từng công cụ, so sánh theo {dimension}. Đây là ước tính đặt cạnh phân bổ, không phải một phần của nó: chỉ chính công cụ mục tiêu mới được tính là nắm giữ mục tiêu.",
-      "basisInstrument": "Không thể ước tính mức tiếp xúc thị trường vì {target} chưa có cơ cấu địa lý ({dimension}) trong Monize. Mức tuân thủ tín hiệu vẫn được tính chính xác theo công cụ.",
+      "basisInstrument": "Không thể ước tính mức tiếp xúc thị trường vì {target} chưa có cơ cấu địa lý ({dimension}) trong Artha. Mức tuân thủ tín hiệu vẫn được tính chính xác theo công cụ.",
       "basisPartialData": "{count} vị thế chưa có cơ cấu được ghi nhận, nên ước tính cho danh mục không khả dụng.",
       "isTarget": "công cụ mục tiêu",
       "notInStrategy": "không thuộc chiến lược",

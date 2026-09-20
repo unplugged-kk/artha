@@ -1,32 +1,32 @@
 {
   "test": {
-    "title": "Monize-Testbenachrichtigung",
+    "title": "Artha-Testbenachrichtigung",
     "body": "Push-Benachrichtigungen funktionieren auf diesem Gerät."
   },
   "notification": {
     "payments": {
       "title": "Zahlungserinnerung",
-      "body": "Eine Rechnung oder geplante Zahlung braucht Ihre Aufmerksamkeit. Öffnen Sie Monize für die Details."
+      "body": "Eine Rechnung oder geplante Zahlung braucht Ihre Aufmerksamkeit. Öffnen Sie Artha für die Details."
     },
     "budgets": {
       "title": "Budgetwarnung",
-      "body": "Eines Ihrer Budgets braucht Ihre Aufmerksamkeit. Öffnen Sie Monize für die Details."
+      "body": "Eines Ihrer Budgets braucht Ihre Aufmerksamkeit. Öffnen Sie Artha für die Details."
     },
     "system": {
       "title": "Systemhinweis",
-      "body": "Monize hat einen Systemhinweis für Sie. Öffnen Sie die App für die Details."
+      "body": "Artha hat einen Systemhinweis für Sie. Öffnen Sie die App für die Details."
     },
     "balances": {
       "title": "Kontostandwarnung",
-      "body": "Ein Kontostand hat einen von Ihnen festgelegten Schwellenwert überschritten. Öffnen Sie Monize für die Details."
+      "body": "Ein Kontostand hat einen von Ihnen festgelegten Schwellenwert überschritten. Öffnen Sie Artha für die Details."
     },
     "investments": {
       "title": "Anlagebewegung",
-      "body": "Ihre Anlagen haben sich heute bewegt. Öffnen Sie Monize für die Details."
+      "body": "Ihre Anlagen haben sich heute bewegt. Öffnen Sie Artha für die Details."
     },
     "strategies": {
       "title": "Strategiesignal",
-      "body": "Eine Ihrer Strategien hat ihre Empfehlung geändert. Öffnen Sie Monize für die Details."
+      "body": "Eine Ihrer Strategien hat ihre Empfehlung geändert. Öffnen Sie Artha für die Details."
     }
   },
   "actions": {

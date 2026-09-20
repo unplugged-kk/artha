@@ -6,7 +6,7 @@
   "backToSignIn": "Kembali ke halaman masuk",
   "ownerFallback": "pemilik akun",
   "ownerFirstNameFallback": "pemilik",
-  "intro": "Halo {contactName}, Anda ditunjuk sebagai kontak darurat pada akun Monize milik <b>{ownerName}</b>.",
+  "intro": "Halo {contactName}, Anda ditunjuk sebagai kontak darurat pada akun Artha milik <b>{ownerName}</b>.",
   "introDetail": "Menetapkan kata sandi di sini akan masuk ke akun sebagai pemegang akun dan memberikan Anda akses penuh ke akun. Sesi yang ada dicabut dan kredensial sebelumnya diganti.",
   "messageHeading": "Pesan dari {name}",
   "newPasswordLabel": "Kata Sandi Baru",

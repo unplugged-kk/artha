@@ -164,7 +164,7 @@
     "sectorTab": "Secteur",
     "countryTab": "Pays",
     "assetClassTab": "Classe d'actifs",
-    "sectorEmpty": "Aucune répartition sectorielle enregistrée. Monize la renseigne depuis le fournisseur pour les fonds et les ETF.",
+    "sectorEmpty": "Aucune répartition sectorielle enregistrée. Artha la renseigne depuis le fournisseur pour les fonds et les ETF.",
     "countryEmpty": "Aucune répartition par pays enregistrée. Vous pouvez la saisir en modifiant le titre.",
     "assetClassEmpty": "Aucune répartition par classe d'actifs enregistrée pour l'instant.",
     "remainder": "{percent} non classé"

@@ -27,8 +27,8 @@
     "dismissAriaLabel": "Bỏ qua cảnh báo HTTPS"
   },
   "updateBanner": {
-    "availableWithVersion": "Monize v{version} đã có sẵn",
-    "availableGeneric": "Có phiên bản mới của Monize",
+    "availableWithVersion": "Artha v{version} đã có sẵn",
+    "availableGeneric": "Có phiên bản mới của Artha",
     "runningVersion": "(đang chạy v{version})",
     "releaseNotes": "Ghi chú phát hành",
     "dismiss": "Bỏ qua",
@@ -134,29 +134,29 @@
     "redonePrefix": "Đã làm lại: {description}"
   },
   "pageHeader": {
-    "helpAriaLabel": "Mở wiki Monize để được trợ giúp về phần này",
-    "helpTooltip": "Mở wiki Monize để được trợ giúp về phần này"
+    "helpAriaLabel": "Mở wiki Artha để được trợ giúp về phần này",
+    "helpTooltip": "Mở wiki Artha để được trợ giúp về phần này"
   },
   "bootSplash": {
-    "loading": "Đang tải Monize",
+    "loading": "Đang tải Artha",
     "slowMessage": "Quá trình này lâu hơn dự kiến. Hãy kiểm tra kết nối của bạn.",
     "reload": "Tải lại ứng dụng"
   },
   "offlineFallback": {
     "title": "Không thể kết nối",
-    "message": "Monize không thể kết nối đến máy chủ. Hãy kiểm tra kết nối của bạn và thử lại.",
+    "message": "Artha không thể kết nối đến máy chủ. Hãy kiểm tra kết nối của bạn và thử lại.",
     "retry": "Thử lại"
   },
   "pushBanner": {
     "enableTitle": "Bật thông báo?",
-    "enableBody": "Monize có thể nhắc bạn về hóa đơn và hạn mức ngân sách trên thiết bị này, kể cả khi ứng dụng đã đóng. Trình duyệt sẽ hỏi quyền của bạn.",
+    "enableBody": "Artha có thể nhắc bạn về hóa đơn và hạn mức ngân sách trên thiết bị này, kể cả khi ứng dụng đã đóng. Trình duyệt sẽ hỏi quyền của bạn.",
     "enableButton": "Bật",
     "enabling": "Đang bật…",
-    "installIosTitle": "Hãy thêm Monize vào Màn hình chính trước.",
-    "installIosBody": "Trên iPhone và iPad, thông báo chỉ hoạt động từ ứng dụng đã cài. Chạm Chia sẻ, rồi Thêm vào Màn hình chính, và mở Monize từ đó.",
-    "blockedTitle": "Thông báo đang bị chặn với Monize.",
-    "blockedBody": "Hãy cho phép trong phần cài đặt trang của trình duyệt cho trang này. Monize không thể tự hỏi lại.",
-    "blockedIosBody": "Mở Cài đặt iOS, rồi Thông báo, rồi Monize, và cho phép ở đó. Nếu không thấy Monize trong danh sách, hãy xóa khỏi Màn hình chính và thêm lại.",
+    "installIosTitle": "Hãy thêm Artha vào Màn hình chính trước.",
+    "installIosBody": "Trên iPhone và iPad, thông báo chỉ hoạt động từ ứng dụng đã cài. Chạm Chia sẻ, rồi Thêm vào Màn hình chính, và mở Artha từ đó.",
+    "blockedTitle": "Thông báo đang bị chặn với Artha.",
+    "blockedBody": "Hãy cho phép trong phần cài đặt trang của trình duyệt cho trang này. Artha không thể tự hỏi lại.",
+    "blockedIosBody": "Mở Cài đặt iOS, rồi Thông báo, rồi Artha, và cho phép ở đó. Nếu không thấy Artha trong danh sách, hãy xóa khỏi Màn hình chính và thêm lại.",
     "dismiss": "Để sau"
   }
 }

@@ -265,7 +265,7 @@
     "readRequiredForWrite": "LEES-toegang is vereist voor AANMAKEN, BEWERKEN of VERWIJDEREN",
     "accountsNotOwned": "Een of meer rekeningen behoren niet aan jou toe",
     "cannotResetSsoPassword": "Kan het wachtwoord van een SSO-gedelegeerd account niet opnieuw instellen",
-    "delegateManagesOwnPassword": "Deze gedelegeerde beheert zijn eigen wachtwoord (ze hebben een eigen Monize-account of gedelegeerde toegang elders). Alleen zij kunnen het wijzigen.",
+    "delegateManagesOwnPassword": "Deze gedelegeerde beheert zijn eigen wachtwoord (ze hebben een eigen Artha-account of gedelegeerde toegang elders). Alleen zij kunnen het wijzigen.",
     "accountIdsMustBeArray": "accountIds moet een array zijn",
     "actionNotAvailableAsDelegate": "Deze actie is niet beschikbaar terwijl je handelt namens een andere gebruiker. Alleen de rekeninghouder kan dit doen.",
     "capabilityNotGranted": "De rekeninghouder heeft je geen toestemming gegeven om {{ operation }} {{ resource }}. Vraag hen dit in te schakelen in je instellingen voor gedelegeerde toegang.",
@@ -276,7 +276,7 @@
     "jointAccountTypeReadOnly": "Dit rekeningtype wordt alleen-lezen gedeeld; alleen de eigenaar kan de transacties wijzigen.",
     "jointOwnAccountNetWorth": "Gebruik voor eigen rekeningen de nettovermogen-instelling van de rekening zelf.",
     "jointRequiresRead": "LEES-toegang is vereist om een rekening als gezamenlijk te markeren",
-    "jointRequiresFullAccount": "Gezamenlijke rekeningen kunnen alleen worden gedeeld met gebruikers die een eigen Monize-account hebben",
+    "jointRequiresFullAccount": "Gezamenlijke rekeningen kunnen alleen worden gedeeld met gebruikers die een eigen Artha-account hebben",
     "jointPayeeCreateNotGranted": "De eigenaar van de rekening heeft u geen toestemming gegeven om begunstigden aan te maken. Kies in plaats daarvan een bestaande begunstigde.",
     "jointCategoryCreateNotGranted": "De eigenaar van de rekening heeft u geen toestemming gegeven om categorieën aan te maken. Kies in plaats daarvan een bestaande categorie.",
     "jointTagsNotAllowed": "Tags zijn persoonlijk en kunnen niet worden ingesteld op transacties van een gedeelde rekening.",
@@ -315,7 +315,7 @@
     "mnyNoFile": "Er is geen Money-bestand geüpload",
     "mnyFileTruncated": "Dit Money-bestand lijkt onvolledig. De upload is mogelijk onderbroken -- probeer het opnieuw.",
     "mnyNotAMoneyFile": "Dit bestand is geen Microsoft Money-bestand (.mny)",
-    "mnyUnsupportedVersion": "Dit bestand is gemaakt met Money 97 of 98, dat Monize niet kan lezen. Open en bewaar het één keer in de gratis Money Plus Sunset-editie en importeer daarna het resultaat.",
+    "mnyUnsupportedVersion": "Dit bestand is gemaakt met Money 97 of 98, dat Artha niet kan lezen. Open en bewaar het één keer in de gratis Money Plus Sunset-editie en importeer daarna het resultaat.",
     "mnyPasswordRequired": "Dit Money-bestand is met een wachtwoord beveiligd. Voer het wachtwoord in om door te gaan.",
     "mnyPasswordIncorrect": "Met dit wachtwoord kan het Money-bestand niet worden geopend. Controleer het en probeer het opnieuw.",
     "mnyUnreadableDatabase": "Dit Money-bestand is ontsleuteld, maar de inhoud kon niet worden gelezen. Het is mogelijk beschadigd.",
@@ -347,8 +347,8 @@
     "reminderOnReminder": "Een herinnering kan niet op de melding van een herinnering worden gezet. Zet deze op de oorspronkelijke melding."
   },
   "push": {
-    "channelUnavailable": "Pushmeldingen zijn niet beschikbaar op deze Monize-instantie.",
-    "endpointClaimed": "Deze browser is al geregistreerd bij een ander Monize-account. Meld je in deze browser af bij dat account en probeer het opnieuw.",
+    "channelUnavailable": "Pushmeldingen zijn niet beschikbaar op deze Artha-instantie.",
+    "endpointClaimed": "Deze browser is al geregistreerd bij een ander Artha-account. Meld je in deze browser af bij dat account en probeer het opnieuw.",
     "deviceNotFound": "Pushapparaat niet gevonden.",
     "noDevices": "Er is geen pushapparaat geregistreerd voor dit account. Schakel pushmeldingen eerst in deze browser in.",
     "rotationUnavailable": "ENCRYPTION_KEY is niet ingesteld, dus de nieuwe privésleutel kon niet versleuteld worden opgeslagen. Stel de variabele in en start opnieuw voordat je vervangt.",
@@ -613,6 +613,6 @@
     "capReached": "De limiet voor Google Places-verzoeken van deze maand is bereikt.",
     "testFailed": "De verbindingstest met Google Places is mislukt.",
     "referrerRestricted": "Deze sleutel is beperkt op HTTP-referrer, maar deze installatie heeft geen PUBLIC_APP_URL ingesteld, dus er wordt geen referrer verzonden en geen enkele toegestane lijst kan overeenkomen. Stel PUBLIC_APP_URL in, of beperk de sleutel op IP-adres, de optie die een serversleutel daadwerkelijk beschermt.",
-    "referrerRejected": "Google heeft de HTTP-referrerbeperking van deze sleutel geweigerd. Monize verstuurt \"{referer}\" (uit PUBLIC_APP_URL); voeg precies die waarde toe aan de toegestane referrers, en let erop dat een patroon als *.example.com/* niet overeenkomt met een kaal example.com. De sleutel beperken op IP-adres is de optie die een serversleutel daadwerkelijk beschermt."
+    "referrerRejected": "Google heeft de HTTP-referrerbeperking van deze sleutel geweigerd. Artha verstuurt \"{referer}\" (uit PUBLIC_APP_URL); voeg precies die waarde toe aan de toegestane referrers, en let erop dat een patroon als *.example.com/* niet overeenkomt met een kaal example.com. De sleutel beperken op IP-adres is de optie die een serversleutel daadwerkelijk beschermt."
   }
 }

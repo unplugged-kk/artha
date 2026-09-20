@@ -37,7 +37,7 @@
     "description": "Pelajari fitur-fitur aplikasi langkah demi langkah.",
     "backLink": "Kembali ke Pengaturan",
     "pageTitle": "Tur berpandu",
-    "pageSubtitle": "Semua tur yang ditawarkan Monize dalam satu tempat. Mulai kapan saja — Anda bisa keluar dari tur dengan Escape dan melanjutkannya lagi dari sini.",
+    "pageSubtitle": "Semua tur yang ditawarkan Artha dalam satu tempat. Mulai kapan saja — Anda bisa keluar dari tur dengan Escape dan melanjutkannya lagi dari sini.",
     "meta": "{steps} · {status}",
     "metaWithRelease": "{steps} · {release} · {status}",
     "stepCount": "{count, plural, other {# langkah}}",
@@ -59,10 +59,10 @@
   },
   "intro": {
     "basics": {
-      "title": "Pengenalan Monize",
+      "title": "Pengenalan Artha",
       "steps": {
         "welcome": {
-          "title": "Selamat datang di Monize",
+          "title": "Selamat datang di Artha",
           "body": "Tur singkat ini menunjukkan bagian inti aplikasi. Anda bisa keluar kapan saja dengan menekan **Escape** atau **Akhiri tur**."
         },
         "dashboard": {
@@ -103,7 +103,7 @@
         },
         "currencyField": {
           "title": "Jumlah dan mata uang",
-          "body": "Masukkan jumlah transaksinya di sini. Membayar dalam mata uang lain? Atur mata uang di samping jumlah dan masukkan sesuai yang dibebankan — Monize akan mengonversinya ke mata uang akun untuk Anda."
+          "body": "Masukkan jumlah transaksinya di sini. Membayar dalam mata uang lain? Atur mata uang di samping jumlah dan masukkan sesuai yang dibebankan — Artha akan mengonversinya ke mata uang akun untuk Anda."
         },
         "closeForm": {
           "title": "Tutup formulir untuk melanjutkan",
@@ -147,7 +147,7 @@
           },
           "fxFeePercent": {
             "title": "Tetapkan biaya konversi",
-            "body": "Masukkan biaya transaksi mata uang asing akun ini di sini dalam persen — misalnya 2,5. Monize menyertakannya ke dalam jumlah terkonversi setiap pembelian luar negeri, sehingga biayanya tercatat untuk Anda."
+            "body": "Masukkan biaya transaksi mata uang asing akun ini di sini dalam persen — misalnya 2,5. Artha menyertakannya ke dalam jumlah terkonversi setiap pembelian luar negeri, sehingga biayanya tercatat untuk Anda."
           },
           "closeAccountForm": {
             "title": "Simpan dan tutup",
@@ -171,7 +171,7 @@
           },
           "enterAmount": {
             "title": "Masukkan jumlah yang ditagihkan",
-            "body": "Ketik totalnya persis seperti yang tertera di rekening koran Anda. Monize mencari **kurs** untuk tanggal transaksi, menampilkan total terkonversi di sebelahnya, dan menyertakan **biaya transaksi mata uang asing** yang Anda atur pada akun — keterangan di bawah menjabarkan keduanya. Bank membulatkan berbeda? Ubah kursnya atau total terkonversinya agar cocok hingga sen terakhir."
+            "body": "Ketik totalnya persis seperti yang tertera di rekening koran Anda. Artha mencari **kurs** untuk tanggal transaksi, menampilkan total terkonversi di sebelahnya, dan menyertakan **biaya transaksi mata uang asing** yang Anda atur pada akun — keterangan di bawah menjabarkan keduanya. Bank membulatkan berbeda? Ubah kursnya atau total terkonversinya agar cocok hingga sen terakhir."
           },
           "closeTransactionForm": {
             "title": "Tutup formulirnya",
@@ -192,7 +192,7 @@
             "fallbackBody": "Laporan **Biaya mata uang asing** mengumpulkan pembelian luar negeri dari semua akun dan mata uang Anda dalam satu tempat. Saat ini tidak terlihat — pencarian atau filter kategori bisa menyembunyikannya — tetapi Anda akan menemukannya di **Laporan**."
           },
           "finish": {
-            "title": "Itulah mata uang asing di Monize",
+            "title": "Itulah mata uang asing di Artha",
             "body": "Atur biayanya sekali, masukkan pembelian sesuai yang ditagihkan, dan biayanya terlacak sendiri. Anda bisa mengulang tur ini kapan saja dari bagian **Tur berpandu** di **Pengaturan**."
           }
         }
@@ -221,7 +221,7 @@
         "steps": {
           "welcome": {
             "title": "Setiap efek dalam satu halaman",
-            "body": "Efek sebelumnya tersebar di tiga dialog. Kini masing-masing punya halaman sendiri yang mengumpulkan semuanya: apa yang Anda pegang, bagaimana perjalanannya, dan semua yang Monize ketahui tentangnya. Ini versi singkatnya."
+            "body": "Efek sebelumnya tersebar di tiga dialog. Kini masing-masing punya halaman sendiri yang mengumpulkan semuanya: apa yang Anda pegang, bagaimana perjalanannya, dan semua yang Artha ketahui tentangnya. Ini versi singkatnya."
           },
           "openDetail": {
             "title": "Membuka sebuah efek",
@@ -238,7 +238,7 @@
           },
           "keyInfo": {
             "title": "Apa instrumen ini",
-            "body": "Di samping grafik: jenis efek, bursa, mata uang, penyedia kuotasi yang Monize pakai, dan harga terakhir yang tercatat. Di bawahnya, kartu **Rincian** menunjukkan isi sebuah reksa dana: beralih antara rincian sektor, negara, dan kelas aset."
+            "body": "Di samping grafik: jenis efek, bursa, mata uang, penyedia kuotasi yang Artha pakai, dan harga terakhir yang tercatat. Di bawahnya, kartu **Rincian** menunjukkan isi sebuah reksa dana: beralih antara rincian sektor, negara, dan kelas aset."
           },
           "tabs": {
             "title": "Detail di bawahnya",
@@ -259,7 +259,7 @@
           },
           "findReport": {
             "title": "Temukan GEM di Laporan",
-            "body": "Buka laporan **Strategi GEM** di sini. Laporan ini ada di kategori **Investasi**. Laporan tetap tersedia meski Anda belum punya instrumen investasi atau posisi yang dicatat di Monize.",
+            "body": "Buka laporan **Strategi GEM** di sini. Laporan ini ada di kategori **Investasi**. Laporan tetap tersedia meski Anda belum punya instrumen investasi atau posisi yang dicatat di Artha.",
             "fallbackBody": "Kartu laporan tidak terlihat sekarang, biasanya karena filter. Pilih **Berikutnya** dan tur akan membuka laporan GEM secara langsung. Nanti Anda dapat menemukannya di **Laporan**, kategori **Investasi**."
           },
           "page": {
@@ -272,7 +272,7 @@
           },
           "action": {
             "title": "Saran, bukan order otomatis",
-            "body": "Grafik membandingkan instrumen yang ditetapkan. **Apa yang harus saya lakukan?** menerjemahkan sinyal menjadi kemungkinan operasi jual lalu beli, serta memperkirakan pajak dan komisi bila datanya cukup. Monize tidak pernah mengirim order ke broker Anda. Setelah benar-benar bertransaksi melalui broker, catat transaksinya di Monize; baru gunakan **Tandai sudah dilakukan** hanya sebagai catatan bahwa Anda menjalankan sinyal itu."
+            "body": "Grafik membandingkan instrumen yang ditetapkan. **Apa yang harus saya lakukan?** menerjemahkan sinyal menjadi kemungkinan operasi jual lalu beli, serta memperkirakan pajak dan komisi bila datanya cukup. Artha tidak pernah mengirim order ke broker Anda. Setelah benar-benar bertransaksi melalui broker, catat transaksinya di Artha; baru gunakan **Tandai sudah dilakukan** hanya sebagai catatan bahwa Anda menjalankan sinyal itu."
           },
           "reasoning": {
             "title": "Mengapa GEM memilih ini?",
@@ -296,7 +296,7 @@
           },
           "addInstruments": {
             "title": "Belum punya instrumen? Mulai di sini",
-            "body": "GEM butuh satu instrumen di setiap peran agar bisa memutuskan apa pun. Ketika sebuah peran kosong, kartu **Peran dan instrumen** menawarkan jalan singkat yang menambahkan ETF contoh. Pertama, di **Pencatatan yang ditambahkan**, pilih kawasan yang benar-benar dapat ditransaksikan broker Anda: **Amerika** atau **Eropa (UCITS)**. Tombol tambah langsung membuat catatan instrumen di Monize, bahkan sebelum Anda menyimpan konfigurasi GEM; tombol itu tidak membeli apa pun. Hanya peran yang kosong yang diisi, dan instrumen yang cocok dan sudah ada di daftar Anda dapat dipakai ulang. Periksa setiap simbol, bursa, dan mata uang. Contoh-contoh ini bukan rekomendasi. Jika jalan singkat itu tidak muncul, peran Anda sudah terisi dan Anda bisa memeriksanya di bawah.",
+            "body": "GEM butuh satu instrumen di setiap peran agar bisa memutuskan apa pun. Ketika sebuah peran kosong, kartu **Peran dan instrumen** menawarkan jalan singkat yang menambahkan ETF contoh. Pertama, di **Pencatatan yang ditambahkan**, pilih kawasan yang benar-benar dapat ditransaksikan broker Anda: **Amerika** atau **Eropa (UCITS)**. Tombol tambah langsung membuat catatan instrumen di Artha, bahkan sebelum Anda menyimpan konfigurasi GEM; tombol itu tidak membeli apa pun. Hanya peran yang kosong yang diisi, dan instrumen yang cocok dan sudah ada di daftar Anda dapat dipakai ulang. Periksa setiap simbol, bursa, dan mata uang. Contoh-contoh ini bukan rekomendasi. Jika jalan singkat itu tidak muncul, peran Anda sudah terisi dan Anda bisa memeriksanya di bawah.",
             "fallbackBody": "Formulir pengaturan belum termuat, jadi tur tidak dapat menunjuk kartu peran. Tidak ada pengaturan yang diubah. Gunakan tombol coba lagi di halaman ini, atau ulangi tur nanti dari **Tur berpandu** di **Pengaturan**."
           },
           "roles": {
@@ -305,11 +305,11 @@
           },
           "save": {
             "title": "Periksa sebelum menyimpan",
-            "body": "Periksa daftar rekening, setiap pencatatan, dan mata uangnya, lalu **Simpan konfigurasi** untuk menyimpan skenario dan menghitung ulang laporan dari riwayat harga yang tersedia. Penyimpanan inilah yang memberi langkah-langkah berikutnya sesuatu untuk ditampilkan. Itu tetap tidak mengirim order apa pun, dan Anda tidak perlu menyimpan untuk menyelesaikan tur ini. Jika harga tidak ada atau terlalu lama, Monize menampilkan bahwa sinyal tidak tersedia daripada menebak."
+            "body": "Periksa daftar rekening, setiap pencatatan, dan mata uangnya, lalu **Simpan konfigurasi** untuk menyimpan skenario dan menghitung ulang laporan dari riwayat harga yang tersedia. Penyimpanan inilah yang memberi langkah-langkah berikutnya sesuatu untuk ditampilkan. Itu tetap tidak mengirim order apa pun, dan Anda tidak perlu menyimpan untuk menyelesaikan tur ini. Jika harga tidak ada atau terlalu lama, Artha menampilkan bahwa sinyal tidak tersedia daripada menebak."
           },
           "finish": {
             "title": "Kembalilah pada evaluasi berikutnya",
-            "body": "GEM mengambil satu keputusan per periode, dan tanggal evaluasi berikutnya ada di bagian atas laporan. Sampai hari itu tidak ada yang perlu dilakukan. Ketika tiba, periksa apakah sinyalnya berubah; jika ya, lakukan transaksinya melalui broker Anda dan catat di Monize agar perbandingan portofolio tetap cocok. Anda dapat mengulangi tur ini kapan saja dari **Tur berpandu** di **Pengaturan**."
+            "body": "GEM mengambil satu keputusan per periode, dan tanggal evaluasi berikutnya ada di bagian atas laporan. Sampai hari itu tidak ada yang perlu dilakukan. Ketika tiba, periksa apakah sinyalnya berubah; jika ya, lakukan transaksinya melalui broker Anda dan catat di Artha agar perbandingan portofolio tetap cocok. Anda dapat mengulangi tur ini kapan saja dari **Tur berpandu** di **Pengaturan**."
           }
         }
       }
@@ -319,12 +319,12 @@
         "title": "Notifikasi",
         "steps": {
           "welcome": {
-            "title": "Monize kini bisa memberi tahu Anda",
+            "title": "Artha kini bisa memberi tahu Anda",
             "body": "Tagihan yang jatuh tempo, anggaran yang terlampaui, saldo yang melewati batas yang Anda tetapkan, cadangan yang gagal. Panduan ini menunjukkan ke mana semua itu tiba, dan bagaimana Anda memilih mana yang sampai lewat email atau di ponsel."
           },
           "bell": {
             "title": "Loncengnya adalah catatannya",
-            "body": "Setiap notifikasi yang dibuat Monize ditulis di sini, apa pun yang Anda nyalakan atau matikan di tempat lain. Email dan push adalah salinan yang dikirim menyusul; daftar ini adalah aslinya, dan angka pada lonceng menghitung yang belum Anda baca."
+            "body": "Setiap notifikasi yang dibuat Artha ditulis di sini, apa pun yang Anda nyalakan atau matikan di tempat lain. Email dan push adalah salinan yang dikirim menyusul; daftar ini adalah aslinya, dan angka pada lonceng menghitung yang belum Anda baca."
           },
           "panel": {
             "title": "Apa yang dibawa sebuah notifikasi",
@@ -344,7 +344,7 @@
           },
           "push": {
             "title": "Perangkat Anda",
-            "body": "Daftarkan sebuah peramban di sini dan Monize bisa menjangkaunya meski aplikasi tertutup. Monize menandatangani pesannya sendiri, jadi tidak ada akun Google atau Apple di tengah. Tiap perangkat bisa diuji dan dilepas sendiri-sendiri, dan perangkat yang tak lagi terjangkau menyebutkan alasannya. Di iPhone ini berjalan setelah Monize ditambahkan ke Layar Utama; bila administrator belum mengaktifkan push pada instansi ini, keterangannya muncul di sini."
+            "body": "Daftarkan sebuah peramban di sini dan Artha bisa menjangkaunya meski aplikasi tertutup. Artha menandatangani pesannya sendiri, jadi tidak ada akun Google atau Apple di tengah. Tiap perangkat bisa diuji dan dilepas sendiri-sendiri, dan perangkat yang tak lagi terjangkau menyebutkan alasannya. Di iPhone ini berjalan setelah Artha ditambahkan ke Layar Utama; bila administrator belum mengaktifkan push pada instansi ini, keterangannya muncul di sini."
           },
           "portfolio": {
             "title": "Pergerakan nilai investasi",

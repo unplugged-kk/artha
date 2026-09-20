@@ -6,7 +6,7 @@
   "backToSignIn": "Voltar ao início de sessão",
   "ownerFallback": "o proprietário da conta",
   "ownerFirstNameFallback": "o proprietário",
-  "intro": "Olá {contactName}, foi designado(a) como contacto de emergência na conta Monize de <b>{ownerName}</b>.",
+  "intro": "Olá {contactName}, foi designado(a) como contacto de emergência na conta Artha de <b>{ownerName}</b>.",
   "introDetail": "Definir uma palavra-passe aqui permitirá iniciar sessão como titular da conta e terá acesso total à mesma. As sessões existentes serão revogadas e as credenciais anteriores substituídas.",
   "messageHeading": "Mensagem de {name}",
   "newPasswordLabel": "Nova palavra-passe",

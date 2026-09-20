@@ -29,9 +29,9 @@ describe("Email Templates", () => {
     it("renders HTML with the test message", () => {
       const html = testEmailTemplate("Bob");
 
-      expect(html).toContain("Monize Test Email");
+      expect(html).toContain("Artha Test Email");
       expect(html).toContain(
-        "This is a test email from Monize. If you received this, your email notifications are working correctly.",
+        "This is a test email from Artha. If you received this, your email notifications are working correctly.",
       );
     });
 
@@ -451,7 +451,7 @@ describe("Email Templates", () => {
     it("mentions that an administrator created the account", () => {
       const html = accountInviteTemplate("Alice", "https://monize.app/x");
 
-      expect(html).toContain("An administrator has created a Monize account");
+      expect(html).toContain("An administrator has created a Artha account");
       expect(html).toContain("This link will expire in 24 hours");
     });
 
@@ -521,7 +521,7 @@ describe("Email Templates", () => {
       expect(html).toContain(
         "monthly budget summary for the period that just closed",
       );
-      expect(html).toContain("-- Monize");
+      expect(html).toContain("-- Artha");
     });
 
     it("includes budget name and period label", () => {

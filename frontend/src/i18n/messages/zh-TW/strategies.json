@@ -271,7 +271,7 @@
       "workingTotal": "合計",
       "workingUnknown": "在持股能夠估值之前，無法算出這個比例。",
       "basisComposition": "曝險是依 {dimension} 比較各標的持倉內容估算出來的。它只是配置旁邊的估計值，不是配置的一部分：只有目標標的本身才算持有目標。",
-      "basisInstrument": "無法估計市場曝險，因為 Monize 中沒有記錄 {target} 的地域結構（{dimension}）。與訊號的一致程度仍依標的精確計算。",
+      "basisInstrument": "無法估計市場曝險，因為 Artha 中沒有記錄 {target} 的地域結構（{dimension}）。與訊號的一致程度仍依標的精確計算。",
       "basisPartialData": "有 {count} 筆持倉沒有記錄結構，因此無法給出整個組合的估計值。",
       "isTarget": "目標標的",
       "notInStrategy": "不屬於策略",
