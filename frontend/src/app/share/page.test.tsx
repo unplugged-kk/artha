@@ -300,7 +300,7 @@ describe('share review screen', () => {
 
     await renderPage();
 
-    expect(await screen.findByText(/did not reach monize/i)).toBeInTheDocument();
+    expect(await screen.findByText(/did not reach artha/i)).toBeInTheDocument();
     // Nothing is read from the stash on this path: there is nothing in it.
     expect(mocks.readSharedBundle).not.toHaveBeenCalled();
   });

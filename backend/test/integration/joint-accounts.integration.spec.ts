@@ -167,6 +167,7 @@ describe("Joint accounts (integration)", () => {
       "scheduled_transactions",
       "investment_transactions",
       "monthly_account_balances",
+      "user_preferences",
       "users",
     ]);
     const owner = await createTestUserDirect(dataSource, {
@@ -179,6 +180,12 @@ describe("Joint accounts (integration)", () => {
       lastName: "Grantee",
     });
     granteeId = grantee.id;
+
+    await dataSource.query(
+      `INSERT INTO user_preferences (user_id, default_currency)
+       VALUES ($1, 'USD'), ($2, 'USD')`,
+      [ownerId, granteeId],
+    );
 
     jointAccountId = (
       await createTestAccount(dataSource, ownerId, {

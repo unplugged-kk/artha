@@ -17,7 +17,7 @@ describe('loadMessages', () => {
   it('resolves nested keys for extracted feature areas', async () => {
     const messages = await loadMessages('en');
     const auth = messages.auth as Record<string, Record<string, string>>;
-    expect(auth.signIn.title).toBe('Sign in to Monize');
+    expect(auth.signIn.title).toBe('Sign in to Artha');
     const navigation = messages.navigation as Record<string, string>;
     expect(navigation.transactions).toBe('Transactions');
   });
