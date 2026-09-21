@@ -13,6 +13,7 @@ Last updated: 2026-09-21 · `main` at **`9df296b58`** · **Mission 1 IN REVIEW (
 - **INR-first (Scope B):** a brand-new user's default currency is **INR**; an existing user's stored `default_currency` is never rewritten (the fallback applies only when the preference is unset). No implicit migration.
 - **CI repair:** the previous head's only red job was Backend Unit Tests — ten suites still asserted the old USD fallback (12 tests). They now assert the intended INR default.
 - **E2E:** a new `e2e/tests/artha-foundation.spec.ts` covers journeys A/C/F/G/H; `settings.spec.ts` and `transactions.spec.ts` cover B/D/E.
+- **CI green:** every GitHub Actions check on PR #22 passes — Backend Unit/Integration, Frontend Unit, all four E2E shards (chromium + firefox), schema drift, Bearer scan, Lighthouse. `mergeStateStatus: CLEAN`.
 - **No financial invariant, schema, migration or FX engine changed.**
 
 ---
@@ -63,8 +64,9 @@ Last updated: 2026-09-21 · `main` at **`9df296b58`** · **Mission 1 IN REVIEW (
 | E2E — new journeys | `artha-foundation.spec.ts` (chromium) | **7 passed** |
 | E2E — currency/settings | `currencies.spec.ts`, `settings.spec.ts` (chromium) | **12 passed** |
 | Live probe | `/api/v1/health`, `/users/preferences`, `/manifest.webmanifest` | healthy; new user `INR`; manifest `Artha` |
+| **CI (PR #22, head `8abd9f4be`)** | full GitHub Actions run | **All checks pass** — Backend Unit (1h20m), Backend Integration, Frontend Unit, E2E shards 1–4, Schema vs Migrations Drift, Bearer Security Scan, Lighthouse, NPM Audit, zizmor |
 
-The full backend unit suite and the Firefox E2E project are owned by CI on PR #22.
+The complete backend unit suite (98 minutes, 646 suites) and the full chromium+firefox E2E matrix run in CI and are green on the pushed head.
 
 ---
 
