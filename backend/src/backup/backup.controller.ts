@@ -210,7 +210,7 @@ export class BackupController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary:
-      "Restore user data from a backup file (gzipped JSON or encrypted Monize backup)",
+      "Restore user data from a backup file (gzipped JSON or encrypted Artha backup)",
   })
   @ApiResponse({ status: 200, description: "Data restored successfully" })
   @ApiResponse({ status: 401, description: "Invalid credentials" })

@@ -499,7 +499,7 @@ export class PayeeLookupSettingsService {
       return referer
         ? tr(
             "errors.payeeLookup.referrerRejected",
-            `Google rejected this key's HTTP referrer restriction. Monize sends "${referer}" (from PUBLIC_APP_URL); add exactly that to the key's allowed referrers, remembering that a pattern like *.example.com/* does not match a bare example.com. Restricting the key by IP address instead is the option that actually protects a server-side key.`,
+            `Google rejected this key's HTTP referrer restriction. Artha sends "${referer}" (from PUBLIC_APP_URL); add exactly that to the key's allowed referrers, remembering that a pattern like *.example.com/* does not match a bare example.com. Restricting the key by IP address instead is the option that actually protects a server-side key.`,
             { referer },
           )
         : tr(

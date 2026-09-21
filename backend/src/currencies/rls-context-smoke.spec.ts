@@ -41,7 +41,7 @@ describe("currencies module RLS context smoke (real withScopedDb)", () => {
     expect(currencyRepo.findOne).toHaveBeenCalled();
     expect(manager.query).toHaveBeenCalledWith(
       expect.stringContaining("INSERT INTO currencies"),
-      expect.arrayContaining(["USD"]),
+      expect.arrayContaining(["INR"]),
     );
   });
 

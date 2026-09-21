@@ -343,14 +343,14 @@ describe("CurrenciesService", () => {
   });
 
   describe("onApplicationBootstrap()", () => {
-    it("ensures the default USD currency exists on startup", async () => {
+    it("ensures the default INR currency exists on startup", async () => {
       mockCurrencyRepo.findOne!.mockResolvedValue(null);
 
       await service.onApplicationBootstrap();
 
       expect(mockDataSource.query).toHaveBeenCalledWith(
         expect.stringContaining("INSERT INTO currencies"),
-        ["USD", "US Dollar", "$", 2],
+        ["INR", "Indian Rupee", "₹", 2],
       );
     });
 

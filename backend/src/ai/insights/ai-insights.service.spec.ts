@@ -682,7 +682,7 @@ describe("AiInsightsService", () => {
 
       expect(mockAggregatorService.computeAggregates).toHaveBeenCalledWith(
         userId,
-        "USD",
+        "INR",
       );
     });
 

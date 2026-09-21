@@ -453,7 +453,7 @@ describe("AuthController (e2e)", () => {
       );
       expect(mockEmailService.sendMail).toHaveBeenCalledWith(
         "test@example.com",
-        "Monize Password Reset",
+        "Artha Password Reset",
         expect.any(String),
       );
     });

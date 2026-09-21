@@ -1640,7 +1640,7 @@ describe("NetWorthService", () => {
       expect(queryArgs[1][2]).toBe(new Date().toISOString().slice(0, 10));
     });
 
-    it("defaults to USD when user has no preference", async () => {
+    it("defaults to the fallback currency when user has no preference", async () => {
       mabRepository.count.mockResolvedValue(5);
       prefRepository.findOne.mockResolvedValue(null);
       reportQuery.mockResolvedValueOnce([
@@ -1651,13 +1651,13 @@ describe("NetWorthService", () => {
           account_id: "a1",
           account_type: AccountType.CHEQUING,
           account_sub_type: null,
-          currency_code: "USD",
+          currency_code: "INR",
         },
       ]);
 
       const result = await service.getMonthlyNetWorth("user-1");
 
-      // No currency conversion needed (USD to USD), so no rate query
+      // No currency conversion needed (INR to INR), so no rate query
       expect(result[0].assets).toBe(1000);
     });
 

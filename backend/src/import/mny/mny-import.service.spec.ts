@@ -645,13 +645,13 @@ describe("MnyImportService", () => {
       );
     });
 
-    it("falls back to USD when the user has no currency preference", async () => {
+    it("falls back to the default currency when the user has no currency preference", async () => {
       preferenceRepo.findOne.mockResolvedValue(null);
 
       await run();
 
       expect(parser.parse).toHaveBeenCalledWith(
-        expect.objectContaining({ userDefaultCurrency: "USD" }),
+        expect.objectContaining({ userDefaultCurrency: "INR" }),
       );
     });
 
