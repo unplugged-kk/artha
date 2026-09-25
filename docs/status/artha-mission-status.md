@@ -2,13 +2,13 @@
 
 **How this works:** each mission rewrites this file as a current snapshot (never a diary). **This PR is never merged — it is overwritten.** The summary is at the top; matrices, evidence, and the next-mission brief are below.
 
-Last updated: 2026-09-21 · `main` at **`9df296b58`** · **Mission 1 IN REVIEW (PR #22)** · next mission: **Mission 2 — Fintrack Completion Audit & Implementation**
+Last updated: 2026-09-25 · `main` at **`cfe995483`** · **Mission 1 MERGED (PR #22)** · next mission: **Mission 2 — Fintrack Completion Audit & Implementation**
 
 ---
 
 ## TL;DR
 
-- **Mission 1** — "Complete Initial Artha / Monize Productization & Foundation Integration" — is implemented on `fm/artha-productization-01` and open as code **PR #22**.
+- **Mission 1** — "Complete Initial Artha / Monize Productization & Foundation Integration" — is implemented on `fm/artha-productization-01` and **merged** as code **PR #22** into `main` (merge commit `cfe995483`).
 - **Product identity (Scope A):** user-facing Monize residue replaced with Artha across every frontend/backend locale catalog, email subject, service worker string, PDF/CSV export, the TOTP issuer, the Swagger title and the OAuth consent pages — plus the remaining non-catalog strings (backup-format error, Ollama model hint, `.mny` and Google-referrer error fallbacks, two Swagger descriptions, and the backend e2e reset-subject assertion).
 - **INR-first (Scope B):** a brand-new user's default currency is **INR**; an existing user's stored `default_currency` is never rewritten (the fallback applies only when the preference is unset). No implicit migration.
 - **CI repair:** the previous head's only red job was Backend Unit Tests — ten suites still asserted the old USD fallback (12 tests). They now assert the intended INR default.
@@ -20,10 +20,10 @@ Last updated: 2026-09-21 · `main` at **`9df296b58`** · **Mission 1 IN REVIEW (
 
 ## Current repository state
 
-- **main SHA:** `9df296b58` — `Merge pull request #21`.
+- **main SHA:** `cfe995483` — `Merge pull request #22`.
 - **Rolling status PR:** PR #5 (`fm/artha-mission-status`) — strictly one file, `docs/status/artha-mission-status.md`.
-- **Code PR:** **PR #22** — `feat: complete initial Artha productization` (`fm/artha-productization-01` → `main`).
-- **Merged PRs:** #1–#21.
+- **Code PR:** **PR #22** — `feat: complete initial Artha productization` (`fm/artha-productization-01` → `main`) — **MERGED**.
+- **Merged PRs:** #1–#22.
 
 ---
 
@@ -78,7 +78,7 @@ The complete backend unit suite (98 minutes, 646 suites) and the full chromium+f
 | `a85bb23e5` | `test: align joint accounts integration and frontend test expectations with Artha copy and INR default` | Committed |
 | `9dce9741b` | `fix: align the USD-fallback suites with the INR default and finish user-visible Artha copy` | Pushed |
 | `8abd9f4be` | `test(e2e): add the foundational Artha journeys and install the USD test currency` | Pushed |
-| **PR #22** | `feat: complete initial Artha productization` | **OPEN** |
+| **PR #22** | `feat: complete initial Artha productization` | **MERGED → `main` (`cfe995483`)** |
 | **PR #5** | Rolling status (this file) | **OPEN — 1 file** |
 
 ---
@@ -94,4 +94,4 @@ Fintrack features, Finsight analytics, India instrument/tax/Account-Aggregator s
 
 ## Next mission
 
-**Mission 2 — Fintrack Completion Audit & Implementation** (after the owner merges PR #22).
+**Mission 2 — Fintrack Completion Audit & Implementation**. PR #22 is merged; Mission 2 is ready to begin from `main` at `cfe995483`.
