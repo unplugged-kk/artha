@@ -164,7 +164,7 @@
     "sectorTab": "Sektor",
     "countryTab": "Land",
     "assetClassTab": "Anlageklasse",
-    "sectorEmpty": "Es ist keine Sektoraufteilung gespeichert. Monize füllt sie für Fonds und ETFs beim Anbieter ab.",
+    "sectorEmpty": "Es ist keine Sektoraufteilung gespeichert. Artha füllt sie für Fonds und ETFs beim Anbieter ab.",
     "countryEmpty": "Es ist keine Länderaufteilung gespeichert. Du kannst sie beim Bearbeiten des Wertpapiers eintragen.",
     "assetClassEmpty": "Es ist noch keine Aufteilung nach Anlageklassen gespeichert.",
     "remainder": "{percent} nicht zugeordnet"

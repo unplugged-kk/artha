@@ -407,7 +407,7 @@ export class TwoFactorService {
     const secret = otplib.generateSecret();
     const otpauthUrl = otplib.generateURI({
       secret,
-      issuer: "Monize",
+      issuer: "Artha",
       label: user.email || userId,
     });
     const qrCodeDataUrl = await QRCode.toDataURL(otpauthUrl);

@@ -1,13 +1,13 @@
 {
   "test": {
-    "subject": "Testowy e-mail Monize",
-    "heading": "Testowy e-mail Monize",
+    "subject": "Testowy e-mail Artha",
+    "heading": "Testowy e-mail Artha",
     "greeting": "Cześć {{ name }},",
-    "body": "To jest testowy e-mail z Monize. Jeśli go otrzymałeś, powiadomienia e-mail działają poprawnie."
+    "body": "To jest testowy e-mail z Artha. Jeśli go otrzymałeś, powiadomienia e-mail działają poprawnie."
   },
   "billReminder": {
-    "subjectOne": "Monize: 1 nadchodzący rachunek wymaga uwagi",
-    "subjectMany": "Monize: {{ count }} nadchodzących rachunków wymaga uwagi",
+    "subjectOne": "Artha: 1 nadchodzący rachunek wymaga uwagi",
+    "subjectMany": "Artha: {{ count }} nadchodzących rachunków wymaga uwagi",
     "heading": "Przypomnienie o nadchodzących rachunkach",
     "greeting": "Cześć {{ name }},",
     "introOne": "Masz 1 nadchodzący rachunek, który wymaga uwagi:",
@@ -23,8 +23,8 @@
     "button": "Zobacz rachunki &amp; wpłaty"
   },
   "mortgageReminder": {
-    "subject": "Monize: 1 nadchodzące odnowienie kredytu hipotecznego",
-    "subjectPlural": "Monize: {{ count }} nadchodzących odnowień kredytów hipotecznych",
+    "subject": "Artha: 1 nadchodzące odnowienie kredytu hipotecznego",
+    "subjectPlural": "Artha: {{ count }} nadchodzących odnowień kredytów hipotecznych",
     "heading": "Przypomnienie o odnowieniu kredytu hipotecznego",
     "greeting": "Cześć {{ name }},",
     "introOne": "Masz 1 kredyt hipoteczny z nadchodzącym odnowieniem okresu. Skontaktuj się z pożyczkodawcą, aby omówić opcje odnowienia przed końcem okresu:",
@@ -43,8 +43,8 @@
     "info": "Informacja"
   },
   "budgetAlertImmediate": {
-    "subject": "Monize: Alert - {{ title }}",
-    "subjectPlural": "Monize: {{ count }} alertów wymaga uwagi",
+    "subject": "Artha: Alert - {{ title }}",
+    "subjectPlural": "Artha: {{ count }} alertów wymaga uwagi",
     "heading": "Alert",
     "greeting": "Cześć {{ name }},",
     "intro": "Twój budżet wymaga uwagi:",
@@ -54,7 +54,7 @@
     "button": "Zobacz budżet"
   },
   "budgetWeeklyDigest": {
-    "subject": "Monize: Twoje tygodniowe podsumowanie budżetu",
+    "subject": "Artha: Twoje tygodniowe podsumowanie budżetu",
     "heading": "Tygodniowe podsumowanie budżetu",
     "greeting": "Cześć {{ name }},",
     "intro": "Oto Twoje tygodniowe podsumowanie budżetu dla: <strong>{{ budgets }}</strong>",
@@ -72,8 +72,8 @@
     "button": "Zobacz panel budżetu"
   },
   "budgetMonthlySummary": {
-    "subject": "Monize: Miesięczne podsumowanie budżetu - {{ period }}",
-    "subjectPlural": "Monize: Miesięczne podsumowanie budżetu dla {{ count }} budżetów",
+    "subject": "Artha: Miesięczne podsumowanie budżetu - {{ period }}",
+    "subjectPlural": "Artha: Miesięczne podsumowanie budżetu dla {{ count }} budżetów",
     "heading": "Miesięczne podsumowanie budżetu",
     "greeting": "Cześć {{ name }},",
     "intro": "Oto Twoje miesięczne podsumowanie budżetu za właśnie zakończony okres:",
@@ -87,10 +87,10 @@
     "button": "Zobacz panel budżetu"
   },
   "oidcLink": {
-    "subject": "Monize: Potwierdź połączenie konta SSO",
+    "subject": "Artha: Potwierdź połączenie konta SSO",
     "heading": "Połącz konto SSO",
     "greeting": "Cześć {{ name }},",
-    "intro": "Ktoś próbował zalogować się przez SSO przy użyciu adresu e-mail powiązanego z Twoim istniejącym kontem Monize. Aby połączyć swoją tożsamość SSO z tym kontem, kliknij przycisk poniżej:",
+    "intro": "Ktoś próbował zalogować się przez SSO przy użyciu adresu e-mail powiązanego z Twoim istniejącym kontem Artha. Aby połączyć swoją tożsamość SSO z tym kontem, kliknij przycisk poniżej:",
     "button": "Potwierdź połączenie konta",
     "disclaimer": "Jeśli to nie Ty zainicjowałeś to żądanie, możesz bezpiecznie zignorować ten e-mail. Link wygasa za 1 godzinę."
   },
@@ -98,11 +98,11 @@
     "subject": "Konto tymczasowo zablokowane",
     "heading": "Konto tymczasowo zablokowane",
     "greeting": "Cześć {{ name }},",
-    "body1": "Twoje konto Monize zostało tymczasowo zablokowane z powodu wielu nieudanych prób logowania. To środek bezpieczeństwa chroniący Twoje konto.",
+    "body1": "Twoje konto Artha zostało tymczasowo zablokowane z powodu wielu nieudanych prób logowania. To środek bezpieczeństwa chroniący Twoje konto.",
     "body2": "Blokada wygaśnie automatycznie. Jeśli to nie Ty próbowałeś się zalogować, zalecamy natychmiastowe zresetowanie hasła."
   },
   "passwordReset": {
-    "subject": "Resetowanie hasła Monize",
+    "subject": "Resetowanie hasła Artha",
     "heading": "Żądanie resetowania hasła",
     "greeting": "Cześć {{ name }},",
     "intro": "Otrzymaliśmy żądanie zresetowania Twojego hasła. Kliknij przycisk poniżej, aby ustawić nowe hasło:",
@@ -110,54 +110,54 @@
     "disclaimer": "Ten link wygasa za 1 godzinę. Jeśli nie prosiłeś o zresetowanie hasła, możesz bezpiecznie zignorować ten e-mail."
   },
   "emailVerification": {
-    "subject": "Zweryfikuj swój adres e-mail Monize",
+    "subject": "Zweryfikuj swój adres e-mail Artha",
     "heading": "Zweryfikuj swój adres e-mail",
     "greeting": "Cześć {{ name }},",
-    "intro": "Dziękujemy za rejestrację w Monize. Potwierdź swój adres e-mail, aby aktywować konto i zalogować się:",
+    "intro": "Dziękujemy za rejestrację w Artha. Potwierdź swój adres e-mail, aby aktywować konto i zalogować się:",
     "button": "Zweryfikuj e-mail",
-    "disclaimer": "Ten link wygasa za 24 godziny. Jeśli nie zakładałeś konta Monize, możesz bezpiecznie zignorować ten e-mail."
+    "disclaimer": "Ten link wygasa za 24 godziny. Jeśli nie zakładałeś konta Artha, możesz bezpiecznie zignorować ten e-mail."
   },
   "accountInvite": {
-    "subject": "Twoje konto Monize jest gotowe",
-    "heading": "Twoje konto Monize jest gotowe",
+    "subject": "Twoje konto Artha jest gotowe",
+    "heading": "Twoje konto Artha jest gotowe",
     "greeting": "Cześć {{ name }},",
-    "intro": "Administrator utworzył dla Ciebie konto Monize. Kliknij przycisk poniżej, aby ustawić hasło i zalogować się:",
+    "intro": "Administrator utworzył dla Ciebie konto Artha. Kliknij przycisk poniżej, aby ustawić hasło i zalogować się:",
     "button": "Ustaw hasło",
     "disclaimer": "Ten link wygasa za 24 godziny. Jeśli nie spodziewałeś się tej wiadomości, możesz bezpiecznie zignorować ten e-mail."
   },
   "delegateInvite": {
-    "subject": "Zostałeś zaproszony do Monize",
-    "heading": "Zostałeś zaproszony do Monize",
+    "subject": "Zostałeś zaproszony do Artha",
+    "heading": "Zostałeś zaproszony do Artha",
     "greeting": "Cześć {{ name }},",
-    "intro": "{{ owner }} zaprosił Cię do uzyskania dostępu do swojego konta Monize jako delegat. Kliknij przycisk poniżej, aby ustawić hasło i rozpocząć:",
+    "intro": "{{ owner }} zaprosił Cię do uzyskania dostępu do swojego konta Artha jako delegat. Kliknij przycisk poniżej, aby ustawić hasło i rozpocząć:",
     "button": "Ustaw hasło",
     "disclaimer": "Ten link wygasa za 24 godziny. Jeśli nie spodziewałeś się tego zaproszenia, możesz bezpiecznie zignorować ten e-mail."
   },
   "emergencyAccessReminder": {
-    "subjectOne": "Monize: Twoje konto było nieaktywne przez 1 dzień",
-    "subjectMany": "Monize: Twoje konto było nieaktywne przez {{ daysSinceLogin }} dni",
-    "heading": "Przypomnienie o dostępie awaryjnym Monize",
+    "subjectOne": "Artha: Twoje konto było nieaktywne przez 1 dzień",
+    "subjectMany": "Artha: Twoje konto było nieaktywne przez {{ daysSinceLogin }} dni",
+    "heading": "Przypomnienie o dostępie awaryjnym Artha",
     "greeting": "Cześć {{ name }},",
     "grantPhraseToday": "dzisiaj",
     "grantPhraseFutureOne": "za 1 dzień",
     "grantPhraseFutureMany": "za {{ count }} dni",
-    "bodyOne": "Nie logowałeś się do Monize od <strong>1 dnia</strong>. Jeśli pozostaniesz nieaktywny, Twoi wyznaczeni kontakci awaryjni uzyskają pełny dostęp do Twojego konta {{ grantPhrase }}.",
-    "bodyMany": "Nie logowałeś się do Monize od <strong>{{ daysSinceLogin }} dni</strong>. Jeśli pozostaniesz nieaktywny, Twoi wyznaczeni kontakci awaryjni uzyskają pełny dostęp do Twojego konta {{ grantPhrase }}.",
+    "bodyOne": "Nie logowałeś się do Artha od <strong>1 dnia</strong>. Jeśli pozostaniesz nieaktywny, Twoi wyznaczeni kontakci awaryjni uzyskają pełny dostęp do Twojego konta {{ grantPhrase }}.",
+    "bodyMany": "Nie logowałeś się do Artha od <strong>{{ daysSinceLogin }} dni</strong>. Jeśli pozostaniesz nieaktywny, Twoi wyznaczeni kontakci awaryjni uzyskają pełny dostęp do Twojego konta {{ grantPhrase }}.",
     "contactsLabel": "Wyznaczeni kontakci:",
     "button": "Zaloguj się teraz",
     "footer": "Zalogowanie się resetuje licznik. Jeśli nie chcesz już korzystać z tej funkcji, możesz ją wyłączyć w Ustawienia → Dostęp awaryjny."
   },
   "emergencyAccessGrant": {
-    "subject": "Udzielono Ci dostępu awaryjnego do konta Monize użytkownika {{ owner }}",
+    "subject": "Udzielono Ci dostępu awaryjnego do konta Artha użytkownika {{ owner }}",
     "heading": "Dostęp awaryjny przyznany",
     "greeting": "Cześć {{ name }},",
-    "body": "<strong>{{ owner }}</strong> wyznaczył Cię wcześniej jako kontakt awaryjny na swoim koncie Monize. Ponieważ nie logował się przez dłuższy czas, przyznaję Ci teraz pełny dostęp do przejęcia konta.",
+    "body": "<strong>{{ owner }}</strong> wyznaczył Cię wcześniej jako kontakt awaryjny na swoim koncie Artha. Ponieważ nie logował się przez dłuższy czas, przyznaję Ci teraz pełny dostęp do przejęcia konta.",
     "claimIntro": "Aby przejąć dostęp, kliknij poniższy link i ustaw nowe hasło. Zostaniesz zalogowany jako posiadacz konta.",
     "button": "Przejmij dostęp awaryjny",
     "expiry": "Ten link jest ważny do <strong>{{ expiry }}</strong> i może być użyty tylko raz. Jeśli kilka kontaktów otrzymało ten e-mail, pierwsze które skorzysta z linku przejmie konto."
   },
   "emergencyAccessGrantRevoked": {
-    "subject": "Monize: dostęp awaryjny został przyznany podczas Twojej nieobecności",
+    "subject": "Artha: dostęp awaryjny został przyznany podczas Twojej nieobecności",
     "heading": "Dostęp awaryjny został przyznany podczas Twojej nieobecności",
     "greeting": "Cześć {{ name }},",
     "body1": "Ze względu na nieaktywność Twojego konta, Twoi wyznaczeni kontakci awaryjni otrzymali linki do przejęcia konta. Zalogowałeś się ponownie, więc <strong>te linki zostały unieważnione</strong>, a zabezpieczenie zostało ponownie uruchomione.",
@@ -165,39 +165,39 @@
     "button": "Przejrzyj dostęp awaryjny"
   },
   "providerOutage": {
-    "subject": "Monize: {{ provider }} nie odpowiada",
+    "subject": "Artha: {{ provider }} nie odpowiada",
     "heading": "Dostawca danych rynkowych jest niedostępny",
     "greeting": "Cześć {{ name }},",
-    "intro": "Monize nie może połączyć się z <strong>{{ provider }}</strong> od {{ since }} ({{ duration }}). Zapytania do tego dostawcy są na razie wstrzymane i ponawiane w coraz dłuższych odstępach.",
+    "intro": "Artha nie może połączyć się z <strong>{{ provider }}</strong> od {{ since }} ({{ duration }}). Zapytania do tego dostawcy są na razie wstrzymane i ponawiane w coraz dłuższych odstępach.",
     "labelFailures": "Nieudane próby",
     "labelLastError": "Ostatni błąd",
     "labelLastSuccess": "Ostatnia poprawna odpowiedź",
     "valueNever": "nigdy",
     "valueUnknown": "nieznany",
-    "impact": "Ceny, wykresy i porównania z indeksami zależne od tego dostawcy mogą być niedostępne lub nieaktualne, dopóki nie zacznie znowu odpowiadać. Żadne dane zapisane w Monize nie zostały utracone.",
+    "impact": "Ceny, wykresy i porównania z indeksami zależne od tego dostawcy mogą być niedostępne lub nieaktualne, dopóki nie zacznie znowu odpowiadać. Żadne dane zapisane w Artha nie zostały utracone.",
     "whatToCheck": "Jeśli dostawca działa, sprawdź wychodzący dostęp sieciowy i DNS tego serwera -- kontener, który nie potrafi rozwiązać nazwy dostawcy albo się z nim połączyć, zawodzi dokładnie w ten sposób.",
     "throttleNote": "Otrzymasz jeszcze jedną wiadomość, gdy dostawca wróci do działania. Alerty o tym samym dostawcy wysyłamy najwyżej raz na {{ hours }} godz., aby niestabilny dostawca nie zapełnił skrzynki.",
     "durationMinutes": "{{ minutes }} min",
     "durationHoursMinutes": "{{ hours }} godz. {{ minutes }} min"
   },
   "providerRecovery": {
-    "subject": "Monize: {{ provider }} znowu odpowiada",
+    "subject": "Artha: {{ provider }} znowu odpowiada",
     "heading": "Dostawca danych rynkowych znowu odpowiada",
     "greeting": "Cześć {{ name }},",
     "intro": "<strong>{{ provider }}</strong> odpowiedział ponownie o {{ restoredAt }}. Awaria trwała {{ duration }}.",
     "backfill": "Ceny i historia indeksów pominięte w czasie awarii zostaną uzupełnione przy najbliższym zaplanowanym odświeżeniu; nie musisz nic robić."
   },
   "systemAlert": {
-    "subject": "Monize: {{ title }}",
+    "subject": "Artha: {{ title }}",
     "heading": "Alert systemowy",
     "greeting": "Cześć {{ name }},",
-    "intro": "Problem w Twojej instalacji Monize wymaga uwagi administratora.",
+    "intro": "Problem w Twojej instalacji Artha wymaga uwagi administratora.",
     "footer": "Ten alert jest też widoczny w dzwonku powiadomień aplikacji. Jest tworzony najwyżej raz na zdarzenie, niezależnie od liczby replik serwera, które je zauważyły."
   },
   "notificationImmediate": {
-    "subject": "Masz nowe powiadomienie Monize",
-    "eyebrow": "Powiadomienie Monize",
-    "button": "Otwórz w Monize",
+    "subject": "Masz nowe powiadomienie Artha",
+    "eyebrow": "Powiadomienie Artha",
+    "button": "Otwórz w Artha",
     "footer": "Otrzymujesz tę wiadomość, ponieważ dla tego typu powiadomień włączono natychmiastowy e-mail. Zmień to w Ustawieniach, Powiadomienia."
   },
   "notificationCopy": {
@@ -254,7 +254,7 @@
       },
       "smtpFailure": {
         "title": "Wysyłanie e-maili nie działa",
-        "message": "Monize nie mógł wysłać e-maila: {{ error }}. Powiadomienia i przypomnienia nie są dostarczane."
+        "message": "Artha nie mógł wysłać e-maila: {{ error }}. Powiadomienia i przypomnienia nie są dostarczane."
       },
       "providerOutage": {
         "title": "{{ provider }} nie odpowiada",

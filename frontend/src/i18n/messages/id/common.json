@@ -15,7 +15,7 @@
     "showNextLogin": "Tampilkan saat masuk berikutnya",
     "close": "Tutup",
     "unavailable": "Catatan rilis untuk versi ini tidak tersedia.",
-    "englishOnly": "Catatan rilis di bawah ini hanya tersedia dalam bahasa Inggris. Monize sendiri, termasuk tur berpanduan, mengikuti pengaturan bahasa Anda."
+    "englishOnly": "Catatan rilis di bawah ini hanya tersedia dalam bahasa Inggris. Artha sendiri, termasuk tur berpanduan, mengikuti pengaturan bahasa Anda."
   },
   "transferPayee": "{direction, select, to {Transfer ke {name}} other {Transfer dari {name}}}",
   "save": "Simpan",

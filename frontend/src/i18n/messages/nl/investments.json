@@ -224,7 +224,7 @@
     "statusLockedToParent": "Deze transactie maakt deel uit van een gesplitste transactie. Wijzig in plaats daarvan de status van de gesplitste transactie, zodat beide zijden samen wijzigen.",
     "descriptionPlaceholder": "Optionele notities",
     "splitRatio": "Splitsingsverhouding",
-    "noSplitRatioWarning": "Voor deze transactie is geen splitsingsverhouding ingesteld. Voer de verhouding in zoals aangekondigd vóór het opslaan — Monize neemt er geen aan.",
+    "noSplitRatioWarning": "Voor deze transactie is geen splitsingsverhouding ingesteld. Voer de verhouding in zoals aangekondigd vóór het opslaan — Artha neemt er geen aan.",
     "newShares": "Nieuwe aandelen",
     "oldShares": "Oude aandelen",
     "splitRatioHelp": "Voer de verhouding in zoals aangekondigd. Voor een 2-voor-1 splitsing gebruik 2 nieuw en 1 oud; voor een 1-voor-2 omgekeerde splitsing gebruik 1 nieuw en 2 oud. Effectieve verhouding:",

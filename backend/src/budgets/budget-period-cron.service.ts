@@ -284,12 +284,12 @@ export class BudgetPeriodCronService {
       summaries.length === 1
         ? t(
             "emails.budgetMonthlySummary.subject",
-            `Monize: Monthly budget summary - ${summaries[0].periodLabel}`,
+            `Artha: Monthly budget summary - ${summaries[0].periodLabel}`,
             { period: summaries[0].periodLabel },
           )
         : t(
             "emails.budgetMonthlySummary.subjectPlural",
-            `Monize: Monthly budget summary for ${summaries.length} budgets`,
+            `Artha: Monthly budget summary for ${summaries.length} budgets`,
             { count: summaries.length },
           );
 

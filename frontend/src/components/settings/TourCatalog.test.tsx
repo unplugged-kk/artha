@@ -33,7 +33,7 @@ import { useTourStore } from '@/store/tourStore';
 import { ALL_TOURS, INTRO_TOUR } from '@/lib/tours/registry';
 import { tourStepCount } from '@/lib/tours/catalog';
 
-const INTRO_TITLE = 'Introduction to Monize';
+const INTRO_TITLE = 'Introduction to Artha';
 const FX_TITLE = 'Foreign currency transactions';
 const SECURITY_TITLE = 'Security detail page';
 

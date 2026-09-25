@@ -215,7 +215,7 @@ export class AdminService {
       this.emailService
         .sendMail(
           email,
-          t("emails.accountInvite.subject", "Your Monize account is ready"),
+          t("emails.accountInvite.subject", "Your Artha account is ready"),
           accountInviteTemplate(dto.firstName || "", inviteUrl, t),
         )
         .catch((err) =>

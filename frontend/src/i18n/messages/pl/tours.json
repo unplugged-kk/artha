@@ -37,7 +37,7 @@
     "description": "Poznaj funkcje aplikacji krok po kroku.",
     "backLink": "Powrót do Ustawień",
     "pageTitle": "Przewodniki po aplikacji",
-    "pageSubtitle": "Wszystkie przewodniki, które oferuje Monize, w jednym miejscu. Uruchom dowolny w każdej chwili — przewodnik możesz przerwać klawiszem Escape i wrócić do niego stąd.",
+    "pageSubtitle": "Wszystkie przewodniki, które oferuje Artha, w jednym miejscu. Uruchom dowolny w każdej chwili — przewodnik możesz przerwać klawiszem Escape i wrócić do niego stąd.",
     "meta": "{steps} · {status}",
     "metaWithRelease": "{steps} · {release} · {status}",
     "stepCount": "{count, plural, one {# krok} few {# kroki} many {# kroków} other {# kroku}}",
@@ -59,10 +59,10 @@
   },
   "intro": {
     "basics": {
-      "title": "Wprowadzenie do Monize",
+      "title": "Wprowadzenie do Artha",
       "steps": {
         "welcome": {
-          "title": "Witamy w Monize",
+          "title": "Witamy w Artha",
           "body": "Ten krótki przewodnik pokaże Ci najważniejsze elementy aplikacji. Możesz go opuścić w dowolnym momencie, naciskając **Escape** lub wybierając **Zakończ przewodnik**."
         },
         "dashboard": {
@@ -103,7 +103,7 @@
         },
         "currencyField": {
           "title": "Kwota i waluta",
-          "body": "Tutaj wpisujesz kwotę transakcji. Płaciłeś w innej walucie? Ustaw walutę obok kwoty i wpisz ją zgodnie z obciążeniem — Monize przeliczy ją na walutę konta za Ciebie."
+          "body": "Tutaj wpisujesz kwotę transakcji. Płaciłeś w innej walucie? Ustaw walutę obok kwoty i wpisz ją zgodnie z obciążeniem — Artha przeliczy ją na walutę konta za Ciebie."
         },
         "closeForm": {
           "title": "Zamknij formularz, aby kontynuować",
@@ -147,7 +147,7 @@
           },
           "fxFeePercent": {
             "title": "Ustaw opłatę za przewalutowanie",
-            "body": "Wpisz tutaj opłatę tego konta za transakcje w obcej walucie jako procent — na przykład 2,5. Monize wlicza ją w przeliczoną kwotę każdego zagranicznego zakupu, więc opłata jest rejestrowana za Ciebie."
+            "body": "Wpisz tutaj opłatę tego konta za transakcje w obcej walucie jako procent — na przykład 2,5. Artha wlicza ją w przeliczoną kwotę każdego zagranicznego zakupu, więc opłata jest rejestrowana za Ciebie."
           },
           "closeAccountForm": {
             "title": "Zapisz i zamknij",
@@ -171,7 +171,7 @@
           },
           "enterAmount": {
             "title": "Wpisz kwotę, którą Cię obciążono",
-            "body": "Wpisz sumę dokładnie tak, jak widnieje na wyciągu. Monize pobiera **kurs wymiany** na dzień transakcji, pokazuje obok przeliczoną sumę i wlicza **opłatę za transakcje w obcej walucie** ustawioną na koncie — podpis poniżej wymienia oba. Bank zaokrąglił inaczej? Zmień kurs lub przeliczoną sumę, aby zgadzało się co do grosza."
+            "body": "Wpisz sumę dokładnie tak, jak widnieje na wyciągu. Artha pobiera **kurs wymiany** na dzień transakcji, pokazuje obok przeliczoną sumę i wlicza **opłatę za transakcje w obcej walucie** ustawioną na koncie — podpis poniżej wymienia oba. Bank zaokrąglił inaczej? Zmień kurs lub przeliczoną sumę, aby zgadzało się co do grosza."
           },
           "closeTransactionForm": {
             "title": "Zamknij formularz",
@@ -192,7 +192,7 @@
             "fallbackBody": "Raport **Opłaty za waluty obce** zbiera zagraniczne zakupy ze wszystkich kont i walut w jednym miejscu. Teraz go tu nie widać — może go ukrywać wyszukiwanie albo filtr kategorii — ale znajdziesz go w **Raportach**."
           },
           "finish": {
-            "title": "To tyle o walutach obcych w Monize",
+            "title": "To tyle o walutach obcych w Artha",
             "body": "Ustaw opłatę raz, wprowadzaj zakupy tak, jak Cię obciążono, a opłaty policzą się same. Ten przewodnik możesz powtórzyć kiedy chcesz w sekcji **Przewodniki po aplikacji** w **Ustawieniach**."
           }
         }
@@ -221,7 +221,7 @@
         "steps": {
           "welcome": {
             "title": "Każdy papier na jednej stronie",
-            "body": "Papiery wartościowe były wcześniej trzema osobnymi okienkami. Teraz każdy ma własną stronę, która zbiera wszystko: co trzymasz, jak się zachowywał i wszystko, co Monize o nim wie. Oto skrócona wersja."
+            "body": "Papiery wartościowe były wcześniej trzema osobnymi okienkami. Teraz każdy ma własną stronę, która zbiera wszystko: co trzymasz, jak się zachowywał i wszystko, co Artha o nim wie. Oto skrócona wersja."
           },
           "openDetail": {
             "title": "Otwórz papier",
@@ -238,7 +238,7 @@
           },
           "keyInfo": {
             "title": "Czym jest ten instrument",
-            "body": "Obok wykresu: typ papieru, giełda, waluta, dostawca notowań, którego używa Monize, i ostatnia zapisana cena. Pod tym karta **Struktura** pokazuje, z czego składa się fundusz — przełączaj między podziałem na sektory, kraje i klasy aktywów."
+            "body": "Obok wykresu: typ papieru, giełda, waluta, dostawca notowań, którego używa Artha, i ostatnia zapisana cena. Pod tym karta **Struktura** pokazuje, z czego składa się fundusz — przełączaj między podziałem na sektory, kraje i klasy aktywów."
           },
           "tabs": {
             "title": "Szczegóły pod spodem",
@@ -259,7 +259,7 @@
           },
           "findReport": {
             "title": "Znajdź GEM w Raportach",
-            "body": "Otwórz tutaj raport **Strategia GEM**. Znajdziesz go w kategorii **Inwestycja**. Raport jest dostępny również wtedy, gdy nie masz jeszcze w Monize żadnych instrumentów inwestycyjnych ani zapisanych pozycji maklerskich.",
+            "body": "Otwórz tutaj raport **Strategia GEM**. Znajdziesz go w kategorii **Inwestycja**. Raport jest dostępny również wtedy, gdy nie masz jeszcze w Artha żadnych instrumentów inwestycyjnych ani zapisanych pozycji maklerskich.",
             "fallbackBody": "Karta raportu nie jest teraz widoczna, zwykle z powodu filtra. Wybierz **Dalej**, a przewodnik otworzy raport GEM bezpośrednio. Później znajdziesz go w **Raportach**, w kategorii **Inwestycja**."
           },
           "page": {
@@ -272,7 +272,7 @@
           },
           "action": {
             "title": "Wskazówka, nie automatyczne zlecenie",
-            "body": "Wykres porównuje przypisane instrumenty. Karta **Co powinienem zrobić?** przekłada sygnał na możliwą operację sprzedaży i zakupu oraz, gdy wystarcza danych, szacuje podatek i prowizję. Monize nigdy nie wysyła zlecenia do brokera. Po wykonaniu prawdziwych transakcji u brokera zapisz je w Monize, a następnie użyj **Oznacz jako wykonane** wyłącznie jako notatki, że sygnał został zrealizowany."
+            "body": "Wykres porównuje przypisane instrumenty. Karta **Co powinienem zrobić?** przekłada sygnał na możliwą operację sprzedaży i zakupu oraz, gdy wystarcza danych, szacuje podatek i prowizję. Artha nigdy nie wysyła zlecenia do brokera. Po wykonaniu prawdziwych transakcji u brokera zapisz je w Artha, a następnie użyj **Oznacz jako wykonane** wyłącznie jako notatki, że sygnał został zrealizowany."
           },
           "reasoning": {
             "title": "Dlaczego GEM wybrał ten instrument?",
@@ -296,7 +296,7 @@
           },
           "addInstruments": {
             "title": "Nie masz jeszcze instrumentów? Zacznij tutaj",
-            "body": "GEM potrzebuje instrumentu w każdej roli, żeby móc cokolwiek zdecydować. Gdy rola jest pusta, karta **Role i instrumenty** proponuje skrót dodający przykładowe funduszy ETF. Najpierw w polu **Notowania do dodania** wybierz rynek, na którym rzeczywiście działa Twój broker: **Ameryka** albo **Europa (UCITS)**. Przycisk dodawania od razu tworzy wpisy instrumentów w Monize, jeszcze przed zapisaniem konfiguracji GEM; niczego nie kupuje. Uzupełniane są tylko puste role, a pasujący instrument z Twojej listy może zostać użyty ponownie. Sprawdź każdy symbol, giełdę i walutę. Te przykłady nie są rekomendacją. Jeśli skrótu nie ma, role są już uzupełnione i możesz je przejrzeć poniżej.",
+            "body": "GEM potrzebuje instrumentu w każdej roli, żeby móc cokolwiek zdecydować. Gdy rola jest pusta, karta **Role i instrumenty** proponuje skrót dodający przykładowe funduszy ETF. Najpierw w polu **Notowania do dodania** wybierz rynek, na którym rzeczywiście działa Twój broker: **Ameryka** albo **Europa (UCITS)**. Przycisk dodawania od razu tworzy wpisy instrumentów w Artha, jeszcze przed zapisaniem konfiguracji GEM; niczego nie kupuje. Uzupełniane są tylko puste role, a pasujący instrument z Twojej listy może zostać użyty ponownie. Sprawdź każdy symbol, giełdę i walutę. Te przykłady nie są rekomendacją. Jeśli skrótu nie ma, role są już uzupełnione i możesz je przejrzeć poniżej.",
             "fallbackBody": "Formularz ustawień nie został wczytany, dlatego przewodnik nie może wskazać karty z rolami. Żadne ustawienie nie zostało zmienione. Użyj opcji ponowienia na stronie albo uruchom przewodnik później w sekcji **Przewodniki po aplikacji** w **Ustawieniach**."
           },
           "roles": {
@@ -305,11 +305,11 @@
           },
           "save": {
             "title": "Sprawdź wszystko przed zapisaniem",
-            "body": "Sprawdź listę kont, każde notowanie i waluty, a potem **Zapisz konfigurację**, aby przechować scenariusz i ponownie obliczyć raport z dostępnej historii cen. To zapis sprawia, że kolejne kroki mają co pokazać. Nadal nie składa żadnych zleceń i nie musisz zapisywać, aby ukończyć ten przewodnik. Jeśli cen brakuje albo są zbyt stare, Monize pokaże brak dostępnego sygnału zamiast zgadywać."
+            "body": "Sprawdź listę kont, każde notowanie i waluty, a potem **Zapisz konfigurację**, aby przechować scenariusz i ponownie obliczyć raport z dostępnej historii cen. To zapis sprawia, że kolejne kroki mają co pokazać. Nadal nie składa żadnych zleceń i nie musisz zapisywać, aby ukończyć ten przewodnik. Jeśli cen brakuje albo są zbyt stare, Artha pokaże brak dostępnego sygnału zamiast zgadywać."
           },
           "finish": {
             "title": "Wróć przy następnej ocenie",
-            "body": "GEM podejmuje jedną decyzję na okres, a datę najbliższej widzisz u góry raportu. Do tego dnia nie musisz nic robić. Gdy nadejdzie, sprawdź, czy sygnał się zmienił; jeśli tak, wykonaj transakcje u brokera i zapisz je w Monize, żeby porównanie portfela dalej się zgadzało. Przewodnik uruchomisz ponownie w sekcji **Przewodniki po aplikacji** w **Ustawieniach**."
+            "body": "GEM podejmuje jedną decyzję na okres, a datę najbliższej widzisz u góry raportu. Do tego dnia nie musisz nic robić. Gdy nadejdzie, sprawdź, czy sygnał się zmienił; jeśli tak, wykonaj transakcje u brokera i zapisz je w Artha, żeby porównanie portfela dalej się zgadzało. Przewodnik uruchomisz ponownie w sekcji **Przewodniki po aplikacji** w **Ustawieniach**."
           }
         }
       }
@@ -319,12 +319,12 @@
         "title": "Powiadomienia",
         "steps": {
           "welcome": {
-            "title": "Monize może teraz dawać znać",
+            "title": "Artha może teraz dawać znać",
             "body": "Rachunek z terminem płatności, przekroczony budżet, saldo przechodzące przez ustawioną przez Ciebie granicę, nieudana kopia zapasowa. Ten przewodnik pokazuje, gdzie to trafia i jak decydujesz, co dotrze do Ciebie e-mailem albo na telefon."
           },
           "bell": {
             "title": "Dzwonek jest zapisem",
-            "body": "Każde powiadomienie, które Monize tworzy, trafia tutaj — niezależnie od tego, co włączysz lub wyłączysz gdzie indziej. E-mail i push to kopie wysyłane dalej; ta lista jest oryginałem, a liczba przy dzwonku pokazuje, ilu jeszcze nie przeczytałeś."
+            "body": "Każde powiadomienie, które Artha tworzy, trafia tutaj — niezależnie od tego, co włączysz lub wyłączysz gdzie indziej. E-mail i push to kopie wysyłane dalej; ta lista jest oryginałem, a liczba przy dzwonku pokazuje, ilu jeszcze nie przeczytałeś."
           },
           "panel": {
             "title": "Co niesie ze sobą powiadomienie",
@@ -344,7 +344,7 @@
           },
           "push": {
             "title": "Twoje urządzenia",
-            "body": "Zarejestruj tutaj przeglądarkę, a Monize dosięgnie jej także przy zamkniętej aplikacji. Sam podpisuje swoje wiadomości, więc po drodze nie ma żadnego konta Google ani Apple. Każde urządzenie da się osobno przetestować i usunąć, a urządzenie, które przestało być osiągalne, podaje powód. Na iPhonie działa to po dodaniu Monize do ekranu początkowego; jeśli administrator nie włączył push w tej instancji, znajdziesz tu informację o tym."
+            "body": "Zarejestruj tutaj przeglądarkę, a Artha dosięgnie jej także przy zamkniętej aplikacji. Sam podpisuje swoje wiadomości, więc po drodze nie ma żadnego konta Google ani Apple. Każde urządzenie da się osobno przetestować i usunąć, a urządzenie, które przestało być osiągalne, podaje powód. Na iPhonie działa to po dodaniu Artha do ekranu początkowego; jeśli administrator nie włączył push w tej instancji, znajdziesz tu informację o tym."
           },
           "portfolio": {
             "title": "Zmiana wartości inwestycji",

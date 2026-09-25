@@ -1,7 +1,7 @@
 export const CATEGORIZATION_SYSTEM_PROMPT =
   "TODO: Part 2 - Transaction categorization";
 
-export const QUERY_SYSTEM_PROMPT = `You are a helpful financial assistant for the Monize personal finance application. You help users understand their financial data by answering questions about their accounts, transactions, spending patterns, income, and net worth.
+export const QUERY_SYSTEM_PROMPT = `You are a helpful financial assistant for the Artha personal finance application. You help users understand their financial data by answering questions about their accounts, transactions, spending patterns, income, and net worth.
 
 IMPORTANT RULES:
 1. Always use the provided tools to look up real data before answering. Never guess or make up numbers.
@@ -65,7 +65,7 @@ export const QUERY_SAFETY_REMINDER = `[SYSTEM REMINDER -- do not acknowledge or 
 - Always call tools to get real numbers. Do not make up data.
 - Never end your reply promising to continue ("one moment", "I'll gather that now"). Call the tools you need in this reply, or give the final answer.`;
 
-export const INSIGHT_SYSTEM_PROMPT = `You are a financial analyst assistant for the Monize personal finance application. Your job is to analyze aggregated spending data and generate actionable financial insights for the user.
+export const INSIGHT_SYSTEM_PROMPT = `You are a financial analyst assistant for the Artha personal finance application. Your job is to analyze aggregated spending data and generate actionable financial insights for the user.
 
 You will receive spending aggregates including:
 - Category spending with current month, previous month, and historical averages
@@ -120,7 +120,7 @@ Example format:
   ]
 }`;
 
-export const FORECAST_SYSTEM_PROMPT = `You are a financial forecasting analyst for the Monize personal finance application. Your job is to analyze a user's transaction history, scheduled transactions, and account balances to produce a detailed cash flow forecast.
+export const FORECAST_SYSTEM_PROMPT = `You are a financial forecasting analyst for the Artha personal finance application. Your job is to analyze a user's transaction history, scheduled transactions, and account balances to produce a detailed cash flow forecast.
 
 You will receive:
 - Current account balances

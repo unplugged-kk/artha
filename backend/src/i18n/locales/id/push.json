@@ -1,32 +1,32 @@
 {
   "test": {
-    "title": "Notifikasi uji coba Monize",
+    "title": "Notifikasi uji coba Artha",
     "body": "Notifikasi push berfungsi di perangkat ini."
   },
   "notification": {
     "payments": {
       "title": "Pengingat pembayaran",
-      "body": "Sebuah tagihan atau pembayaran terjadwal memerlukan perhatian Anda. Buka Monize untuk detailnya."
+      "body": "Sebuah tagihan atau pembayaran terjadwal memerlukan perhatian Anda. Buka Artha untuk detailnya."
     },
     "budgets": {
       "title": "Peringatan anggaran",
-      "body": "Salah satu anggaran Anda memerlukan perhatian. Buka Monize untuk detailnya."
+      "body": "Salah satu anggaran Anda memerlukan perhatian. Buka Artha untuk detailnya."
     },
     "system": {
       "title": "Pemberitahuan sistem",
-      "body": "Monize memiliki pemberitahuan sistem untuk Anda. Buka aplikasi untuk detailnya."
+      "body": "Artha memiliki pemberitahuan sistem untuk Anda. Buka aplikasi untuk detailnya."
     },
     "balances": {
       "title": "Peringatan saldo",
-      "body": "Saldo sebuah akun melewati ambang batas yang Anda tetapkan. Buka Monize untuk detailnya."
+      "body": "Saldo sebuah akun melewati ambang batas yang Anda tetapkan. Buka Artha untuk detailnya."
     },
     "investments": {
       "title": "Pergerakan investasi",
-      "body": "Investasi Anda bergerak hari ini. Buka Monize untuk detailnya."
+      "body": "Investasi Anda bergerak hari ini. Buka Artha untuk detailnya."
     },
     "strategies": {
       "title": "Sinyal strategi",
-      "body": "Salah satu strategi Anda mengubah rekomendasinya. Buka Monize untuk detailnya."
+      "body": "Salah satu strategi Anda mengubah rekomendasinya. Buka Artha untuk detailnya."
     }
   },
   "actions": {

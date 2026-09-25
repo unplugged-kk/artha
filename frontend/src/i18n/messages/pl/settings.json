@@ -2,7 +2,7 @@
   "language": {
     "label": "Język",
     "browserOption": "Użyj języka przeglądarki (wykryto {locale})",
-    "helpText": "Wybierz język używany w całym interfejsie Monize. Formatowanie liczb i dat jest sterowane osobno poniżej.",
+    "helpText": "Wybierz język używany w całym interfejsie Artha. Formatowanie liczb i dat jest sterowane osobno poniżej.",
     "saved": "Zmieniono język",
     "saveFailed": "Nie udało się zapisać języka"
   },
@@ -124,7 +124,7 @@
     "preferredExchangesHelp": "Wybierz maksymalnie 3 giełdy w kolejności priorytetu. Będą one preferowane podczas wyszukiwania papierów wartościowych.",
     "exchangePriorityPlaceholder": "Priorytet {n}",
     "defaultQuoteProviderLabel": "Domyślny dostawca notowań akcji",
-    "defaultQuoteProviderHelp": "Używany, gdy papier nie ma własnego dostawcy. Jeśli wybrany dostawca zawiedzie, Monize automatycznie spróbuje drugiego.",
+    "defaultQuoteProviderHelp": "Używany, gdy papier nie ma własnego dostawcy. Jeśli wybrany dostawca zawiedzie, Artha automatycznie spróbuje drugiego.",
     "msnNoIntradayNote": "Uwaga: MSN Money nie udostępnia danych śróddziennych, więc zakresy 1D / 1W / 1M na wykresie Wartość portfela w czasie są niedostępne dla pozycji śledzonych przez MSN.",
     "msnNotConfigured": "MSN jest wybrany jako domyślny dostawca notowań, ale na serwerze nie skonfigurowano MSN_API_KEY. Notowania MSN nie będą działać, dopóki administrator nie ustawi zmiennej środowiskowej i nie zrestartuje backendu.",
     "dateFormatLabel": "Format daty",
@@ -133,11 +133,11 @@
     "timezonePlaceholder": "Szukaj stref czasowych...",
     "weekStartsOnLabel": "Tydzień zaczyna się od",
     "showCreatedAtLabel": "Pokaż datę utworzenia w formularzach transakcji",
-    "showCreatedAtTooltip": "Wyświetla datę i godzinę pierwotnego utworzenia transakcji w formularzach. Jest to odrębne od daty transakcji i pomaga ustalić, kiedy wpis faktycznie dodano do Monize.",
+    "showCreatedAtTooltip": "Wyświetla datę i godzinę pierwotnego utworzenia transakcji w formularzach. Jest to odrębne od daty transakcji i pomaga ustalić, kiedy wpis faktycznie dodano do Artha.",
     "showWhatsNewLabel": "Pokaż „Co nowego” po aktualizacji",
-    "showWhatsNewTooltip": "Wyświetla podsumowanie informacji o wydaniu przy pierwszym logowaniu po zaktualizowaniu Monize do nowej wersji. Zawsze możesz otworzyć je ponownie, klikając numer wersji na dole tej strony lub na ekranie logowania.",
+    "showWhatsNewTooltip": "Wyświetla podsumowanie informacji o wydaniu przy pierwszym logowaniu po zaktualizowaniu Artha do nowej wersji. Zawsze możesz otworzyć je ponownie, klikając numer wersji na dole tej strony lub na ekranie logowania.",
     "lockReconciledLabel": "Zablokuj uzgodnione transakcje",
-    "lockReconciledTooltip": "Gdy ta opcja jest wyłączona, Monize ostrzega przed edycją, która zmieniłaby datę lub kwotę uzgodnionej transakcji, a potem ją dopuszcza. Gdy jest włączona, uzgodnionych transakcji nie można w ogóle edytować, usuwać ani cofać ich uzgodnienia. Wyłącz ją ponownie, aby wprowadzić poprawkę.",
+    "lockReconciledTooltip": "Gdy ta opcja jest wyłączona, Artha ostrzega przed edycją, która zmieniłaby datę lub kwotę uzgodnionej transakcji, a potem ją dopuszcza. Gdy jest włączona, uzgodnionych transakcji nie można w ogóle edytować, usuwać ani cofać ich uzgodnienia. Wyłącz ją ponownie, aby wprowadzić poprawkę.",
     "timeFormatLabel": "Format czasu",
     "timeFormatOptions": {
       "h24": "24-godzinny (14:30)",
@@ -250,13 +250,13 @@
       "collapsedDevicesUnavailable": "Lista urządzeń niedostępna",
       "diagnostics": {
         "summary": "Diagnostyka powiadomień",
-        "intro": "Co ta przeglądarka i to urządzenie zgłaszają Monize na temat powiadomień. Odśwież po zmianie ustawienia, a następnie użyj Kopiuj, aby wysłać pełny raport.",
+        "intro": "Co ta przeglądarka i to urządzenie zgłaszają Artha na temat powiadomień. Odśwież po zmianie ustawienia, a następnie użyj Kopiuj, aby wysłać pełny raport.",
         "refresh": "Odśwież",
         "copy": "Kopiuj raport",
         "copied": "Skopiowano diagnostykę do schowka"
       },
-      "description": "Zarejestruj to urządzenie, aby Monize mogło je powiadomić nawet przy zamkniętej aplikacji. Na razie tą drogą dostarczane jest tylko powiadomienie testowe; wszystko inne nadal trafia do dzwonka.",
-      "androidNotify": "Na Androidzie sama zgoda nie wystarczy: system nadal może ukrywać powiadomienia. Przytrzymaj ikonę Monize na ekranie głównym, wybierz „O aplikacji”, potem „Powiadomienia” i upewnij się, że są włączone.",
+      "description": "Zarejestruj to urządzenie, aby Artha mogło je powiadomić nawet przy zamkniętej aplikacji. Na razie tą drogą dostarczane jest tylko powiadomienie testowe; wszystko inne nadal trafia do dzwonka.",
+      "androidNotify": "Na Androidzie sama zgoda nie wystarczy: system nadal może ukrywać powiadomienia. Przytrzymaj ikonę Artha na ekranie głównym, wybierz „O aplikacji”, potem „Powiadomienia” i upewnij się, że są włączone.",
       "permissionHint": "Po włączeniu przeglądarka poprosi o zgodę na wyświetlanie powiadomień. Nic nie zostanie wysłane, dopóki jej nie udzielisz.",
       "enableButton": "Włącz na tym urządzeniu",
       "enablingButton": "Włączanie...",
@@ -267,16 +267,16 @@
       "unifiedpushBadge": "UnifiedPush",
       "unnamedDevice": "Urządzenie bez nazwy",
       "noLiveDevices": "Nie zarejestrowano jeszcze żadnego urządzenia. Włącz push na tym urządzeniu, aby wysłać test.",
-      "notConfigured": "Push w przeglądarce nie jest dostępny w tej instancji Monize. Administrator może go włączyć w sekcji Admin.",
-      "disabledByAdmin": "Administrator wyłączył push w przeglądarce dla tej instancji Monize.",
-      "keyUnreadable": "Monize nie potrafi odczytać pary kluczy push tej instancji, więc nic nie jest dostarczane. Administrator może to naprawić, wymieniając parę kluczy w sekcji Admin.",
-      "serverKeyMissing": "Tej instancji Monize brakuje klucza szyfrującego potrzebnego do otwarcia pary kluczy push, więc nic nie może zostać dostarczone. Administrator musi ustawić go we wdrożeniu i zrestartować aplikację.",
-      "statusUnavailable": "Monize nie mógł sprawdzić, czy push w przeglądarce jest dostępny. Odśwież stronę, aby spróbować ponownie.",
-      "devicesUnavailable": "Monize nie wczytał Twoich zarejestrowanych urządzeń. Reszta tej strony działa normalnie; odśwież, aby spróbować ponownie.",
+      "notConfigured": "Push w przeglądarce nie jest dostępny w tej instancji Artha. Administrator może go włączyć w sekcji Admin.",
+      "disabledByAdmin": "Administrator wyłączył push w przeglądarce dla tej instancji Artha.",
+      "keyUnreadable": "Artha nie potrafi odczytać pary kluczy push tej instancji, więc nic nie jest dostarczane. Administrator może to naprawić, wymieniając parę kluczy w sekcji Admin.",
+      "serverKeyMissing": "Tej instancji Artha brakuje klucza szyfrującego potrzebnego do otwarcia pary kluczy push, więc nic nie może zostać dostarczone. Administrator musi ustawić go we wdrożeniu i zrestartować aplikację.",
+      "statusUnavailable": "Artha nie mógł sprawdzić, czy push w przeglądarce jest dostępny. Odśwież stronę, aby spróbować ponownie.",
+      "devicesUnavailable": "Artha nie wczytał Twoich zarejestrowanych urządzeń. Reszta tej strony działa normalnie; odśwież, aby spróbować ponownie.",
       "unsupported": {
         "unsupported": "Ta przeglądarka nie może odbierać powiadomień push.",
-        "denied": "Powiadomienia dla Monize są zablokowane w tej przeglądarce. Zezwól na nie w ustawieniach witryny, a następnie odśwież tę stronę.",
-        "ios-browser": "Na iPhonie i iPadzie powiadomienia push działają dopiero po zainstalowaniu Monize na ekranie głównym. Użyj Udostępnij, potem Dodaj do ekranu głównego i otwórz Monize stamtąd."
+        "denied": "Powiadomienia dla Artha są zablokowane w tej przeglądarce. Zezwól na nie w ustawieniach witryny, a następnie odśwież tę stronę.",
+        "ios-browser": "Na iPhonie i iPadzie powiadomienia push działają dopiero po zainstalowaniu Artha na ekranie głównym. Użyj Udostępnij, potem Dodaj do ekranu głównego i otwórz Artha stamtąd."
       },
       "disabledReason": {
         "GONE": "Nieosiągalne. Włącz push ponownie w tamtej przeglądarce.",
@@ -286,10 +286,10 @@
       "toasts": {
         "enabled": "Włączono powiadomienia push na tym urządzeniu",
         "enableFailed": "Nie udało się włączyć powiadomień push",
-        "permissionDenied": "Ta przeglądarka blokuje powiadomienia Monize. Zezwól na nie w ustawieniach witryny i spróbuj ponownie.",
-        "permissionDeniedIos": "Powiadomienia dla Monize są zablokowane. Otwórz Ustawienia iOS, potem Powiadomienia, potem Monize, aby na nie zezwolić.",
+        "permissionDenied": "Ta przeglądarka blokuje powiadomienia Artha. Zezwól na nie w ustawieniach witryny i spróbuj ponownie.",
+        "permissionDeniedIos": "Powiadomienia dla Artha są zablokowane. Otwórz Ustawienia iOS, potem Powiadomienia, potem Artha, aby na nie zezwolić.",
         "permissionDismissed": "Powiadomienia nie zostały włączone. Wybierz Zezwól, gdy przeglądarka zapyta.",
-        "permissionNoPrompt": "Powiadomienia nie zostały włączone i nie pojawiło się żadne pytanie. Otwórz Ustawienia iOS, potem Powiadomienia, potem Monize, i zezwól tam. Jeśli Monize nie ma na liście, usuń je z ekranu głównego, dodaj ponownie (Udostępnij, potem Dodaj do ekranu głównego) i spróbuj jeszcze raz.",
+        "permissionNoPrompt": "Powiadomienia nie zostały włączone i nie pojawiło się żadne pytanie. Otwórz Ustawienia iOS, potem Powiadomienia, potem Artha, i zezwól tam. Jeśli Artha nie ma na liście, usuń je z ekranu głównego, dodaj ponownie (Udostępnij, potem Dodaj do ekranu głównego) i spróbuj jeszcze raz.",
         "removed": "Usunięto urządzenie",
         "removeFailed": "Nie udało się usunąć urządzenia",
         "testSent": "{count, plural, one {Wysłano powiadomienie testowe na 1 urządzenie} few {Wysłano powiadomienie testowe na # urządzenia} many {Wysłano powiadomienie testowe na # urządzeń} other {Wysłano powiadomienie testowe na # urządzenia}}",
@@ -325,7 +325,7 @@
     },
     "preferences": {
       "heading": "Jak mnie powiadamiać",
-      "description": "Wybierz, które rodzaje Monize wysyła e-mailem lub przez push i jak często.",
+      "description": "Wybierz, które rodzaje Artha wysyła e-mailem lub przez push i jak często.",
       "categoryHeader": "Powiadomienie",
       "channels": {
         "emailReport": "E-mail (raport)",
@@ -394,7 +394,7 @@
   "about": {
     "heading": "O programie",
     "description": "Co działa w tej instancji oraz gdzie znaleźć informacje o wydaniu, licencję i politykę bezpieczeństwa.",
-    "appName": "Monize",
+    "appName": "Artha",
     "tagline": "Samodzielnie hostowane zarządzanie finansami osobistymi.",
     "versionLabel": "Wersja",
     "versionUnknown": "Nieznana",
@@ -417,7 +417,7 @@
     },
     "license": {
       "label": "Licencja",
-      "description": "Monize to wolne oprogramowanie na licencji GNU AGPL v3."
+      "description": "Artha to wolne oprogramowanie na licencji GNU AGPL v3."
     },
     "securityPolicy": {
       "label": "Polityka bezpieczeństwa",
@@ -595,7 +595,7 @@
   },
   "autoBackup": {
     "heading": "Automatyczna kopia zapasowa",
-    "description": "Automatycznie twórz kopie zapasowe danych do folderu według harmonogramu. Ponieważ Monize działa w Dockerze, musisz zamapować folder hosta do kontenera jako wolumin (np. -v /host/backups:/data/backups).",
+    "description": "Automatycznie twórz kopie zapasowe danych do folderu według harmonogramu. Ponieważ Artha działa w Dockerze, musisz zamapować folder hosta do kontenera jako wolumin (np. -v /host/backups:/data/backups).",
     "adminManagedNote": "Tylko administratorzy mogą zmieniać te ustawienia. Wszyscy pozostali użytkownicy są archiwizowani automatycznie według tego samego harmonogramu i zasad przechowywania, każdy do własnego folderu.",
     "loadingText": "Wczytywanie...",
     "enableLabel": "Włącz automatyczne kopie zapasowe",
@@ -756,20 +756,20 @@
     "sharedDataLabel": "Udostępnione dane: {count}",
     "editAccessButton": "Edytuj dostęp",
     "resetPasswordButton": "Zresetuj hasło",
-    "resetPasswordDisabledTitle": "Ta osoba sama zarządza swoim hasłem (ma własne konto Monize lub dostęp pełnomocnika w innym miejscu).",
+    "resetPasswordDisabledTitle": "Ta osoba sama zarządza swoim hasłem (ma własne konto Artha lub dostęp pełnomocnika w innym miejscu).",
     "removeButton": "Usuń",
     "createModal": {
       "title": "Dodaj pełnomocnika",
       "description": "Przyznaj innej osobie ograniczony dostęp do Twoich kont.",
       "emailLabel": "E-mail",
       "emailPlaceholder": "E-mail pełnomocnika",
-      "checkingEmail": "Sprawdzanie tego adresu e-mail względem istniejących kont Monize…",
+      "checkingEmail": "Sprawdzanie tego adresu e-mail względem istniejących kont Artha…",
       "retryEmailCheck": "Sprawdź ponownie",
       "firstNameLabel": "Imię",
       "firstNamePlaceholder": "Imię (opcjonalnie)",
       "lastNameLabel": "Nazwisko",
       "lastNamePlaceholder": "Nazwisko (opcjonalnie)",
-      "existingAccountNotice": "Ta osoba ma już logowanie Monize. Zachowa własne dane i po prostu otrzyma dodatkowy dostęp współdzielony — bez hasła ani zaproszenia.",
+      "existingAccountNotice": "Ta osoba ma już logowanie Artha. Zachowa własne dane i po prostu otrzyma dodatkowy dostęp współdzielony — bez hasła ani zaproszenia.",
       "sendInviteLabel": "Wyślij zaproszenie e-mail zamiast ustawiać hasło",
       "passwordLabel": "Hasło",
       "passwordPlaceholder": "Ustaw hasło",
@@ -777,7 +777,7 @@
     },
     "revokeDialog": {
       "title": "Usuń pełnomocnika",
-      "message": "Usunąć tego pełnomocnika? Utraci dostęp do Twojego konta. Jeśli nie ma innego dostępu współdzielonego i nigdy nie przejął tego adresu e-mail jako własnego konta Monize, jego logowanie zarządzane przez właściciela również zostanie usunięte.",
+      "message": "Usunąć tego pełnomocnika? Utraci dostęp do Twojego konta. Jeśli nie ma innego dostępu współdzielonego i nigdy nie przejął tego adresu e-mail jako własnego konta Artha, jego logowanie zarządzane przez właściciela również zostanie usunięte.",
       "removingButton": "Usuwanie...",
       "removeButton": "Usuń"
     },
@@ -801,7 +801,7 @@
       "revokeFailed": "Nie udało się odwołać pełnomocnika",
       "resetPasswordFailed": "Nie udało się zresetować hasła",
       "copyFailed": "Nie udało się skopiować do schowka",
-      "lookupFailed": "Nie udało się sprawdzić tego adresu e-mail względem istniejących kont Monize. Dodawanie pełnomocnika jest wstrzymane do czasu powodzenia tego sprawdzenia, aby istniejące hasło nigdy nie zostało przypadkowo nadpisane."
+      "lookupFailed": "Nie udało się sprawdzić tego adresu e-mail względem istniejących kont Artha. Dodawanie pełnomocnika jest wstrzymane do czasu powodzenia tego sprawdzenia, aby istniejące hasło nigdy nie zostało przypadkowo nadpisane."
     },
     "jointLabel": "{count, plural, one {# wspólne konto} few {# wspólne konta} many {# wspólnych kont} other {# wspólnego konta}}"
   },
@@ -818,7 +818,7 @@
     "accounts": {
       "noAccounts": "Brak kont do przyznania.",
       "grantAll": "Przyznaj wszystkie",
-      "jointRequiresFullAccount": "Wspólne konta można udostępniać tylko użytkownikom, którzy mają własne konto Monize"
+      "jointRequiresFullAccount": "Wspólne konta można udostępniać tylko użytkownikom, którzy mają własne konto Artha"
     },
     "shared": {
       "description": "ODCZYT odbiorców, kategorii i tagów jest zawsze dozwolony. To steruje tworzeniem/edycją/usuwaniem."
@@ -859,7 +859,7 @@
     },
     "toursCard": {
       "title": "Przewodniki po aplikacji",
-      "description": "Wszystkie przewodniki, które oferuje Monize, wraz z tym, co już obejrzałeś. Uruchom lub powtórz dowolny z nich."
+      "description": "Wszystkie przewodniki, które oferuje Artha, wraz z tym, co już obejrzałeś. Uruchom lub powtórz dowolny z nich."
     },
     "emergencyAccessCard": {
       "title": "Dostęp awaryjny",
@@ -904,7 +904,7 @@
       "how": {
         "intro": "Po włączeniu czat AI nie wywołuje modelu LLM po stronie serwera. Zamiast tego:",
         "step1": "Uruchamiasz agenta MCP (np. Claude CLI) na własnym komputerze, zalogowanego do swojej subskrypcji.",
-        "step2": "Agent wykonuje long-polling do Monize w poszukiwaniu monitów wpisywanych w czacie i odpowiada na nie za pomocą narzędzi Monize.",
+        "step2": "Agent wykonuje long-polling do Artha w poszukiwaniu monitów wpisywanych w czacie i odpowiada na nie za pomocą narzędzi Artha.",
         "step3": "Odpowiedzi są przesyłane strumieniowo z powrotem do czatu. Kropka stanu pokazuje, czy agent jest połączony.",
         "note": "Nic się nie uruchamia, dopóki agent nie jest połączony i nie nasłuchuje. Czat wyświetla instrukcje połączenia."
       }
@@ -1200,7 +1200,7 @@
       "keyUnreadable": "Ten serwer nie może odczytać zapisanego klucza API. Dzieje się tak po przywróceniu kopii zapasowej na innej instancji lub po zmianie klucza szyfrowania. Wprowadź klucz ponownie, aby to naprawić.",
       "encryptionUnavailable": "Na tym serwerze nie skonfigurowano klucza szyfrowania, więc klucza API nie da się bezpiecznie zapisać. Poproś administratora o jego ustawienie.",
       "modalTitle": "Google Places",
-      "modalSubtitle": "Monize wysyła do Google nazwę odbiorcy i adres, który już masz, i nic tam nie przechowuje.",
+      "modalSubtitle": "Artha wysyła do Google nazwę odbiorcy i adres, który już masz, i nic tam nie przechowuje.",
       "apiKeyLabel": "Klucz API",
       "apiKeyPlaceholder": "Wklej swój klucz API Google Places",
       "apiKeyHelp": "Utwórz klucz w konsoli Google Cloud z włączonym Places API (New). Pozostaw puste, aby zachować już zapisany klucz.",

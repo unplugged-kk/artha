@@ -15,7 +15,7 @@
     "showNextLogin": "Pokaż przy następnym logowaniu",
     "close": "Zamknij",
     "unavailable": "Informacje o wydaniu tej wersji są niedostępne.",
-    "englishOnly": "Informacje o wydaniu poniżej są dostępne tylko w języku angielskim. Sam Monize, w tym przewodniki, używa wybranego przez Ciebie języka."
+    "englishOnly": "Informacje o wydaniu poniżej są dostępne tylko w języku angielskim. Sam Artha, w tym przewodniki, używa wybranego przez Ciebie języka."
   },
   "transferPayee": "{direction, select, to {Przelew do {name}} other {Przelew z {name}}}",
   "save": "Zapisz",

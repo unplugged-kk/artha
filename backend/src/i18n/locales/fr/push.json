@@ -1,32 +1,32 @@
 {
   "test": {
-    "title": "Notification de test Monize",
+    "title": "Notification de test Artha",
     "body": "Les notifications push fonctionnent sur cet appareil."
   },
   "notification": {
     "payments": {
       "title": "Rappel de paiement",
-      "body": "Une facture ou un paiement planifié demande votre attention. Ouvrez Monize pour les détails."
+      "body": "Une facture ou un paiement planifié demande votre attention. Ouvrez Artha pour les détails."
     },
     "budgets": {
       "title": "Alerte budgétaire",
-      "body": "L'un de vos budgets demande votre attention. Ouvrez Monize pour les détails."
+      "body": "L'un de vos budgets demande votre attention. Ouvrez Artha pour les détails."
     },
     "system": {
       "title": "Avis système",
-      "body": "Monize a un avis système pour vous. Ouvrez l'application pour les détails."
+      "body": "Artha a un avis système pour vous. Ouvrez l'application pour les détails."
     },
     "balances": {
       "title": "Alerte de solde",
-      "body": "Le solde d'un compte a franchi un seuil que vous avez défini. Ouvrez Monize pour les détails."
+      "body": "Le solde d'un compte a franchi un seuil que vous avez défini. Ouvrez Artha pour les détails."
     },
     "investments": {
       "title": "Mouvement des placements",
-      "body": "Vos placements ont bougé aujourd'hui. Ouvrez Monize pour les détails."
+      "body": "Vos placements ont bougé aujourd'hui. Ouvrez Artha pour les détails."
     },
     "strategies": {
       "title": "Signal de stratégie",
-      "body": "L'une de vos stratégies a modifié sa recommandation. Ouvrez Monize pour les détails."
+      "body": "L'une de vos stratégies a modifié sa recommandation. Ouvrez Artha pour les détails."
     }
   },
   "actions": {

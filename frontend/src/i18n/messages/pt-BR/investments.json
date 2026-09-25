@@ -224,7 +224,7 @@
     "statusLockedToParent": "Esta transação faz parte de uma transação dividida. Altere o status da transação dividida, para que os dois lados mudem juntos.",
     "descriptionPlaceholder": "Notas opcionais",
     "splitRatio": "Rácio de desdobramento",
-    "noSplitRatioWarning": "Não há rácio de desdobramento definido nesta transação. Insira o rácio conforme anunciado antes de salvar — o Monize não assumirá um por você.",
+    "noSplitRatioWarning": "Não há rácio de desdobramento definido nesta transação. Insira o rácio conforme anunciado antes de salvar — o Artha não assumirá um por você.",
     "newShares": "Novas ações",
     "oldShares": "Ações antigas",
     "splitRatioHelp": "Insira o rácio conforme anunciado. Para um desdobramento de 2 por 1 use 2 novas e 1 antiga; para um reagrupamento de 1 por 2 use 1 nova e 2 antigas. Rácio efetivo:",

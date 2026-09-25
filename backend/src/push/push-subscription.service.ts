@@ -203,7 +203,7 @@ export class PushSubscriptionService {
         throw new BadRequestException(
           tr(
             "errors.push.channelUnavailable",
-            "Push notifications are not available on this Monize instance.",
+            "Push notifications are not available on this Artha instance.",
           ),
         );
       }
@@ -435,7 +435,7 @@ export class PushSubscriptionService {
       throw new BadRequestException(
         tr(
           "errors.push.channelUnavailable",
-          "Push notifications are not available on this Monize instance.",
+          "Push notifications are not available on this Artha instance.",
         ),
       );
     }
@@ -463,7 +463,7 @@ export class PushSubscriptionService {
     const t = emailTranslator(this.i18n, lang);
     const payload: PushPayload = {
       type: "TEST",
-      title: t("push.test.title", "Monize test notification"),
+      title: t("push.test.title", "Artha test notification"),
       body: t(
         "push.test.body",
         "Push notifications are working on this device.",
@@ -710,7 +710,7 @@ function endpointClaimed(): ConflictException {
   return new ConflictException({
     message: tr(
       "errors.push.endpointClaimed",
-      "This browser is already registered to a different Monize account. Sign out of that account in this browser and try again.",
+      "This browser is already registered to a different Artha account. Sign out of that account in this browser and try again.",
     ),
     errorCode: ENDPOINT_CLAIMED_CODE,
   });

@@ -325,7 +325,7 @@ function addFooter(
   doc.setFontSize(8);
   doc.setFont(PDF_FONT, 'normal');
   doc.setTextColor(156, 163, 175);
-  doc.text('Monize', 14, pageHeight - 8);
+  doc.text('Artha', 14, pageHeight - 8);
   doc.text(
     `Page ${pageNumber} of ${totalPages}`,
     pageWidth - 14,

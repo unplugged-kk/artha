@@ -9,10 +9,10 @@ export function testEmailTemplate(
   const safeName = escapeHtml(firstName || "there");
   return `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <h2 style="color: #1f2937;">${t("emails.test.heading", "Monize Test Email")}</h2>
+      <h2 style="color: #1f2937;">${t("emails.test.heading", "Artha Test Email")}</h2>
       <p style="color: #374151;">${t("emails.test.greeting", `Hi ${safeName},`, { name: safeName })}</p>
-      <p style="color: #374151;">${t("emails.test.body", "This is a test email from Monize. If you received this, your email notifications are working correctly.")}</p>
-      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Monize</p>
+      <p style="color: #374151;">${t("emails.test.body", "This is a test email from Artha. If you received this, your email notifications are working correctly.")}</p>
+      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Artha</p>
     </div>
   `;
 }
@@ -51,11 +51,11 @@ export function notificationImmediateTemplate(
   const accent = notificationAccentColour(params.severity);
   return `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <p style="color: #6b7280; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 8px;">${t("emails.notificationImmediate.eyebrow", "Monize notification")}</p>
+      <p style="color: #6b7280; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 8px;">${t("emails.notificationImmediate.eyebrow", "Artha notification")}</p>
       <h2 style="color: ${accent}; margin: 0 0 12px;">${safeTitle}</h2>
       <p style="color: #374151; line-height: 1.5;">${safeMessage}</p>
       <p style="margin: 24px 0;">
-        <a href="${safeUrl}" style="display: inline-block; padding: 10px 20px; background: ${accent}; color: #ffffff; border-radius: 6px; text-decoration: none; font-weight: 500;">${t("emails.notificationImmediate.button", "Open in Monize")}</a>
+        <a href="${safeUrl}" style="display: inline-block; padding: 10px 20px; background: ${accent}; color: #ffffff; border-radius: 6px; text-decoration: none; font-weight: 500;">${t("emails.notificationImmediate.button", "Open in Artha")}</a>
       </p>
       <p style="color: #9ca3af; font-size: 13px; margin-top: 24px;">${t("emails.notificationImmediate.footer", "You are receiving this because immediate email is on for this notification type. Change it in Settings, Notifications.")}</p>
     </div>
@@ -142,7 +142,7 @@ export function billReminderTemplate(
       <p style="margin-top: 20px;">
         <a href="${appUrl}/bills" style="display: inline-block; padding: 10px 20px; background: #2563eb; color: #ffffff; border-radius: 6px; text-decoration: none; font-weight: 500;">${t("emails.billReminder.button", "View Bills &amp; Deposits")}</a>
       </p>
-      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Monize</p>
+      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Artha</p>
     </div>
   `;
 }
@@ -189,7 +189,7 @@ export function mortgageReminderTemplate(
       <p style="margin-top: 20px;">
         <a href="${appUrl}/accounts" style="display: inline-block; padding: 10px 20px; background: #2563eb; color: #ffffff; border-radius: 6px; text-decoration: none; font-weight: 500;">${t("emails.mortgageReminder.button", "View Accounts")}</a>
       </p>
-      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Monize</p>
+      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Artha</p>
     </div>
   `;
 }
@@ -267,7 +267,7 @@ export function budgetAlertImmediateTemplate(
       <p style="margin-top: 20px;">
         <a href="${appUrl}/budgets" style="display: inline-block; padding: 10px 20px; background: #2563eb; color: #ffffff; border-radius: 6px; text-decoration: none; font-weight: 500;">${t("emails.budgetAlertImmediate.button", "View Budget")}</a>
       </p>
-      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Monize</p>
+      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Artha</p>
     </div>
   `;
 }
@@ -344,7 +344,7 @@ export function budgetWeeklyDigestTemplate(
       <p style="margin-top: 20px;">
         <a href="${appUrl}/budgets" style="display: inline-block; padding: 10px 20px; background: #2563eb; color: #ffffff; border-radius: 6px; text-decoration: none; font-weight: 500;">${t("emails.budgetWeeklyDigest.button", "View Budget Dashboard")}</a>
       </p>
-      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Monize</p>
+      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Artha</p>
     </div>
   `;
 }
@@ -480,7 +480,7 @@ export function budgetMonthlySummaryTemplate(
       <p style="margin-top: 20px;">
         <a href="${appUrl}/budgets" style="display: inline-block; padding: 10px 20px; background: #2563eb; color: #ffffff; border-radius: 6px; text-decoration: none; font-weight: 500;">${t("emails.budgetMonthlySummary.button", "View Budget Dashboard")}</a>
       </p>
-      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Monize</p>
+      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Artha</p>
     </div>
   `;
 }
@@ -496,12 +496,12 @@ export function oidcLinkTemplate(
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <h2 style="color: #1f2937;">${t("emails.oidcLink.heading", "Link Your SSO Account")}</h2>
       <p style="color: #374151;">${t("emails.oidcLink.greeting", `Hi ${safeName},`, { name: safeName })}</p>
-      <p style="color: #374151;">${t("emails.oidcLink.intro", "Someone attempted to sign in via SSO with an email that matches your existing Monize account. To link your SSO identity to this account, click the button below:")}</p>
+      <p style="color: #374151;">${t("emails.oidcLink.intro", "Someone attempted to sign in via SSO with an email that matches your existing Artha account. To link your SSO identity to this account, click the button below:")}</p>
       <p style="text-align: center; margin: 24px 0;">
         <a href="${safeUrl}" style="background-color: #2563eb; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600;">${t("emails.oidcLink.button", "Confirm Account Link")}</a>
       </p>
       <p style="color: #6b7280; font-size: 14px;">${t("emails.oidcLink.disclaimer", "If you did not initiate this request, you can safely ignore this email. The link expires in 1 hour.")}</p>
-      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Monize</p>
+      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Artha</p>
     </div>
   `;
 }
@@ -515,9 +515,9 @@ export function accountLockedTemplate(
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <h2 style="color: #1f2937;">${t("emails.accountLocked.heading", "Account Temporarily Locked")}</h2>
       <p style="color: #374151;">${t("emails.accountLocked.greeting", `Hi ${safeName},`, { name: safeName })}</p>
-      <p style="color: #374151;">${t("emails.accountLocked.body1", "Your Monize account has been temporarily locked due to multiple failed login attempts. This is a security measure to protect your account.")}</p>
+      <p style="color: #374151;">${t("emails.accountLocked.body1", "Your Artha account has been temporarily locked due to multiple failed login attempts. This is a security measure to protect your account.")}</p>
       <p style="color: #374151;">${t("emails.accountLocked.body2", "The lock will expire automatically. If you did not attempt to log in, we recommend resetting your password immediately.")}</p>
-      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Monize</p>
+      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Artha</p>
     </div>
   `;
 }
@@ -538,7 +538,7 @@ export function passwordResetTemplate(
         <a href="${safeUrl}" style="display: inline-block; padding: 12px 24px; background: #2563eb; color: #ffffff; border-radius: 6px; text-decoration: none; font-weight: 500;">${t("emails.passwordReset.button", "Reset Password")}</a>
       </p>
       <p style="color: #374151;">${t("emails.passwordReset.disclaimer", "This link will expire in 1 hour. If you did not request a password reset, you can safely ignore this email.")}</p>
-      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Monize</p>
+      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Artha</p>
     </div>
   `;
 }
@@ -554,12 +554,12 @@ export function emailVerificationTemplate(
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <h2 style="color: #1f2937;">${t("emails.emailVerification.heading", "Verify your email address")}</h2>
       <p style="color: #374151;">${t("emails.emailVerification.greeting", `Hi ${safeName},`, { name: safeName })}</p>
-      <p style="color: #374151;">${t("emails.emailVerification.intro", "Thanks for signing up for Monize. Please confirm your email address to activate your account and sign in:")}</p>
+      <p style="color: #374151;">${t("emails.emailVerification.intro", "Thanks for signing up for Artha. Please confirm your email address to activate your account and sign in:")}</p>
       <p style="margin: 24px 0;">
         <a href="${safeUrl}" style="display: inline-block; padding: 12px 24px; background: #2563eb; color: #ffffff; border-radius: 6px; text-decoration: none; font-weight: 500;">${t("emails.emailVerification.button", "Verify Email")}</a>
       </p>
-      <p style="color: #374151;">${t("emails.emailVerification.disclaimer", "This link will expire in 24 hours. If you did not create a Monize account, you can safely ignore this email.")}</p>
-      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Monize</p>
+      <p style="color: #374151;">${t("emails.emailVerification.disclaimer", "This link will expire in 24 hours. If you did not create a Artha account, you can safely ignore this email.")}</p>
+      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Artha</p>
     </div>
   `;
 }
@@ -573,14 +573,14 @@ export function accountInviteTemplate(
   const safeUrl = escapeHtml(inviteUrl);
   return `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <h2 style="color: #1f2937;">${t("emails.accountInvite.heading", "Your Monize account is ready")}</h2>
+      <h2 style="color: #1f2937;">${t("emails.accountInvite.heading", "Your Artha account is ready")}</h2>
       <p style="color: #374151;">${t("emails.accountInvite.greeting", `Hi ${safeName},`, { name: safeName })}</p>
-      <p style="color: #374151;">${t("emails.accountInvite.intro", "An administrator has created a Monize account for you. Click the button below to set your password and sign in:")}</p>
+      <p style="color: #374151;">${t("emails.accountInvite.intro", "An administrator has created a Artha account for you. Click the button below to set your password and sign in:")}</p>
       <p style="margin: 24px 0;">
         <a href="${safeUrl}" style="display: inline-block; padding: 12px 24px; background: #2563eb; color: #ffffff; border-radius: 6px; text-decoration: none; font-weight: 500;">${t("emails.accountInvite.button", "Set Your Password")}</a>
       </p>
       <p style="color: #374151;">${t("emails.accountInvite.disclaimer", "This link will expire in 24 hours. If you were not expecting this, you can safely ignore this email.")}</p>
-      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Monize</p>
+      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Artha</p>
     </div>
   `;
 }
@@ -596,14 +596,14 @@ export function delegateInviteTemplate(
   const safeUrl = escapeHtml(inviteUrl);
   return `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <h2 style="color: #1f2937;">${t("emails.delegateInvite.heading", "You have been invited to Monize")}</h2>
+      <h2 style="color: #1f2937;">${t("emails.delegateInvite.heading", "You have been invited to Artha")}</h2>
       <p style="color: #374151;">${t("emails.delegateInvite.greeting", `Hi ${safeName},`, { name: safeName })}</p>
-      <p style="color: #374151;">${t("emails.delegateInvite.intro", `${safeOwner} has invited you to access their Monize account as a delegate. Click the button below to set your password and get started:`, { owner: safeOwner })}</p>
+      <p style="color: #374151;">${t("emails.delegateInvite.intro", `${safeOwner} has invited you to access their Artha account as a delegate. Click the button below to set your password and get started:`, { owner: safeOwner })}</p>
       <p style="margin: 24px 0;">
         <a href="${safeUrl}" style="display: inline-block; padding: 12px 24px; background: #2563eb; color: #ffffff; border-radius: 6px; text-decoration: none; font-weight: 500;">${t("emails.delegateInvite.button", "Set Your Password")}</a>
       </p>
       <p style="color: #374151;">${t("emails.delegateInvite.disclaimer", "This link will expire in 24 hours. If you were not expecting this invitation, you can safely ignore this email.")}</p>
-      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Monize</p>
+      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Artha</p>
     </div>
   `;
 }
@@ -639,16 +639,16 @@ export function emergencyAccessReminderTemplate(
           );
   return `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <h2 style="color: #b45309;">${t("emails.emergencyAccessReminder.heading", "Monize Emergency Access Reminder")}</h2>
+      <h2 style="color: #b45309;">${t("emails.emergencyAccessReminder.heading", "Artha Emergency Access Reminder")}</h2>
       <p style="color: #374151;">${t("emails.emergencyAccessReminder.greeting", `Hi ${safeName},`, { name: safeName })}</p>
-      <p style="color: #374151;">${data.daysSinceLogin === 1 ? t("emails.emergencyAccessReminder.bodyOne", `You have not signed in to Monize for <strong>1 day</strong>. If you remain inactive, your designated emergency contacts will be granted full access to your account ${grantPhrase}.`, { grantPhrase }) : t("emails.emergencyAccessReminder.bodyMany", `You have not signed in to Monize for <strong>${data.daysSinceLogin} days</strong>. If you remain inactive, your designated emergency contacts will be granted full access to your account ${grantPhrase}.`, { daysSinceLogin: data.daysSinceLogin, grantPhrase })}</p>
+      <p style="color: #374151;">${data.daysSinceLogin === 1 ? t("emails.emergencyAccessReminder.bodyOne", `You have not signed in to Artha for <strong>1 day</strong>. If you remain inactive, your designated emergency contacts will be granted full access to your account ${grantPhrase}.`, { grantPhrase }) : t("emails.emergencyAccessReminder.bodyMany", `You have not signed in to Artha for <strong>${data.daysSinceLogin} days</strong>. If you remain inactive, your designated emergency contacts will be granted full access to your account ${grantPhrase}.`, { daysSinceLogin: data.daysSinceLogin, grantPhrase })}</p>
       <p style="color: #374151;">${t("emails.emergencyAccessReminder.contactsLabel", "Designated contacts:")}</p>
       <ul style="margin: 8px 0 16px 20px; padding: 0;">${contactRows}</ul>
       <p style="margin: 24px 0;">
         <a href="${data.appUrl}/login" style="display: inline-block; padding: 12px 24px; background: #2563eb; color: #ffffff; border-radius: 6px; text-decoration: none; font-weight: 500;">${t("emails.emergencyAccessReminder.button", "Sign in now")}</a>
       </p>
       <p style="color: #374151;">${t("emails.emergencyAccessReminder.footer", "Signing in resets the timer. If you no longer want this feature enabled, you can disable it from Settings → Emergency Access.")}</p>
-      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Monize</p>
+      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Artha</p>
     </div>
   `;
 }
@@ -676,14 +676,14 @@ export function emergencyAccessGrantTemplate(
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <h2 style="color: #1f2937;">${t("emails.emergencyAccessGrant.heading", "Emergency Access Granted")}</h2>
       <p style="color: #374151;">${t("emails.emergencyAccessGrant.greeting", `Hi ${safeContact},`, { name: safeContact })}</p>
-      <p style="color: #374151;">${t("emails.emergencyAccessGrant.body", `<strong>${safeOwner}</strong> previously designated you as an emergency contact on their Monize account. Because they have not signed in for an extended period, you are now being granted full access to take over the account.`, { owner: safeOwner })}</p>
+      <p style="color: #374151;">${t("emails.emergencyAccessGrant.body", `<strong>${safeOwner}</strong> previously designated you as an emergency contact on their Artha account. Because they have not signed in for an extended period, you are now being granted full access to take over the account.`, { owner: safeOwner })}</p>
       ${messageBlock}
       <p style="color: #374151;">${t("emails.emergencyAccessGrant.claimIntro", "To claim access, click the link below and set a new password. You will be signed in as the account holder.")}</p>
       <p style="margin: 24px 0;">
         <a href="${safeUrl}" style="display: inline-block; padding: 12px 24px; background: #2563eb; color: #ffffff; border-radius: 6px; text-decoration: none; font-weight: 500;">${t("emails.emergencyAccessGrant.button", "Claim Emergency Access")}</a>
       </p>
       <p style="color: #374151; font-size: 14px;">${t("emails.emergencyAccessGrant.expiry", `This link is valid until <strong>${expiry}</strong> and can only be used once. If multiple contacts received this email, the first to claim will take over the account.`, { expiry })}</p>
-      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Monize</p>
+      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Artha</p>
     </div>
   `;
 }
@@ -707,7 +707,7 @@ export function emergencyAccessGrantRevokedTemplate(
       <p style="margin: 24px 0;">
         <a href="${escapeHtml(data.appUrl)}/settings/emergency-access" style="display: inline-block; padding: 12px 24px; background: #2563eb; color: #ffffff; border-radius: 6px; text-decoration: none; font-weight: 500;">${t("emails.emergencyAccessGrantRevoked.button", "Review Emergency Access")}</a>
       </p>
-      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Monize</p>
+      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Artha</p>
     </div>
   `;
 }
@@ -758,7 +758,7 @@ export function providerOutageTemplate(
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <h2 style="color: #b45309;">${t("emails.providerOutage.heading", "Market data provider unavailable")}</h2>
       <p style="color: #374151;">${t("emails.providerOutage.greeting", `Hi ${safeName},`, { name: safeName })}</p>
-      <p style="color: #374151;">${t("emails.providerOutage.intro", `Monize has not been able to reach <strong>${provider}</strong> since ${since} (${duration}). Requests to it are suspended for now and retried at widening intervals.`, { provider, since, duration })}</p>
+      <p style="color: #374151;">${t("emails.providerOutage.intro", `Artha has not been able to reach <strong>${provider}</strong> since ${since} (${duration}). Requests to it are suspended for now and retried at widening intervals.`, { provider, since, duration })}</p>
       <table style="width: 100%; border-collapse: collapse; margin: 16px 0; border: 1px solid #e5e7eb; border-radius: 8px;">
         <tbody>
           <tr><td style="${label}">${t("emails.providerOutage.labelFailures", "Failed attempts")}</td><td style="${cell}">${data.recentFailures}</td></tr>
@@ -766,10 +766,10 @@ export function providerOutageTemplate(
           <tr><td style="${label}">${t("emails.providerOutage.labelLastSuccess", "Last successful response")}</td><td style="${cell}">${lastSuccess}</td></tr>
         </tbody>
       </table>
-      <p style="color: #374151;">${t("emails.providerOutage.impact", "Prices, charts and index comparisons that depend on this provider may be missing or out of date until it answers again. Nothing recorded in Monize has been lost.")}</p>
+      <p style="color: #374151;">${t("emails.providerOutage.impact", "Prices, charts and index comparisons that depend on this provider may be missing or out of date until it answers again. Nothing recorded in Artha has been lost.")}</p>
       <p style="color: #374151;">${t("emails.providerOutage.whatToCheck", "If the provider itself is up, check this server's outbound network access and DNS -- a container that cannot resolve or reach the provider fails exactly this way.")}</p>
       <p style="color: #6b7280; font-size: 14px;">${t("emails.providerOutage.throttleNote", `You will get one more email when it recovers. Alerts about the same provider are sent at most once every ${data.quietPeriodHours} hours, so a provider that keeps flapping cannot fill your inbox.`, { hours: data.quietPeriodHours })}</p>
-      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Monize</p>
+      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Artha</p>
     </div>
   `;
 }
@@ -797,7 +797,7 @@ export function providerRecoveryTemplate(
       <p style="color: #374151;">${t("emails.providerRecovery.greeting", `Hi ${safeName},`, { name: safeName })}</p>
       <p style="color: #374151;">${t("emails.providerRecovery.intro", `<strong>${provider}</strong> answered again at ${restoredAt}. The outage lasted ${duration}.`, { provider, restoredAt, duration })}</p>
       <p style="color: #374151;">${t("emails.providerRecovery.backfill", "Prices and index history missed during the outage are picked up by the next scheduled refresh; no action is needed.")}</p>
-      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Monize</p>
+      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Artha</p>
     </div>
   `;
 }
@@ -829,7 +829,7 @@ export function systemAlertTemplate(
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <h2 style="color: #1f2937;">${t("emails.systemAlert.heading", "System alert")}</h2>
       <p style="color: #374151;">${t("emails.systemAlert.greeting", `Hi ${safeName},`, { name: safeName })}</p>
-      <p style="color: #374151;">${t("emails.systemAlert.intro", "An issue on your Monize deployment needs an administrator's attention.")}</p>
+      <p style="color: #374151;">${t("emails.systemAlert.intro", "An issue on your Artha deployment needs an administrator's attention.")}</p>
       <div style="margin: 16px 0; padding: 14px 16px; border: 1px solid #e5e7eb; border-radius: 8px;">
         <p style="margin: 0 0 8px 0;">
           <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; color: white; background: ${severityColor(data.severity)};">${badge}</span>
@@ -838,7 +838,7 @@ export function systemAlertTemplate(
         <p style="margin: 0; color: #374151;">${message}</p>
       </div>
       <p style="color: #6b7280; font-size: 14px;">${t("emails.systemAlert.footer", "This alert is also shown in the app's notification bell. It is raised at most once per occurrence, however many server replicas noticed it.")}</p>
-      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Monize</p>
+      <p style="color: #6b7280; font-size: 14px; margin-top: 24px;">-- Artha</p>
     </div>
   `;
 }

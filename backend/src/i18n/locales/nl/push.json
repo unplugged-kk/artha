@@ -1,32 +1,32 @@
 {
   "test": {
-    "title": "Monize-testmelding",
+    "title": "Artha-testmelding",
     "body": "Pushmeldingen werken op dit apparaat."
   },
   "notification": {
     "payments": {
       "title": "Betalingsherinnering",
-      "body": "Een rekening of geplande betaling vraagt uw aandacht. Open Monize voor de details."
+      "body": "Een rekening of geplande betaling vraagt uw aandacht. Open Artha voor de details."
     },
     "budgets": {
       "title": "Budgetwaarschuwing",
-      "body": "Een van uw budgetten vraagt uw aandacht. Open Monize voor de details."
+      "body": "Een van uw budgetten vraagt uw aandacht. Open Artha voor de details."
     },
     "system": {
       "title": "Systeemmelding",
-      "body": "Monize heeft een systeemmelding voor u. Open de app voor de details."
+      "body": "Artha heeft een systeemmelding voor u. Open de app voor de details."
     },
     "balances": {
       "title": "Saldowaarschuwing",
-      "body": "Een rekeningsaldo heeft een door u ingestelde drempel overschreden. Open Monize voor de details."
+      "body": "Een rekeningsaldo heeft een door u ingestelde drempel overschreden. Open Artha voor de details."
     },
     "investments": {
       "title": "Beleggingsbeweging",
-      "body": "Uw beleggingen zijn vandaag bewogen. Open Monize voor de details."
+      "body": "Uw beleggingen zijn vandaag bewogen. Open Artha voor de details."
     },
     "strategies": {
       "title": "Strategiesignaal",
-      "body": "Een van uw strategieën heeft de aanbeveling gewijzigd. Open Monize voor de details."
+      "body": "Een van uw strategieën heeft de aanbeveling gewijzigd. Open Artha voor de details."
     }
   },
   "actions": {

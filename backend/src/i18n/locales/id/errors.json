@@ -265,7 +265,7 @@
     "readRequiredForWrite": "Akses BACA diperlukan untuk BUAT, EDIT, atau HAPUS",
     "accountsNotOwned": "Satu atau lebih akun bukan milik Anda",
     "cannotResetSsoPassword": "Tidak dapat mereset kata sandi untuk akun delegasi SSO",
-    "delegateManagesOwnPassword": "Delegasi ini mengelola kata sandinya sendiri (mereka memiliki akun Monize sendiri atau akses delegasi di tempat lain). Hanya mereka yang dapat mengubahnya.",
+    "delegateManagesOwnPassword": "Delegasi ini mengelola kata sandinya sendiri (mereka memiliki akun Artha sendiri atau akses delegasi di tempat lain). Hanya mereka yang dapat mengubahnya.",
     "accountIdsMustBeArray": "accountIds harus berupa array",
     "actionNotAvailableAsDelegate": "Tindakan ini tidak tersedia saat Anda bertindak atas nama pengguna lain. Hanya pemilik akun yang dapat melakukannya.",
     "capabilityNotGranted": "Pemilik akun belum memberikan izin kepada Anda untuk {{ operation }} {{ resource }}. Minta mereka untuk mengaktifkannya di pengaturan akses delegasi Anda.",
@@ -276,7 +276,7 @@
     "jointAccountTypeReadOnly": "Jenis akun ini dibagikan hanya-baca; hanya pemilik yang dapat mengubah transaksinya.",
     "jointOwnAccountNetWorth": "Gunakan pengaturan kekayaan bersih akun untuk akun milik Anda sendiri.",
     "jointRequiresRead": "Akses BACA diperlukan untuk menandai akun sebagai akun bersama",
-    "jointRequiresFullAccount": "Akun bersama hanya dapat dibagikan dengan pengguna yang memiliki akun Monize sendiri",
+    "jointRequiresFullAccount": "Akun bersama hanya dapat dibagikan dengan pengguna yang memiliki akun Artha sendiri",
     "jointPayeeCreateNotGranted": "Pemilik akun belum memberi Anda izin membuat penerima. Pilih salah satu penerima yang sudah ada.",
     "jointCategoryCreateNotGranted": "Pemilik akun belum memberi Anda izin membuat kategori. Pilih salah satu kategori yang sudah ada.",
     "jointTagsNotAllowed": "Tag bersifat pribadi, jadi tidak dapat dipasang pada transaksi akun bersama.",
@@ -315,7 +315,7 @@
     "mnyNoFile": "Tidak ada berkas Money yang diunggah",
     "mnyFileTruncated": "Berkas Money ini tampak tidak lengkap. Unggahan mungkin terputus -- coba lagi.",
     "mnyNotAMoneyFile": "Berkas itu bukan berkas Microsoft Money (.mny)",
-    "mnyUnsupportedVersion": "Berkas itu dibuat oleh Money 97 atau 98, yang tidak dapat dibaca Monize. Buka dan simpan sekali di edisi gratis Money Plus Sunset, lalu impor hasilnya.",
+    "mnyUnsupportedVersion": "Berkas itu dibuat oleh Money 97 atau 98, yang tidak dapat dibaca Artha. Buka dan simpan sekali di edisi gratis Money Plus Sunset, lalu impor hasilnya.",
     "mnyPasswordRequired": "Berkas Money itu dilindungi kata sandi. Masukkan kata sandinya untuk melanjutkan.",
     "mnyPasswordIncorrect": "Kata sandi itu tidak membuka berkas Money. Periksa dan coba lagi.",
     "mnyUnreadableDatabase": "Berkas Money itu berhasil didekripsi, tetapi isinya tidak dapat dibaca. Mungkin rusak.",
@@ -347,8 +347,8 @@
     "reminderOnReminder": "Pengingat tidak dapat dibuat pada notifikasi yang dihasilkan pengingat. Buatlah pada notifikasi aslinya."
   },
   "push": {
-    "channelUnavailable": "Notifikasi push tidak tersedia di instans Monize ini.",
-    "endpointClaimed": "Peramban ini sudah terdaftar pada akun Monize lain. Keluar dari akun tersebut di peramban ini lalu coba lagi.",
+    "channelUnavailable": "Notifikasi push tidak tersedia di instans Artha ini.",
+    "endpointClaimed": "Peramban ini sudah terdaftar pada akun Artha lain. Keluar dari akun tersebut di peramban ini lalu coba lagi.",
     "deviceNotFound": "Perangkat push tidak ditemukan.",
     "noDevices": "Belum ada perangkat push terdaftar untuk akun ini. Aktifkan notifikasi push di peramban ini terlebih dahulu.",
     "rotationUnavailable": "ENCRYPTION_KEY belum disetel, sehingga kunci privat baru tidak dapat disimpan terenkripsi. Setel dan mulai ulang sebelum merotasi.",
@@ -613,6 +613,6 @@
     "capReached": "Batas permintaan Google Places bulan ini telah tercapai.",
     "testFailed": "Uji koneksi Google Places gagal.",
     "referrerRestricted": "Kunci ini dibatasi oleh perujuk HTTP, tetapi penerapan ini tidak menyetel PUBLIC_APP_URL, sehingga tidak ada perujuk yang dikirim dan tidak ada daftar izin yang dapat cocok. Setel PUBLIC_APP_URL, atau batasi kunci berdasarkan alamat IP, yaitu opsi yang benar-benar melindungi kunci sisi server.",
-    "referrerRejected": "Google menolak pembatasan perujuk HTTP kunci ini. Monize mengirim \"{referer}\" (dari PUBLIC_APP_URL); tambahkan persis nilai itu ke perujuk yang diizinkan, dan ingat bahwa pola seperti *.example.com/* tidak cocok dengan example.com polos. Membatasi kunci berdasarkan alamat IP adalah opsi yang benar-benar melindungi kunci sisi server."
+    "referrerRejected": "Google menolak pembatasan perujuk HTTP kunci ini. Artha mengirim \"{referer}\" (dari PUBLIC_APP_URL); tambahkan persis nilai itu ke perujuk yang diizinkan, dan ingat bahwa pola seperti *.example.com/* tidak cocok dengan example.com polos. Membatasi kunci berdasarkan alamat IP adalah opsi yang benar-benar melindungi kunci sisi server."
   }
 }

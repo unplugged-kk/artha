@@ -104,7 +104,7 @@ describe('MnyBillsPanel', () => {
       />,
     );
 
-    expect(screen.getByText('Closest Monize frequency')).toBeInTheDocument();
+    expect(screen.getByText('Closest Artha frequency')).toBeInTheDocument();
   });
 
   it('explains that a Money 2001 file has no bills to import', () => {

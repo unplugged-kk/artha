@@ -247,9 +247,9 @@ describe("AiForecastService", () => {
 
       expect(mockAggregatorService.computeAggregates).toHaveBeenCalledWith(
         userId,
-        "USD",
+        "INR",
       );
-      expect(result.currency).toBe("USD");
+      expect(result.currency).toBe("INR");
     });
 
     it("passes months parameter correctly", async () => {

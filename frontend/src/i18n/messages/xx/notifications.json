@@ -97,7 +97,7 @@
     },
     "smtpFailure": {
       "title": "[XX-Email delivery is failing-XX]",
-      "message": "[XX-Monize could not send email: {error}. Notifications and reminders are not being delivered.-XX]"
+      "message": "[XX-Artha could not send email: {error}. Notifications and reminders are not being delivered.-XX]"
     },
     "providerOutage": {
       "title": "[XX-{provider} is not responding-XX]",

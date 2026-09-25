@@ -15,7 +15,7 @@
     "showNextLogin": "Afficher à la prochaine connexion",
     "close": "Fermer",
     "unavailable": "Les notes de version pour cette version ne sont pas disponibles.",
-    "englishOnly": "Les notes de version ci-dessous sont uniquement en anglais. Monize, y compris les visites guidées, suit votre préférence de langue."
+    "englishOnly": "Les notes de version ci-dessous sont uniquement en anglais. Artha, y compris les visites guidées, suit votre préférence de langue."
   },
   "transferPayee": "{direction, select, to {Virement vers {name}} other {Virement depuis {name}}}",
   "save": "Enregistrer",

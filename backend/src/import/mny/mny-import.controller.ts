@@ -273,7 +273,7 @@ const MNY_ERROR_MESSAGES: Record<string, () => string> = {
   mnyUnsupportedVersion: () =>
     tr(
       "errors.import.mnyUnsupportedVersion",
-      "That file was written by Money 97 or 98, which Monize cannot read. Open and save it once in the free Money Plus Sunset edition, then import the result.",
+      "That file was written by Money 97 or 98, which Artha cannot read. Open and save it once in the free Money Plus Sunset edition, then import the result.",
     ),
   mnyPasswordRequired: () =>
     tr(

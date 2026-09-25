@@ -6,7 +6,7 @@
   "backToSignIn": "返回登录",
   "ownerFallback": "账户所有者",
   "ownerFirstNameFallback": "所有者",
-  "intro": "您好，{contactName}，您被指定为 <b>{ownerName}</b> 的 Monize 账户紧急联系人。",
+  "intro": "您好，{contactName}，您被指定为 <b>{ownerName}</b> 的 Artha 账户紧急联系人。",
   "introDetail": "在此设置密码将以账户持有人身份登录，并授予您对账户的完全访问权限。现有会话将被撤销，之前的凭据将被替换。",
   "messageHeading": "来自 {name} 的留言",
   "newPasswordLabel": "新密码",

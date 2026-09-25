@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 const mockSetupData = {
   secret: 'JBSWY3DPEHPK3PXP',
   qrCodeDataUrl: 'data:image/png;base64,fakeqrcode',
-  otpauthUrl: 'otpauth://totp/Monize:test@example.com?secret=JBSWY3DPEHPK3PXP&issuer=Monize',
+  otpauthUrl: 'otpauth://totp/Artha:test@example.com?secret=JBSWY3DPEHPK3PXP&issuer=Artha',
 };
 
 vi.mock('@/lib/auth', () => ({

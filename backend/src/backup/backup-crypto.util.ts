@@ -79,7 +79,7 @@ export async function decryptBackup(
   const version = backupEnvelopeVersion(envelope);
   if (version === null) {
     throw new BackupDecryptionError(
-      "Backup file is not in the encrypted Monize format",
+      "Backup file is not in the encrypted Artha format",
     );
   }
   if (version === VERSION_FRAMED) {

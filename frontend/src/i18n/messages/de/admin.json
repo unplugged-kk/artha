@@ -107,9 +107,9 @@
   },
   "notificationsPage": {
     "title": "Benachrichtigungen",
-    "subtitle": "Zustellkanäle dieser Monize-Instanz und die Push-Identität dahinter.",
+    "subtitle": "Zustellkanäle dieser Artha-Instanz und die Push-Identität dahinter.",
     "loading": "Benachrichtigungseinstellungen werden geladen ...",
-    "loadUnavailable": "Monize konnte die Benachrichtigungseinstellungen nicht vom Server lesen. Laden Sie die Seite neu, um es erneut zu versuchen.",
+    "loadUnavailable": "Artha konnte die Benachrichtigungseinstellungen nicht vom Server lesen. Laden Sie die Seite neu, um es erneut zu versuchen.",
     "channelsHeading": "Zustellkanäle",
     "identityHeading": "Web-Push-Identität",
     "perAccountNote": "Geräte, Testbenachrichtigungen und Benachrichtigungseinstellungen gehören zu jedem Konto und werden in den Einstellungen verwaltet. Die Administration konfiguriert die Instanz und sendet nie an fremde Benachrichtigungen – und sieht sie auch nicht.",
@@ -126,9 +126,9 @@
       },
       "webPush": {
         "name": "Browser-Push",
-        "description": "Benachrichtigungen auf Telefon oder Desktop, auch wenn Monize geschlossen ist. Benötigt weder Firebase noch ein Google-Play- oder Apple-Developer-Konto.",
+        "description": "Benachrichtigungen auf Telefon oder Desktop, auch wenn Artha geschlossen ist. Benötigt weder Firebase noch ein Google-Play- oder Apple-Developer-Konto.",
         "toggleLabel": "Browser-Push für diese Instanz aktivieren",
-        "missingKeys": "Diese Instanz hat kein Push-Schlüsselpaar. Setzen Sie ENCRYPTION_KEY und starten Sie neu: Monize erzeugt das Paar beim nächsten Start selbst.",
+        "missingKeys": "Diese Instanz hat kein Push-Schlüsselpaar. Setzen Sie ENCRYPTION_KEY und starten Sie neu: Artha erzeugt das Paar beim nächsten Start selbst.",
         "keyUnreadable": "Diese Instanz kann ihr gespeichertes Push-Schlüsselpaar nicht entschlüsseln, es kann nichts zugestellt werden. Erneuern Sie das Schlüsselpaar unten.",
         "serverKeyMissing": "Für diese Instanz ist kein ENCRYPTION_KEY gesetzt, daher kann das gespeicherte Push-Schlüsselpaar nicht geöffnet werden. Setzen Sie ENCRYPTION_KEY im Deployment und starten Sie neu — ein Rotieren hilft bei fehlendem Schlüssel nicht."
       },
@@ -136,7 +136,7 @@
         "name": "E-Mail",
         "description": "Rechnungserinnerungen, Budget-Zusammenfassungen und Systemwarnungen an die E-Mail-Adresse des jeweiligen Kontos.",
         "missingSmtp": "Es ist kein Mailserver konfiguriert. Setzen Sie die SMTP-Umgebungsvariablen, um E-Mail zu aktivieren.",
-        "statusUnavailable": "Monize konnte den Status des Mailservers nicht lesen."
+        "statusUnavailable": "Artha konnte den Status des Mailservers nicht lesen."
       },
       "ntfy": {
         "name": "ntfy und UnifiedPush",
@@ -152,7 +152,7 @@
       "rotateDescription": "Beim Erneuern wird das Schlüsselpaar dieser Instanz ersetzt. Jedes registrierte Gerät ist danach nicht mehr erreichbar und muss Push erneut aktivieren – erneuern Sie also nur, wenn der Schlüssel offengelegt sein könnte.",
       "rotateButton": "Schlüsselpaar erneuern",
       "rotatingButton": "Wird erneuert ...",
-      "missingEncryptionKey": "Diese Instanz hat kein Push-Schlüsselpaar, weil ENCRYPTION_KEY nicht gesetzt ist und der private Schlüssel unverschlüsselt gespeichert werden müsste. Setzen Sie die Variable und starten Sie neu: Monize erzeugt das Paar selbst.",
+      "missingEncryptionKey": "Diese Instanz hat kein Push-Schlüsselpaar, weil ENCRYPTION_KEY nicht gesetzt ist und der private Schlüssel unverschlüsselt gespeichert werden müsste. Setzen Sie die Variable und starten Sie neu: Artha erzeugt das Paar selbst.",
       "keyUnreadable": "Diese Instanz besitzt ein Push-Schlüsselpaar, das sie nicht mehr entschlüsseln kann – es kann nichts zugestellt werden. Das passiert, wenn sich ENCRYPTION_KEY bei laufender Datenbank ändert oder ein Backup auf einer anderen Instanz wiederhergestellt wird. Erneuern Sie das Schlüsselpaar; alle Geräte registrieren sich danach neu.",
       "serverKeyMissing": "Für diese Instanz ist kein ENCRYPTION_KEY gesetzt, daher kann sie das gespeicherte Push-Schlüsselpaar nicht öffnen. Ein Rotieren hilft bei fehlendem Schlüssel nicht: Setzen Sie ENCRYPTION_KEY im Deployment und starten Sie neu — Push funktioniert dann mit den bestehenden Geräten weiter."
     },

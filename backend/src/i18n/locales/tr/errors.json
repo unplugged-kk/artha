@@ -265,7 +265,7 @@
     "readRequiredForWrite": "OLUŞTURMA, DÜZENLEME veya SİLME için OKUMA erişimi gereklidir",
     "accountsNotOwned": "Bir veya daha fazla hesap size ait değil",
     "cannotResetSsoPassword": "SSO delege hesabı için şifre sıfırlanamaz",
-    "delegateManagesOwnPassword": "Bu delege kendi şifresini yönetiyor (kendi Monize hesabı var veya başka yerde delege erişimi var). Yalnızca kendileri değiştirebilir.",
+    "delegateManagesOwnPassword": "Bu delege kendi şifresini yönetiyor (kendi Artha hesabı var veya başka yerde delege erişimi var). Yalnızca kendileri değiştirebilir.",
     "accountIdsMustBeArray": "accountIds bir dizi olmalıdır",
     "actionNotAvailableAsDelegate": "Bu işlem başka bir kullanıcı adına hareket ederken kullanılamaz. Yalnızca hesap sahibi bunu yapabilir.",
     "capabilityNotGranted": "Hesap sahibi, {{ resource }} üzerinde {{ operation }} yapmanız için izin vermedi. Delege erişim ayarlarında bunu etkinleştirmelerini isteyin.",
@@ -276,7 +276,7 @@
     "jointAccountTypeReadOnly": "Bu hesap türü salt okunur paylaşılır; işlemlerini yalnızca sahibi değiştirebilir.",
     "jointOwnAccountNetWorth": "Kendi hesaplarınız için hesabın net değer ayarını kullanın.",
     "jointRequiresRead": "Bir hesabı ortak olarak işaretlemek için OKUMA erişimi gereklidir",
-    "jointRequiresFullAccount": "Ortak hesaplar yalnızca kendi Monize hesabı olan kullanıcılarla paylaşılabilir",
+    "jointRequiresFullAccount": "Ortak hesaplar yalnızca kendi Artha hesabı olan kullanıcılarla paylaşılabilir",
     "jointPayeeCreateNotGranted": "Hesap sahibi size alacaklı oluşturma izni vermedi. Bunun yerine mevcut alacaklılardan birini seçin.",
     "jointCategoryCreateNotGranted": "Hesap sahibi size kategori oluşturma izni vermedi. Bunun yerine mevcut kategorilerden birini seçin.",
     "jointTagsNotAllowed": "Etiketler kişiseldir, bu yüzden paylaşılan hesabın işlemlerine eklenemez.",
@@ -315,7 +315,7 @@
     "mnyNoFile": "Hiçbir Money dosyası yüklenmedi",
     "mnyFileTruncated": "Bu Money dosyası eksik görünüyor. Yükleme kesilmiş olabilir; yeniden deneyin.",
     "mnyNotAMoneyFile": "Bu dosya bir Microsoft Money (.mny) dosyası değil",
-    "mnyUnsupportedVersion": "Bu dosya Monize'ın okuyamadığı Money 97 veya 98 ile oluşturulmuş. Ücretsiz Money Plus Sunset sürümünde bir kez açıp kaydedin, ardından sonucu içe aktarın.",
+    "mnyUnsupportedVersion": "Bu dosya Artha'ın okuyamadığı Money 97 veya 98 ile oluşturulmuş. Ücretsiz Money Plus Sunset sürümünde bir kez açıp kaydedin, ardından sonucu içe aktarın.",
     "mnyPasswordRequired": "Bu Money dosyası parola korumalı. Devam etmek için parolayı girin.",
     "mnyPasswordIncorrect": "Bu parola Money dosyasını açmıyor. Kontrol edip yeniden deneyin.",
     "mnyUnreadableDatabase": "Bu Money dosyasının şifresi çözüldü ancak içeriği okunamadı. Dosya bozuk olabilir.",
@@ -347,8 +347,8 @@
     "reminderOnReminder": "Bir hatırlatmanın kendi bildirimi üzerine hatırlatma kurulamaz. Bunun yerine özgün bildirim üzerine kurun."
   },
   "push": {
-    "channelUnavailable": "Bu Monize örneğinde anlık bildirimler kullanılamıyor.",
-    "endpointClaimed": "Bu tarayıcı zaten başka bir Monize hesabına kayıtlı. Bu tarayıcıda o hesaptan çıkış yapıp yeniden deneyin.",
+    "channelUnavailable": "Bu Artha örneğinde anlık bildirimler kullanılamıyor.",
+    "endpointClaimed": "Bu tarayıcı zaten başka bir Artha hesabına kayıtlı. Bu tarayıcıda o hesaptan çıkış yapıp yeniden deneyin.",
     "deviceNotFound": "Anlık bildirim cihazı bulunamadı.",
     "noDevices": "Bu hesap için kayıtlı anlık bildirim cihazı yok. Önce bu tarayıcıda anlık bildirimleri açın.",
     "rotationUnavailable": "ENCRYPTION_KEY ayarlanmadığı için yeni özel anahtar şifrelenmiş olarak saklanamadı. Değiştirmeden önce ayarlayıp yeniden başlatın.",
@@ -613,6 +613,6 @@
     "capReached": "Bu ayki Google Places istek sınırına ulaşıldı.",
     "testFailed": "Google Places bağlantı testi başarısız oldu.",
     "referrerRestricted": "Bu anahtar HTTP yönlendireni ile kısıtlanmış, ancak bu kurulumda PUBLIC_APP_URL ayarlı değil; bu nedenle hiçbir yönlendiren gönderilmiyor ve hiçbir izin listesi eşleşemez. PUBLIC_APP_URL değerini ayarlayın veya anahtarı IP adresine göre kısıtlayın; sunucu tarafı bir anahtarı gerçekten koruyan seçenek budur.",
-    "referrerRejected": "Google bu anahtarın HTTP yönlendiren kısıtlamasını reddetti. Monize \"{referer}\" gönderiyor (PUBLIC_APP_URL değerinden); tam olarak bu değeri anahtarın izin verilen yönlendirenlerine ekleyin ve *.example.com/* gibi bir kalıbın sade example.com ile eşleşmediğini unutmayın. Anahtarı IP adresine göre kısıtlamak, sunucu tarafı bir anahtarı gerçekten koruyan seçenektir."
+    "referrerRejected": "Google bu anahtarın HTTP yönlendiren kısıtlamasını reddetti. Artha \"{referer}\" gönderiyor (PUBLIC_APP_URL değerinden); tam olarak bu değeri anahtarın izin verilen yönlendirenlerine ekleyin ve *.example.com/* gibi bir kalıbın sade example.com ile eşleşmediğini unutmayın. Anahtarı IP adresine göre kısıtlamak, sunucu tarafı bir anahtarı gerçekten koruyan seçenektir."
   }
 }

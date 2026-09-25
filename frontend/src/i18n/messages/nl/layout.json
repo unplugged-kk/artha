@@ -27,8 +27,8 @@
     "dismissAriaLabel": "HTTPS-waarschuwing sluiten"
   },
   "updateBanner": {
-    "availableWithVersion": "Monize v{version} is beschikbaar",
-    "availableGeneric": "Er is een nieuwe versie van Monize beschikbaar",
+    "availableWithVersion": "Artha v{version} is beschikbaar",
+    "availableGeneric": "Er is een nieuwe versie van Artha beschikbaar",
     "runningVersion": "(actief: v{version})",
     "releaseNotes": "Release-opmerkingen",
     "dismiss": "Sluiten",
@@ -134,29 +134,29 @@
     "redonePrefix": "Opnieuw gedaan: {description}"
   },
   "pageHeader": {
-    "helpAriaLabel": "Open de Monize-wiki voor hulp bij dit gedeelte",
-    "helpTooltip": "Open de Monize-wiki voor hulp bij dit gedeelte"
+    "helpAriaLabel": "Open de Artha-wiki voor hulp bij dit gedeelte",
+    "helpTooltip": "Open de Artha-wiki voor hulp bij dit gedeelte"
   },
   "bootSplash": {
-    "loading": "Monize wordt geladen",
+    "loading": "Artha wordt geladen",
     "slowMessage": "Dit duurt langer dan verwacht. Controleer je verbinding.",
     "reload": "App opnieuw laden"
   },
   "offlineFallback": {
     "title": "Kan geen verbinding maken",
-    "message": "Monize kon de server niet bereiken. Controleer je verbinding en probeer het opnieuw.",
+    "message": "Artha kon de server niet bereiken. Controleer je verbinding en probeer het opnieuw.",
     "retry": "Opnieuw proberen"
   },
   "pushBanner": {
     "enableTitle": "Meldingen aanzetten?",
-    "enableBody": "Monize kan je op dit apparaat aan rekeningen en budgetgrenzen herinneren, ook als de app gesloten is. Je browser vraagt om toestemming.",
+    "enableBody": "Artha kan je op dit apparaat aan rekeningen en budgetgrenzen herinneren, ook als de app gesloten is. Je browser vraagt om toestemming.",
     "enableButton": "Aanzetten",
     "enabling": "Wordt aangezet…",
-    "installIosTitle": "Voeg Monize eerst toe aan je beginscherm.",
-    "installIosBody": "Op iPhone en iPad werken meldingen alleen vanuit de geïnstalleerde app. Tik op Deel, dan op Zet op beginscherm, en open Monize daarvandaan.",
-    "blockedTitle": "Meldingen zijn geblokkeerd voor Monize.",
-    "blockedBody": "Sta ze toe in de site-instellingen van je browser voor deze pagina. Monize kan het niet zelf opnieuw vragen.",
-    "blockedIosBody": "Open iOS-instellingen, dan Meldingen, dan Monize, en sta ze daar toe. Staat Monize er niet bij, verwijder het dan van het beginscherm en voeg het opnieuw toe.",
+    "installIosTitle": "Voeg Artha eerst toe aan je beginscherm.",
+    "installIosBody": "Op iPhone en iPad werken meldingen alleen vanuit de geïnstalleerde app. Tik op Deel, dan op Zet op beginscherm, en open Artha daarvandaan.",
+    "blockedTitle": "Meldingen zijn geblokkeerd voor Artha.",
+    "blockedBody": "Sta ze toe in de site-instellingen van je browser voor deze pagina. Artha kan het niet zelf opnieuw vragen.",
+    "blockedIosBody": "Open iOS-instellingen, dan Meldingen, dan Artha, en sta ze daar toe. Staat Artha er niet bij, verwijder het dan van het beginscherm en voeg het opnieuw toe.",
     "dismiss": "Niet nu"
   }
 }

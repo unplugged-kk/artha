@@ -15,7 +15,7 @@
     "showNextLogin": "Bei der nächsten Anmeldung anzeigen",
     "close": "Schließen",
     "unavailable": "Für diese Version sind keine Versionshinweise verfügbar.",
-    "englishOnly": "Die Versionshinweise unten sind nur auf Englisch verfügbar. Monize selbst, einschließlich der geführten Touren, folgt Ihrer Spracheinstellung."
+    "englishOnly": "Die Versionshinweise unten sind nur auf Englisch verfügbar. Artha selbst, einschließlich der geführten Touren, folgt Ihrer Spracheinstellung."
   },
   "transferPayee": "{direction, select, to {Überweisung an {name}} other {Überweisung von {name}}}",
   "save": "Speichern",

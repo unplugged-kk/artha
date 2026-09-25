@@ -462,7 +462,7 @@ describe("ExchangeRateService", () => {
       expect(result.totalRatesLoaded).toBe(0);
     });
 
-    it("defaults to USD when user has no preference", async () => {
+    it("defaults to the fallback currency when user has no preference", async () => {
       userPreferenceRepository.findOne.mockResolvedValue(null);
       dataSource.query
         .mockResolvedValueOnce([
@@ -473,10 +473,10 @@ describe("ExchangeRateService", () => {
 
       const result = await service.backfillHistoricalRates("user-1");
 
-      // Should query for EUR->USD pair (default currency is USD)
+      // Should query for EUR->INR pair (default currency is the fallback)
       expect(result.totalPairs).toBe(1);
       expect(result.successful).toBe(1);
-      expect(result.results[0].pair).toBe("EUR/USD");
+      expect(result.results[0].pair).toBe("EUR/INR");
       expect(result.results[0].ratesLoaded).toBe(0); // skipped because existing
     });
 

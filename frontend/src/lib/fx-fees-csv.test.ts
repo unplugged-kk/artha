@@ -85,7 +85,7 @@ describe('exportForeignTransactionsCsv', () => {
     });
 
     const [filename, headers, rows] = mockExportToCsv.mock.calls[0];
-    expect(filename).toMatch(/^Monize_ForeignCurrencyFees_.*\.csv$/);
+    expect(filename).toMatch(/^Artha_ForeignCurrencyFees_.*\.csv$/);
     expect(headers).toEqual([
       'Date', 'Account', 'Payee', 'Category', 'Description', 'Tags',
       'Amount', 'Currency', 'Paid Currency', 'Paid Amount', 'Fee Paid', 'Status',

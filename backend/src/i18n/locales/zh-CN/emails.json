@@ -1,13 +1,13 @@
 {
   "test": {
-    "subject": "Monize 测试邮件",
-    "heading": "Monize 测试邮件",
+    "subject": "Artha 测试邮件",
+    "heading": "Artha 测试邮件",
     "greeting": "您好，{{ name }}，",
-    "body": "这是一封来自 Monize 的测试邮件。如果您收到了此邮件，说明您的邮件通知功能运行正常。"
+    "body": "这是一封来自 Artha 的测试邮件。如果您收到了此邮件，说明您的邮件通知功能运行正常。"
   },
   "billReminder": {
-    "subjectOne": "Monize：1 个即将到期的账单需要关注",
-    "subjectMany": "Monize：{{ count }} 个即将到期的账单需要关注",
+    "subjectOne": "Artha：1 个即将到期的账单需要关注",
+    "subjectMany": "Artha：{{ count }} 个即将到期的账单需要关注",
     "heading": "即将到期账单提醒",
     "greeting": "您好，{{ name }}，",
     "introOne": "您有 1 个即将到期的账单需要关注：",
@@ -23,8 +23,8 @@
     "button": "查看账单与存款"
   },
   "mortgageReminder": {
-    "subject": "Monize：1 个即将到期的抵押贷款续期",
-    "subjectPlural": "Monize：{{ count }} 个即将到期的抵押贷款续期",
+    "subject": "Artha：1 个即将到期的抵押贷款续期",
+    "subjectPlural": "Artha：{{ count }} 个即将到期的抵押贷款续期",
     "heading": "抵押贷款续期提醒",
     "greeting": "您好，{{ name }}，",
     "introOne": "您有 1 笔抵押贷款的期限即将到期。请在期限结束前联系贷款机构讨论续期选项：",
@@ -43,8 +43,8 @@
     "info": "信息"
   },
   "budgetAlertImmediate": {
-    "subject": "Monize：提醒 - {{ title }}",
-    "subjectPlural": "Monize：{{ count }} 个提醒需要关注",
+    "subject": "Artha：提醒 - {{ title }}",
+    "subjectPlural": "Artha：{{ count }} 个提醒需要关注",
     "heading": "提醒",
     "greeting": "您好，{{ name }}，",
     "intro": "您的预算需要关注：",
@@ -54,7 +54,7 @@
     "button": "查看预算"
   },
   "budgetWeeklyDigest": {
-    "subject": "Monize：您的每周预算摘要",
+    "subject": "Artha：您的每周预算摘要",
     "heading": "每周预算摘要",
     "greeting": "您好，{{ name }}，",
     "intro": "以下是您的每周预算摘要：<strong>{{ budgets }}</strong>",
@@ -72,8 +72,8 @@
     "button": "查看预算仪表盘"
   },
   "budgetMonthlySummary": {
-    "subject": "Monize：月度预算摘要 - {{ period }}",
-    "subjectPlural": "Monize：{{ count }} 个预算的月度摘要",
+    "subject": "Artha：月度预算摘要 - {{ period }}",
+    "subjectPlural": "Artha：{{ count }} 个预算的月度摘要",
     "heading": "月度预算摘要",
     "greeting": "您好，{{ name }}，",
     "intro": "以下是刚刚结束的周期的月度预算摘要：",
@@ -87,10 +87,10 @@
     "button": "查看预算仪表盘"
   },
   "oidcLink": {
-    "subject": "Monize：确认 SSO 账户关联",
+    "subject": "Artha：确认 SSO 账户关联",
     "heading": "关联您的 SSO 账户",
     "greeting": "您好，{{ name }}，",
-    "intro": "有人尝试通过 SSO 使用与您现有 Monize 账户匹配的电子邮件登录。要将您的 SSO 身份关联到此账户，请点击下方按钮：",
+    "intro": "有人尝试通过 SSO 使用与您现有 Artha 账户匹配的电子邮件登录。要将您的 SSO 身份关联到此账户，请点击下方按钮：",
     "button": "确认账户关联",
     "disclaimer": "如果您未发起此请求，可以安全忽略此邮件。链接将在 1 小时后过期。"
   },
@@ -98,11 +98,11 @@
     "subject": "账户已暂时锁定",
     "heading": "账户已暂时锁定",
     "greeting": "您好，{{ name }}，",
-    "body1": "由于多次登录失败，您的 Monize 账户已被暂时锁定。这是保护您账户安全的措施。",
+    "body1": "由于多次登录失败，您的 Artha 账户已被暂时锁定。这是保护您账户安全的措施。",
     "body2": "锁定将自动过期。如果您未尝试登录，建议立即重置密码。"
   },
   "passwordReset": {
-    "subject": "Monize 密码重置",
+    "subject": "Artha 密码重置",
     "heading": "密码重置请求",
     "greeting": "您好，{{ name }}，",
     "intro": "我们收到了您的密码重置请求。点击下方按钮设置新密码：",
@@ -110,54 +110,54 @@
     "disclaimer": "此链接将在 1 小时后过期。如果您未请求密码重置，可以安全忽略此邮件。"
   },
   "emailVerification": {
-    "subject": "验证您的 Monize 邮箱",
+    "subject": "验证您的 Artha 邮箱",
     "heading": "验证您的邮箱地址",
     "greeting": "您好，{{ name }}，",
-    "intro": "感谢您注册 Monize。请确认您的邮箱地址以激活账户并登录：",
+    "intro": "感谢您注册 Artha。请确认您的邮箱地址以激活账户并登录：",
     "button": "验证邮箱",
-    "disclaimer": "此链接将在 24 小时后过期。如果您未创建 Monize 账户，可以安全忽略此邮件。"
+    "disclaimer": "此链接将在 24 小时后过期。如果您未创建 Artha 账户，可以安全忽略此邮件。"
   },
   "accountInvite": {
-    "subject": "您的 Monize 账户已准备就绪",
-    "heading": "您的 Monize 账户已准备就绪",
+    "subject": "您的 Artha 账户已准备就绪",
+    "heading": "您的 Artha 账户已准备就绪",
     "greeting": "您好，{{ name }}，",
-    "intro": "管理员已为您创建了 Monize 账户。点击下方按钮设置密码并登录：",
+    "intro": "管理员已为您创建了 Artha 账户。点击下方按钮设置密码并登录：",
     "button": "设置密码",
     "disclaimer": "此链接将在 24 小时后过期。如果您未期待此邮件，可以安全忽略。"
   },
   "delegateInvite": {
-    "subject": "您已受邀加入 Monize",
-    "heading": "您已受邀加入 Monize",
+    "subject": "您已受邀加入 Artha",
+    "heading": "您已受邀加入 Artha",
     "greeting": "您好，{{ name }}，",
-    "intro": "{{ owner }} 邀请您作为委托人访问其 Monize 账户。点击下方按钮设置密码并开始使用：",
+    "intro": "{{ owner }} 邀请您作为委托人访问其 Artha 账户。点击下方按钮设置密码并开始使用：",
     "button": "设置密码",
     "disclaimer": "此链接将在 24 小时后过期。如果您未期待此邀请，可以安全忽略此邮件。"
   },
   "emergencyAccessReminder": {
-    "subjectOne": "Monize：您的账户已有 1 天未活跃",
-    "subjectMany": "Monize：您的账户已有 {{ daysSinceLogin }} 天未活跃",
-    "heading": "Monize 紧急访问提醒",
+    "subjectOne": "Artha：您的账户已有 1 天未活跃",
+    "subjectMany": "Artha：您的账户已有 {{ daysSinceLogin }} 天未活跃",
+    "heading": "Artha 紧急访问提醒",
     "greeting": "您好，{{ name }}，",
     "grantPhraseToday": "今天",
     "grantPhraseFutureOne": "1 天后",
     "grantPhraseFutureMany": "{{ count }} 天后",
-    "bodyOne": "您已有 <strong>1 天</strong>未登录 Monize。如果您继续不活跃，您指定的紧急联系人将 {{ grantPhrase }} 获得对您账户的完全访问权限。",
-    "bodyMany": "您已有 <strong>{{ daysSinceLogin }} 天</strong>未登录 Monize。如果您继续不活跃，您指定的紧急联系人将 {{ grantPhrase }} 获得对您账户的完全访问权限。",
+    "bodyOne": "您已有 <strong>1 天</strong>未登录 Artha。如果您继续不活跃，您指定的紧急联系人将 {{ grantPhrase }} 获得对您账户的完全访问权限。",
+    "bodyMany": "您已有 <strong>{{ daysSinceLogin }} 天</strong>未登录 Artha。如果您继续不活跃，您指定的紧急联系人将 {{ grantPhrase }} 获得对您账户的完全访问权限。",
     "contactsLabel": "指定联系人：",
     "button": "立即登录",
     "footer": "登录将重置计时器。如果您不再需要此功能，可以在设置 → 紧急访问中将其禁用。"
   },
   "emergencyAccessGrant": {
-    "subject": "您已获得对 {{ owner }} 的 Monize 账户的紧急访问权限",
+    "subject": "您已获得对 {{ owner }} 的 Artha 账户的紧急访问权限",
     "heading": "紧急访问已授权",
     "greeting": "您好，{{ name }}，",
-    "body": "<strong>{{ owner }}</strong> 之前将您指定为其 Monize 账户的紧急联系人。由于他们已长时间未登录，现授予您完全访问权限以接管该账户。",
+    "body": "<strong>{{ owner }}</strong> 之前将您指定为其 Artha 账户的紧急联系人。由于他们已长时间未登录，现授予您完全访问权限以接管该账户。",
     "claimIntro": "要获取访问权限，请点击下方链接并设置新密码。您将以账户持有人身份登录。",
     "button": "领取紧急访问权限",
     "expiry": "此链接有效期至 <strong>{{ expiry }}</strong>，且只能使用一次。如果多位联系人收到了此邮件，第一个领取者将接管账户。"
   },
   "emergencyAccessGrantRevoked": {
-    "subject": "Monize：您不在期间紧急访问权限已被授予",
+    "subject": "Artha：您不在期间紧急访问权限已被授予",
     "heading": "您不在期间紧急访问权限已被授予",
     "greeting": "您好，{{ name }}，",
     "body1": "由于您的账户已处于不活跃状态，您指定的紧急联系人收到了接管账户的链接。您现在已重新登录，因此<strong>这些链接已被撤销</strong>，安全保障已重新启动。",
@@ -165,39 +165,39 @@
     "button": "查看紧急访问"
   },
   "providerOutage": {
-    "subject": "Monize：{{ provider }} 无响应",
+    "subject": "Artha：{{ provider }} 无响应",
     "heading": "市场数据提供方不可用",
     "greeting": "您好，{{ name }}，",
-    "intro": "自 {{ since }} 起（{{ duration }}），Monize 一直无法连接 <strong>{{ provider }}</strong>。对该提供方的请求已暂停，并会以逐渐延长的间隔重试。",
+    "intro": "自 {{ since }} 起（{{ duration }}），Artha 一直无法连接 <strong>{{ provider }}</strong>。对该提供方的请求已暂停，并会以逐渐延长的间隔重试。",
     "labelFailures": "失败尝试次数",
     "labelLastError": "最近一次错误",
     "labelLastSuccess": "最近一次成功响应",
     "valueNever": "从未",
     "valueUnknown": "未知",
-    "impact": "依赖该提供方的价格、图表和指数对比在其恢复响应前可能缺失或过时。Monize 中记录的数据没有丢失。",
+    "impact": "依赖该提供方的价格、图表和指数对比在其恢复响应前可能缺失或过时。Artha 中记录的数据没有丢失。",
     "whatToCheck": "如果提供方本身正常，请检查此服务器的出站网络访问和 DNS——无法解析或无法连接提供方的容器正是以这种方式失败的。",
     "throttleNote": "提供方恢复后你会再收到一封邮件。关于同一提供方的告警最多每 {{ hours }} 小时发送一次，因此反复抖动的提供方不会填满你的收件箱。",
     "durationMinutes": "{{ minutes }} 分钟",
     "durationHoursMinutes": "{{ hours }} 小时 {{ minutes }} 分钟"
   },
   "providerRecovery": {
-    "subject": "Monize：{{ provider }} 已恢复响应",
+    "subject": "Artha：{{ provider }} 已恢复响应",
     "heading": "市场数据提供方已恢复响应",
     "greeting": "您好，{{ name }}，",
     "intro": "<strong>{{ provider }}</strong> 已于 {{ restoredAt }} 恢复响应，本次故障持续了 {{ duration }}。",
     "backfill": "故障期间缺失的价格和指数历史会在下一次计划刷新时补齐，无需任何操作。"
   },
   "systemAlert": {
-    "subject": "Monize: {{ title }}",
+    "subject": "Artha: {{ title }}",
     "heading": "系统警报",
     "greeting": "您好，{{ name }}，",
-    "intro": "您的 Monize 部署出现了需要管理员关注的问题。",
+    "intro": "您的 Artha 部署出现了需要管理员关注的问题。",
     "footer": "此警报也会显示在应用的通知铃铛中。无论有多少个服务器副本发现该问题，每次事件最多只会生成一条警报。"
   },
   "notificationImmediate": {
-    "subject": "您有一条新的 Monize 通知",
-    "eyebrow": "Monize 通知",
-    "button": "在 Monize 中打开",
+    "subject": "您有一条新的 Artha 通知",
+    "eyebrow": "Artha 通知",
+    "button": "在 Artha 中打开",
     "footer": "您收到此邮件是因为此通知类型已开启即时邮件。可在设置、通知中更改。"
   },
   "notificationCopy": {
@@ -254,7 +254,7 @@
       },
       "smtpFailure": {
         "title": "邮件发送失败",
-        "message": "Monize 无法发送邮件：{{ error }}。通知和提醒未能送达。"
+        "message": "Artha 无法发送邮件：{{ error }}。通知和提醒未能送达。"
       },
       "providerOutage": {
         "title": "{{ provider }} 无响应",

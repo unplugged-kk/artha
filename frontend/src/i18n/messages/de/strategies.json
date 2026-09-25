@@ -271,7 +271,7 @@
       "workingTotal": "Summe",
       "workingUnknown": "Der Anteil lässt sich erst berechnen, wenn die Positionen bewertet werden können.",
       "basisComposition": "Das Engagement wird aus dem Inhalt der Instrumente geschätzt, verglichen nach {dimension}. Es steht neben der Allokation und ist nicht Teil davon: als Halten des Ziels zählt allein das Zielinstrument selbst.",
-      "basisInstrument": "Das Markt-Engagement lässt sich nicht schätzen, weil für {target} in Monize keine geografische Struktur ({dimension}) hinterlegt ist. Die Übereinstimmung mit dem Signal wird weiterhin exakt je Instrument berechnet.",
+      "basisInstrument": "Das Markt-Engagement lässt sich nicht schätzen, weil für {target} in Artha keine geografische Struktur ({dimension}) hinterlegt ist. Die Übereinstimmung mit dem Signal wird weiterhin exakt je Instrument berechnet.",
       "basisPartialData": "Bei {count, plural, one {# Position} other {# Positionen}} ist keine Struktur hinterlegt, daher ist die Schätzung für das Portfolio nicht verfügbar.",
       "isTarget": "Zielinstrument",
       "notInStrategy": "nicht Teil der Strategie",

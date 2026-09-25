@@ -107,9 +107,9 @@
   },
   "notificationsPage": {
     "title": "Notifikasi",
-    "subtitle": "Kanal pengiriman yang disediakan instans Monize ini, beserta identitas push di baliknya.",
+    "subtitle": "Kanal pengiriman yang disediakan instans Artha ini, beserta identitas push di baliknya.",
     "loading": "Memuat pengaturan notifikasi...",
-    "loadUnavailable": "Monize tidak dapat membaca pengaturan notifikasi dari server. Muat ulang halaman untuk mencoba lagi.",
+    "loadUnavailable": "Artha tidak dapat membaca pengaturan notifikasi dari server. Muat ulang halaman untuk mencoba lagi.",
     "channelsHeading": "Kanal pengiriman",
     "identityHeading": "Identitas Web Push",
     "perAccountNote": "Perangkat, notifikasi uji coba, dan preferensi notifikasi adalah milik masing-masing akun dan dikelola di Pengaturan. Administrator mengonfigurasi instans dan tidak pernah mengirim ke, atau melihat, notifikasi orang lain.",
@@ -126,9 +126,9 @@
       },
       "webPush": {
         "name": "Push peramban",
-        "description": "Notifikasi terkirim ke ponsel atau desktop bahkan saat Monize tertutup. Tidak memerlukan Firebase, Google Play, atau akun Apple Developer.",
+        "description": "Notifikasi terkirim ke ponsel atau desktop bahkan saat Artha tertutup. Tidak memerlukan Firebase, Google Play, atau akun Apple Developer.",
         "toggleLabel": "Aktifkan push peramban untuk instans ini",
-        "missingKeys": "Instans ini tidak memiliki pasangan kunci push. Setel ENCRYPTION_KEY dan mulai ulang: Monize akan membuat pasangannya sendiri saat start berikutnya.",
+        "missingKeys": "Instans ini tidak memiliki pasangan kunci push. Setel ENCRYPTION_KEY dan mulai ulang: Artha akan membuat pasangannya sendiri saat start berikutnya.",
         "keyUnreadable": "Instans ini tidak dapat mendekripsi pasangan kunci push yang tersimpan, sehingga tidak ada yang terkirim. Rotasi pasangan kunci di bawah untuk memulihkan.",
         "serverKeyMissing": "Instance ini tidak memiliki ENCRYPTION_KEY, sehingga tidak dapat membuka pasangan kunci push yang disimpannya. Setel ENCRYPTION_KEY di deployment lalu mulai ulang — merotasi tidak membantu selama kuncinya hilang."
       },
@@ -136,7 +136,7 @@
         "name": "Email",
         "description": "Pengingat tagihan, ringkasan anggaran, dan peringatan sistem dikirim ke alamat email tiap akun.",
         "missingSmtp": "Belum ada server email yang dikonfigurasi. Setel variabel lingkungan SMTP untuk mengaktifkan email.",
-        "statusUnavailable": "Monize tidak dapat membaca status server email."
+        "statusUnavailable": "Artha tidak dapat membaca status server email."
       },
       "ntfy": {
         "name": "ntfy dan UnifiedPush",
@@ -152,7 +152,7 @@
       "rotateDescription": "Rotasi mengganti pasangan kunci instans ini. Semua perangkat terdaftar tidak lagi dapat dijangkau dan harus mengaktifkan push kembali, jadi lakukan rotasi hanya jika kunci mungkin bocor.",
       "rotateButton": "Rotasi pasangan kunci",
       "rotatingButton": "Merotasi...",
-      "missingEncryptionKey": "Instans ini tidak memiliki pasangan kunci push karena ENCRYPTION_KEY belum disetel dan kunci privat harus disimpan tanpa enkripsi. Setel dan mulai ulang: Monize akan membuat pasangannya sendiri.",
+      "missingEncryptionKey": "Instans ini tidak memiliki pasangan kunci push karena ENCRYPTION_KEY belum disetel dan kunci privat harus disimpan tanpa enkripsi. Setel dan mulai ulang: Artha akan membuat pasangannya sendiri.",
       "keyUnreadable": "Instans ini memiliki pasangan kunci push yang tidak lagi dapat didekripsi, sehingga tidak ada yang terkirim. Ini terjadi saat ENCRYPTION_KEY berubah pada basis data yang sedang berjalan, atau saat cadangan dipulihkan ke instans lain. Rotasi pasangan kunci untuk memulihkan; setiap perangkat akan mendaftar ulang.",
       "serverKeyMissing": "Instance ini tidak memiliki ENCRYPTION_KEY, sehingga tidak dapat membuka pasangan kunci push yang disimpannya. Merotasi tidak membantu selama kuncinya hilang: setel ENCRYPTION_KEY di deployment dan mulai ulang, lalu push berfungsi lagi dengan perangkat yang ada."
     },

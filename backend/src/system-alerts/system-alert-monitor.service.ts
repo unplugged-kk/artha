@@ -111,7 +111,7 @@ export class SystemAlertMonitorService {
       severity: NotificationSeverity.WARNING,
       title: "Email delivery is failing",
       message:
-        `Monize could not send email: ${snapshot.lastFailureMessage ?? "unknown error"}. ` +
+        `Artha could not send email: ${snapshot.lastFailureMessage ?? "unknown error"}. ` +
         "Notifications and reminders are not being delivered.",
       data: {
         system: true,

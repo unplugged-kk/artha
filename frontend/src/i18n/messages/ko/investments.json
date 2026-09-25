@@ -224,7 +224,7 @@
     "statusLockedToParent": "이 거래는 분할 거래의 일부입니다. 양쪽이 함께 변경되도록 대신 분할 거래의 상태를 변경하세요.",
     "descriptionPlaceholder": "선택적 메모",
     "splitRatio": "분할 비율",
-    "noSplitRatioWarning": "이 거래에 분할 비율이 설정되지 않았습니다. 저장하기 전에 공표된 비율을 입력하세요 — Monize가 자동으로 가정하지 않습니다.",
+    "noSplitRatioWarning": "이 거래에 분할 비율이 설정되지 않았습니다. 저장하기 전에 공표된 비율을 입력하세요 — Artha가 자동으로 가정하지 않습니다.",
     "newShares": "신주",
     "oldShares": "구주",
     "splitRatioHelp": "공표된 비율을 입력하세요. 2대1 분할은 신주 2, 구주 1을 사용하고, 1대2 역분할은 신주 1, 구주 2를 사용합니다. 실제 비율:",

@@ -164,7 +164,7 @@
     "sectorTab": "Setor",
     "countryTab": "País",
     "assetClassTab": "Classe de ativos",
-    "sectorEmpty": "Nenhuma composição setorial armazenada. O Monize a preenche pelo fornecedor para fundos e ETFs.",
+    "sectorEmpty": "Nenhuma composição setorial armazenada. O Artha a preenche pelo fornecedor para fundos e ETFs.",
     "countryEmpty": "Nenhuma composição por país armazenada. Você pode informá-la ao editar o ativo.",
     "assetClassEmpty": "Nenhuma composição por classe de ativos armazenada ainda.",
     "remainder": "{percent} não classificado"

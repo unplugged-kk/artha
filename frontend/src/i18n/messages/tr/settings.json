@@ -2,7 +2,7 @@
   "language": {
     "label": "Dil",
     "browserOption": "Tarayıcı yerel ayarını kullan (otomatik algılama: {locale})",
-    "helpText": "Monize arayüzünde kullanılan dili seçin. Sayı ve tarih biçimlendirmesi aşağıda ayrıca kontrol edilir.",
+    "helpText": "Artha arayüzünde kullanılan dili seçin. Sayı ve tarih biçimlendirmesi aşağıda ayrıca kontrol edilir.",
     "saved": "Dil güncellendi",
     "saveFailed": "Dil kaydedilemedi"
   },
@@ -124,7 +124,7 @@
     "preferredExchangesHelp": "Öncelik sırasına göre en fazla 3 borsa seçin. Menkul kıymet ararken bunlar tercih edilecektir.",
     "exchangePriorityPlaceholder": "Öncelik {n}",
     "defaultQuoteProviderLabel": "Varsayılan Hisse Fiyat Teklifi Sağlayıcısı",
-    "defaultQuoteProviderHelp": "Menkul kıymetin sağlayıcı geçersiz kılması olmadığında kullanılır. Seçilen sağlayıcı başarısız olursa Monize otomatik olarak diğerini dener.",
+    "defaultQuoteProviderHelp": "Menkul kıymetin sağlayıcı geçersiz kılması olmadığında kullanılır. Seçilen sağlayıcı başarısız olursa Artha otomatik olarak diğerini dener.",
     "msnNoIntradayNote": "Not: MSN Money gün içi fiyat teklifi verileri sağlamamaktadır; bu nedenle MSN tarafından takip edilen varlıklar için Zaman İçinde Portföy Değeri grafiğindeki 1G / 1H / 1A aralıkları kullanılamaz.",
     "msnNotConfigured": "Varsayılan fiyat teklifi sağlayıcısı olarak MSN seçildi, ancak sunucuda MSN_API_KEY yapılandırılmamış. Bir yönetici ortam değişkenini ayarlayıp arka ucu yeniden başlatana kadar MSN fiyat teklifleri başarısız olacak.",
     "dateFormatLabel": "Tarih Biçimi",
@@ -133,11 +133,11 @@
     "timezonePlaceholder": "Saat dilimi ara...",
     "weekStartsOnLabel": "Hafta başlangıcı",
     "showCreatedAtLabel": "İşlem formlarında Oluşturma Tarihini Göster",
-    "showCreatedAtTooltip": "İşlem formlarında bir işlemin ilk oluşturulduğu tarih ve saati görüntüler. Bu, işlem tarihinden ayrıdır ve bir kaydın Monize'ye gerçekte ne zaman eklendiğini anlamanıza yardımcı olabilir.",
+    "showCreatedAtTooltip": "İşlem formlarında bir işlemin ilk oluşturulduğu tarih ve saati görüntüler. Bu, işlem tarihinden ayrıdır ve bir kaydın Artha'ye gerçekte ne zaman eklendiğini anlamanıza yardımcı olabilir.",
     "showWhatsNewLabel": "Yükseltmeden sonra Yenilikler'i göster",
-    "showWhatsNewTooltip": "Monize yeni bir sürüme güncellendikten sonra ilk oturum açtığınızda sürüm notlarının bir özetini gösterir. Bu sayfanın altındaki veya oturum açma ekranındaki sürüm numarasına tıklayarak istediğiniz zaman yeniden açabilirsiniz.",
+    "showWhatsNewTooltip": "Artha yeni bir sürüme güncellendikten sonra ilk oturum açtığınızda sürüm notlarının bir özetini gösterir. Bu sayfanın altındaki veya oturum açma ekranındaki sürüm numarasına tıklayarak istediğiniz zaman yeniden açabilirsiniz.",
     "lockReconciledLabel": "Mutabık kılınan işlemleri kilitle",
-    "lockReconciledTooltip": "Bu kapalıyken Monize, mutabık kılınmış bir işlemin tarihini veya tutarını değiştirecek bir düzenlemeden önce sizi uyarır ve ardından izin verir. Açıkken mutabık kılınmış işlemler hiç düzenlenemez, silinemez ve mutabakatları geri alınamaz. Bir düzeltme yapmak için tekrar kapatın.",
+    "lockReconciledTooltip": "Bu kapalıyken Artha, mutabık kılınmış bir işlemin tarihini veya tutarını değiştirecek bir düzenlemeden önce sizi uyarır ve ardından izin verir. Açıkken mutabık kılınmış işlemler hiç düzenlenemez, silinemez ve mutabakatları geri alınamaz. Bir düzeltme yapmak için tekrar kapatın.",
     "timeFormatLabel": "Saat Biçimi",
     "timeFormatOptions": {
       "h24": "24 saat (14:30)",
@@ -250,13 +250,13 @@
       "collapsedDevicesUnavailable": "Cihaz listesi kullanılamıyor",
       "diagnostics": {
         "summary": "Bildirim tanılaması",
-        "intro": "Bu tarayıcının ve cihazın bildirimler hakkında Monize'a bildirdikleri. Bir ayarı değiştirdikten sonra yenileyin, ardından tam raporu göndermek için Kopyala'yı kullanın.",
+        "intro": "Bu tarayıcının ve cihazın bildirimler hakkında Artha'a bildirdikleri. Bir ayarı değiştirdikten sonra yenileyin, ardından tam raporu göndermek için Kopyala'yı kullanın.",
         "refresh": "Yenile",
         "copy": "Raporu kopyala",
         "copied": "Tanılama panoya kopyalandı"
       },
-      "description": "Bu cihazı kaydedin, böylece uygulama kapalıyken de Monize ona ulaşabilir. Şimdilik bu yolla yalnızca test bildirimi teslim ediliyor; diğer her şey yine zil simgesine geliyor.",
-      "androidNotify": "Android'de izin vermeniz yetmez: sistem bildirimleri yine de gizleyebilir. Ana ekrandaki Monize simgesini basılı tutun, Uygulama bilgileri'ne, ardından Bildirimler'e dokunun ve açık olduklarından emin olun.",
+      "description": "Bu cihazı kaydedin, böylece uygulama kapalıyken de Artha ona ulaşabilir. Şimdilik bu yolla yalnızca test bildirimi teslim ediliyor; diğer her şey yine zil simgesine geliyor.",
+      "androidNotify": "Android'de izin vermeniz yetmez: sistem bildirimleri yine de gizleyebilir. Ana ekrandaki Artha simgesini basılı tutun, Uygulama bilgileri'ne, ardından Bildirimler'e dokunun ve açık olduklarından emin olun.",
       "permissionHint": "Bunu açtığınızda tarayıcınız bildirim gösterme izni ister. İzin verilene kadar hiçbir şey gönderilmez.",
       "enableButton": "Bu cihazda etkinleştir",
       "enablingButton": "Etkinleştiriliyor...",
@@ -267,16 +267,16 @@
       "unifiedpushBadge": "UnifiedPush",
       "unnamedDevice": "Adsız cihaz",
       "noLiveDevices": "Henüz kayıtlı cihaz yok. Test göndermek için bu cihazda anlık bildirimleri açın.",
-      "notConfigured": "Bu Monize örneğinde tarayıcı anlık bildirimi kullanılamıyor. Bir yönetici Admin bölümünden etkinleştirebilir.",
-      "disabledByAdmin": "Bir yönetici bu Monize örneği için tarayıcı anlık bildirimini kapattı.",
-      "keyUnreadable": "Monize bu örneğin anlık bildirim anahtar çiftini okuyamıyor; bu yüzden hiçbir şey teslim edilmiyor. Bir yönetici Admin bölümünde anahtar çiftini değiştirerek kurtarabilir.",
-      "serverKeyMissing": "Bu Monize örneğinde push anahtar çiftini açmak için gereken şifreleme anahtarı yok, bu yüzden hiçbir şey iletilemiyor. Bir yöneticinin bunu dağıtımda ayarlayıp yeniden başlatması gerekiyor.",
-      "statusUnavailable": "Monize, tarayıcı anlık bildiriminin kullanılabilir olup olmadığını kontrol edemedi. Yeniden denemek için sayfayı yenileyin.",
-      "devicesUnavailable": "Monize kayıtlı cihazlarınızı yükleyemedi. Bu sayfadaki diğer her şey çalışıyor; yeniden denemek için sayfayı yenileyin.",
+      "notConfigured": "Bu Artha örneğinde tarayıcı anlık bildirimi kullanılamıyor. Bir yönetici Admin bölümünden etkinleştirebilir.",
+      "disabledByAdmin": "Bir yönetici bu Artha örneği için tarayıcı anlık bildirimini kapattı.",
+      "keyUnreadable": "Artha bu örneğin anlık bildirim anahtar çiftini okuyamıyor; bu yüzden hiçbir şey teslim edilmiyor. Bir yönetici Admin bölümünde anahtar çiftini değiştirerek kurtarabilir.",
+      "serverKeyMissing": "Bu Artha örneğinde push anahtar çiftini açmak için gereken şifreleme anahtarı yok, bu yüzden hiçbir şey iletilemiyor. Bir yöneticinin bunu dağıtımda ayarlayıp yeniden başlatması gerekiyor.",
+      "statusUnavailable": "Artha, tarayıcı anlık bildiriminin kullanılabilir olup olmadığını kontrol edemedi. Yeniden denemek için sayfayı yenileyin.",
+      "devicesUnavailable": "Artha kayıtlı cihazlarınızı yükleyemedi. Bu sayfadaki diğer her şey çalışıyor; yeniden denemek için sayfayı yenileyin.",
       "unsupported": {
         "unsupported": "Bu tarayıcı anlık bildirim alamaz.",
-        "denied": "Bu tarayıcıda Monize bildirimleri engellenmiş. Tarayıcının site ayarlarından izin verin ve bu sayfayı yenileyin.",
-        "ios-browser": "iPhone ve iPad'de anlık bildirimler yalnızca Monize Ana Ekrana eklendikten sonra çalışır. Paylaş, ardından Ana Ekrana Ekle'yi kullanın ve Monize'ı oradan açın."
+        "denied": "Bu tarayıcıda Artha bildirimleri engellenmiş. Tarayıcının site ayarlarından izin verin ve bu sayfayı yenileyin.",
+        "ios-browser": "iPhone ve iPad'de anlık bildirimler yalnızca Artha Ana Ekrana eklendikten sonra çalışır. Paylaş, ardından Ana Ekrana Ekle'yi kullanın ve Artha'ı oradan açın."
       },
       "disabledReason": {
         "GONE": "Artık erişilebilir değil. O tarayıcıda anlık bildirimleri yeniden açın.",
@@ -286,10 +286,10 @@
       "toasts": {
         "enabled": "Bu cihazda anlık bildirimler etkinleştirildi",
         "enableFailed": "Anlık bildirimler etkinleştirilemedi",
-        "permissionDenied": "Bu tarayıcı Monize bildirimlerini engelliyor. Site ayarlarından izin verip yeniden deneyin.",
-        "permissionDeniedIos": "Monize için bildirimler engellenmiş. İzin vermek için iOS Ayarlar'ı, sonra Bildirimler'i, sonra Monize'yi açın.",
+        "permissionDenied": "Bu tarayıcı Artha bildirimlerini engelliyor. Site ayarlarından izin verip yeniden deneyin.",
+        "permissionDeniedIos": "Artha için bildirimler engellenmiş. İzin vermek için iOS Ayarlar'ı, sonra Bildirimler'i, sonra Artha'yi açın.",
         "permissionDismissed": "Bildirimler etkinleştirilmedi. Tarayıcı sorduğunda İzin Ver'i seçin.",
-        "permissionNoPrompt": "Bildirimler açılmadı ve hiçbir istek görünmedi. iOS Ayarlar'ı açın, sonra Bildirimler, sonra Monize, ve orada izin verin. Monize listede yoksa ana ekrandan kaldırın, yeniden ekleyin (Paylaş, sonra Ana Ekrana Ekle) ve bir daha deneyin.",
+        "permissionNoPrompt": "Bildirimler açılmadı ve hiçbir istek görünmedi. iOS Ayarlar'ı açın, sonra Bildirimler, sonra Artha, ve orada izin verin. Artha listede yoksa ana ekrandan kaldırın, yeniden ekleyin (Paylaş, sonra Ana Ekrana Ekle) ve bir daha deneyin.",
         "removed": "Cihaz kaldırıldı",
         "removeFailed": "Cihaz kaldırılamadı",
         "testSent": "{count, plural, one {Test bildirimi 1 cihaza gönderildi} other {Test bildirimi # cihaza gönderildi}}",
@@ -325,7 +325,7 @@
     },
     "preferences": {
       "heading": "Beni nasıl bilgilendirelim",
-      "description": "Monize'ın e-posta veya push ile hangi türleri, ne sıklıkta göndereceğini seçin.",
+      "description": "Artha'ın e-posta veya push ile hangi türleri, ne sıklıkta göndereceğini seçin.",
       "categoryHeader": "Bildirim",
       "channels": {
         "emailReport": "E-posta (rapor)",
@@ -394,7 +394,7 @@
   "about": {
     "heading": "Hakkında",
     "description": "Bu örneğin hangi sürümü çalıştırdığı ve sürüm notlarını, lisansı ve güvenlik politikasını nerede bulacağınız.",
-    "appName": "Monize",
+    "appName": "Artha",
     "tagline": "Kendi sunucunuzda barındırılan kişisel finans yönetimi.",
     "versionLabel": "Sürüm",
     "versionUnknown": "Bilinmiyor",
@@ -417,7 +417,7 @@
     },
     "license": {
       "label": "Lisans",
-      "description": "Monize, GNU AGPL v3 kapsamında özgür yazılımdır."
+      "description": "Artha, GNU AGPL v3 kapsamında özgür yazılımdır."
     },
     "securityPolicy": {
       "label": "Güvenlik politikası",
@@ -595,7 +595,7 @@
   },
   "autoBackup": {
     "heading": "Otomatik Yedekleme",
-    "description": "Verilerinizi bir programa göre otomatik olarak bir klasöre yedekleyin. Monize Docker'da çalıştığından, bir ana klasörü kapsayıcıya birim olarak eşlemeniz gerekir (örn., -v /host/backups:/data/backups).",
+    "description": "Verilerinizi bir programa göre otomatik olarak bir klasöre yedekleyin. Artha Docker'da çalıştığından, bir ana klasörü kapsayıcıya birim olarak eşlemeniz gerekir (örn., -v /host/backups:/data/backups).",
     "adminManagedNote": "Bu ayarları yalnızca yöneticiler değiştirebilir. Diğer tüm kullanıcılar aynı zamanlama ve saklama ilkesiyle, her biri kendi klasörüne otomatik olarak yedeklenir.",
     "loadingText": "Yükleniyor...",
     "enableLabel": "Otomatik yedeklemeyi etkinleştir",
@@ -756,20 +756,20 @@
     "sharedDataLabel": "Paylaşılan veri: {count}",
     "editAccessButton": "Erişimi düzenle",
     "resetPasswordButton": "Şifreyi sıfırla",
-    "resetPasswordDisabledTitle": "Bu kişi kendi şifresini yönetiyor (kendi Monize hesabı var veya başka bir yerde temsilci erişimi var).",
+    "resetPasswordDisabledTitle": "Bu kişi kendi şifresini yönetiyor (kendi Artha hesabı var veya başka bir yerde temsilci erişimi var).",
     "removeButton": "Kaldır",
     "createModal": {
       "title": "Temsilci ekle",
       "description": "Başka bir kişiye hesaplarınıza kapsamlı erişim verin.",
       "emailLabel": "E-posta",
       "emailPlaceholder": "Temsilci e-postası",
-      "checkingEmail": "Bu e-posta mevcut Monize hesaplarıyla karşılaştırılıyor…",
+      "checkingEmail": "Bu e-posta mevcut Artha hesaplarıyla karşılaştırılıyor…",
       "retryEmailCheck": "Yeniden denetle",
       "firstNameLabel": "Ad",
       "firstNamePlaceholder": "Ad (isteğe bağlı)",
       "lastNameLabel": "Soyad",
       "lastNamePlaceholder": "Soyad (isteğe bağlı)",
-      "existingAccountNotice": "Bu kişinin zaten bir Monize girişi var. Kendi kimlik bilgilerini koruyacak ve yalnızca ek paylaşılan erişim verilecek — şifre veya davet gerekmez.",
+      "existingAccountNotice": "Bu kişinin zaten bir Artha girişi var. Kendi kimlik bilgilerini koruyacak ve yalnızca ek paylaşılan erişim verilecek — şifre veya davet gerekmez.",
       "sendInviteLabel": "Şifre ayarlamak yerine e-posta daveti gönder",
       "passwordLabel": "Şifre",
       "passwordPlaceholder": "Şifre belirle",
@@ -777,7 +777,7 @@
     },
     "revokeDialog": {
       "title": "Temsilciyi kaldır",
-      "message": "Bu temsilciyi kaldır? Hesabınıza erişimini kaybeder. Başka paylaşılan erişimi yoksa ve bu e-postayı kendi Monize hesabı olarak talep etmediyse, sahibi tarafından yönetilen girişi de kaldırılır.",
+      "message": "Bu temsilciyi kaldır? Hesabınıza erişimini kaybeder. Başka paylaşılan erişimi yoksa ve bu e-postayı kendi Artha hesabı olarak talep etmediyse, sahibi tarafından yönetilen girişi de kaldırılır.",
       "removingButton": "Kaldırılıyor...",
       "removeButton": "Kaldır"
     },
@@ -801,7 +801,7 @@
       "revokeFailed": "Temsilci iptal edilemedi",
       "resetPasswordFailed": "Şifre sıfırlanamadı",
       "copyFailed": "Panoya kopyalanamadı",
-      "lookupFailed": "Bu e-posta mevcut Monize hesaplarıyla karşılaştırılamadı. Mevcut bir parolanın yanlışlıkla üzerine yazılmaması için, bu denetim başarılı olana kadar temsilci ekleme duraklatıldı."
+      "lookupFailed": "Bu e-posta mevcut Artha hesaplarıyla karşılaştırılamadı. Mevcut bir parolanın yanlışlıkla üzerine yazılmaması için, bu denetim başarılı olana kadar temsilci ekleme duraklatıldı."
     },
     "jointLabel": "{count, plural, other {# ortak hesap}}"
   },
@@ -818,7 +818,7 @@
     "accounts": {
       "noAccounts": "Verilecek hesap yok.",
       "grantAll": "Tümüne ver",
-      "jointRequiresFullAccount": "Ortak hesaplar yalnızca kendi Monize hesabı olan kullanıcılarla paylaşılabilir"
+      "jointRequiresFullAccount": "Ortak hesaplar yalnızca kendi Artha hesabı olan kullanıcılarla paylaşılabilir"
     },
     "shared": {
       "description": "Alacaklılar, kategoriler ve etiketlerin OKUNMASI her zaman izin verilir. Bunlar oluşturma/düzenleme/silmeyi kontrol eder."
@@ -859,7 +859,7 @@
     },
     "toursCard": {
       "title": "Rehberli Turlar",
-      "description": "Monize'in sunduğu tüm turlar ve hangilerini gördüğünüz. İstediğinizi başlatın ya da tekrar alın."
+      "description": "Artha'in sunduğu tüm turlar ve hangilerini gördüğünüz. İstediğinizi başlatın ya da tekrar alın."
     },
     "emergencyAccessCard": {
       "title": "Acil Durum Erişimi",
@@ -904,7 +904,7 @@
       "how": {
         "intro": "Etkinleştirildiğinde, yapay zeka sohbeti sunucu tarafı bir LLM çağırmaz. Bunun yerine:",
         "step1": "Aboneliğinizde oturum açmış bir MCP aracını (ör. Claude CLI) kendi makinenizde çalıştırırsınız.",
-        "step2": "Aracı, sohbete yazdığınız istemler için Monize'e long-polling yapar ve bunları Monize araçlarıyla yanıtlar.",
+        "step2": "Aracı, sohbete yazdığınız istemler için Artha'e long-polling yapar ve bunları Artha araçlarıyla yanıtlar.",
         "step3": "Yanıtlar sohbete geri akışla gelir. Bir durum noktası, aracınızın bağlı olup olmadığını gösterir.",
         "note": "Aracınız bağlanıp dinlemeye başlayana kadar hiçbir şey çalışmaz. Sohbet, bağlantı talimatlarını gösterir."
       }
@@ -1200,7 +1200,7 @@
       "keyUnreadable": "Bu sunucu kayıtlı API anahtarını okuyamıyor. Bu, bir yedek başka bir örneğe geri yüklendiğinde ya da şifreleme anahtarı değiştiğinde olur. Düzeltmek için anahtarı yeniden girin.",
       "encryptionUnavailable": "Bu sunucuda şifreleme anahtarı yapılandırılmamış, bu yüzden bir API anahtarı güvenle saklanamaz. Yöneticinizden bir tane ayarlamasını isteyin.",
       "modalTitle": "Google Places",
-      "modalSubtitle": "Monize, alacaklının adını ve halihazırdaki adresi Google'a gönderir ve orada hiçbir şey saklamaz.",
+      "modalSubtitle": "Artha, alacaklının adını ve halihazırdaki adresi Google'a gönderir ve orada hiçbir şey saklamaz.",
       "apiKeyLabel": "API anahtarı",
       "apiKeyPlaceholder": "Google Places API anahtarınızı yapıştırın",
       "apiKeyHelp": "Google Cloud konsolunda Places API (New) etkinleştirilmiş bir anahtar oluşturun. Kayıtlı anahtarı korumak için boş bırakın.",

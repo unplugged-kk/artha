@@ -164,7 +164,7 @@
     "sectorTab": "類股",
     "countryTab": "国家",
     "assetClassTab": "資產類別",
-    "sectorEmpty": "未儲存類股組成。對於基金與 ETF，Monize 會從資料來源補齊。",
+    "sectorEmpty": "未儲存類股組成。對於基金與 ETF，Artha 會從資料來源補齊。",
     "countryEmpty": "未儲存國家組成。你可以在編輯該證券時輸入。",
     "assetClassEmpty": "尚未儲存資產類別組成。",
     "remainder": "{percent} 未分类"

@@ -35,7 +35,7 @@ jest.mock("otplib", () => ({
   generateURI: jest
     .fn()
     .mockReturnValue(
-      "otpauth://totp/Monize:test@example.com?secret=TESTSECRET&issuer=Monize",
+      "otpauth://totp/Artha:test@example.com?secret=TESTSECRET&issuer=Artha",
     ),
 }));
 

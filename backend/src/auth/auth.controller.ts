@@ -328,7 +328,7 @@ export class AuthController {
     try {
       await this.emailService.sendMail(
         email,
-        t("emails.emailVerification.subject", "Verify your Monize email"),
+        t("emails.emailVerification.subject", "Verify your Artha email"),
         html,
       );
     } catch (error) {
@@ -903,7 +903,7 @@ export class AuthController {
       try {
         await this.emailService.sendMail(
           result.user.email!,
-          t("emails.passwordReset.subject", "Monize Password Reset"),
+          t("emails.passwordReset.subject", "Artha Password Reset"),
           html,
         );
       } catch (error) {

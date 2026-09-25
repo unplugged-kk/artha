@@ -1214,7 +1214,7 @@ export class DelegationService {
             email,
             t(
               "emails.delegateInvite.subject",
-              "You have been invited to Monize",
+              "You have been invited to Artha",
             ),
             delegateInviteTemplate(
               dto.firstName || "",
@@ -1352,7 +1352,7 @@ export class DelegationService {
       throw new BadRequestException(
         tr(
           "errors.delegation.jointRequiresFullAccount",
-          "Joint accounts can only be shared with users who have their own Monize account",
+          "Joint accounts can only be shared with users who have their own Artha account",
         ),
       );
     }
@@ -1438,7 +1438,7 @@ export class DelegationService {
       throw new ForbiddenException(
         tr(
           "errors.delegation.delegateManagesOwnPassword",
-          "This delegate manages their own password (they have their own Monize account or delegated access elsewhere). Only they can change it.",
+          "This delegate manages their own password (they have their own Artha account or delegated access elsewhere). Only they can change it.",
         ),
       );
     }

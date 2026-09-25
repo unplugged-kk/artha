@@ -115,7 +115,7 @@ describe('EnableThisEndpointButton', () => {
 
     await waitFor(() =>
       expect(toast.error).toHaveBeenCalledWith(
-        'This browser is blocking notifications for Monize. Allow them in the browser’s site settings, then try again.',
+        'This browser is blocking notifications for Artha. Allow them in the browser’s site settings, then try again.',
       ),
     );
   });

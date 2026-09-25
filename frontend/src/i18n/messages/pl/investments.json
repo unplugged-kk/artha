@@ -224,7 +224,7 @@
     "statusLockedToParent": "Ta transakcja jest częścią transakcji podzielonej. Zamiast tego zmień status transakcji podzielonej, aby obie strony zmieniły się razem.",
     "descriptionPlaceholder": "Opcjonalne notatki",
     "splitRatio": "Współczynnik splitu",
-    "noSplitRatioWarning": "Dla tej transakcji nie ustawiono współczynnika splitu. Wprowadź współczynnik zgodnie z ogłoszeniem przed zapisaniem — Monize nie założy go za Ciebie.",
+    "noSplitRatioWarning": "Dla tej transakcji nie ustawiono współczynnika splitu. Wprowadź współczynnik zgodnie z ogłoszeniem przed zapisaniem — Artha nie założy go za Ciebie.",
     "newShares": "Nowe udziały",
     "oldShares": "Stare udziały",
     "splitRatioHelp": "Wprowadź współczynnik zgodnie z ogłoszeniem. Dla splitu 2 za 1 wpisz 2 nowe i 1 stary; dla odwrotnego splitu 1 za 2 wpisz 1 nowy i 2 stare. Efektywny współczynnik:",

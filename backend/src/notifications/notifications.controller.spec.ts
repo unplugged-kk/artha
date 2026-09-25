@@ -52,7 +52,7 @@ describe("NotificationsController", () => {
               opts?: { lang?: string; defaultValue?: string },
             ) =>
               opts?.lang === "fr" && key === "emails.test.subject"
-                ? "Monize Test Email (fr)"
+                ? "Artha Test Email (fr)"
                 : (opts?.defaultValue ?? key),
           },
         },
@@ -95,7 +95,7 @@ describe("NotificationsController", () => {
       expect(mockUsersService.findById).toHaveBeenCalledWith("user-1");
       expect(mockEmailService.sendMail).toHaveBeenCalledWith(
         "test@example.com",
-        "Monize Test Email",
+        "Artha Test Email",
         expect.any(String),
       );
     });
@@ -120,7 +120,7 @@ describe("NotificationsController", () => {
       });
       expect(mockEmailService.sendMail).toHaveBeenCalledWith(
         "test@example.com",
-        "Monize Test Email (fr)",
+        "Artha Test Email (fr)",
         expect.any(String),
       );
     });

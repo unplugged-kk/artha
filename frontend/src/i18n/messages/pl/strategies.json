@@ -271,7 +271,7 @@
       "workingTotal": "Razem",
       "workingUnknown": "Udziału nie da się wyliczyć, dopóki pozycji nie można wycenić.",
       "basisComposition": "Ekspozycja jest szacowana na podstawie zawartości instrumentów, porównanej według: {dimension}. To szacunek obok alokacji, a nie jej część: za posiadanie celu liczy się wyłącznie sam instrument docelowy.",
-      "basisInstrument": "Nie można oszacować ekspozycji na rynki docelowe, ponieważ {target} nie ma w Monize zapisanej struktury geograficznej ({dimension}). Zgodność z sygnałem jest nadal liczona dokładnie, po instrumencie.",
+      "basisInstrument": "Nie można oszacować ekspozycji na rynki docelowe, ponieważ {target} nie ma w Artha zapisanej struktury geograficznej ({dimension}). Zgodność z sygnałem jest nadal liczona dokładnie, po instrumencie.",
       "basisPartialData": "{count, plural, one {# pozycja nie ma} few {# pozycje nie mają} many {# pozycji nie ma} other {# pozycji nie ma}} zapisanej struktury, więc szacunek dla całego portfela jest niedostępny.",
       "isTarget": "instrument docelowy",
       "notInStrategy": "poza strategią",

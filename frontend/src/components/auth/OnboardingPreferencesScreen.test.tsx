@@ -38,7 +38,7 @@ describe('OnboardingPreferencesScreen', () => {
     expect(screen.getByText('Set Your Preferences')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Choose your language and the currency Monize should use by default. You can change these later in Settings.',
+        'Choose your language and the currency Artha should use by default. You can change these later in Settings.',
       ),
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Language')).toBeInTheDocument();

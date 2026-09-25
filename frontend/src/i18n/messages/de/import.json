@@ -396,7 +396,7 @@
       "importPricesHint": "Moneys eigene Aufzeichnung, was jedes Wertpapier Tag für Tag wert war. Deaktivieren Sie dies, wenn Sie lieber mit aktuellen Kursen beginnen möchten.",
       "importExchangeRates": "Wechselkurse importieren",
       "importExchangeRatesHint": "Historische Kurse zwischen den Währungen in Ihrer Datei, damit frühere Fremdwährungsbuchungen so umgerechnet werden wie in Money.",
-      "wipeExistingData": "Neu beginnen: meine vorhandenen Monize-Daten zuerst entfernen",
+      "wipeExistingData": "Neu beginnen: meine vorhandenen Artha-Daten zuerst entfernen",
       "wipeExistingDataHint": "Führt vor dem Import denselben Vorgang \"Meine Daten löschen\" aus wie in den Einstellungen. Sie werden um Bestätigung gebeten. Lassen Sie dies aus, um die Money-Datei zu Ihren vorhandenen Daten hinzuzufügen."
     },
     "warningsHeading": "Hinweise zu dieser Datei",
@@ -420,7 +420,7 @@
       "transfer": "Umbuchung",
       "investment": "Anlage",
       "splits": "{count, plural, one {# Aufteilung} other {# Aufteilungen}}",
-      "approximate": "Nächstliegende Monize-Häufigkeit"
+      "approximate": "Nächstliegende Artha-Häufigkeit"
     }
   },
   "mnyWipe": {
@@ -478,15 +478,15 @@
     "existingDataRemoved": "Ihre bestehenden Daten wurden wie gewünscht vor diesem Import entfernt.",
     "verificationHeading": "Saldenprüfung",
     "holdingsHeading": "Bestandsprüfung",
-    "holdingsExplainer": "Anteile, die Monize jetzt hält, verglichen mit den offenen Steuerlots Ihrer Money-Datei. Money gleicht selbst gegen diese Lots ab, daher sind sie der maßgebliche Wert.",
+    "holdingsExplainer": "Anteile, die Artha jetzt hält, verglichen mit den offenen Steuerlots Ihrer Money-Datei. Money gleicht selbst gegen diese Lots ab, daher sind sie der maßgebliche Wert.",
     "table": {
       "account": "Konto",
       "security": "Wertpapier",
       "transactions": "Transaktionen",
       "expected": "Aus Money-Datei",
-      "imported": "In Monize",
+      "imported": "In Artha",
       "lotShares": "Anteile in Money",
-      "importedShares": "Anteile in Monize",
+      "importedShares": "Anteile in Artha",
       "delta": "Differenz",
       "check": "Prüfen"
     },
@@ -497,7 +497,7 @@
   "mnyWarnings": {
     "missingTable": "Diese Money-Version hat {count, plural, one {# Tabelle} other {# Tabellen}} nicht, die der Import verwendet.",
     "missingField": "{count, plural, one {# Feld war} other {# Felder waren}} in dieser Money-Version nicht vorhanden und wurden mit einem Standardwert belegt.",
-    "unknownAccountType": "{count, plural, one {# Konto hatte} other {# Konten hatten}} einen Kontotyp, den Monize nicht kennt, und wurden übersprungen.",
+    "unknownAccountType": "{count, plural, one {# Konto hatte} other {# Konten hatten}} einen Kontotyp, den Artha nicht kennt, und wurden übersprungen.",
     "duplicateAccountName": "{count, plural, one {# Konto trug} other {# Konten trugen}} denselben Namen wie ein anderes und wurden umbenannt.",
     "unknownCurrency": "{count, plural, one {# Konto verweist} other {# Konten verweisen}} auf eine Währung, die die Datei nicht definiert, und verwenden die Basiswährung.",
     "categoryFlattened": "{count, plural, one {# Kategorie war} other {# Kategorien waren}} tiefer als zwei Ebenen und wurden in die übergeordnete Kategorie zusammengeführt.",
@@ -511,7 +511,7 @@
     "balanceMismatch": "{count, plural, one {# Konto weicht} other {# Konten weichen}} im Endsaldo von der Money-Datei ab.",
     "duplicateSecuritySymbol": "{count, plural, one {# Wertpapier teilt} other {# Wertpapiere teilen}} sich ein Symbol mit einem anderen; die späteren wurden umbenannt, damit sie getrennt bleiben.",
     "generatedSecuritySymbol": "{count, plural, one {# Wertpapier hat} other {# Wertpapiere haben}} in Money kein Symbol, daher wurde ein Platzhalter erzeugt und Kursaktualisierungen deaktiviert.",
-    "unknownInvestmentAction": "{count, plural, one {# Investitionstransaktion verwendete} other {# Investitionstransaktionen verwendeten}} eine Aktion, die Monize nicht kennt, und wurden übersprungen.",
+    "unknownInvestmentAction": "{count, plural, one {# Investitionstransaktion verwendete} other {# Investitionstransaktionen verwendeten}} eine Aktion, die Artha nicht kennt, und wurden übersprungen.",
     "unconfirmedInvestmentAction": "{count, plural, one {# Investitionstransaktion verwendete} other {# Investitionstransaktionen verwendeten}} eine Money-Aktion, deren Bedeutung abgeleitet und nicht dokumentiert ist; prüfen Sie sie gegen Money.",
     "missingInvestmentDetail": "{count, plural, one {# Investitionstransaktion hatte} other {# Investitionstransaktionen hatten}} keine Anteilsangaben in der Datei und wurden nur mit ihrem Geldbetrag importiert.",
     "investmentAccountMismatch": "{count, plural, one {# Investitionstransaktion lag} other {# Investitionstransaktionen lagen}} in einem Konto, das kein Depotkonto ist, und wurden übersprungen.",
@@ -519,7 +519,7 @@
     "holdingsMismatch": "{count, plural, one {# Position stimmt} other {# Positionen stimmen}} nicht mit den in Ihrer Money-Datei erfassten Anteilen überein.",
     "billTemplateMissing": "{count, plural, one {# geplante Rechnung hatte} other {# geplante Rechnungen hatten}} keine Vorlagentransaktion in der Datei und wurden übersprungen.",
     "unusableBill": "{count, plural, one {# geplante Rechnung hatte} other {# geplante Rechnungen hatten}} kein Konto, kein brauchbares Datum oder eine unbekannte Wiederholung und wurden übersprungen.",
-    "billFrequencyApproximated": "{count, plural, one {# geplante Rechnung verwendet} other {# geplante Rechnungen verwenden}} ein Wiederholungsintervall, das Monize nicht exakt abbilden kann; das nächstkürzere wurde verwendet.",
+    "billFrequencyApproximated": "{count, plural, one {# geplante Rechnung verwendet} other {# geplante Rechnungen verwenden}} ein Wiederholungsintervall, das Artha nicht exakt abbilden kann; das nächstkürzere wurde verwendet.",
     "loanInterestCategoryUnclear": "{count, plural, one {# Kreditzahlung enthielt} other {# Kreditzahlungen enthielten}} mehrere Kategorien außer der Tilgung, daher wurde die Zinskategorie des Kredits nicht gesetzt. Prüfe, ob die Zahlung eine Treuhandkomponente (Escrow) enthält, und lege die Zinskategorie nach dem Import fest.",
     "showTransactions": "{count, plural, one {Die # Transaktion anzeigen} other {Die # Transaktionen anzeigen}}",
     "hideTransactions": "Transaktionen ausblenden",

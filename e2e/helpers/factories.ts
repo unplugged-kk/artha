@@ -89,7 +89,8 @@ export function createAccount(
     openingBalance?: number;
   } = {},
 ): Promise<CreatedAccount> {
-  // A fresh user's default currency is USD (user_preference default).
+  // USD is installed once by global setup as the suite's test currency; the
+  // product's own default-preference currency is INR.
   return api.post<CreatedAccount>("/accounts", {
     name: data.name ?? `E2E Account ${uniqueId()}`,
     accountType: data.accountType ?? "CHEQUING",

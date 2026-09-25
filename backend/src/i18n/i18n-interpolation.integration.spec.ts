@@ -37,9 +37,9 @@ describe("i18n interpolation (real catalogue)", () => {
     const t = emailTranslator(i18n, "en");
     const subject = t(
       "emails.budgetAlertImmediate.subjectPlural",
-      "Monize: {{ count }} alerts need attention",
+      "Artha: {{ count }} alerts need attention",
       { count: 4 },
     );
-    expect(subject).toBe("Monize: 4 alerts need attention");
+    expect(subject).toBe("Artha: 4 alerts need attention");
   });
 });

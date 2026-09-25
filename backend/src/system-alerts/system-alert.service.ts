@@ -304,7 +304,7 @@ export class SystemAlertService {
         },
         t,
       );
-      const subject = t("emails.systemAlert.subject", `Monize: ${copy.title}`, {
+      const subject = t("emails.systemAlert.subject", `Artha: ${copy.title}`, {
         title: copy.title,
       });
       await this.emailService.sendMail(admin.email, subject, html);

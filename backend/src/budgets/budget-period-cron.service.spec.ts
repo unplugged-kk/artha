@@ -662,7 +662,7 @@ describe("BudgetPeriodCronService", () => {
       await service.sendMonthlySummaryEmails(closedPeriods);
 
       const subject = emailService.sendMail.mock.calls[0][1];
-      expect(subject).toMatch(/^Monize: Monthly budget summary -/);
+      expect(subject).toMatch(/^Artha: Monthly budget summary -/);
     });
 
     it("includes the app URL link in the email", async () => {

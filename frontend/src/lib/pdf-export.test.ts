@@ -140,8 +140,8 @@ describe('exportToPdf', () => {
 
     // Should call setPage for footer
     expect(mockSetPage).toHaveBeenCalledWith(1);
-    // Should have "Monize" and page number in footer
-    expect(mockText).toHaveBeenCalledWith('Monize', expect.any(Number), expect.any(Number));
+    // Should have "Artha" and page number in footer
+    expect(mockText).toHaveBeenCalledWith('Artha', expect.any(Number), expect.any(Number));
     expect(mockText).toHaveBeenCalledWith(
       'Page 1 of 1',
       expect.any(Number),

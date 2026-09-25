@@ -65,7 +65,7 @@ export class NotificationsController {
     );
     const t = emailTranslator(this.i18n, lang);
     const html = testEmailTemplate(user.firstName || "", t);
-    const subject = t("emails.test.subject", "Monize Test Email");
+    const subject = t("emails.test.subject", "Artha Test Email");
     await this.emailService.sendMail(user.email, subject, html);
     return { message: "Test email sent successfully" };
   }

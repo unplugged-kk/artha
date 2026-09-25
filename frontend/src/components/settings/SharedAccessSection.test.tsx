@@ -218,7 +218,7 @@ describe('SharedAccessSection', () => {
     });
 
     expect(
-      await screen.findByText(/already has a Monize login/i),
+      await screen.findByText(/already has an Artha login/i),
     ).toBeInTheDocument();
     expect(
       screen.queryByPlaceholderText('Set a password'),
@@ -435,7 +435,7 @@ describe('SharedAccessSection', () => {
       screen.queryByPlaceholderText('Set a password'),
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByText(/already has a Monize login/i),
+      screen.queryByText(/already has an Artha login/i),
     ).not.toBeInTheDocument();
   });
 
@@ -474,7 +474,7 @@ describe('SharedAccessSection', () => {
     });
 
     expect(
-      await screen.findByText(/already has a Monize login/i, undefined, {
+      await screen.findByText(/already has an Artha login/i, undefined, {
         timeout: 2000,
       }),
     ).toBeInTheDocument();
@@ -504,7 +504,7 @@ describe('SharedAccessSection', () => {
         target: { value: 'old@x.y' },
       });
     });
-    await screen.findByText(/already has a Monize login/i, undefined, {
+    await screen.findByText(/already has an Artha login/i, undefined, {
       timeout: 2000,
     });
 
@@ -521,7 +521,7 @@ describe('SharedAccessSection', () => {
       }),
     ).toBeInTheDocument();
     expect(
-      screen.queryByText(/already has a Monize login/i),
+      screen.queryByText(/already has an Artha login/i),
     ).not.toBeInTheDocument();
   });
 

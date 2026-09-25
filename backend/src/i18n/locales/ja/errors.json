@@ -265,7 +265,7 @@
     "readRequiredForWrite": "作成、編集、削除には READ アクセスが必要です",
     "accountsNotOwned": "1つ以上の口座があなたのものではありません",
     "cannotResetSsoPassword": "SSO代理人アカウントのパスワードはリセットできません",
-    "delegateManagesOwnPassword": "この代理人は自分のパスワードを管理しています（独自のMonizeアカウントを持っているか、別の場所で委任アクセスを持っています）。変更できるのは本人のみです。",
+    "delegateManagesOwnPassword": "この代理人は自分のパスワードを管理しています（独自のArthaアカウントを持っているか、別の場所で委任アクセスを持っています）。変更できるのは本人のみです。",
     "accountIdsMustBeArray": "accountIds は配列でなければなりません",
     "actionNotAvailableAsDelegate": "別のユーザーを代理している間はこのアクションは利用できません。アカウント所有者のみが行えます。",
     "capabilityNotGranted": "アカウント所有者は {{ resource }} を {{ operation }} する権限を付与していません。委任アクセス設定でこれを有効にするよう依頼してください。",
@@ -276,7 +276,7 @@
     "jointAccountTypeReadOnly": "この口座タイプは読み取り専用で共有されています。取引を変更できるのは所有者のみです。",
     "jointOwnAccountNetWorth": "自分の口座には、その口座の純資産設定を使用してください。",
     "jointRequiresRead": "口座を共同としてマークするには読み取りアクセスが必要です",
-    "jointRequiresFullAccount": "共同口座は、自分のMonizeアカウントを持つユーザーとのみ共有できます",
+    "jointRequiresFullAccount": "共同口座は、自分のArthaアカウントを持つユーザーとのみ共有できます",
     "jointPayeeCreateNotGranted": "口座の所有者から支払先を作成する権限が付与されていません。既存の支払先から選択してください。",
     "jointCategoryCreateNotGranted": "口座の所有者からカテゴリを作成する権限が付与されていません。既存のカテゴリから選択してください。",
     "jointTagsNotAllowed": "タグは個人のものなので、共有口座の取引には設定できません。",
@@ -315,7 +315,7 @@
     "mnyNoFile": "Money ファイルがアップロードされていません",
     "mnyFileTruncated": "この Money ファイルは不完全なようです。アップロードが中断された可能性があります。もう一度お試しください。",
     "mnyNotAMoneyFile": "このファイルは Microsoft Money (.mny) ファイルではありません",
-    "mnyUnsupportedVersion": "このファイルは Money 97 または 98 で作成されており、Monize では読み取れません。無償の Money Plus Sunset エディションで一度開いて保存し、その結果をインポートしてください。",
+    "mnyUnsupportedVersion": "このファイルは Money 97 または 98 で作成されており、Artha では読み取れません。無償の Money Plus Sunset エディションで一度開いて保存し、その結果をインポートしてください。",
     "mnyPasswordRequired": "この Money ファイルはパスワードで保護されています。続行するにはパスワードを入力してください。",
     "mnyPasswordIncorrect": "そのパスワードでは Money ファイルを開けません。確認してもう一度お試しください。",
     "mnyUnreadableDatabase": "この Money ファイルは復号できましたが、内容を読み取れませんでした。破損している可能性があります。",
@@ -347,8 +347,8 @@
     "reminderOnReminder": "リマインダーが生成した通知にリマインダーを設定することはできません。元の通知に設定してください。"
   },
   "push": {
-    "channelUnavailable": "この Monize インスタンスではプッシュ通知を利用できません。",
-    "endpointClaimed": "このブラウザーはすでに別の Monize アカウントに登録されています。このブラウザーでそのアカウントからサインアウトしてから、もう一度お試しください。",
+    "channelUnavailable": "この Artha インスタンスではプッシュ通知を利用できません。",
+    "endpointClaimed": "このブラウザーはすでに別の Artha アカウントに登録されています。このブラウザーでそのアカウントからサインアウトしてから、もう一度お試しください。",
     "deviceNotFound": "プッシュデバイスが見つかりません。",
     "noDevices": "このアカウントにはプッシュデバイスが登録されていません。まずこのブラウザーでプッシュ通知を有効にしてください。",
     "rotationUnavailable": "ENCRYPTION_KEY が設定されていないため、新しい秘密鍵を暗号化して保存できませんでした。更新する前に設定して再起動してください。",
@@ -613,6 +613,6 @@
     "capReached": "今月の Google Places リクエスト上限に達しました。",
     "testFailed": "Google Places の接続テストに失敗しました。",
     "referrerRestricted": "このキーは HTTP リファラーで制限されていますが、このデプロイには PUBLIC_APP_URL が設定されていないためリファラーが送信されず、どの許可リストにも一致しません。PUBLIC_APP_URL を設定するか、サーバー側のキーを実際に保護する IP アドレスによる制限を使用してください。",
-    "referrerRejected": "Google がこのキーの HTTP リファラー制限を拒否しました。Monize は「{referer}」を送信します（PUBLIC_APP_URL より）。その値をそのままキーの許可リファラーに追加してください。*.example.com/* のようなパターンは素の example.com には一致しない点に注意してください。サーバー側のキーを実際に保護するのは、IP アドレスによる制限です。"
+    "referrerRejected": "Google がこのキーの HTTP リファラー制限を拒否しました。Artha は「{referer}」を送信します（PUBLIC_APP_URL より）。その値をそのままキーの許可リファラーに追加してください。*.example.com/* のようなパターンは素の example.com には一致しない点に注意してください。サーバー側のキーを実際に保護するのは、IP アドレスによる制限です。"
   }
 }

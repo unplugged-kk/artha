@@ -2,7 +2,7 @@
   "language": {
     "label": "Language",
     "browserOption": "Use browser locale (auto-detected as {locale})",
-    "helpText": "Choose the language used throughout the Monize interface. Number and date formatting are controlled separately below.",
+    "helpText": "Choose the language used throughout the Artha interface. Number and date formatting are controlled separately below.",
     "saved": "Language updated",
     "saveFailed": "Failed to save language"
   },
@@ -124,7 +124,7 @@
     "preferredExchangesHelp": "Select up to 3 exchanges in priority order. These will be preferred when looking up securities.",
     "exchangePriorityPlaceholder": "Priority {n}",
     "defaultQuoteProviderLabel": "Default Stock Quote Provider",
-    "defaultQuoteProviderHelp": "Used when a security has no provider override. If the chosen provider fails, Monize automatically tries the other.",
+    "defaultQuoteProviderHelp": "Used when a security has no provider override. If the chosen provider fails, Artha automatically tries the other.",
     "msnNoIntradayNote": "Note: MSN Money does not provide intraday quote data, so the 1D / 1W / 1M ranges on the Portfolio Value Over Time chart are unavailable for MSN-tracked holdings.",
     "msnNotConfigured": "MSN is selected as the default quote provider, but MSN_API_KEY is not configured on the server. MSN quotes will fail until an administrator sets the env var and restarts the backend.",
     "dateFormatLabel": "Date Format",
@@ -133,11 +133,11 @@
     "timezonePlaceholder": "Search timezones...",
     "weekStartsOnLabel": "Week starts on",
     "showCreatedAtLabel": "Show Create Date in transaction forms",
-    "showCreatedAtTooltip": "Displays the date and time a transaction was originally created on transaction forms. This is separate from the transaction date and can help you tell when an entry was actually added to Monize.",
+    "showCreatedAtTooltip": "Displays the date and time a transaction was originally created on transaction forms. This is separate from the transaction date and can help you tell when an entry was actually added to Artha.",
     "showWhatsNewLabel": "Show What's New after an upgrade",
-    "showWhatsNewTooltip": "Shows a summary of the release notes the first time you sign in after Monize updates to a new version. You can always reopen it by clicking the version number at the bottom of this page or on the login screen.",
+    "showWhatsNewTooltip": "Shows a summary of the release notes the first time you sign in after Artha updates to a new version. You can always reopen it by clicking the version number at the bottom of this page or on the login screen.",
     "lockReconciledLabel": "Lock reconciled transactions",
-    "lockReconciledTooltip": "While this is off, Monize warns you before an edit that would change a reconciled transaction's date or amount and then lets it through. While it is on, reconciled transactions cannot be edited, deleted or unreconciled at all. Turn it off again to make a correction.",
+    "lockReconciledTooltip": "While this is off, Artha warns you before an edit that would change a reconciled transaction's date or amount and then lets it through. While it is on, reconciled transactions cannot be edited, deleted or unreconciled at all. Turn it off again to make a correction.",
     "timeFormatLabel": "Time Format",
     "timeFormatOptions": {
       "h24": "24-hour (14:30)",
@@ -250,13 +250,13 @@
       "collapsedDevicesUnavailable": "Device list unavailable",
       "diagnostics": {
         "summary": "Notification diagnostics",
-        "intro": "What this browser and device report to Monize about notifications. Refresh after changing a setting, then Copy to send the full report.",
+        "intro": "What this browser and device report to Artha about notifications. Refresh after changing a setting, then Copy to send the full report.",
         "refresh": "Refresh",
         "copy": "Copy report",
         "copied": "Diagnostics copied to clipboard"
       },
-      "description": "Register this device so Monize can reach it even when the app is closed. Only the test notification is delivered this way so far; everything else still arrives in the bell.",
-      "androidNotify": "On Android, a granted permission is not enough: the system can still hide notifications. Press and hold the Monize icon on your home screen, tap App info, then Notifications, and make sure they are turned on.",
+      "description": "Register this device so Artha can reach it even when the app is closed. Only the test notification is delivered this way so far; everything else still arrives in the bell.",
+      "androidNotify": "On Android, a granted permission is not enough: the system can still hide notifications. Press and hold the Artha icon on your home screen, tap App info, then Notifications, and make sure they are turned on.",
       "permissionHint": "When you turn this on, your browser asks for permission to show notifications. Nothing is sent until you allow it.",
       "enableButton": "Enable on this device",
       "enablingButton": "Enabling...",
@@ -267,16 +267,16 @@
       "unifiedpushBadge": "UnifiedPush",
       "unnamedDevice": "Unnamed device",
       "noLiveDevices": "No device is registered yet. Enable push on this device to send a test.",
-      "notConfigured": "Browser push is not available on this Monize instance. An administrator can enable it in the Admin area.",
-      "disabledByAdmin": "An administrator has switched browser push off for this Monize instance.",
-      "keyUnreadable": "Monize cannot read this instance's push key pair, so nothing can be delivered. An administrator can recover it by rotating the key pair in the Admin area.",
-      "serverKeyMissing": "This Monize instance is missing the encryption key it needs to open its push key pair, so nothing can be delivered. An administrator has to set it in the deployment and restart.",
-      "statusUnavailable": "Monize could not check whether browser push is available. Reload the page to try again.",
-      "devicesUnavailable": "Monize could not load your registered devices. Everything else on this page still works; reload to try again.",
+      "notConfigured": "Browser push is not available on this Artha instance. An administrator can enable it in the Admin area.",
+      "disabledByAdmin": "An administrator has switched browser push off for this Artha instance.",
+      "keyUnreadable": "Artha cannot read this instance's push key pair, so nothing can be delivered. An administrator can recover it by rotating the key pair in the Admin area.",
+      "serverKeyMissing": "This Artha instance is missing the encryption key it needs to open its push key pair, so nothing can be delivered. An administrator has to set it in the deployment and restart.",
+      "statusUnavailable": "Artha could not check whether browser push is available. Reload the page to try again.",
+      "devicesUnavailable": "Artha could not load your registered devices. Everything else on this page still works; reload to try again.",
       "unsupported": {
         "unsupported": "This browser cannot receive push notifications.",
-        "denied": "Notifications are blocked for Monize in this browser. Allow them in the browser’s site settings, then reload this page.",
-        "ios-browser": "On iPhone and iPad, push notifications work only once Monize is installed to the Home Screen. Use Share, then Add to Home Screen, and open Monize from there."
+        "denied": "Notifications are blocked for Artha in this browser. Allow them in the browser’s site settings, then reload this page.",
+        "ios-browser": "On iPhone and iPad, push notifications work only once Artha is installed to the Home Screen. Use Share, then Add to Home Screen, and open Artha from there."
       },
       "disabledReason": {
         "GONE": "No longer reachable. Enable push again in that browser.",
@@ -286,10 +286,10 @@
       "toasts": {
         "enabled": "Push notifications enabled on this device",
         "enableFailed": "Could not enable push notifications",
-        "permissionDenied": "This browser is blocking notifications for Monize. Allow them in the browser’s site settings, then try again.",
-        "permissionDeniedIos": "Notifications are blocked for Monize. Open iOS Settings, then Notifications, then Monize to allow them.",
+        "permissionDenied": "This browser is blocking notifications for Artha. Allow them in the browser’s site settings, then try again.",
+        "permissionDeniedIos": "Notifications are blocked for Artha. Open iOS Settings, then Notifications, then Artha to allow them.",
         "permissionDismissed": "Notifications were not enabled. Choose Allow when the browser asks.",
-        "permissionNoPrompt": "Notifications were not enabled, and no prompt appeared. Open iOS Settings, then Notifications, then Monize, and allow them there. If Monize is not listed, remove it from the Home Screen, add it again (Share, then Add to Home Screen) and try once more.",
+        "permissionNoPrompt": "Notifications were not enabled, and no prompt appeared. Open iOS Settings, then Notifications, then Artha, and allow them there. If Artha is not listed, remove it from the Home Screen, add it again (Share, then Add to Home Screen) and try once more.",
         "removed": "Device removed",
         "removeFailed": "Could not remove the device",
         "testSent": "{count, plural, one {Test notification sent to 1 device} other {Test notification sent to # devices}}",
@@ -325,7 +325,7 @@
     },
     "preferences": {
       "heading": "How to notify me",
-      "description": "Choose which kinds Monize sends by email or push, and how often.",
+      "description": "Choose which kinds Artha sends by email or push, and how often.",
       "categoryHeader": "Notification",
       "channels": {
         "emailReport": "Email (report)",
@@ -394,7 +394,7 @@
   "about": {
     "heading": "About",
     "description": "What this instance is running, and where to find the release notes, licence and security policy.",
-    "appName": "Monize",
+    "appName": "Artha",
     "tagline": "Self-hosted personal finance management.",
     "versionLabel": "Version",
     "versionUnknown": "Unknown",
@@ -417,7 +417,7 @@
     },
     "license": {
       "label": "Licence",
-      "description": "Monize is free software under the GNU AGPL v3."
+      "description": "Artha is free software under the GNU AGPL v3."
     },
     "securityPolicy": {
       "label": "Security policy",
@@ -595,7 +595,7 @@
   },
   "autoBackup": {
     "heading": "Automatic Backup",
-    "description": "Automatically back up your data to a folder on a schedule. Since Monize runs in Docker, you must map a host folder into the container as a volume (e.g., -v /host/backups:/data/backups).",
+    "description": "Automatically back up your data to a folder on a schedule. Since Artha runs in Docker, you must map a host folder into the container as a volume (e.g., -v /host/backups:/data/backups).",
     "adminManagedNote": "Only administrators can change these settings. Every other user is backed up automatically on the same schedule and retention policy, into a folder of their own.",
     "loadingText": "Loading...",
     "enableLabel": "Enable automatic backups",
@@ -756,20 +756,20 @@
     "sharedDataLabel": "Shared data: {count}",
     "editAccessButton": "Edit access",
     "resetPasswordButton": "Reset password",
-    "resetPasswordDisabledTitle": "This person manages their own password (they have their own Monize account or delegated access elsewhere).",
+    "resetPasswordDisabledTitle": "This person manages their own password (they have their own Artha account or delegated access elsewhere).",
     "removeButton": "Remove",
     "createModal": {
       "title": "Add delegate",
       "description": "Grant another person scoped access to your accounts.",
       "emailLabel": "Email",
       "emailPlaceholder": "Delegate email",
-      "checkingEmail": "Checking this email against existing Monize accounts…",
+      "checkingEmail": "Checking this email against existing Artha accounts…",
       "retryEmailCheck": "Check again",
       "firstNameLabel": "First name",
       "firstNamePlaceholder": "First name (optional)",
       "lastNameLabel": "Last name",
       "lastNamePlaceholder": "Last name (optional)",
-      "existingAccountNotice": "This person already has a Monize login. They'll keep their own credentials and simply be granted the additional shared access — no password or invite needed.",
+      "existingAccountNotice": "This person already has an Artha login. They'll keep their own credentials and simply be granted the additional shared access — no password or invite needed.",
       "sendInviteLabel": "Send an email invite instead of setting a password",
       "passwordLabel": "Password",
       "passwordPlaceholder": "Set a password",
@@ -777,7 +777,7 @@
     },
     "revokeDialog": {
       "title": "Remove delegate",
-      "message": "Remove this delegate? They lose access to your account. If they have no other shared access and never claimed this email as their own Monize account, their owner-managed login is removed too.",
+      "message": "Remove this delegate? They lose access to your account. If they have no other shared access and never claimed this email as their own Artha account, their owner-managed login is removed too.",
       "removingButton": "Removing...",
       "removeButton": "Remove"
     },
@@ -801,7 +801,7 @@
       "revokeFailed": "Failed to revoke delegate",
       "resetPasswordFailed": "Failed to reset password",
       "copyFailed": "Could not copy to clipboard",
-      "lookupFailed": "Could not check this email against existing Monize accounts. Adding a delegate is paused until that check succeeds, so an existing password is never overwritten by mistake."
+      "lookupFailed": "Could not check this email against existing Artha accounts. Adding a delegate is paused until that check succeeds, so an existing password is never overwritten by mistake."
     },
     "jointLabel": "{count, plural, one {# joint account} other {# joint accounts}}"
   },
@@ -818,7 +818,7 @@
     "accounts": {
       "noAccounts": "No accounts to grant.",
       "grantAll": "Grant all",
-      "jointRequiresFullAccount": "Joint accounts can only be shared with users who have their own Monize account"
+      "jointRequiresFullAccount": "Joint accounts can only be shared with users who have their own Artha account"
     },
     "shared": {
       "description": "READ of payees, categories and tags is always allowed. These control create/edit/delete."
@@ -859,7 +859,7 @@
     },
     "toursCard": {
       "title": "Guided Tours",
-      "description": "Every walkthrough Monize offers, with what you have already seen. Start or retake any of them."
+      "description": "Every walkthrough Artha offers, with what you have already seen. Start or retake any of them."
     },
     "emergencyAccessCard": {
       "title": "Emergency Access",
@@ -904,7 +904,7 @@
       "how": {
         "intro": "When enabled, the AI chat does not call a server-side LLM. Instead:",
         "step1": "You run an MCP agent (e.g. Claude CLI) on your own machine, signed in to your subscription.",
-        "step2": "The agent long-polls Monize for prompts you type in the chat and answers them using the Monize tools.",
+        "step2": "The agent long-polls Artha for prompts you type in the chat and answers them using the Artha tools.",
         "step3": "Answers stream back into the chat. A status dot shows whether your agent is connected.",
         "note": "Nothing runs until your agent is connected and listening. The chat shows connection instructions."
       }
@@ -1200,7 +1200,7 @@
       "keyUnreadable": "The stored API key cannot be read by this server. This happens when a backup is restored onto a different instance, or after the encryption key changes. Enter the key again to fix it.",
       "encryptionUnavailable": "This server has no encryption key configured, so an API key cannot be stored securely. Ask your administrator to set one.",
       "modalTitle": "Google Places",
-      "modalSubtitle": "Monize sends the payee's name, and the address you already have, to Google and stores nothing with them.",
+      "modalSubtitle": "Artha sends the payee's name, and the address you already have, to Google and stores nothing with them.",
       "apiKeyLabel": "API key",
       "apiKeyPlaceholder": "Paste your Google Places API key",
       "apiKeyHelp": "Create a key in the Google Cloud console with the Places API (New) enabled. Leave this blank to keep the key you already saved.",

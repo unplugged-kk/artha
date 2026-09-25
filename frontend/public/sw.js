@@ -24,7 +24,7 @@ var OFFLINE_DEFAULT_STRINGS = {
   background: '',
   foreground: '',
   title: 'Unable to connect',
-  message: 'Monize could not reach the server. Check your connection and try again.',
+  message: 'Artha could not reach the server. Check your connection and try again.',
   retry: 'Try again',
 };
 
@@ -374,8 +374,8 @@ var PUSH_ICON = '/icons/icon-192x192.png';
 // frontend/scripts/build-notification-badge.mjs and held to that shape by
 // src/test/notification-badge.test.ts.
 var PUSH_BADGE = '/icons/badge-monochrome.png';
-var PUSH_FALLBACK_TITLE = 'Monize';
-var PUSH_FALLBACK_BODY = 'You have a new notification in Monize.';
+var PUSH_FALLBACK_TITLE = 'Artha';
+var PUSH_FALLBACK_BODY = 'You have a new notification in Artha.';
 
 // A push target is a path inside this app, never a URL. Anything else -- an
 // absolute URL, a protocol-relative '//host', a backslash Chrome normalises to

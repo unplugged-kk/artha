@@ -2,7 +2,7 @@
   "language": {
     "label": "Taal",
     "browserOption": "Browsertaal gebruiken (automatisch gedetecteerd als {locale})",
-    "helpText": "Kies de taal die door de hele Monize-interface wordt gebruikt. Getal- en datumopmaak worden hieronder apart ingesteld.",
+    "helpText": "Kies de taal die door de hele Artha-interface wordt gebruikt. Getal- en datumopmaak worden hieronder apart ingesteld.",
     "saved": "Taal bijgewerkt",
     "saveFailed": "Opslaan van taal mislukt"
   },
@@ -124,7 +124,7 @@
     "preferredExchangesHelp": "Selecteer maximaal 3 beurzen in volgorde van prioriteit. Deze worden gebruikt bij het opzoeken van effecten.",
     "exchangePriorityPlaceholder": "Prioriteit {n}",
     "defaultQuoteProviderLabel": "Standaard aandelenkoersprovider",
-    "defaultQuoteProviderHelp": "Gebruikt wanneer een effect geen provideroverride heeft. Als de gekozen provider uitvalt, probeert Monize automatisch de andere.",
+    "defaultQuoteProviderHelp": "Gebruikt wanneer een effect geen provideroverride heeft. Als de gekozen provider uitvalt, probeert Artha automatisch de andere.",
     "msnNoIntradayNote": "Opmerking: MSN Money levert geen intraday-koersgegevens, dus de bereiken 1D / 1W / 1M in het diagram Portefeuillewaarde over tijd zijn niet beschikbaar voor MSN-bijgehouden posities.",
     "msnNotConfigured": "MSN is geselecteerd als de standaard koersprovider, maar MSN_API_KEY is niet geconfigureerd op de server. MSN-koersen zullen mislukken totdat een beheerder de omgevingsvariabele instelt en de backend opnieuw opstart.",
     "dateFormatLabel": "Datumnotatie",
@@ -133,11 +133,11 @@
     "timezonePlaceholder": "Tijdzones zoeken...",
     "weekStartsOnLabel": "Week begint op",
     "showCreatedAtLabel": "Aanmaakdatum weergeven in transactieformulieren",
-    "showCreatedAtTooltip": "Toont de datum en tijd waarop een transactie oorspronkelijk is aangemaakt op transactieformulieren. Dit staat los van de transactiedatum en kan helpen bij te houden wanneer een invoer werkelijk aan Monize is toegevoegd.",
+    "showCreatedAtTooltip": "Toont de datum en tijd waarop een transactie oorspronkelijk is aangemaakt op transactieformulieren. Dit staat los van de transactiedatum en kan helpen bij te houden wanneer een invoer werkelijk aan Artha is toegevoegd.",
     "showWhatsNewLabel": "'Wat is er nieuw' tonen na een update",
-    "showWhatsNewTooltip": "Toont een samenvatting van de release-opmerkingen de eerste keer dat je je aanmeldt nadat Monize is bijgewerkt naar een nieuwe versie. Je kunt het altijd opnieuw openen door op het versienummer onder aan deze pagina of op het aanmeldscherm te klikken.",
+    "showWhatsNewTooltip": "Toont een samenvatting van de release-opmerkingen de eerste keer dat je je aanmeldt nadat Artha is bijgewerkt naar een nieuwe versie. Je kunt het altijd opnieuw openen door op het versienummer onder aan deze pagina of op het aanmeldscherm te klikken.",
     "lockReconciledLabel": "Afgestemde transacties vergrendelen",
-    "lockReconciledTooltip": "Zolang dit uit staat, waarschuwt Monize vóór een bewerking die de datum of het bedrag van een afgestemde transactie zou verschuiven, en staat die daarna toe. Zolang het aan staat, kunnen afgestemde transacties helemaal niet worden bewerkt, verwijderd of ongedaan gemaakt. Zet het weer uit om een correctie te maken.",
+    "lockReconciledTooltip": "Zolang dit uit staat, waarschuwt Artha vóór een bewerking die de datum of het bedrag van een afgestemde transactie zou verschuiven, en staat die daarna toe. Zolang het aan staat, kunnen afgestemde transacties helemaal niet worden bewerkt, verwijderd of ongedaan gemaakt. Zet het weer uit om een correctie te maken.",
     "timeFormatLabel": "Tijdnotatie",
     "timeFormatOptions": {
       "h24": "24-uurs (14:30)",
@@ -250,13 +250,13 @@
       "collapsedDevicesUnavailable": "Apparatenlijst niet beschikbaar",
       "diagnostics": {
         "summary": "Meldingsdiagnose",
-        "intro": "Wat deze browser en dit apparaat aan Monize melden over meldingen. Ververs na het wijzigen van een instelling en gebruik daarna Kopiëren om het volledige rapport te versturen.",
+        "intro": "Wat deze browser en dit apparaat aan Artha melden over meldingen. Ververs na het wijzigen van een instelling en gebruik daarna Kopiëren om het volledige rapport te versturen.",
         "refresh": "Vernieuwen",
         "copy": "Rapport kopiëren",
         "copied": "Diagnose naar klembord gekopieerd"
       },
-      "description": "Registreer dit apparaat zodat Monize het ook kan bereiken als de app gesloten is. Voorlopig wordt alleen de testmelding zo bezorgd; al het andere komt nog steeds in de bel.",
-      "androidNotify": "Op Android is een verleende toestemming niet genoeg: het systeem kan meldingen alsnog verbergen. Houd het Monize-pictogram op je startscherm ingedrukt, tik op App-info, dan Meldingen, en zorg dat ze aan staan.",
+      "description": "Registreer dit apparaat zodat Artha het ook kan bereiken als de app gesloten is. Voorlopig wordt alleen de testmelding zo bezorgd; al het andere komt nog steeds in de bel.",
+      "androidNotify": "Op Android is een verleende toestemming niet genoeg: het systeem kan meldingen alsnog verbergen. Houd het Artha-pictogram op je startscherm ingedrukt, tik op App-info, dan Meldingen, en zorg dat ze aan staan.",
       "permissionHint": "Als je dit aanzet, vraagt je browser toestemming om meldingen te tonen. Er wordt niets verzonden voordat je die geeft.",
       "enableButton": "Inschakelen op dit apparaat",
       "enablingButton": "Inschakelen...",
@@ -267,16 +267,16 @@
       "unifiedpushBadge": "UnifiedPush",
       "unnamedDevice": "Naamloos apparaat",
       "noLiveDevices": "Nog geen apparaat geregistreerd. Schakel push in op dit apparaat om een test te versturen.",
-      "notConfigured": "Browserpush is niet beschikbaar op deze Monize-instantie. Een beheerder kan het inschakelen in het Admin-gedeelte.",
-      "disabledByAdmin": "Een beheerder heeft browserpush uitgeschakeld voor deze Monize-instantie.",
-      "keyUnreadable": "Monize kan het pushsleutelpaar van deze instantie niet lezen, dus er wordt niets bezorgd. Een beheerder kan dit herstellen door het sleutelpaar in het Admin-gedeelte te vervangen.",
-      "serverKeyMissing": "Deze Monize-instantie mist de encryptiesleutel die nodig is om het push-sleutelpaar te openen, dus er kan niets bezorgd worden. Een beheerder moet die in de deployment instellen en opnieuw opstarten.",
-      "statusUnavailable": "Monize kon niet controleren of browserpush beschikbaar is. Herlaad de pagina om het opnieuw te proberen.",
-      "devicesUnavailable": "Monize kon je geregistreerde apparaten niet laden. De rest van deze pagina werkt gewoon; herlaad om het opnieuw te proberen.",
+      "notConfigured": "Browserpush is niet beschikbaar op deze Artha-instantie. Een beheerder kan het inschakelen in het Admin-gedeelte.",
+      "disabledByAdmin": "Een beheerder heeft browserpush uitgeschakeld voor deze Artha-instantie.",
+      "keyUnreadable": "Artha kan het pushsleutelpaar van deze instantie niet lezen, dus er wordt niets bezorgd. Een beheerder kan dit herstellen door het sleutelpaar in het Admin-gedeelte te vervangen.",
+      "serverKeyMissing": "Deze Artha-instantie mist de encryptiesleutel die nodig is om het push-sleutelpaar te openen, dus er kan niets bezorgd worden. Een beheerder moet die in de deployment instellen en opnieuw opstarten.",
+      "statusUnavailable": "Artha kon niet controleren of browserpush beschikbaar is. Herlaad de pagina om het opnieuw te proberen.",
+      "devicesUnavailable": "Artha kon je geregistreerde apparaten niet laden. De rest van deze pagina werkt gewoon; herlaad om het opnieuw te proberen.",
       "unsupported": {
         "unsupported": "Deze browser kan geen pushmeldingen ontvangen.",
-        "denied": "Meldingen zijn geblokkeerd voor Monize in deze browser. Sta ze toe in de site-instellingen en herlaad deze pagina.",
-        "ios-browser": "Op iPhone en iPad werken pushmeldingen pas als Monize op het beginscherm is geïnstalleerd. Gebruik Deel en daarna Zet op beginscherm, en open Monize van daaruit."
+        "denied": "Meldingen zijn geblokkeerd voor Artha in deze browser. Sta ze toe in de site-instellingen en herlaad deze pagina.",
+        "ios-browser": "Op iPhone en iPad werken pushmeldingen pas als Artha op het beginscherm is geïnstalleerd. Gebruik Deel en daarna Zet op beginscherm, en open Artha van daaruit."
       },
       "disabledReason": {
         "GONE": "Niet meer bereikbaar. Schakel push opnieuw in in die browser.",
@@ -286,10 +286,10 @@
       "toasts": {
         "enabled": "Pushmeldingen ingeschakeld op dit apparaat",
         "enableFailed": "Pushmeldingen konden niet worden ingeschakeld",
-        "permissionDenied": "Deze browser blokkeert meldingen van Monize. Sta ze toe in de site-instellingen en probeer het opnieuw.",
-        "permissionDeniedIos": "Meldingen zijn geblokkeerd voor Monize. Open iOS-instellingen, dan Meldingen, dan Monize, om ze toe te staan.",
+        "permissionDenied": "Deze browser blokkeert meldingen van Artha. Sta ze toe in de site-instellingen en probeer het opnieuw.",
+        "permissionDeniedIos": "Meldingen zijn geblokkeerd voor Artha. Open iOS-instellingen, dan Meldingen, dan Artha, om ze toe te staan.",
         "permissionDismissed": "Meldingen zijn niet ingeschakeld. Kies Toestaan wanneer de browser het vraagt.",
-        "permissionNoPrompt": "Meldingen zijn niet aangezet en er verscheen geen verzoek. Open iOS-instellingen, dan Meldingen, dan Monize, en sta ze daar toe. Staat Monize er niet bij, verwijder het dan van het beginscherm, voeg het opnieuw toe (Deel, dan Zet op beginscherm) en probeer het nog eens.",
+        "permissionNoPrompt": "Meldingen zijn niet aangezet en er verscheen geen verzoek. Open iOS-instellingen, dan Meldingen, dan Artha, en sta ze daar toe. Staat Artha er niet bij, verwijder het dan van het beginscherm, voeg het opnieuw toe (Deel, dan Zet op beginscherm) en probeer het nog eens.",
         "removed": "Apparaat verwijderd",
         "removeFailed": "Apparaat kon niet worden verwijderd",
         "testSent": "{count, plural, one {Testmelding verstuurd naar 1 apparaat} other {Testmelding verstuurd naar # apparaten}}",
@@ -325,7 +325,7 @@
     },
     "preferences": {
       "heading": "Hoe ik meldingen ontvang",
-      "description": "Kies welke soorten Monize per e-mail of push verstuurt, en hoe vaak.",
+      "description": "Kies welke soorten Artha per e-mail of push verstuurt, en hoe vaak.",
       "categoryHeader": "Melding",
       "channels": {
         "emailReport": "E-mail (rapport)",
@@ -394,7 +394,7 @@
   "about": {
     "heading": "Over",
     "description": "Wat deze instantie draait en waar u de release-opmerkingen, licentie en het beveiligingsbeleid vindt.",
-    "appName": "Monize",
+    "appName": "Artha",
     "tagline": "Zelfgehost beheer van persoonlijke financiën.",
     "versionLabel": "Versie",
     "versionUnknown": "Onbekend",
@@ -417,7 +417,7 @@
     },
     "license": {
       "label": "Licentie",
-      "description": "Monize is vrije software onder de GNU AGPL v3."
+      "description": "Artha is vrije software onder de GNU AGPL v3."
     },
     "securityPolicy": {
       "label": "Beveiligingsbeleid",
@@ -595,7 +595,7 @@
   },
   "autoBackup": {
     "heading": "Automatische back-up",
-    "description": "Maak automatisch een back-up van jouw gegevens naar een map op een schema. Omdat Monize in Docker draait, moet je een hostmap als volume in de container koppelen (bijv. -v /host/backups:/data/backups).",
+    "description": "Maak automatisch een back-up van jouw gegevens naar een map op een schema. Omdat Artha in Docker draait, moet je een hostmap als volume in de container koppelen (bijv. -v /host/backups:/data/backups).",
     "adminManagedNote": "Alleen beheerders kunnen deze instellingen wijzigen. Alle andere gebruikers worden automatisch volgens hetzelfde schema en bewaarbeleid geback-upt, elk in een eigen map.",
     "loadingText": "Laden...",
     "enableLabel": "Automatische back-ups inschakelen",
@@ -756,20 +756,20 @@
     "sharedDataLabel": "Gedeelde gegevens: {count}",
     "editAccessButton": "Toegang bewerken",
     "resetPasswordButton": "Wachtwoord opnieuw instellen",
-    "resetPasswordDisabledTitle": "Deze persoon beheert zijn eigen wachtwoord (hij heeft een eigen Monize-account of gedelegeerde toegang elders).",
+    "resetPasswordDisabledTitle": "Deze persoon beheert zijn eigen wachtwoord (hij heeft een eigen Artha-account of gedelegeerde toegang elders).",
     "removeButton": "Verwijderen",
     "createModal": {
       "title": "Gedelegeerde toevoegen",
       "description": "Verleen een andere persoon beperkte toegang tot jouw rekeningen.",
       "emailLabel": "E-mail",
       "emailPlaceholder": "E-mail van gedelegeerde",
-      "checkingEmail": "Dit e-mailadres wordt vergeleken met bestaande Monize-accounts…",
+      "checkingEmail": "Dit e-mailadres wordt vergeleken met bestaande Artha-accounts…",
       "retryEmailCheck": "Opnieuw controleren",
       "firstNameLabel": "Voornaam",
       "firstNamePlaceholder": "Voornaam (optioneel)",
       "lastNameLabel": "Achternaam",
       "lastNamePlaceholder": "Achternaam (optioneel)",
-      "existingAccountNotice": "Deze persoon heeft al een Monize-aanmelding. Ze behouden hun eigen inloggegevens en krijgen gewoon de aanvullende gedeelde toegang -- geen wachtwoord of uitnodiging nodig.",
+      "existingAccountNotice": "Deze persoon heeft al een Artha-aanmelding. Ze behouden hun eigen inloggegevens en krijgen gewoon de aanvullende gedeelde toegang -- geen wachtwoord of uitnodiging nodig.",
       "sendInviteLabel": "Een e-mailuitnodiging sturen in plaats van een wachtwoord instellen",
       "passwordLabel": "Wachtwoord",
       "passwordPlaceholder": "Stel een wachtwoord in",
@@ -777,7 +777,7 @@
     },
     "revokeDialog": {
       "title": "Gedelegeerde verwijderen",
-      "message": "Deze gedelegeerde verwijderen? Ze verliezen toegang tot jouw account. Als ze geen andere gedeelde toegang hebben en dit e-mailadres nooit hebben geclaimd als eigen Monize-account, wordt hun door de eigenaar beheerde aanmelding ook verwijderd.",
+      "message": "Deze gedelegeerde verwijderen? Ze verliezen toegang tot jouw account. Als ze geen andere gedeelde toegang hebben en dit e-mailadres nooit hebben geclaimd als eigen Artha-account, wordt hun door de eigenaar beheerde aanmelding ook verwijderd.",
       "removingButton": "Verwijderen...",
       "removeButton": "Verwijderen"
     },
@@ -801,7 +801,7 @@
       "revokeFailed": "Intrekken van gedelegeerde mislukt",
       "resetPasswordFailed": "Opnieuw instellen van wachtwoord mislukt",
       "copyFailed": "Kopiëren naar klembord mislukt",
-      "lookupFailed": "Dit e-mailadres kon niet worden vergeleken met bestaande Monize-accounts. Het toevoegen van een gemachtigde is gepauzeerd totdat die controle slaagt, zodat een bestaand wachtwoord nooit per ongeluk wordt overschreven."
+      "lookupFailed": "Dit e-mailadres kon niet worden vergeleken met bestaande Artha-accounts. Het toevoegen van een gemachtigde is gepauzeerd totdat die controle slaagt, zodat een bestaand wachtwoord nooit per ongeluk wordt overschreven."
     },
     "jointLabel": "{count, plural, one {# gezamenlijke rekening} other {# gezamenlijke rekeningen}}"
   },
@@ -818,7 +818,7 @@
     "accounts": {
       "noAccounts": "Geen rekeningen om te verlenen.",
       "grantAll": "Alles verlenen",
-      "jointRequiresFullAccount": "Gezamenlijke rekeningen kunnen alleen worden gedeeld met gebruikers die een eigen Monize-account hebben"
+      "jointRequiresFullAccount": "Gezamenlijke rekeningen kunnen alleen worden gedeeld met gebruikers die een eigen Artha-account hebben"
     },
     "shared": {
       "description": "LEZEN van begunstigden, categorieën en labels is altijd toegestaan. Dit regelt aanmaken/bewerken/verwijderen."
@@ -859,7 +859,7 @@
     },
     "toursCard": {
       "title": "Begeleide rondleidingen",
-      "description": "Alle rondleidingen die Monize biedt, met wat je al hebt gezien. Start of doe er een opnieuw."
+      "description": "Alle rondleidingen die Artha biedt, met wat je al hebt gezien. Start of doe er een opnieuw."
     },
     "emergencyAccessCard": {
       "title": "Noodtoegang",
@@ -904,7 +904,7 @@
       "how": {
         "intro": "Indien ingeschakeld roept de AI-chat geen LLM aan de serverzijde aan. In plaats daarvan:",
         "step1": "U voert een MCP-agent (bijv. Claude CLI) op uw eigen machine uit, aangemeld bij uw abonnement.",
-        "step2": "De agent doet long-polling bij Monize voor prompts die u in de chat typt en beantwoordt ze met de Monize-tools.",
+        "step2": "De agent doet long-polling bij Artha voor prompts die u in de chat typt en beantwoordt ze met de Artha-tools.",
         "step3": "Antwoorden worden terug naar de chat gestreamd. Een statusstip toont of uw agent verbonden is.",
         "note": "Er gebeurt niets totdat uw agent verbonden is en luistert. De chat toont verbindingsinstructies."
       }
@@ -1200,7 +1200,7 @@
       "keyUnreadable": "Deze server kan de opgeslagen API-sleutel niet lezen. Dat gebeurt wanneer een back-up op een andere instantie wordt teruggezet, of nadat de encryptiesleutel is gewijzigd. Voer de sleutel opnieuw in om dit op te lossen.",
       "encryptionUnavailable": "Deze server heeft geen encryptiesleutel ingesteld, dus een API-sleutel kan niet veilig worden bewaard. Vraag je beheerder er een in te stellen.",
       "modalTitle": "Google Places",
-      "modalSubtitle": "Monize stuurt de naam van de begunstigde en het adres dat je al hebt naar Google, en slaat daar niets op.",
+      "modalSubtitle": "Artha stuurt de naam van de begunstigde en het adres dat je al hebt naar Google, en slaat daar niets op.",
       "apiKeyLabel": "API-sleutel",
       "apiKeyPlaceholder": "Plak je Google Places API-sleutel",
       "apiKeyHelp": "Maak in de Google Cloud-console een sleutel met de Places API (New) ingeschakeld. Laat leeg om de al opgeslagen sleutel te behouden.",

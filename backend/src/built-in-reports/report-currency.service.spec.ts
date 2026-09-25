@@ -3,6 +3,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { ReportCurrencyService, RateMap } from "./report-currency.service";
 import { UserPreference } from "../users/entities/user-preference.entity";
+import { FALLBACK_DEFAULT_CURRENCY } from "../common/default-currency.util";
 import { ExchangeRateService } from "../currencies/exchange-rate.service";
 import {
   createScopedDbMocks,
@@ -75,32 +76,32 @@ describe("ReportCurrencyService", () => {
       });
     });
 
-    it("returns USD when user preference is null", async () => {
+    it("returns the fallback currency when user preference is null", async () => {
       userPreferenceRepository.findOne.mockResolvedValue(null);
 
       const result = await service.getDefaultCurrency(mockUserId);
 
-      expect(result).toBe("USD");
+      expect(result).toBe(FALLBACK_DEFAULT_CURRENCY);
     });
 
-    it("returns USD when user preference has no defaultCurrency", async () => {
+    it("returns the fallback currency when user preference has no defaultCurrency", async () => {
       userPreferenceRepository.findOne.mockResolvedValue({
         defaultCurrency: undefined,
       });
 
       const result = await service.getDefaultCurrency(mockUserId);
 
-      expect(result).toBe("USD");
+      expect(result).toBe(FALLBACK_DEFAULT_CURRENCY);
     });
 
-    it("returns USD when defaultCurrency is empty string", async () => {
+    it("returns the fallback currency when defaultCurrency is empty string", async () => {
       userPreferenceRepository.findOne.mockResolvedValue({
         defaultCurrency: "",
       });
 
       const result = await service.getDefaultCurrency(mockUserId);
 
-      expect(result).toBe("USD");
+      expect(result).toBe(FALLBACK_DEFAULT_CURRENCY);
     });
 
     it("returns the correct currency for different users", async () => {

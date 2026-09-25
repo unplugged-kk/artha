@@ -288,14 +288,14 @@ describe("AccountBalancesReportService", () => {
       expect(result.displayRates.USD).toBeCloseTo(1.25, 10);
     });
 
-    it("falls back to USD when the user has stated no reporting currency", async () => {
+    it("falls back to the default currency when the user has stated no reporting currency", async () => {
       preferencesRepo.findOne.mockResolvedValue(null);
       program({
         accounts: [cheque],
         balances: [{ id: "acc-1", balance: "1" }],
       });
       const result = await service.getBalancesAsOf("user-1", "2026-03-01");
-      expect(result.displayCurrency).toBe("USD");
+      expect(result.displayCurrency).toBe("INR");
     });
   });
 

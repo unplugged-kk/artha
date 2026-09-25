@@ -19,7 +19,7 @@ import { withScopedDb } from "./db/scoped-db";
  * Portfolio therefore reported the same user's money in two currencies, with no
  * conversion between them and nothing on either screen to say so.
  */
-export const FALLBACK_DEFAULT_CURRENCY = "USD";
+export const FALLBACK_DEFAULT_CURRENCY = "INR";
 
 /**
  * The reporting currency for a preference row already in hand.

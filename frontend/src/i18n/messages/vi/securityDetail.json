@@ -164,7 +164,7 @@
     "sectorTab": "Ngành",
     "countryTab": "Quốc gia",
     "assetClassTab": "Loại tài sản",
-    "sectorEmpty": "Chưa lưu cơ cấu theo ngành. Monize lấy phần này từ nhà cung cấp cho quỹ và ETF.",
+    "sectorEmpty": "Chưa lưu cơ cấu theo ngành. Artha lấy phần này từ nhà cung cấp cho quỹ và ETF.",
     "countryEmpty": "Chưa lưu cơ cấu theo quốc gia. Bạn có thể nhập khi sửa chứng khoán.",
     "assetClassEmpty": "Chưa lưu cơ cấu theo loại tài sản.",
     "remainder": "{percent} chưa phân loại"

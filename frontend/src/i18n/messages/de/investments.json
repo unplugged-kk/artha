@@ -224,7 +224,7 @@
     "statusLockedToParent": "Diese Buchung ist Teil einer aufgeteilten Transaktion. Ändern Sie stattdessen den Status der aufgeteilten Transaktion, damit sich beide Seiten gemeinsam ändern.",
     "descriptionPlaceholder": "Optionale Notizen",
     "splitRatio": "Teilungsverhältnis",
-    "noSplitRatioWarning": "Für diese Buchung ist kein Teilungsverhältnis festgelegt. Geben Sie das Verhältnis so ein, wie es angekündigt wurde, bevor Sie speichern – Monize nimmt keines an.",
+    "noSplitRatioWarning": "Für diese Buchung ist kein Teilungsverhältnis festgelegt. Geben Sie das Verhältnis so ein, wie es angekündigt wurde, bevor Sie speichern – Artha nimmt keines an.",
     "newShares": "Neue Anteile",
     "oldShares": "Alte Anteile",
     "splitRatioHelp": "Geben Sie das Verhältnis so ein, wie es angekündigt wurde. Für eine 2-für-1-Teilung verwenden Sie 2 neue und 1 alte; für eine 1-für-2-Umkehrteilung 1 neue und 2 alte. Effektives Verhältnis:",

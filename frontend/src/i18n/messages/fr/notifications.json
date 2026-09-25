@@ -97,7 +97,7 @@
     },
     "smtpFailure": {
       "title": "L'envoi d'e-mails échoue",
-      "message": "Monize n'a pas pu envoyer d'e-mail : {error}. Les notifications et les rappels ne sont pas distribués."
+      "message": "Artha n'a pas pu envoyer d'e-mail : {error}. Les notifications et les rappels ne sont pas distribués."
     },
     "providerOutage": {
       "title": "{provider} ne répond pas",

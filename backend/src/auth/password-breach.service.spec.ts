@@ -44,7 +44,7 @@ describe("PasswordBreachService", () => {
     expect(fetchSpy).toHaveBeenCalledWith(
       expect.stringContaining("https://api.pwnedpasswords.com/range/"),
       expect.objectContaining({
-        headers: { "User-Agent": "Monize-PasswordCheck" },
+        headers: { "User-Agent": "Artha-PasswordCheck" },
       }),
     );
   });

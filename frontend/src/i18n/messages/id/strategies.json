@@ -271,7 +271,7 @@
       "workingTotal": "Total",
       "workingUnknown": "Porsinya belum bisa dihitung sampai kepemilikan bisa dinilai.",
       "basisComposition": "Eksposur diperkirakan dari isi setiap instrumen, dibandingkan menurut {dimension}. Ini perkiraan di samping alokasi, bukan bagian darinya: hanya instrumen target itu sendiri yang dihitung sebagai memegang target.",
-      "basisInstrument": "Eksposur pasar tidak bisa diperkirakan karena {target} tidak punya struktur geografis ({dimension}) yang tercatat di Monize. Kesesuaian dengan sinyal tetap dihitung persis, per instrumen.",
+      "basisInstrument": "Eksposur pasar tidak bisa diperkirakan karena {target} tidak punya struktur geografis ({dimension}) yang tercatat di Artha. Kesesuaian dengan sinyal tetap dihitung persis, per instrumen.",
       "basisPartialData": "{count} posisi tidak punya struktur tercatat, jadi perkiraan untuk portofolio tidak tersedia.",
       "isTarget": "instrumen target",
       "notInStrategy": "bukan bagian dari strategi",

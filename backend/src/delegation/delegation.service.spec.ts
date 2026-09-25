@@ -408,7 +408,7 @@ describe("DelegationService", () => {
         service.setGrants(OWNER_ID, "g1", [
           { accountId: "a1", canRead: true, isJoint: true },
         ]),
-      ).rejects.toThrow(/their own Monize account/);
+      ).rejects.toThrow(/their own Artha account/);
     });
 
     it("persists isJoint for a full-account delegate", async () => {

@@ -70,7 +70,7 @@ export class DelegationController {
 
   @Get("delegates/lookup")
   @ApiOperation({
-    summary: "Whether an email already has a Monize login",
+    summary: "Whether an email already has an Artha login",
   })
   async lookupDelegate(@Query() dto: LookupDelegateDto) {
     return {

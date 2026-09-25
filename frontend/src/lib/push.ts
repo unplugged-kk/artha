@@ -267,7 +267,7 @@ export const SERVICE_WORKER_READY_TIMEOUT_MS = 5000;
 /** Thrown when the service worker never became ready, so callers can say so. */
 export class ServiceWorkerUnavailableError extends Error {
   constructor() {
-    super('The Monize service worker is not available in this browser.');
+    super('The Artha service worker is not available in this browser.');
     this.name = 'ServiceWorkerUnavailableError';
   }
 }

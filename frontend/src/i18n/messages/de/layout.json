@@ -27,8 +27,8 @@
     "dismissAriaLabel": "HTTPS-Warnung schließen"
   },
   "updateBanner": {
-    "availableWithVersion": "Monize v{version} ist verfügbar",
-    "availableGeneric": "Eine neue Version von Monize ist verfügbar",
+    "availableWithVersion": "Artha v{version} ist verfügbar",
+    "availableGeneric": "Eine neue Version von Artha ist verfügbar",
     "runningVersion": "(aktuelle Version: v{version})",
     "releaseNotes": "Versionshinweise",
     "dismiss": "Schließen",
@@ -134,29 +134,29 @@
     "redonePrefix": "Wiederholt: {description}"
   },
   "pageHeader": {
-    "helpAriaLabel": "Monize-Wiki für Hilfe zu diesem Bereich öffnen",
-    "helpTooltip": "Monize-Wiki für Hilfe zu diesem Bereich öffnen"
+    "helpAriaLabel": "Artha-Wiki für Hilfe zu diesem Bereich öffnen",
+    "helpTooltip": "Artha-Wiki für Hilfe zu diesem Bereich öffnen"
   },
   "bootSplash": {
-    "loading": "Monize wird geladen",
+    "loading": "Artha wird geladen",
     "slowMessage": "Das dauert länger als erwartet. Prüfen Sie Ihre Verbindung.",
     "reload": "App neu laden"
   },
   "offlineFallback": {
     "title": "Verbindung nicht möglich",
-    "message": "Monize konnte den Server nicht erreichen. Prüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+    "message": "Artha konnte den Server nicht erreichen. Prüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
     "retry": "Erneut versuchen"
   },
   "pushBanner": {
     "enableTitle": "Benachrichtigungen aktivieren?",
-    "enableBody": "Monize kann Sie auf diesem Gerät an Rechnungen und Budgetgrenzen erinnern, auch wenn die App geschlossen ist. Ihr Browser fragt Sie um Erlaubnis.",
+    "enableBody": "Artha kann Sie auf diesem Gerät an Rechnungen und Budgetgrenzen erinnern, auch wenn die App geschlossen ist. Ihr Browser fragt Sie um Erlaubnis.",
     "enableButton": "Aktivieren",
     "enabling": "Wird aktiviert…",
-    "installIosTitle": "Fügen Sie Monize zuerst zum Home-Bildschirm hinzu.",
-    "installIosBody": "Auf iPhone und iPad funktionieren Benachrichtigungen nur in der installierten App. Tippen Sie auf Teilen, dann auf Zum Home-Bildschirm, und öffnen Sie Monize von dort.",
-    "blockedTitle": "Benachrichtigungen sind für Monize blockiert.",
-    "blockedBody": "Erlauben Sie sie in den Website-Einstellungen Ihres Browsers für diese Seite. Monize kann nicht von selbst erneut fragen.",
-    "blockedIosBody": "Öffnen Sie die iOS-Einstellungen, dann Mitteilungen, dann Monize, und erlauben Sie sie dort. Falls Monize nicht aufgeführt ist, entfernen Sie es vom Home-Bildschirm und fügen Sie es erneut hinzu.",
+    "installIosTitle": "Fügen Sie Artha zuerst zum Home-Bildschirm hinzu.",
+    "installIosBody": "Auf iPhone und iPad funktionieren Benachrichtigungen nur in der installierten App. Tippen Sie auf Teilen, dann auf Zum Home-Bildschirm, und öffnen Sie Artha von dort.",
+    "blockedTitle": "Benachrichtigungen sind für Artha blockiert.",
+    "blockedBody": "Erlauben Sie sie in den Website-Einstellungen Ihres Browsers für diese Seite. Artha kann nicht von selbst erneut fragen.",
+    "blockedIosBody": "Öffnen Sie die iOS-Einstellungen, dann Mitteilungen, dann Artha, und erlauben Sie sie dort. Falls Artha nicht aufgeführt ist, entfernen Sie es vom Home-Bildschirm und fügen Sie es erneut hinzu.",
     "dismiss": "Nicht jetzt"
   }
 }

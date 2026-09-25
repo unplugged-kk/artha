@@ -97,7 +97,7 @@
     },
     "smtpFailure": {
       "title": "E-posta gönderimi başarısız oluyor",
-      "message": "Monize e-posta gönderemedi: {error}. Bildirimler ve hatırlatıcılar iletilemiyor."
+      "message": "Artha e-posta gönderemedi: {error}. Bildirimler ve hatırlatıcılar iletilemiyor."
     },
     "providerOutage": {
       "title": "{provider} yanıt vermiyor",

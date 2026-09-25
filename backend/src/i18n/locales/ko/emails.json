@@ -1,13 +1,13 @@
 {
   "test": {
-    "subject": "Monize 테스트 이메일",
-    "heading": "Monize 테스트 이메일",
+    "subject": "Artha 테스트 이메일",
+    "heading": "Artha 테스트 이메일",
     "greeting": "안녕하세요 {{ name }}님,",
-    "body": "Monize에서 발송된 테스트 이메일입니다. 이 메일을 수신하셨다면 이메일 알림이 정상적으로 작동 중입니다."
+    "body": "Artha에서 발송된 테스트 이메일입니다. 이 메일을 수신하셨다면 이메일 알림이 정상적으로 작동 중입니다."
   },
   "billReminder": {
-    "subjectOne": "Monize: 주의가 필요한 예정 청구서 1건",
-    "subjectMany": "Monize: 주의가 필요한 예정 청구서 {{ count }}건",
+    "subjectOne": "Artha: 주의가 필요한 예정 청구서 1건",
+    "subjectMany": "Artha: 주의가 필요한 예정 청구서 {{ count }}건",
     "heading": "예정 청구서 알림",
     "greeting": "안녕하세요 {{ name }}님,",
     "introOne": "주의가 필요한 예정 청구서가 1건 있습니다:",
@@ -23,8 +23,8 @@
     "button": "청구서 &amp; 입금 보기"
   },
   "mortgageReminder": {
-    "subject": "Monize: 예정된 주택담보대출 갱신 1건",
-    "subjectPlural": "Monize: 예정된 주택담보대출 갱신 {{ count }}건",
+    "subject": "Artha: 예정된 주택담보대출 갱신 1건",
+    "subjectPlural": "Artha: 예정된 주택담보대출 갱신 {{ count }}건",
     "heading": "주택담보대출 갱신 알림",
     "greeting": "안녕하세요 {{ name }}님,",
     "introOne": "만기 갱신이 예정된 주택담보대출이 1건 있습니다. 만기 전에 대출 기관에 연락하여 갱신 옵션을 논의하세요:",
@@ -43,8 +43,8 @@
     "info": "정보"
   },
   "budgetAlertImmediate": {
-    "subject": "Monize: 알림 - {{ title }}",
-    "subjectPlural": "Monize: 주의가 필요한 알림 {{ count }}건",
+    "subject": "Artha: 알림 - {{ title }}",
+    "subjectPlural": "Artha: 주의가 필요한 알림 {{ count }}건",
     "heading": "알림",
     "greeting": "안녕하세요 {{ name }}님,",
     "intro": "예산에 주의가 필요합니다:",
@@ -54,7 +54,7 @@
     "button": "예산 보기"
   },
   "budgetWeeklyDigest": {
-    "subject": "Monize: 주간 예산 요약",
+    "subject": "Artha: 주간 예산 요약",
     "heading": "주간 예산 요약",
     "greeting": "안녕하세요 {{ name }}님,",
     "intro": "다음 예산에 대한 주간 요약입니다: <strong>{{ budgets }}</strong>",
@@ -72,8 +72,8 @@
     "button": "예산 대시보드 보기"
   },
   "budgetMonthlySummary": {
-    "subject": "Monize: 월간 예산 요약 - {{ period }}",
-    "subjectPlural": "Monize: {{ count }}개 예산의 월간 예산 요약",
+    "subject": "Artha: 월간 예산 요약 - {{ period }}",
+    "subjectPlural": "Artha: {{ count }}개 예산의 월간 예산 요약",
     "heading": "월간 예산 요약",
     "greeting": "안녕하세요 {{ name }}님,",
     "intro": "방금 종료된 기간의 월간 예산 요약입니다:",
@@ -87,10 +87,10 @@
     "button": "예산 대시보드 보기"
   },
   "oidcLink": {
-    "subject": "Monize: SSO 계정 연결 확인",
+    "subject": "Artha: SSO 계정 연결 확인",
     "heading": "SSO 계정 연결",
     "greeting": "안녕하세요 {{ name }}님,",
-    "intro": "누군가 기존 Monize 계정의 이메일과 일치하는 주소로 SSO를 통해 로그인을 시도했습니다. SSO 인증을 이 계정에 연결하려면 아래 버튼을 클릭하세요:",
+    "intro": "누군가 기존 Artha 계정의 이메일과 일치하는 주소로 SSO를 통해 로그인을 시도했습니다. SSO 인증을 이 계정에 연결하려면 아래 버튼을 클릭하세요:",
     "button": "계정 연결 확인",
     "disclaimer": "이 요청을 직접 시작하지 않으셨다면 이 이메일을 무시하셔도 됩니다. 링크는 1시간 후 만료됩니다."
   },
@@ -98,11 +98,11 @@
     "subject": "계정이 일시적으로 잠겼습니다",
     "heading": "계정이 일시적으로 잠겼습니다",
     "greeting": "안녕하세요 {{ name }}님,",
-    "body1": "여러 번의 로그인 실패로 인해 Monize 계정이 일시적으로 잠겼습니다. 이는 계정을 보호하기 위한 보안 조치입니다.",
+    "body1": "여러 번의 로그인 실패로 인해 Artha 계정이 일시적으로 잠겼습니다. 이는 계정을 보호하기 위한 보안 조치입니다.",
     "body2": "잠금은 자동으로 해제됩니다. 로그인을 시도하지 않으셨다면 즉시 비밀번호를 재설정하시기 바랍니다."
   },
   "passwordReset": {
-    "subject": "Monize 비밀번호 재설정",
+    "subject": "Artha 비밀번호 재설정",
     "heading": "비밀번호 재설정 요청",
     "greeting": "안녕하세요 {{ name }}님,",
     "intro": "비밀번호 재설정 요청을 받았습니다. 아래 버튼을 클릭하여 새 비밀번호를 설정하세요:",
@@ -110,54 +110,54 @@
     "disclaimer": "이 링크는 1시간 후 만료됩니다. 비밀번호 재설정을 요청하지 않으셨다면 이 이메일을 무시하셔도 됩니다."
   },
   "emailVerification": {
-    "subject": "Monize 이메일 인증",
+    "subject": "Artha 이메일 인증",
     "heading": "이메일 주소 인증",
     "greeting": "안녕하세요 {{ name }}님,",
-    "intro": "Monize에 가입해 주셔서 감사합니다. 계정을 활성화하고 로그인하려면 이메일 주소를 확인하세요:",
+    "intro": "Artha에 가입해 주셔서 감사합니다. 계정을 활성화하고 로그인하려면 이메일 주소를 확인하세요:",
     "button": "이메일 인증",
-    "disclaimer": "이 링크는 24시간 후 만료됩니다. Monize 계정을 만들지 않으셨다면 이 이메일을 무시하셔도 됩니다."
+    "disclaimer": "이 링크는 24시간 후 만료됩니다. Artha 계정을 만들지 않으셨다면 이 이메일을 무시하셔도 됩니다."
   },
   "accountInvite": {
-    "subject": "Monize 계정이 준비되었습니다",
-    "heading": "Monize 계정이 준비되었습니다",
+    "subject": "Artha 계정이 준비되었습니다",
+    "heading": "Artha 계정이 준비되었습니다",
     "greeting": "안녕하세요 {{ name }}님,",
-    "intro": "관리자가 Monize 계정을 생성했습니다. 아래 버튼을 클릭하여 비밀번호를 설정하고 로그인하세요:",
+    "intro": "관리자가 Artha 계정을 생성했습니다. 아래 버튼을 클릭하여 비밀번호를 설정하고 로그인하세요:",
     "button": "비밀번호 설정",
     "disclaimer": "이 링크는 24시간 후 만료됩니다. 이 초대를 예상하지 못하셨다면 이 이메일을 무시하셔도 됩니다."
   },
   "delegateInvite": {
-    "subject": "Monize에 초대되었습니다",
-    "heading": "Monize에 초대되었습니다",
+    "subject": "Artha에 초대되었습니다",
+    "heading": "Artha에 초대되었습니다",
     "greeting": "안녕하세요 {{ name }}님,",
-    "intro": "{{ owner }}님이 귀하를 Monize 계정의 위임 사용자로 초대했습니다. 아래 버튼을 클릭하여 비밀번호를 설정하고 시작하세요:",
+    "intro": "{{ owner }}님이 귀하를 Artha 계정의 위임 사용자로 초대했습니다. 아래 버튼을 클릭하여 비밀번호를 설정하고 시작하세요:",
     "button": "비밀번호 설정",
     "disclaimer": "이 링크는 24시간 후 만료됩니다. 이 초대를 예상하지 못하셨다면 이 이메일을 무시하셔도 됩니다."
   },
   "emergencyAccessReminder": {
-    "subjectOne": "Monize: 계정이 1일 동안 비활성 상태입니다",
-    "subjectMany": "Monize: 계정이 {{ daysSinceLogin }}일 동안 비활성 상태입니다",
-    "heading": "Monize 긴급 접근 알림",
+    "subjectOne": "Artha: 계정이 1일 동안 비활성 상태입니다",
+    "subjectMany": "Artha: 계정이 {{ daysSinceLogin }}일 동안 비활성 상태입니다",
+    "heading": "Artha 긴급 접근 알림",
     "greeting": "안녕하세요 {{ name }}님,",
     "grantPhraseToday": "오늘",
     "grantPhraseFutureOne": "1일 후",
     "grantPhraseFutureMany": "{{ count }}일 후",
-    "bodyOne": "Monize에 <strong>1일</strong> 동안 로그인하지 않으셨습니다. 계속 비활성 상태이면 지정된 긴급 연락처가 {{ grantPhrase }} 계정에 대한 전체 접근 권한을 부여받습니다.",
-    "bodyMany": "Monize에 <strong>{{ daysSinceLogin }}일</strong> 동안 로그인하지 않으셨습니다. 계속 비활성 상태이면 지정된 긴급 연락처가 {{ grantPhrase }} 계정에 대한 전체 접근 권한을 부여받습니다.",
+    "bodyOne": "Artha에 <strong>1일</strong> 동안 로그인하지 않으셨습니다. 계속 비활성 상태이면 지정된 긴급 연락처가 {{ grantPhrase }} 계정에 대한 전체 접근 권한을 부여받습니다.",
+    "bodyMany": "Artha에 <strong>{{ daysSinceLogin }}일</strong> 동안 로그인하지 않으셨습니다. 계속 비활성 상태이면 지정된 긴급 연락처가 {{ grantPhrase }} 계정에 대한 전체 접근 권한을 부여받습니다.",
     "contactsLabel": "지정된 연락처:",
     "button": "지금 로그인",
     "footer": "로그인하면 타이머가 초기화됩니다. 이 기능을 더 이상 사용하지 않으려면 설정 → 긴급 접근에서 비활성화할 수 있습니다."
   },
   "emergencyAccessGrant": {
-    "subject": "{{ owner }}님의 Monize 계정에 대한 긴급 접근 권한이 부여되었습니다",
+    "subject": "{{ owner }}님의 Artha 계정에 대한 긴급 접근 권한이 부여되었습니다",
     "heading": "긴급 접근 권한 부여됨",
     "greeting": "안녕하세요 {{ name }}님,",
-    "body": "<strong>{{ owner }}</strong>님이 이전에 귀하를 Monize 계정의 긴급 연락처로 지정했습니다. 장기간 로그인하지 않아 계정에 대한 전체 접근 권한이 귀하에게 부여됩니다.",
+    "body": "<strong>{{ owner }}</strong>님이 이전에 귀하를 Artha 계정의 긴급 연락처로 지정했습니다. 장기간 로그인하지 않아 계정에 대한 전체 접근 권한이 귀하에게 부여됩니다.",
     "claimIntro": "접근 권한을 얻으려면 아래 링크를 클릭하고 새 비밀번호를 설정하세요. 계정 소유자로 로그인됩니다.",
     "button": "긴급 접근 권한 사용",
     "expiry": "이 링크는 <strong>{{ expiry }}</strong>까지 유효하며 한 번만 사용할 수 있습니다. 여러 연락처가 이 이메일을 받은 경우 먼저 사용한 사람이 계정을 인수합니다."
   },
   "emergencyAccessGrantRevoked": {
-    "subject": "Monize: 부재 중 긴급 접근 권한이 부여되었습니다",
+    "subject": "Artha: 부재 중 긴급 접근 권한이 부여되었습니다",
     "heading": "부재 중 긴급 접근 권한이 부여되었습니다",
     "greeting": "안녕하세요 {{ name }}님,",
     "body1": "계정이 비활성 상태였기 때문에 지정된 긴급 연락처에게 계정 인수 링크가 발송되었습니다. 귀하가 다시 로그인하셨으므로 <strong>해당 링크가 취소되었으며</strong> 보안 장치가 다시 활성화되었습니다.",
@@ -165,39 +165,39 @@
     "button": "긴급 접근 검토"
   },
   "providerOutage": {
-    "subject": "Monize: {{ provider }}이(가) 응답하지 않습니다",
+    "subject": "Artha: {{ provider }}이(가) 응답하지 않습니다",
     "heading": "시장 데이터 공급자를 사용할 수 없습니다",
     "greeting": "안녕하세요 {{ name }}님,",
-    "intro": "Monize가 {{ since }}부터({{ duration }}) <strong>{{ provider }}</strong>에 연결할 수 없습니다. 이 공급자에 대한 요청은 현재 중단되었으며 간격을 늘려 가며 재시도합니다.",
+    "intro": "Artha가 {{ since }}부터({{ duration }}) <strong>{{ provider }}</strong>에 연결할 수 없습니다. 이 공급자에 대한 요청은 현재 중단되었으며 간격을 늘려 가며 재시도합니다.",
     "labelFailures": "실패한 시도",
     "labelLastError": "마지막 오류",
     "labelLastSuccess": "마지막 성공 응답",
     "valueNever": "없음",
     "valueUnknown": "알 수 없음",
-    "impact": "이 공급자에 의존하는 가격, 차트, 지수 비교는 공급자가 다시 응답할 때까지 누락되거나 최신이 아닐 수 있습니다. Monize에 기록된 데이터는 손실되지 않았습니다.",
+    "impact": "이 공급자에 의존하는 가격, 차트, 지수 비교는 공급자가 다시 응답할 때까지 누락되거나 최신이 아닐 수 있습니다. Artha에 기록된 데이터는 손실되지 않았습니다.",
     "whatToCheck": "공급자 자체가 정상이라면 이 서버의 외부 네트워크 접근과 DNS를 확인하세요. 공급자 이름을 확인하지 못하거나 연결할 수 없는 컨테이너는 정확히 이런 형태로 실패합니다.",
     "throttleNote": "공급자가 복구되면 이메일을 한 번 더 받게 됩니다. 동일한 공급자에 대한 알림은 최대 {{ hours }}시간에 한 번만 발송되므로 불안정한 공급자가 받은 편지함을 채울 수 없습니다.",
     "durationMinutes": "{{ minutes }}분",
     "durationHoursMinutes": "{{ hours }}시간 {{ minutes }}분"
   },
   "providerRecovery": {
-    "subject": "Monize: {{ provider }}이(가) 다시 응답합니다",
+    "subject": "Artha: {{ provider }}이(가) 다시 응답합니다",
     "heading": "시장 데이터 공급자가 다시 응답합니다",
     "greeting": "안녕하세요 {{ name }}님,",
     "intro": "<strong>{{ provider }}</strong>이(가) {{ restoredAt }}에 다시 응답했습니다. 장애는 {{ duration }} 동안 이어졌습니다.",
     "backfill": "장애 동안 누락된 가격과 지수 이력은 다음 예정된 새로 고침에서 채워집니다. 별도의 조치는 필요하지 않습니다."
   },
   "systemAlert": {
-    "subject": "Monize: {{ title }}",
+    "subject": "Artha: {{ title }}",
     "heading": "시스템 알림",
     "greeting": "안녕하세요 {{ name }}님,",
-    "intro": "Monize 설치 환경에 관리자의 확인이 필요한 문제가 있습니다.",
+    "intro": "Artha 설치 환경에 관리자의 확인이 필요한 문제가 있습니다.",
     "footer": "이 알림은 앱의 알림 종에도 표시됩니다. 서버 복제본 수와 관계없이 발생 건당 최대 한 번만 생성됩니다."
   },
   "notificationImmediate": {
-    "subject": "새로운 Monize 알림이 있습니다",
-    "eyebrow": "Monize 알림",
-    "button": "Monize에서 열기",
+    "subject": "새로운 Artha 알림이 있습니다",
+    "eyebrow": "Artha 알림",
+    "button": "Artha에서 열기",
     "footer": "이 알림 유형에 대해 즉시 이메일이 켜져 있어 이 메일을 받았습니다. 설정, 알림에서 변경하세요."
   },
   "notificationCopy": {
@@ -254,7 +254,7 @@
       },
       "smtpFailure": {
         "title": "이메일 발송이 실패하고 있음",
-        "message": "Monize가 이메일을 보내지 못했습니다: {{ error }}. 알림과 미리 알림이 전달되지 않고 있습니다."
+        "message": "Artha가 이메일을 보내지 못했습니다: {{ error }}. 알림과 미리 알림이 전달되지 않고 있습니다."
       },
       "providerOutage": {
         "title": "{{ provider }}가 응답하지 않음",

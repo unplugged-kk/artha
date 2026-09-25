@@ -271,7 +271,7 @@
       "workingTotal": "합계",
       "workingUnknown": "보유 종목을 평가할 수 있을 때까지 이 비율은 계산할 수 없습니다.",
       "basisComposition": "익스포저는 각 종목의 구성 내용을 {dimension} 기준으로 비교해 추정합니다. 배분 옆의 추정치일 뿐 배분의 일부가 아닙니다. 목표를 보유한 것으로 인정되는 것은 목표 종목 자체뿐입니다.",
-      "basisInstrument": "Monize에 {target}의 지역 구성({dimension})이 없어서 시장 익스포저를 추정할 수 없습니다. 신호 준수 여부는 여전히 종목 단위로 정확히 계산됩니다.",
+      "basisInstrument": "Artha에 {target}의 지역 구성({dimension})이 없어서 시장 익스포저를 추정할 수 없습니다. 신호 준수 여부는 여전히 종목 단위로 정확히 계산됩니다.",
       "basisPartialData": "{count}개 보유 종목에 구성이 없어 포트폴리오 추정치를 사용할 수 없습니다.",
       "isTarget": "목표 종목",
       "notInStrategy": "전략에 포함되지 않음",

@@ -224,7 +224,7 @@
     "statusLockedToParent": "此交易属于拆分交易的一部分。请改为更改拆分交易的状态，使两侧一并变更。",
     "descriptionPlaceholder": "可选备注",
     "splitRatio": "拆股比例",
-    "noSplitRatioWarning": "此交易未设置拆股比例。请按公告中的比例输入后再保存，Monize 不会自动假设比例。",
+    "noSplitRatioWarning": "此交易未设置拆股比例。请按公告中的比例输入后再保存，Artha 不会自动假设比例。",
     "newShares": "新股数",
     "oldShares": "旧股数",
     "splitRatioHelp": "按公告中的比例输入。2 送 1 拆股填 2 新 1 旧；1 合 2 缩股填 1 新 2 旧。实际比例：",

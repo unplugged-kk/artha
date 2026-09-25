@@ -164,7 +164,7 @@
     "sectorTab": "Sektor",
     "countryTab": "Kraj",
     "assetClassTab": "Klasa aktywów",
-    "sectorEmpty": "Nie zapisano podziału na sektory. Monize uzupełnia go od dostawcy dla funduszy i ETF-ów.",
+    "sectorEmpty": "Nie zapisano podziału na sektory. Artha uzupełnia go od dostawcy dla funduszy i ETF-ów.",
     "countryEmpty": "Nie zapisano podziału na kraje. Możesz go wpisać przy edycji papieru wartościowego.",
     "assetClassEmpty": "Nie zapisano jeszcze podziału na klasy aktywów.",
     "remainder": "{percent} niesklasyfikowane"

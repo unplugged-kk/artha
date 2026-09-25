@@ -396,7 +396,7 @@
       "importPricesHint": "Bản ghi của chính Money về giá trị từng chứng khoán theo từng ngày. Tắt tùy chọn này nếu bạn muốn bắt đầu từ giá hiện tại.",
       "importExchangeRates": "Nhập tỷ giá hối đoái",
       "importExchangeRatesHint": "Tỷ giá lịch sử giữa các loại tiền trong tệp của bạn, để các giao dịch ngoại tệ cũ được quy đổi đúng như Money đã quy đổi.",
-      "wipeExistingData": "Bắt đầu lại: xóa dữ liệu Monize hiện có của tôi trước",
+      "wipeExistingData": "Bắt đầu lại: xóa dữ liệu Artha hiện có của tôi trước",
       "wipeExistingDataHint": "Chạy cùng thao tác Xóa dữ liệu của tôi như trong Cài đặt trước khi nhập. Bạn sẽ được yêu cầu xác nhận. Để tắt nếu muốn thêm tệp Money vào dữ liệu hiện có."
     },
     "warningsHeading": "Ghi chú về tệp này",
@@ -420,7 +420,7 @@
       "transfer": "Chuyển khoản",
       "investment": "Đầu tư",
       "splits": "{count, plural, other {# phân tách}}",
-      "approximate": "Tần suất Monize gần nhất"
+      "approximate": "Tần suất Artha gần nhất"
     }
   },
   "mnyWipe": {
@@ -478,15 +478,15 @@
     "existingDataRemoved": "Dữ liệu hiện có của bạn đã được xoá trước lần nhập này, theo yêu cầu.",
     "verificationHeading": "Kiểm tra số dư",
     "holdingsHeading": "Đối chiếu nắm giữ",
-    "holdingsExplainer": "Số cổ phiếu Monize đang nắm giữ, so với các lô thuế còn mở ghi trong tệp Money của bạn. Chính Money cũng đối chiếu theo các lô đó, nên đây là con số đáng tin.",
+    "holdingsExplainer": "Số cổ phiếu Artha đang nắm giữ, so với các lô thuế còn mở ghi trong tệp Money của bạn. Chính Money cũng đối chiếu theo các lô đó, nên đây là con số đáng tin.",
     "table": {
       "account": "Tài khoản",
       "security": "Chứng khoán",
       "transactions": "Giao dịch",
       "expected": "Từ tệp Money",
-      "imported": "Trong Monize",
+      "imported": "Trong Artha",
       "lotShares": "Cổ phiếu trong Money",
-      "importedShares": "Cổ phiếu trong Monize",
+      "importedShares": "Cổ phiếu trong Artha",
       "delta": "Chênh lệch",
       "check": "Cần kiểm tra"
     },
@@ -497,7 +497,7 @@
   "mnyWarnings": {
     "missingTable": "Phiên bản Money này thiếu {count, plural, other {# bảng}} mà quá trình nhập cần dùng.",
     "missingField": "{count, plural, other {# trường}} không có trong phiên bản Money này và đã dùng giá trị mặc định.",
-    "unknownAccountType": "{count, plural, other {# tài khoản}} có loại tài khoản mà Monize không nhận ra và đã bị bỏ qua.",
+    "unknownAccountType": "{count, plural, other {# tài khoản}} có loại tài khoản mà Artha không nhận ra và đã bị bỏ qua.",
     "duplicateAccountName": "{count, plural, other {# tài khoản}} trùng tên với tài khoản khác và đã được đổi tên.",
     "unknownCurrency": "{count, plural, other {# tài khoản}} tham chiếu một loại tiền tệ mà tệp không định nghĩa và dùng tiền tệ cơ sở.",
     "categoryFlattened": "{count, plural, other {# danh mục}} sâu hơn hai cấp và đã được gộp vào danh mục cha.",
@@ -511,7 +511,7 @@
     "balanceMismatch": "{count, plural, other {# tài khoản}} có số dư cuối khác với tệp Money.",
     "duplicateSecuritySymbol": "{count, plural, other {# chứng khoán}} dùng chung mã với chứng khoán khác; những mã sau đã được đổi tên để giữ riêng biệt.",
     "generatedSecuritySymbol": "{count, plural, other {# chứng khoán}} không có mã trong Money, nên một mã tạm đã được tạo và việc cập nhật giá được tắt.",
-    "unknownInvestmentAction": "{count, plural, other {# giao dịch đầu tư}} dùng một thao tác mà Monize không nhận ra và đã bị bỏ qua.",
+    "unknownInvestmentAction": "{count, plural, other {# giao dịch đầu tư}} dùng một thao tác mà Artha không nhận ra và đã bị bỏ qua.",
     "unconfirmedInvestmentAction": "{count, plural, other {# giao dịch đầu tư}} dùng một thao tác Money có ý nghĩa được suy đoán chứ không được ghi nhận; hãy đối chiếu với Money.",
     "missingInvestmentDetail": "{count, plural, other {# giao dịch đầu tư}} không có chi tiết cổ phiếu trong tệp và chỉ được nhập theo số tiền mặt.",
     "investmentAccountMismatch": "{count, plural, other {# giao dịch đầu tư}} nằm trong tài khoản không phải tài khoản đầu tư và đã bị bỏ qua.",
@@ -519,7 +519,7 @@
     "holdingsMismatch": "{count, plural, other {# khoản nắm giữ}} không khớp với số cổ phiếu ghi trong tệp Money của bạn.",
     "billTemplateMissing": "{count, plural, other {# hóa đơn theo lịch}} không có giao dịch mẫu trong tệp và đã bị bỏ qua.",
     "unusableBill": "{count, plural, other {# hóa đơn theo lịch}} không có tài khoản, ngày dùng được hoặc chu kỳ nhận diện được, nên đã bị bỏ qua.",
-    "billFrequencyApproximated": "{count, plural, other {# hóa đơn theo lịch}} dùng khoảng lặp mà Monize không thể diễn đạt chính xác, nên đã dùng khoảng ngắn hơn gần nhất.",
+    "billFrequencyApproximated": "{count, plural, other {# hóa đơn theo lịch}} dùng khoảng lặp mà Artha không thể diễn đạt chính xác, nên đã dùng khoảng ngắn hơn gần nhất.",
     "loanInterestCategoryUnclear": "{count, plural, other {# khoản thanh toán khoản vay}} bao gồm nhiều danh mục ngoài phần gốc, nên danh mục lãi của khoản vay chưa được đặt. Hãy kiểm tra xem khoản thanh toán có bao gồm escrow (ký quỹ) không và đặt danh mục lãi sau khi nhập.",
     "showTransactions": "Hiện {count, plural, other {# giao dịch}}",
     "hideTransactions": "Ẩn giao dịch",

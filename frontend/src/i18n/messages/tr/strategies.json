@@ -271,7 +271,7 @@
       "workingTotal": "Toplam",
       "workingUnknown": "Pozisyonlar fiyatlanana kadar bu oran hesaplanamaz.",
       "basisComposition": "Maruziyet, her enstrümanın içeriğinden {dimension} bazında karşılaştırılarak tahmin edilir. Dağılımın yanındaki bir tahmindir, parçası değil: hedefi tutmak olarak yalnızca hedef enstrümanın kendisi sayılır.",
-      "basisInstrument": "Piyasa maruziyeti tahmin edilemiyor, çünkü {target} için Monize’de coğrafi yapı ({dimension}) kayıtlı değil. Sinyale uyum yine de enstrüman bazında tam olarak hesaplanıyor.",
+      "basisInstrument": "Piyasa maruziyeti tahmin edilemiyor, çünkü {target} için Artha’de coğrafi yapı ({dimension}) kayıtlı değil. Sinyale uyum yine de enstrüman bazında tam olarak hesaplanıyor.",
       "basisPartialData": "{count, plural, other {# pozisyonun}} kayıtlı yapısı yok, bu yüzden portföy tahmini kullanılamıyor.",
       "isTarget": "hedef enstrüman",
       "notInStrategy": "stratejinin parçası değil",

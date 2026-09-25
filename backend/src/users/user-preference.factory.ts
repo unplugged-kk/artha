@@ -32,7 +32,7 @@ export function buildDefaultPreferences(
 ): UserPreference {
   const preferences = new UserPreference();
   preferences.userId = userId;
-  preferences.defaultCurrency = "USD";
+  preferences.defaultCurrency = "INR";
   preferences.dateFormat = "browser";
   preferences.numberFormat = "browser";
   preferences.theme = "system";

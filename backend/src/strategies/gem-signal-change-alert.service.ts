@@ -231,12 +231,12 @@ function englishMessage(change: SignalChange, strategyName: string): string {
   if (change.kind === "risk") {
     const from = change.previous.state === "RISK_ON" ? "risk-on" : "risk-off";
     const to = change.current.state === "RISK_ON" ? "risk-on" : "risk-off";
-    return `Your GEM strategy "${strategyName}" changed from ${from} to ${to}. Open Monize to review the recommendation.`;
+    return `Your GEM strategy "${strategyName}" changed from ${from} to ${to}. Open Artha to review the recommendation.`;
   }
   const to =
     change.current.winner?.symbol ??
     change.current.winner?.name ??
     change.current.winner?.role ??
     "a new target";
-  return `Your GEM strategy "${strategyName}" now targets ${to}. Open Monize to review the recommendation.`;
+  return `Your GEM strategy "${strategyName}" now targets ${to}. Open Artha to review the recommendation.`;
 }

@@ -240,7 +240,7 @@ describe("envelope version dispatch", () => {
 
     expect(isEncryptedBackup(future)).toBe(false);
     await expect(decryptBackup(future, PASSWORD)).rejects.toThrow(
-      /not in the encrypted Monize format/,
+      /not in the encrypted Artha format/,
     );
   });
 });

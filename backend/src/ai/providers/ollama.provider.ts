@@ -44,7 +44,7 @@ export class OllamaModelDoesNotSupportToolsError extends Error {
       `The Ollama model "${model}" does not support tool use, so the AI ` +
         `Assistant cannot run queries against your data. Switch to a ` +
         `tool-calling-capable model in your AI provider settings. Models ` +
-        `known to work well with Monize: "ministral-3", "qwen3:30b", ` +
+        `known to work well with Artha: "ministral-3", "qwen3:30b", ` +
         `"gpt-oss:20b", and "MFDoom/deepseek-r1-tool-calling:8b". Small ` +
         `models (under ~7B parameters) often advertise tool support but ` +
         `follow instructions poorly; prefer 8B+ parameter models.`,

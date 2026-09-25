@@ -396,7 +396,7 @@
       "importPricesHint": "Catatan Money sendiri tentang nilai setiap efek dari hari ke hari. Matikan jika Anda lebih suka mulai dari kuotasi terkini.",
       "importExchangeRates": "Impor kurs tukar",
       "importExchangeRatesHint": "Kurs historis antar mata uang di berkas Anda, agar transaksi valuta asing lama dikonversi seperti yang dilakukan Money.",
-      "wipeExistingData": "Mulai dari awal: hapus dulu data Monize saya yang ada",
+      "wipeExistingData": "Mulai dari awal: hapus dulu data Artha saya yang ada",
       "wipeExistingDataHint": "Menjalankan operasi Hapus Data Saya yang sama seperti di Pengaturan sebelum mengimpor. Anda akan diminta konfirmasi. Biarkan mati untuk menambahkan berkas Money ke data yang sudah ada."
     },
     "warningsHeading": "Catatan tentang berkas ini",
@@ -420,7 +420,7 @@
       "transfer": "Transfer",
       "investment": "Investasi",
       "splits": "{count, plural, other {# pemecahan}}",
-      "approximate": "Frekuensi Monize terdekat"
+      "approximate": "Frekuensi Artha terdekat"
     }
   },
   "mnyWipe": {
@@ -478,15 +478,15 @@
     "existingDataRemoved": "Data Anda yang ada dihapus sebelum impor ini, sesuai permintaan.",
     "verificationHeading": "Verifikasi saldo",
     "holdingsHeading": "Verifikasi kepemilikan",
-    "holdingsExplainer": "Lembar yang kini dipegang Monize, dibandingkan lot pajak terbuka yang dicatat berkas Money Anda. Money sendiri merekonsiliasi terhadap lot tersebut, jadi itulah angka yang dapat dipercaya.",
+    "holdingsExplainer": "Lembar yang kini dipegang Artha, dibandingkan lot pajak terbuka yang dicatat berkas Money Anda. Money sendiri merekonsiliasi terhadap lot tersebut, jadi itulah angka yang dapat dipercaya.",
     "table": {
       "account": "Akun",
       "security": "Sekuritas",
       "transactions": "Transaksi",
       "expected": "Dari berkas Money",
-      "imported": "Di Monize",
+      "imported": "Di Artha",
       "lotShares": "Lembar di Money",
-      "importedShares": "Lembar di Monize",
+      "importedShares": "Lembar di Artha",
       "delta": "Selisih",
       "check": "Periksa"
     },
@@ -497,7 +497,7 @@
   "mnyWarnings": {
     "missingTable": "Versi Money ini tidak memiliki {count, plural, other {# tabel}} yang dipakai impor.",
     "missingField": "{count, plural, other {# bidang}} tidak ada di versi Money ini dan memakai nilai bawaan.",
-    "unknownAccountType": "{count, plural, other {# akun}} memiliki jenis akun yang tidak dikenali Monize dan dilewati.",
+    "unknownAccountType": "{count, plural, other {# akun}} memiliki jenis akun yang tidak dikenali Artha dan dilewati.",
     "duplicateAccountName": "{count, plural, other {# akun}} bernama sama dengan akun lain dan diganti namanya.",
     "unknownCurrency": "{count, plural, other {# akun}} merujuk mata uang yang tidak didefinisikan berkas dan memakai mata uang dasar.",
     "categoryFlattened": "{count, plural, other {# kategori}} lebih dalam dari dua tingkat dan diratakan ke kategori induknya.",
@@ -511,7 +511,7 @@
     "balanceMismatch": "{count, plural, other {# akun}} berakhir dengan saldo yang berbeda dari berkas Money.",
     "duplicateSecuritySymbol": "{count, plural, other {# efek}} berbagi simbol dengan efek lain; yang berikutnya diganti namanya agar tetap terpisah.",
     "generatedSecuritySymbol": "{count, plural, other {# efek}} tidak memiliki simbol di Money, jadi simbol sementara dibuat dan pembaruan harga dibiarkan mati.",
-    "unknownInvestmentAction": "{count, plural, other {# transaksi investasi}} memakai aksi yang tidak dikenali Monize dan dilewati.",
+    "unknownInvestmentAction": "{count, plural, other {# transaksi investasi}} memakai aksi yang tidak dikenali Artha dan dilewati.",
     "unconfirmedInvestmentAction": "{count, plural, other {# transaksi investasi}} memakai aksi Money yang artinya disimpulkan, bukan terdokumentasi; periksa terhadap Money.",
     "missingInvestmentDetail": "{count, plural, other {# transaksi investasi}} tidak memiliki rincian lembar di berkas dan hanya diimpor sebesar jumlah tunainya.",
     "investmentAccountMismatch": "{count, plural, other {# transaksi investasi}} berada di akun yang bukan akun investasi dan dilewati.",
@@ -519,7 +519,7 @@
     "holdingsMismatch": "{count, plural, other {# kepemilikan}} tidak sesuai dengan jumlah lembar yang dicatat berkas Money Anda.",
     "billTemplateMissing": "{count, plural, other {# tagihan terjadwal}} tidak memiliki transaksi templat dalam berkas dan dilewati.",
     "unusableBill": "{count, plural, other {# tagihan terjadwal}} tidak memiliki akun, tanggal yang bisa dipakai, atau pengulangan yang dikenali, sehingga dilewati.",
-    "billFrequencyApproximated": "{count, plural, other {# tagihan terjadwal}} memakai interval pengulangan yang tidak bisa dinyatakan persis oleh Monize, jadi dipakai interval terpendek terdekat.",
+    "billFrequencyApproximated": "{count, plural, other {# tagihan terjadwal}} memakai interval pengulangan yang tidak bisa dinyatakan persis oleh Artha, jadi dipakai interval terpendek terdekat.",
     "loanInterestCategoryUnclear": "{count, plural, other {# pembayaran pinjaman}} menyertakan beberapa kategori selain pokok, sehingga kategori bunga pinjaman dibiarkan kosong. Periksa apakah pembayaran mencakup escrow dan atur kategori bunga setelah impor.",
     "showTransactions": "Tampilkan {count, plural, other {# transaksi}}",
     "hideTransactions": "Sembunyikan transaksi",

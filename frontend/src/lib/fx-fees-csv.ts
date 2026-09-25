@@ -60,7 +60,7 @@ function timestampedFilename(now: Date): string {
   const pad = (n: number) => String(n).padStart(2, '0');
   const datePart = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
   const timePart = `${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
-  return `Monize_ForeignCurrencyFees_${datePart}_${timePart}.csv`;
+  return `Artha_ForeignCurrencyFees_${datePart}_${timePart}.csv`;
 }
 
 /**

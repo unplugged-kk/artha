@@ -86,7 +86,7 @@ describe('ShareInboxNotice', () => {
 
     await renderNotice();
 
-    expect(await screen.findByText(/2 files were shared with monize/i)).toBeInTheDocument();
+    expect(await screen.findByText(/2 files were shared with artha/i)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /review/i })).toHaveAttribute(
       'href',
       '/share?id=newest',
@@ -99,7 +99,7 @@ describe('ShareInboxNotice', () => {
 
     await renderNotice();
 
-    expect(await screen.findByText(/1 file was shared with monize/i)).toBeInTheDocument();
+    expect(await screen.findByText(/1 file was shared with artha/i)).toBeInTheDocument();
   });
 
   // A share whose every file was refused has nothing to offer on the review
@@ -118,7 +118,7 @@ describe('ShareInboxNotice', () => {
 
     await renderNotice();
 
-    expect(await screen.findByText(/1 file was shared with monize/i)).toBeInTheDocument();
+    expect(await screen.findByText(/1 file was shared with artha/i)).toBeInTheDocument();
   });
 
   it('stays silent with nothing waiting', async () => {

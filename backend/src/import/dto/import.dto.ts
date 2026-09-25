@@ -713,7 +713,7 @@ export class CsvColumnMappingConfigDto {
 
   @ApiPropertyOptional({
     description:
-      "Column index for reconciliation status field (values are mapped to Monize statuses via keyword matching)",
+      "Column index for reconciliation status field (values are mapped to Artha statuses via keyword matching)",
   })
   @IsOptional()
   @IsInt()

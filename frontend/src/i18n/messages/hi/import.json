@@ -396,7 +396,7 @@
       "importPricesHint": "Money का अपना रिकॉर्ड कि हर प्रतिभूति दिन-प्रतिदिन कितने की थी। यदि आप मौजूदा भावों से शुरू करना चाहें तो इसे बंद कर दें।",
       "importExchangeRates": "विनिमय दरें आयात करें",
       "importExchangeRatesHint": "आपकी फ़ाइल की मुद्राओं के बीच ऐतिहासिक दरें, ताकि पुराने विदेशी मुद्रा लेन-देन उसी तरह परिवर्तित हों जैसे Money करता था।",
-      "wipeExistingData": "नए सिरे से शुरू करें: पहले मेरा मौजूदा Monize डेटा हटाएँ",
+      "wipeExistingData": "नए सिरे से शुरू करें: पहले मेरा मौजूदा Artha डेटा हटाएँ",
       "wipeExistingDataHint": "आयात से पहले वही \"मेरा डेटा हटाएँ\" कार्रवाई चलाता है जो सेटिंग्स में है। आपसे पुष्टि माँगी जाएगी। Money फ़ाइल को अपने मौजूदा डेटा में जोड़ने के लिए इसे बंद रखें।"
     },
     "warningsHeading": "इस फ़ाइल के बारे में टिप्पणियाँ",
@@ -420,7 +420,7 @@
       "transfer": "स्थानांतरण",
       "investment": "निवेश",
       "splits": "{count, plural, one {# विभाजन} other {# विभाजन}}",
-      "approximate": "निकटतम Monize आवृत्ति"
+      "approximate": "निकटतम Artha आवृत्ति"
     }
   },
   "mnyWipe": {
@@ -478,15 +478,15 @@
     "existingDataRemoved": "आपके अनुरोध के अनुसार, इस आयात से पहले आपका मौजूदा डेटा हटा दिया गया।",
     "verificationHeading": "शेष सत्यापन",
     "holdingsHeading": "होल्डिंग्स सत्यापन",
-    "holdingsExplainer": "Monize के पास अब जितने शेयर हैं, उनकी तुलना आपकी Money फ़ाइल में दर्ज खुले टैक्स लॉट से। Money स्वयं इन्हीं लॉट से मिलान करता है, इसलिए यही भरोसेमंद संख्या है।",
+    "holdingsExplainer": "Artha के पास अब जितने शेयर हैं, उनकी तुलना आपकी Money फ़ाइल में दर्ज खुले टैक्स लॉट से। Money स्वयं इन्हीं लॉट से मिलान करता है, इसलिए यही भरोसेमंद संख्या है।",
     "table": {
       "account": "खाता",
       "security": "प्रतिभूति",
       "transactions": "लेन-देन",
       "expected": "Money फ़ाइल से",
-      "imported": "Monize में",
+      "imported": "Artha में",
       "lotShares": "Money में शेयर",
-      "importedShares": "Monize में शेयर",
+      "importedShares": "Artha में शेयर",
       "delta": "अंतर",
       "check": "जाँचें"
     },
@@ -497,7 +497,7 @@
   "mnyWarnings": {
     "missingTable": "इस Money संस्करण में आयात द्वारा उपयोग की जाने वाली {count, plural, one {# तालिका} other {# तालिकाएँ}} नहीं है।",
     "missingField": "इस Money संस्करण में {count, plural, one {# फ़ील्ड} other {# फ़ील्ड}} मौजूद नहीं थे और उन्होंने डिफ़ॉल्ट मान लिया।",
-    "unknownAccountType": "{count, plural, one {# खाते} other {# खातों}} का खाता प्रकार Monize नहीं पहचानता, इसलिए उन्हें छोड़ दिया गया।",
+    "unknownAccountType": "{count, plural, one {# खाते} other {# खातों}} का खाता प्रकार Artha नहीं पहचानता, इसलिए उन्हें छोड़ दिया गया।",
     "duplicateAccountName": "{count, plural, one {# खाते} other {# खातों}} का नाम किसी अन्य खाते से समान था, इसलिए उनका नाम बदल दिया गया।",
     "unknownCurrency": "{count, plural, one {# खाता} other {# खाते}} ऐसी मुद्रा का संदर्भ देते हैं जो फ़ाइल में परिभाषित नहीं है; वे आधार मुद्रा का उपयोग करते हैं।",
     "categoryFlattened": "{count, plural, one {# श्रेणी} other {# श्रेणियाँ}} दो स्तरों से अधिक गहरी थीं और उन्हें उनकी मूल श्रेणी में समाहित कर दिया गया।",
@@ -511,7 +511,7 @@
     "balanceMismatch": "{count, plural, one {# खाते} other {# खातों}} का अंतिम शेष Money फ़ाइल से भिन्न है।",
     "duplicateSecuritySymbol": "{count, plural, one {# प्रतिभूति} other {# प्रतिभूतियाँ}} किसी अन्य के साथ प्रतीक साझा करती थीं; अलग बनी रहें इसलिए बाद वाली का नाम बदल दिया गया।",
     "generatedSecuritySymbol": "{count, plural, one {# प्रतिभूति} other {# प्रतिभूतियों}} का Money में कोई प्रतीक नहीं है, इसलिए एक अस्थायी प्रतीक बनाया गया और मूल्य अद्यतन बंद रखे गए।",
-    "unknownInvestmentAction": "{count, plural, one {# निवेश लेन-देन} other {# निवेश लेन-देन}} में ऐसी क्रिया थी जिसे Monize नहीं पहचानता, और उन्हें छोड़ दिया गया।",
+    "unknownInvestmentAction": "{count, plural, one {# निवेश लेन-देन} other {# निवेश लेन-देन}} में ऐसी क्रिया थी जिसे Artha नहीं पहचानता, और उन्हें छोड़ दिया गया।",
     "unconfirmedInvestmentAction": "{count, plural, one {# निवेश लेन-देन} other {# निवेश लेन-देन}} में Money की ऐसी क्रिया थी जिसका अर्थ अनुमानित है, प्रलेखित नहीं; उन्हें Money से मिलाकर देखें।",
     "missingInvestmentDetail": "{count, plural, one {# निवेश लेन-देन} other {# निवेश लेन-देन}} में फ़ाइल में शेयर विवरण नहीं था और उन्हें केवल नकद राशि के रूप में आयात किया गया।",
     "investmentAccountMismatch": "{count, plural, one {# निवेश लेन-देन} other {# निवेश लेन-देन}} ऐसे खाते में था जो निवेश खाता नहीं है, और उन्हें छोड़ दिया गया।",
@@ -519,7 +519,7 @@
     "holdingsMismatch": "{count, plural, one {# होल्डिंग} other {# होल्डिंग्स}} आपकी Money फ़ाइल में दर्ज शेयरों से मेल नहीं खाती।",
     "billTemplateMissing": "{count, plural, one {# निर्धारित बिल} other {# निर्धारित बिलों}} के लिए फ़ाइल में कोई टेम्पलेट लेन-देन नहीं था, इसलिए उन्हें छोड़ दिया गया।",
     "unusableBill": "{count, plural, one {# निर्धारित बिल} other {# निर्धारित बिलों}} में कोई खाता, उपयोग योग्य तिथि या पहचानी गई आवृत्ति नहीं थी, इसलिए उन्हें छोड़ दिया गया।",
-    "billFrequencyApproximated": "{count, plural, one {# निर्धारित बिल} other {# निर्धारित बिल}} ऐसा दोहराव अंतराल उपयोग करते हैं जिसे Monize ठीक-ठीक व्यक्त नहीं कर सकता, इसलिए निकटतम छोटा अंतराल उपयोग किया गया।",
+    "billFrequencyApproximated": "{count, plural, one {# निर्धारित बिल} other {# निर्धारित बिल}} ऐसा दोहराव अंतराल उपयोग करते हैं जिसे Artha ठीक-ठीक व्यक्त नहीं कर सकता, इसलिए निकटतम छोटा अंतराल उपयोग किया गया।",
     "loanInterestCategoryUnclear": "{count, plural, one {# ऋण भुगतान में} other {# ऋण भुगतानों में}} मूलधन के अलावा कई श्रेणियाँ शामिल थीं, इसलिए ऋण की ब्याज श्रेणी अनसेट रह गई। जाँचें कि क्या भुगतान में एस्क्रो (escrow) शामिल है और आयात के बाद ब्याज श्रेणी सेट करें।",
     "showTransactions": "{count, plural, one {# लेन-देन दिखाएँ} other {# लेन-देन दिखाएँ}}",
     "hideTransactions": "लेन-देन छिपाएँ",

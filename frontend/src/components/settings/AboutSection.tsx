@@ -53,7 +53,7 @@ function buildDiagnostics(fields: {
   const userAgent =
     typeof navigator === 'undefined' ? 'unknown' : navigator.userAgent;
   return [
-    'Monize diagnostics',
+    'Artha diagnostics',
     `UI version: ${fields.uiVersion}`,
     `API version: ${fields.apiVersion ?? 'unknown'}`,
     `Locale: ${fields.locale}`,

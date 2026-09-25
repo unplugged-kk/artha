@@ -350,8 +350,8 @@ export function buildPortfolioNotification(
     title: "Investment value moved",
     message:
       fire.direction === "up"
-        ? `Your investments are up ${n.formatPercentTrimmed(fire.changePercent)} today (excluding deposits). Open Monize for the details.`
-        : `Your investments are down ${n.formatPercentTrimmed(Math.abs(fire.changePercent))} today (excluding deposits). Open Monize for the details.`,
+        ? `Your investments are up ${n.formatPercentTrimmed(fire.changePercent)} today (excluding deposits). Open Artha for the details.`
+        : `Your investments are down ${n.formatPercentTrimmed(Math.abs(fire.changePercent))} today (excluding deposits). Open Artha for the details.`,
     data: {
       changePercent: fire.changePercent,
       direction: fire.direction,

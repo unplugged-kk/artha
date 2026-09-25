@@ -16,7 +16,7 @@
  * constant and scans `src/` for a second literal, so the two cannot drift back
  * apart quietly.
  */
-export const FALLBACK_DEFAULT_CURRENCY = 'USD';
+export const FALLBACK_DEFAULT_CURRENCY = 'INR';
 
 /**
  * The reporting currency for a loaded preferences object.

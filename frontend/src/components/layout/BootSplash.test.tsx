@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { BootSplash, BOOT_SPLASH_ID, type BootSplashStrings } from './BootSplash';
 
 const strings: BootSplashStrings = {
-  loading: 'Loading Monize',
+  loading: 'Loading Artha',
   slowMessage: 'This is taking longer than expected. Check your connection.',
   reload: 'Reload the app',
 };
@@ -13,7 +13,7 @@ describe('BootSplash', () => {
     render(<BootSplash bootTheme={null} strings={strings} />);
     const splash = screen.getByRole('status');
     expect(splash).toHaveAttribute('id', BOOT_SPLASH_ID);
-    expect(splash).toHaveAttribute('aria-label', 'Loading Monize');
+    expect(splash).toHaveAttribute('aria-label', 'Loading Artha');
   });
 
   it('marks the palette as system-driven when no theme cookie was present', () => {

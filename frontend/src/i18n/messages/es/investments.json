@@ -224,7 +224,7 @@
     "statusLockedToParent": "Esta transacción forma parte de una transacción dividida. Cambia el estado de la transacción dividida en su lugar, para que ambos lados cambien juntos.",
     "descriptionPlaceholder": "Notas opcionales",
     "splitRatio": "Ratio de división",
-    "noSplitRatioWarning": "Esta transacción no tiene ratio de división establecido. Ingresa el ratio tal como fue anunciado antes de guardar — Monize no asumirá uno por ti.",
+    "noSplitRatioWarning": "Esta transacción no tiene ratio de división establecido. Ingresa el ratio tal como fue anunciado antes de guardar — Artha no asumirá uno por ti.",
     "newShares": "Nuevas acciones",
     "oldShares": "Acciones antiguas",
     "splitRatioHelp": "Ingresa el ratio tal como fue anunciado. Para una división 2 por 1 usa 2 nuevas y 1 antigua; para una contrasplit 1 por 2 usa 1 nueva y 2 antiguas. Ratio efectivo:",

@@ -27,8 +27,8 @@
     "dismissAriaLabel": "HTTPS 警告を閉じる"
   },
   "updateBanner": {
-    "availableWithVersion": "Monize v{version} が利用可能です",
-    "availableGeneric": "Monize の新しいバージョンが利用可能です",
+    "availableWithVersion": "Artha v{version} が利用可能です",
+    "availableGeneric": "Artha の新しいバージョンが利用可能です",
     "runningVersion": "（現在 v{version} を実行中）",
     "releaseNotes": "リリースノート",
     "dismiss": "閉じる",
@@ -134,29 +134,29 @@
     "redonePrefix": "やり直しました: {description}"
   },
   "pageHeader": {
-    "helpAriaLabel": "このセクションのヘルプは Monize Wiki を開いてください",
-    "helpTooltip": "このセクションのヘルプは Monize Wiki を開いてください"
+    "helpAriaLabel": "このセクションのヘルプは Artha Wiki を開いてください",
+    "helpTooltip": "このセクションのヘルプは Artha Wiki を開いてください"
   },
   "bootSplash": {
-    "loading": "Monize を読み込んでいます",
+    "loading": "Artha を読み込んでいます",
     "slowMessage": "予想より時間がかかっています。接続を確認してください。",
     "reload": "アプリを再読み込み"
   },
   "offlineFallback": {
     "title": "接続できません",
-    "message": "Monize はサーバーに到達できませんでした。接続を確認して、もう一度お試しください。",
+    "message": "Artha はサーバーに到達できませんでした。接続を確認して、もう一度お試しください。",
     "retry": "再試行"
   },
   "pushBanner": {
     "enableTitle": "通知をオンにしますか？",
-    "enableBody": "Monize はこの端末で、アプリを閉じているときも請求や予算上限をお知らせできます。ブラウザが許可を求めます。",
+    "enableBody": "Artha はこの端末で、アプリを閉じているときも請求や予算上限をお知らせできます。ブラウザが許可を求めます。",
     "enableButton": "オンにする",
     "enabling": "設定中…",
-    "installIosTitle": "まず Monize をホーム画面に追加してください。",
-    "installIosBody": "iPhone と iPad では、通知はインストール済みのアプリからのみ動作します。「共有」→「ホーム画面に追加」を選び、そこから Monize を開いてください。",
-    "blockedTitle": "Monize の通知はブロックされています。",
-    "blockedBody": "このページについて、ブラウザのサイト設定で許可してください。Monize から再度お尋ねすることはできません。",
-    "blockedIosBody": "iOS の「設定」→「通知」→ Monize を開いて許可してください。Monize が一覧にない場合は、ホーム画面から削除して再度追加してください。",
+    "installIosTitle": "まず Artha をホーム画面に追加してください。",
+    "installIosBody": "iPhone と iPad では、通知はインストール済みのアプリからのみ動作します。「共有」→「ホーム画面に追加」を選び、そこから Artha を開いてください。",
+    "blockedTitle": "Artha の通知はブロックされています。",
+    "blockedBody": "このページについて、ブラウザのサイト設定で許可してください。Artha から再度お尋ねすることはできません。",
+    "blockedIosBody": "iOS の「設定」→「通知」→ Artha を開いて許可してください。Artha が一覧にない場合は、ホーム画面から削除して再度追加してください。",
     "dismiss": "後で"
   }
 }

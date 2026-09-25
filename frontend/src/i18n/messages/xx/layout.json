@@ -27,8 +27,8 @@
     "dismissAriaLabel": "[XX-Dismiss HTTPS warning-XX]"
   },
   "updateBanner": {
-    "availableWithVersion": "[XX-Monize v{version} is available-XX]",
-    "availableGeneric": "[XX-A new version of Monize is available-XX]",
+    "availableWithVersion": "[XX-Artha v{version} is available-XX]",
+    "availableGeneric": "[XX-A new version of Artha is available-XX]",
     "runningVersion": "[XX-(running v{version})-XX]",
     "releaseNotes": "[XX-Release notes-XX]",
     "dismiss": "[XX-Dismiss-XX]",
@@ -134,29 +134,29 @@
     "redonePrefix": "[XX-Redone: {description}-XX]"
   },
   "pageHeader": {
-    "helpAriaLabel": "[XX-Open the Monize wiki for help with this section-XX]",
-    "helpTooltip": "[XX-Open the Monize wiki for help with this section-XX]"
+    "helpAriaLabel": "[XX-Open the Artha wiki for help with this section-XX]",
+    "helpTooltip": "[XX-Open the Artha wiki for help with this section-XX]"
   },
   "bootSplash": {
-    "loading": "[XX-Loading Monize-XX]",
+    "loading": "[XX-Loading Artha-XX]",
     "slowMessage": "[XX-This is taking longer than expected. Check your connection.-XX]",
     "reload": "[XX-Reload the app-XX]"
   },
   "offlineFallback": {
     "title": "[XX-Unable to connect-XX]",
-    "message": "[XX-Monize could not reach the server. Check your connection and try again.-XX]",
+    "message": "[XX-Artha could not reach the server. Check your connection and try again.-XX]",
     "retry": "[XX-Try again-XX]"
   },
   "pushBanner": {
     "enableTitle": "[XX-Turn on notifications?-XX]",
-    "enableBody": "[XX-Monize can remind you about bills and budget limits on this device, even when the app is closed. Your browser will ask you to allow it.-XX]",
+    "enableBody": "[XX-Artha can remind you about bills and budget limits on this device, even when the app is closed. Your browser will ask you to allow it.-XX]",
     "enableButton": "[XX-Turn on-XX]",
     "enabling": "[XX-Turning on…-XX]",
-    "installIosTitle": "[XX-Add Monize to your Home Screen first.-XX]",
-    "installIosBody": "[XX-On iPhone and iPad, notifications only work from the installed app. Tap Share, then Add to Home Screen, and open Monize from there.-XX]",
-    "blockedTitle": "[XX-Notifications are blocked for Monize.-XX]",
-    "blockedBody": "[XX-Allow them in your browser's site settings for this page. Monize cannot ask again on its own.-XX]",
-    "blockedIosBody": "[XX-Open iOS Settings, then Notifications, then Monize, and allow them there. If Monize is not listed, remove it from the Home Screen and add it again.-XX]",
+    "installIosTitle": "[XX-Add Artha to your Home Screen first.-XX]",
+    "installIosBody": "[XX-On iPhone and iPad, notifications only work from the installed app. Tap Share, then Add to Home Screen, and open Artha from there.-XX]",
+    "blockedTitle": "[XX-Notifications are blocked for Artha.-XX]",
+    "blockedBody": "[XX-Allow them in your browser's site settings for this page. Artha cannot ask again on its own.-XX]",
+    "blockedIosBody": "[XX-Open iOS Settings, then Notifications, then Artha, and allow them there. If Artha is not listed, remove it from the Home Screen and add it again.-XX]",
     "dismiss": "[XX-Not now-XX]"
   }
 }

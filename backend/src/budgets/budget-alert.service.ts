@@ -748,12 +748,12 @@ export class BudgetAlertService {
         alerts.length === 1
           ? t(
               "emails.budgetAlertImmediate.subject",
-              `Monize: Alert - ${alertData[0].title}`,
+              `Artha: Alert - ${alertData[0].title}`,
               { title: alertData[0].title },
             )
           : t(
               "emails.budgetAlertImmediate.subjectPlural",
-              `Monize: ${alerts.length} alerts need attention`,
+              `Artha: ${alerts.length} alerts need attention`,
               { count: alerts.length },
             );
 
@@ -898,7 +898,7 @@ export class BudgetAlertService {
 
     const subject = t(
       "emails.budgetWeeklyDigest.subject",
-      "Monize: Your weekly budget summary",
+      "Artha: Your weekly budget summary",
     );
     await this.emailService.sendMail(user.email, subject, html);
     return true;

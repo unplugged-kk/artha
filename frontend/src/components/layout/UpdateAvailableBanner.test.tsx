@@ -83,7 +83,7 @@ describe('UpdateAvailableBanner', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(/Monize v1\.9\.0 is available/),
+        screen.getByText(/Artha v1\.9\.0 is available/),
       ).toBeInTheDocument();
     });
 
@@ -149,7 +149,7 @@ describe('UpdateAvailableBanner', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(/A new version of Monize is available/),
+        screen.getByText(/A new version of Artha is available/),
       ).toBeInTheDocument();
     });
   });
@@ -175,7 +175,7 @@ describe('UpdateAvailableBanner', () => {
 
     // After the failed dismiss, the banner should be visible again.
     expect(
-      screen.getByText(/Monize v1\.9\.0 is available/),
+      screen.getByText(/Artha v1\.9\.0 is available/),
     ).toBeInTheDocument();
   });
 
@@ -202,7 +202,7 @@ describe('UpdateAvailableBanner', () => {
     });
 
     expect(
-      screen.queryByText(/Monize v1\.9\.0 is available/),
+      screen.queryByText(/Artha v1\.9\.0 is available/),
     ).not.toBeInTheDocument();
   });
 });

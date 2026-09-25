@@ -97,7 +97,7 @@
     },
     "smtpFailure": {
       "title": "Wysyłanie e-maili nie działa",
-      "message": "Monize nie mógł wysłać e-maila: {error}. Powiadomienia i przypomnienia nie są dostarczane."
+      "message": "Artha nie mógł wysłać e-maila: {error}. Powiadomienia i przypomnienia nie są dostarczane."
     },
     "providerOutage": {
       "title": "{provider} nie odpowiada",

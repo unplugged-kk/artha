@@ -127,12 +127,12 @@ describe("FinancialContextBuilder", () => {
       expect(result).toContain(`TODAY'S DATE: ${today}`);
     });
 
-    it("defaults to USD when no preferences found", async () => {
+    it("defaults to the fallback currency when no preferences found", async () => {
       mockPrefRepo.findOne.mockResolvedValue(null);
 
       const result = await builder.buildQueryContext(userId);
 
-      expect(result).toContain("USER'S DEFAULT CURRENCY: USD");
+      expect(result).toContain("USER'S DEFAULT CURRENCY: INR");
     });
 
     it("shows placeholder when no accounts configured", async () => {

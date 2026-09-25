@@ -383,11 +383,11 @@ export class BillReminderService {
         billData.length === 1
           ? t(
               "emails.billReminder.subjectOne",
-              "Monize: 1 upcoming bill needs attention",
+              "Artha: 1 upcoming bill needs attention",
             )
           : t(
               "emails.billReminder.subjectMany",
-              `Monize: ${billData.length} upcoming bills need attention`,
+              `Artha: ${billData.length} upcoming bills need attention`,
               { count: billData.length },
             );
 

@@ -271,7 +271,7 @@
       "workingTotal": "Total",
       "workingUnknown": "A proporção só pode ser calculada quando as posições tiverem preço.",
       "basisComposition": "A exposição é estimada a partir do conteúdo de cada instrumento, comparado por {dimension}. É uma estimativa ao lado da alocação, não parte dela: só o próprio instrumento alvo conta como deter o alvo.",
-      "basisInstrument": "Não é possível estimar a exposição ao mercado, porque {target} não tem estrutura geográfica ({dimension}) registrada no Monize. A conformidade com o sinal continua sendo calculada exatamente, por instrumento.",
+      "basisInstrument": "Não é possível estimar a exposição ao mercado, porque {target} não tem estrutura geográfica ({dimension}) registrada no Artha. A conformidade com o sinal continua sendo calculada exatamente, por instrumento.",
       "basisPartialData": "{count, plural, one {# posição não tem} other {# posições não têm}} estrutura registrada, então a estimativa para a carteira não está disponível.",
       "isTarget": "instrumento alvo",
       "notInStrategy": "não faz parte da estratégia",

@@ -164,7 +164,7 @@
     "sectorTab": "Settore",
     "countryTab": "Paese",
     "assetClassTab": "Classe di attivo",
-    "sectorEmpty": "Non è memorizzata alcuna composizione settoriale. Monize la compila dal fornitore per fondi ed ETF.",
+    "sectorEmpty": "Non è memorizzata alcuna composizione settoriale. Artha la compila dal fornitore per fondi ed ETF.",
     "countryEmpty": "Non è memorizzata alcuna composizione per paese. Puoi inserirla modificando il titolo.",
     "assetClassEmpty": "Non è ancora memorizzata alcuna composizione per classe di attivo.",
     "remainder": "{percent} non classificato"

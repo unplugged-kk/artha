@@ -224,7 +224,7 @@
     "statusLockedToParent": "Transaksi ini merupakan bagian dari transaksi terpisah. Ubah status transaksi terpisah tersebut, agar kedua sisi berubah bersama-sama.",
     "descriptionPlaceholder": "Catatan opsional",
     "splitRatio": "Rasio pemecahan saham",
-    "noSplitRatioWarning": "Tidak ada rasio pemecahan saham yang ditetapkan pada transaksi ini. Masukkan rasio seperti yang diumumkan sebelum menyimpan — Monize tidak akan menganggap satu untuk Anda.",
+    "noSplitRatioWarning": "Tidak ada rasio pemecahan saham yang ditetapkan pada transaksi ini. Masukkan rasio seperti yang diumumkan sebelum menyimpan — Artha tidak akan menganggap satu untuk Anda.",
     "newShares": "Lembar baru",
     "oldShares": "Lembar lama",
     "splitRatioHelp": "Masukkan rasio seperti yang diumumkan. Untuk pemecahan 2-untuk-1 gunakan 2 baru dan 1 lama; untuk pemecahan balik 1-untuk-2 gunakan 1 baru dan 2 lama. Rasio efektif:",

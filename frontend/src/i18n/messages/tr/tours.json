@@ -37,7 +37,7 @@
     "description": "Uygulamanın özelliklerini adım adım keşfedin.",
     "backLink": "Ayarlara Geri Dön",
     "pageTitle": "Rehberli turlar",
-    "pageSubtitle": "Monize'in sunduğu tüm turlar tek bir yerde. İstediğiniz zaman başlatın — bir turdan Escape ile çıkıp buradan kaldığınız yerden devam edebilirsiniz.",
+    "pageSubtitle": "Artha'in sunduğu tüm turlar tek bir yerde. İstediğiniz zaman başlatın — bir turdan Escape ile çıkıp buradan kaldığınız yerden devam edebilirsiniz.",
     "meta": "{steps} · {status}",
     "metaWithRelease": "{steps} · {release} · {status}",
     "stepCount": "{count, plural, one {# adım} other {# adım}}",
@@ -59,10 +59,10 @@
   },
   "intro": {
     "basics": {
-      "title": "Monize'a Giriş",
+      "title": "Artha'a Giriş",
       "steps": {
         "welcome": {
-          "title": "Monize'a hoş geldiniz",
+          "title": "Artha'a hoş geldiniz",
           "body": "Bu kısa tur, uygulamanın temel bölümlerini tanıtır. İstediğiniz zaman **Escape** tuşuna basarak veya **Turu bitir** seçeneğiyle çıkabilirsiniz."
         },
         "dashboard": {
@@ -103,7 +103,7 @@
         },
         "currencyField": {
           "title": "Tutar ve para birimi",
-          "body": "İşlemin tutarını burada girin. Başka bir para biriminde mi ödediniz? Tutarın yanındaki para birimini ayarlayın ve tutarı ödendiği şekilde girin — Monize bunu hesap para birimine sizin için çevirir."
+          "body": "İşlemin tutarını burada girin. Başka bir para biriminde mi ödediniz? Tutarın yanındaki para birimini ayarlayın ve tutarı ödendiği şekilde girin — Artha bunu hesap para birimine sizin için çevirir."
         },
         "closeForm": {
           "title": "Devam etmek için formu kapatın",
@@ -147,7 +147,7 @@
           },
           "fxFeePercent": {
             "title": "Dönüşüm ücretini belirleyin",
-            "body": "Hesabın yabancı para birimi işlem ücretini buraya yüzde olarak girin — örneğin 2,5. Monize bunu her yurt dışı alışverişin dönüştürülmüş tutarına katar, böylece ücret sizin için kaydedilir."
+            "body": "Hesabın yabancı para birimi işlem ücretini buraya yüzde olarak girin — örneğin 2,5. Artha bunu her yurt dışı alışverişin dönüştürülmüş tutarına katar, böylece ücret sizin için kaydedilir."
           },
           "closeAccountForm": {
             "title": "Kaydedin ve kapatın",
@@ -171,7 +171,7 @@
           },
           "enterAmount": {
             "title": "Size yansıtılan tutarı girin",
-            "body": "Toplamı ekstrenizde göründüğü gibi tam olarak yazın. Monize işlemin tarihi için **döviz kurunu** arar, dönüştürülmüş toplamı yanında gösterir ve hesapta belirlediğiniz **yabancı para birimi işlem ücretini** ekler — alttaki açıklama ikisini de ayrıntılandırır. Bankanız farklı mı yuvarladı? Kuruşuna kadar tutması için kuru veya dönüştürülmüş toplamı düzenleyin."
+            "body": "Toplamı ekstrenizde göründüğü gibi tam olarak yazın. Artha işlemin tarihi için **döviz kurunu** arar, dönüştürülmüş toplamı yanında gösterir ve hesapta belirlediğiniz **yabancı para birimi işlem ücretini** ekler — alttaki açıklama ikisini de ayrıntılandırır. Bankanız farklı mı yuvarladı? Kuruşuna kadar tutması için kuru veya dönüştürülmüş toplamı düzenleyin."
           },
           "closeTransactionForm": {
             "title": "Formu kapatın",
@@ -192,7 +192,7 @@
             "fallbackBody": "**Yabancı para birimi ücretleri** raporu, tüm hesap ve para birimlerindeki yurt dışı alışverişlerini tek yerde toplar. Şu anda ekranda değil — bir arama ya da kategori filtresi onu gizleyebilir — ama **Raporlar** içinde bulabilirsiniz."
           },
           "finish": {
-            "title": "Monize'de yabancı para birimi bu kadar",
+            "title": "Artha'de yabancı para birimi bu kadar",
             "body": "Ücreti bir kez belirleyin, alışverişleri size yansıtıldığı gibi girin; ücreler kendi kendini izler. Bu turu istediğiniz zaman **Ayarlar** içindeki **Rehberli turlar** bölümünden tekrar alabilirsiniz."
           }
         }
@@ -221,7 +221,7 @@
         "steps": {
           "welcome": {
             "title": "Her menkul kıymet tek bir sayfada",
-            "body": "Menkul kıymetler eskiden üç ayrı pencereye dağılmıştı. Artık her birinin kendi sayfası var ve hepsini bir arada topluyor: neyi tuttuğunu, nasıl gittiğini ve Monize’ın onun hakkında bildiği her şeyi. İşte kısa hâli."
+            "body": "Menkul kıymetler eskiden üç ayrı pencereye dağılmıştı. Artık her birinin kendi sayfası var ve hepsini bir arada topluyor: neyi tuttuğunu, nasıl gittiğini ve Artha’ın onun hakkında bildiği her şeyi. İşte kısa hâli."
           },
           "openDetail": {
             "title": "Bir menkul kıymet aç",
@@ -238,7 +238,7 @@
           },
           "keyInfo": {
             "title": "Bu araç nedir",
-            "body": "Grafiğin yanında: menkul kıymet türü, borsa, para birimi, Monize’ın kullandığı fiyat sağlayıcısı ve kaydedilen son fiyat. Altında **Dağılım** kartı bir fonun neyden oluştuğunu gösterir: sektör, ülke ve varlık sınıfı dağılımları arasında geçiş yap."
+            "body": "Grafiğin yanında: menkul kıymet türü, borsa, para birimi, Artha’ın kullandığı fiyat sağlayıcısı ve kaydedilen son fiyat. Altında **Dağılım** kartı bir fonun neyden oluştuğunu gösterir: sektör, ülke ve varlık sınıfı dağılımları arasında geçiş yap."
           },
           "tabs": {
             "title": "Alttaki ayrıntı",
@@ -259,7 +259,7 @@
           },
           "findReport": {
             "title": "GEM'i Raporlar altında bulun",
-            "body": "**GEM stratejisi** raporunu buradan açın. **Yatırım** kategorisinde yer alır. Monize'de henüz hiç yatırım enstrümanınız veya kayıtlı pozisyonunuz olmasa da rapor kullanılabilir.",
+            "body": "**GEM stratejisi** raporunu buradan açın. **Yatırım** kategorisinde yer alır. Artha'de henüz hiç yatırım enstrümanınız veya kayıtlı pozisyonunuz olmasa da rapor kullanılabilir.",
             "fallbackBody": "Rapor kartı şu anda görünmüyor, genellikle bir filtre yüzünden. **İleri**'yi seçin, tur GEM raporunu doğrudan açacak. Daha sonra **Raporlar** altında, **Yatırım** kategorisinde bulabilirsiniz."
           },
           "page": {
@@ -272,7 +272,7 @@
           },
           "action": {
             "title": "Bir öneri, otomatik emir değil",
-            "body": "Grafik, atanmış enstrümanları karşılaştırır. **Ne yapmalıyım?**, sinyali olası bir satış ve alım işlemine dönüştürür ve yeterli veri varsa vergi ile komisyonu tahmin eder. Monize aracı kurumunuza asla emir göndermez. Aracı kurumunuz üzerinden gerçekten işlem yaptıktan sonra kayıtları Monize'ye girin; **Yapıldı olarak işaretle**'yi ise yalnızca sinyali uyguladığınıza dair bir not olarak kullanın."
+            "body": "Grafik, atanmış enstrümanları karşılaştırır. **Ne yapmalıyım?**, sinyali olası bir satış ve alım işlemine dönüştürür ve yeterli veri varsa vergi ile komisyonu tahmin eder. Artha aracı kurumunuza asla emir göndermez. Aracı kurumunuz üzerinden gerçekten işlem yaptıktan sonra kayıtları Artha'ye girin; **Yapıldı olarak işaretle**'yi ise yalnızca sinyali uyguladığınıza dair bir not olarak kullanın."
           },
           "reasoning": {
             "title": "GEM bunu neden seçti?",
@@ -296,7 +296,7 @@
           },
           "addInstruments": {
             "title": "Henüz enstrüman yok mu? Buradan başlayın",
-            "body": "GEM'in bir karar verebilmesi için her rolde bir enstrüman gerekir. Bir rol boşken **Roller ve enstrümanlar** kartı, örnek ETF'ler ekleyen bir kısayol sunar. Önce **Eklenecek kotasyonlar** alanında, aracı kurumunuzun gerçekten işlem yapabildiği bölgeyi seçin: **Amerika** veya **Avrupa (UCITS)**. Ekle düğmesi, GEM yapılandırmasını kaydetmenizden önce bile enstrüman kayıtlarını Monize'de hemen oluşturur; hiçbir şey satın almaz. Yalnızca boş roller doldurulur ve listenizde zaten bulunan uygun bir enstrüman yeniden kullanılabilir. Her sembolü, borsayı ve para birimini kontrol edin. Bu örnekler bir öneri değildir. Kısayol görünmüyorsa rolleriniz zaten dolu ve onları aşağıda gözden geçirebilirsiniz.",
+            "body": "GEM'in bir karar verebilmesi için her rolde bir enstrüman gerekir. Bir rol boşken **Roller ve enstrümanlar** kartı, örnek ETF'ler ekleyen bir kısayol sunar. Önce **Eklenecek kotasyonlar** alanında, aracı kurumunuzun gerçekten işlem yapabildiği bölgeyi seçin: **Amerika** veya **Avrupa (UCITS)**. Ekle düğmesi, GEM yapılandırmasını kaydetmenizden önce bile enstrüman kayıtlarını Artha'de hemen oluşturur; hiçbir şey satın almaz. Yalnızca boş roller doldurulur ve listenizde zaten bulunan uygun bir enstrüman yeniden kullanılabilir. Her sembolü, borsayı ve para birimini kontrol edin. Bu örnekler bir öneri değildir. Kısayol görünmüyorsa rolleriniz zaten dolu ve onları aşağıda gözden geçirebilirsiniz.",
             "fallbackBody": "Ayarlar formu yüklenmedi, bu yüzden tur roller kartını gösteremiyor. Hiçbir ayar değiştirilmedi. Sayfadaki yeniden dene seçeneğini kullanın ya da turu daha sonra **Ayarlar** içindeki **Rehberli turlar** bölümünden tekrar başlatın."
           },
           "roles": {
@@ -305,11 +305,11 @@
           },
           "save": {
             "title": "Kaydetmeden önce gözden geçirin",
-            "body": "Hesap listesini, her kotasyonu ve para birimlerini kontrol edin, ardından senaryoyu saklamak ve raporu mevcut fiyat geçmişinden yeniden hesaplamak için **Yapılandırmayı kaydet**'i kullanın. Sonraki adımlara gösterecek bir şey veren şey bu kayıttır. Bu yine hiçbir emir iletmez ve turu bitirmek için kaydetmeniz gerekmez. Fiyatlar eksikse ya da fazla eskiyse Monize tahmin yürütmek yerine sinyalin kullanılamadığını gösterir."
+            "body": "Hesap listesini, her kotasyonu ve para birimlerini kontrol edin, ardından senaryoyu saklamak ve raporu mevcut fiyat geçmişinden yeniden hesaplamak için **Yapılandırmayı kaydet**'i kullanın. Sonraki adımlara gösterecek bir şey veren şey bu kayıttır. Bu yine hiçbir emir iletmez ve turu bitirmek için kaydetmeniz gerekmez. Fiyatlar eksikse ya da fazla eskiyse Artha tahmin yürütmek yerine sinyalin kullanılamadığını gösterir."
           },
           "finish": {
             "title": "Bir sonraki değerlendirmede tekrar gelin",
-            "body": "GEM her dönem bir karar verir ve bir sonraki değerlendirmenin tarihi raporun üst kısmında yazar. O güne kadar yapılacak bir şey yok. Gün geldiğinde sinyalin değişip değişmediğine bakın; değiştiyse işlemleri aracı kurumunuz üzerinden yapın ve Monize'ye kaydedin, böylece portföy karşılaştırması tutmaya devam eder. Bu turu istediğiniz zaman **Ayarlar** içindeki **Rehberli turlar** bölümünden yeniden başlatabilirsiniz."
+            "body": "GEM her dönem bir karar verir ve bir sonraki değerlendirmenin tarihi raporun üst kısmında yazar. O güne kadar yapılacak bir şey yok. Gün geldiğinde sinyalin değişip değişmediğine bakın; değiştiyse işlemleri aracı kurumunuz üzerinden yapın ve Artha'ye kaydedin, böylece portföy karşılaştırması tutmaya devam eder. Bu turu istediğiniz zaman **Ayarlar** içindeki **Rehberli turlar** bölümünden yeniden başlatabilirsiniz."
           }
         }
       }
@@ -319,12 +319,12 @@
         "title": "Bildirimler",
         "steps": {
           "welcome": {
-            "title": "Monize artık size haber verebiliyor",
+            "title": "Artha artık size haber verebiliyor",
             "body": "Vadesi gelen bir fatura, aşılan bir bütçe, koyduğunuz bir sınırı geçen bir bakiye, başarısız bir yedekleme. Bu tur, bunların nereye düştüğünü ve hangilerinin size e-postayla ya da telefonunuzda ulaşacağını nasıl seçtiğinizi gösteriyor."
           },
           "bell": {
             "title": "Zil kaydın kendisidir",
-            "body": "Monize’ın ürettiği her bildirim, başka neyi açıp kapatırsanız kapatın buraya yazılır. E-posta ve anlık bildirim, sonradan gönderilen kopyalardır; bu liste aslın kendisidir ve zilin üzerindeki sayı henüz okumadıklarınızı sayar."
+            "body": "Artha’ın ürettiği her bildirim, başka neyi açıp kapatırsanız kapatın buraya yazılır. E-posta ve anlık bildirim, sonradan gönderilen kopyalardır; bu liste aslın kendisidir ve zilin üzerindeki sayı henüz okumadıklarınızı sayar."
           },
           "panel": {
             "title": "Bir bildirim neyi taşır",
@@ -344,7 +344,7 @@
           },
           "push": {
             "title": "Cihazlarınız",
-            "body": "Buradan bir tarayıcı kaydedin, Monize uygulama kapalıyken bile ona ulaşsın. Kendi iletilerini kendisi imzalar, yani araya giren bir Google ya da Apple hesabı yoktur. Her cihaz ayrı ayrı sınanabilir ve kaldırılabilir, ulaşılamaz hale gelen bir cihaz da nedenini söyler. iPhone’da bu, Monize Ana Ekran’a eklendikten sonra çalışır; yöneticiniz bu kurulumda anlık bildirimi açmadıysa burada bunu okursunuz."
+            "body": "Buradan bir tarayıcı kaydedin, Artha uygulama kapalıyken bile ona ulaşsın. Kendi iletilerini kendisi imzalar, yani araya giren bir Google ya da Apple hesabı yoktur. Her cihaz ayrı ayrı sınanabilir ve kaldırılabilir, ulaşılamaz hale gelen bir cihaz da nedenini söyler. iPhone’da bu, Artha Ana Ekran’a eklendikten sonra çalışır; yöneticiniz bu kurulumda anlık bildirimi açmadıysa burada bunu okursunuz."
           },
           "portfolio": {
             "title": "Yatırım değeri hareketi",

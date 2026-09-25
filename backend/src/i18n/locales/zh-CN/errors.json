@@ -265,7 +265,7 @@
     "readRequiredForWrite": "创建、编辑或删除需要读取权限",
     "accountsNotOwned": "一个或多个账户不属于您",
     "cannotResetSsoPassword": "无法重置 SSO 委托账户的密码",
-    "delegateManagesOwnPassword": "此委托人自行管理密码（他们有自己的 Monize 账户或在其他地方拥有委托访问权限）。只有他们才能更改密码。",
+    "delegateManagesOwnPassword": "此委托人自行管理密码（他们有自己的 Artha 账户或在其他地方拥有委托访问权限）。只有他们才能更改密码。",
     "accountIdsMustBeArray": "accountIds 必须是数组",
     "actionNotAvailableAsDelegate": "此操作在代表其他用户操作时不可用。只有账户所有者才能执行此操作。",
     "capabilityNotGranted": "账户所有者未授予您在 {{ resource }} 上执行 {{ operation }} 的权限。请让他们在您的委托访问设置中启用此权限。",
@@ -276,7 +276,7 @@
     "jointAccountTypeReadOnly": "此账户类型为只读共享，只有所有者才能更改其交易。",
     "jointOwnAccountNetWorth": "自己的账户请使用该账户本身的净资产设置。",
     "jointRequiresRead": "将账户标记为联名需要读取权限",
-    "jointRequiresFullAccount": "联名账户只能与拥有自己 Monize 账户的用户共享",
+    "jointRequiresFullAccount": "联名账户只能与拥有自己 Artha 账户的用户共享",
     "jointPayeeCreateNotGranted": "账户所有者未授予您创建收款人的权限。请从其现有收款人中选择。",
     "jointCategoryCreateNotGranted": "账户所有者未授予您创建分类的权限。请从其现有分类中选择。",
     "jointTagsNotAllowed": "标签是个人数据，无法设置在共享账户的交易上。",
@@ -315,7 +315,7 @@
     "mnyNoFile": "未上传 Money 文件",
     "mnyFileTruncated": "该 Money 文件似乎不完整。上传可能被中断，请重试。",
     "mnyNotAMoneyFile": "该文件不是 Microsoft Money (.mny) 文件",
-    "mnyUnsupportedVersion": "该文件由 Money 97 或 98 创建，Monize 无法读取。请先用免费的 Money Plus Sunset 版本打开并保存一次，然后导入结果。",
+    "mnyUnsupportedVersion": "该文件由 Money 97 或 98 创建，Artha 无法读取。请先用免费的 Money Plus Sunset 版本打开并保存一次，然后导入结果。",
     "mnyPasswordRequired": "该 Money 文件受密码保护。请输入密码以继续。",
     "mnyPasswordIncorrect": "该密码无法打开 Money 文件。请检查后重试。",
     "mnyUnreadableDatabase": "该 Money 文件已解密，但无法读取其内容。文件可能已损坏。",
@@ -347,8 +347,8 @@
     "reminderOnReminder": "无法在提醒自身生成的通知上设置提醒。请在原始通知上设置。"
   },
   "push": {
-    "channelUnavailable": "此 Monize 实例不提供推送通知。",
-    "endpointClaimed": "此浏览器已注册到另一个 Monize 账户。请在此浏览器中退出该账户后重试。",
+    "channelUnavailable": "此 Artha 实例不提供推送通知。",
+    "endpointClaimed": "此浏览器已注册到另一个 Artha 账户。请在此浏览器中退出该账户后重试。",
     "deviceNotFound": "未找到推送设备。",
     "noDevices": "此账户尚未注册推送设备。请先在此浏览器中启用推送通知。",
     "rotationUnavailable": "未设置 ENCRYPTION_KEY，因此无法加密存储新的私钥。请先设置并重启，然后再轮换。",
@@ -613,6 +613,6 @@
     "capReached": "本月的 Google Places 请求已达上限。",
     "testFailed": "Google Places 连接测试失败。",
     "referrerRestricted": "此密钥受 HTTP 引荐来源网址限制，但本部署未设置 PUBLIC_APP_URL，因此不会发送任何引荐来源网址，任何允许列表都无法匹配。请设置 PUBLIC_APP_URL，或改为按 IP 地址限制密钥——这才是真正保护服务器端密钥的选项。",
-    "referrerRejected": "Google 拒绝了此密钥的 HTTP 引荐来源网址限制。Monize 发送“{referer}”（来自 PUBLIC_APP_URL）；请将该值原样添加到密钥的允许引荐来源中，并注意 *.example.com/* 这样的模式并不匹配纯粹的 example.com。按 IP 地址限制密钥才是真正保护服务器端密钥的选项。"
+    "referrerRejected": "Google 拒绝了此密钥的 HTTP 引荐来源网址限制。Artha 发送“{referer}”（来自 PUBLIC_APP_URL）；请将该值原样添加到密钥的允许引荐来源中，并注意 *.example.com/* 这样的模式并不匹配纯粹的 example.com。按 IP 地址限制密钥才是真正保护服务器端密钥的选项。"
   }
 }

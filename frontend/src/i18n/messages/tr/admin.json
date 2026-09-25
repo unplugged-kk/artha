@@ -107,9 +107,9 @@
   },
   "notificationsPage": {
     "title": "Bildirimler",
-    "subtitle": "Bu Monize örneğinin sunduğu teslim kanalları ve arkalarındaki anlık bildirim kimliği.",
+    "subtitle": "Bu Artha örneğinin sunduğu teslim kanalları ve arkalarındaki anlık bildirim kimliği.",
     "loading": "Bildirim ayarları yükleniyor...",
-    "loadUnavailable": "Monize bildirim ayarlarını sunucudan okuyamadı. Yeniden denemek için sayfayı yenileyin.",
+    "loadUnavailable": "Artha bildirim ayarlarını sunucudan okuyamadı. Yeniden denemek için sayfayı yenileyin.",
     "channelsHeading": "Teslim kanalları",
     "identityHeading": "Web Push kimliği",
     "perAccountNote": "Cihazlar, test bildirimleri ve bildirim tercihleri her hesabın kendisine aittir ve Ayarlar'dan yönetilir. Yönetici örneği yapılandırır; başkasının bildirimlerini ne gönderir ne de görür.",
@@ -126,9 +126,9 @@
       },
       "webPush": {
         "name": "Tarayıcı anlık bildirimi",
-        "description": "Monize kapalıyken bile telefona veya masaüstüne ulaşan bildirimler. Firebase, Google Play veya Apple Developer hesabı gerekmez.",
+        "description": "Artha kapalıyken bile telefona veya masaüstüne ulaşan bildirimler. Firebase, Google Play veya Apple Developer hesabı gerekmez.",
         "toggleLabel": "Bu örnek için tarayıcı anlık bildirimini etkinleştir",
-        "missingKeys": "Bu örneğin anlık bildirim anahtar çifti yok. ENCRYPTION_KEY değerini ayarlayıp yeniden başlatın: Monize bir sonraki açılışta çifti kendisi üretir.",
+        "missingKeys": "Bu örneğin anlık bildirim anahtar çifti yok. ENCRYPTION_KEY değerini ayarlayıp yeniden başlatın: Artha bir sonraki açılışta çifti kendisi üretir.",
         "keyUnreadable": "Bu örnek, kayıtlı anlık bildirim anahtar çiftini çözemiyor; bu yüzden hiçbir şey teslim edilmiyor. Kurtarmak için aşağıdan anahtar çiftini değiştirin.",
         "serverKeyMissing": "Bu örnekte ENCRYPTION_KEY yok, bu yüzden kaydettiği push anahtar çiftini açamıyor. Dağıtımda ENCRYPTION_KEY ayarlayın ve yeniden başlatın — anahtar yokken döndürmek yardımcı olamaz."
       },
@@ -136,7 +136,7 @@
         "name": "E-posta",
         "description": "Fatura hatırlatmaları, bütçe özetleri ve sistem uyarıları her hesabın e-posta adresine gönderilir.",
         "missingSmtp": "Yapılandırılmış bir posta sunucusu yok. E-postayı etkinleştirmek için SMTP ortam değişkenlerini ayarlayın.",
-        "statusUnavailable": "Monize posta sunucusunun durumunu okuyamadı."
+        "statusUnavailable": "Artha posta sunucusunun durumunu okuyamadı."
       },
       "ntfy": {
         "name": "ntfy ve UnifiedPush",
@@ -152,7 +152,7 @@
       "rotateDescription": "Değiştirme bu örneğin anahtar çiftini yeniler. Kayıtlı her cihaz erişilemez hale gelir ve anlık bildirimleri yeniden açması gerekir; bu nedenle yalnızca anahtar ifşa olmuş olabilecekse değiştirin.",
       "rotateButton": "Anahtar çiftini değiştir",
       "rotatingButton": "Değiştiriliyor...",
-      "missingEncryptionKey": "ENCRYPTION_KEY ayarlanmadığı ve özel anahtarın şifrelenmeden saklanması gerekeceği için bu örneğin anlık bildirim anahtar çifti yok. Değişkeni ayarlayıp yeniden başlatın: Monize çifti kendisi üretir.",
+      "missingEncryptionKey": "ENCRYPTION_KEY ayarlanmadığı ve özel anahtarın şifrelenmeden saklanması gerekeceği için bu örneğin anlık bildirim anahtar çifti yok. Değişkeni ayarlayıp yeniden başlatın: Artha çifti kendisi üretir.",
       "keyUnreadable": "Bu örnek, artık çözemediği bir anlık bildirim anahtar çifti tutuyor; bu yüzden hiçbir şey teslim edilmiyor. Çalışan bir veritabanında ENCRYPTION_KEY değiştiğinde ya da bir yedek başka bir örneğe geri yüklendiğinde olur. Kurtarmak için anahtar çiftini değiştirin; her cihaz yeniden kaydolacaktır.",
       "serverKeyMissing": "Bu örnekte ENCRYPTION_KEY tanımlı değil, bu yüzden kaydettiği push anahtar çiftini açamıyor. Anahtar yokken döndürmek işe yaramaz: dağıtımda ENCRYPTION_KEY değerini ayarlayın ve yeniden başlatın; push mevcut cihazlarla yeniden çalışır."
     },

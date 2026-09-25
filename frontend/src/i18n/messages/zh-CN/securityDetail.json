@@ -164,7 +164,7 @@
     "sectorTab": "板块",
     "countryTab": "国家",
     "assetClassTab": "资产类别",
-    "sectorEmpty": "未存储板块构成。对于基金和 ETF，Monize 会从数据源补齐。",
+    "sectorEmpty": "未存储板块构成。对于基金和 ETF，Artha 会从数据源补齐。",
     "countryEmpty": "未存储国家构成。你可以在编辑该证券时录入。",
     "assetClassEmpty": "尚未存储资产类别构成。",
     "remainder": "{percent} 未分类"

@@ -52,7 +52,7 @@ export const NOTIFICATION_EMAIL_MESSAGES = {
     "ENCRYPTION_KEY is not set, so backups are written unencrypted and secrets cannot be stored. A future release will refuse to start without it.",
   "system.smtpFailure.title": "Email delivery is failing",
   "system.smtpFailure.message":
-    "Monize could not send email: {{ error }}. Notifications and reminders are not being delivered.",
+    "Artha could not send email: {{ error }}. Notifications and reminders are not being delivered.",
   "system.providerOutage.title": "{{ provider }} is not responding",
   "system.providerOutage.message":
     "Market data from {{ provider }} is unavailable. Prices and index data may be out of date until it answers again.",

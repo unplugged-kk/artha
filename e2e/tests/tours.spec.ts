@@ -19,7 +19,7 @@ test.describe('Guided tours', () => {
 
     // Start from the Getting Started card.
     await page.getByRole('button', { name: 'Take the tour' }).click();
-    await expect(page.getByText('Welcome to Monize')).toBeVisible();
+    await expect(page.getByText('Welcome to Artha')).toBeVisible();
 
     const next = page.getByRole('button', { name: 'Next', exact: true });
     // Click Next until the given step copy is on screen (the engine navigates

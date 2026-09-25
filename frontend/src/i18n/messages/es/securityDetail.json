@@ -164,7 +164,7 @@
     "sectorTab": "Sector",
     "countryTab": "País",
     "assetClassTab": "Clase de activo",
-    "sectorEmpty": "No hay desglose por sectores guardado. Monize lo rellena desde el proveedor para fondos y ETF.",
+    "sectorEmpty": "No hay desglose por sectores guardado. Artha lo rellena desde el proveedor para fondos y ETF.",
     "countryEmpty": "No hay desglose por países guardado. Puedes introducirlo al editar el valor.",
     "assetClassEmpty": "Todavía no hay desglose por clase de activo guardado.",
     "remainder": "{percent} sin clasificar"

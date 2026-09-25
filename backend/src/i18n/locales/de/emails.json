@@ -1,13 +1,13 @@
 {
   "test": {
-    "subject": "Monize Test-E-Mail",
-    "heading": "Monize Test-E-Mail",
+    "subject": "Artha Test-E-Mail",
+    "heading": "Artha Test-E-Mail",
     "greeting": "Hallo {{ name }},",
-    "body": "Dies ist eine Test-E-Mail von Monize. Wenn Sie diese erhalten haben, funktionieren Ihre E-Mail-Benachrichtigungen korrekt."
+    "body": "Dies ist eine Test-E-Mail von Artha. Wenn Sie diese erhalten haben, funktionieren Ihre E-Mail-Benachrichtigungen korrekt."
   },
   "billReminder": {
-    "subjectOne": "Monize: 1 anstehende Rechnung erfordert Ihre Aufmerksamkeit",
-    "subjectMany": "Monize: {{ count }} anstehende Rechnungen erfordern Ihre Aufmerksamkeit",
+    "subjectOne": "Artha: 1 anstehende Rechnung erfordert Ihre Aufmerksamkeit",
+    "subjectMany": "Artha: {{ count }} anstehende Rechnungen erfordern Ihre Aufmerksamkeit",
     "heading": "Erinnerung an anstehende Rechnung",
     "greeting": "Hallo {{ name }},",
     "introOne": "Sie haben 1 anstehende Rechnung, die Ihre Aufmerksamkeit erfordert:",
@@ -23,8 +23,8 @@
     "button": "Rechnungen &amp; Einzahlungen anzeigen"
   },
   "mortgageReminder": {
-    "subject": "Monize: 1 bevorstehende Hypothekenverlängerung",
-    "subjectPlural": "Monize: {{ count }} bevorstehende Hypothekenverlängerungen",
+    "subject": "Artha: 1 bevorstehende Hypothekenverlängerung",
+    "subjectPlural": "Artha: {{ count }} bevorstehende Hypothekenverlängerungen",
     "heading": "Erinnerung an Hypothekenverlängerung",
     "greeting": "Hallo {{ name }},",
     "introOne": "Sie haben 1 Hypothek mit einer bevorstehenden Laufzeitverlängerung. Kontaktieren Sie Ihren Kreditgeber, um Verlängerungsoptionen zu besprechen, bevor die Laufzeit endet:",
@@ -43,8 +43,8 @@
     "info": "Info"
   },
   "budgetAlertImmediate": {
-    "subject": "Monize: Alarm – {{ title }}",
-    "subjectPlural": "Monize: {{ count }} Alarme erfordern Ihre Aufmerksamkeit",
+    "subject": "Artha: Alarm – {{ title }}",
+    "subjectPlural": "Artha: {{ count }} Alarme erfordern Ihre Aufmerksamkeit",
     "heading": "Alarm",
     "greeting": "Hallo {{ name }},",
     "intro": "Ihr Budget erfordert Ihre Aufmerksamkeit:",
@@ -54,7 +54,7 @@
     "button": "Budget anzeigen"
   },
   "budgetWeeklyDigest": {
-    "subject": "Monize: Ihre wöchentliche Budget-Zusammenfassung",
+    "subject": "Artha: Ihre wöchentliche Budget-Zusammenfassung",
     "heading": "Wöchentliche Budget-Zusammenfassung",
     "greeting": "Hallo {{ name }},",
     "intro": "Hier ist Ihre wöchentliche Budget-Zusammenfassung für: <strong>{{ budgets }}</strong>",
@@ -72,8 +72,8 @@
     "button": "Budget-Dashboard anzeigen"
   },
   "budgetMonthlySummary": {
-    "subject": "Monize: Monatliche Budget-Zusammenfassung – {{ period }}",
-    "subjectPlural": "Monize: Monatliche Budget-Zusammenfassung für {{ count }} Budgets",
+    "subject": "Artha: Monatliche Budget-Zusammenfassung – {{ period }}",
+    "subjectPlural": "Artha: Monatliche Budget-Zusammenfassung für {{ count }} Budgets",
     "heading": "Monatliche Budget-Zusammenfassung",
     "greeting": "Hallo {{ name }},",
     "intro": "Hier ist Ihre monatliche Budget-Zusammenfassung für den gerade abgeschlossenen Zeitraum:",
@@ -87,10 +87,10 @@
     "button": "Budget-Dashboard anzeigen"
   },
   "oidcLink": {
-    "subject": "Monize: SSO-Kontoverknüpfung bestätigen",
+    "subject": "Artha: SSO-Kontoverknüpfung bestätigen",
     "heading": "Ihr SSO-Konto verknüpfen",
     "greeting": "Hallo {{ name }},",
-    "intro": "Jemand hat versucht, sich über SSO mit einer E-Mail-Adresse anzumelden, die mit Ihrem bestehenden Monize-Konto übereinstimmt. Um Ihre SSO-Identität mit diesem Konto zu verknüpfen, klicken Sie auf die Schaltfläche unten:",
+    "intro": "Jemand hat versucht, sich über SSO mit einer E-Mail-Adresse anzumelden, die mit Ihrem bestehenden Artha-Konto übereinstimmt. Um Ihre SSO-Identität mit diesem Konto zu verknüpfen, klicken Sie auf die Schaltfläche unten:",
     "button": "Kontoverknüpfung bestätigen",
     "disclaimer": "Wenn Sie diese Anfrage nicht initiiert haben, können Sie diese E-Mail ignorieren. Der Link läuft in 1 Stunde ab."
   },
@@ -98,11 +98,11 @@
     "subject": "Konto vorübergehend gesperrt",
     "heading": "Konto vorübergehend gesperrt",
     "greeting": "Hallo {{ name }},",
-    "body1": "Ihr Monize-Konto wurde aufgrund mehrerer fehlgeschlagener Anmeldeversuche vorübergehend gesperrt. Dies ist eine Sicherheitsmaßnahme zum Schutz Ihres Kontos.",
+    "body1": "Ihr Artha-Konto wurde aufgrund mehrerer fehlgeschlagener Anmeldeversuche vorübergehend gesperrt. Dies ist eine Sicherheitsmaßnahme zum Schutz Ihres Kontos.",
     "body2": "Die Sperre läuft automatisch ab. Wenn Sie nicht versucht haben, sich anzumelden, empfehlen wir Ihnen, Ihr Passwort sofort zurückzusetzen."
   },
   "passwordReset": {
-    "subject": "Monize Passwort zurücksetzen",
+    "subject": "Artha Passwort zurücksetzen",
     "heading": "Anfrage zum Zurücksetzen des Passworts",
     "greeting": "Hallo {{ name }},",
     "intro": "Wir haben eine Anfrage erhalten, Ihr Passwort zurückzusetzen. Klicken Sie auf die Schaltfläche unten, um ein neues Passwort festzulegen:",
@@ -110,54 +110,54 @@
     "disclaimer": "Dieser Link läuft in 1 Stunde ab. Wenn Sie keine Passwortrücksetzung angefordert haben, können Sie diese E-Mail ignorieren."
   },
   "emailVerification": {
-    "subject": "Bestätigen Sie Ihre Monize-E-Mail-Adresse",
+    "subject": "Bestätigen Sie Ihre Artha-E-Mail-Adresse",
     "heading": "Bestätigen Sie Ihre E-Mail-Adresse",
     "greeting": "Hallo {{ name }},",
-    "intro": "Danke, dass Sie sich für Monize registriert haben. Bitte bestätigen Sie Ihre E-Mail-Adresse, um Ihr Konto zu aktivieren und sich anzumelden:",
+    "intro": "Danke, dass Sie sich für Artha registriert haben. Bitte bestätigen Sie Ihre E-Mail-Adresse, um Ihr Konto zu aktivieren und sich anzumelden:",
     "button": "E-Mail bestätigen",
-    "disclaimer": "Dieser Link läuft in 24 Stunden ab. Wenn Sie kein Monize-Konto erstellt haben, können Sie diese E-Mail ignorieren."
+    "disclaimer": "Dieser Link läuft in 24 Stunden ab. Wenn Sie kein Artha-Konto erstellt haben, können Sie diese E-Mail ignorieren."
   },
   "accountInvite": {
-    "subject": "Ihr Monize-Konto ist bereit",
-    "heading": "Ihr Monize-Konto ist bereit",
+    "subject": "Ihr Artha-Konto ist bereit",
+    "heading": "Ihr Artha-Konto ist bereit",
     "greeting": "Hallo {{ name }},",
-    "intro": "Ein Administrator hat ein Monize-Konto für Sie erstellt. Klicken Sie auf die Schaltfläche unten, um Ihr Passwort festzulegen und sich anzumelden:",
+    "intro": "Ein Administrator hat ein Artha-Konto für Sie erstellt. Klicken Sie auf die Schaltfläche unten, um Ihr Passwort festzulegen und sich anzumelden:",
     "button": "Ihr Passwort festlegen",
     "disclaimer": "Dieser Link läuft in 24 Stunden ab. Wenn Sie dies nicht erwartet haben, können Sie diese E-Mail ignorieren."
   },
   "delegateInvite": {
-    "subject": "Sie wurden zu Monize eingeladen",
-    "heading": "Sie wurden zu Monize eingeladen",
+    "subject": "Sie wurden zu Artha eingeladen",
+    "heading": "Sie wurden zu Artha eingeladen",
     "greeting": "Hallo {{ name }},",
-    "intro": "{{ owner }} hat Sie eingeladen, als Delegierter auf das Monize-Konto zuzugreifen. Klicken Sie auf die Schaltfläche unten, um Ihr Passwort festzulegen und zu beginnen:",
+    "intro": "{{ owner }} hat Sie eingeladen, als Delegierter auf das Artha-Konto zuzugreifen. Klicken Sie auf die Schaltfläche unten, um Ihr Passwort festzulegen und zu beginnen:",
     "button": "Ihr Passwort festlegen",
     "disclaimer": "Dieser Link läuft in 24 Stunden ab. Wenn Sie diese Einladung nicht erwartet haben, können Sie diese E-Mail ignorieren."
   },
   "emergencyAccessReminder": {
-    "subjectOne": "Monize: Ihr Konto war 1 Tag lang inaktiv",
-    "subjectMany": "Monize: Ihr Konto war {{ daysSinceLogin }} Tage lang inaktiv",
-    "heading": "Monize Erinnerung an Notfallzugriff",
+    "subjectOne": "Artha: Ihr Konto war 1 Tag lang inaktiv",
+    "subjectMany": "Artha: Ihr Konto war {{ daysSinceLogin }} Tage lang inaktiv",
+    "heading": "Artha Erinnerung an Notfallzugriff",
     "greeting": "Hallo {{ name }},",
     "grantPhraseToday": "heute",
     "grantPhraseFutureOne": "in 1 Tag",
     "grantPhraseFutureMany": "in {{ count }} Tagen",
-    "bodyOne": "Sie haben sich seit <strong>1 Tag</strong> nicht bei Monize angemeldet. Wenn Sie inaktiv bleiben, erhalten Ihre designierten Notfallkontakte {{ grantPhrase }} vollen Zugriff auf Ihr Konto.",
-    "bodyMany": "Sie haben sich seit <strong>{{ daysSinceLogin }} Tagen</strong> nicht bei Monize angemeldet. Wenn Sie inaktiv bleiben, erhalten Ihre designierten Notfallkontakte {{ grantPhrase }} vollen Zugriff auf Ihr Konto.",
+    "bodyOne": "Sie haben sich seit <strong>1 Tag</strong> nicht bei Artha angemeldet. Wenn Sie inaktiv bleiben, erhalten Ihre designierten Notfallkontakte {{ grantPhrase }} vollen Zugriff auf Ihr Konto.",
+    "bodyMany": "Sie haben sich seit <strong>{{ daysSinceLogin }} Tagen</strong> nicht bei Artha angemeldet. Wenn Sie inaktiv bleiben, erhalten Ihre designierten Notfallkontakte {{ grantPhrase }} vollen Zugriff auf Ihr Konto.",
     "contactsLabel": "Designierte Kontakte:",
     "button": "Jetzt anmelden",
     "footer": "Die Anmeldung setzt den Timer zurück. Wenn Sie diese Funktion nicht mehr aktiviert haben möchten, können Sie sie unter Einstellungen → Notfallzugriff deaktivieren."
   },
   "emergencyAccessGrant": {
-    "subject": "Sie haben Notfallzugriff auf das Monize-Konto von {{ owner }} erhalten",
+    "subject": "Sie haben Notfallzugriff auf das Artha-Konto von {{ owner }} erhalten",
     "heading": "Notfallzugriff gewährt",
     "greeting": "Hallo {{ name }},",
-    "body": "<strong>{{ owner }}</strong> hat Sie zuvor als Notfallkontakt in seinem Monize-Konto eingetragen. Da er sich über einen längeren Zeitraum nicht angemeldet hat, erhalten Sie nun vollen Zugriff, um das Konto zu übernehmen.",
+    "body": "<strong>{{ owner }}</strong> hat Sie zuvor als Notfallkontakt in seinem Artha-Konto eingetragen. Da er sich über einen längeren Zeitraum nicht angemeldet hat, erhalten Sie nun vollen Zugriff, um das Konto zu übernehmen.",
     "claimIntro": "Um den Zugriff zu beanspruchen, klicken Sie auf den Link unten und legen Sie ein neues Passwort fest. Sie werden als Kontoinhaber angemeldet.",
     "button": "Notfallzugriff beanspruchen",
     "expiry": "Dieser Link ist gültig bis <strong>{{ expiry }}</strong> und kann nur einmal verwendet werden. Wenn mehrere Kontakte diese E-Mail erhalten haben, übernimmt derjenige das Konto, der zuerst den Zugriff beansprucht."
   },
   "emergencyAccessGrantRevoked": {
-    "subject": "Monize: Notfallzugriff wurde während Ihrer Abwesenheit gewährt",
+    "subject": "Artha: Notfallzugriff wurde während Ihrer Abwesenheit gewährt",
     "heading": "Notfallzugriff wurde während Ihrer Abwesenheit gewährt",
     "greeting": "Hallo {{ name }},",
     "body1": "Da Ihr Konto inaktiv war, wurden Ihren designierten Notfallkontakten Links zur Übernahme Ihres Kontos zugeschickt. Da Sie sich nun wieder angemeldet haben, <strong>wurden diese Links widerrufen</strong> und die Schutzfunktion wurde neu aktiviert.",
@@ -165,39 +165,39 @@
     "button": "Notfallzugriff überprüfen"
   },
   "providerOutage": {
-    "subject": "Monize: {{ provider }} antwortet nicht",
+    "subject": "Artha: {{ provider }} antwortet nicht",
     "heading": "Marktdatenanbieter nicht erreichbar",
     "greeting": "Hallo {{ name }},",
-    "intro": "Monize kann <strong>{{ provider }}</strong> seit {{ since }} ({{ duration }}) nicht erreichen. Anfragen an den Anbieter sind vorerst ausgesetzt und werden in immer größeren Abständen wiederholt.",
+    "intro": "Artha kann <strong>{{ provider }}</strong> seit {{ since }} ({{ duration }}) nicht erreichen. Anfragen an den Anbieter sind vorerst ausgesetzt und werden in immer größeren Abständen wiederholt.",
     "labelFailures": "Fehlgeschlagene Versuche",
     "labelLastError": "Letzter Fehler",
     "labelLastSuccess": "Letzte erfolgreiche Antwort",
     "valueNever": "nie",
     "valueUnknown": "unbekannt",
-    "impact": "Kurse, Diagramme und Indexvergleiche, die von diesem Anbieter abhängen, können bis zur Wiederherstellung fehlen oder veraltet sein. In Monize erfasste Daten sind nicht verloren.",
+    "impact": "Kurse, Diagramme und Indexvergleiche, die von diesem Anbieter abhängen, können bis zur Wiederherstellung fehlen oder veraltet sein. In Artha erfasste Daten sind nicht verloren.",
     "whatToCheck": "Wenn der Anbieter selbst erreichbar ist, prüfen Sie den ausgehenden Netzwerkzugang und das DNS dieses Servers -- ein Container, der den Anbieter nicht auflösen oder erreichen kann, fällt genau so aus.",
     "throttleNote": "Sie erhalten eine weitere E-Mail, sobald der Anbieter wieder antwortet. Warnungen zum selben Anbieter werden höchstens einmal alle {{ hours }} Stunden verschickt, damit ein instabiler Anbieter Ihr Postfach nicht füllen kann.",
     "durationMinutes": "{{ minutes }} Min.",
     "durationHoursMinutes": "{{ hours }} Std. {{ minutes }} Min."
   },
   "providerRecovery": {
-    "subject": "Monize: {{ provider }} antwortet wieder",
+    "subject": "Artha: {{ provider }} antwortet wieder",
     "heading": "Marktdatenanbieter antwortet wieder",
     "greeting": "Hallo {{ name }},",
     "intro": "<strong>{{ provider }}</strong> hat um {{ restoredAt }} wieder geantwortet. Die Störung dauerte {{ duration }}.",
     "backfill": "Kurse und Indexverläufe, die während der Störung fehlten, werden bei der nächsten geplanten Aktualisierung nachgeholt; es ist nichts zu tun."
   },
   "systemAlert": {
-    "subject": "Monize: {{ title }}",
+    "subject": "Artha: {{ title }}",
     "heading": "Systemwarnung",
     "greeting": "Hallo {{ name }},",
-    "intro": "Ein Problem in Ihrer Monize-Installation erfordert die Aufmerksamkeit eines Administrators.",
+    "intro": "Ein Problem in Ihrer Artha-Installation erfordert die Aufmerksamkeit eines Administrators.",
     "footer": "Diese Warnung wird auch in der Benachrichtigungsglocke der App angezeigt. Sie wird höchstens einmal pro Vorfall ausgelöst, unabhängig von der Anzahl der Server-Replikate."
   },
   "notificationImmediate": {
-    "subject": "Sie haben eine neue Monize-Benachrichtigung",
-    "eyebrow": "Monize-Benachrichtigung",
-    "button": "In Monize öffnen",
+    "subject": "Sie haben eine neue Artha-Benachrichtigung",
+    "eyebrow": "Artha-Benachrichtigung",
+    "button": "In Artha öffnen",
     "footer": "Sie erhalten dies, weil die Sofort-E-Mail für diesen Benachrichtigungstyp aktiviert ist. Ändern Sie das unter Einstellungen, Benachrichtigungen."
   },
   "notificationCopy": {
@@ -254,7 +254,7 @@
       },
       "smtpFailure": {
         "title": "E-Mail-Zustellung schlägt fehl",
-        "message": "Monize konnte keine E-Mail senden: {{ error }}. Benachrichtigungen und Erinnerungen werden nicht zugestellt."
+        "message": "Artha konnte keine E-Mail senden: {{ error }}. Benachrichtigungen und Erinnerungen werden nicht zugestellt."
       },
       "providerOutage": {
         "title": "{{ provider }} antwortet nicht",
