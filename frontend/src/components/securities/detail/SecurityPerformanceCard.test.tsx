@@ -103,6 +103,29 @@ describe('SecurityPerformanceCard', () => {
     expect(screen.queryByText('Excludes dividends')).not.toBeInTheDocument();
   });
 
+  it('says its 3Y and 5Y figures are cumulative, not per year', () => {
+    // A fund's Rolling returns card quotes 3Y/5Y per annum on the same page;
+    // without this the two read as disagreeing.
+    render(
+      <SecurityPerformanceCard
+        prices={series([
+          { daysAgo: 40, close: 100 },
+          { daysAgo: 0, close: 110 },
+        ])}
+      />,
+    );
+
+    expect(
+      screen.getByText('3Y and 5Y are cumulative over the whole period, not per year.'),
+    ).toBeInTheDocument();
+  });
+
+  it('omits the cumulative caption when there are no figures', () => {
+    render(<SecurityPerformanceCard prices={series([{ daysAgo: 0, close: 110 }])} />);
+
+    expect(screen.queryByText(/cumulative over the whole period/)).not.toBeInTheDocument();
+  });
+
   it('separates the security\'s return from the holder\'s', () => {
     // Readers take any "Performance" heading on a page about their own holding to
     // mean their own return; the subtitle is what stops that misreading.

@@ -2,11 +2,14 @@ import {
   BadRequestException,
   Controller,
   Get,
+  Param,
+  ParseUUIDPipe,
   Query,
   Request,
   UseGuards,
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
+import { Throttle } from "@nestjs/throttler";
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -21,7 +24,10 @@ import {
 import { MarketIndexService, MarketIndexView } from "./market-index.service";
 import { PerformanceComparisonService } from "./performance-comparison.service";
 import { PerformanceComparisonQueryDto } from "./dto/performance-comparison-query.dto";
-import { PerformanceComparisonView } from "./performance-comparison.types";
+import {
+  FundRollingReturnsView,
+  PerformanceComparisonView,
+} from "./performance-comparison.types";
 
 /**
  * The Security Performance report's comparison chart and the benchmark catalog
@@ -85,5 +91,28 @@ export class PerformanceComparisonController {
       startDate: query.startDate || undefined,
       endDate: query.endDate || undefined,
     });
+  }
+
+  /**
+   * Owner-only: no `@AllowDelegate()`, so a delegate is refused. Throttled
+   * because the read may reach the NAV provider for a fund with no history yet.
+   */
+  @Get("securities/:id/rolling-returns")
+  @Throttle({ default: { ttl: 60000, limit: 60 } })
+  @ApiOperation({
+    summary: "Rolling 1Y/3Y/5Y return distribution of an AMFI mutual fund",
+    description:
+      "Every NAV date is a window end; its start is the last NAV at or before " +
+      "the same date one, three or five years earlier, at most 14 days older. " +
+      "1Y is absolute, 3Y and 5Y are annualized. Windows whose start cannot " +
+      "be priced are counted and located in `gaps`, never reported as 0.",
+  })
+  @ApiResponse({ status: 200, description: "Rolling return distribution" })
+  @ApiResponse({ status: 404, description: "Security not found" })
+  getRollingReturns(
+    @Request() req,
+    @Param("id", ParseUUIDPipe) id: string,
+  ): Promise<FundRollingReturnsView> {
+    return this.performanceComparisonService.getRollingReturns(req.user.id, id);
   }
 }

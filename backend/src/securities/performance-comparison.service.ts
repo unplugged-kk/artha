@@ -21,7 +21,10 @@ import { Security } from "./entities/security.entity";
 import { MarketIndexService } from "./market-index.service";
 import { SecurityPriceService } from "./security-price.service";
 import { marketIndexByCode } from "./market-indexes";
+import { computeRollingReturns } from "./rolling-returns.util";
+import { addMonthsUtc, parseYmd } from "../strategies/gem-momentum.util";
 import {
+  FundRollingReturnsView,
   PerformanceComparisonView,
   PerformanceExclusion,
   PerformanceExclusionReason,
@@ -101,6 +104,17 @@ export interface PerformanceComparisonRequest {
   startDate?: string;
   endDate?: string;
 }
+
+/**
+ * The NAV series a rolling return reads: the provider's published NAVs and the
+ * user's own corrections. A transaction-derived price (`buy`, `sell`, ...) is an
+ * allotment or trade price, not the published NAV
+ * (`docs/specs/fund-rolling-returns.md` section 4.1, INV-ROLLING-002).
+ */
+const ROLLING_NAV_SOURCES = ["amfi_nav", "manual"] as const;
+
+/** The longest rolling period, which is how far back the history must reach. */
+const ROLLING_HISTORY_MONTHS = 60;
 
 /** A candidate line, before we know whether it can be drawn. */
 interface Candidate {
@@ -271,6 +285,72 @@ export class PerformanceComparisonService {
     }
 
     return this.build({ start, end, sampling, lag, resolved, excluded });
+  }
+
+  /**
+   * The rolling-return distribution of one AMFI mutual fund
+   * (`docs/specs/fund-rolling-returns.md`).
+   *
+   * Ownership is checked before anything else, so another user's id is a 404
+   * that never reaches a price query. A security with no scheme code is not an
+   * AMFI fund and gets no provider fetch and no read. The history fetch is the
+   * comparison's own, cooldown and swallowed failures included: a provider
+   * outage yields figures over what is stored, never a failed request.
+   */
+  async getRollingReturns(
+    userId: string,
+    securityId: string,
+  ): Promise<FundRollingReturnsView> {
+    const [security] = await this.loadOwnedSecurities(userId, [securityId]);
+
+    if (!security.amfiSchemeCode?.trim()) {
+      return {
+        securityId: security.id,
+        eligibility: "NOT_AN_AMFI_FUND",
+        currencyCode: security.currencyCode,
+        history: {
+          firstDate: null,
+          lastDate: null,
+          observationCount: 0,
+          excludedObservationCount: 0,
+          lastIsStale: false,
+        },
+        periods: [],
+      };
+    }
+
+    const today = todayYMD();
+    await this.ensureSecuritiesHistory(
+      [security],
+      addMonthsUtc(parseYmd(today), -ROLLING_HISTORY_MONTHS)
+        .toISOString()
+        .slice(0, 10),
+    );
+
+    // Whole stored history, on the raw basis: a NAV has one basis, and letting
+    // the loader choose would flip to ADJUSTED on a stray adjusted_close and
+    // drop every genuine NAV.
+    const loaded = await withScopedDb(this.dataSource, (m) =>
+      loadPriceSeries(m, {
+        table: "security_prices",
+        ids: [security.id],
+        sampling: "day",
+        sources: ROLLING_NAV_SOURCES,
+        basis: "RAW",
+      }),
+    );
+
+    const { history, periods } = computeRollingReturns(
+      loaded.get(security.id)?.points ?? [],
+      today,
+    );
+    return {
+      securityId: security.id,
+      eligibility: "ELIGIBLE",
+      currencyCode: security.currencyCode,
+      history,
+      periods,
+    };
   }
 
   /**

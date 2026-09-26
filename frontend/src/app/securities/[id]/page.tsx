@@ -18,6 +18,7 @@ import { SecurityChartSection } from '@/components/securities/detail/SecurityCha
 import { SecurityKeyInformation } from '@/components/securities/detail/SecurityKeyInformation';
 import { SecurityAboutCard } from '@/components/securities/detail/SecurityAboutCard';
 import { SecurityPerformanceCard } from '@/components/securities/detail/SecurityPerformanceCard';
+import { FundRollingReturnsCard } from '@/components/securities/detail/FundRollingReturnsCard';
 import { SecurityPositionInfoCard } from '@/components/securities/detail/SecurityPositionInfoCard';
 import { SecurityAccountsTable } from '@/components/securities/detail/SecurityAccountsTable';
 import { SecurityBreakdownCard } from '@/components/securities/detail/SecurityBreakdownCard';
@@ -472,6 +473,12 @@ function SecurityDetailContent() {
                     <SecurityPositionInfoCard detail={detail} />
                   </div>
                 </div>
+
+                {/* Rolling returns are measured on AMFI NAVs, so only a
+                    security priced from an AMFI scheme has them. */}
+                {security.amfiSchemeCode?.trim() && (
+                  <FundRollingReturnsCard securityId={security.id} />
+                )}
 
                 <SecurityAccountsTable detail={detail} />
               </TabPanel>

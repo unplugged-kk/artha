@@ -111,7 +111,46 @@
     },
     "includesDividends": "含股利",
     "excludesDividends": "不含股利",
-    "excludesDividendsTitle": "該資料來源不提供調整後收盤價序列，因此這些報酬只依價格計算。對於會配息的基金，它們會把報酬低估掉整個配息率。"
+    "excludesDividendsTitle": "該資料來源不提供調整後收盤價序列，因此這些報酬只依價格計算。對於會配息的基金，它們會把報酬低估掉整個配息率。",
+    "cumulativeNote": "3年和5年為整個期間的累計報酬，而非每年。"
+  },
+  "rollingReturns": {
+    "title": "滾動報酬",
+    "subject": "基金淨值歷史中每一個此長度的持有期間：最差、典型和最佳情況下的表現，以及以正報酬結束的頻率。",
+    "loadFailed": "無法載入滾動報酬。",
+    "retry": "重試",
+    "columns": {
+      "period": "期間",
+      "worst": "最差",
+      "median": "中位數",
+      "best": "最佳",
+      "positive": "正報酬",
+      "windows": "已測量期間數"
+    },
+    "periods": {
+      "1Y": "1年",
+      "3Y": "3年",
+      "5Y": "5年"
+    },
+    "perAnnum": "年化",
+    "absolute": "絕對",
+    "windowRange": "{start} 至 {end}",
+    "missingCount": "{count, plural, other {缺少 {shown} 個}}",
+    "notAvailable": "不適用",
+    "status": {
+      "INSUFFICIENT_HISTORY": "已儲存的淨值歷史短於此期間。",
+      "ALL_WINDOWS_MISSING": "無法測量任何期間：{count, plural, other {其 {shown} 個起始日期}}皆在 14 天內沒有淨值。",
+      "NO_PRICE_HISTORY": "此基金尚未儲存淨值歷史。"
+    },
+    "incompleteHeading": "部分期間無法測量",
+    "incomplete": "{period}：{count, plural, other {{shown} 個期間}}在起始日期前 14 天內沒有淨值，因此數據僅描述可測量的期間。缺少期間的結束日期：{ranges}。",
+    "gapRange": "{from} 至 {to}",
+    "gapMore": "{count, plural, other {及另外 {shown} 個範圍}}",
+    "asOf": "根據截至 {date} 的淨值。",
+    "stale": "最新淨值為 {date}，已超過 14 天。淨值資料來源可能延遲，因此缺少近期的期間。",
+    "excluded": "{count, plural, other {已排除 {shown} 列淨值，}}因為其值為零、負數或日期在未來。",
+    "basisNote": "1年數據為絕對報酬；3年和5年數據為年化報酬（年化）。",
+    "idcwNote": "根據淨值。對於 IDCW（配息）計畫，配發的金額不計入。"
   },
   "positionInfo": {
     "title": "部位資訊",

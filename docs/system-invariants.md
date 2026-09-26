@@ -98,6 +98,9 @@ implied.
 | INV-FX-001 | An unavailable rate never becomes 1:1 | enforced |
 | INV-REPORT-001 | A report's account scope is investment linkage, not account type | enforced |
 | INV-REPORT-002 | A chart's down-sampling never reaches a count, a total or an export | enforced |
+| INV-ROLLING-001 | A fund rolling window is two usable NAVs, its start at most 14 days before its calendar target; an unresolved start is a counted, located missing window, never 0 | enforced |
+| INV-ROLLING-002 | A fund's rolling-return NAV series is `amfi_nav` and `manual` rows on the raw basis only | enforced |
+| INV-ROLLING-003 | Rolling periods over 12 months are annualized on actual days / 365.25; 12 months is absolute; no period is reported from a shorter history | enforced |
 | INV-LOAN-001 | A recurring overpayment's cadence is a calendar, not a payment interval | enforced |
 | INV-LOAN-002 | A schedule truncated by the projection horizon yields no lifetime total | enforced |
 | INV-LOAN-003 | One named compounding convention, from preview to projection to displayed EAR | enforced |
@@ -1412,6 +1415,93 @@ to the stored contractual payment, and where the rate timeline records the
 payment in effect that value is authoritative even when it does not amortize
 (`INV-LOAN-HISTORY-001` covers the interest; the payment's authority ordering is
 documented in `frontend/CLAUDE.md`).
+
+## Fund rolling returns
+
+`docs/specs/fund-rolling-returns.md` is the specification; the three entries
+below are its section 11. The computation is one pure function,
+`computeRollingReturns` (`backend/src/securities/rolling-returns.util.ts`),
+reached only through `PerformanceComparisonService.getRollingReturns`.
+
+### INV-ROLLING-001 -- a rolling window is two usable NAVs, never a fabricated 0
+
+```text
+Statement           Every usable NAV date is a candidate window end. Its start is
+                    the last usable NAV at or before the same calendar date 12,
+                    36 or 60 months earlier (addMonthsUtc, month-end clamped),
+                    at most BOUNDARY_LAG_DAYS (14) older. A start that cannot be
+                    resolved is counted in missingWindowCount and located in
+                    gaps; it is never 0, never bridged, never a forward or
+                    nearest lookup. Statistics are over computed windows only.
+Source of truth     security_prices rows for the fund (INV-ROLLING-002)
+Enforcement         rolling-returns.util.ts resolves every start through
+                    observationAt (common/time-series/price-boundary.util.ts,
+                    bounded lag) and throws when a start is not before its end
+                    or when input dates are not strictly ascending. Zero,
+                    negative, non-finite and future-dated closes are excluded
+                    and counted, never priced.
+Concurrency scope   -- (read only)
+Failure response    Period status ALL_WINDOWS_MISSING, INSUFFICIENT_HISTORY or
+                    NO_PRICE_HISTORY with null statistics; the UI renders "n/a"
+                    with the reason and names the gap ranges.
+Required tests      Present: backend/src/securities/rolling-returns.util.spec.ts
+                    U3, U4 (14 days computed, 15 missing), U6 (weekend start, no
+                    forward lookup), U9, U10, U12, U14; integration
+                    backend/test/integration/fund-rolling-returns.integration.spec.ts
+                    (manual 0 and future row excluded, lag fallback).
+Status              enforced
+```
+
+### INV-ROLLING-002 -- the NAV series is published NAVs and user corrections, on one basis
+
+```text
+Statement           The series a rolling return reads is the fund's amfi_nav and
+                    manual rows only, on close_price. A transaction-derived price
+                    (buy, sell, reinvest, ...) is an allotment or trade price and
+                    never enters it; a stray adjusted_close on a row never flips
+                    the series to the adjusted basis.
+Source of truth     security_prices.source and security_prices.close_price
+Enforcement         loadPriceSeries (common/time-series/price-series.util.ts)
+                    takes `sources`, applied as a parameterized
+                    `source = ANY($n::text[])` in the scoped CTE, and
+                    `basis: "RAW"`; getRollingReturns passes
+                    ROLLING_NAV_SOURCES and basis RAW. Ownership is checked
+                    (404) before any price is read.
+Concurrency scope   --
+Failure response    --
+Required tests      Present: price-series.util.spec.ts (sources parameterized,
+                    RAW basis, omitted fromDate); performance-comparison.service.spec.ts
+                    (loader called with sources and RAW); integration
+                    fund-rolling-returns.integration.spec.ts negative controls
+                    (a buy row does not resolve a target; an adjusted_close on
+                    an amfi_nav row changes no figure) and
+                    security-cross-user-isolation.integration.spec.ts.
+Status              enforced
+```
+
+### INV-ROLLING-003 -- annualized on actual days over 365.25, 1Y absolute
+
+```text
+Statement           The 1Y window return is (Pe / Ps - 1) * 100, never raised to
+                    a power. 3Y and 5Y are ((Pe / Ps) ^ (365.25 / d) - 1) * 100
+                    with d the actual calendar days between the two NAVs used.
+                    A period is reported only from a history that spans it: a
+                    fund with 2.5 years of NAVs has no 3Y figure. Every figure
+                    is computed unrounded and rounded once, to 4dp, at the edge.
+Source of truth     rolling-returns.util.ts windowReturn
+Enforcement         One formula in one pure function with no wall clock (`today`
+                    is a parameter); DAYS_PER_YEAR = 365.25 matches the
+                    repository's price-CAGR convention.
+Concurrency scope   --
+Failure response    INSUFFICIENT_HISTORY with null statistics for a period the
+                    history does not span.
+Required tests      Present: rolling-returns.util.spec.ts U1, U2 (365 and 1/N
+                    rejected), U5 (leap day), U7 (1Y over 366 days stays 10.0000),
+                    U8 (signs kept), U11, U17 (round once), U18 (identical under
+                    three process time zones); E2E e2e/tests/fund-rolling-returns.spec.ts
+                    (card equals the API response).
+Status              enforced
+```
 
 ## Scheduled occurrences
 

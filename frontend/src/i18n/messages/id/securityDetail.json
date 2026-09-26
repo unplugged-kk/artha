@@ -111,7 +111,46 @@
     },
     "includesDividends": "Termasuk dividen",
     "excludesDividends": "Tanpa dividen",
-    "excludesDividendsTitle": "Penyedia ini tidak menyediakan seri penutupan yang disesuaikan, jadi hasil ini diukur hanya dari harga. Untuk reksa dana yang membagikan hasil, angka ini terlalu rendah sebesar seluruh tingkat pembagiannya."
+    "excludesDividendsTitle": "Penyedia ini tidak menyediakan seri penutupan yang disesuaikan, jadi hasil ini diukur hanya dari harga. Untuk reksa dana yang membagikan hasil, angka ini terlalu rendah sebesar seluruh tingkat pembagiannya.",
+    "cumulativeNote": "3T dan 5T bersifat kumulatif selama seluruh periode, bukan per tahun."
+  },
+  "rollingReturns": {
+    "title": "Imbal hasil bergulir",
+    "subject": "Setiap periode kepemilikan sepanjang ini dalam riwayat NAV reksa dana: hasilnya pada kondisi terburuk, umumnya, dan terbaik, serta seberapa sering berakhir positif.",
+    "loadFailed": "Imbal hasil bergulir tidak dapat dimuat.",
+    "retry": "Coba lagi",
+    "columns": {
+      "period": "Periode",
+      "worst": "Terburuk",
+      "median": "Median",
+      "best": "Terbaik",
+      "positive": "Positif",
+      "windows": "Periode diukur"
+    },
+    "periods": {
+      "1Y": "1 tahun",
+      "3Y": "3 tahun",
+      "5Y": "5 tahun"
+    },
+    "perAnnum": "per tahun",
+    "absolute": "absolut",
+    "windowRange": "{start} sampai {end}",
+    "missingCount": "{count, plural, other {{shown} hilang}}",
+    "notAvailable": "t/a",
+    "status": {
+      "INSUFFICIENT_HISTORY": "Riwayat NAV yang tersimpan lebih pendek dari periode ini.",
+      "ALL_WINDOWS_MISSING": "Tidak ada periode yang dapat diukur: {count, plural, other {tidak satu pun dari {shown} tanggal mulainya memiliki}} NAV dalam 14 hari.",
+      "NO_PRICE_HISTORY": "Belum ada riwayat NAV yang tersimpan untuk reksa dana ini."
+    },
+    "incompleteHeading": "Beberapa periode tidak dapat diukur",
+    "incomplete": "{period}: {count, plural, other {{shown} periode tidak memiliki}} NAV dalam 14 hari dari tanggal mulainya, jadi angka hanya menggambarkan periode yang dapat diukur. Periode yang hilang berakhir {ranges}.",
+    "gapRange": "{from} sampai {to}",
+    "gapMore": "{count, plural, other {dan {shown} rentang lainnya}}",
+    "asOf": "Berdasarkan NAV hingga {date}.",
+    "stale": "NAV terbaru bertanggal {date}, lebih dari 14 hari yang lalu. Umpan NAV mungkin tertinggal, sehingga periode terbaru hilang.",
+    "excluded": "{count, plural, other {{shown} baris NAV dikecualikan karena bernilai}} nol, negatif, atau bertanggal di masa depan.",
+    "basisNote": "Angka 1 tahun bersifat absolut; angka 3 dan 5 tahun disetahunkan (per tahun).",
+    "idcwNote": "Berdasarkan NAV. Untuk paket IDCW (dividen), pembayaran tidak ditambahkan kembali."
   },
   "positionInfo": {
     "title": "Informasi posisi",

@@ -111,7 +111,46 @@
     },
     "includesDividends": "배당 포함",
     "excludesDividends": "배당 제외",
-    "excludesDividendsTitle": "이 제공처는 수정 종가 계열을 제공하지 않아 이 수익률은 가격만으로 계산됩니다. 분배를 하는 펀드라면 그 분배율만큼 수익률이 낮게 나타납니다."
+    "excludesDividendsTitle": "이 제공처는 수정 종가 계열을 제공하지 않아 이 수익률은 가격만으로 계산됩니다. 분배를 하는 펀드라면 그 분배율만큼 수익률이 낮게 나타납니다.",
+    "cumulativeNote": "3년과 5년은 연간이 아니라 전체 기간의 누적 수익률입니다."
+  },
+  "rollingReturns": {
+    "title": "롤링 수익률",
+    "subject": "펀드 NAV 이력에서 이 길이의 모든 보유 기간: 최악, 일반적, 최선의 결과와 플러스로 끝난 빈도.",
+    "loadFailed": "롤링 수익률을 불러오지 못했습니다.",
+    "retry": "다시 시도",
+    "columns": {
+      "period": "기간",
+      "worst": "최악",
+      "median": "중앙값",
+      "best": "최선",
+      "positive": "플러스",
+      "windows": "측정된 기간"
+    },
+    "periods": {
+      "1Y": "1년",
+      "3Y": "3년",
+      "5Y": "5년"
+    },
+    "perAnnum": "연율",
+    "absolute": "절대",
+    "windowRange": "{start} ~ {end}",
+    "missingCount": "{count, plural, other {{shown}개 누락}}",
+    "notAvailable": "해당 없음",
+    "status": {
+      "INSUFFICIENT_HISTORY": "저장된 NAV 이력이 이 기간보다 짧습니다.",
+      "ALL_WINDOWS_MISSING": "측정할 수 있는 기간이 없습니다: {count, plural, other {{shown}개의 시작일 모두}} 14일 이내에 NAV가 없습니다.",
+      "NO_PRICE_HISTORY": "이 펀드에 대해 저장된 NAV 이력이 아직 없습니다."
+    },
+    "incompleteHeading": "일부 기간을 측정할 수 없습니다",
+    "incomplete": "{period}: {count, plural, other {{shown}개 기간은}} 시작일로부터 14일 이내에 NAV가 없어, 수치는 측정할 수 있었던 기간만 나타냅니다. 누락된 기간의 종료일: {ranges}.",
+    "gapRange": "{from} ~ {to}",
+    "gapMore": "{count, plural, other {외 {shown}개 범위}}",
+    "asOf": "{date}까지의 NAV 기준.",
+    "stale": "최신 NAV는 {date} 기준으로 14일 이상 지났습니다. NAV 피드가 지연되어 최근 기간이 누락되었을 수 있습니다.",
+    "excluded": "{count, plural, other {NAV 행 {shown}개가 제외되었습니다.}} 값이 0, 음수이거나 미래 날짜였습니다.",
+    "basisNote": "1년 수치는 절대 수익률이며, 3년과 5년 수치는 연율화(연율)되었습니다.",
+    "idcwNote": "NAV 기준입니다. IDCW(배당) 플랜의 경우 지급금은 다시 더해지지 않습니다."
   },
   "positionInfo": {
     "title": "포지션 정보",

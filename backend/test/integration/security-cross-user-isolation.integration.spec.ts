@@ -10,6 +10,7 @@ import { PayeesService } from "@/payees/payees.service";
 import { TagsService } from "@/tags/tags.service";
 import { SecuritiesService } from "@/securities/securities.service";
 import { InvestmentTransactionsService } from "@/securities/investment-transactions.service";
+import { PerformanceComparisonService } from "@/securities/performance-comparison.service";
 import { BudgetsModule } from "@/budgets/budgets.module";
 import { BudgetsService } from "@/budgets/budgets.service";
 import { ReportsModule } from "@/reports/reports.module";
@@ -80,6 +81,7 @@ describe("Cross-user data isolation (integration)", () => {
   let budgetsService: BudgetsService;
   let reportsService: ReportsService;
   let investmentReportsService: InvestmentReportsService;
+  let performanceComparisonService: PerformanceComparisonService;
 
   let userAId: string;
   let userBId: string;
@@ -102,6 +104,7 @@ describe("Cross-user data isolation (integration)", () => {
     budgetsService = module.get(BudgetsService);
     reportsService = module.get(ReportsService);
     investmentReportsService = module.get(InvestmentReportsService);
+    performanceComparisonService = module.get(PerformanceComparisonService);
   });
 
   afterAll(async () => {
@@ -112,6 +115,7 @@ describe("Cross-user data isolation (integration)", () => {
     await cleanTables(dataSource, [
       "action_history",
       "holdings",
+      "security_prices",
       "securities",
       "transaction_split_tags",
       "transaction_tags",
@@ -681,6 +685,50 @@ describe("Cross-user data isolation (integration)", () => {
       );
       expect(result.find((s) => s.id === userASecurity.id)).toBeUndefined();
       expect(result.every((s) => s.userId === userBId)).toBe(true);
+    });
+  });
+
+  // ---- Fund rolling returns ------------------------------------------------
+
+  describe("Fund rolling returns", () => {
+    let userAFundId: string;
+
+    beforeEach(async () => {
+      // Inserted directly: a scheme code on create would start a provider
+      // backfill this suite has no reason to make.
+      const fund = await dataSource.manager.save(
+        dataSource.manager.create(Security, {
+          userId: userAId,
+          symbol: "AFUND",
+          name: "userA fund",
+          securityType: "MUTUAL_FUND",
+          currencyCode: "INR",
+          amfiSchemeCode: "119551",
+        }),
+      );
+      userAFundId = fund.id;
+      await dataSource.query(
+        `INSERT INTO security_prices (security_id, price_date, close_price, source)
+         VALUES ($1, DATE '2025-06-30', 160, 'amfi_nav'),
+                ($1, DATE '2026-06-30', 200, 'amfi_nav')`,
+        [userAFundId],
+      );
+    });
+
+    it("getRollingReturns(userB, userA.fund.id) throws NotFoundException and leaves the fund untouched", async () => {
+      await expect(
+        withUserContext(userBId, () =>
+          performanceComparisonService.getRollingReturns(userBId, userAFundId),
+        ),
+      ).rejects.toThrow(NotFoundException);
+
+      // A read that got past ownership would have stamped the backfill
+      // cooldown on userA's row.
+      const reloaded = await dataSource.manager.findOneOrFail(Security, {
+        where: { id: userAFundId },
+      });
+      expect(reloaded.userId).toBe(userAId);
+      expect(reloaded.historicalBackfillAttemptedAt).toBeNull();
     });
   });
 

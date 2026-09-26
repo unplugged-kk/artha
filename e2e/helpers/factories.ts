@@ -210,6 +210,8 @@ export function createSecurity(
     securityType?: string;
     exchange?: string;
     currencyCode?: string;
+    /** Routes the security to the AMFI NAV provider (Indian mutual funds). */
+    amfiSchemeCode?: string;
   } = {},
 ): Promise<CreatedSecurity> {
   return api.post<CreatedSecurity>("/securities", {
@@ -218,6 +220,9 @@ export function createSecurity(
     securityType: data.securityType ?? "STOCK",
     currencyCode: data.currencyCode ?? "USD",
     ...(data.exchange !== undefined ? { exchange: data.exchange } : {}),
+    ...(data.amfiSchemeCode !== undefined
+      ? { amfiSchemeCode: data.amfiSchemeCode }
+      : {}),
   });
 }
 

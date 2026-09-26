@@ -111,7 +111,46 @@
     },
     "includesDividends": "Inclusief dividend",
     "excludesDividends": "Zonder dividend",
-    "excludesDividendsTitle": "Deze aanbieder levert geen reeks aangepaste slotkoersen, dus deze rendementen zijn alleen op de koers gemeten. Bij een uitkerend fonds geven ze het rendement te laag weer, met het hele uitkeringspercentage."
+    "excludesDividendsTitle": "Deze aanbieder levert geen reeks aangepaste slotkoersen, dus deze rendementen zijn alleen op de koers gemeten. Bij een uitkerend fonds geven ze het rendement te laag weer, met het hele uitkeringspercentage.",
+    "cumulativeNote": "3J en 5J zijn cumulatief over de hele periode, niet per jaar."
+  },
+  "rollingReturns": {
+    "title": "Rollende rendementen",
+    "subject": "Elke beleggingsperiode van deze lengte in de NAV-geschiedenis van het fonds: hoe die in het slechtste, typische en beste geval verliep, en hoe vaak die positief eindigde.",
+    "loadFailed": "Rollende rendementen konden niet worden geladen.",
+    "retry": "Opnieuw proberen",
+    "columns": {
+      "period": "Periode",
+      "worst": "Slechtste",
+      "median": "Mediaan",
+      "best": "Beste",
+      "positive": "Positief",
+      "windows": "Gemeten perioden"
+    },
+    "periods": {
+      "1Y": "1 jaar",
+      "3Y": "3 jaar",
+      "5Y": "5 jaar"
+    },
+    "perAnnum": "p.j.",
+    "absolute": "absoluut",
+    "windowRange": "{start} tot {end}",
+    "missingCount": "{count, plural, one {{shown} ontbreekt} other {{shown} ontbreken}}",
+    "notAvailable": "n.v.t.",
+    "status": {
+      "INSUFFICIENT_HISTORY": "De opgeslagen NAV-geschiedenis is korter dan deze periode.",
+      "ALL_WINDOWS_MISSING": "Er kon geen periode worden gemeten: {count, plural, one {voor de begindatum is er} other {voor geen van de {shown} begindatums is er}} een NAV binnen 14 dagen.",
+      "NO_PRICE_HISTORY": "Voor dit fonds is nog geen NAV-geschiedenis opgeslagen."
+    },
+    "incompleteHeading": "Sommige perioden konden niet worden gemeten",
+    "incomplete": "{period}: {count, plural, one {{shown} periode heeft} other {{shown} perioden hebben}} geen NAV binnen 14 dagen van de begindatum, dus de cijfers beschrijven alleen de perioden die konden worden gemeten. Ontbrekende perioden eindigen {ranges}.",
+    "gapRange": "{from} tot {to}",
+    "gapMore": "{count, plural, one {en nog {shown} bereik} other {en nog {shown} bereiken}}",
+    "asOf": "Gebaseerd op NAV's tot {date}.",
+    "stale": "De laatste NAV is van {date}, meer dan 14 dagen geleden. De NAV-feed loopt mogelijk achter, waardoor recente perioden ontbreken.",
+    "excluded": "{count, plural, one {{shown} NAV-rij is weggelaten omdat die} other {{shown} NAV-rijen zijn weggelaten omdat die}} nul, negatief of in de toekomst gedateerd waren.",
+    "basisNote": "Cijfers over 1 jaar zijn absoluut; cijfers over 3 en 5 jaar zijn op jaarbasis (p.j.).",
+    "idcwNote": "Gebaseerd op NAV. Bij IDCW-plannen (dividendplannen) worden uitkeringen niet meegeteld."
   },
   "positionInfo": {
     "title": "Gegevens van de positie",

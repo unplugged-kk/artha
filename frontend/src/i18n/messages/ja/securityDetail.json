@@ -111,7 +111,46 @@
     },
     "includesDividends": "配当込み",
     "excludesDividends": "配当を含まない",
-    "excludesDividendsTitle": "この提供元は調整後終値の系列を出さないため、これらのリターンは価格のみで算出しています。分配を行うファンドでは、その分配率のぶんだけリターンを低く見せます。"
+    "excludesDividendsTitle": "この提供元は調整後終値の系列を出さないため、これらのリターンは価格のみで算出しています。分配を行うファンドでは、その分配率のぶんだけリターンを低く見せます。",
+    "cumulativeNote": "3年と5年は期間全体の累積で、年率ではありません。"
+  },
+  "rollingReturns": {
+    "title": "ローリングリターン",
+    "subject": "ファンドのNAV履歴におけるこの長さのすべての保有期間：最悪・中央・最良の結果と、プラスで終わった頻度。",
+    "loadFailed": "ローリングリターンを読み込めませんでした。",
+    "retry": "再試行",
+    "columns": {
+      "period": "期間",
+      "worst": "最悪",
+      "median": "中央値",
+      "best": "最良",
+      "positive": "プラス",
+      "windows": "測定期間数"
+    },
+    "periods": {
+      "1Y": "1年",
+      "3Y": "3年",
+      "5Y": "5年"
+    },
+    "perAnnum": "年率",
+    "absolute": "絶対",
+    "windowRange": "{start}～{end}",
+    "missingCount": "{count, plural, other {{shown}件欠落}}",
+    "notAvailable": "該当なし",
+    "status": {
+      "INSUFFICIENT_HISTORY": "保存されているNAV履歴がこの期間より短いです。",
+      "ALL_WINDOWS_MISSING": "測定できた期間はありません：{count, plural, other {{shown}件の開始日のいずれにも}}14日以内のNAVがありません。",
+      "NO_PRICE_HISTORY": "このファンドのNAV履歴はまだ保存されていません。"
+    },
+    "incompleteHeading": "一部の期間を測定できませんでした",
+    "incomplete": "{period}：{count, plural, other {{shown}件の期間で}}開始日から14日以内のNAVがないため、数値は測定できた期間のみを表します。欠落した期間の終了日：{ranges}。",
+    "gapRange": "{from}～{to}",
+    "gapMore": "{count, plural, other {ほか{shown}件の範囲}}",
+    "asOf": "{date}までのNAVに基づきます。",
+    "stale": "最新のNAVは{date}のもので、14日以上前です。NAVフィードが遅れている可能性があり、最近の期間が欠落しています。",
+    "excluded": "{count, plural, other {{shown}件のNAV行を除外しました。}}値がゼロ、負、または将来の日付だったためです。",
+    "basisNote": "1年の数値は絶対値、3年と5年の数値は年率換算（年率）です。",
+    "idcwNote": "NAVに基づきます。IDCW（配当）プランでは、分配金は加算されません。"
   },
   "positionInfo": {
     "title": "ポジション情報",

@@ -518,6 +518,18 @@ describe('investmentsApi', () => {
     );
   });
 
+  it('getFundRollingReturns reads the security rolling-returns route, uncached', async () => {
+    vi.mocked(apiClient.get).mockResolvedValue({ data: { securityId: 's-1', periods: [] } });
+    const first = await investmentsApi.getFundRollingReturns('s-1');
+    await investmentsApi.getFundRollingReturns('s-1');
+    expect(apiClient.get).toHaveBeenCalledWith(
+      '/investments/performance/securities/s-1/rolling-returns',
+    );
+    // A second read goes back to the server rather than to a cache.
+    expect(apiClient.get).toHaveBeenCalledTimes(2);
+    expect(first).toEqual({ securityId: 's-1', periods: [] });
+  });
+
   it('createSecurityPrice posts to /securities/:id/prices', async () => {
     vi.mocked(apiClient.post).mockResolvedValue({ data: { id: 'p-1' } });
     await investmentsApi.createSecurityPrice('s-1', { price: 100 } as any);

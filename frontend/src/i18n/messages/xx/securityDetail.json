@@ -111,7 +111,46 @@
     },
     "includesDividends": "[XX-Includes dividends-XX]",
     "excludesDividends": "[XX-Excludes dividends-XX]",
-    "excludesDividendsTitle": "[XX-This provider supplies no adjusted-close series, so these returns are measured on price alone. For a fund that pays out, they understate the return by its yield.-XX]"
+    "excludesDividendsTitle": "[XX-This provider supplies no adjusted-close series, so these returns are measured on price alone. For a fund that pays out, they understate the return by its yield.-XX]",
+    "cumulativeNote": "[XX-3Y and 5Y are cumulative over the whole period, not per year.-XX]"
+  },
+  "rollingReturns": {
+    "title": "[XX-Rolling returns-XX]",
+    "subject": "[XX-Every holding period of this length in the fund's NAV history: how it went at worst, typically and at best, and how often it ended positive.-XX]",
+    "loadFailed": "[XX-Rolling returns could not be loaded.-XX]",
+    "retry": "[XX-Retry-XX]",
+    "columns": {
+      "period": "[XX-Period-XX]",
+      "worst": "[XX-Worst-XX]",
+      "median": "[XX-Median-XX]",
+      "best": "[XX-Best-XX]",
+      "positive": "[XX-Positive-XX]",
+      "windows": "[XX-Periods measured-XX]"
+    },
+    "periods": {
+      "1Y": "[XX-1 year-XX]",
+      "3Y": "[XX-3 years-XX]",
+      "5Y": "[XX-5 years-XX]"
+    },
+    "perAnnum": "[XX-p.a.-XX]",
+    "absolute": "[XX-absolute-XX]",
+    "windowRange": "[XX-{start} to {end}-XX]",
+    "missingCount": "[XX-{count, plural, one {{shown} missing} other {{shown} missing}}-XX]",
+    "notAvailable": "[XX-n/a-XX]",
+    "status": {
+      "INSUFFICIENT_HISTORY": "[XX-The stored NAV history is shorter than this period.-XX]",
+      "ALL_WINDOWS_MISSING": "[XX-No period could be measured: {count, plural, one {its start date has} other {every one of its {shown} start dates has}} no NAV within 14 days.-XX]",
+      "NO_PRICE_HISTORY": "[XX-No NAV history is stored for this fund yet.-XX]"
+    },
+    "incompleteHeading": "[XX-Some periods could not be measured-XX]",
+    "incomplete": "[XX-{period}: {count, plural, one {{shown} period has} other {{shown} periods have}} no NAV within 14 days of its start date, so the figures describe only the periods that could be measured. Missing periods end {ranges}.-XX]",
+    "gapRange": "[XX-{from} to {to}-XX]",
+    "gapMore": "[XX-{count, plural, one {and {shown} more range} other {and {shown} more ranges}}-XX]",
+    "asOf": "[XX-Based on NAVs up to {date}.-XX]",
+    "stale": "[XX-The latest NAV is from {date}, more than 14 days ago. The NAV feed may be behind, so recent periods are missing.-XX]",
+    "excluded": "[XX-{count, plural, one {{shown} NAV row was left out because it was} other {{shown} NAV rows were left out because they were}} zero, negative or dated in the future.-XX]",
+    "basisNote": "[XX-1-year figures are absolute; 3- and 5-year figures are annualized (p.a.).-XX]",
+    "idcwNote": "[XX-Based on NAV. For IDCW (dividend) plans, payouts are not added back.-XX]"
   },
   "positionInfo": {
     "title": "[XX-Position info-XX]",
