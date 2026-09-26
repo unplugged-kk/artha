@@ -111,7 +111,46 @@
     },
     "includesDividends": "Dividendi inclusi",
     "excludesDividends": "Senza dividendi",
-    "excludesDividendsTitle": "Questo fornitore non offre una serie di chiusure aggiustate, quindi questi rendimenti sono misurati solo sul prezzo. Per un fondo a distribuzione sottostimano il rendimento di tutto il suo tasso di distribuzione."
+    "excludesDividendsTitle": "Questo fornitore non offre una serie di chiusure aggiustate, quindi questi rendimenti sono misurati solo sul prezzo. Per un fondo a distribuzione sottostimano il rendimento di tutto il suo tasso di distribuzione.",
+    "cumulativeNote": "3A e 5A sono cumulativi sull'intero periodo, non annui."
+  },
+  "rollingReturns": {
+    "title": "Rendimenti mobili",
+    "subject": "Ogni periodo di detenzione di questa durata nella storia dei NAV del fondo: com'è andato nel caso peggiore, tipico e migliore, e quanto spesso si è chiuso in positivo.",
+    "loadFailed": "Impossibile caricare i rendimenti mobili.",
+    "retry": "Riprova",
+    "columns": {
+      "period": "Periodo",
+      "worst": "Peggiore",
+      "median": "Mediana",
+      "best": "Migliore",
+      "positive": "Positivi",
+      "windows": "Periodi misurati"
+    },
+    "periods": {
+      "1Y": "1 anno",
+      "3Y": "3 anni",
+      "5Y": "5 anni"
+    },
+    "perAnnum": "annuo",
+    "absolute": "assoluto",
+    "windowRange": "dal {start} al {end}",
+    "missingCount": "{count, plural, one {{shown} mancante} other {{shown} mancanti}}",
+    "notAvailable": "n/d",
+    "status": {
+      "INSUFFICIENT_HISTORY": "La storia dei NAV memorizzata è più breve di questo periodo.",
+      "ALL_WINDOWS_MISSING": "Nessun periodo è stato misurabile: {count, plural, one {la sua data di inizio non ha} other {nessuna delle sue {shown} date di inizio ha}} un NAV entro 14 giorni.",
+      "NO_PRICE_HISTORY": "Per questo fondo non è ancora memorizzata alcuna storia dei NAV."
+    },
+    "incompleteHeading": "Alcuni periodi non sono stati misurabili",
+    "incomplete": "{period}: {count, plural, one {{shown} periodo non ha} other {{shown} periodi non hanno}} un NAV entro 14 giorni dalla data di inizio, quindi i valori descrivono solo i periodi misurabili. I periodi mancanti terminano {ranges}.",
+    "gapRange": "dal {from} al {to}",
+    "gapMore": "{count, plural, one {e {shown} altro intervallo} other {e altri {shown} intervalli}}",
+    "asOf": "Basato sui NAV fino al {date}.",
+    "stale": "L'ultimo NAV è del {date}, più di 14 giorni fa. Il flusso dei NAV potrebbe essere in ritardo, quindi mancano i periodi recenti.",
+    "excluded": "{count, plural, one {{shown} riga di NAV è stata esclusa perché era} other {{shown} righe di NAV sono state escluse perché erano}} zero, negative o con data futura.",
+    "basisNote": "I valori a 1 anno sono assoluti; quelli a 3 e 5 anni sono annualizzati (annuo).",
+    "idcwNote": "Basato sul NAV. Per i piani IDCW (a dividendo), le distribuzioni non vengono aggiunte."
   },
   "positionInfo": {
     "title": "Dati della posizione",

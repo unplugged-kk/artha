@@ -111,7 +111,46 @@
     },
     "includesDividends": "含分红",
     "excludesDividends": "不含分红",
-    "excludesDividendsTitle": "该数据源不提供调整后收盘价序列，因此这些回报只按价格计算。对于会派发的基金，它们会把回报低估掉整个派发率。"
+    "excludesDividendsTitle": "该数据源不提供调整后收盘价序列，因此这些回报只按价格计算。对于会派发的基金，它们会把回报低估掉整个派发率。",
+    "cumulativeNote": "3年和5年为整个期间的累计收益，而非每年。"
+  },
+  "rollingReturns": {
+    "title": "滚动收益",
+    "subject": "基金净值历史中每一个此长度的持有期：最差、典型和最佳情况下的表现，以及以正收益结束的频率。",
+    "loadFailed": "无法加载滚动收益。",
+    "retry": "重试",
+    "columns": {
+      "period": "期间",
+      "worst": "最差",
+      "median": "中位数",
+      "best": "最佳",
+      "positive": "正收益",
+      "windows": "已测量期间数"
+    },
+    "periods": {
+      "1Y": "1年",
+      "3Y": "3年",
+      "5Y": "5年"
+    },
+    "perAnnum": "年化",
+    "absolute": "绝对",
+    "windowRange": "{start} 至 {end}",
+    "missingCount": "{count, plural, other {缺失 {shown} 个}}",
+    "notAvailable": "不适用",
+    "status": {
+      "INSUFFICIENT_HISTORY": "已存储的净值历史短于此期间。",
+      "ALL_WINDOWS_MISSING": "无法测量任何期间：{count, plural, other {其 {shown} 个起始日期}}均在 14 天内没有净值。",
+      "NO_PRICE_HISTORY": "此基金尚未存储净值历史。"
+    },
+    "incompleteHeading": "部分期间无法测量",
+    "incomplete": "{period}：{count, plural, other {{shown} 个期间}}在起始日期前 14 天内没有净值，因此数据仅描述可测量的期间。缺失期间的结束日期：{ranges}。",
+    "gapRange": "{from} 至 {to}",
+    "gapMore": "{count, plural, other {及另外 {shown} 个范围}}",
+    "asOf": "基于截至 {date} 的净值。",
+    "stale": "最新净值为 {date}，已超过 14 天。净值数据源可能滞后，因此缺少近期的期间。",
+    "excluded": "{count, plural, other {已排除 {shown} 行净值，}}因为其值为零、负数或日期在未来。",
+    "basisNote": "1年数据为绝对收益；3年和5年数据为年化收益（年化）。",
+    "idcwNote": "基于净值。对于 IDCW（派息）计划，派发的金额不计入。"
   },
   "positionInfo": {
     "title": "持仓信息",

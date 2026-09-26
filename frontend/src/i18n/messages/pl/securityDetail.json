@@ -111,7 +111,46 @@
     },
     "includesDividends": "Zawiera dywidendy",
     "excludesDividends": "Bez dywidend",
-    "excludesDividendsTitle": "Ten dostawca nie podaje serii kursów skorygowanych, więc te zwroty liczone są wyłącznie z ceny. Dla funduszu wypłacającego zaniżają zwrot o całą jego stopę wypłaty."
+    "excludesDividendsTitle": "Ten dostawca nie podaje serii kursów skorygowanych, więc te zwroty liczone są wyłącznie z ceny. Dla funduszu wypłacającego zaniżają zwrot o całą jego stopę wypłaty.",
+    "cumulativeNote": "3L i 5L są skumulowane za cały okres, a nie roczne."
+  },
+  "rollingReturns": {
+    "title": "Kroczące stopy zwrotu",
+    "subject": "Każdy okres utrzymywania tej długości w historii NAV funduszu: jak wypadł w najgorszym, typowym i najlepszym przypadku oraz jak często kończył się na plusie.",
+    "loadFailed": "Nie udało się wczytać kroczących stóp zwrotu.",
+    "retry": "Ponów",
+    "columns": {
+      "period": "Okres",
+      "worst": "Najgorszy",
+      "median": "Mediana",
+      "best": "Najlepszy",
+      "positive": "Dodatnie",
+      "windows": "Zmierzone okresy"
+    },
+    "periods": {
+      "1Y": "1 rok",
+      "3Y": "3 lata",
+      "5Y": "5 lat"
+    },
+    "perAnnum": "rocznie",
+    "absolute": "bezwzględna",
+    "windowRange": "{start} - {end}",
+    "missingCount": "{count, plural, one {{shown} brakujący} few {{shown} brakujące} many {{shown} brakujących} other {{shown} brakującego}}",
+    "notAvailable": "b.d.",
+    "status": {
+      "INSUFFICIENT_HISTORY": "Zapisana historia NAV jest krótsza niż ten okres.",
+      "ALL_WINDOWS_MISSING": "Nie udało się zmierzyć żadnego okresu: {count, plural, one {jego data początkowa nie ma} few {żadna z jego {shown} dat początkowych nie ma} many {żadna z jego {shown} dat początkowych nie ma} other {żadna z jego {shown} daty początkowej nie ma}} NAV w ciągu 14 dni.",
+      "NO_PRICE_HISTORY": "Dla tego funduszu nie zapisano jeszcze historii NAV."
+    },
+    "incompleteHeading": "Niektórych okresów nie udało się zmierzyć",
+    "incomplete": "{period}: {count, plural, one {{shown} okres nie ma} few {{shown} okresy nie mają} many {{shown} okresów nie ma} other {{shown} okresu nie ma}} NAV w ciągu 14 dni od daty początkowej, więc wartości opisują tylko okresy, które udało się zmierzyć. Brakujące okresy kończą się {ranges}.",
+    "gapRange": "{from} - {to}",
+    "gapMore": "{count, plural, one {i {shown} inny zakres} few {i {shown} inne zakresy} many {i {shown} innych zakresów} other {i {shown} innego zakresu}}",
+    "asOf": "Na podstawie NAV do {date}.",
+    "stale": "Najnowszy NAV pochodzi z {date}, sprzed ponad 14 dni. Źródło NAV może być opóźnione, więc brakuje ostatnich okresów.",
+    "excluded": "{count, plural, one {Pominięto {shown} wiersz NAV, ponieważ był} few {Pominięto {shown} wiersze NAV, ponieważ były} many {Pominięto {shown} wierszy NAV, ponieważ były} other {Pominięto {shown} wiersza NAV, ponieważ były}} zerowe, ujemne lub z datą przyszłą.",
+    "basisNote": "Wartości 1-letnie są bezwzględne; 3- i 5-letnie są annualizowane (rocznie).",
+    "idcwNote": "Na podstawie NAV. W planach IDCW (dywidendowych) wypłaty nie są doliczane."
   },
   "positionInfo": {
     "title": "Informacje o pozycji",

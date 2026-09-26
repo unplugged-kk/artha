@@ -111,7 +111,46 @@
     },
     "includesDividends": "Đã gồm cổ tức",
     "excludesDividends": "Chưa gồm cổ tức",
-    "excludesDividendsTitle": "Nhà cung cấp này không đưa ra chuỗi giá đóng cửa điều chỉnh, nên các con số lợi nhuận này chỉ tính theo giá. Với quỹ có chi trả, chúng thấp hơn thực tế đúng bằng toàn bộ tỷ lệ chi trả của quỹ."
+    "excludesDividendsTitle": "Nhà cung cấp này không đưa ra chuỗi giá đóng cửa điều chỉnh, nên các con số lợi nhuận này chỉ tính theo giá. Với quỹ có chi trả, chúng thấp hơn thực tế đúng bằng toàn bộ tỷ lệ chi trả của quỹ.",
+    "cumulativeNote": "3N và 5N là lũy kế trong toàn bộ kỳ, không phải mỗi năm."
+  },
+  "rollingReturns": {
+    "title": "Lợi nhuận cuốn chiếu",
+    "subject": "Mọi khoảng thời gian nắm giữ có độ dài này trong lịch sử NAV của quỹ: kết quả trong trường hợp xấu nhất, điển hình và tốt nhất, và tần suất kết thúc với lợi nhuận dương.",
+    "loadFailed": "Không thể tải lợi nhuận cuốn chiếu.",
+    "retry": "Thử lại",
+    "columns": {
+      "period": "Kỳ",
+      "worst": "Tệ nhất",
+      "median": "Trung vị",
+      "best": "Tốt nhất",
+      "positive": "Dương",
+      "windows": "Số kỳ đã đo"
+    },
+    "periods": {
+      "1Y": "1 năm",
+      "3Y": "3 năm",
+      "5Y": "5 năm"
+    },
+    "perAnnum": "mỗi năm",
+    "absolute": "tuyệt đối",
+    "windowRange": "{start} đến {end}",
+    "missingCount": "{count, plural, other {thiếu {shown}}}",
+    "notAvailable": "không có",
+    "status": {
+      "INSUFFICIENT_HISTORY": "Lịch sử NAV đã lưu ngắn hơn kỳ này.",
+      "ALL_WINDOWS_MISSING": "Không đo được kỳ nào: {count, plural, other {không ngày nào trong {shown} ngày bắt đầu có}} NAV trong vòng 14 ngày.",
+      "NO_PRICE_HISTORY": "Chưa có lịch sử NAV nào được lưu cho quỹ này."
+    },
+    "incompleteHeading": "Không đo được một số kỳ",
+    "incomplete": "{period}: {count, plural, other {{shown} kỳ không có}} NAV trong vòng 14 ngày kể từ ngày bắt đầu, vì vậy số liệu chỉ mô tả các kỳ đo được. Các kỳ bị thiếu kết thúc {ranges}.",
+    "gapRange": "{from} đến {to}",
+    "gapMore": "{count, plural, other {và {shown} khoảng khác}}",
+    "asOf": "Dựa trên NAV đến {date}.",
+    "stale": "NAV mới nhất là ngày {date}, đã hơn 14 ngày. Nguồn NAV có thể đang chậm, nên thiếu các kỳ gần đây.",
+    "excluded": "{count, plural, other {Đã loại {shown} dòng NAV vì giá trị}} bằng không, âm hoặc có ngày trong tương lai.",
+    "basisNote": "Số liệu 1 năm là tuyệt đối; số liệu 3 và 5 năm được quy đổi theo năm (mỗi năm).",
+    "idcwNote": "Dựa trên NAV. Với các gói IDCW (chia cổ tức), khoản chi trả không được cộng lại."
   },
   "positionInfo": {
     "title": "Thông tin vị thế",

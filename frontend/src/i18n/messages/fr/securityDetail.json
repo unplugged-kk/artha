@@ -111,7 +111,46 @@
     },
     "includesDividends": "Dividendes inclus",
     "excludesDividends": "Hors dividendes",
-    "excludesDividendsTitle": "Ce fournisseur ne livre pas de série de cours ajustés : ces rendements sont donc mesurés sur le seul cours. Pour un fonds distribuant, ils sous-estiment le rendement de tout son taux de distribution."
+    "excludesDividendsTitle": "Ce fournisseur ne livre pas de série de cours ajustés : ces rendements sont donc mesurés sur le seul cours. Pour un fonds distribuant, ils sous-estiment le rendement de tout son taux de distribution.",
+    "cumulativeNote": "3 ans et 5 ans sont cumulés sur toute la période, pas par an."
+  },
+  "rollingReturns": {
+    "title": "Rendements glissants",
+    "subject": "Chaque période de détention de cette durée dans l'historique des VL du fonds : son résultat dans le pire cas, dans le cas typique et dans le meilleur cas, et la fréquence à laquelle elle s'est terminée en positif.",
+    "loadFailed": "Impossible de charger les rendements glissants.",
+    "retry": "Réessayer",
+    "columns": {
+      "period": "Période",
+      "worst": "Pire",
+      "median": "Médiane",
+      "best": "Meilleur",
+      "positive": "Positives",
+      "windows": "Périodes mesurées"
+    },
+    "periods": {
+      "1Y": "1 an",
+      "3Y": "3 ans",
+      "5Y": "5 ans"
+    },
+    "perAnnum": "par an",
+    "absolute": "absolu",
+    "windowRange": "du {start} au {end}",
+    "missingCount": "{count, plural, one {{shown} manquante} other {{shown} manquantes}}",
+    "notAvailable": "n/d",
+    "status": {
+      "INSUFFICIENT_HISTORY": "L'historique des VL enregistré est plus court que cette période.",
+      "ALL_WINDOWS_MISSING": "Aucune période n'a pu être mesurée : {count, plural, one {sa date de début n'a} other {aucune de ses {shown} dates de début n'a}} de VL dans un délai de 14 jours.",
+      "NO_PRICE_HISTORY": "Aucun historique de VL n'est encore enregistré pour ce fonds."
+    },
+    "incompleteHeading": "Certaines périodes n'ont pas pu être mesurées",
+    "incomplete": "{period} : {count, plural, one {{shown} période n'a} other {{shown} périodes n'ont}} aucune VL dans les 14 jours précédant sa date de début, les chiffres ne décrivent donc que les périodes mesurables. Les périodes manquantes se terminent {ranges}.",
+    "gapRange": "du {from} au {to}",
+    "gapMore": "{count, plural, one {et {shown} autre plage} other {et {shown} autres plages}}",
+    "asOf": "Basé sur les VL jusqu'au {date}.",
+    "stale": "La dernière VL date du {date}, il y a plus de 14 jours. Le flux de VL est peut-être en retard, les périodes récentes sont donc manquantes.",
+    "excluded": "{count, plural, one {{shown} ligne de VL a été écartée car elle était} other {{shown} lignes de VL ont été écartées car elles étaient}} nulles, négatives ou datées dans le futur.",
+    "basisNote": "Les chiffres à 1 an sont absolus ; ceux à 3 et 5 ans sont annualisés (par an).",
+    "idcwNote": "Basé sur la VL. Pour les plans IDCW (à dividendes), les versements ne sont pas réintégrés."
   },
   "positionInfo": {
     "title": "Détail de la position",

@@ -111,7 +111,46 @@
     },
     "includesDividends": "Einschließlich Dividenden",
     "excludesDividends": "Ohne Dividenden",
-    "excludesDividendsTitle": "Dieser Anbieter liefert keine Reihe bereinigter Schlusskurse, daher werden diese Renditen allein aus dem Kurs berechnet. Bei einem ausschüttenden Fonds untertreiben sie die Rendite um dessen gesamte Ausschüttungsrendite."
+    "excludesDividendsTitle": "Dieser Anbieter liefert keine Reihe bereinigter Schlusskurse, daher werden diese Renditen allein aus dem Kurs berechnet. Bei einem ausschüttenden Fonds untertreiben sie die Rendite um dessen gesamte Ausschüttungsrendite.",
+    "cumulativeNote": "3J und 5J sind kumuliert über den gesamten Zeitraum, nicht pro Jahr."
+  },
+  "rollingReturns": {
+    "title": "Rollierende Renditen",
+    "subject": "Jeder Haltezeitraum dieser Länge in der NAV-Historie des Fonds: wie er im schlechtesten Fall, typischerweise und im besten Fall verlief und wie oft er positiv endete.",
+    "loadFailed": "Rollierende Renditen konnten nicht geladen werden.",
+    "retry": "Erneut versuchen",
+    "columns": {
+      "period": "Zeitraum",
+      "worst": "Schlechtester",
+      "median": "Median",
+      "best": "Bester",
+      "positive": "Positiv",
+      "windows": "Gemessene Zeiträume"
+    },
+    "periods": {
+      "1Y": "1 Jahr",
+      "3Y": "3 Jahre",
+      "5Y": "5 Jahre"
+    },
+    "perAnnum": "p. a.",
+    "absolute": "absolut",
+    "windowRange": "{start} bis {end}",
+    "missingCount": "{count, plural, one {{shown} fehlt} other {{shown} fehlen}}",
+    "notAvailable": "k. A.",
+    "status": {
+      "INSUFFICIENT_HISTORY": "Die gespeicherte NAV-Historie ist kürzer als dieser Zeitraum.",
+      "ALL_WINDOWS_MISSING": "Kein Zeitraum konnte gemessen werden: {count, plural, one {für sein Startdatum gibt es} other {für keines seiner {shown} Startdaten gibt es}} einen NAV innerhalb von 14 Tagen.",
+      "NO_PRICE_HISTORY": "Für diesen Fonds ist noch keine NAV-Historie gespeichert."
+    },
+    "incompleteHeading": "Einige Zeiträume konnten nicht gemessen werden",
+    "incomplete": "{period}: {count, plural, one {für {shown} Zeitraum gibt es} other {für {shown} Zeiträume gibt es}} keinen NAV innerhalb von 14 Tagen nach dem Startdatum, daher beschreiben die Werte nur die messbaren Zeiträume. Fehlende Zeiträume enden {ranges}.",
+    "gapRange": "{from} bis {to}",
+    "gapMore": "{count, plural, one {und {shown} weiterer Bereich} other {und {shown} weitere Bereiche}}",
+    "asOf": "Basierend auf NAVs bis {date}.",
+    "stale": "Der neueste NAV stammt vom {date}, also von vor mehr als 14 Tagen. Der NAV-Feed ist möglicherweise im Rückstand, daher fehlen aktuelle Zeiträume.",
+    "excluded": "{count, plural, one {{shown} NAV-Zeile wurde ausgelassen, weil sie} other {{shown} NAV-Zeilen wurden ausgelassen, weil sie}} null, negativ oder in der Zukunft datiert waren.",
+    "basisNote": "1-Jahres-Werte sind absolut; 3- und 5-Jahres-Werte sind annualisiert (p. a.).",
+    "idcwNote": "Basierend auf dem NAV. Bei IDCW-Plänen (Ausschüttungsplänen) werden Ausschüttungen nicht hinzugerechnet."
   },
   "positionInfo": {
     "title": "Positionsdaten",

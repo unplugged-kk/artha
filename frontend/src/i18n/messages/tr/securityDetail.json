@@ -111,7 +111,46 @@
     },
     "includesDividends": "Temettü dahil",
     "excludesDividends": "Temettü hariç",
-    "excludesDividendsTitle": "Bu sağlayıcı düzeltilmiş kapanış serisi vermiyor, bu yüzden bu getiriler yalnızca fiyattan hesaplanıyor. Dağıtım yapan bir fonda getiriyi, dağıtım oranının tamamı kadar düşük gösterirler."
+    "excludesDividendsTitle": "Bu sağlayıcı düzeltilmiş kapanış serisi vermiyor, bu yüzden bu getiriler yalnızca fiyattan hesaplanıyor. Dağıtım yapan bir fonda getiriyi, dağıtım oranının tamamı kadar düşük gösterirler.",
+    "cumulativeNote": "3Y ve 5Y yıllık değil, tüm dönem boyunca kümülatiftir."
+  },
+  "rollingReturns": {
+    "title": "Kayan getiriler",
+    "subject": "Fonun NAV geçmişindeki bu uzunluktaki her elde tutma dönemi: en kötü, tipik ve en iyi durumda nasıl sonuçlandığı ve ne sıklıkla pozitif bittiği.",
+    "loadFailed": "Kayan getiriler yüklenemedi.",
+    "retry": "Yeniden dene",
+    "columns": {
+      "period": "Dönem",
+      "worst": "En kötü",
+      "median": "Medyan",
+      "best": "En iyi",
+      "positive": "Pozitif",
+      "windows": "Ölçülen dönemler"
+    },
+    "periods": {
+      "1Y": "1 yıl",
+      "3Y": "3 yıl",
+      "5Y": "5 yıl"
+    },
+    "perAnnum": "yıllık",
+    "absolute": "mutlak",
+    "windowRange": "{start} - {end}",
+    "missingCount": "{count, plural, one {{shown} eksik} other {{shown} eksik}}",
+    "notAvailable": "yok",
+    "status": {
+      "INSUFFICIENT_HISTORY": "Kayıtlı NAV geçmişi bu dönemden kısa.",
+      "ALL_WINDOWS_MISSING": "Hiçbir dönem ölçülemedi: {count, plural, one {başlangıç tarihinin} other {{shown} başlangıç tarihinin hiçbirinin}} 14 gün içinde NAV değeri yok.",
+      "NO_PRICE_HISTORY": "Bu fon için henüz kayıtlı NAV geçmişi yok."
+    },
+    "incompleteHeading": "Bazı dönemler ölçülemedi",
+    "incomplete": "{period}: {count, plural, one {{shown} dönemin} other {{shown} dönemin}} başlangıç tarihinden itibaren 14 gün içinde NAV değeri yok, bu nedenle rakamlar yalnızca ölçülebilen dönemleri gösterir. Eksik dönemlerin bitişi: {ranges}.",
+    "gapRange": "{from} - {to}",
+    "gapMore": "{count, plural, one {ve {shown} aralık daha} other {ve {shown} aralık daha}}",
+    "asOf": "{date} tarihine kadarki NAV'lere dayanır.",
+    "stale": "En son NAV {date} tarihli, 14 günden daha eski. NAV akışı gecikmiş olabilir, bu nedenle son dönemler eksik.",
+    "excluded": "{count, plural, one {{shown} NAV satırı hariç tutuldu çünkü değeri} other {{shown} NAV satırı hariç tutuldu çünkü değerleri}} sıfır, negatif veya gelecek tarihliydi.",
+    "basisNote": "1 yıllık rakamlar mutlaktır; 3 ve 5 yıllık rakamlar yıllıklandırılmıştır (yıllık).",
+    "idcwNote": "NAV'ye dayanır. IDCW (temettü) planlarında ödemeler geri eklenmez."
   },
   "positionInfo": {
     "title": "Pozisyon bilgileri",
