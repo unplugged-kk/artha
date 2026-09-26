@@ -50,12 +50,12 @@ function isRollingReturns(res: Response): boolean {
   );
 }
 
-/** The card, found by its heading rather than by position on the page. */
+/**
+ * The card: a `<section>` labelled by its "Rolling returns" heading, so the
+ * accessible region is the stable handle rather than position on the page.
+ */
 function rollingCard(page: Page) {
-  return page
-    .locator('section, [data-testid="fund-rolling-returns"], div')
-    .filter({ has: page.getByRole('heading', { name: /rolling returns/i }) })
-    .last();
+  return page.getByRole('region', { name: 'Rolling returns' });
 }
 
 test.describe('Fund rolling returns', () => {
@@ -100,9 +100,13 @@ test.describe('Fund rolling returns', () => {
     await expect(card).toBeVisible();
     for (const [period, median, text] of EXPECTED) {
       expect(`+${median.toFixed(2)}%`).toBe(text);
-      const row = card.getByRole('row').filter({ hasText: period });
-      await expect(row).toHaveCount(1);
-      await expect(row).toContainText(text);
+      // Cells in order: worst, median, best, % positive, periods measured.
+      const cells = card.getByTestId(`rolling-${period}`).getByRole('cell');
+      await expect(cells).toHaveCount(5);
+      for (const i of [0, 1, 2]) {
+        await expect(cells.nth(i)).toContainText(text);
+      }
+      await expect(cells.nth(3)).toContainText('100.00%');
     }
   });
 
@@ -136,7 +140,7 @@ test.describe('Fund rolling returns', () => {
     ).toBeVisible();
 
     await expect(
-      page.getByRole('heading', { name: /rolling returns/i }),
+      page.getByRole('region', { name: 'Rolling returns' }),
     ).toHaveCount(0);
     expect(requested).toEqual([]);
   });
