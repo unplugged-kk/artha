@@ -27,6 +27,7 @@ import {
   SecurityPrice,
   MarketIndex,
   PerformanceComparison,
+  FundRollingReturnsView,
   SecurityDocument,
   CreateSecurityDocumentData,
   SecurityNewsResult,
@@ -822,6 +823,20 @@ export const investmentsApi = {
           ...(params.endDate ? { endDate: params.endDate } : {}),
         },
       },
+    );
+    return response.data;
+  },
+
+  /**
+   * Rolling 1Y/3Y/5Y return distribution over an AMFI fund's stored NAV series.
+   *
+   * Uncached for the same reason as `getPerformanceComparison`: the read may
+   * backfill the fund's NAV history, and a cached "no history yet" would
+   * outlive the backfill that answers it.
+   */
+  getFundRollingReturns: async (securityId: string): Promise<FundRollingReturnsView> => {
+    const response = await apiClient.get<FundRollingReturnsView>(
+      `/investments/performance/securities/${securityId}/rolling-returns`,
     );
     return response.data;
   },
