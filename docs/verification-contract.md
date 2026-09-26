@@ -85,6 +85,9 @@ INV-LOAN-002's entry names the missing source scan while its row said `--`.
 | INV-FX-001 no 1:1 fallback | **required** | **required** | required | -- | -- | required | optional | required |
 | INV-REPORT-001 report account scope | supporting | **required** | **required** | -- | -- | -- | -- | optional |
 | INV-REPORT-002 chart reduction | **required** | **required** | -- | -- | -- | -- | -- | -- |
+| INV-ROLLING-001 bounded rolling window | **required** | -- | required | -- | -- | -- | -- | optional |
+| INV-ROLLING-002 NAV series sources | supporting | -- | **required** | -- | -- | -- | -- | -- |
+| INV-ROLLING-003 rolling annualization | **required** | -- | -- | -- | -- | -- | -- | required |
 | INV-LOAN-001 overpayment cadence | **required** | -- | -- | -- | -- | -- | -- | optional |
 | INV-LOAN-002 no truncated total | **required** | **required** (not yet met) | -- | -- | -- | -- | -- | optional |
 | INV-LOAN-003 compounding convention | **required** | **required** | -- | -- | -- | -- | -- | -- |
@@ -279,6 +282,15 @@ The HOLDING-002 case is the more instructive one. It read as a careful test: fiv
 actions, three months, arithmetic worked out in a comment -- and the arithmetic
 was simply the wrong rule, applied consistently, which a reviewer checking code
 against test would have found to match.
+
+### Located and still open
+
+| Test | Asserts | Defect it protects |
+| --- | --- | --- |
+| `frontend/src/lib/security-detail.test.ts`, "measures from the last price at or before the start date" | That `computePeriodReturn` measures a period whose start date is 2025-06-01 from a price dated 2025-01-01 -- a baseline 151 days older than the period it labels. | The client trailing-return engine in `frontend/src/lib/security-detail.ts` (the Security Performance card): an unbounded baseline lookup, a per-row adjusted/raw splice (`totalReturnOf`) and period starts read from the wall clock. The server's rolling-return path bounds the same lookup at `BOUNDARY_LAG_DAYS` (INV-ROLLING-001); the test is not corrected here because replacing the engine with a server answer is a recorded follow-up (`docs/specs/fund-rolling-returns.md` section 9), and correcting the assertion alone would fail against unchanged code. |
+
+When that follow-up lands, this test must assert a null (or a missing-window
+disclosure) for a baseline older than the lag, in the same change.
 
 ### Reported but not located
 
