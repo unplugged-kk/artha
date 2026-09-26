@@ -288,5 +288,24 @@
     "accountRequired": "[XX-Account is required-XX]",
     "dateRequired": "[XX-Date is required-XX]",
     "acquisitionPriceRequired": "[XX-Price per share is required and must be greater than zero. Use Add Shares for shares acquired without a known cost.-XX]"
+  },
+  "concentration": {
+    "title": "[XX-Concentration-XX]",
+    "unavailable": "[XX-There are no priced holdings to measure concentration against yet.-XX]",
+    "partialHeading": "[XX-These figures cover part of the portfolio-XX]",
+    "partialUnpriced": "[XX-Not included: {count, plural, one {# holding} other {# holdings}} with no current price.-XX]",
+    "partialFx": "[XX-No exchange rate for {pairs}, so the holdings in those currencies are not included.-XX]",
+    "measure": "[XX-Measure-XX]",
+    "holdingsBasis": "[XX-Holdings-XX]",
+    "portfolioBasis": "[XX-Including cash-XX]",
+    "effectiveHoldings": "[XX-Effective holdings-XX]",
+    "effectiveHoldingsValue": "[XX-{effective} of {positions}-XX]",
+    "effectiveHoldingsTooltip": "[XX-How many equally sized positions would spread your money the same way. It equals the number of positions only when they are all the same size; a lower figure means a few positions dominate.-XX]",
+    "largestPosition": "[XX-Largest position-XX]",
+    "topFive": "[XX-Top 5 positions-XX]",
+    "herfindahl": "[XX-Herfindahl index-XX]",
+    "herfindahlTooltip": "[XX-The sum of the squared weights, from 0 to 1. 1 means everything is in a single position; values near 0 mean many positions of similar size.-XX]",
+    "largestPositions": "[XX-Largest positions-XX]",
+    "notAvailable": "[XX-Not available-XX]"
   }
 }

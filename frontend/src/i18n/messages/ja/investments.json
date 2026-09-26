@@ -288,5 +288,24 @@
     "accountRequired": "口座は必須です",
     "dateRequired": "日付は必須です",
     "acquisitionPriceRequired": "1株あたりの価格は必須で、ゼロより大きい必要があります。取得原価が不明な株式には「株数追加」を使用してください。"
+  },
+  "concentration": {
+    "title": "集中度",
+    "unavailable": "集中度を測定できる価格付きの保有銘柄がまだありません。",
+    "partialHeading": "この数値はポートフォリオの一部のみを対象としています",
+    "partialUnpriced": "対象外: 現在価格のない{count, plural, other {#件の保有銘柄}}。",
+    "partialFx": "{pairs} の為替レートがないため、これらの通貨の保有銘柄は含まれていません。",
+    "measure": "指標",
+    "holdingsBasis": "保有銘柄",
+    "portfolioBasis": "現金を含む",
+    "effectiveHoldings": "実効保有銘柄数",
+    "effectiveHoldingsValue": "{positions}件中 {effective}",
+    "effectiveHoldingsTooltip": "同じ規模の銘柄がいくつあれば資金が同じように分散されるかを示します。すべての銘柄が同じ規模のときだけ銘柄数と一致し、値が小さいほど少数の銘柄に偏っています。",
+    "largestPosition": "最大銘柄",
+    "topFive": "上位5銘柄",
+    "herfindahl": "ハーフィンダール指数",
+    "herfindahlTooltip": "各比率の二乗の合計で、0から1の値です。1はすべてが1銘柄に集中していることを、0に近い値は同程度の規模の銘柄が多いことを意味します。",
+    "largestPositions": "上位の銘柄",
+    "notAvailable": "利用不可"
   }
 }

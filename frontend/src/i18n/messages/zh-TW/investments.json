@@ -288,5 +288,24 @@
     "accountRequired": "科目為必填",
     "dateRequired": "日期為必填",
     "acquisitionPriceRequired": "每股價格為必填項，且必須大於零。對於成本未知的股數，請使用「增加股數」。"
+  },
+  "concentration": {
+    "title": "集中度",
+    "unavailable": "目前還沒有可用來衡量集中度的已定價持倉。",
+    "partialHeading": "這些數據僅涵蓋部分投資組合",
+    "partialUnpriced": "未計入：{count, plural, other {# 項}}沒有目前價格的持倉。",
+    "partialFx": "沒有 {pairs} 的匯率，因此這些貨幣的持倉未計入。",
+    "measure": "指標",
+    "holdingsBasis": "持倉",
+    "portfolioBasis": "含現金",
+    "effectiveHoldings": "有效持倉數",
+    "effectiveHoldingsValue": "{effective} / {positions}",
+    "effectiveHoldingsTooltip": "需要多少個規模相同的持倉才能以同樣方式分散您的資金。只有當所有持倉規模相同時才等於持倉數量；數值越低，表示少數持倉占主導。",
+    "largestPosition": "最大持倉",
+    "topFive": "前 5 大持倉",
+    "herfindahl": "赫芬達爾指數",
+    "herfindahlTooltip": "各權重平方之和，介於 0 到 1 之間。1 表示全部集中在單一持倉；接近 0 表示有許多規模相近的持倉。",
+    "largestPositions": "最大持倉",
+    "notAvailable": "不可用"
   }
 }

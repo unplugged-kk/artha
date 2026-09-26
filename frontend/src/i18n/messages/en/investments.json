@@ -288,5 +288,24 @@
     "accountRequired": "Account is required",
     "dateRequired": "Date is required",
     "acquisitionPriceRequired": "Price per share is required and must be greater than zero. Use Add Shares for shares acquired without a known cost."
+  },
+  "concentration": {
+    "title": "Concentration",
+    "unavailable": "There are no priced holdings to measure concentration against yet.",
+    "partialHeading": "These figures cover part of the portfolio",
+    "partialUnpriced": "Not included: {count, plural, one {# holding} other {# holdings}} with no current price.",
+    "partialFx": "No exchange rate for {pairs}, so the holdings in those currencies are not included.",
+    "measure": "Measure",
+    "holdingsBasis": "Holdings",
+    "portfolioBasis": "Including cash",
+    "effectiveHoldings": "Effective holdings",
+    "effectiveHoldingsValue": "{effective} of {positions}",
+    "effectiveHoldingsTooltip": "How many equally sized positions would spread your money the same way. It equals the number of positions only when they are all the same size; a lower figure means a few positions dominate.",
+    "largestPosition": "Largest position",
+    "topFive": "Top 5 positions",
+    "herfindahl": "Herfindahl index",
+    "herfindahlTooltip": "The sum of the squared weights, from 0 to 1. 1 means everything is in a single position; values near 0 mean many positions of similar size.",
+    "largestPositions": "Largest positions",
+    "notAvailable": "Not available"
   }
 }

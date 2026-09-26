@@ -288,5 +288,24 @@
     "accountRequired": "A conta é obrigatória",
     "dateRequired": "A data é obrigatória",
     "acquisitionPriceRequired": "O preço por ação é obrigatório e deve ser maior que zero. Use «Adicionar Ações» para ações adquiridas sem um custo conhecido."
+  },
+  "concentration": {
+    "title": "Concentração",
+    "unavailable": "Ainda não existem posições com preço para medir a concentração.",
+    "partialHeading": "Estes valores abrangem apenas parte da carteira",
+    "partialUnpriced": "Não incluídas: {count, plural, one {# posição} other {# posições}} sem preço atual.",
+    "partialFx": "Não existe taxa de câmbio para {pairs}, pelo que as posições nessas moedas não estão incluídas.",
+    "measure": "Medida",
+    "holdingsBasis": "Posições",
+    "portfolioBasis": "Incluindo liquidez",
+    "effectiveHoldings": "Posições efetivas",
+    "effectiveHoldingsValue": "{effective} de {positions}",
+    "effectiveHoldingsTooltip": "Quantas posições do mesmo tamanho distribuiriam o seu dinheiro da mesma forma. Só é igual ao número de posições quando todas têm o mesmo tamanho; um valor mais baixo significa que poucas posições dominam.",
+    "largestPosition": "Maior posição",
+    "topFive": "5 maiores posições",
+    "herfindahl": "Índice de Herfindahl",
+    "herfindahlTooltip": "A soma dos pesos ao quadrado, de 0 a 1. 1 significa que tudo está numa única posição; valores próximos de 0 significam muitas posições de dimensão semelhante.",
+    "largestPositions": "Maiores posições",
+    "notAvailable": "Não disponível"
   }
 }

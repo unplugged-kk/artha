@@ -12,6 +12,7 @@ import { MultiSelect } from '@/components/ui/MultiSelect';
 import { PortfolioSummaryCard } from '@/components/investments/PortfolioSummaryCard';
 import { GroupedHoldingsList } from '@/components/investments/GroupedHoldingsList';
 import { AssetAllocationChart } from '@/components/investments/AssetAllocationChart';
+import { PortfolioConcentrationCard } from '@/components/investments/PortfolioConcentrationCard';
 import { InvestmentTransactionList } from '@/components/investments/InvestmentTransactionList';
 import { ListBottomPager } from '@/components/ui/ListBottomPager';
 import { NewTransactionButton } from '@/components/investments/NewTransactionButton';
@@ -224,6 +225,15 @@ function InvestmentsContent() {
               titleSuffix={accountFilterLabel}
               accountIds={data.selectedAccountIds}
               valuationComplete={data.portfolioSummary?.valuationComplete}
+            />
+          </div>
+
+          {/* Concentration -- read from the summary, not recomputed */}
+          <div className="mb-6">
+            <PortfolioConcentrationCard
+              concentration={data.portfolioSummary?.concentration}
+              isLoading={data.isLoading}
+              titleSuffix={accountFilterLabel}
             />
           </div>
 

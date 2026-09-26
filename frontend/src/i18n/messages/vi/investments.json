@@ -288,5 +288,24 @@
     "accountRequired": "Tài khoản là bắt buộc",
     "dateRequired": "Ngày là bắt buộc",
     "acquisitionPriceRequired": "Giá mỗi cổ phiếu là bắt buộc và phải lớn hơn không. Dùng \"Thêm cổ phiếu\" cho cổ phiếu có được mà không biết giá gốc."
+  },
+  "concentration": {
+    "title": "Mức độ tập trung",
+    "unavailable": "Chưa có khoản nắm giữ nào có giá để đo mức độ tập trung.",
+    "partialHeading": "Các số liệu này chỉ bao gồm một phần danh mục",
+    "partialUnpriced": "Không bao gồm: {count, plural, other {# khoản nắm giữ}} chưa có giá hiện tại.",
+    "partialFx": "Không có tỷ giá cho {pairs}, nên các khoản nắm giữ bằng những loại tiền đó không được bao gồm.",
+    "measure": "Chỉ số",
+    "holdingsBasis": "Khoản nắm giữ",
+    "portfolioBasis": "Bao gồm tiền mặt",
+    "effectiveHoldings": "Số khoản nắm giữ hiệu dụng",
+    "effectiveHoldingsValue": "{effective} trên {positions}",
+    "effectiveHoldingsTooltip": "Số vị thế có quy mô bằng nhau sẽ phân bổ tiền của bạn theo cùng một cách. Con số này chỉ bằng số vị thế khi tất cả có cùng quy mô; con số thấp hơn nghĩa là một vài vị thế chiếm ưu thế.",
+    "largestPosition": "Vị thế lớn nhất",
+    "topFive": "5 vị thế lớn nhất",
+    "herfindahl": "Chỉ số Herfindahl",
+    "herfindahlTooltip": "Tổng bình phương các tỷ trọng, từ 0 đến 1. 1 nghĩa là toàn bộ nằm trong một vị thế; giá trị gần 0 nghĩa là có nhiều vị thế với quy mô tương tự.",
+    "largestPositions": "Vị thế lớn nhất",
+    "notAvailable": "Không khả dụng"
   }
 }

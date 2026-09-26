@@ -264,6 +264,62 @@ export interface PortfolioSummary {
   holdings: HoldingWithMarketValue[];
   holdingsByAccount: AccountHoldings[];
   allocation: AllocationItem[];  // Included to avoid duplicate API call
+  /**
+   * Concentration over the allocation above, computed by the server from the
+   * same slices (`backend/src/securities/concentration.util.ts`). Optional for
+   * the rolling-deploy reason on the flags above: absent means an older backend,
+   * which is "no information" -- render nothing rather than a measure.
+   */
+  concentration?: ConcentrationResult;
+}
+
+/** One of the largest positions in a concentration basis. */
+export interface ConcentrationPosition {
+  name: string;
+  /** Value in the concentration's `currencyCode`. */
+  value: number;
+  /** Weight in its basis, as a percentage (0-100). */
+  percent: number;
+}
+
+/** Concentration over one basis: `holdings` excludes cash, `portfolio` includes it. */
+export interface ConcentrationMeasure {
+  basis: 'holdings' | 'portfolio';
+  /** Positions carrying weight. */
+  positions: number;
+  /** The denominator the weights are fractions of, in `currencyCode`. */
+  drawnValue: number;
+  /** Herfindahl-Hirschman index: the sum of squared weights, 0-1. */
+  herfindahl: number;
+  /** 1 / HHI -- the effective number of holdings, at most `positions`. */
+  effectiveHoldings: number;
+  /** The largest weight, as a percentage (0-100). */
+  top1Percent: number;
+  /** The five largest weights summed, as a percentage (0-100). */
+  top5Percent: number;
+  /** The largest positions, largest first. */
+  largest: ConcentrationPosition[];
+}
+
+export interface ConcentrationResult {
+  /**
+   * `complete` when every held position was priced and convertible; `partial`
+   * when the measures describe only the part that was (the counts below say
+   * what is missing); `unavailable` when nothing could be measured.
+   */
+  status: 'complete' | 'partial' | 'unavailable';
+  currencyCode: string;
+  /** Securities only. Null when no priced position exists. */
+  holdings: ConcentrationMeasure | null;
+  /** Positions plus positive cash. Null when nothing is drawn. */
+  portfolio: ConcentrationMeasure | null;
+  pricedPositions: number;
+  /** Held with no current price; excluded from the measures. */
+  unpricedPositions: number;
+  /** Pairs with no available rate; their holdings are excluded. */
+  missingRatePairs: string[];
+  /** Positions worth zero or less; they carry no weight. */
+  nonPositiveValuePositions: number;
 }
 
 export interface AllocationItem {

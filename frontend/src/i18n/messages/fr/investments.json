@@ -288,5 +288,24 @@
     "accountRequired": "Le compte est obligatoire",
     "dateRequired": "La date est obligatoire",
     "acquisitionPriceRequired": "Le prix par part est obligatoire et doit être supérieur à zéro. Utilisez « Ajout de parts » pour des parts acquises sans coût connu."
+  },
+  "concentration": {
+    "title": "Concentration",
+    "unavailable": "Il n'y a pas encore de positions valorisées sur lesquelles mesurer la concentration.",
+    "partialHeading": "Ces chiffres ne couvrent qu'une partie du portefeuille",
+    "partialUnpriced": "Non inclus : {count, plural, one {# position} other {# positions}} sans cours actuel.",
+    "partialFx": "Aucun taux de change pour {pairs} : les positions dans ces devises ne sont pas incluses.",
+    "measure": "Mesure",
+    "holdingsBasis": "Positions",
+    "portfolioBasis": "Liquidités comprises",
+    "effectiveHoldings": "Nombre effectif de positions",
+    "effectiveHoldingsValue": "{effective} sur {positions}",
+    "effectiveHoldingsTooltip": "Le nombre de positions de même taille qui répartiraient votre argent de la même façon. Il n'est égal au nombre de positions que lorsqu'elles ont toutes la même taille ; un chiffre plus bas signifie que quelques positions dominent.",
+    "largestPosition": "Plus grande position",
+    "topFive": "5 plus grandes positions",
+    "herfindahl": "Indice de Herfindahl",
+    "herfindahlTooltip": "La somme des poids au carré, de 0 à 1. 1 signifie que tout est dans une seule position ; des valeurs proches de 0 indiquent de nombreuses positions de taille similaire.",
+    "largestPositions": "Plus grandes positions",
+    "notAvailable": "Non disponible"
   }
 }
