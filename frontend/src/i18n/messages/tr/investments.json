@@ -288,5 +288,24 @@
     "accountRequired": "Hesap gereklidir",
     "dateRequired": "Tarih gereklidir",
     "acquisitionPriceRequired": "Hisse başına fiyat zorunludur ve sıfırdan büyük olmalıdır. Maliyeti bilinmeyen hisseler için \"Hisse Ekle\" kullanın."
+  },
+  "concentration": {
+    "title": "Yoğunlaşma",
+    "unavailable": "Yoğunlaşmayı ölçmek için henüz fiyatı olan bir varlık yok.",
+    "partialHeading": "Bu rakamlar portföyün yalnızca bir kısmını kapsıyor",
+    "partialUnpriced": "Dahil edilmedi: güncel fiyatı olmayan {count, plural, one {# varlık} other {# varlık}}.",
+    "partialFx": "{pairs} için döviz kuru yok, bu nedenle bu para birimlerindeki varlıklar dahil edilmedi.",
+    "measure": "Ölçüt",
+    "holdingsBasis": "Varlıklar",
+    "portfolioBasis": "Nakit dahil",
+    "effectiveHoldings": "Etkin varlık sayısı",
+    "effectiveHoldingsValue": "{positions} içinde {effective}",
+    "effectiveHoldingsTooltip": "Paranızı aynı şekilde dağıtacak eşit büyüklükteki pozisyon sayısı. Yalnızca tüm pozisyonlar aynı büyüklükteyse pozisyon sayısına eşittir; daha düşük bir değer birkaç pozisyonun baskın olduğu anlamına gelir.",
+    "largestPosition": "En büyük pozisyon",
+    "topFive": "İlk 5 pozisyon",
+    "herfindahl": "Herfindahl endeksi",
+    "herfindahlTooltip": "Ağırlıkların karelerinin toplamı, 0 ile 1 arasında. 1, her şeyin tek bir pozisyonda olduğu anlamına gelir; 0'a yakın değerler benzer büyüklükte çok sayıda pozisyon anlamına gelir.",
+    "largestPositions": "En büyük pozisyonlar",
+    "notAvailable": "Kullanılamıyor"
   }
 }

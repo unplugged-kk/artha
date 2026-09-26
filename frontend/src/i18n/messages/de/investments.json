@@ -288,5 +288,24 @@
     "accountRequired": "Konto ist erforderlich",
     "dateRequired": "Datum ist erforderlich",
     "acquisitionPriceRequired": "Der Preis pro Anteil ist erforderlich und muss größer als null sein. Verwenden Sie „Anteile hinzufügen“ für Anteile, die ohne bekannte Kosten erworben wurden."
+  },
+  "concentration": {
+    "title": "Konzentration",
+    "unavailable": "Es gibt noch keine bewerteten Positionen, an denen sich die Konzentration messen lässt.",
+    "partialHeading": "Diese Werte decken nur einen Teil des Portfolios ab",
+    "partialUnpriced": "Nicht enthalten: {count, plural, one {# Position} other {# Positionen}} ohne aktuellen Kurs.",
+    "partialFx": "Kein Wechselkurs für {pairs}, daher sind die Positionen in diesen Währungen nicht enthalten.",
+    "measure": "Kennzahl",
+    "holdingsBasis": "Positionen",
+    "portfolioBasis": "Inklusive Barmittel",
+    "effectiveHoldings": "Effektive Anzahl Positionen",
+    "effectiveHoldingsValue": "{effective} von {positions}",
+    "effectiveHoldingsTooltip": "Wie viele gleich große Positionen Ihr Geld auf dieselbe Weise verteilen würden. Der Wert entspricht der Anzahl der Positionen nur, wenn alle gleich groß sind; ein niedrigerer Wert bedeutet, dass wenige Positionen dominieren.",
+    "largestPosition": "Größte Position",
+    "topFive": "Top-5-Positionen",
+    "herfindahl": "Herfindahl-Index",
+    "herfindahlTooltip": "Die Summe der quadrierten Gewichte, von 0 bis 1. 1 bedeutet, dass alles in einer einzigen Position steckt; Werte nahe 0 bedeuten viele Positionen ähnlicher Größe.",
+    "largestPositions": "Größte Positionen",
+    "notAvailable": "Nicht verfügbar"
   }
 }

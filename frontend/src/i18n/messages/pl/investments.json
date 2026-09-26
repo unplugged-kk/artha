@@ -288,5 +288,24 @@
     "accountRequired": "Konto jest wymagane",
     "dateRequired": "Data jest wymagana",
     "acquisitionPriceRequired": "Cena za jednostkę jest wymagana i musi być większa od zera. Dla jednostek nabytych bez znanego kosztu użyj „Dodaj udziały”."
+  },
+  "concentration": {
+    "title": "Koncentracja",
+    "unavailable": "Nie ma jeszcze wycenionych pozycji, na podstawie których można zmierzyć koncentrację.",
+    "partialHeading": "Te dane obejmują tylko część portfela",
+    "partialUnpriced": "Nieuwzględnione: {count, plural, one {# pozycja} few {# pozycje} many {# pozycji} other {# pozycji}} bez bieżącej ceny.",
+    "partialFx": "Brak kursu wymiany dla {pairs}, więc pozycje w tych walutach nie zostały uwzględnione.",
+    "measure": "Miara",
+    "holdingsBasis": "Pozycje",
+    "portfolioBasis": "Z gotówką",
+    "effectiveHoldings": "Efektywna liczba pozycji",
+    "effectiveHoldingsValue": "{effective} z {positions}",
+    "effectiveHoldingsTooltip": "Ile pozycji tej samej wielkości rozłożyłoby Twoje pieniądze w ten sam sposób. Równa się liczbie pozycji tylko wtedy, gdy wszystkie są tej samej wielkości; niższa wartość oznacza, że dominuje kilka pozycji.",
+    "largestPosition": "Największa pozycja",
+    "topFive": "5 największych pozycji",
+    "herfindahl": "Indeks Herfindahla",
+    "herfindahlTooltip": "Suma kwadratów udziałów, od 0 do 1. 1 oznacza, że wszystko jest w jednej pozycji; wartości bliskie 0 oznaczają wiele pozycji o podobnej wielkości.",
+    "largestPositions": "Największe pozycje",
+    "notAvailable": "Niedostępne"
   }
 }

@@ -288,5 +288,24 @@
     "accountRequired": "Rekening is vereist",
     "dateRequired": "Datum is vereist",
     "acquisitionPriceRequired": "De prijs per aandeel is verplicht en moet groter zijn dan nul. Gebruik \"Aandelen toevoegen\" voor aandelen die zonder bekende kostprijs zijn verkregen."
+  },
+  "concentration": {
+    "title": "Concentratie",
+    "unavailable": "Er zijn nog geen geprijsde posities om de concentratie aan te meten.",
+    "partialHeading": "Deze cijfers dekken slechts een deel van de portefeuille",
+    "partialUnpriced": "Niet meegenomen: {count, plural, one {# positie} other {# posities}} zonder actuele koers.",
+    "partialFx": "Geen wisselkoers voor {pairs}, dus de posities in die valuta zijn niet meegenomen.",
+    "measure": "Maatstaf",
+    "holdingsBasis": "Posities",
+    "portfolioBasis": "Inclusief contanten",
+    "effectiveHoldings": "Effectief aantal posities",
+    "effectiveHoldingsValue": "{effective} van {positions}",
+    "effectiveHoldingsTooltip": "Hoeveel even grote posities uw geld op dezelfde manier zouden spreiden. Dit is alleen gelijk aan het aantal posities als ze allemaal even groot zijn; een lager getal betekent dat een paar posities overheersen.",
+    "largestPosition": "Grootste positie",
+    "topFive": "Top 5 posities",
+    "herfindahl": "Herfindahl-index",
+    "herfindahlTooltip": "De som van de gekwadrateerde gewichten, van 0 tot 1. 1 betekent dat alles in één positie zit; waarden dicht bij 0 betekenen veel posities van vergelijkbare grootte.",
+    "largestPositions": "Grootste posities",
+    "notAvailable": "Niet beschikbaar"
   }
 }

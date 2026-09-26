@@ -288,5 +288,24 @@
     "accountRequired": "账户为必填项",
     "dateRequired": "日期为必填项",
     "acquisitionPriceRequired": "每股价格为必填项，且必须大于零。对于成本未知的股份，请使用“增加股份”。"
+  },
+  "concentration": {
+    "title": "集中度",
+    "unavailable": "目前还没有可用于衡量集中度的已定价持仓。",
+    "partialHeading": "这些数据仅涵盖部分投资组合",
+    "partialUnpriced": "未计入：{count, plural, other {# 项}}没有当前价格的持仓。",
+    "partialFx": "没有 {pairs} 的汇率，因此这些货币的持仓未计入。",
+    "measure": "指标",
+    "holdingsBasis": "持仓",
+    "portfolioBasis": "含现金",
+    "effectiveHoldings": "有效持仓数",
+    "effectiveHoldingsValue": "{effective} / {positions}",
+    "effectiveHoldingsTooltip": "需要多少个规模相同的持仓才能以同样方式分散您的资金。只有当所有持仓规模相同时才等于持仓数量；数值越低，说明少数持仓占主导。",
+    "largestPosition": "最大持仓",
+    "topFive": "前 5 大持仓",
+    "herfindahl": "赫芬达尔指数",
+    "herfindahlTooltip": "各权重平方之和，介于 0 到 1 之间。1 表示全部集中在单一持仓；接近 0 表示有许多规模相近的持仓。",
+    "largestPositions": "最大持仓",
+    "notAvailable": "不可用"
   }
 }

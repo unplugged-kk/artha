@@ -288,5 +288,24 @@
     "accountRequired": "Akun wajib diisi",
     "dateRequired": "Tanggal wajib diisi",
     "acquisitionPriceRequired": "Harga per lembar wajib diisi dan harus lebih besar dari nol. Gunakan \"Tambah Lembar\" untuk lembar yang diperoleh tanpa biaya yang diketahui."
+  },
+  "concentration": {
+    "title": "Konsentrasi",
+    "unavailable": "Belum ada kepemilikan berharga untuk mengukur konsentrasi.",
+    "partialHeading": "Angka ini hanya mencakup sebagian portofolio",
+    "partialUnpriced": "Tidak disertakan: {count, plural, other {# kepemilikan}} tanpa harga terkini.",
+    "partialFx": "Tidak ada kurs untuk {pairs}, jadi kepemilikan dalam mata uang tersebut tidak disertakan.",
+    "measure": "Ukuran",
+    "holdingsBasis": "Kepemilikan",
+    "portfolioBasis": "Termasuk kas",
+    "effectiveHoldings": "Kepemilikan efektif",
+    "effectiveHoldingsValue": "{effective} dari {positions}",
+    "effectiveHoldingsTooltip": "Berapa banyak posisi berukuran sama yang akan membagi uang Anda dengan cara yang sama. Angka ini sama dengan jumlah posisi hanya jika semuanya berukuran sama; angka yang lebih rendah berarti beberapa posisi mendominasi.",
+    "largestPosition": "Posisi terbesar",
+    "topFive": "5 posisi teratas",
+    "herfindahl": "Indeks Herfindahl",
+    "herfindahlTooltip": "Jumlah bobot yang dikuadratkan, dari 0 sampai 1. 1 berarti semuanya berada di satu posisi; nilai mendekati 0 berarti banyak posisi dengan ukuran serupa.",
+    "largestPositions": "Posisi terbesar",
+    "notAvailable": "Tidak tersedia"
   }
 }
