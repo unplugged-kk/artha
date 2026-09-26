@@ -16,7 +16,7 @@ from the revision), and the specification does not require CIMD.
 ## Why it is not in the upgrade
 
 CIMD is an authorization-server feature, not a protocol-surface one: nothing
-about how Monize serves MCP requests changes with it. Adopting it means
+about how Artha serves MCP requests changes with it. Adopting it means
 accepting a URL where a client id is expected, fetching it, validating the
 document, and deciding what to do about every failure mode that fetch has --
 which is a new outbound request made on behalf of an unauthenticated caller,
@@ -43,7 +43,7 @@ flow, `mcp-remote` and the CLI all register dynamically.
 
 ## When to revisit
 
-Before the deprecation window closes, or as soon as a client Monize wants to
+Before the deprecation window closes, or as soon as a client Artha wants to
 serve presents a URL as its `client_id`. Until then DCR stays enabled and the
 `iss` parameter (RFC 9207), which the same revision asks for, is already on
 every authorization response.

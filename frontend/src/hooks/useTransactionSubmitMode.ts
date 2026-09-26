@@ -18,9 +18,9 @@ export type TransactionSubmitMode = 'close' | 'new';
  * under its own key, the way `lastTransactionDate.ts` keeps the two remembered
  * dates apart.
  */
-export const TRANSACTION_SUBMIT_MODE_KEY = 'monize-transaction-submit-mode';
+export const TRANSACTION_SUBMIT_MODE_KEY = 'artha-transaction-submit-mode';
 export const INVESTMENT_TRANSACTION_SUBMIT_MODE_KEY =
-  'monize-investment-transaction-submit-mode';
+  'artha-investment-transaction-submit-mode';
 
 const MODES: readonly TransactionSubmitMode[] = ['close', 'new'];
 

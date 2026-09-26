@@ -22,7 +22,7 @@ const SAMPLE_NOTES: ReleaseNotes = {
   version: CURRENT_VERSION,
   intro: "Intro.",
   sections: [{ heading: "Feature", body: "Body.", children: [] }],
-  releaseUrl: `https://github.com/kenlasko/monize/releases/tag/v${CURRENT_VERSION}`,
+  releaseUrl: `https://github.com/unplugged-kk/artha/releases/tag/v${CURRENT_VERSION}`,
 };
 
 describe("WhatsNewService", () => {

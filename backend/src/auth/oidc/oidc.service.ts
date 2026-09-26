@@ -76,7 +76,7 @@ export class OidcService implements OnModuleInit {
    * provider to challenge the user again rather than silently re-using its
    * existing session. That is the whole point of a re-authentication: without it
    * the round trip is a redirect the user never notices, and it proves nothing
-   * beyond what the Monize session already proved (P2-005). Both parameters are
+   * beyond what the Artha session already proved (P2-005). Both parameters are
    * sent because providers honour them unevenly -- `prompt=login` is the RFC 6749
    * spelling, `max_age=0` the OIDC Core one.
    */

@@ -185,7 +185,7 @@ describe('ForeignCurrencyFeesReport', () => {
 
   it('restores the persisted account selection', async () => {
     window.localStorage.setItem(
-      'monize-reports-foreign-currency-fees-accounts',
+      'artha-reports-foreign-currency-fees-accounts',
       JSON.stringify(['usd-1']),
     );
     await renderReport();
@@ -198,14 +198,14 @@ describe('ForeignCurrencyFeesReport', () => {
 
   it('drops persisted account IDs that are no longer eligible', async () => {
     window.localStorage.setItem(
-      'monize-reports-foreign-currency-fees-accounts',
+      'artha-reports-foreign-currency-fees-accounts',
       JSON.stringify(['usd-1', 'plain']),
     );
     await renderReport();
     // 'plain' has no FX fee, so it is not an option and is dropped.
     await waitFor(() => {
       expect(
-        window.localStorage.getItem('monize-reports-foreign-currency-fees-accounts'),
+        window.localStorage.getItem('artha-reports-foreign-currency-fees-accounts'),
       ).toBe(JSON.stringify(['usd-1']));
     });
   });

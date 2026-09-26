@@ -165,7 +165,7 @@ export class PushSubscriptionService {
    * Register (or refresh) the calling user's device.
    *
    * `pushManager.subscribe()` is scoped to a browser profile and an origin, not
-   * to a Monize session, so two accounts used in one browser can be handed the
+   * to a Artha session, so two accounts used in one browser can be handed the
    * *same* endpoint and the same encryption keys. One row per endpoint is what
    * stops both rows living at once; the question is what happens to the second
    * subscriber, and the answer is that it is **refused**, never a takeover.
@@ -730,7 +730,7 @@ export const ENDPOINT_UNIQUE_INDEX = "idx_push_subscriptions_endpoint";
  *
  * Both are also **scoped**, and that matters more than it looks: a bare code
  * match turns a missing INSERT grant -- an ordinary 42501, and a deployment
- * fault -- into "already registered to a different Monize account", and the
+ * fault -- into "already registered to a different Artha account", and the
  * client's automatic recovery then unsubscribes and destroys a working browser
  * registration before failing again. A conflict is a conflict only when the
  * database names this endpoint index or this table.

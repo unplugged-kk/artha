@@ -2,7 +2,7 @@ import { spawnSync } from "node:child_process";
 
 /**
  * `npm test` runs the unit suite and then the integration suite, in that order
- * and never at the same time -- the integration suites share one `monize_test`
+ * and never at the same time -- the integration suites share one `artha_test`
  * and rebuild its schema, so a second worker is a race rather than a speedup.
  *
  * This is a script rather than an `&&` chain in `package.json` because of what

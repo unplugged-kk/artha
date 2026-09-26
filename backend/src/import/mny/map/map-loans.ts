@@ -13,10 +13,10 @@ import {
 /**
  * Loan and mortgage terms inferred from the payments Money recorded.
  *
- * Money has no loan-terms table Monize can read directly, but a loan payment's
+ * Money has no loan-terms table Artha can read directly, but a loan payment's
  * *shape* says most of what the loan schedule and the interest-rate detection
  * need: a payment that transfers principal into the loan account and books
- * interest as a sibling category leg is exactly Monize's `SPLIT` interest
+ * interest as a sibling category leg is exactly Artha's `SPLIT` interest
  * booking mode, and the account the payment comes from is the loan's funding
  * account.
  *

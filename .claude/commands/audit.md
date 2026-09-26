@@ -1,12 +1,12 @@
 ---
-description: Monize Universal Adversarial PR Review Protocol — a deep, read-only implementation review that determines whether a change preserves the repository's material invariants across every affected layer, and ends in APPROVE or REQUEST CHANGES only after an independent adversarial approval-challenge pass.
+description: Artha Universal Adversarial PR Review Protocol — a deep, read-only implementation review that determines whether a change preserves the repository's material invariants across every affected layer, and ends in APPROVE or REQUEST CHANGES only after an independent adversarial approval-challenge pass.
 argument-hint: "[PR number | diff | branch | path]  (+ any priority hints, e.g. 'prioritize backup atomicity')"
 ---
 
-# Monize — Universal Adversarial PR Review Protocol
+# Artha — Universal Adversarial PR Review Protocol
 
 You are performing deep, read-only implementation reviews of pull requests and feature branches
-in the `monize` repository.
+in the `artha` repository.
 
 Your job is not merely to check whether the implementation appears reasonable or whether the
 tests pass.
@@ -28,7 +28,7 @@ it may be deferred, summarised, or loaded on demand.
 
 Two companion documents exist and neither replaces this file:
 
-- `docs/audits/monize-universal-adversarial-pr-review-project-prompt.md` — the **source
+- `docs/audits/artha-universal-adversarial-pr-review-project-prompt.md` — the **source
   document** this command implements, kept verbatim. It is the authority on every requirement
   below. Reconcile against it, never against a summary, a table, or a review of it.
 - `docs/audits/review-prompt-v3.md` — provenance, the two-layer structure, and the revision
@@ -160,7 +160,7 @@ Document contradictions between:
 
 Do not assume a test is authoritative when it contradicts a documented invariant.
 
-> **Monize.** No `AGENTS.md` exists today — check rather than assume. The `CLAUDE.md` files are
+> **Artha.** No `AGENTS.md` exists today — check rather than assume. The `CLAUDE.md` files are
 > the root, `backend/`, `frontend/`, `database/` and `backend/src/mcp/`. `docs/system-invariants.md`
 > is the invariant index (each entry carries `enforced` / `partial` / `unenforced`; an `unenforced`
 > entry describes something the system currently gets wrong). The contract set is
@@ -250,7 +250,7 @@ Examples:
 
 `loan payment -> DTO -> allocation rules -> interest accrual -> principal update -> schedule regeneration -> balances -> UI`
 
-> **Monize.** Name each invariant's ID from `docs/system-invariants.md` and the mechanism that
+> **Artha.** Name each invariant's ID from `docs/system-invariants.md` and the mechanism that
 > enforces it. An invariant whose mechanism cannot be named is already a finding: the repository's
 > rule is that "atomic", "single-use", "exactly once", "retryable", "cannot", "always",
 > "complete" and "transactional" must each name the transaction, index, conditional `UPDATE` or
@@ -305,7 +305,7 @@ must trigger a repo-wide producer/consumer audit.
 
 Unchanged callers are part of the review.
 
-> **Monize.** The consumer surfaces that have been missed here before: backend services, the AI
+> **Artha.** The consumer surfaces that have been missed here before: backend services, the AI
 > executor (`backend/src/ai/query/tool-executor.service.ts`), MCP tools
 > (`backend/src/mcp/tools/*`), dashboard, budgets, built-in reports, CSV/PDF export, and
 > `frontend/src/types/*`. Two repository findings make this concrete: a completeness flag the
@@ -427,7 +427,7 @@ as interchangeable unless the contract explicitly says so.
 
 For every nullable or optional API field, explicitly define what each representation means.
 
-> **Monize.** During a rolling deploy `absent` means "no information", so a completeness flag is
+> **Artha.** During a rolling deploy `absent` means "no information", so a completeness flag is
 > read `=== false`, never `!flag`. `zero` is not `null`: an empty account holds zero, moves zero,
 > realizes zero and owes zero — that is known, not unknown. Rate `1` means "same currency", never
 > "no rate found". A driver value is not a JSON value: `pg` returns `bytea` as a `Buffer` and
@@ -482,7 +482,7 @@ from:
 
 the review must prove the UI signal actually represents user intent.
 
-> **Monize.** This is a live defect class here: the transfer form resends the current accounts,
+> **Artha.** This is a live defect class here: the transfer form resends the current accounts,
 > amount and rate on every save, so `updateDto.amount !== undefined` does not mean the amount
 > changed. A change is a value difference, not a field being present — keying repricing off
 > presence made an idempotent full-form payload move a balance from a description-only edit. A
@@ -519,7 +519,7 @@ authoritative metadata.
 Client-supplied provenance or identity metadata must never become trusted merely because the
 server skipped a validation branch.
 
-> **Monize.** `userId` comes from the JWT (`req.user.id`), never from a param or body. A
+> **Artha.** `userId` comes from the JWT (`req.user.id`), never from a param or body. A
 > transaction's `currencyCode` is derived from the account via
 > `assertTransactionCurrencyMatchesAccount` — an unchecked `currencyCode` moved 100 EUR while
 > recording 100 USD, and both fields persist into every report and backup. A cross-currency
@@ -594,7 +594,7 @@ This applies especially to:
 - attachment upload;
 - asynchronous processing.
 
-> **Monize.** `VOID` means no balance moved, on every path that writes one — create, status-only
+> **Artha.** `VOID` means no balance moved, on every path that writes one — create, status-only
 > edit, bulk void, split parent. Verify the refusal exists on **every** entry point: single write,
 > bulk update, AI action, MCP tool, scheduled path. Where two rows can hold different statuses — a
 > cross-owner transfer's status is deliberately per-ledger — inclusion is decided per row, and
@@ -641,7 +641,7 @@ Test where applicable:
 Do not insist on a preferred mechanism when a different concrete mechanism actually enforces the
 invariant.
 
-> **Monize.** `docs/concurrency-and-idempotency.md` is the register of which mechanism to use when,
+> **Artha.** `docs/concurrency-and-idempotency.md` is the register of which mechanism to use when,
 > plus lock ordering and retry semantics. A rejected command must not already have written: every
 > check that can refuse — ownership, tenant, scenario identity, revision, precondition — runs
 > inside the same transaction as the mutation, and under the same lock where concurrency matters.
@@ -681,7 +681,7 @@ Verify:
 
 Do not assume a database rollback cleans up external side effects.
 
-> **Monize.** `docs/external-side-effects.md` gives the per-provider lifecycle. Order side effects
+> **Artha.** `docs/external-side-effects.md` gives the per-provider lifecycle. Order side effects
 > so a failure leaves *bytes nobody references* (a storage cost), never *a row promising bytes that
 > are gone*: write bytes before the commit and clean up on failure; delete bytes after it. The
 > `database` provider is the exception both ways. A post-commit recalculation must be dispatched
@@ -775,7 +775,7 @@ into:
 
 Verify migration ordering after rebases or integration with newer `main`.
 
-> **Monize.** `database/schema.sql` is updated alongside every migration, in both directions. Every
+> **Artha.** `database/schema.sql` is updated alongside every migration, in both directions. Every
 > migration must replay as a no-op on top of `schema.sql` (`CREATE ... IF NOT EXISTS`,
 > `DROP ... IF EXISTS` before `CREATE POLICY`/`TRIGGER`) because that is how the app boots; a
 > missing guard aborts container start-up and CI then reports only "backend exited (1)".
@@ -822,7 +822,7 @@ A backup is not correct merely because the SQL rows can be serialized.
 A restore is not correct merely because the database transaction rolls back: external objects may
 already have been created.
 
-> **Monize.** `docs/backup-restore-contract.md` is canonical. Every `bytea` column is read through
+> **Artha.** `docs/backup-restore-contract.md` is canonical. Every `bytea` column is read through
 > `encode(col, 'base64')` (`export-driver-values.spec.ts` fails if a new one is added without it).
 > Insertion order and deferred foreign keys are declared as data in `restore-plan.ts` and proven
 > against the schema by `restore-plan.spec.ts`. Paths go through `shardedSegments`
@@ -888,7 +888,7 @@ For a loan feature, explicitly test at minimum:
 Do not accept a financial test that only asserts object shape when the invariant is a monetary
 result.
 
-> **Monize.** `docs/financial-calculation-contract.md`, `docs/financial-semantics.md` and
+> **Artha.** `docs/financial-calculation-contract.md`, `docs/financial-semantics.md` and
 > `docs/time-series-contract.md` are canonical; read them before changing any financial
 > calculation. Money is `decimal(20,4)`, a rate is `NUMERIC(20,10)` — use `roundFxRate`, never
 > `roundMoney`, for rates, and round the *delta* too, since the difference of two 4dp decimals is
@@ -932,7 +932,7 @@ Trace actor and subject independently.
 A valid identifier from another tenant must not become usable merely because the client supplied
 it.
 
-> **Monize.** `docs/row-level-security-contract.md` is canonical for which tables are exempt and
+> **Artha.** `docs/row-level-security-contract.md` is canonical for which tables are exempt and
 > why. `withUserContext` collapses owner and delegate onto one id, silently returning zero rows for
 > whichever half it is not — a delegate acting on an owner's data needs `withDelegateContext`.
 > `withScopedDb` throws without an ambient identity context, so a bearer-only route such as `/mcp`
@@ -970,7 +970,7 @@ For every material regression test, state:
 
 If it mocks the exact layer where the defect could occur, it does not prove the full scenario.
 
-> **Monize.** A green suite after a behavior change is itself a finding: either the change is a
+> **Artha.** A green suite after a behavior change is itself a finding: either the change is a
 > no-op or the suite had no case for it — say which. A mocked filesystem cannot demonstrate a
 > filesystem property; `rename` being called is not the claim. A test that reads the wall clock is a
 > test about today's date. A guard walking the tree with `git ls-files` cannot see an untracked
@@ -1038,7 +1038,7 @@ Attempt to break the fix.
 
 Do not only prove the examples the implementer already anticipated.
 
-> **Monize.** `docs/testing-contract.md` lists the adversarial inputs that have broken this
+> **Artha.** `docs/testing-contract.md` lists the adversarial inputs that have broken this
 > codebase before (dates, money precision, aggregation, currency conversion, ownership,
 > concurrency) so a counterexample is selected from a list rather than recalled.
 
@@ -1104,7 +1104,7 @@ merely for DRY or structural similarity.
 > prove that their input semantics and user-intent contracts are identical. A deliberate exception
 > documented by a specification or regression test takes precedence over structural similarity.
 
-> **Monize.** Paths that look duplicated but are not: per-ledger reconciliation states vs the
+> **Artha.** Paths that look duplicated but are not: per-ledger reconciliation states vs the
 > shared VOID boundary; `applyRegisterOrder`'s credits-before-debits tiebreak; FX re-resolution
 > only on structural change; netting within one category but never across two, while the payee
 > surfaces deliberately do not net.
@@ -1307,7 +1307,7 @@ Then re-check:
 
 This protects against a fix that closes a new finding by reverting an earlier one.
 
-> **Monize.** Where the mistake is mechanical, prefer a source-scanning guard over a single case:
+> **Artha.** Where the mistake is mechanical, prefer a source-scanning guard over a single case:
 > `frontend/src/test/ui-conventions.test.ts`, `investment-replay.guard.spec.ts`,
 > `deletion-balance.guard.spec.ts`, `fx-fallback.guard.spec.ts` are the pattern. A regression test
 > must fail on the *original* mistake, not merely cover the fix.
@@ -1377,7 +1377,7 @@ If hosted CI is unavailable, say so explicitly.
 
 Do not convert locally reported tests into independently verified CI results.
 
-> **Monize.** Also confirm: `database/schema.sql` parity and idempotent migration replay;
+> **Artha.** Also confirm: `database/schema.sql` parity and idempotent migration replay;
 > `required-db-functions.ts` registration; zero discovered tests treated as a failure
 > (`docs/release-integrity.md`); the tested, imaged and tagged revision is one revision; and i18n
 > parity for `main` (English-first during development, pseudo-locale regenerated, no duplicate

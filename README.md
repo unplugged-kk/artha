@@ -5,35 +5,18 @@ Unified self-hosted India-first personal finance platform.
 > **Provenance:** artha is a fork of [Monize](https://github.com/kenlasko/monize) (AGPL-3.0-only, all upstream copyright notices and license files retained verbatim). Divergence roadmap is India-first: AMFI/NSE market data, UPI/SMS/CAS imports, India instruments, FY-versioned tax engine. Upstream attribution is preserved; see LICENSE.
 
 <p align="center">
-  <img src="frontend/public/icons/monize-logo.svg" alt="Monize" width="128" height="128" />
+  <img src="frontend/public/icons/artha-logo.svg" alt="Artha" width="128" height="128" />
 </p>
 
-# Monize
+# Artha
 > [!CAUTION] 
 > This project is 100% written by AI. I've done practically zero manual changes. I am not a programmer by trade, but have dabbled in various languages over the years. This gives me high-level awareness on coding practices, but **I AM NOT SKILLED IN THE LANGUAGES USED IN THIS PRODUCT**. I have spent months prompting Claude Code for features, updates, fixes and tweaks. I have taken steps to ensure this is secure as it can be, given the constraints. I've performed numerous security audits (both AI-prompted and 3rd party) and have implemented best-practice security measures as much as I can (including 2FA and OIDC support). Every build must pass NPM audits and security scans before publishing. However, I can't personally guarantee the security of this code. **YOU HAVE BEEN WARNED**. 
-
-<div align="center">
-<table>
-<tr>
-<td align="center"><a href="https://raw.githubusercontent.com/wiki/kenlasko/monize/images/dashboard-overview.png"><img src="https://raw.githubusercontent.com/wiki/kenlasko/monize/images/dashboard-overview.png" width="400" alt="Dashboard Overview"/></a></td>
-<td align="center"><a href="https://raw.githubusercontent.com/wiki/kenlasko/monize/images/transactions-page.png"><img src="https://raw.githubusercontent.com/wiki/kenlasko/monize/images/transactions-page.png" width="400" alt="Transactions"/></a></td>
-<td align="center"><a href="https://raw.githubusercontent.com/wiki/kenlasko/monize/images/bills-deposits-page.png"><img src="https://raw.githubusercontent.com/wiki/kenlasko/monize/images/bills-deposits-page.png" width="400" alt="Bills & Deposits"/></a></td>
-<td align="center"><a href="https://raw.githubusercontent.com/wiki/kenlasko/monize/images/investments-page.png"><img src="https://raw.githubusercontent.com/wiki/kenlasko/monize/images/investments-page.png" width="400" alt="Investments"/></a></td>
-</tr>
-<tr>
-<td align="center"><b>Dashboard</b></td>
-<td align="center"><b>Transactions</b></td>
-<td align="center"><b>Bills & Deposits</b></td>
-<td align="center"><b>Investments</b></td>
-</tr>
-</table>
-</div>
 
 A comprehensive personal finance management application built with NestJS and Next.js. Designed as a replacement for Microsoft Money and Intuit Quicken. 100% built using farm-fresh, free-range Claude Code.
 
 <div align="center">
 
-### [**Live Demo**](https://demo.monize.net) | [**Wiki**](https://github.com/kenlasko/monize/wiki)
+### [**Repository**](https://github.com/unplugged-kk/artha)
 
 </div>
 
@@ -62,9 +45,9 @@ My perfect product to replace MS Money needed the following features:
 - Must support PostgreSQL for the backend tables
 - Must have a usable mobile app or web interface
 
-Since I couldn't find anything out there to meet that criteria, I decided to create Monize! After weeks of vibe-coding and testing, I finally was able to migrate ALL of 30+ years of Microsoft Money data into Monize with no errors or discrepancies. Microsoft Money has finally been retired!
+Since I couldn't find anything out there to meet that criteria, I decided to create Artha! After weeks of vibe-coding and testing, I finally was able to migrate ALL of 30+ years of Microsoft Money data into Artha with no errors or discrepancies. Microsoft Money has finally been retired!
 
-Monize is running in my [Kubernetes cluster](https://github.com/kenlasko/k8s).
+Artha is running in my [Kubernetes cluster](https://github.com/kenlasko/k8s).
 
 
 ## Features
@@ -89,7 +72,7 @@ Monize is running in my [Kubernetes cluster](https://github.com/kenlasko/k8s).
 - Microsoft Money full-file import: read a `.mny` file directly -- accounts, transfers, splits, investments, price history, exchange rates and scheduled bills -- and reconcile every balance against the file afterwards ([guide](docs/import-ms-money.md))
 - Quicken full-file import: import all accounts, categories, and tags from a single QIF export
 - Data reset: wipe financial data and re-import without losing your user account or settings
-- Share into the app on Android: with Monize installed as a PWA, share a receipt photo, a PDF or a statement export (CSV, OFX, QFX, QIF) to it from another app and land on a review screen that offers to attach it to a new transaction or open the import wizard. Nothing is imported or attached until you choose it, and shared files are kept on the device for an hour
+- Share into the app on Android: with Artha installed as a PWA, share a receipt photo, a PDF or a statement export (CSV, OFX, QFX, QIF) to it from another app and land on a review screen that offers to attach it to a new transaction or open the import wizard. Nothing is imported or attached until you choose it, and shared files are kept on the device for an hour
 
 ### Investment Features
 - Track stocks, bonds, ETFs, mutual funds, options, GICs and cryptocurrency
@@ -199,7 +182,7 @@ Monize is running in my [Kubernetes cluster](https://github.com/kenlasko/k8s).
 ## Project Structure
 
 ```
-monize/
+artha/
 ├── backend/                    # NestJS backend application
 │   ├── src/
 │   │   ├── auth/              # Authentication (Local, OIDC, 2FA, trusted devices, PAT)
@@ -260,8 +243,8 @@ monize/
 
 1. Clone the repository:
 ```bash
-git clone git@github.com:kenlasko/monize.git
-cd monize
+git clone git@github.com:unplugged-kk/artha.git
+cd artha
 ```
 
 2. Copy environment variables:
@@ -297,15 +280,15 @@ npm install
 
 2. Set up PostgreSQL database:
 ```bash
-createdb monize
-psql monize < ../database/schema.sql
+createdb artha
+psql artha < ../database/schema.sql
 ```
 
 3. Create `backend/.env`:
 ```env
 DATABASE_HOST=localhost
 DATABASE_PORT=5432
-DATABASE_NAME=monize
+DATABASE_NAME=artha
 DATABASE_USER=your_user
 DATABASE_PASSWORD=your_password
 JWT_SECRET=your-secret-key
@@ -331,8 +314,8 @@ npm run dev
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `POSTGRES_DB` | Database name | `monize` |
-| `POSTGRES_USER` | Database user | `monize_user` |
+| `POSTGRES_DB` | Database name | `artha` |
+| `POSTGRES_USER` | Database user | `artha_user` |
 | `POSTGRES_PASSWORD` | Database password | `secure-password` |
 | `JWT_SECRET` | JWT signing key (min 32 chars) | `openssl rand -base64 32` |
 | `PUBLIC_APP_URL` | Public frontend URL | `https://money.example.com` |
@@ -370,9 +353,9 @@ npm run dev
 | `DISABLE_HTTPS_HEADERS` | Disable HSTS and COOP headers for plain HTTP | `false` |
 | `DEMO_MODE` | Enable demo mode with sample data | `false` |
 | `BACKUP_CONTAINER_DIR` | Container folder automatic backups are written to (each user gets a `<ab>/<cd>/<user-id>/` folder underneath it) | `/data/backups` |
-| `BACKUP_HOST_DIR` | Host folder mapped to `BACKUP_CONTAINER_DIR` by docker-compose | `./monize/backups` |
+| `BACKUP_HOST_DIR` | Host folder mapped to `BACKUP_CONTAINER_DIR` by docker-compose | `./artha/backups` |
 | `ATTACHMENT_CONTAINER_DIR` | Container folder local attachments are written to (was `ATTACHMENT_LOCAL_DIR`) | `/data/attachments` |
-| `ATTACHMENT_HOST_DIR` | Host folder mapped to `ATTACHMENT_CONTAINER_DIR` by docker-compose | `./monize/attachments` |
+| `ATTACHMENT_HOST_DIR` | Host folder mapped to `ATTACHMENT_CONTAINER_DIR` by docker-compose | `./artha/attachments` |
 | `SMTP_SECURE` | Use TLS for SMTP | `false` |
 
 The `AI_DEFAULT_*` and `AI_QUERY_*` variables configure the **centrally managed

@@ -11,7 +11,7 @@ import { DEFAULT_APP_USER } from "@/common/db/rls-config";
  *
  * `synchronize: true` builds the schema from entity metadata, which gives the
  * integration suites tables and columns but **none** of the database objects
- * that only exist in SQL: no `monize_app` role, no grants, no RLS helper
+ * that only exist in SQL: no `artha_app` role, no grants, no RLS helper
  * functions, no policies, and no `updated_at` triggers. Every one of those is
  * something the RLS work depends on, so without this step T2's enforcement
  * assertions and C5's restore acceptance would pass vacuously against a
@@ -29,10 +29,10 @@ const SCHEMA_SQL = path.join(__dirname, "../../../database/schema.sql");
 
 /**
  * Password for the test-only runtime role. Not a secret: the role exists in the
- * throwaway `monize_test` database so specs can `SET LOCAL ROLE` to a non-owner
+ * throwaway `artha_test` database so specs can `SET LOCAL ROLE` to a non-owner
  * and observe policies actually filtering (the owner bypasses RLS).
  */
-export const TEST_APP_ROLE_PASSWORD = "monize_test_app_password";
+export const TEST_APP_ROLE_PASSWORD = "artha_test_app_password";
 
 /** Role name the harness provisions, matching the app's default. */
 export const TEST_APP_ROLE = process.env.DATABASE_APP_USER || DEFAULT_APP_USER;
@@ -284,7 +284,7 @@ export async function applyRlsPolicies(
   { includeEnable = false }: { includeEnable?: boolean } = {},
 ): Promise<void> {
   // 1. The role first: the grants below are meaningless without it, and a spec
-  //    doing `SET LOCAL ROLE monize_app` needs it to exist. Never throws on a
+  //    doing `SET LOCAL ROLE artha_app` needs it to exist. Never throws on a
   //    privilege shortfall -- it warns -- so the grant assertion below is what
   //    actually proves it worked.
   await provisionAppRole(dataSource, {

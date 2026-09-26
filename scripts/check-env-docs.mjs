@@ -54,9 +54,9 @@ const IGNORED = new Set([
   // stderr). Not deployment configuration: the harness is a measurement tool
   // nothing in the server imports, and documenting these in .env.example would
   // invite an operator to set them.
-  'MONIZE_PEAK_RSS_ARTIFACT',
-  'MONIZE_PEAK_RSS_DEBUG',
-  'MONIZE_PEAK_RSS_PASSWORD',
+  'ARTHA_PEAK_RSS_ARTIFACT',
+  'ARTHA_PEAK_RSS_DEBUG',
+  'ARTHA_PEAK_RSS_PASSWORD',
 ]);
 
 const REFERENCE_PATTERNS = [

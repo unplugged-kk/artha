@@ -30,7 +30,7 @@ const logger = createLogger('CurrencyList');
 /**
  * Every field this list sorts by, with its position in the tier header's own
  * order. The phone's slim control header renders all of them: the chosen field
- * is persisted (`monize-currencies-sort-field`, set on the Currencies page) and
+ * is persisted (`artha-currencies-sort-field`, set on the Currencies page) and
  * two of the five columns are hidden at phone width (Name below `sm`, Decimals
  * below `lg`), so a header offering fewer would strand a phone on a sort order
  * it can neither see nor undo. Usage, Status and Actions are absent because the

@@ -22,7 +22,7 @@ codec tests; they contain no real personal financial data.
 | `money2008-pwd.mny` | Money Plus / Sunset | new (SHA-1 digest) | `Test12345` |
 | `sample-cd-redemption.mny` | Money Plus / Sunset | new (SHA-1 digest) | none |
 
-`sample-cd-redemption.mny` was purpose-built for Monize with synthetic data and
+`sample-cd-redemption.mny` was purpose-built for Artha with synthetic data and
 contains no personal financial data. Its "Sample 3-month CD" activity is a
 5,000 purchase, three reinvested-interest
 transactions of 20 each, and a 5,061 redemption comprising 5,060 of proceeds
@@ -51,4 +51,4 @@ crashed the PR #192 proof of concept, and it is the fixture that guards
 The five `money20*.mny` files are Apache License 2.0, Copyright the
 jackcess-encrypt authors. See <https://www.apache.org/licenses/LICENSE-2.0>.
 They are retained here under that licence. `sample-cd-redemption.mny` is part of
-Monize and is licensed under the repository's AGPL-3.0-only licence.
+Artha and is licensed under the repository's AGPL-3.0-only licence.

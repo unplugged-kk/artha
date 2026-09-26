@@ -20,7 +20,7 @@ import { createLogger } from '@/lib/logger';
 
 const logger = createLogger('useMonteCarloScenarios');
 
-const ACTIVE_ID_KEY = 'monize-monte-carlo-active-id';
+const ACTIVE_ID_KEY = 'artha-monte-carlo-active-id';
 
 export const MAX_COMPARE_SCENARIOS = 4;
 

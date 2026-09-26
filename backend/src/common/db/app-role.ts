@@ -2,10 +2,10 @@ import { Logger } from "@nestjs/common";
 import { DEFAULT_APP_USER } from "./rls-config";
 
 /**
- * Provisioning of the unprivileged `monize_app` runtime role and its DML grants.
+ * Provisioning of the unprivileged `artha_app` runtime role and its DML grants.
  *
  * This lives in db-init (run as the DB owner on every startup), NOT in a
- * migration: a migration that referenced the role (`GRANT ... TO monize_app`,
+ * migration: a migration that referenced the role (`GRANT ... TO artha_app`,
  * `ALTER DEFAULT PRIVILEGES FOR ROLE ...`) would run unconditionally at startup
  * and crash-loop any deployment where the role does not yet exist. Keeping all
  * role/grant SQL here is what lets existing deployments upgrade with zero new
@@ -35,14 +35,14 @@ export interface RoleProvisionLogger {
  * definition, and `format('%I', ...)` quotes it as an identifier so a hostile
  * role name cannot inject SQL.
  */
-export const APP_ROLE_NAME_GUC = "monize.app_role";
+export const APP_ROLE_NAME_GUC = "artha.app_role";
 
 /**
  * Session GUC that carries the password into the DO block. The password reaches
  * SQL only via a parameterized `set_config` (never string interpolation), then
  * `format('%L', ...)` quotes it as a literal inside the CREATE/ALTER ROLE.
  */
-export const APP_ROLE_PASSWORD_GUC = "monize.app_password";
+export const APP_ROLE_PASSWORD_GUC = "artha.app_password";
 
 /**
  * The attribute set that makes the role unprivileged, spelled out on both the

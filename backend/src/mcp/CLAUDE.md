@@ -1,6 +1,6 @@
 # MCP Server
 
-Monize exposes its financial data over the **Model Context Protocol** so MCP clients (Claude Desktop's "Add Connector", IDE agents, etc.) can query and act on a user's finances. This directory is the whole server: transport, the `McpServer` factory, and the tool/resource/prompt definitions. Built on the v2 SDK (`@modelcontextprotocol/server` + `@modelcontextprotocol/node`).
+Artha exposes its financial data over the **Model Context Protocol** so MCP clients (Claude Desktop's "Add Connector", IDE agents, etc.) can query and act on a user's finances. This directory is the whole server: transport, the `McpServer` factory, and the tool/resource/prompt definitions. Built on the v2 SDK (`@modelcontextprotocol/server` + `@modelcontextprotocol/node`).
 
 ## Two protocol revisions, one definition
 
@@ -81,7 +81,7 @@ Checklist for a new tool:
 3. Add its output schema to `tool-output-schemas.ts` (conventions below) and import it.
 4. Pick the right annotation preset (below).
 5. If it mutates data, derive scope `"write"`, enforce the daily write limit via `McpWriteLimiter` (see `transactions.tool.ts`), and sanitize user strings with `stripHtml(...)` before persisting. Gate the write behind a user confirmation with `confirmWrite(server, ctx, message, action)`, passing the signed action descriptor as it is -- `confirmationFingerprint` strips the per-build fields itself (see below), so a caller neither may nor need pre-trim it. **Handle all four outcomes**: return `outcome.ask` unchanged when `isAsk(outcome)` (the question, on 2026-07-28 -- write nothing), persist on `"accepted"`/`"unsupported"`, and return a `toolError` without writing on `"declined"`. `"unsupported"` means no dialog reached a human -- the client still gates every tool call with its own approval prompt, so proceeding is not a consent bypass.
-   - **Relay first.** When the call is serving a prompt the user typed in the Monize web chat (reverse relay), confirm there instead: build the signed `PendingAiAction` with `AiActionBuilderService` (shared with the AI Assistant tool executor) and emit it. If the card is shown in the browser (committed via `/ai/actions/confirm` on approval), return `RELAY_PREVIEW_SHOWN` and do NOT write or `confirmWrite`; otherwise fall through to `confirmWrite`. Offer the card only when `ctx.mcpReq.requestState()` is absent -- a retry round already carries the user's answer.
+   - **Relay first.** When the call is serving a prompt the user typed in the Artha web chat (reverse relay), confirm there instead: build the signed `PendingAiAction` with `AiActionBuilderService` (shared with the AI Assistant tool executor) and emit it. If the card is shown in the browser (committed via `/ai/actions/confirm` on approval), return `RELAY_PREVIEW_SHOWN` and do NOT write or `confirmWrite`; otherwise fall through to `confirmWrite`. Offer the card only when `ctx.mcpReq.requestState()` is absent -- a retry round already carries the user's answer.
 6. Update `mcp-server.service.ts` count and `mcp.module.ts` if it's a new provider class.
 7. Add/extend tests (below). `mcp-annotations.spec.ts` enforces that every tool has title + input/output schema + annotations with the right read/write hints -- bump `EXPECTED_TOOL_COUNT` and `WRITE_TOOLS`/`IDEMPOTENT_WRITES`.
 
@@ -193,7 +193,7 @@ There is no destructive preset for a read tool. The four `manage_*` tools take `
 
 ## Scopes
 
-`requireScope(ctx.scopes, ...)` gates each handler. Scopes in use: `read` (queries, including report/anomaly tools) and `write` (mutations). Resources gate with `hasScope(ctx.scopes, "read")`. There is no separate `reports` scope: the OAuth layer only issues `monize:read`/`monize:write`, so reports are folded into `read`.
+`requireScope(ctx.scopes, ...)` gates each handler. Scopes in use: `read` (queries, including report/anomaly tools) and `write` (mutations). Resources gate with `hasScope(ctx.scopes, "read")`. There is no separate `reports` scope: the OAuth layer only issues `artha:read`/`artha:write`, so reports are folded into `read`.
 
 ## Resources & prompts
 

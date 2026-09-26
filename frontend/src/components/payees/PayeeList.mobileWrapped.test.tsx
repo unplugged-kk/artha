@@ -471,7 +471,7 @@ describe('the payees list on a phone', () => {
     const { container } = renderList([makePayee({ id: 'p1', name: 'Walmart' })], { onSort });
 
     // The page owns the ordering (and persists the field in
-    // `monize-payees-sort-field`), so the claim here is that every button
+    // `artha-payees-sort-field`), so the claim here is that every button
     // reaches it -- including the five fields whose columns a phone cannot see.
     for (const button of Array.from(container.querySelectorAll<HTMLButtonElement>('thead button'))) {
       fireEvent.click(button);

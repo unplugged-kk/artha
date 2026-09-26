@@ -98,7 +98,7 @@ describe("mapAccounts", () => {
   }
 
   describe("account types", () => {
-    // Every `at` value in the Money format reference, and what Monize calls it.
+    // Every `at` value in the Money format reference, and what Artha calls it.
     const cases: Array<[number, AccountType]> = [
       [MNY_ACCOUNT_TYPE.BANK, AccountType.CHEQUING],
       [MNY_ACCOUNT_TYPE.CREDIT_CARD, AccountType.CREDIT_CARD],
@@ -264,7 +264,7 @@ describe("mapAccounts", () => {
         "USD",
       );
 
-      // Two investment accounts, so two pairs -- four Monize accounts.
+      // Two investment accounts, so two pairs -- four Artha accounts.
       expect(result.accounts).toHaveLength(4);
     });
   });
@@ -522,7 +522,7 @@ describe("mapCategories", () => {
     expect(result.categories).toEqual([]);
   });
 
-  it("maps a level-1 category to a Monize top-level category", () => {
+  it("maps a level-1 category to a Artha top-level category", () => {
     const result = mapCategories(
       tree([
         mnyCategory({ handle: 200, name: "Utilities", level: 1, parent: 131 }),

@@ -79,10 +79,10 @@ export class McpServerService {
     // is never staler than the connection.
     const today = new Date().toISOString().substring(0, 10);
     const server = new McpServer(
-      { name: "monize", version: backendPkg.version },
+      { name: "artha", version: backendPkg.version },
       {
         instructions: [
-          "Monize is a personal finance management service: accounts, transactions, investments, budgets and reports for one user.",
+          "Artha is a personal finance management service: accounts, transactions, investments, budgets and reports for one user.",
           "",
           `Today is ${today}. Resolve relative ranges ('this month', 'last 30 days') against it and pass YYYY-MM-DD; report months are YYYY-MM.`,
           "",
@@ -102,7 +102,7 @@ export class McpServerService {
           "- Net worth and balances: list_accounts.",
           "- Specific transactions: list_transactions, and only then with includeTransactions.",
           "- Upcoming bills: list_upcoming_bills. Investments: get_portfolio_summary, which includes a per-account breakdown.",
-          "- monize://financial-summary answers a snapshot question with no tool call; monize://accounts and monize://categories resolve names to ids.",
+          "- artha://financial-summary answers a snapshot question with no tool call; artha://accounts and artha://categories resolve names to ids.",
           "",
           "## Web-chat relay",
           "- When get_next_prompt hands you a prompt, its `guidance` field says how to report progress, batch work and finish the turn. Follow it.",

@@ -20,7 +20,7 @@ const NOTES: ReleaseNotes = {
     },
     { heading: 'Bug Fixes', body: 'Fixed a thing.', children: [] },
   ],
-  releaseUrl: 'https://github.com/kenlasko/monize/releases/tag/v1.12.1',
+  releaseUrl: 'https://github.com/unplugged-kk/artha/releases/tag/v1.12.1',
 };
 
 function renderModal(props: Partial<React.ComponentProps<typeof WhatsNewModal>> = {}) {

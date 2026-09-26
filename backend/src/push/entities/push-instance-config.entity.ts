@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryColumn, UpdateDateColumn } from "typeorm";
 
 /**
- * This deployment's Web Push identity: one VAPID key pair per Monize instance,
+ * This deployment's Web Push identity: one VAPID key pair per Artha instance,
  * not per user.
  *
  * The pair is generated on first start (`PushConfigService`) so a self-hosted

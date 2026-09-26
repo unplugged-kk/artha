@@ -3,7 +3,7 @@
 ## Goal
 
 Let an account owner mark any of their accounts as a **joint account** for one or more other
-Monize users. A joint account appears in each grantee's **own** account list, register and net
+Artha users. A joint account appears in each grantee's **own** account list, register and net
 worth as if it were native -- no context switching -- while the owner keeps per-user
 read / create / edit / delete control through the existing Shared Access grants. Both sides can
 always see that the account is joint: the grantee sees who shares it, the owner sees how many
@@ -130,7 +130,7 @@ scheduled transactions and holdings on joint accounts not natively visible; no n
 creation; built-in/custom reports and **all AI Assistant + MCP tools** exclude joint rows (the two
 AI layers change together or not at all -- "not at all" in v1); investment breakdowns exclude
 joint INVESTMENT accounts (the plain net-worth total includes them); grantee CSV/QIF export
-deferred; the joint toggle is offered only for delegates who are full Monize accounts
+deferred; the joint toggle is offered only for delegates who are full Artha accounts
 (`isFullAccount`), never owner-managed credential identities.
 
 The account-scoped transaction analytics -- `GET /transactions/summary`, `/grouped-totals` and

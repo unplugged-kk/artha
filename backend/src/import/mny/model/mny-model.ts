@@ -5,7 +5,7 @@ import { InvestmentAction } from "../../../securities/entities/investment-transa
 import { TransactionStatus } from "../../../transactions/entities/transaction.entity";
 
 /**
- * Microsoft Money's coded values, and how they map onto Monize's domain.
+ * Microsoft Money's coded values, and how they map onto Artha's domain.
  *
  * Every constant here is either **confirmed** against the committed fixtures
  * (see `mny-model.spec.ts`, which asserts the fixture evidence) or carried
@@ -47,7 +47,7 @@ const ACCOUNT_TYPE_BY_CODE: ReadonlyMap<number, AccountType> = new Map([
 ]);
 
 /**
- * The Monize account type for a Money `at` code, or null when the code is
+ * The Artha account type for a Money `at` code, or null when the code is
  * unknown. Money has no separate savings type, so bank accounts land on
  * CHEQUING; the wizard lets the user change it.
  */
@@ -95,12 +95,12 @@ const STATUS_BY_CODE: ReadonlyMap<number, TransactionStatus> = new Map([
  * | 0x4000 | Loan-payment template | 50 rows, which is **exactly** the ten account-less `ps = 5` split parents plus their legs and those legs' transfer counterparts -- set equality in both directions, and one family per loan or mortgage account |
  * | 0x200000 | Member of a scheduled series | 4,653 of 4,692 are `frq != -1` templates, and no template lacks it |
  *
- * Only the two Monize acts on are exported; the rest are documented here and in
+ * Only the two Artha acts on are exported; the rest are documented here and in
  * `docs/ms-money-data-model.md` so the next reader does not have to re-measure.
  */
 export const MNY_TRANSACTION_FLAG = {
   /**
-   * Transaction is voided. Monize imports it with status VOID.
+   * Transaction is voided. Artha imports it with status VOID.
    *
    * PR #192's format reference called this 0x80, and 0x80 is the bit every loan
    * and mortgage payment carries -- so **every loan payment imported as VOID**,
@@ -188,7 +188,7 @@ export function isDebtAccountRow(flags: number): boolean {
 
 /**
  * The reference (Money's "Num" column) a `TRN.szId` holds, or null for a value
- * Monize has nothing to show.
+ * Artha has nothing to show.
  *
  * **`szId` packs two fields into one string**: a leading digit saying what kind
  * of reference it is, then the reference itself. Imported whole, it reads as
@@ -311,7 +311,7 @@ export function isRecurrenceTemplate(frequency: number): boolean {
 }
 
 /**
- * The Monize status for a transaction. Voided wins over the reconciliation
+ * The Artha status for a transaction. Voided wins over the reconciliation
  * state; an unknown `cs` falls back to UNRECONCILED, which is the safe
  * direction (a wrongly-reconciled row hides a real discrepancy).
  */
@@ -428,7 +428,7 @@ export const MNY_ACTION = {
   /**
    * Money's "Redeem CD/Bond": a fixed-income instrument sold back, optionally
    * carrying accrued interest inside its cash figure. Issue #1149. Mapped to
-   * Monize's REDEEM (a sale in behaviour), and `TRN.amt` wins as the total
+   * Artha's REDEEM (a sale in behaviour), and `TRN.amt` wins as the total
    * (see `totalAmountOf`), so the accrued-interest component is included the
    * same way Money includes it.
    */
@@ -447,14 +447,14 @@ const ACTION_BY_CODE: ReadonlyMap<number, InvestmentAction> = new Map([
   [MNY_ACTION.INTEREST, InvestmentAction.INTEREST],
   [MNY_ACTION.REINVEST_ALT, InvestmentAction.REINVEST],
   [MNY_ACTION.REINVEST, InvestmentAction.REINVEST],
-  // Money's activity vocabulary now exists 1:1 in Monize (issue #1149), so
+  // Money's activity vocabulary now exists 1:1 in Artha (issue #1149), so
   // nothing is collapsed: the income kind -- interest versus short- versus
   // long-term capital gain, paid out versus reinvested -- survives the import
   // for tax reporting. Each of these behaves financially exactly as its base
   // action does (see `baseInvestmentAction`).
   [MNY_ACTION.REINVEST_INTEREST, InvestmentAction.REINVEST_INTEREST],
   // Value and quantity like a buy, cash like a reinvestment -- and REINVEST is
-  // the only Monize action that is both, so the cost basis survives.
+  // the only Artha action that is both, so the cost basis survives.
   [MNY_ACTION.CONTRIBUTION, InvestmentAction.REINVEST],
   [MNY_ACTION.REMOVE_SHARES, InvestmentAction.REMOVE_SHARES],
   [MNY_ACTION.CAPITAL_GAIN, InvestmentAction.CAPITAL_GAIN],
@@ -482,7 +482,7 @@ const ACTION_BY_CODE: ReadonlyMap<number, InvestmentAction> = new Map([
  *
  * `CONTRIBUTION` is here because the file proves what it does -- to a
  * position, and to cash -- and issue #1149 supplies Money's name for it
- * ("Add Shares"), but Monize models it as REINVEST so the stated value
+ * ("Add Shares"), but Artha models it as REINVEST so the stated value
  * survives as cost basis; the warning keeps that translation reviewable.
  * The `act` 10 / 24 / 26 / 27 / 29 / 30 distribution family is the converse:
  * each is named by issue #1149's reporter against Money's own register and
@@ -526,7 +526,7 @@ const CASH_ONLY_ACTIONS: ReadonlySet<number> = new Set([
 ]);
 
 /**
- * The Monize action for a Money `act` code, or null when the code is unknown.
+ * The Artha action for a Money `act` code, or null when the code is unknown.
  * Unknown codes are skipped and counted, never guessed.
  *
  * Direction always comes from the action -- `TRN_INV.qty` is stored positive,
@@ -681,7 +681,7 @@ const UNIT_DAYS: Record<number, number> = {
 export interface MnyFrequencyMapping {
   readonly frequency: FrequencyType;
   /**
-   * True when Monize has no type for the cadence Money recorded, so the mapping
+   * True when Artha has no type for the cadence Money recorded, so the mapping
    * changes how often the bill falls due and the mapper must warn per bill.
    * Every cadence Money's own picker offers maps exactly -- `EVERY4MONTHS` and
    * `EVERY2YEARS` were added for the last two of them -- so this is reserved
@@ -723,7 +723,7 @@ function nearestShorterFrequency(days: number): FrequencyType {
 }
 
 /**
- * Maps a Money recurrence onto a Monize frequency.
+ * Maps a Money recurrence onto a Artha frequency.
  *
  * Returns null for an unknown `frq`, which the mapper reports (`unusableBill`,
  * with the raw pair) rather than guesses. The bill mapper asks the series' own

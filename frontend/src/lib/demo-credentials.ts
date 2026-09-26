@@ -6,5 +6,5 @@
  * reads that file and fails when the two drift, because a form that pre-fills
  * a password the seed no longer sets is a demo nobody can enter.
  */
-export const DEMO_USER_EMAIL = 'demo@monize.com';
+export const DEMO_USER_EMAIL = 'demo@artha.local';
 export const DEMO_USER_PASSWORD = 'Demo123!';

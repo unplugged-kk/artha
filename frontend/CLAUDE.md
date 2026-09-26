@@ -130,7 +130,7 @@ Tailwind v4 trap: the bare `shadow` utility is a legacy alias with the stock val
 
 ### An auth screen renders inside `AuthShell`
 
-`components/auth/AuthShell.tsx` is the single shell for login, register, forgot/reset/change-password, verify-email and setup-2fa: transparent brand mark, title/subtitle, notices slot, shared `Card` around the body (`plain` for a bare status line). Language picker and version line are opt-in props. Use `/icons/monize-logo-transparent.svg` everywhere in the UI -- the boxed `monize-logo.svg` bakes in a white background and renders as a white square in dark mode. Guarded in `ui-conventions.test.ts`.
+`components/auth/AuthShell.tsx` is the single shell for login, register, forgot/reset/change-password, verify-email and setup-2fa: transparent brand mark, title/subtitle, notices slot, shared `Card` around the body (`plain` for a bare status line). Language picker and version line are opt-in props. Use `/icons/artha-logo-transparent.svg` everywhere in the UI -- the boxed `artha-logo.svg` bakes in a white background and renders as a white square in dark mode. Guarded in `ui-conventions.test.ts`.
 
 ### Navigation links and their icons live in `lib/nav-links.ts`
 
@@ -593,7 +593,7 @@ The hook answers `configured: false` until the status settles **and** for a stat
 
 ### A push subscription belongs to an account; `localStorage` belongs to an origin
 
-`monize.push.registeredEndpoint` records the endpoint this browser registered
+`artha.push.registeredEndpoint` records the endpoint this browser registered
 **and whose registration it was** (`rememberRegisteredEndpoint(userId,
 fingerprint)`), because two people share one browser profile: with the owner
 missing, the second account signing in saw a subscription it had no server row
@@ -627,7 +627,7 @@ the browser had refused after they had allowed it, with the Enable button hidden
 
 ### A shared file has one accept list and one reader -- `share-target.ts`, `share-inbox.ts`
 
-The Web Share Target puts Monize in the OS share sheet, and the two halves of it
+The Web Share Target puts Artha in the OS share sheet, and the two halves of it
 each live in exactly one file:
 
 - **`lib/share-target.ts` is the accept list, the limits and the
@@ -740,7 +740,7 @@ button**, and `pushPromptState` (`lib/push.ts`) decides that moment.
 `PushEnableBanner` renders its three answers app-wide, and two of them carry no
 button because nothing a button could do would help: an iPhone in a Safari tab
 needs the Home Screen app first, and a browser already refusing can only be
-undone in its own settings -- **iOS Settings, then Notifications, then Monize**
+undone in its own settings -- **iOS Settings, then Notifications, then Artha**
 for an installed app, not any site settings. Those two states are exactly what
 the product had nothing to say about, and the reported experience was a user
 deleting the PWA to find out.
@@ -750,10 +750,10 @@ in either surface: iOS spends the click's transient activation on the first
 suspension, so the request has to be the first thing the handler does -- written
 `async () => { setBusy(true); await enable() }` it asks for a permission the user
 is then told they did not grant, with no prompt ever shown. And the dismissal is
-remembered per account **and** per kind (`monize.push.promptDismissed`): the
+remembered per account **and** per kind (`artha.push.promptDismissed`): the
 account for the reason the registered-endpoint marker carries one, and the kind
 because waving away the offer says nothing about wanting to know, later, that the
-browser has started blocking Monize.
+browser has started blocking Artha.
 
 ### A notification's `badge` is a mask, its `icon` is a picture
 
@@ -779,7 +779,7 @@ committed PNG that has stopped matching the logo it is generated from.
 
 **What a collapsed summary stands in for is not the same text the open block shows.** It replaces the block, so it answers the question the block would have -- Browser push collapses to how many devices can be *delivered to*, retired rows named separately rather than summed in, and "Device list unavailable" where the read failed, never the `0` an empty `devices` array would give (the failed-lookup rule, one more time). And a block whose whole content is one sentence explaining why a feature is unavailable does not get a disclosure: hiding the reason behind a click is worse than not folding.
 
-**Which Settings sections are folded is remembered by one store, `settingsSectionStore`** (`monize-settings-sections`), read through `useSettingsSectionCollapsed(section)`. Browser-local for the reason row density is: whether a panel is worth its height is a fact about the screen in front of the reader, not about the account. The store is the density store's lesson applied before it can be relearned -- a second foldable section adds a member to `SettingsSectionId` and a default to `SETTINGS_SECTION_DEFAULT_COLLAPSED` (a `Record` over the union, so the compiler asks for that default), never a second store and never a second line in `persisted-storage.guard.test.ts`. Every default is `false` and that is the rule, not today's coincidence: a section that folds itself before the reader asked has to be found before it can be read. A stored value that is not a boolean, and a key naming a section that no longer exists, both fall back to the default rather than hiding a panel behind a corrupted entry.
+**Which Settings sections are folded is remembered by one store, `settingsSectionStore`** (`artha-settings-sections`), read through `useSettingsSectionCollapsed(section)`. Browser-local for the reason row density is: whether a panel is worth its height is a fact about the screen in front of the reader, not about the account. The store is the density store's lesson applied before it can be relearned -- a second foldable section adds a member to `SettingsSectionId` and a default to `SETTINGS_SECTION_DEFAULT_COLLAPSED` (a `Record` over the union, so the compiler asks for that default), never a second store and never a second line in `persisted-storage.guard.test.ts`. Every default is `false` and that is the rule, not today's coincidence: a section that folds itself before the reader asked has to be found before it can be read. A stored value that is not a boolean, and a key naming a section that no longer exists, both fall back to the default rather than hiding a panel behind a corrupted entry.
 
 **A persisted fold outlives a test, so a suite that drives one resets the store.** `setup.ts` clears `localStorage` between tests and cannot reach a store that has already read it, so the first test to collapse a section leaves it collapsed for the rest of the file -- reset it in `beforeEach`, where nothing is mounted and the write needs no `act()`. And assert the fold on `details.open`, not on the content having gone: jsdom applies no user-agent stylesheet, so the children stay in the document whatever `open` says, and "the button is not there" would pass in a browser and fail here for a reason that is nothing to do with the component.
 
@@ -1364,7 +1364,7 @@ Colour themes are pure CSS variable overrides in `src/app/themes.css` (`html[dat
 
 ### The boot surfaces read the theme from cookies, not from localStorage
 
-`ThemeProvider` returns `null` until it has read localStorage, so nothing it renders can decide the first paint. The surfaces that paint before hydration -- the server-stamped `dark` class and `data-theme` attribute in `layout.tsx`, the boot splash (`components/layout/BootSplash.tsx`, hidden by `BootSplashHider` once the app mounts -- *hidden*, never removed: detaching a React-owned node outside React crashes the reconciler on the next client-side navigation), the `theme-color` viewport meta, and the PWA manifest's splash palette (`app/manifest.webmanifest/route.ts`) -- read the `monize-resolved-theme` and `monize-color-theme` cookies that `ThemeContext` mirrors on every change (`src/lib/pwa-theme.ts` owns the names and fallback colours).
+`ThemeProvider` returns `null` until it has read localStorage, so nothing it renders can decide the first paint. The surfaces that paint before hydration -- the server-stamped `dark` class and `data-theme` attribute in `layout.tsx`, the boot splash (`components/layout/BootSplash.tsx`, hidden by `BootSplashHider` once the app mounts -- *hidden*, never removed: detaching a React-owned node outside React crashes the reconciler on the next client-side navigation), the `theme-color` viewport meta, and the PWA manifest's splash palette (`app/manifest.webmanifest/route.ts`) -- read the `artha-resolved-theme` and `artha-color-theme` cookies that `ThemeContext` mirrors on every change (`src/lib/pwa-theme.ts` owns the names and fallback colours).
 
 A non-CSS consumer needing a palette's actual hex goes through `THEME_SWATCHES` (`src/lib/theme-swatches.ts`), never a literal; the service worker's offline fallback cannot import either, so `components/providers/OfflineFallbackSync.tsx` posts it the localized copy and computed page colours, and `src/test/sw-offline.test.ts` holds sw.js's built-in fallbacks equal to the catalog and `pwa-theme` constants. The manifest link is hand-written in `layout.tsx` with `crossorigin="use-credentials"` (a manifest fetch carries no cookies without it, which Next's static manifest convention cannot express -- hence the route handler). The link's href also encodes the theme as query parameters so a cookieless manifest update check still resolves the installed theme (cookies, when present, win); the manifest pins `id: '/'`. The OS bakes splash colours in at install time and refreshes lazily; the boot splash is the surface that follows a theme change immediately.
 
@@ -1398,6 +1398,6 @@ Changing the curve is a change to every theme at once -- expect the guard to nam
 
 - **Zod:** Configured with `jitless: true` (`zodConfig.ts`) for CSP compliance -- no `new Function()`
 - **Auth tokens:** Stored in httpOnly cookies (backend-managed), never in JS-accessible storage
-- **localStorage is readable by any XSS, and by any scanner pointed at a public page.** A store that persists there must be listed in `src/store/persisted-storage.guard.test.ts` with the reason its contents may sit in storage, and the pre-login footprint (`auth-storage` and `monize-preferences`, both empty envelopes) is pinned there byte for byte -- the ZAP baseline's rule 120000 is silenced in `.github/zap/rules.tsv` on exactly that claim, so widening a `partialize` fails the guard rather than shipping under an IGNORE written for a smaller footprint.
+- **localStorage is readable by any XSS, and by any scanner pointed at a public page.** A store that persists there must be listed in `src/store/persisted-storage.guard.test.ts` with the reason its contents may sit in storage, and the pre-login footprint (`auth-storage` and `artha-preferences`, both empty envelopes) is pinned there byte for byte -- the ZAP baseline's rule 120000 is silenced in `.github/zap/rules.tsv` on exactly that claim, so widening a `partialize` fails the guard rather than shipping under an IGNORE written for a smaller footprint.
 - **CSP:** Per-request nonce generated in proxy, `strict-dynamic` for script-src
 - **ESLint:** `no-new-func: error` enforced to prevent CSP violations

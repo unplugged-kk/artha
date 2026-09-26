@@ -36,7 +36,7 @@ describe("McpFinancialSummaryResource", () => {
   it("should register the resource", () => {
     expect(server.registerResource).toHaveBeenCalledWith(
       "financial-summary",
-      "monize://financial-summary",
+      "artha://financial-summary",
       expect.any(Object),
       expect.any(Function),
     );
@@ -44,13 +44,13 @@ describe("McpFinancialSummaryResource", () => {
 
   it("should return error when no user context", async () => {
     ctx.setUser(undefined);
-    const result = await handler("monize://financial-summary", ctx);
+    const result = await handler("artha://financial-summary", ctx);
     expect(result.contents[0].text).toContain("Error");
   });
 
   it("should return error when scope check fails", async () => {
     ctx.setUser({ userId: "u1", scopes: "write" });
-    const result = await handler("monize://financial-summary", ctx);
+    const result = await handler("artha://financial-summary", ctx);
     expect(result.contents[0].text).toContain("Insufficient scope");
   });
 
@@ -66,7 +66,7 @@ describe("McpFinancialSummaryResource", () => {
       totalExpenses: -3000,
     });
 
-    const result = await handler("monize://financial-summary", ctx);
+    const result = await handler("artha://financial-summary", ctx);
     const parsed = JSON.parse(result.contents[0].text);
     expect(parsed.netWorth.netWorth).toBe(8000);
     expect(parsed.currentMonth.totalIncome).toBe(5000);
@@ -85,7 +85,7 @@ describe("McpFinancialSummaryResource", () => {
       totalExpenses: 0,
     });
 
-    await handler("monize://financial-summary", ctx);
+    await handler("artha://financial-summary", ctx);
 
     // 10th positional arg is excludeInvestmentLinked.
     const args = analyticsService.getSummary.mock.calls[0];

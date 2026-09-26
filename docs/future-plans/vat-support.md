@@ -1,9 +1,9 @@
-# VAT / GST Support for Monize
+# VAT / GST Support for Artha
 
 ## Context
 
 A user asked for "VAT support." VAT (Value Added Tax; GST/HST/PST in Canada, sales tax in the US)
-is a consumption tax layered on top of a price: a gross amount = net + tax. Monize today stores a
+is a consumption tax layered on top of a price: a gross amount = net + tax. Artha today stores a
 single signed `amount` per transaction/split with **no tax breakdown**, no tax-rate config, and only
 an income-tax-deduction report (keyword-based) that is unrelated to VAT.
 

@@ -168,8 +168,8 @@ export class OAuthInteractionController {
     // stays missing the provider re-prompts, minting a fresh consent
     // interaction on each submit (the "consent uid keeps changing" loop).
     // Claude requests OIDC scopes (openid, profile) alongside the MCP resource
-    // scopes (monize:read/write), so grant exactly what the prompt reports as
-    // missing rather than only the monize:* subset. Granular per-scope consent
+    // scopes (artha:read/write), so grant exactly what the prompt reports as
+    // missing rather than only the artha:* subset. Granular per-scope consent
     // is intentionally not offered: the client fixes the requested scope set,
     // and withholding any of it would just loop the prompt — the user's choice
     // is Allow (grant all) or Deny.

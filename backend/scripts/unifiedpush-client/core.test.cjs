@@ -20,7 +20,7 @@ const { tmpdir } = require("node:os");
 const { join } = require("node:path");
 const { readPrivate, writePrivate, locked } = require("./storage.cjs");
 const state = () =>
-  createState("https://monize.example", "https://ntfy.example");
+  createState("https://artha.example", "https://ntfy.example");
 const session = {
   authToken: "a".repeat(40),
   csrfToken: "b".repeat(32) + ":" + "c".repeat(64),
@@ -71,7 +71,7 @@ test("registers generated recipient keys and UnifiedPush endpoint; private key s
   assert.equal(posted.auth, s.auth);
   assert.equal(JSON.stringify(calls).includes(s.privateKey), false);
   for (const c of calls) {
-    assert.ok(c.url.startsWith(s.monize + "/"));
+    assert.ok(c.url.startsWith(s.artha + "/"));
     assert.equal(c.options.redirect, "error");
     assert.equal(c.options.headers["x-csrf-token"], session.csrfToken);
   }
@@ -81,7 +81,7 @@ test("decrypts real web-push aes128gcm output and preserves localized copy", () 
   assert.deepEqual(decryptEvent(s, event(s)), {
     title: "Zmiana ceny",
     body: "Otwórz instrument",
-    target: "https://monize.example/securities/123",
+    target: "https://artha.example/securities/123",
   });
 });
 test("rejects ciphertext tampering, wrong device and plaintext relay messages", () => {
@@ -115,12 +115,12 @@ test("replaces unsafe navigation and never forwards image/action metadata", () =
         actions: [{ action: "stop-reminder" }],
       }),
     );
-    assert.equal(p.target, s.monize + "/");
+    assert.equal(p.target, s.artha + "/");
     assert.equal(p.image, undefined);
     assert.equal(p.actions, undefined);
   }
 });
-test("polls without Monize credentials and checkpoints past poisoned messages", async () => {
+test("polls without Artha credentials and checkpoints past poisoned messages", async () => {
   const s = state(),
     received = [],
     checkpoints = [];
@@ -182,11 +182,11 @@ test("does not expose a response body on authentication failure", async () => {
       undefined,
       async () => new Response("sensitive secret", { status: 401 }),
     ),
-    { message: "MONIZE_HTTP_401" },
+    { message: "ARTHA_HTTP_401" },
   );
 });
 test("stores keys privately, refuses overwrite/symlinks and releases command lock", async () => {
-  const dir = mkdtempSync(join(tmpdir(), "monize-up-")),
+  const dir = mkdtempSync(join(tmpdir(), "artha-up-")),
     path = join(dir, "state.json");
   try {
     const s = state();
@@ -250,7 +250,7 @@ test("registration-to-reception harness uses the exact registered recipient keys
     {
       title: "Test",
       body: "Dostarczono",
-      target: "https://monize.example/settings",
+      target: "https://artha.example/settings",
     },
   ]);
   assert.equal(updated.since, "fullpath1");

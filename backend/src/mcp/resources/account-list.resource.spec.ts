@@ -29,7 +29,7 @@ describe("McpAccountListResource", () => {
   it("should register the resource", () => {
     expect(server.registerResource).toHaveBeenCalledWith(
       "accounts",
-      "monize://accounts",
+      "artha://accounts",
       expect.any(Object),
       expect.any(Function),
     );
@@ -37,13 +37,13 @@ describe("McpAccountListResource", () => {
 
   it("should return error when no user context", async () => {
     ctx.setUser(undefined);
-    const result = await handler("monize://accounts", ctx);
+    const result = await handler("artha://accounts", ctx);
     expect(result.contents[0].text).toContain("Error");
   });
 
   it("should return error when scope check fails", async () => {
     ctx.setUser({ userId: "u1", scopes: "write" });
-    const result = await handler("monize://accounts", ctx);
+    const result = await handler("artha://accounts", ctx);
     expect(result.contents[0].text).toContain("Insufficient scope");
   });
 
@@ -52,7 +52,7 @@ describe("McpAccountListResource", () => {
     accountsService.findAll.mockResolvedValue([{ id: "a1", name: "Checking" }]);
     accountsService.getSummary.mockResolvedValue({ netWorth: 5000 });
 
-    const result = await handler("monize://accounts", ctx);
+    const result = await handler("artha://accounts", ctx);
     expect(result.contents[0].mimeType).toBe("application/json");
     const parsed = JSON.parse(result.contents[0].text);
     expect(parsed.accounts).toHaveLength(1);

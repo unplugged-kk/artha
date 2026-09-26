@@ -1,10 +1,10 @@
-# Contributing to Monize
+# Contributing to Artha
 
-Thanks for your interest in improving Monize! This project is built almost entirely with AI assistance, and contributions are welcome. To keep the codebase reviewable and the maintainer's workload sane, we follow a **propose-first** workflow. Please read this document before opening a pull request.
+Thanks for your interest in improving Artha! This project is built almost entirely with AI assistance, and contributions are welcome. To keep the codebase reviewable and the maintainer's workload sane, we follow a **propose-first** workflow. Please read this document before opening a pull request.
 
 ## Why a propose-first workflow?
 
-Monize has run into a recurring set of problems with unsolicited, AI-generated contributions:
+Artha has run into a recurring set of problems with unsolicited, AI-generated contributions:
 
 - Large multi-concern PRs are difficult and risky to review.
 - AI-generated code varies in quality and often ignores project conventions.
@@ -15,7 +15,7 @@ The steps below exist to head off those problems before any code is written.
 
 ## The workflow
 
-1. **Propose first.** Open a [Discussion](https://github.com/kenlasko/monize/discussions) describing the idea before writing code. Explain the problem, the proposed change, and roughly which modules it touches.
+1. **Propose first.** Open a [Discussion](https://github.com/unplugged-kk/artha/discussions) describing the idea before writing code. Explain the problem, the proposed change, and roughly which modules it touches.
 2. **Agree on the approach.** The maintainer signs off on scope, boundaries, affected modules, expected size, conventions, and testing strategy.
 3. **Get ownership assigned.** The maintainer designates who builds it and when, so two people don't work the same shared area simultaneously.
 4. **Then implement.** Open a PR scoped *exactly* to what was agreed, and link the approving discussion in the PR description.
@@ -98,4 +98,4 @@ docker compose -f docker-compose.dev.yml up
 
 Pre-commit hooks (husky + lint-staged) run automatically on commit. See the `CLAUDE.md` files for layer-specific commands and structure.
 
-Thanks for helping make Monize better!
+Thanks for helping make Artha better!

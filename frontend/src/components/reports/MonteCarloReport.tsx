@@ -119,7 +119,7 @@ export function MonteCarloReport() {
   // The inputs panel collapses automatically after a fresh simulation run
   // (so the output is visible without scrolling) and after that respects the
   // user's manual toggle, persisted across scenario switches and reloads.
-  const INPUTS_COLLAPSED_KEY = 'monize-monte-carlo-inputs-collapsed';
+  const INPUTS_COLLAPSED_KEY = 'artha-monte-carlo-inputs-collapsed';
   const [inputsCollapsed, setInputsCollapsed] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
     try {

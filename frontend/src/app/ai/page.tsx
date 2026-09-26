@@ -102,7 +102,7 @@ function AiChatPage({
         <PageHeader
           title={t('page.title')}
           subtitle={t('page.subtitle')}
-          helpUrl="https://github.com/kenlasko/monize/wiki/AI"
+          helpUrl="https://github.com/unplugged-kk/artha/wiki/AI"
         />
         <div className="flex min-h-0 flex-1 flex-col w-full max-w-4xl mx-auto">
           <ChatInterface

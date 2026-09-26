@@ -220,7 +220,7 @@ describe("BillReminderService", () => {
     describe("when SMTP is configured", () => {
       beforeEach(() => {
         emailService.getStatus.mockReturnValue({ configured: true });
-        configService.get.mockReturnValue("https://app.monize.com");
+        configService.get.mockReturnValue("https://app.artha.com");
         emailService.sendMail.mockResolvedValue(undefined);
       });
 
@@ -753,7 +753,7 @@ describe("BillReminderService", () => {
         });
 
         it("passes appUrl from config to email template", async () => {
-          configService.get.mockReturnValue("https://custom.monize.app");
+          configService.get.mockReturnValue("https://custom.artha.app");
 
           const bill = makeBill({
             userId: userId1,
@@ -769,7 +769,7 @@ describe("BillReminderService", () => {
           await service.sendBillReminders();
 
           const htmlArg = emailService.sendMail.mock.calls[0][2];
-          expect(htmlArg).toContain("https://custom.monize.app");
+          expect(htmlArg).toContain("https://custom.artha.app");
         });
 
         it("passes user firstName to the email template", async () => {

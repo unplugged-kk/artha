@@ -6,7 +6,7 @@ import { useAuthStore } from '@/store/authStore';
 import type { User } from '@/types/auth';
 
 // The banner is the durable way back to a share whose redirect did not survive
-// (an OIDC round trip that drops returnTo, or the user opening Monize from the
+// (an OIDC round trip that drops returnTo, or the user opening Artha from the
 // launcher). Without it those files sit on the device until they expire with
 // nothing on any screen pointing at them.
 
@@ -55,7 +55,7 @@ function bundleIndex(id: string, acceptedFiles: number, refusedFiles = 0) {
  */
 const VIEWER_ID = 'user-1';
 
-const reader = (id: string) => ({ id, email: 'reader@monize.test' }) as User;
+const reader = (id: string) => ({ id, email: 'reader@artha.test' }) as User;
 
 async function renderNotice() {
   await act(async () => {

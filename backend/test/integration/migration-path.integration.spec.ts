@@ -32,7 +32,7 @@ import {
  * schema serves the code" are different claims and production needs both.
  */
 describe("production migration path (baseline schema + migrations)", () => {
-  const SCRATCH_DB = "monize_migration_path_test";
+  const SCRATCH_DB = "artha_migration_path_test";
   const FIXTURE = path.join(__dirname, "fixtures/schema-baseline.sql");
   const MIGRATIONS_DIR = path.join(__dirname, "../../../database/migrations");
 

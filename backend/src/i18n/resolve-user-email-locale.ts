@@ -24,7 +24,7 @@ import { currentRequestLocale } from "./request-locale";
  *
  * @param preferencesRepo repository for {@link UserPreference}
  * @param userId the recipient's user id, or null/undefined when the recipient
- *   is not a known Monize user (e.g. an emergency contact without an account)
+ *   is not a known Artha user (e.g. an emergency contact without an account)
  */
 export async function resolveUserEmailLocale(
   preferencesRepo: Repository<UserPreference>,

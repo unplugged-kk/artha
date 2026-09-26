@@ -55,7 +55,7 @@ export class PushChartArtifactService {
       withScopedDb(this.db, async (m) => {
         // Serialize quota decisions across replicas. The cap also bounds cleanup.
         await m.query(
-          "SELECT pg_advisory_xact_lock(hashtext('monize.push-chart-cap'))",
+          "SELECT pg_advisory_xact_lock(hashtext('artha.push-chart-cap'))",
         );
         await m.query(
           "DELETE FROM push_chart_artifacts WHERE expires_at <= CURRENT_TIMESTAMP",

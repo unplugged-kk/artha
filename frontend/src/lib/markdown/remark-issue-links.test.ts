@@ -24,7 +24,7 @@ describe('splitIssueRefs', () => {
       { type: 'text', value: 'Fixed the thing. (' },
       {
         type: 'link',
-        url: 'https://github.com/kenlasko/monize/issues/931',
+        url: 'https://github.com/unplugged-kk/artha/issues/931',
         children: [{ type: 'text', value: '#931' }],
       },
       { type: 'text', value: ')' },
@@ -37,8 +37,8 @@ describe('splitIssueRefs', () => {
       url: string;
     }[];
     expect(links.map((l) => l.url)).toEqual([
-      'https://github.com/kenlasko/monize/issues/931',
-      'https://github.com/kenlasko/monize/issues/933',
+      'https://github.com/unplugged-kk/artha/issues/931',
+      'https://github.com/unplugged-kk/artha/issues/933',
     ]);
   });
 });
@@ -62,7 +62,7 @@ describe('remarkIssueLinks', () => {
     const strong = tree.children![0].children![1];
     expect(strong.children![0]).toEqual({
       type: 'link',
-      url: 'https://github.com/kenlasko/monize/issues/42',
+      url: 'https://github.com/unplugged-kk/artha/issues/42',
       children: [{ type: 'text', value: '#42' }],
     });
   });

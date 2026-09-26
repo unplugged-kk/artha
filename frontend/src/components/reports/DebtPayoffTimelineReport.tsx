@@ -76,7 +76,7 @@ interface PayoffScheduleItem {
  */
 type SchedulePoint = Omit<PayoffScheduleItem, 'axisKey'>;
 
-const ACCOUNT_STORAGE_KEY = 'monize-reports-debt-payoff-timeline-account';
+const ACCOUNT_STORAGE_KEY = 'artha-reports-debt-payoff-timeline-account';
 
 export function DebtPayoffTimelineReport() {
   const t = useTranslations('reports');

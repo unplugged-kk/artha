@@ -20,17 +20,17 @@ import { SortableHeader } from '@/components/ui/SortableHeader';
 import { ReportError } from '@/components/reports/ReportError';
 import { exportToCsv } from '@/lib/csv-export';
 
-const RANGE_STORAGE_KEY = 'monize-reports-monthly-category-breakdown-range';
+const RANGE_STORAGE_KEY = 'artha-reports-monthly-category-breakdown-range';
 const PERCENTAGES_STORAGE_KEY =
-  'monize-reports-monthly-category-breakdown-percentages';
+  'artha-reports-monthly-category-breakdown-percentages';
 const DEVIATIONS_STORAGE_KEY =
-  'monize-reports-monthly-category-breakdown-deviations';
+  'artha-reports-monthly-category-breakdown-deviations';
 const SORT_COLUMN_STORAGE_KEY =
-  'monize-reports-monthly-category-breakdown-sort-column';
+  'artha-reports-monthly-category-breakdown-sort-column';
 const SORT_DIR_STORAGE_KEY =
-  'monize-reports-monthly-category-breakdown-sort-dir';
+  'artha-reports-monthly-category-breakdown-sort-dir';
 const INCLUDE_CURRENT_MONTH_STORAGE_KEY =
-  'monize-reports-monthly-category-breakdown-include-current-month';
+  'artha-reports-monthly-category-breakdown-include-current-month';
 
 // Deviation thresholds (fraction of the non-zero average) mirroring yaffa.
 const DEVIATION_LEVEL_1 = 0.05;

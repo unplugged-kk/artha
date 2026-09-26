@@ -225,7 +225,7 @@
     "step3": "啟動代理程式迴圈，讓 Claude 接聽來自 Artha 的查詢：",
     "loopPrompt": "Loop forever: call get_next_prompt; if hasPrompt is false, call it again; otherwise handle the request with the Artha tools and call post_response with the answer; then repeat.",
     "codexHeading": "或使用 Codex",
-    "codexNote": "將此內容新增到 ~/.codex/config.toml，將 MONIZE_TOKEN 設定為您的權杖，然後執行 codex 並貼上上方的提示。",
+    "codexNote": "將此內容新增到 ~/.codex/config.toml，將 ARTHA_TOKEN 設定為您的權杖，然後執行 codex 並貼上上方的提示。",
     "copy": "複製",
     "copied": "已複製到剪貼簿"
   }

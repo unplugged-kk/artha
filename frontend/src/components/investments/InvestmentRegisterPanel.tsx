@@ -83,7 +83,7 @@ export function InvestmentRegisterPanel({
   // the noun under `investments`.
   const tTx = useTranslations('transactions');
   const [view, setView] = useLocalStorage<InvestmentTransactionView>(
-    'monize-account-detail-register-view',
+    'artha-account-detail-register-view',
     'brokerage',
   );
 

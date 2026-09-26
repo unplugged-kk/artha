@@ -106,7 +106,7 @@ let currentCategoryFilter = 'all';
 
 vi.mock('@/hooks/useLocalStorage', () => ({
   useLocalStorage: (key: string, defaultValue: any) => {
-    if (key === 'monize-reports-category') {
+    if (key === 'artha-reports-category') {
       return [currentCategoryFilter, mockSetCategoryFilter];
     }
     return [defaultValue, vi.fn()];
@@ -834,7 +834,7 @@ describe('ReportsPage', () => {
   });
 
   it('migrates localStorage favourites to backend on first load', async () => {
-    localStorage.setItem('monize-favourite-reports', JSON.stringify(['net-worth', 'tax-summary']));
+    localStorage.setItem('artha-favourite-reports', JSON.stringify(['net-worth', 'tax-summary']));
     mockGetSettingsPreferences.mockResolvedValue({ favouriteReportIds: [] });
     mockUpdateSettingsPreferences.mockResolvedValue({});
     render(<ReportsPage />);
@@ -849,12 +849,12 @@ describe('ReportsPage', () => {
       });
     });
     await waitFor(() => {
-      expect(localStorage.getItem('monize-favourite-reports')).toBeNull();
+      expect(localStorage.getItem('artha-favourite-reports')).toBeNull();
     });
   });
 
   it('merges localStorage favourites with existing backend favourites', async () => {
-    localStorage.setItem('monize-favourite-reports', JSON.stringify(['net-worth', 'spending-by-category']));
+    localStorage.setItem('artha-favourite-reports', JSON.stringify(['net-worth', 'spending-by-category']));
     // Server already has 'spending-by-category' from another device
     mockGetSettingsPreferences.mockResolvedValue({ favouriteReportIds: ['spending-by-category'] });
     mockUpdateSettingsPreferences.mockResolvedValue({});
@@ -868,21 +868,21 @@ describe('ReportsPage', () => {
   });
 
   it('removes invalid JSON from localStorage without crashing', async () => {
-    localStorage.setItem('monize-favourite-reports', 'not-valid-json');
+    localStorage.setItem('artha-favourite-reports', 'not-valid-json');
     render(<ReportsPage />);
     await waitFor(() => {
       expect(screen.getByText('Spending by Category')).toBeInTheDocument();
     });
-    expect(localStorage.getItem('monize-favourite-reports')).toBeNull();
+    expect(localStorage.getItem('artha-favourite-reports')).toBeNull();
   });
 
   it('removes empty array from localStorage without calling API', async () => {
-    localStorage.setItem('monize-favourite-reports', JSON.stringify([]));
+    localStorage.setItem('artha-favourite-reports', JSON.stringify([]));
     render(<ReportsPage />);
     await waitFor(() => {
       expect(screen.getByText('Spending by Category')).toBeInTheDocument();
     });
-    expect(localStorage.getItem('monize-favourite-reports')).toBeNull();
+    expect(localStorage.getItem('artha-favourite-reports')).toBeNull();
     expect(mockUpdateSettingsPreferences).not.toHaveBeenCalled();
   });
 

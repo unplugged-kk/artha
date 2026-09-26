@@ -106,7 +106,7 @@ function nextWithCsp(request: NextRequest): NextResponse {
   return response;
 }
 
-// MCP clients configured with the bare origin (https://monize.laskonet.com)
+// MCP clients configured with the bare origin (https://artha.laskonet.com)
 // send their JSON-RPC traffic to "/". The Streamable HTTP transport requires
 // clients to send "Accept: application/json, text/event-stream" on POST and
 // "Accept: text/event-stream" on GET, and follow-up requests carry an

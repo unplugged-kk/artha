@@ -137,7 +137,7 @@ export class BackupController {
       "x-export-password",
     );
 
-    this.setBackupDownloadHeaders(res, !!encryptionPassword, "monize-backup");
+    this.setBackupDownloadHeaders(res, !!encryptionPassword, "artha-backup");
     await this.backupService.streamExport(req.user.id, res, encryptionPassword);
   }
 
@@ -157,7 +157,7 @@ export class BackupController {
       req.user.id,
       dto,
     );
-    this.setBackupDownloadHeaders(res, encrypted, "monize-support-backup");
+    this.setBackupDownloadHeaders(res, encrypted, "artha-support-backup");
     res.send(buffer);
   }
 

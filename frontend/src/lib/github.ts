@@ -1,5 +1,5 @@
 /** The project's GitHub repository, used for help links and issue references. */
-export const GITHUB_REPO_URL = 'https://github.com/kenlasko/monize';
+export const GITHUB_REPO_URL = 'https://github.com/unplugged-kk/artha';
 
 /**
  * Canonical URL for an issue or pull-request number. GitHub redirects

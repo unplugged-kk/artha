@@ -2,7 +2,7 @@
 # Downloads every screenshot the site uses into assets/img/screenshots/
 # so the site serves its own images instead of hot-linking the GitHub wiki.
 set -euo pipefail
-BASE="https://raw.githubusercontent.com/wiki/kenlasko/monize/images"
+BASE="https://raw.githubusercontent.com/wiki/unplugged-kk/artha/images"
 OUT="$(dirname "$0")/../assets/img/screenshots"
 mkdir -p "$OUT"
 for n in \
@@ -54,5 +54,5 @@ do
   echo "-> $n.png"
   curl -fsSL "$BASE/$n.png" -o "$OUT/$n.png" || echo "   (missing, site will fall back to the wiki URL)"
 done
-curl -fsSL "https://raw.githubusercontent.com/kenlasko/monize/main/frontend/public/icons/monize-logo.svg" -o "$(dirname "$0")/../assets/img/monize-logo.svg"
+curl -fsSL "https://raw.githubusercontent.com/kenlasko/artha/main/frontend/public/icons/artha-logo.svg" -o "$(dirname "$0")/../assets/img/artha-logo.svg"
 echo "Done. $(ls -1 "$OUT" | wc -l) files in assets/img/screenshots/"

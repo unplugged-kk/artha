@@ -17,7 +17,7 @@ const CSV_BASE64 = Buffer.from("a,b\n1,2\n").toString("base64");
 const PDF_BASE64 = Buffer.from("%PDF-1.4 minimal").toString("base64");
 
 // The handler only reads `uri.href`, so a light stub suffices.
-const uriFor = (id: string) => ({ href: `monize-attachment://${id}` }) as any;
+const uriFor = (id: string) => ({ href: `artha-attachment://${id}` }) as any;
 
 describe("McpRelayAttachmentResource", () => {
   let store: RelayAttachmentStore;

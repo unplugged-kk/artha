@@ -1,7 +1,7 @@
 # Database Directory
 
 ## Overview
-PostgreSQL schema definition and incremental migration scripts for the monize database.
+PostgreSQL schema definition and incremental migration scripts for the artha database.
 
 A constraint here is usually the strongest available form of a system rule, so several entries in [`docs/system-invariants.md`](../docs/system-invariants.md) are enforced -- or unenforced -- by what is in `schema.sql`. `database/migrations/135_import_jobs_single_active.sql` is the model: a partial unique index doing what a read-then-insert in the service could not, with the reasoning in the migration's own header. See [`docs/concurrency-and-idempotency.md`](../docs/concurrency-and-idempotency.md) for when a constraint is the right mechanism -- and note that a uniqueness constraint prevents duplicate *rows* and does nothing about a lost update to one.
 
@@ -50,7 +50,7 @@ Every user-owned table carries a row-level-security policy; the app emits per-tr
 
    Keep the `(SELECT app_current_user_id())` initplan form -- a bare function call relies on SQL-function inlining and evaluates per row on sequential scans.
 
-2. **No migration may name a role.** `GRANT ... TO monize_app` (or any `CREATE/ALTER/DROP ROLE`) in a migration crash-loops every deployment where the role does not exist. The role and its grants are provisioned idempotently by db-init on every startup (`backend/src/common/db/app-role.ts`); on CNPG the role comes from the `Cluster` manifest (`managed.roles`). New tables created by the owner get grants automatically via `ALTER DEFAULT PRIVILEGES`. The `role-or-grant-statement` rule in `backend/scripts/migration-lint.mjs` enforces this in CI.
+2. **No migration may name a role.** `GRANT ... TO artha_app` (or any `CREATE/ALTER/DROP ROLE`) in a migration crash-loops every deployment where the role does not exist. The role and its grants are provisioned idempotently by db-init on every startup (`backend/src/common/db/app-role.ts`); on CNPG the role comes from the `Cluster` manifest (`managed.roles`). New tables created by the owner get grants automatically via `ALTER DEFAULT PRIVILEGES`. The `role-or-grant-statement` rule in `backend/scripts/migration-lint.mjs` enforces this in CI.
 
    **`PUBLIC` is the exception, for the same reason and not in spite of it:** it is a keyword that always resolves, so it cannot fail for a missing role. It has to be permitted, because `CREATE FUNCTION` grants `EXECUTE` to `PUBLIC` implicitly -- revoking that anywhere but the transaction that created the function leaves a window in which any role can execute a fresh `SECURITY DEFINER` function. `136_currency_global_liveness.sql` is the case.
 

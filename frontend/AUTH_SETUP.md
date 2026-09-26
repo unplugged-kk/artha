@@ -1,6 +1,6 @@
 # Authentication Setup Guide
 
-This document describes the authentication system implementation for Monize.
+This document describes the authentication system implementation for Artha.
 
 ## Overview
 

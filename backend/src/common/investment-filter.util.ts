@@ -6,7 +6,7 @@ import { roundMoney, sumMoney } from "./round.util";
  * Which transaction rows are an investment movement rather than ordinary cash,
  * written once for every reader.
  *
- * An INVESTMENT account in Monize is a PAIR (`accounts.service.ts`
+ * An INVESTMENT account in Artha is a PAIR (`accounts.service.ts`
  * `createInvestmentAccountPair`): an `INVESTMENT_CASH` sleeve holding real
  * money and an `INVESTMENT_BROKERAGE` sleeve holding securities, both carrying
  * `account_type = 'INVESTMENT'`. So `account_type != 'INVESTMENT'` is not a

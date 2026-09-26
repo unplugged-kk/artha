@@ -66,7 +66,7 @@ interface SecurityGain {
   transactionCount: number;
 }
 
-const ACCOUNTS_STORAGE_KEY = 'monize-reports-realized-gains-accounts';
+const ACCOUNTS_STORAGE_KEY = 'artha-reports-realized-gains-accounts';
 
 export function RealizedGainsReport() {
   const t = useTranslations('reports');

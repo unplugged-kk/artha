@@ -1040,7 +1040,7 @@ describe('PushDevicesPanel and a browser-rotated subscription', () => {
       await waitFor(() => expect(mockListDevices).toHaveBeenCalledTimes(1));
 
       listeners.get('message')?.({
-        data: { type: 'monize-push-subscription-changed' },
+        data: { type: 'artha-push-subscription-changed' },
       } as unknown as Event);
 
       await waitFor(() => expect(mockListDevices).toHaveBeenCalledTimes(2));
@@ -1063,7 +1063,7 @@ describe('PushDevicesPanel and a browser-rotated subscription', () => {
       await waitFor(() => expect(mockListDevices).toHaveBeenCalledTimes(1));
 
       listeners.get('message')?.({
-        data: { type: 'monize-offline-strings' },
+        data: { type: 'artha-offline-strings' },
       } as unknown as Event);
 
       await new Promise((resolve) => setTimeout(resolve, 0));

@@ -15,7 +15,7 @@ all import; what remains is Phase 4 hardening (see the design's task list).
 
 ## Coded values
 
-`model/mny-model.ts` holds every Money code and its Monize equivalent -- account types, cleared
+`model/mny-model.ts` holds every Money code and its Artha equivalent -- account types, cleared
 status and the `grftt` flag bits, investment actions, category classification, recurrence
 frequencies. Each constant is labelled **confirmed** (asserted against the fixtures in
 `mny-model.spec.ts`) or **unconfirmed** (carried from the format reference). An unconfirmed code
@@ -107,11 +107,11 @@ not the cause -- see `helm/README.md` for the sizing table.
   transaction is open -- and the wizard only polls every 1500 ms, so a report per 500-row chunk
   writes a hundred-odd updates nobody reads.
 
-### A row Money does not store may still be one Monize has to write
+### A row Money does not store may still be one Artha has to write
 
-Money's model and Monize's are not the same shape, and the gaps are silent. A transfer from a
+Money's model and Artha's are not the same shape, and the gaps are silent. A transfer from a
 bank account into an investment account is one Money row on each side, and the investment side is
-*both* the arriving cash and the trade. Monize splits those: originally the trade's cash leg always
+*both* the arriving cash and the trade. Artha splits those: originally the trade's cash leg always
 came out of the brokerage's cash sleeve, so something had to pay into it, and Money has no row for
 that -- `buildCashCounterparts` synthesizes one.
 
@@ -126,13 +126,13 @@ trade this import writes, or is one that moves no cash. The rule the section sta
 for those.)
 
 So when a mapper is about to warn that it cannot represent something, check first whether the
-right answer is to *create* the row Monize needs rather than to report the mismatch. A warning
+right answer is to *create* the row Artha needs rather than to report the mismatch. A warning
 about 3,255 rows the user cannot act on is a sign the mapping is wrong, not that the file is.
 
-### A row Monize writes itself has to say why it exists
+### A row Artha writes itself has to say why it exists
 
-Because Monize writes the trade's cash leg rather than importing Money's, the columns on that row
-are Monize's to fill -- and `payee` was left empty. Money records no payee on a trade, so every
+Because Artha writes the trade's cash leg rather than importing Money's, the columns on that row
+are Artha's to fill -- and `payee` was left empty. Money records no payee on a trade, so every
 imported cash leg rendered as a bare `-` in the register: the one column that could say why the
 money moved, on rows that exist only to say a trade settled (issue #1204).
 
@@ -146,11 +146,11 @@ The general rule: when the importer synthesizes a row Money has no copy of, ask 
 would have held had a person entered it. An empty column on a row nobody wrote reads as missing
 data rather than as a row that never had any.
 
-### And the same gap read the other way: a row Money *does* store may be one Monize writes anyway
+### And the same gap read the other way: a row Money *does* store may be one Artha writes anyway
 
 The mirror of the rule above, and the way it goes wrong. When a trade is funded from the
 brokerage's **own** cash companion, Money already has the cash-side row -- an ordinary `TRN` in
-the companion account, paired to the trade through `TRN_XFER`. Monize writes that row itself, from
+the companion account, paired to the trade through `TRN_XFER`. Artha writes that row itself, from
 the investment transaction's `cashAmount`, so importing Money's copy as well is one payment
 recorded twice.
 
@@ -174,7 +174,7 @@ else falling through to the synthesized counterpart. That left two shapes wrong 
 the sleeve one had been, and for the same reason -- a `TRN_XFER` pairing whose far side is a trade
 is never an ordinary transfer, wherever the near side lives:
 
-| Money's near side | Monize's model | Issue |
+| Money's near side | Artha's model | Issue |
 |---|---|---|
 | A row in the trade's own cash sleeve | Drop it; `writeInvestments` writes the leg from `cashAmount` | #1175 |
 | A top-level row in another account | That row **is** the cash leg; the trade names it as its `funding_account_id` | #1212 |

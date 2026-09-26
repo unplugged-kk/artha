@@ -5,7 +5,7 @@ import {
 } from '@/types/attachment';
 
 /**
- * The Web Share Target: the one place that says what an installed Monize PWA
+ * The Web Share Target: the one place that says what an installed Artha PWA
  * accepts from the OS share sheet, where a share lands, and what bounds the
  * stash it lands in.
  *
@@ -23,17 +23,17 @@ export const SHARE_TARGET_PATH = '/share-target';
 export const SHARE_PAGE_PATH = '/share';
 
 /** The stash. Separate from the static cache so a worker update cannot drop it. */
-export const SHARE_CACHE_NAME = 'monize-share-v1';
+export const SHARE_CACHE_NAME = 'artha-share-v1';
 
 /**
  * Synthetic key prefix for stash entries. Deliberately extension-less: the
  * worker's `isStaticAsset` matches on a trailing extension, so no stash key can
  * ever be mistaken for a cacheable asset and served to a page fetch.
  */
-export const SHARE_KEY_PREFIX = '/__monize/share/';
+export const SHARE_KEY_PREFIX = '/__artha/share/';
 
 /** Header carrying the original filename on a stored file's Response. */
-export const SHARE_NAME_HEADER = 'X-Monize-Share-Name';
+export const SHARE_NAME_HEADER = 'X-Artha-Share-Name';
 
 // ---------------------------------------------------------------------------
 // Limits (plan section 3.2). The server remains the authority -- these bound
@@ -233,7 +233,7 @@ export function shareFileKey(id: string, position: number): string {
 export function shareBundleIdFromIndexKey(url: string): string | null {
   let pathname: string;
   try {
-    pathname = new URL(url, 'https://monize.invalid').pathname;
+    pathname = new URL(url, 'https://artha.invalid').pathname;
   } catch {
     return null;
   }

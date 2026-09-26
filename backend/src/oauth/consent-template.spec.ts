@@ -7,8 +7,8 @@ describe("renderConsentPage", () => {
       clientName: "Claude Desktop",
       clientUri: "https://claude.ai",
       userEmail: "user@example.com",
-      scopes: ["monize:read", "monize:write"],
-      resource: "https://monize.example/api/v1/mcp",
+      scopes: ["artha:read", "artha:write"],
+      resource: "https://artha.example/api/v1/mcp",
     });
 
     expect(html).toContain("Authorize");
@@ -53,6 +53,6 @@ describe("renderConsentPage", () => {
 
     // Form still renders so user can deny; scopes ul is empty.
     expect(html).toContain('class="scopes">');
-    expect(html).not.toContain('value="monize:read"');
+    expect(html).not.toContain('value="artha:read"');
   });
 });

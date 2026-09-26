@@ -247,7 +247,7 @@ describe('CreditUtilizationReport', () => {
 
   it('restores the persisted account selection', async () => {
     window.localStorage.setItem(
-      'monize-reports-credit-utilization-accounts',
+      'artha-reports-credit-utilization-accounts',
       JSON.stringify(['a-2']),
     );
     mockGetAll.mockResolvedValue(cadAccounts);
@@ -262,14 +262,14 @@ describe('CreditUtilizationReport', () => {
 
   it('drops persisted account IDs that no longer exist', async () => {
     window.localStorage.setItem(
-      'monize-reports-credit-utilization-accounts',
+      'artha-reports-credit-utilization-accounts',
       JSON.stringify(['a-2', 'gone']),
     );
     mockGetAll.mockResolvedValue(cadAccounts);
     render(<CreditUtilizationReport />);
     await waitFor(() => {
       expect(
-        window.localStorage.getItem('monize-reports-credit-utilization-accounts'),
+        window.localStorage.getItem('artha-reports-credit-utilization-accounts'),
       ).toBe(JSON.stringify(['a-2']));
     });
   });

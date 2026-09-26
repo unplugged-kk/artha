@@ -91,7 +91,7 @@ const RECONCILED_CONFIRM_NOTE =
 
 /**
  * One file to save on the transaction: either a relayed chat attachment
- * (referenced by its monize-attachment:// URI) or inline base64 bytes from a
+ * (referenced by its artha-attachment:// URI) or inline base64 bytes from a
  * direct MCP client.
  */
 interface ManageAttachmentInput {
@@ -481,7 +481,7 @@ export class McpTransactionsTools {
                       .max(300)
                       .optional()
                       .describe(
-                        "A monize-attachment:// URI (or bare id) of a web-chat file. Exclusive with fileData.",
+                        "A artha-attachment:// URI (or bare id) of a web-chat file. Exclusive with fileData.",
                       ),
                     fileData: z
                       .string()
@@ -995,7 +995,7 @@ export class McpTransactionsTools {
     return { dtos };
   }
 
-  /** Accept a full monize-attachment:// URI or a bare store id. */
+  /** Accept a full artha-attachment:// URI or a bare store id. */
   private parseAttachmentUri(uri: string): string {
     const prefix = `${ATTACHMENT_URI_SCHEME}://`;
     return uri.startsWith(prefix) ? uri.slice(prefix.length) : uri;

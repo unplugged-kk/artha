@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { safeNotificationTarget } from './notification-target';
 
-const ORIGIN = 'https://monize.test';
+const ORIGIN = 'https://artha.test';
 
 describe('safeNotificationTarget', () => {
   it('accepts a same-origin path', () => {

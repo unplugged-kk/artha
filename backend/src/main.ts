@@ -192,7 +192,7 @@ async function bootstrap() {
 
   // Backup restore accepts gzip-compressed binary (compressed on the client
   // to avoid multi-minute uploads of large JSON files). Encrypted backups
-  // are uploaded as the Monize envelope under application/octet-stream, so
+  // are uploaded as the Artha envelope under application/octet-stream, so
   // both content-types must be parsed into a raw Buffer here -- otherwise the
   // controller sees an unparsed body and rejects it.
   //

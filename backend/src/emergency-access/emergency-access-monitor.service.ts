@@ -399,7 +399,7 @@ export class EmergencyAccessMonitorService {
         const { token: rawToken, expiresAt } = credential;
 
         const claimUrl = `${appUrl}/emergency-access/claim?token=${rawToken}`;
-        // The contact may or may not be a Monize user; localize to their own
+        // The contact may or may not be a Artha user; localize to their own
         // account language when they have one, otherwise fall back to default.
         const contactUser = await this.scoped(User, (repo) =>
           repo.findOne({

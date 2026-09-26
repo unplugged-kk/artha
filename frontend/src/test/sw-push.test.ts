@@ -13,7 +13,7 @@ import vm from 'node:vm';
 
 const swSource = readFileSync(resolve(__dirname, '../../public/sw.js'), 'utf8');
 
-const ORIGIN = 'https://monize.test';
+const ORIGIN = 'https://artha.test';
 
 type Listener = (event: unknown) => unknown;
 
@@ -329,7 +329,7 @@ describe('service worker push handling', () => {
 
     await sw.dispatchPush({ title: 'a', body: 'b' });
 
-    expect(sw.shown[0].options.tag).toBe('monize');
+    expect(sw.shown[0].options.tag).toBe('artha');
   });
 
   // A push with no readable payload still has to produce a notification: the
@@ -543,7 +543,7 @@ describe('service worker subscription rotation', () => {
       options: { applicationServerKey: KEY },
     });
 
-    expect(sw.posted).toEqual([{ type: 'monize-push-subscription-changed' }]);
+    expect(sw.posted).toEqual([{ type: 'artha-push-subscription-changed' }]);
   });
 
   // Firefox -- where Web Push is most used -- fires this event with no
@@ -577,7 +577,7 @@ describe('service worker subscription rotation', () => {
     await sw.dispatchSubscriptionChange(oldSub, newSub);
 
     expect(sw.resubscribe).not.toHaveBeenCalled();
-    expect(sw.posted).toEqual([{ type: 'monize-push-subscription-changed' }]);
+    expect(sw.posted).toEqual([{ type: 'artha-push-subscription-changed' }]);
   });
 
   // A failed resubscribe is exactly when the page needs to know: the panel is
@@ -592,7 +592,7 @@ describe('service worker subscription rotation', () => {
       options: { applicationServerKey: KEY },
     });
 
-    expect(sw.posted).toEqual([{ type: 'monize-push-subscription-changed' }]);
+    expect(sw.posted).toEqual([{ type: 'artha-push-subscription-changed' }]);
   });
 
   it('does not reject when resubscribing fails', async () => {

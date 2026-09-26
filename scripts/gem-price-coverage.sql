@@ -7,7 +7,7 @@
 -- was not, until the report learned to fetch it too.
 --
 -- Run it read-only against the app database, e.g.
---   docker exec -i monize-postgres psql -U monize_user -d monize -f - < scripts/gem-price-coverage.sql
+--   docker exec -i artha-postgres psql -U artha_user -d artha -f - < scripts/gem-price-coverage.sql
 -- or
 --   psql "$DATABASE_URL" -f scripts/gem-price-coverage.sql
 --

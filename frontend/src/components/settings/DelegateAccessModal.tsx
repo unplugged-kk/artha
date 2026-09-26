@@ -46,7 +46,7 @@ const GRANT_OPS: { key: GrantOp; label: string }[] = [
   { key: 'canEdit', label: 'Edit' },
   { key: 'canDelete', label: 'Delete' },
   // Joint: with Read, the account appears natively in the delegate's own
-  // account list. Only offered for delegates with a full Monize account.
+  // account list. Only offered for delegates with a full Artha account.
   { key: 'isJoint', label: 'Joint' },
 ];
 
@@ -185,7 +185,7 @@ export function DelegateAccessModal({
   const [draft, setDraft] = useState<Draft>(baseline);
   const [tab, setTab] = useState<Tab>('accounts');
   const [saving, setSaving] = useState(false);
-  // Joint shares require the delegate to be a full Monize account; the
+  // Joint shares require the delegate to be a full Artha account; the
   // server re-checks on save (setGrants rejects otherwise).
   const jointAllowed = !!delegate.delegate.isFullAccount;
 

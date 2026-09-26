@@ -89,7 +89,7 @@ export interface MnyPreviewBill {
   amount: number;
   currencyCode: string;
   frequency: MnyFrequency;
-  /** True when the Money interval had no exact Monize frequency. */
+  /** True when the Money interval had no exact Artha frequency. */
   approximate: boolean;
   nextDueDate: string;
   isTransfer: boolean;
@@ -217,7 +217,7 @@ export interface MnyHoldingVerification {
   lotQuantity: number;
   /** Shares replaying the mapped investment actions produces. */
   replayQuantity: number;
-  /** Shares Monize holds after the import. */
+  /** Shares Artha holds after the import. */
   importedQuantity: number;
   /** `importedQuantity - lotQuantity`. */
   delta: number;

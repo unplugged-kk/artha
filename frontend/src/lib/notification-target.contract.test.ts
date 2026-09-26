@@ -21,7 +21,7 @@ import { safeNotificationTarget } from './notification-target';
 const APP_DIR = resolve(__dirname, '../app');
 
 /** The origin the worker sandbox runs on, so both rules resolve against one. */
-const WORKER_ORIGIN = 'https://monize.test';
+const WORKER_ORIGIN = 'https://artha.test';
 const BACKEND_SRC = resolve(__dirname, '../../../backend/src');
 
 // ---------------------------------------------------------------------------

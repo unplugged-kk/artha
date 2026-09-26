@@ -82,7 +82,7 @@ describe("DemoSeedService", () => {
           call[0].includes("SELECT id FROM users") && call[0].includes("email"),
       );
       expect(userLookup).toBeDefined();
-      expect(userLookup[1]).toContain("demo@monize.com");
+      expect(userLookup[1]).toContain("demo@artha.local");
     });
 
     it("throws if demo user is not found after base seeding", async () => {

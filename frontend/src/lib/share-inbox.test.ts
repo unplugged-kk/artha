@@ -16,7 +16,7 @@ import {
   readSharedBundle,
 } from './share-inbox';
 
-const ORIGIN = 'https://monize.test';
+const ORIGIN = 'https://artha.test';
 
 /**
  * An in-memory stand-in for the Cache API. The real thing is not in jsdom, and

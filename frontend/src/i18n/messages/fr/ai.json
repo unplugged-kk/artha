@@ -225,7 +225,7 @@
     "step3": "Lancez une boucle d'agent pour que Claude écoute les requêtes de Artha :",
     "loopPrompt": "Loop forever: call get_next_prompt; if hasPrompt is false, call it again; otherwise handle the request with the Artha tools and call post_response with the answer; then repeat.",
     "codexHeading": "Ou utilisez Codex",
-    "codexNote": "Ajoutez ceci à ~/.codex/config.toml, définissez MONIZE_TOKEN sur votre jeton, puis exécutez codex et collez l'invite ci-dessus.",
+    "codexNote": "Ajoutez ceci à ~/.codex/config.toml, définissez ARTHA_TOKEN sur votre jeton, puis exécutez codex et collez l'invite ci-dessus.",
     "copy": "Copier",
     "copied": "Copié dans le presse-papiers"
   }

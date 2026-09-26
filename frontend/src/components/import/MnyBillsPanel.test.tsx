@@ -96,7 +96,7 @@ describe('MnyBillsPanel', () => {
     expect(screen.getByText('2 splits')).toBeInTheDocument();
   });
 
-  it('flags a bill whose Money interval Monize cannot express exactly', () => {
+  it('flags a bill whose Money interval Artha cannot express exactly', () => {
     render(
       <MnyBillsPanel
         {...defaultProps}

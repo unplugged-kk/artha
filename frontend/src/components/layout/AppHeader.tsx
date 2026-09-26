@@ -338,7 +338,7 @@ export function AppHeader() {
               className="hidden xl:flex items-center gap-2 text-2xl font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
             >
               <Image
-                src="/icons/monize-logo-transparent.svg"
+                src="/icons/artha-logo-transparent.svg"
                 alt="Artha"
                 width={32}
                 height={32}

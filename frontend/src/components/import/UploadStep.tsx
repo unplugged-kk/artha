@@ -17,8 +17,8 @@ interface UploadStepProps {
   mnyError?: { code?: string; message: string } | null;
 }
 
-const MS_MONEY_WIKI_URL = 'https://github.com/kenlasko/monize/wiki/Importing-from-Microsoft-Money';
-const QUICKEN_WIKI_URL = 'https://github.com/kenlasko/monize/wiki/Importing-from-Quicken';
+const MS_MONEY_WIKI_URL = 'https://github.com/unplugged-kk/artha/wiki/Importing-from-Microsoft-Money';
+const QUICKEN_WIKI_URL = 'https://github.com/unplugged-kk/artha/wiki/Importing-from-Quicken';
 
 function wikiLink(href: string) {
   return function WikiLink(chunks: React.ReactNode) {

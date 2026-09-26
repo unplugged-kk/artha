@@ -578,7 +578,7 @@ export function SecurityList({
               header is dropped -- but the controls in that header row must not
               go with it: these `<th>`s are how the list is sorted, the chosen
               field is persisted by the Securities page
-              (`monize-securities-sort-field`), and four of the nine sortable
+              (`artha-securities-sort-field`), and four of the nine sortable
               columns are invisible at phone width (Exchange and Currency below
               `sm`, Provider and Source below `md`), so a phone could be left
               sorted by a field it can neither see nor undo. A slim control

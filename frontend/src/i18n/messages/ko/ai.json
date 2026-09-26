@@ -225,7 +225,7 @@
     "step3": "에이전트 루프를 시작하여 Claude가 Artha의 쿼리를 수신하도록 하세요:",
     "loopPrompt": "Loop forever: call get_next_prompt; if hasPrompt is false, call it again; otherwise handle the request with the Artha tools and call post_response with the answer; then repeat.",
     "codexHeading": "또는 Codex 사용",
-    "codexNote": "이것을 ~/.codex/config.toml에 추가하고 MONIZE_TOKEN을 토큰으로 설정한 다음 codex를 실행하고 위의 프롬프트를 붙여넣으세요.",
+    "codexNote": "이것을 ~/.codex/config.toml에 추가하고 ARTHA_TOKEN을 토큰으로 설정한 다음 codex를 실행하고 위의 프롬프트를 붙여넣으세요.",
     "copy": "복사",
     "copied": "클립보드에 복사됨"
   }

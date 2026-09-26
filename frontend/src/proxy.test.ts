@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import { proxy } from './proxy';
 
-const BASE = 'https://monize.laskonet.com';
+const BASE = 'https://artha.laskonet.com';
 
 function makeRequest(
   path: string,
@@ -96,7 +96,7 @@ describe('proxy MCP-at-root routing', () => {
     fetchMock.mockResolvedValueOnce(
       new Response('{"error":{"message":"Unauthorized"}}', {
         status: 401,
-        headers: { 'www-authenticate': 'Bearer realm="monize"' },
+        headers: { 'www-authenticate': 'Bearer realm="artha"' },
       }),
     );
     const request = makeRequest('/', {

@@ -339,7 +339,7 @@ describe("mapInvestments", () => {
 
     /**
      * Money's cash capital-gain distributions (issue #1149): short-term
-     * (act 24) and long-term (act 26) both pay into the cash sleeve. Monize
+     * (act 24) and long-term (act 26) both pay into the cash sleeve. Artha
      * has a single CAPITAL_GAIN action, so the term distinction ends at the
      * import. As cash payouts they are expected to have no TRN_INV row, and
      * its absence is not a missing-detail defect.

@@ -80,12 +80,12 @@ describe("prompt-templates", () => {
 
     it("includes entity link rules with the structured URI forms", () => {
       expect(QUERY_SYSTEM_PROMPT).toMatch(/ENTITY LINK RULES/);
-      expect(QUERY_SYSTEM_PROMPT).toMatch(/monize:\/\/account\/<id>/);
-      expect(QUERY_SYSTEM_PROMPT).toMatch(/monize:\/\/payee\/<id>/);
-      expect(QUERY_SYSTEM_PROMPT).toMatch(/monize:\/\/category\/<id>/);
-      expect(QUERY_SYSTEM_PROMPT).toMatch(/monize:\/\/transaction\/<id>/);
-      expect(QUERY_SYSTEM_PROMPT).toMatch(/monize:\/\/security\/<securityId>/);
-      expect(QUERY_SYSTEM_PROMPT).toMatch(/monize:\/\/scheduled\/<id>/);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/artha:\/\/account\/<id>/);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/artha:\/\/payee\/<id>/);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/artha:\/\/category\/<id>/);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/artha:\/\/transaction\/<id>/);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/artha:\/\/security\/<securityId>/);
+      expect(QUERY_SYSTEM_PROMPT).toMatch(/artha:\/\/scheduled\/<id>/);
     });
 
     it("forbids ending a turn on a promise to keep working", () => {

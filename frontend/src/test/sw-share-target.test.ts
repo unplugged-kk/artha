@@ -32,7 +32,7 @@ import { ACCEPTED_ATTACHMENT_TYPES } from '@/types/attachment';
 
 const swSource = readFileSync(resolve(__dirname, '../../public/sw.js'), 'utf8');
 
-const ORIGIN = 'https://monize.test';
+const ORIGIN = 'https://artha.test';
 
 interface SharedInput {
   name: string;
@@ -481,12 +481,12 @@ describe('service worker share stash lifetime', () => {
       sw.shareRequest([{ name: 'a.png', type: 'image/png' }]),
     );
     // A cache from an older worker, which activate is entitled to drop.
-    await sw.caches.open('monize-static-v2');
+    await sw.caches.open('artha-static-v2');
 
     await sw.dispatchActivate();
 
     expect(await sw.caches.keys()).toContain(SHARE_CACHE_NAME);
-    expect(await sw.caches.keys()).not.toContain('monize-static-v2');
+    expect(await sw.caches.keys()).not.toContain('artha-static-v2');
     expect(sw.shareStore().size).toBeGreaterThan(0);
   });
 

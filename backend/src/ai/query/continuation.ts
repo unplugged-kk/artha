@@ -118,7 +118,7 @@ const CARD_PROMISE_PATTERNS: readonly RegExp[] = [
  * followed by the actual summary does not trip it.
  *
  * Measured after markdown link targets are stripped: a single
- * `[Automobile: Accessories](monize://category/...)` is ~60 characters of URL
+ * `[Automobile: Accessories](artha://category/...)` is ~60 characters of URL
  * the reader never sees, and two of them pushed the actual stall
  * ("I am currently gathering the remaining split details") out of the window
  * on the reply that motivated this.

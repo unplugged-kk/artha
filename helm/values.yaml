@@ -1,10 +1,10 @@
 # -- Global settings
 global:
   # -- Namespace for all resources
-  namespace: monize
+  namespace: artha
   # -- Application domain name
   domain: yourdomain.com
-  # -- Full application hostname (defaults to monize.<domain>)
+  # -- Full application hostname (defaults to artha.<domain>)
   hostname: ""
   # -- Timezone for all containers
   timezone: ""
@@ -21,7 +21,7 @@ backend:
   # -- Image settings
   image:
     registry: ghcr.io
-    repository: kenlasko/monize/backend
+    repository: unplugged-kk/artha/backend
     tag: latest
     pullPolicy: IfNotPresent
 
@@ -249,7 +249,7 @@ backend:
   # NOTE: DATABASE_APP_PASSWORD is a secret -- supply it alongside
   # DATABASE_PASSWORD via extraEnvFrom (secretRef) or extraEnv
   # (valueFrom.secretKeyRef), never here.
-  # On CNPG the owner (DATABASE_USER) has no CREATEROLE, so the monize_app role
+  # On CNPG the owner (DATABASE_USER) has no CREATEROLE, so the artha_app role
   # cannot be created by the app at startup -- provision it with the CNPG
   # DatabaseRole CRD (CloudNativePG 1.30+; see helm/README.md), or the older
   # Cluster `spec.managed.roles` stanza on pre-1.30. Startup then only applies
@@ -258,8 +258,8 @@ backend:
     # off | shadow | enforce
     RLS_MODE: "off"
     # Name of the unprivileged runtime role (must match the CNPG managed role /
-    # DATABASE_APP_PASSWORD secret). Defaults to monize_app when blank.
-    DATABASE_APP_USER: "monize_app"
+    # DATABASE_APP_PASSWORD secret). Defaults to artha_app when blank.
+    DATABASE_APP_USER: "artha_app"
 
   # -- Authentication settings
   auth:
@@ -313,19 +313,19 @@ backend:
   extraVolumes: []
   #   - name: extra-backups
   #     persistentVolumeClaim:
-  #       claimName: nas-monize-backups
+  #       claimName: nas-artha-backups
 
   # -- Additional volume mounts for the backend container
   extraVolumeMounts: []
   #   - name: extra-backups
-  #     mountPath: /mnt/nas/monize
+  #     mountPath: /mnt/nas/artha
 
 # -- Frontend configuration
 frontend:
   # -- Image settings
   image:
     registry: ghcr.io
-    repository: kenlasko/monize/frontend
+    repository: unplugged-kk/artha/frontend
     tag: latest
     pullPolicy: IfNotPresent
 
@@ -396,7 +396,7 @@ frontend:
   # -- General application settings
   app:
     NODE_ENV: production
-    # -- INTERNAL_API_URL (defaults to http://monize-backend-service:<backend.service.port>)
+    # -- INTERNAL_API_URL (defaults to http://artha-backend-service:<backend.service.port>)
     INTERNAL_API_URL: ""
     # -- PUBLIC_APP_URL (defaults to https://<hostname>)
     PUBLIC_APP_URL: ""
@@ -423,9 +423,9 @@ ingress:
   annotations: {}
   # -- TLS configuration
   tls: []
-  #   - secretName: monize-tls
+  #   - secretName: artha-tls
   #     hosts:
-  #       - monize.yourdomain.com
+  #       - artha.yourdomain.com
 
 # -- HTTPRoute configuration (Gateway API)
 httpRoute:

@@ -95,8 +95,8 @@ describe("DemoResetService", () => {
     );
     expect(userQuery).toBeDefined();
     // Parameterized, not interpolated: the email travels as $1.
-    expect(userQuery[0]).not.toContain("demo@monize.com");
-    expect(userQuery[1]).toEqual(["demo@monize.com"]);
+    expect(userQuery[0]).not.toContain("demo@artha.local");
+    expect(userQuery[1]).toEqual(["demo@artha.local"]);
   });
 
   // RLS (task C3): the reset's cross-user raw SQL runs under a system context.

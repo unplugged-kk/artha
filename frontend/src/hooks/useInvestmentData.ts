@@ -41,7 +41,7 @@ export function useInvestmentData() {
   const router = useRouter();
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [allAccounts, setAllAccounts] = useState<Account[]>([]);
-  const [selectedAccountIds, setSelectedAccountIds] = useLocalStorage<string[]>('monize-investments-accounts', []);
+  const [selectedAccountIds, setSelectedAccountIds] = useLocalStorage<string[]>('artha-investments-accounts', []);
   const [portfolioSummary, setPortfolioSummary] = useState<PortfolioSummary | null>(null);
   const [transactions, setTransactions] = useState<InvestmentTransaction[]>([]);
   const [pagination, setPagination] = useState<InvestmentTransactionPaginationInfo | null>(null);

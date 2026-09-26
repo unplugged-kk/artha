@@ -195,7 +195,7 @@ describe("export streaming", () => {
     await service.streamExport(userId, res);
 
     const fetches = statements.filter((sql) =>
-      /^FETCH FORWARD \d+ FROM monize_export_/.test(sql),
+      /^FETCH FORWARD \d+ FROM artha_export_/.test(sql),
     );
     const transactionsCursor = statements.find(
       (sql) => sql.startsWith("DECLARE") && /FROM transactions\b/.test(sql),
@@ -273,7 +273,7 @@ describe("export streaming", () => {
     await service.streamExport(userId, res, "a-password");
 
     const written = Buffer.concat(chunks);
-    expect(written.subarray(0, 4).toString("ascii")).toBe("MZBE");
+    expect(written.subarray(0, 4).toString("ascii")).toBe("ARBE");
     expect(written[4]).toBe(2);
     // Statements were still being issued after the first bytes went out.
     expect(seenAtFirstWrite[0]).toBeLessThan(statements.length);

@@ -34,7 +34,7 @@ import {
  *
  * Money keeps an investment account's cash in a companion account and records
  * the cash half of a trade there as an ordinary `TRN` row paired to the trade
- * through `TRN_XFER`. Monize writes that row itself, from the investment
+ * through `TRN_XFER`. Artha writes that row itself, from the investment
  * transaction, so importing Money's copy as well produced three rows where
  * Money shows one: the purchase, plus a transfer in and a transfer out that
  * cancelled each other.
@@ -226,7 +226,7 @@ describe("a trade funded from the brokerage's own cash account", () => {
 describe("a trade funded from an outside account (issue #1212)", () => {
   /**
    * Money records the cash half in the account that paid -- here chequing --
-   * and pairs it with the trade. Monize used to read that pairing as a transfer
+   * and pairs it with the trade. Artha used to read that pairing as a transfer
    * into the brokerage's cash sleeve, then have the trade take the money
    * straight back out again: two rows in a register Money shows nothing in, and
    * a purchase that claimed to be funded by the sleeve rather than by the
@@ -405,7 +405,7 @@ describe("a trade funded from an outside account (issue #1212)", () => {
 
 describe("a trade the investment mapper did not write", () => {
   it("keeps Money's own funding row as an ordinary transfer", () => {
-    // `act` 99 is not an action Monize knows, so there is no trade to fund.
+    // `act` 99 is not an action Artha knows, so there is no trade to fund.
     // Dropping the pairing's meaning here would be inventing one: the money
     // Money recorded still has to arrive somewhere, so the old synthesized
     // sleeve counterpart is what stands in for the row that will not exist.
@@ -458,7 +458,7 @@ describe("cash moved into the sleeve without a trade", () => {
 
 describe("a split with a leg paying for a trade (issue #1211)", () => {
   /**
-   * Issue #515 gave Monize a place for exactly this: a split leg whose amount
+   * Issue #515 gave Artha a place for exactly this: a split leg whose amount
    * *is* an investment action's cash impact, with the investment row embedded
    * in the leg. The import did not use it -- the leg became a transfer to the
    * brokerage's cash sleeve, so the register showed the purchase as a transfer
@@ -551,7 +551,7 @@ describe("a split with a leg paying for a trade (issue #1211)", () => {
 /**
  * A CD redemption that paid accrued interest. Money writes it as a split in the
  * cash account -- principal in the investment leg, interest in a sibling -- and
- * Monize records the interest on the redemption's own INTEREST companion
+ * Artha records the interest on the redemption's own INTEREST companion
  * instead, so the split has nothing left to hold and the parent becomes the
  * redemption's single cash row.
  * docs/specs/redemption-accrued-interest.md section 5.

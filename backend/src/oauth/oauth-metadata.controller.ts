@@ -9,7 +9,7 @@ import {
 /**
  * Publishes RFC 9728 OAuth Protected Resource Metadata at the well-known
  * URL. MCP clients fetch this after a 401 to discover which authorization
- * server to use for the Monize MCP endpoint.
+ * server to use for the Artha MCP endpoint.
  *
  * Mounted at the application root (excluded from /api/v1) so it lives at
  * `${PUBLIC_APP_URL}/.well-known/oauth-protected-resource`, which is the

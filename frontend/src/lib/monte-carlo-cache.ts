@@ -1,6 +1,6 @@
 import { SimulationResult } from './monte-carlo';
 
-const STORAGE_KEY = 'monize:monte-carlo-results';
+const STORAGE_KEY = 'artha:monte-carlo-results';
 
 type CacheMap = Record<string, SimulationResult>;
 

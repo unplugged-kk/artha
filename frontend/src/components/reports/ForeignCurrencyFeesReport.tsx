@@ -41,7 +41,7 @@ interface FeeResult {
   currency: string;
 }
 
-const ACCOUNTS_STORAGE_KEY = 'monize-reports-foreign-currency-fees-accounts';
+const ACCOUNTS_STORAGE_KEY = 'artha-reports-foreign-currency-fees-accounts';
 
 /**
  * Foreign Currency Transaction Fees report: the same chart and transaction

@@ -10,7 +10,7 @@ const logger = createLogger('Density');
  * Row density, per view, in one store under one key.
  *
  * It used to be thirteen stores under twelve keys: every page that showed a
- * table owned its own `useLocalStorage('monize-<view>-density')`, `AccountList`
+ * table owned its own `useLocalStorage('artha-<view>-density')`, `AccountList`
  * hand-rolled a thirteenth under a different prefix, and three surfaces -- the
  * investment account detail register among them -- persisted nothing at all and
  * fell through to a `useState('normal')` that reset on every remount. That is
@@ -28,7 +28,7 @@ const logger = createLogger('Density');
  * have to agree. Issue #1193 asks for exactly that -- "persisted in this
  * browser indefinitely".
  */
-export const DENSITY_STORAGE_KEY = 'monize-density';
+export const DENSITY_STORAGE_KEY = 'artha-density';
 
 /**
  * Every surface that remembers a density of its own.
@@ -84,18 +84,18 @@ export const DENSITY_VIEWS: readonly DensityView[] = [
  * forward, which is what issue #1193 was reported against.
  */
 export const LEGACY_DENSITY_KEYS: Readonly<Record<string, DensityView>> = {
-  'monize-transactions-density': 'transactions',
+  'artha-transactions-density': 'transactions',
   'accounts.filter.density': 'accounts',
-  'monize-investments-density': 'investments',
-  'monize-securities-density': 'securities',
-  'monize-payees-density': 'payees',
-  'monize-categories-density': 'categories',
-  'monize-tags-density': 'tags',
-  'monize-currencies-density': 'currencies',
-  'monize-institutions-density': 'institutions',
-  'monize-reports-density': 'reports',
-  'monize-category-detail-density': 'categoryDetail',
-  'monize-payee-detail-density': 'payeeDetail',
+  'artha-investments-density': 'investments',
+  'artha-securities-density': 'securities',
+  'artha-payees-density': 'payees',
+  'artha-categories-density': 'categories',
+  'artha-tags-density': 'tags',
+  'artha-currencies-density': 'currencies',
+  'artha-institutions-density': 'institutions',
+  'artha-reports-density': 'reports',
+  'artha-category-detail-density': 'categoryDetail',
+  'artha-payee-detail-density': 'payeeDetail',
 };
 
 export const DEFAULT_DENSITY: DensityLevel = 'normal';

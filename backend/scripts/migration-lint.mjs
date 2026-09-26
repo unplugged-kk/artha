@@ -285,7 +285,7 @@ export function collectDrops(statements, upToIndex) {
  */
 /**
  * Normalized role names out of a `TO`/`FROM` grantee list ("PUBLIC,
- * monize_app WITH GRANT OPTION" -> ["public", "monize_app"]). Tail options are
+ * artha_app WITH GRANT OPTION" -> ["public", "artha_app"]). Tail options are
  * cut first so `WITH GRANT OPTION` / `GRANTED BY` / `CASCADE` are not mistaken
  * for grantees. An entry the grammar cannot read comes back as "" -- not
  * provably PUBLIC, so the caller flags it rather than passing it.
@@ -513,7 +513,7 @@ export const RULES = [
    * that window in place instead of fighting this rule.
    *
    * Every grantee is checked, not just the first: `REVOKE ... FROM PUBLIC,
-   * monize_app` names a role exactly as much as `FROM monize_app` does. The
+   * artha_app` names a role exactly as much as `FROM artha_app` does. The
    * other statements that bind a specific role -- `OWNER TO`, `REASSIGN OWNED
    * BY`, `SET ROLE` / `SET SESSION AUTHORIZATION`, and a policy's `TO` clause
    * -- fail the same way a GRANT does, so they are covered by the same rule.
@@ -567,8 +567,8 @@ export const RULES = [
       const grant = /\b(GRANT|REVOKE)\b([\s\S]*)$/i.exec(text);
       if (grant) {
         // The grantee list follows TO (GRANT) or FROM (REVOKE); every
-        // comma-separated entry is checked -- `FROM PUBLIC, monize_app` names
-        // a role exactly as much as `FROM monize_app` does.
+        // comma-separated entry is checked -- `FROM PUBLIC, artha_app` names
+        // a role exactly as much as `FROM artha_app` does.
         const list = /\b(?:TO|FROM)\s+([\s\S]+)$/i.exec(grant[2]);
         if (!list || namesARole(granteesOf(list[1]))) {
           messages.push(

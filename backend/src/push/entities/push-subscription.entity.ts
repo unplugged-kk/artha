@@ -32,7 +32,7 @@ export enum PushDisabledReason {
  * User-owned and policied like any other user table. The endpoint, though, is
  * unique **globally** rather than per user, and that is a security property
  * rather than a normalization choice: `pushManager.subscribe()` is scoped to a
- * browser profile and an origin, not to a Monize session, so two people sharing
+ * browser profile and an origin, not to a Artha session, so two people sharing
  * one browser receive the same endpoint and the same encryption keys. Per-user
  * uniqueness would leave both rows alive and let a notification addressed to
  * the first account be decrypted and displayed on the device the second account

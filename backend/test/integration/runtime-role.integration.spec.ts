@@ -734,7 +734,7 @@ describe("Runtime role verification (real PostgreSQL)", () => {
         `GRANT pg_execute_server_program TO ${TEST_APP_ROLE} WITH INHERIT TRUE, SET FALSE`,
       );
       const app = await appRolePool();
-      const proof = `/tmp/monize-rr6-${Date.now()}`;
+      const proof = `/tmp/artha-rr6-${Date.now()}`;
       try {
         // The harm, demonstrated. `COPY ... TO PROGRAM` runs as the PostgreSQL OS
         // account; a NOSUPERUSER role could not do this without the membership.
@@ -918,7 +918,7 @@ describe("Runtime role verification (real PostgreSQL)", () => {
       // grants is `COPY ... FROM '<absolute path>'` -- a bare NOSUPERUSER role is
       // refused an absolute path outright. Write the file as the owner, then read
       // it into a temp table as the app to demonstrate what the membership adds.
-      const proof = `/tmp/monize-rr7-read-${Date.now()}`;
+      const proof = `/tmp/artha-rr7-read-${Date.now()}`;
       await dataSource.query(
         `COPY (SELECT 'rr7-read') TO PROGRAM 'cat > ${proof}'`,
       );
@@ -955,7 +955,7 @@ describe("Runtime role verification (real PostgreSQL)", () => {
       // The write half. A member can COPY ... TO an absolute path; a bare
       // NOSUPERUSER role gets "absolute path not allowed". Write as the app, then
       // read it back as the owner to prove the file landed on the host.
-      const proof = `/tmp/monize-rr7-write-${Date.now()}`;
+      const proof = `/tmp/artha-rr7-write-${Date.now()}`;
       await dataSource.query(
         `GRANT pg_write_server_files TO ${TEST_APP_ROLE} WITH INHERIT TRUE, SET FALSE`,
       );

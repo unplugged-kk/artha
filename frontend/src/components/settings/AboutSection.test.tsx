@@ -31,7 +31,7 @@ vi.mock('@/lib/updatesApi', () => ({
   },
 }));
 
-const REPO_URL = 'https://github.com/kenlasko/monize';
+const REPO_URL = 'https://github.com/unplugged-kk/artha';
 
 const adminUser = { id: 'u1', role: 'admin', authProvider: 'local' } as User;
 const regularUser = { id: 'u2', role: 'user', authProvider: 'local' } as User;

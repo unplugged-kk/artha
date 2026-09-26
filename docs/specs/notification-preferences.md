@@ -229,7 +229,7 @@ Stopping (R4), three doors, all landing on the same `stopReminder(userId, id)`:
    same-origin `fetch('/api/v1/notifications/reminders/<id>/stop', {method:'POST',
    credentials:'include'})` (cookies ride same-origin, and the CSRF double-submit
    cookie is readable in the SW to set the header). A failure is retried once and
-   otherwise surfaced as a follow-up notification "could not stop -- open Monize"
+   otherwise surfaced as a follow-up notification "could not stop -- open Artha"
    rather than silently leaving the nag running.
 3. **From opening the notification** -- clicking the body (not the Stop action)
    deep-links to the subject (R6) and marks read; a read notification whose
@@ -1080,7 +1080,7 @@ delivery to the actual ntfy deployment over LAN remains a smoke test.
 **What it is not.** A browser PWA cannot *receive* at an arbitrary endpoint --
 `pushManager.subscribe()` is bound to the browser's own push service. So a
 UnifiedPush subscription is registered by a **UnifiedPush-capable client** (a
-native/wrapped Monize build, or a browser whose own push service already is a
+native/wrapped Artha build, or a browser whose own push service already is a
 self-hosted UnifiedPush endpoint -- which the ordinary `push` channel already
 covers). The client posts its endpoint and keys through the same
 `POST /push/subscriptions`, tagging `transport: "unifiedpush"`. The web settings
@@ -1095,8 +1095,8 @@ rather than offering a browser button that could never receive.
 recipient key storage, owner-authenticated registration, encrypted ntfy polling,
 checkpointed reconnects and subscription removal. It uses the existing
 `POST /push/subscriptions` with `transport: "unifiedpush"`; no authentication,
-SSRF or delivery gate is relaxed. Monize session credentials are sent only to
-Monize and are unnecessary while listening. Message copy is localized by the
+SSRF or delivery gate is relaxed. Artha session credentials are sent only to
+Artha and are unnecessary while listening. Message copy is localized by the
 server; the receiver emits JSON and accepts only same-origin navigation targets.
 
 This closes the absence of any registering receiver in the tree for ntfy.
@@ -1170,7 +1170,7 @@ there with their enforcement status).
 
 Section 12 recorded autonomous defaults with the caveat that a human confirms
 them before shipping to users. The maintainer answered the #1291 "Open questions"
-directly in **discussion kenlasko/monize#1291, comment dated 2026-09-01**; each
+directly in **discussion kenlasko/artha#1291, comment dated 2026-09-01**; each
 item below cites that answer, so it is a **confirmed decision, not an AI default**.
 Where an answer expands scope beyond PR #1304 it is marked **NEW** -- a follow-on
 surface or producer, with its spec obligation named. (Per the org rule that AI

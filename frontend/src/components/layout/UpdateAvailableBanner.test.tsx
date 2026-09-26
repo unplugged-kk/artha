@@ -30,8 +30,8 @@ const baseStatus: UpdateStatus = {
   currentVersion: '1.8.40',
   latestVersion: '1.9.0',
   updateAvailable: true,
-  releaseUrl: 'https://github.com/kenlasko/monize/releases/tag/v1.9.0',
-  releaseName: 'Monize 1.9.0',
+  releaseUrl: 'https://github.com/unplugged-kk/artha/releases/tag/v1.9.0',
+  releaseName: 'Artha 1.9.0',
   publishedAt: '2026-02-01T00:00:00Z',
   checkedAt: '2026-02-02T00:00:00Z',
   dismissed: false,
@@ -90,7 +90,7 @@ describe('UpdateAvailableBanner', () => {
     const link = screen.getByRole('link', { name: /release notes/i });
     expect(link).toHaveAttribute(
       'href',
-      'https://github.com/kenlasko/monize/releases/tag/v1.9.0',
+      'https://github.com/unplugged-kk/artha/releases/tag/v1.9.0',
     );
     expect(link).toHaveAttribute('target', '_blank');
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');

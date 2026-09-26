@@ -2195,7 +2195,7 @@ describe('DividendIncomeReport', () => {
 
   it('restores the persisted account selection on the first fetch', async () => {
     window.localStorage.setItem(
-      'monize-reports-dividend-income-accounts',
+      'artha-reports-dividend-income-accounts',
       JSON.stringify(['acc-1']),
     );
     mockGetTransactions.mockResolvedValue({ data: [], pagination: { hasMore: false } });
@@ -2216,7 +2216,7 @@ describe('DividendIncomeReport', () => {
 
   it('drops persisted account IDs that no longer exist once accounts load', async () => {
     window.localStorage.setItem(
-      'monize-reports-dividend-income-accounts',
+      'artha-reports-dividend-income-accounts',
       JSON.stringify(['acc-1', 'gone']),
     );
     mockGetTransactions.mockResolvedValue({ data: [], pagination: { hasMore: false } });
@@ -2225,7 +2225,7 @@ describe('DividendIncomeReport', () => {
     render(<DividendIncomeReport />);
     await waitFor(() => {
       expect(
-        window.localStorage.getItem('monize-reports-dividend-income-accounts'),
+        window.localStorage.getItem('artha-reports-dividend-income-accounts'),
       ).toBe(JSON.stringify(['acc-1']));
     });
   });

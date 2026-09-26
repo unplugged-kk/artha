@@ -79,7 +79,7 @@ describe("toAmount", () => {
     expect(toAmount("-1234.5678")).toBe(-1234.5678);
   });
 
-  it("rounds to the four decimal places Monize stores", () => {
+  it("rounds to the four decimal places Artha stores", () => {
     expect(toAmount("1.000049")).toBe(1);
     expect(toAmount(2.00005)).toBe(2.0001);
   });

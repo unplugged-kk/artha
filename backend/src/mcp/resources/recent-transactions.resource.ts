@@ -15,7 +15,7 @@ export class McpRecentTransactionsResource {
   register(server: McpServer) {
     server.registerResource(
       "recent-transactions",
-      "monize://recent-transactions",
+      "artha://recent-transactions",
       {
         // Live data: a cached answer here is a stale figure, not a stale name.
         cacheHint: { ttlMs: 0, cacheScope: "private" },
@@ -28,7 +28,7 @@ export class McpRecentTransactionsResource {
           return {
             contents: [
               {
-                uri: "monize://recent-transactions",
+                uri: "artha://recent-transactions",
                 text: "Error: No user context",
               },
             ],
@@ -38,7 +38,7 @@ export class McpRecentTransactionsResource {
           return {
             contents: [
               {
-                uri: "monize://recent-transactions",
+                uri: "artha://recent-transactions",
                 text: 'Error: Insufficient scope. Requires "read" scope.',
               },
             ],
@@ -82,7 +82,7 @@ export class McpRecentTransactionsResource {
           return {
             contents: [
               {
-                uri: "monize://recent-transactions",
+                uri: "artha://recent-transactions",
                 mimeType: "application/json",
                 text: JSON.stringify(
                   {
@@ -128,7 +128,7 @@ export class McpRecentTransactionsResource {
           return {
             contents: [
               {
-                uri: "monize://recent-transactions",
+                uri: "artha://recent-transactions",
                 text: "Error: An error occurred while loading recent transactions",
               },
             ],

@@ -12,7 +12,7 @@ import {
  * model, so it is declared here rather than cast away at the call site.
  *
  * Files only: no `title`, `text` or `url` params. Declaring those would put
- * Monize in the share sheet for every piece of text on the device, and a plain
+ * Artha in the share sheet for every piece of text on the device, and a plain
  * text share has no destination here that is not a guess.
  */
 type ShareTargetManifest = MetadataRoute.Manifest & {
@@ -48,7 +48,7 @@ export function buildManifest(
     background_color: page,
     theme_color: page,
     orientation: 'portrait-primary',
-    // Put Monize in the OS share sheet for receipts and statement exports. The
+    // Put Artha in the OS share sheet for receipts and statement exports. The
     // POST is answered by the service worker, which stashes the files and sends
     // the user to /share to review them -- nothing is imported or attached
     // without an explicit action there. The accept list is derived in

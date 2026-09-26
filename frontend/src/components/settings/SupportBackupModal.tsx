@@ -130,7 +130,7 @@ export function SupportBackupModal({ isOpen, onClose }: SupportBackupModalProps)
       // Prefer the server-chosen name; fall back to the same convention
       // (always encrypted, so always the encrypted-envelope extension).
       const today = new Date().toISOString().slice(0, 10);
-      downloadBlob(blob, filename ?? `monize-support-backup-${today}.mzbe`);
+      downloadBlob(blob, filename ?? `artha-support-backup-${today}.mzbe`);
       toast.success(t('generatedToast'));
       onClose();
     } catch (err) {

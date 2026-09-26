@@ -119,8 +119,8 @@ export class ImportInvestmentProcessorService {
       div: InvestmentAction.DIVIDEND,
       intinc: InvestmentAction.INTEREST,
       // Quicken/Money distinguish the term of a capital-gain distribution and
-      // whether it was reinvested; Monize carries the full vocabulary (issue
-      // #1149), so nothing is collapsed. CGMid/ReinvMd have no Monize term
+      // whether it was reinvested; Artha carries the full vocabulary (issue
+      // #1149), so nothing is collapsed. CGMid/ReinvMd have no Artha term
       // refinement and keep the base action.
       cglong: InvestmentAction.CAPITAL_GAIN_LONG,
       cgshort: InvestmentAction.CAPITAL_GAIN_SHORT,

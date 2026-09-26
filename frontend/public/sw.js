@@ -1,10 +1,10 @@
-const CACHE_NAME = 'monize-static-v3';
+const CACHE_NAME = 'artha-static-v3';
 
 // Synthetic cache key for the localized offline-fallback strings. Populated
 // by OfflineFallbackSync (a postMessage handshake from the app), read by
 // buildOfflineResponse. Never served to a fetch: it is not a static asset
 // and navigations are handled separately.
-var OFFLINE_STRINGS_URL = '/__monize/offline-strings';
+var OFFLINE_STRINGS_URL = '/__artha/offline-strings';
 
 // How long a navigation may hang before the offline fallback is served.
 // Without this, an unreachable or stalled server leaves the installed PWA
@@ -70,11 +70,11 @@ function isStaticAsset(url) {
 // agree, the same way sw-offline.test.ts pins the boot palette.
 // ---------------------------------------------------------------------------
 
-var SHARE_CACHE_NAME = 'monize-share-v1';
+var SHARE_CACHE_NAME = 'artha-share-v1';
 var SHARE_TARGET_PATH = '/share-target';
 var SHARE_PAGE_PATH = '/share';
-var SHARE_KEY_PREFIX = '/__monize/share/';
-var SHARE_NAME_HEADER = 'X-Monize-Share-Name';
+var SHARE_KEY_PREFIX = '/__artha/share/';
+var SHARE_NAME_HEADER = 'X-Artha-Share-Name';
 var SHARE_TARGET_FILES_FIELD = 'files';
 
 var SHARE_MAX_FILE_BYTES = 10 * 1024 * 1024;
@@ -293,7 +293,7 @@ function handleShareTarget(request) {
     })
     .catch(function () {
       // A malformed body, a storage refusal, a quota error: the user still
-      // lands on a Monize page that explains, never on a browser error page.
+      // lands on a Artha page that explains, never on a browser error page.
       return shareRedirect(SHARE_PAGE_PATH + '?error=stash');
     });
 }
@@ -334,7 +334,7 @@ self.addEventListener('activate', function (event) {
 // Offline-strings handshake from the app (OfflineFallbackSync).
 self.addEventListener('message', function (event) {
   var data = event.data;
-  if (!data || data.type !== 'monize-offline-strings' || !data.payload) return;
+  if (!data || data.type !== 'artha-offline-strings' || !data.payload) return;
 
   var stored = {};
   Object.keys(OFFLINE_DEFAULT_STRINGS).forEach(function (key) {
@@ -425,7 +425,7 @@ function safeNotificationPath(value) {
  * in the tag.
  */
 function collapseTag(payload) {
-  var type = pushText(payload.type, 'monize');
+  var type = pushText(payload.type, 'artha');
   var key = pushText(payload.collapseKey, '');
   return key === '' ? type : type + '|' + key;
 }
@@ -532,7 +532,7 @@ function announceSubscriptionChange() {
     .matchAll({ type: 'window', includeUncontrolled: true })
     .then(function (clientList) {
       for (var i = 0; i < clientList.length; i++) {
-        clientList[i].postMessage({ type: 'monize-push-subscription-changed' });
+        clientList[i].postMessage({ type: 'artha-push-subscription-changed' });
       }
     });
 }
@@ -787,7 +787,7 @@ function buildOfflineHtml(strings) {
     '</style>' +
     '</head>' +
     '<body>' +
-    '<img src="/icons/monize-logo-transparent.svg" alt="">' +
+    '<img src="/icons/artha-logo-transparent.svg" alt="">' +
     '<h1>' + escapeHtml(strings.title) + '</h1>' +
     '<p>' + escapeHtml(strings.message) + '</p>' +
     '<a href="/">' + escapeHtml(strings.retry) + '</a>' +

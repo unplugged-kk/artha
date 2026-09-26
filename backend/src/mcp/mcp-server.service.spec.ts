@@ -104,7 +104,7 @@ describe("McpServerService", () => {
       name: string;
       version: string;
     };
-    expect(serverInfo.name).toBe("monize");
+    expect(serverInfo.name).toBe("artha");
     expect(serverInfo.version).toBe(version);
     expect(serverInfo.version).not.toBe("1.0.0");
   });

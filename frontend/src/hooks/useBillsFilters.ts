@@ -6,11 +6,11 @@ import {
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 const STORAGE_KEYS = {
-  nameSearch: 'monize-bills-name-search',
-  payeeIds: 'monize-bills-payee-ids',
-  accountIds: 'monize-bills-account-ids',
-  categoryIds: 'monize-bills-category-ids',
-  filtersExpanded: 'monize-bills-filters-expanded',
+  nameSearch: 'artha-bills-name-search',
+  payeeIds: 'artha-bills-payee-ids',
+  accountIds: 'artha-bills-account-ids',
+  categoryIds: 'artha-bills-category-ids',
+  filtersExpanded: 'artha-bills-filters-expanded',
 } as const;
 
 /**

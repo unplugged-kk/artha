@@ -231,7 +231,7 @@ function CustomTooltip({ active, payload, formatCurrencyFull, getHoldingsLabel }
   );
 }
 
-const ACCOUNTS_STORAGE_KEY = 'monize-reports-security-type-allocation-accounts';
+const ACCOUNTS_STORAGE_KEY = 'artha-reports-security-type-allocation-accounts';
 
 export function SecurityTypeAllocationReport() {
   const t = useTranslations('reports');

@@ -69,7 +69,7 @@ jobs:
       - name: Prune untagged GHCR manifests
         env:
           OWNER: ${{ github.repository_owner }}
-          PACKAGES: monize-backend monize-frontend
+          PACKAGES: artha-backend artha-frontend
           GRACE_DAYS: '7'
           DRY_RUN: ${{ steps.mode.outputs.dry_run }}
           # Deletion needs a token with delete rights on the packages. The

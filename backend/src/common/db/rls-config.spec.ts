@@ -54,9 +54,9 @@ describe("getRlsMode", () => {
 
 describe("resolveRlsDatabaseAuth", () => {
   const owner = {
-    databaseUser: "monize_user",
+    databaseUser: "artha_user",
     databasePassword: "owner-pw",
-    appUser: "monize_app",
+    appUser: "artha_app",
     appPassword: "app-pw",
   };
 
@@ -64,7 +64,7 @@ describe("resolveRlsDatabaseAuth", () => {
     "connects with the owner credentials in %s mode",
     (mode) => {
       expect(resolveRlsDatabaseAuth({ mode, ...owner })).toEqual({
-        username: "monize_user",
+        username: "artha_user",
         password: "owner-pw",
       });
     },
@@ -72,7 +72,7 @@ describe("resolveRlsDatabaseAuth", () => {
 
   it("connects with the app credentials in enforce mode", () => {
     expect(resolveRlsDatabaseAuth({ mode: "enforce", ...owner })).toEqual({
-      username: "monize_app",
+      username: "artha_app",
       password: "app-pw",
     });
   });
@@ -97,11 +97,11 @@ describe("resolveRlsDatabaseAuth", () => {
     expect(
       resolveRlsDatabaseAuth({
         mode: "off",
-        databaseUser: "monize_user",
+        databaseUser: "artha_user",
         databasePassword: "owner-pw",
         appUser: undefined,
         appPassword: undefined,
       }),
-    ).toEqual({ username: "monize_user", password: "owner-pw" });
+    ).toEqual({ username: "artha_user", password: "owner-pw" });
   });
 });

@@ -1,6 +1,6 @@
 # Row-Level Security contract
 
-What row-level security guarantees in Monize, which tables are exempt from it and
+What row-level security guarantees in Artha, which tables are exempt from it and
 why, and which direct-`DataSource` access paths are sanctioned. This is the
 canonical document: migration comments, the schema, the runbook and the source
 point here rather than restating a rationale of their own.
@@ -70,7 +70,7 @@ ran in `npm run test:unit` and nothing failed.
 | `market_index_sync` | Sync bookkeeping for that refresh; same ownership story. |
 | `oauth_payloads` | See section 3. |
 | `provider_health` | Deployment-wide availability of an outbound market-data provider, plus the bookkeeping that keeps one outage to one alert. One Yahoo outage is every user's Yahoo outage: there is no owner column, and a per-user copy would multiply both the alert and the provider traffic by the number of accounts. Written under system context on transitions only, and read only by the alert sweep -- nothing user-identifiable is stored, and `last_failure_reason` is a network diagnostic, bounded on write. |
-| `push_instance_config` | The deployment's Web Push identity: one VAPID key pair per Monize instance, generated on first start. There is no owner column because there is no owner -- one key pair signs for every account, and a per-user pair is exactly what discussion #1291 rejected (it would multiply the browser's subscription registrations by the number of accounts and gain nothing, since the push service authenticates the *sender*, not the recipient). Written under system context by the bootstrap hook and by an administrator's rotation; the private half is AES-256-GCM ciphertext under `ENCRYPTION_KEY` and is read only by `PushConfigService`. The subscriptions it signs for, `push_subscriptions`, are user-owned and carry the ordinary direct policy. |
+| `push_instance_config` | The deployment's Web Push identity: one VAPID key pair per Artha instance, generated on first start. There is no owner column because there is no owner -- one key pair signs for every account, and a per-user pair is exactly what discussion #1291 rejected (it would multiply the browser's subscription registrations by the number of accounts and gain nothing, since the push service authenticates the *sender*, not the recipient). Written under system context by the bootstrap hook and by an administrator's rotation; the private half is AES-256-GCM ciphertext under `ENCRYPTION_KEY` and is read only by `PushConfigService`. The subscriptions it signs for, `push_subscriptions`, are user-owned and carry the ordinary direct policy. |
 | `schema_migrations` | Migration infrastructure, written only by `db-migrate` running as the owner. `INSERT`/`UPDATE`/`DELETE` are revoked from the runtime role (DR-02). |
 | `tax_rules` | Global statutory reference data: the FY-versioned tax rule catalogue, keyed by financial year and regime. A slab is a property of the law, not of the household -- the same FY 2025-2026 new-regime slabs apply to every user on the instance. There is no owner column to policy on, and it is not indirect either: it has no parent row to resolve ownership through. A per-user copy would have to be reseeded per user and could silently disagree with the rule version an estimate cites. Seeded by the tax engine (Phase 6) and never user-authored. |
 
@@ -80,7 +80,7 @@ ran in `npm run test:unit` and nothing failed.
 
 `oidc-provider` needs durable storage for authorization codes, access and
 refresh tokens, grants, sessions, interactions and device codes. Some of that
-storage happens *before* Monize has an authenticated application user -- during
+storage happens *before* Artha has an authenticated application user -- during
 `authorize`, there is no session yet to derive an identity from.
 
 `oauth_payloads` has no meaningful end-user ownership key. Rows are addressed by

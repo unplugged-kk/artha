@@ -43,11 +43,11 @@ export function RelayConnectInstructions() {
   const t = useTranslations('ai');
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
   const mcpUrl = `${origin}/api/v1/mcp`;
-  const mcpCommand = `claude mcp add --transport http monize ${mcpUrl} --header "Authorization: Bearer <your-token>"`;
-  const claudeRun = 'claude --allowedTools "mcp__monize__*"';
-  const codexToml = `[mcp_servers.monize]
+  const mcpCommand = `claude mcp add --transport http artha ${mcpUrl} --header "Authorization: Bearer <your-token>"`;
+  const claudeRun = 'claude --allowedTools "mcp__artha__*"';
+  const codexToml = `[mcp_servers.artha]
 url = "${mcpUrl}"
-bearer_token_env_var = "MONIZE_TOKEN"
+bearer_token_env_var = "ARTHA_TOKEN"
 default_tools_approval_mode = "auto"`;
   const loopPrompt = t('relay.loopPrompt');
 

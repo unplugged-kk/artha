@@ -225,7 +225,7 @@
     "step3": "Start an agent loop so Claude listens for queries from Artha:",
     "loopPrompt": "Loop forever: call get_next_prompt; if hasPrompt is false, call it again; otherwise handle the request with the Artha tools and call post_response with the answer; then repeat.",
     "codexHeading": "Or use Codex",
-    "codexNote": "Add this to ~/.codex/config.toml, set MONIZE_TOKEN to your token, then run codex and paste the prompt above.",
+    "codexNote": "Add this to ~/.codex/config.toml, set ARTHA_TOKEN to your token, then run codex and paste the prompt above.",
     "copy": "Copy",
     "copied": "Copied to clipboard"
   }

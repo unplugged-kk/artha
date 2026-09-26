@@ -134,7 +134,7 @@ export class EmailService implements OnModuleInit {
 
     const from = this.configService.get<string>(
       "EMAIL_FROM",
-      "noreply@monize.app",
+      "noreply@artha.app",
     );
     try {
       await this.transporter.sendMail({ from, to, subject, html });

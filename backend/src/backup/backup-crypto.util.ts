@@ -30,7 +30,7 @@ export { BackupDecryptionError };
  */
 
 /**
- * True if `buf` carries the Monize encrypted-backup magic header, in either
+ * True if `buf` carries the Artha encrypted-backup magic header, in either
  * container version. Used so restore can tell whether the upload is a raw gzip
  * backup (legacy) or an encrypted envelope, without trying both code paths.
  */
@@ -67,7 +67,7 @@ export async function encryptBackup(
 }
 
 /**
- * Decrypt a Monize encrypted-backup envelope, whichever container it uses. A
+ * Decrypt a Artha encrypted-backup envelope, whichever container it uses. A
  * wrong password (or any tampering) surfaces as a BackupDecryptionError --
  * callers map this to a prompt-for-password response instead of a transaction
  * failure.

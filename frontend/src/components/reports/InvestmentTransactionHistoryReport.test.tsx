@@ -369,7 +369,7 @@ describe('InvestmentTransactionHistoryReport', () => {
 
   it('restores the persisted account selection', async () => {
     window.localStorage.setItem(
-      'monize-reports-investment-transactions-accounts',
+      'artha-reports-investment-transactions-accounts',
       JSON.stringify(['acc-1']),
     );
     mockGetTransactions.mockResolvedValue({ data: [], pagination: { hasMore: false } });

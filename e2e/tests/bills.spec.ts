@@ -121,7 +121,7 @@ test.describe('Bills & Deposits', () => {
     await calendarButton.click();
 
     // Exact matching so short labels like "Mon" don't collide with
-    // "Monize" / "Monthly Net".
+    // "Artha" / "Monthly Net".
     await expect(page.getByText('Sun', { exact: true })).toBeVisible();
     await expect(page.getByText('Mon', { exact: true })).toBeVisible();
     await expect(page.getByText('Sat', { exact: true })).toBeVisible();

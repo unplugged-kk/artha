@@ -6,7 +6,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
  * under one key.
  *
  * One store rather than one per section, for the reason `densityStore` gives:
- * thirteen surfaces each owning their own `useLocalStorage('monize-<x>')` is
+ * thirteen surfaces each owning their own `useLocalStorage('artha-<x>')` is
  * how twelve keys came to disagree about the same question (issue #1193). The
  * next section that grows a disclosure adds a member to `SettingsSectionId`
  * and a default below -- not a second store, and not a second entry in
@@ -18,7 +18,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
  * phone and a desktop signed into the same account need not agree. Nothing
  * here identifies anybody -- it is one boolean per named section.
  */
-export const SETTINGS_SECTION_STORAGE_KEY = 'monize-settings-sections';
+export const SETTINGS_SECTION_STORAGE_KEY = 'artha-settings-sections';
 
 /** A Settings section that can be folded away. */
 export type SettingsSectionId = 'push';

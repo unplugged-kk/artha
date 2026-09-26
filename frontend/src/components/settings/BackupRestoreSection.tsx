@@ -115,8 +115,8 @@ export function BackupRestoreSection({ user }: BackupRestoreSectionProps) {
       // put in Content-Disposition: a toast is gone in five seconds, a filename
       // is still there when somebody reaches for this file in a crisis.
       const filename = complete
-        ? `monize-backup-${today}.${extension}`
-        : `monize-backup-${today}-INCOMPLETE.${extension}`;
+        ? `artha-backup-${today}.${extension}`
+        : `artha-backup-${today}-INCOMPLETE.${extension}`;
       downloadBlob(blob, filename);
 
       if (complete) {
@@ -219,7 +219,7 @@ export function BackupRestoreSection({ user }: BackupRestoreSectionProps) {
     setRestoreFile(file);
     setRestoreBackupPassword('');
     // Sniff the file so the encrypted-backup password field only appears when
-    // the upload is actually an encrypted Monize envelope.
+    // the upload is actually an encrypted Artha envelope.
     setRestoreFileEncrypted(file ? await isEncryptedBackupFile(file) : false);
   };
 

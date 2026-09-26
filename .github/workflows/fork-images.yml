@@ -1,7 +1,7 @@
 # Fork image publisher
 #
 # Builds runnable backend + frontend images for FORKS and pushes them to the
-# fork's own GHCR namespace (ghcr.io/<owner>/monize-{backend,frontend}). It is
+# fork's own GHCR namespace (ghcr.io/<owner>/artha-{backend,frontend}). It is
 # deliberately separate from ci.yml's release pipeline: no version bump, no
 # release, no cosign signing, no SBOM/Trivy gate, and it is NOT gated on the
 # full test/security matrix. It just produces images you can `docker pull`.
@@ -70,13 +70,13 @@ jobs:
           - name: backend
             context: .
             file: backend/Dockerfile
-            title: Monize Backend
-            description: Backend for Monize, a self-hosted personal finance app
+            title: Artha Backend
+            description: Backend for Artha, a self-hosted personal finance app
           - name: frontend
             context: frontend
             file: frontend/Dockerfile
-            title: Monize Frontend
-            description: Frontend for Monize, a self-hosted personal finance app
+            title: Artha Frontend
+            description: Frontend for Artha, a self-hosted personal finance app
     steps:
       - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
         with:
@@ -101,7 +101,7 @@ jobs:
           REF_NAME: ${{ inputs.ref || github.ref_name }}
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
-          image="ghcr.io/${OWNER_LC}/monize-${IMAGE_NAME}"
+          image="ghcr.io/${OWNER_LC}/artha-${IMAGE_NAME}"
 
           # Docker-tag-safe slug of the ref: lowercase, collapse anything
           # outside [a-z0-9._-] to '-', trim leading/trailing separators.

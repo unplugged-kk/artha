@@ -71,7 +71,7 @@ describe('SupportBackupModal', () => {
   it('generates and downloads the file, passing multiplier and sections', async () => {
     mockExport.mockResolvedValue({
       blob: new Blob(['x'], { type: 'application/octet-stream' }),
-      filename: 'monize-support-backup-2026-07-17.mzbe',
+      filename: 'artha-support-backup-2026-07-17.mzbe',
     });
     const createObjectURL = vi.fn().mockReturnValue('blob:url');
     const revokeObjectURL = vi.fn();

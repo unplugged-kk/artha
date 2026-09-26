@@ -208,7 +208,7 @@ function CustomTooltip({ active, payload, formatCurrencyFull, defaultCurrency, l
   );
 }
 
-const ACCOUNTS_STORAGE_KEY = 'monize-reports-currency-exposure-accounts';
+const ACCOUNTS_STORAGE_KEY = 'artha-reports-currency-exposure-accounts';
 
 export function CurrencyExposureReport() {
   const t = useTranslations('reports');

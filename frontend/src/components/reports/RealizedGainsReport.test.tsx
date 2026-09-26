@@ -505,7 +505,7 @@ describe('RealizedGainsReport', () => {
 
   it('restores the persisted account selection', async () => {
     window.localStorage.setItem(
-      'monize-reports-realized-gains-accounts',
+      'artha-reports-realized-gains-accounts',
       JSON.stringify(['acc-1']),
     );
     mockGetRealizedGains.mockResolvedValue([]);

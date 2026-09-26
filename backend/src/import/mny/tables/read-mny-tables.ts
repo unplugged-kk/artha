@@ -9,7 +9,7 @@ import { TableAvailability } from "./table-reader";
  * Reads every table the import needs out of an open Money file.
  *
  * This is the last layer that knows about Jet: mappers take `MnyTables` and
- * produce Monize entities without touching `mdb-reader`.
+ * produce Artha entities without touching `mdb-reader`.
  */
 export interface MnyTables {
   readonly reference: MnyReferenceData;

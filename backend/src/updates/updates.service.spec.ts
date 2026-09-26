@@ -51,8 +51,8 @@ describe("UpdatesService", () => {
 
   const buildRelease = (overrides: Partial<Record<string, unknown>> = {}) => ({
     tag_name: "v99.0.0",
-    name: "Monize 99.0.0",
-    html_url: "https://github.com/kenlasko/monize/releases/tag/v99.0.0",
+    name: "Artha 99.0.0",
+    html_url: "https://github.com/unplugged-kk/artha/releases/tag/v99.0.0",
     published_at: "2026-01-01T00:00:00Z",
     draft: false,
     prerelease: false,
@@ -121,9 +121,9 @@ describe("UpdatesService", () => {
       const status = await service.getStatus("user-1");
       expect(status.latestVersion).toBe("99.0.0");
       expect(status.releaseUrl).toBe(
-        "https://github.com/kenlasko/monize/releases/tag/v99.0.0",
+        "https://github.com/unplugged-kk/artha/releases/tag/v99.0.0",
       );
-      expect(status.releaseName).toBe("Monize 99.0.0");
+      expect(status.releaseName).toBe("Artha 99.0.0");
       expect(status.updateAvailable).toBe(true);
       expect(status.error).toBeNull();
       expect(status.checkedAt).not.toBeNull();
@@ -285,7 +285,7 @@ describe("UpdatesService", () => {
 
       expect(fetchMock).toHaveBeenCalledTimes(1);
       expect(fetchMock).toHaveBeenCalledWith(
-        "https://api.github.com/repos/kenlasko/monize/releases/latest",
+        "https://api.github.com/repos/kenlasko/artha/releases/latest",
         expect.objectContaining({
           headers: expect.objectContaining({
             "User-Agent": "Artha-UpdateCheck",

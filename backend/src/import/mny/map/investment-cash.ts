@@ -15,7 +15,7 @@ import {
  * Where a trade's cash row comes from, decided once for every surface that
  * cares.
  *
- * Monize records the cash half of an investment action in one of three places,
+ * Artha records the cash half of an investment action in one of three places,
  * and only the first is a row the investment writer creates:
  *
  * 1. **The brokerage's cash sleeve.** `writeInvestments` inserts it and links it

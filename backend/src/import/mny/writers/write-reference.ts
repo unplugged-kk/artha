@@ -24,7 +24,7 @@ import {
  */
 
 export interface WrittenAccounts {
-  /** Import-local account key -> the Monize account id it landed in. */
+  /** Import-local account key -> the Artha account id it landed in. */
   readonly idByKey: ReadonlyMap<string, string>;
   readonly created: number;
   /** Accounts matched to a row that already existed. */

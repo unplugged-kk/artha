@@ -62,7 +62,7 @@ function scan(files: string[], pattern: RegExp): Occurrence[] {
  * A report's account scope is investment LINKAGE, never account type
  * (INV-REPORT-001).
  *
- * An INVESTMENT account in Monize is a pair -- an `INVESTMENT_CASH` sleeve
+ * An INVESTMENT account in Artha is a pair -- an `INVESTMENT_CASH` sleeve
  * holding real money and an `INVESTMENT_BROKERAGE` sleeve holding securities --
  * so `account_type != 'INVESTMENT'` removed an entire real ledger from fifteen
  * report queries, and the cash legs it was meant to exclude were never

@@ -1,4 +1,4 @@
-# Web Share Target: sharing files into the installed Monize PWA
+# Web Share Target: sharing files into the installed Artha PWA
 
 Status: IMPLEMENTED (Phase 1). Written spec-first, per root `CLAUDE.md`; this
 section records what shipped and where the build departed from the plan, so the
@@ -10,9 +10,9 @@ The first part of #1292 (document scanning and image enhancement) shipped
 separately and is described by `docs/future-plans/document-scanner.md`; it is not
 covered here beyond Phase 3 below. This document is the plan for the second
 part:
-making an installed Monize PWA appear in the operating system's Share sheet so a
+making an installed Artha PWA appear in the operating system's Share sheet so a
 user can send a receipt photo, a PDF, or a bank statement export (CSV, OFX, QFX,
-QIF) straight to Monize, land on an explicit review screen, and then hand the
+QIF) straight to Artha, land on an explicit review screen, and then hand the
 files to the same transaction form or import wizard they would reach through the
 file picker.
 
@@ -20,10 +20,10 @@ file picker.
 
 ## 1. Requirements (from #1292 and the maintainer's constraints)
 
-R1. Monize appears in the Share sheet of an installed PWA on platforms that
+R1. Artha appears in the Share sheet of an installed PWA on platforms that
     support the `share_target` manifest member (Android Chrome and other
     Chromium browsers; desktop Chromium's installed apps). It appears only for
-    file shares Monize can actually use.
+    file shares Artha can actually use.
 
 R2. A share always lands on an **explicit review screen**. Nothing is imported,
     attached or saved without the user pressing the button that does it. The
@@ -104,7 +104,7 @@ reaches `proxy.ts`. The proxy answers `POST /share-target` with a 303 to
 `/share?missed=1` **before** its auth check and **without reading the body**,
 so an unauthenticated share does not become a 307 that replays a multipart POST
 against `/login`. The review screen explains that the files were not received
-and to open Monize once and share again; the picker flows are one tap away.
+and to open Artha once and share again; the picker flows are one tap away.
 
 The claim "the server never receives the bytes on the worker path" is a
 property of the worker intercepting a navigation; the claim "the server never
@@ -113,7 +113,7 @@ body, held by a source scan (Section 7).
 
 ---
 
-## 3. What Monize accepts
+## 3. What Artha accepts
 
 ### 3.1 Manifest
 
@@ -183,8 +183,8 @@ on device storage, not the authority.
 ### 3.4 Text and URL shares
 
 The manifest declares no `title`, `text` or `url` params. Declaring them makes
-Monize appear for every text share on the device, and a plain text share has no
-destination in Monize that is not a guess (payee? description? memo?). If a
+Artha appear for every text share on the device, and a plain text share has no
+destination in Artha that is not a guess (payee? description? memo?). If a
 later plan gives text a home (a note on a transaction, an AI assistant prompt),
 it adds the params and a text destination on the review screen together.
 
@@ -265,7 +265,7 @@ that drops it, a user who opens the app from the launcher instead):
 - `ShareInboxNotice`, mounted in the shell's banner stack beside
   `PushEnableBanner` (section 10),
   calls `purgeExpiredSharedBundles()` then `listSharedBundles()` on mount and
-  shows a dismissible banner ("2 files were shared with Monize -- review them")
+  shows a dismissible banner ("2 files were shared with Artha -- review them")
   linking to `/share?id=`. A stash the user never reaches is still purged by
   its lifetime.
 
@@ -299,7 +299,7 @@ no extension, so `isStaticAsset` can never serve a stash entry to a fetch.
 | INV-SHARE-001 | A shared file reaches the server only through an endpoint that exists today, under the same authentication, CSRF, sniffing and size rules as a picked file. | No new backend route; the review screen calls `attachmentsApi.upload` and the import wizard's existing API. `proxy.ts` answers the share POST with a redirect and never reads its body (source scan). |
 | INV-SHARE-002 | Nothing is imported, attached or saved from a share without an explicit user action on a screen that shows what will happen. | The review screen has no auto-advance; the two destinations are the existing form save and the wizard's review step. E2E asserts that landing on `/share` creates no rows. |
 | INV-SHARE-003 | The stash holds only files within the declared limits, and no bundle outlives its lifetime or the session. | Worker-side limit checks store a reason, not bytes; purge on `activate`, on each share, on app mount; `clearShareInbox()` in `logout`. |
-| INV-SHARE-004 | A share never produces an error page: on every path the user lands on a Monize page that explains what happened. | The worker's handler always resolves to a redirect (malformed body -> `/share?error=stash`); the proxy fallback redirects; the review screen has states for missed, unsupported, expired, empty. |
+| INV-SHARE-004 | A share never produces an error page: on every path the user lands on a Artha page that explains what happened. | The worker's handler always resolves to a redirect (malformed body -> `/share?error=stash`); the proxy fallback redirects; the review screen has states for missed, unsupported, expired, empty. |
 | INV-SHARE-005 | A stashed bundle belongs to one account; no other account signed in on the same browser can list it, read it or be notified about it. | `listSharedBundles` / `readSharedBundle` require a `viewerUserId`, stamp `ownerUserId` on an unclaimed index and treat another owner's bundle as absent; the three call sites read nothing until the auth store names a reader. |
 
 These are in `docs/system-invariants.md` as INV-SHARE-001..005, all five

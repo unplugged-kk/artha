@@ -4,7 +4,7 @@ Status: **proposed, awaiting maintainer approval.** The trigger model (event-dri
 Section 6) and the product decisions were confirmed with the feature's requester
 (the branch author); the maintainer signs off before this ships to `main`. Scope
 from discussion #1291 (the `balances` group) and the maintainer's answer
-"user-configurable balance thresholds: yes" (kenlasko/monize#1291, 2026-09-01;
+"user-configurable balance thresholds: yes" (kenlasko/artha#1291, 2026-09-01;
 recorded in `notification-preferences.md` Section 16.1).
 
 Owner: notification-center. Related: #1291, `notification-preferences.md`
@@ -40,7 +40,7 @@ That is why the two are separate specs.
 Evaluation is **event-driven**, not a daily cron: the balance-threshold check runs
 whenever a function that changes an account's balance has run. In the requester's
 words -- "the balance can be checked when a function that affects a balance change
-runs on the monize instance."
+runs on the artha instance."
 
 Concretely, evaluation is triggered from the **same post-commit seam that
 invalidates derived state after a money-moving write** (INV-CACHE-001, "a balance

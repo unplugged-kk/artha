@@ -65,8 +65,8 @@ function SecuritiesContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('active');
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortField, setSortField] = useLocalStorage<SecuritySortField>('monize-securities-sort-field', 'symbol');
-  const [sortDirection, setSortDirection] = useLocalStorage<SortDirection>('monize-securities-sort-dir', 'asc');
+  const [sortField, setSortField] = useLocalStorage<SecuritySortField>('artha-securities-sort-field', 'symbol');
+  const [sortDirection, setSortDirection] = useLocalStorage<SortDirection>('artha-securities-sort-dir', 'asc');
   const [lastPriceUpdate, setLastPriceUpdate] = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
@@ -350,7 +350,7 @@ function SecuritiesContent() {
         <PageHeader
           title={t('page.title')}
           subtitle={t('page.subtitle')}
-          helpUrl="https://github.com/kenlasko/monize/wiki/Investments"
+          helpUrl="https://github.com/unplugged-kk/artha/wiki/Investments"
           actions={
             <div className="flex items-center gap-2">
               <Link href="/watchlists">

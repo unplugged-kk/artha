@@ -89,7 +89,7 @@ describe('buildManifest share_target', () => {
     }
   });
 
-  // Section 3.4 of the plan: declaring these would put Monize in the share
+  // Section 3.4 of the plan: declaring these would put Artha in the share
   // sheet for every piece of text on the device, with nowhere to put it.
   it('declares no text, title or url parameters', () => {
     const params = buildManifest('light').share_target.params as Record<

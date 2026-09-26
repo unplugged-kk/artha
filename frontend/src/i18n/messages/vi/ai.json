@@ -225,7 +225,7 @@
     "step3": "Bắt đầu một vòng lặp tác nhân để Claude lắng nghe các truy vấn từ Artha:",
     "loopPrompt": "Loop forever: call get_next_prompt; if hasPrompt is false, call it again; otherwise handle the request with the Artha tools and call post_response with the answer; then repeat.",
     "codexHeading": "Hoặc dùng Codex",
-    "codexNote": "Thêm dòng này vào ~/.codex/config.toml, đặt MONIZE_TOKEN thành mã thông báo của bạn, sau đó chạy codex và dán lời nhắc ở trên.",
+    "codexNote": "Thêm dòng này vào ~/.codex/config.toml, đặt ARTHA_TOKEN thành mã thông báo của bạn, sau đó chạy codex và dán lời nhắc ở trên.",
     "copy": "Sao chép",
     "copied": "Đã sao chép vào bảng nhớ tạm"
   }

@@ -1,7 +1,7 @@
 # Native Microsoft Money (.mny) Import: Assessment and Agent Task List
 
 > Design + task breakdown for importing complete Microsoft Money `.mny` files through the Import
-> Transactions wizard, using only Monize-native TypeScript (no Python, no Java, no mdbtools, no
+> Transactions wizard, using only Artha-native TypeScript (no Python, no Java, no mdbtools, no
 > shell pipelines). Supersedes the approach in PR #192 (`poc/import-from-dotmny`) while preserving
 > everything that proof of concept learned. Written 2026-07 after a full review of PR #192, its
 > comment thread, issue #173, and external research into the .mny format.
@@ -33,7 +33,7 @@ TypeScript pre-decryptor makes the stock reader work on `.mny` files.
 The import runs as a background job with wizard progress polling (a 37k-transaction file cannot
 finish inside the current synchronous 300 s import window), stages the decrypted file in the
 database so any backend replica can run the job, and ends with a per-account **verification
-report** comparing balances computed from the Money file against what landed in Monize — the
+report** comparing balances computed from the Money file against what landed in Artha — the
 trust-builder both PR testers said they needed.
 
 ## 2. Goals and non-goals
@@ -55,7 +55,7 @@ trust-builder both PR testers said they needed.
 - Merging into an already-populated profile with transaction-level dedupe. v1 targets a fresh
   profile, or an explicit opt-in wipe using the existing delete-my-data operation. Accounts are
   still find-or-create by name, so a re-import into a wiped profile is clean.
-- Money budgets (`BGT` tables — no clean mapping to Monize budgets), savings goals (no Monize
+- Money budgets (`BGT` tables — no clean mapping to Artha budgets), savings goals (no Artha
   entity), classifications beyond standard categories, embedded attachments.
 - Writing `.mny` files, or reading `.mbf` backup archives.
 - Money 97/98 files (Jet 3 era). Detect and reject with a clear message suggesting an upgrade
@@ -72,7 +72,7 @@ authoritative holdings source. Task M4.5 adopts that document into `docs/` (with
 as the living format reference (now `docs/ms-money-data-model.md`, with the corrections below called out inline against the original). Also correct and carried forward:
 
 - Money account type map (`at` 0..6) and the `hacctRel` investment/cash account pairing, which
-  matches Monize's linked INVESTMENT_CASH + INVESTMENT_BROKERAGE pair exactly.
+  matches Artha's linked INVESTMENT_CASH + INVESTMENT_BROKERAGE pair exactly.
 - Cleared-status map (`cs` 0/1/2 -> UNRECONCILED/CLEARED/RECONCILED). Voided detection was
   **not** correct: the reference's `grftt` bit 0x80 is the debt-account bit, and the void bit is
   0x100 (measured in Phase 4 against a real Money Plus file; see `docs/ms-money-data-model.md`).
@@ -86,7 +86,7 @@ as the living format reference (now `docs/ms-money-data-model.md`, with the corr
 
 | # | Issue (reporter) | Root cause | Fix in this design |
 |---|---|---|---|
-| 1 | Loans/mortgages import with zero transactions; the principal split on the payment shows blank (kenlasko) | Two compounding bugs: (a) the phantom filter excluded `grftt & 0x8000` (auto-entered) rows — but Money marks scheduler-posted loan payments auto-entered, so the loan-side rows vanished; (b) splits were imported as category-only rows, so a split leg that is really a transfer to the loan account lost its transfer nature | Narrow the phantom rule to `frq != -1` only (auto-entered rows are real postings). Import a `TRN_SPLIT` child that appears in `TRN_XFER` as a Monize **transfer split** (`transaction_splits.kind = 'transfer'`, `transfer_account_id` = loan account, `linked_transaction_id` = the loan-side transaction, which is imported once, not duplicated). Interest/escrow legs stay category splits. Validate with the loan scenario in M1.4 and against real files in M3.4 |
+| 1 | Loans/mortgages import with zero transactions; the principal split on the payment shows blank (kenlasko) | Two compounding bugs: (a) the phantom filter excluded `grftt & 0x8000` (auto-entered) rows — but Money marks scheduler-posted loan payments auto-entered, so the loan-side rows vanished; (b) splits were imported as category-only rows, so a split leg that is really a transfer to the loan account lost its transfer nature | Narrow the phantom rule to `frq != -1` only (auto-entered rows are real postings). Import a `TRN_SPLIT` child that appears in `TRN_XFER` as a Artha **transfer split** (`transaction_splits.kind = 'transfer'`, `transfer_account_id` = loan account, `linked_transaction_id` = the loan-side transaction, which is imported once, not duplicated). Interest/escrow legs stay category splits. Validate with the loan scenario in M1.4 and against real files in M3.4 |
 | 2 | 1,844 scheduled bills imported when ~20 are real; all then bulk-deactivated (kenlasko) | `BILL` accumulates decades of rows; the PoC imported every row then marked past-due ones inactive | Import only bills detected as active series (`st` status + next-due-date sanity horizon + per-series dedupe — exact semantics pinned by the Phase 0 spike against the known "~20 real" ground truth), and show them as a **checkbox list in the wizard**; unchecked bills are simply not imported. Nothing is created inactive |
 | 3 | Junk payees `#` and `*` with zero transactions; never-used categories such as `alimony` (kenlasko) | Money seeds a default category tree and keeps degenerate payee rows; the PoC imported all of `PAY`/`CAT` | Referenced-only import (default on, wizard toggle): only payees/categories referenced by an imported transaction, split, or selected bill are created. Degenerate payee names (`#`, `*`, empty after trim) always skipped. Skip counts shown in the report |
 | 4 | Investment accounts "a mess": share counts wrong, negative positions, cost basis nonsense (kenlasko; marksimpson confirmed buy/sell subtleties and FX cost-basis storage quirks) | Four distinct causes: act=16 mapped to SELL (it closes lots but is a *transfer-out*, and mapping it to SELL corrupts average cost); act=4 dividends have **no TRN_INV row** so iterating TRN_INV dropped them entirely; `SEC_SPLIT` (stock splits) ignored, so every post-split position is wrong; qty-sign/action inference inconsistencies | Complete act map driven from TRN not TRN_INV (section 8.4): 4 -> DIVIDEND from `TRN.amt` (superseded: issue #1149 named `act` 4 as Money's "Interest" activity, and it now maps to INTEREST -- still cash-only from `TRN.amt`); 16 -> REMOVE_SHARES, or paired with the matching act=15 row (same date+security+qty across accounts) into linked TRANSFER_OUT/TRANSFER_IN; **SEC_SPLIT -> no transaction** (superseded: this row originally read "SEC_SPLIT -> SPLIT transactions", which contradicts what the implementation does and what this document itself says further down -- Money does not apply those ratios to its own share counts, so applying them makes the import disagree with the file. Non-unit ratios surface as verification warnings instead. See the `SEC_SPLIT` paragraph in section 8.4 and `backend/src/import/mny/README.md`); quantity always positive, direction only from act. Holdings produced exclusively by the existing `HoldingsService.rebuildAccountsFromTransactions`. Independently, the mapper computes expected holdings from **LOT open lots** (`htrnSell` empty) and flags disagreements in the verification report instead of silently corrupting positions. Foreign-currency cost basis (Money stores base-currency value at the historical rate) is surfaced as report warnings and documented as a v1 limitation |
@@ -116,9 +116,9 @@ as the living format reference (now `docs/ms-money-data-model.md`, with the corr
   `AccountsService.updateBalance` rejects closed accounts, closure is applied **after** the
   account's transactions are written.
 - **Frequency mis-mapping**: Money bimonthly -> BIWEEKLY (wrong: every 2 months vs every 2 weeks)
-  and semiannually -> YEARLY. Monize already had `SEMIMONTHLY`; Track B task B3 has since added
+  and semiannually -> YEARLY. Artha already had `SEMIMONTHLY`; Track B task B3 has since added
   `EVERY2MONTHS` and `SEMIANNUAL`, so every Money recurrence code now maps exactly and the
-  downgrade-with-warning path is left only for intervals Monize cannot express.
+  downgrade-with-warning path is left only for intervals Artha cannot express.
 - **No i18n, no tests, no wizard integration** — all mandatory here (sections 9–10).
 
 ## 4. The .mny format and the native parsing strategy
@@ -360,7 +360,7 @@ to be a deliberate edit rather than silent data loss.
 
 ### 6.3 Spike report (M0.6, implemented)
 
-Money's coded values and their Monize equivalents live in
+Money's coded values and their Artha equivalents live in
 `backend/src/import/mny/model/mny-model.ts`. Every constant is labelled **confirmed** (asserted
 against the committed fixtures in `mny-model.spec.ts`) or **unconfirmed** (carried from PR #192's
 format reference). Mappers own row-level rules; this file owns only code-to-meaning lookups over a
@@ -382,7 +382,7 @@ slash, three-letter currency, two-letter quote currency — so `isCurrencyPseudo
 code **or** the symbol shape. M2.1 should use it rather than the code alone.
 
 **Frequency mapping is code plus interval.** `cFrqInst` is Money's interval multiplier, and
-several combinations land exactly on a Monize type that the code alone does not reach: weekly × 2
+several combinations land exactly on a Artha type that the code alone does not reach: weekly × 2
 is BIWEEKLY, weekly × 4 is EVERY4WEEKS (likewise monthly × 2 → EVERY2MONTHS, × 3 → QUARTERLY,
 × 6 → SEMIANNUAL, × 12 → YEARLY). Where no exact type exists, `mapFrequency` falls to the next
 **shorter** period and returns `approximate: true`. Shorter is the safer error while v1 imports
@@ -526,7 +526,7 @@ real mappers and, in the integration spec, the real INSERT path.
 
 ### 8.1 Reference data
 
-| Money source | Monize target | Rules |
+| Money source | Artha target | Rules |
 |---|---|---|
 | `DHD` (file defaults) | base currency context | Spike-confirmed field for the file's default currency handle; fallback = user's `default_currency` preference. Never a hardcoded literal |
 | `CRNC` | `currencies` via `ensureSystemCurrency` | Only currencies actually referenced by imported accounts/securities/rates |
@@ -610,7 +610,7 @@ reference above 3; `cFrqInst` interval honored where representable, else downgra
 Action mapping is driven from `TRN.act` (never from quantity sign; `TRN_INV.qty` is always
 positive):
 
-| act | Monize action | Notes |
+| act | Artha action | Notes |
 |---|---|---|
 | 0 | BUY | |
 | 1 | SELL | |
@@ -655,7 +655,7 @@ contribution. The signal is `TRN_XFER`: `act` 1 has a cash counterpart 2,015 tim
 the `act` 9 reinvestments. 82 of the 92 sit in the one RRSP whose `ACCT` row sets `fEmpMatch`.
 Mapped to REINVEST — a value and a position, no cash leg — the sleeve lands on Money's $91.00.
 It stays in `MNY_UNCONFIRMED_ACTIONS`: the effect is measured, and issue #1149 later supplied the
-name (Money's "Add Shares" activity), but Monize's REINVEST mapping remains a translation — chosen
+name (Money's "Add Shares" activity), but Artha's REINVEST mapping remains a translation — chosen
 so the stated value survives as cost basis — so the rows stay visible in the verification report.
 
 **`SEC_SPLIT` ratios are not applied to positions, because Money does not apply them either.**
@@ -739,7 +739,7 @@ frontend `FREQUENCY_VALUES` tuple that the form's `z.enum` now derives from),
 `calculateNextDueDate` (`+2` / `+6` months, clamped), all 23 locales, migration
 `116` (documentation no-op like `041`, `VARCHAR(20)` already fits), and
 `mapFrequency` in `mny-model.ts` — Money's `frq` 5 and 7 and `cFrqInst` 2 and 6
-now map **exactly**, so `approximate: true` is left only for intervals Monize
+now map **exactly**, so `approximate: true` is left only for intervals Artha
 still cannot express (weekly every 3 weeks, monthly every 5 months). Section 3's
 frequency bullet and 6.3's approximation note are resolved by this.
 
@@ -776,7 +776,7 @@ See 6.4 for what the implementation settled differently from this plan.
 
 Exit gate: cleared. A `.mny` file's securities, investment transactions, stock
 splits, price history and exchange rates go through the same wizard, and the
-verification report gained a per-holding section reconciling what Monize holds
+verification report gained a per-holding section reconciling what Artha holds
 against Money's own open tax lots. `money2002.mny` imports end to end with all 30
 positions matching and no negative holdings. The localization pass that section 9
 defers to M4.3 was done with it, so Phase 2 is fully translated.
@@ -799,7 +799,7 @@ Five things this plan specified turned out differently once code existed.
 **An investment's cash leg is one row, not a transfer pair.** The QIF processor
 writes a cash transaction *and* a mirroring row in the brokerage account when the
 two differ, which nets to zero across the pair. Copying that here would give the
-brokerage side a `current_balance` the Money file never recorded -- Monize's
+brokerage side a `current_balance` the Money file never recorded -- Artha's
 brokerage value comes from holdings -- and the verification report, which
 compares per-account balances, would then disagree with itself on every
 investment account. The `.mny` writer creates exactly one cash transaction, in
@@ -834,7 +834,7 @@ Two things the plan got right and are worth recording as confirmed. The holdings
 rebuild runs on the import transaction's own `EntityManager` through a
 `{ manager }` shim: `rebuildAccountsFromTransactions` only ever touches
 `queryRunner.manager`, and a second connection would deadlock against the open
-transaction. And `SEC.sct` is deliberately **not** mapped onto Monize's
+transaction. And `SEC.sct` is deliberately **not** mapped onto Artha's
 `securityType` -- 6.3 showed the codes shift between releases, so any mapping
 mislabels some file; the column stays null for the user to set.
 
@@ -907,7 +907,7 @@ rate from the wrong leg.
 
 **Loan payment shape is worth reading even though Money has no loan-terms
 table.** What it does have is the payment: a transfer leg into the loan plus a
-category leg for interest is exactly Monize's `SPLIT` interest booking mode,
+category leg for interest is exactly Artha's `SPLIT` interest booking mode,
 the account the payment came from is the funding account, and an imported bill
 supplies the scheduled installment and cadence. `writeLoans` fills those in
 without ever overwriting a value the account already carries, so a second

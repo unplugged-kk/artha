@@ -52,7 +52,7 @@ test.describe('Backup & restore', () => {
 
     // `.mzbe` is the encrypted envelope; `.json.gz` would mean the capture did
     // not happen, which is the defect this suite exists to catch.
-    expect(download.suggestedFilename()).toMatch(/monize-backup.*\.mzbe$/);
+    expect(download.suggestedFilename()).toMatch(/artha-backup.*\.mzbe$/);
   });
 
   test('hides automatic backup settings from a non-admin', async ({

@@ -85,7 +85,7 @@ export interface MnyParseInput {
   readonly userDefaultCurrency: string;
   /**
    * Balance cut-off, `YYYY-MM-DD`. Future-dated transactions are excluded from
-   * expected balances because Monize's own balance recalculation excludes them;
+   * expected balances because Artha's own balance recalculation excludes them;
    * comparing against a total that included them would report a discrepancy on
    * every account holding a post-dated cheque.
    */
@@ -185,7 +185,7 @@ export function detectEra(tables: MnyTables, db: MnyDatabase): MnyEra {
 }
 
 /**
- * Per-account final balances, computed from the file the same way Monize
+ * Per-account final balances, computed from the file the same way Artha
  * computes `current_balance`: opening balance plus every non-void transaction
  * dated on or before the cut-off. This is the verification report's baseline, so
  * it must mirror `postImportProcessing`'s query exactly rather than being a

@@ -1,10 +1,10 @@
-# Monize Helm Chart
+# Artha Helm Chart
 
-A Helm chart for deploying the Monize personal finance application on Kubernetes.
+A Helm chart for deploying the Artha personal finance application on Kubernetes.
 
 ## Architecture
 
-Monize is a two-tier application:
+Artha is a two-tier application:
 - **Backend**: Node.js API server (port 3001) connected to a PostgreSQL database
 - **Frontend**: Web application (port 3000) that communicates with the backend internally
 
@@ -20,16 +20,16 @@ Only the frontend is exposed externally via HTTPRoute or Ingress. The backend is
 
 ```bash
 # Install with default values (HTTPRoute enabled)
-helm install monize ./helm -n monize --create-namespace
+helm install artha ./helm -n artha --create-namespace
 
 # Install with Ingress instead of HTTPRoute
-helm install monize ./helm -n monize --create-namespace \
+helm install artha ./helm -n artha --create-namespace \
   --set httpRoute.enabled=false \
   --set ingress.enabled=true \
   --set ingress.className=nginx
 
 # Dry-run to preview rendered templates
-helm template monize ./helm -n monize
+helm template artha ./helm -n artha
 ```
 
 ## Routing Options
@@ -63,9 +63,9 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
   tls:
-    - secretName: monize-tls
+    - secretName: artha-tls
       hosts:
-        - monize.yourdomain.com
+        - artha.yourdomain.com
 ```
 
 > **Note**: Both can technically be enabled simultaneously, but it is recommended to only enable one.
@@ -76,9 +76,9 @@ ingress:
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `global.namespace` | Namespace for all resources | `monize` |
+| `global.namespace` | Namespace for all resources | `artha` |
 | `global.domain` | Application domain | `yourdomain.com` |
-| `global.hostname` | Full hostname override | `monize.<domain>` |
+| `global.hostname` | Full hostname override | `artha.<domain>` |
 | `global.timezone` | Container timezone | `America/Toronto` |
 | `global.priorityClassName` | Pod priority class | `low-priority` |
 
@@ -94,7 +94,7 @@ ingress:
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | `backend.image.registry` | Image registry | `ghcr.io` |
-| `backend.image.repository` | Image repository | `kenlasko/monize/backend` |
+| `backend.image.repository` | Image repository | `unplugged-kk/artha/backend` |
 | `backend.image.tag` | Image tag | `latest` |
 | `backend.image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `backend.replicas` | Number of replicas | `1` |
@@ -212,7 +212,7 @@ limit **and** the ceiling: raising either alone achieves nothing.
 **A restore upload needs a ticket, and the ingress should have a body limit.**
 The backend's upload admission has to run in front of its body parser, which is in
 front of every guard — so it cannot authenticate the request whose memory it is
-budgeting for. Since Monize 1.16 it does not have to: the client first asks
+budgeting for. Since Artha 1.16 it does not have to: the client first asks
 `POST /api/v1/backup/restore/ticket` (ordinary authenticated JSON) for a short-lived
 signed ticket, and an upload without one is refused `403` before a byte is buffered.
 Nothing to configure — it is on whenever `JWT_SECRET` is set, which is always.
@@ -300,7 +300,7 @@ Notes on sizing and behaviour:
   default, and each is a gzipped dump of that user's whole dataset -- so size
   against the number of users, not the number of files.
 - A backup that could not include every attachment is kept apart, as
-  `monize-backup-partial-<date>`, so it can never take a complete artifact's
+  `artha-backup-partial-<date>`, so it can never take a complete artifact's
   retention slot. Those are bounded by the same daily count, counted separately,
   so a deployment whose attachment storage is failing can hold up to 7 more
   artifacts per user than the figures above until it is fixed.
@@ -322,7 +322,7 @@ Notes on sizing and behaviour:
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | `frontend.image.registry` | Image registry | `ghcr.io` |
-| `frontend.image.repository` | Image repository | `kenlasko/monize/frontend` |
+| `frontend.image.repository` | Image repository | `unplugged-kk/artha/frontend` |
 | `frontend.image.tag` | Image tag | `latest` |
 | `frontend.image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `frontend.replicas` | Number of replicas | `1` |
@@ -344,7 +344,7 @@ the runbook for the phased rollout.
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | `backend.rls.RLS_MODE` | `off` \| `shadow` \| `enforce` (rendered into the backend ConfigMap) | `off` |
-| `backend.rls.DATABASE_APP_USER` | Name of the unprivileged runtime role (rendered into the ConfigMap) | `monize_app` |
+| `backend.rls.DATABASE_APP_USER` | Name of the unprivileged runtime role (rendered into the ConfigMap) | `artha_app` |
 
 `RLS_MODE` and `DATABASE_APP_USER` are non-secret and go in the
 `env-vars-backend` ConfigMap. The role's password, `DATABASE_APP_PASSWORD`, is a
@@ -354,7 +354,7 @@ in `values.yaml`.
 
 **CNPG `DatabaseRole` requirement.** On the CloudNativePG deployment the
 database owner (`DATABASE_USER`) is not a superuser and has **no `CREATEROLE`**,
-so the application cannot create the `monize_app` role at startup. Provision it
+so the application cannot create the `artha_app` role at startup. Provision it
 declaratively with the `DatabaseRole` CRD (CloudNativePG **1.30+**), which gives
 the role its own object and reconciliation loop rather than nesting it in the
 `Cluster` spec's older `managed.roles` stanza:
@@ -363,18 +363,18 @@ the role its own object and reconciliation loop rather than nesting it in the
 apiVersion: postgresql.cnpg.io/v1
 kind: DatabaseRole
 metadata:
-  name: monize-app
-  namespace: monize
+  name: artha-app
+  namespace: artha
 spec:
   cluster:
     name: home            # your CNPG Cluster name (matches DATABASE_HOST)
-  name: monize_app        # must equal backend.rls.DATABASE_APP_USER
+  name: artha_app        # must equal backend.rls.DATABASE_APP_USER
   ensure: present
   login: true
   # Leave superuser/bypassrls at their defaults (false): the runtime role must
   # NOT bypass RLS -- that is the whole point of the unprivileged role.
   passwordSecret:
-    name: monize-app-role # a kubernetes.io/basic-auth Secret (username+password)
+    name: artha-app-role # a kubernetes.io/basic-auth Secret (username+password)
 ```
 
 The referenced Secret (`kubernetes.io/basic-auth`, keys `username` +
@@ -387,7 +387,7 @@ backend:
     - name: DATABASE_APP_PASSWORD
       valueFrom:
         secretKeyRef:
-          name: monize-app-role
+          name: artha-app-role
           key: password
 ```
 
@@ -414,13 +414,13 @@ All containers enforce the `restricted` Pod Security Standard:
 helm lint ./helm
 
 # Render templates without deploying
-helm template monize ./helm -n monize
+helm template artha ./helm -n artha
 
 # Dry-run install
-helm install monize ./helm -n monize --dry-run
+helm install artha ./helm -n artha --dry-run
 
 # Test with Ingress instead of HTTPRoute
-helm template monize ./helm -n monize \
+helm template artha ./helm -n artha \
   --set httpRoute.enabled=false \
   --set ingress.enabled=true \
   --set ingress.className=nginx

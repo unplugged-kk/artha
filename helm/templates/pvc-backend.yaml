@@ -17,10 +17,10 @@ pod that starts and reports backup failures forever while looking configured.
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: monize-backend-{{ $name }}
+  name: artha-backend-{{ $name }}
   namespace: {{ $.Values.global.namespace }}
   labels:
-    {{- include "monize.backend.labels" $ | nindent 4 }}
+    {{- include "artha.backend.labels" $ | nindent 4 }}
   annotations:
     # The claim outlives the release on purpose: `helm uninstall` deleting a
     # user's only off-database backups, or their attachment bytes, would be a

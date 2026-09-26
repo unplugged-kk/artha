@@ -436,7 +436,7 @@ describe('the registered-endpoint marker', () => {
   const withStore = (initial?: string) => {
     const store = new Map<string, string>();
     if (initial !== undefined) {
-      store.set('monize.push.registeredEndpoint', initial);
+      store.set('artha.push.registeredEndpoint', initial);
     }
     vi.stubGlobal('window', {
       localStorage: {

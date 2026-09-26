@@ -83,9 +83,9 @@ describe("db-init initDatabase()", () => {
       DATABASE_APP_PASSWORD: process.env.DATABASE_APP_PASSWORD,
       RLS_MODE: process.env.RLS_MODE,
     };
-    process.env.DATABASE_USER = "monize";
+    process.env.DATABASE_USER = "artha";
     process.env.DATABASE_PASSWORD = "owner-pw";
-    process.env.DATABASE_NAME = "monize";
+    process.env.DATABASE_NAME = "artha";
     delete process.env.DATABASE_APP_USER;
     delete process.env.DATABASE_APP_PASSWORD;
     delete process.env.RLS_MODE;

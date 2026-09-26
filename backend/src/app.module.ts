@@ -84,7 +84,7 @@ import { I18nModule } from "./i18n/i18n.module";
         // parses throw on misconfiguration (invalid mode, or enforce without
         // DATABASE_APP_PASSWORD), which refuses the boot -- the safe outcome.
         // At off/shadow the runtime keeps the owner credentials, so the image
-        // is deployable before the monize_app role exists and a revert is one
+        // is deployable before the artha_app role exists and a revert is one
         // flag flip. No pool-size change: connections are held only for each
         // short tenant transaction (see the RLS design doc, Phase 1).
         const rlsMode = parseRlsMode(configService.get("RLS_MODE"));

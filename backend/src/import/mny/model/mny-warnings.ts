@@ -20,7 +20,7 @@ export const MNY_WARNING_CODES = [
   "duplicateAccountName",
   /** An account or security referenced a currency handle the file lacks. */
   "unknownCurrency",
-  /** Money's category tree ran deeper than Monize's two levels. */
+  /** Money's category tree ran deeper than Artha's two levels. */
   "categoryFlattened",
   /** `CAT.lType` was outside the confirmed set; income/expense came from the tree. */
   "categoryTypeInferred",
@@ -69,7 +69,7 @@ export const MNY_WARNING_CODES = [
   "billTemplateMissing",
   /** A `BILL` series with no usable due date, account or recurrence code. */
   "unusableBill",
-  /** A bill recurrence Monize cannot express exactly; the next shorter period is used. */
+  /** A bill recurrence Artha cannot express exactly; the next shorter period is used. */
   "billFrequencyApproximated",
   /**
    * A loan's payments name more than one non-principal category (interest plus

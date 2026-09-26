@@ -136,7 +136,7 @@ export class StepUpAuthService {
         args.totpCode,
       );
     } else if (user.authProvider === "oidc") {
-      // OIDC users have no Monize-managed password and cannot enroll Monize 2FA
+      // OIDC users have no Artha-managed password and cannot enroll Artha 2FA
       // (see two-factor.service.ts:283), so their strongest factor lives at the
       // identity provider. This used to accept `oidcConfirmed: true` -- a boolean
       // the client sent -- which meant the step-up token, whose entire purpose is

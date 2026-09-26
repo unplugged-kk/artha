@@ -952,7 +952,7 @@ describe('buildLoanProjectionInput scheduled-installment anchor (issue #1253)', 
   });
 
   it('judges the anchor against the passed day, not the browser day', () => {
-    // A user whose Monize timezone differs from their browser's gets the
+    // A user whose Artha timezone differs from their browser's gets the
     // configured one -- `useFinancialToday` resolves the preference and the
     // browser is only its fallback, exactly as the backend resolves it. Pinning
     // the clock proves the argument is what decides: the same instant and the

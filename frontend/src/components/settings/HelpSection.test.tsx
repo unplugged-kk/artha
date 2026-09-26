@@ -18,7 +18,7 @@ vi.mock('./SupportBackupModal', () => ({
   SupportBackupModal: () => null,
 }));
 
-const REPO_URL = 'https://github.com/kenlasko/monize';
+const REPO_URL = 'https://github.com/unplugged-kk/artha';
 
 describe('HelpSection', () => {
   it('renders the section heading', () => {

@@ -42,7 +42,7 @@ logs/
 docker-compose.override.yml
 
 # Container data mounted from the host (BACKUP_HOST_DIR, ATTACHMENT_HOST_DIR)
-/monize/
+/artha/
 
 # Testing
 coverage/
@@ -85,3 +85,6 @@ credentials/
 # Standalone Chromium push integration artifacts
 e2e/playwright-push-report/
 e2e/test-results-push/
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/

@@ -14,12 +14,12 @@ describe('ReleaseNotesMarkdown', () => {
     const first = screen.getByRole('link', { name: '#931' });
     expect(first).toHaveAttribute(
       'href',
-      'https://github.com/kenlasko/monize/issues/931',
+      'https://github.com/unplugged-kk/artha/issues/931',
     );
     expect(first).toHaveAttribute('target', '_blank');
     expect(screen.getByRole('link', { name: '#933' })).toHaveAttribute(
       'href',
-      'https://github.com/kenlasko/monize/issues/933',
+      'https://github.com/unplugged-kk/artha/issues/933',
     );
   });
 

@@ -53,10 +53,10 @@ FROM node:24-alpine AS production
 ARG GIT_SHA
 ARG BUILD_DATE
 ARG VERSION
-LABEL org.opencontainers.image.title="Monize Backend" \
-      org.opencontainers.image.description="Backend for Monize, a self-hosted personal finance app" \
-      org.opencontainers.image.source="https://github.com/kenlasko/monize" \
-      org.opencontainers.image.url="https://github.com/kenlasko/monize" \
+LABEL org.opencontainers.image.title="Artha Backend" \
+      org.opencontainers.image.description="Backend for Artha, a self-hosted personal finance app" \
+      org.opencontainers.image.source="https://github.com/unplugged-kk/artha" \
+      org.opencontainers.image.url="https://github.com/unplugged-kk/artha" \
       org.opencontainers.image.authors="ken.lasko@gmail.com" \
       org.opencontainers.image.vendor="Ken Lasko" \
       org.opencontainers.image.revision="${GIT_SHA}" \

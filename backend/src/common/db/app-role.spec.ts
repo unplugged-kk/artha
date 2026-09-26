@@ -34,7 +34,7 @@ describe("provisionAppRole", () => {
     const logger = makeLogger();
 
     await provisionAppRole(client, {
-      appUser: "monize_app",
+      appUser: "artha_app",
       appPassword: "s3cret",
       logger,
     });
@@ -42,7 +42,7 @@ describe("provisionAppRole", () => {
     // Role name carried via a parameterized session GUC (no interpolation).
     expect(calls[0]).toEqual({
       text: "SELECT set_config($1, $2, false)",
-      params: [APP_ROLE_NAME_GUC, "monize_app"],
+      params: [APP_ROLE_NAME_GUC, "artha_app"],
     });
     // Password carried via a parameterized session GUC (never in SQL text).
     expect(calls[1]).toEqual({
@@ -55,7 +55,7 @@ describe("provisionAppRole", () => {
     expect(logger.warn).not.toHaveBeenCalled();
   });
 
-  it("defaults the role name to monize_app when appUser is unset", async () => {
+  it("defaults the role name to artha_app when appUser is unset", async () => {
     const { client, calls } = makeClient();
     await provisionAppRole(client, {
       appUser: undefined,
@@ -70,7 +70,7 @@ describe("provisionAppRole", () => {
     const logger = makeLogger();
 
     await provisionAppRole(client, {
-      appUser: "monize_app",
+      appUser: "artha_app",
       appPassword: undefined,
       logger,
     });
@@ -95,7 +95,7 @@ describe("provisionAppRole", () => {
       .mockImplementation(() => {});
     try {
       await provisionAppRole(client, {
-        appUser: "monize_app",
+        appUser: "artha_app",
         appPassword: "pw",
       });
       expect(logSpy).toHaveBeenCalledTimes(1);
@@ -109,7 +109,7 @@ describe("provisionAppRole", () => {
   it("never emits the password as a literal in any SQL statement text", async () => {
     const { client, calls } = makeClient();
     await provisionAppRole(client, {
-      appUser: "monize_app",
+      appUser: "artha_app",
       appPassword: "super-secret-value",
       logger: makeLogger(),
     });
@@ -278,17 +278,17 @@ describe("applyAppRoleGrants", () => {
   it("sets the role-name GUC parameterized, then applies the grants", async () => {
     const { client, calls } = makeClient();
 
-    await applyAppRoleGrants(client, { appUser: "monize_app" });
+    await applyAppRoleGrants(client, { appUser: "artha_app" });
 
     expect(calls).toHaveLength(2);
     expect(calls[0]).toEqual({
       text: "SELECT set_config($1, $2, false)",
-      params: [APP_ROLE_NAME_GUC, "monize_app"],
+      params: [APP_ROLE_NAME_GUC, "artha_app"],
     });
     expect(calls[1].text).toBe(APP_ROLE_GRANTS_SQL);
   });
 
-  it("defaults the role name to monize_app when appUser is unset", async () => {
+  it("defaults the role name to artha_app when appUser is unset", async () => {
     const { client, calls } = makeClient();
 
     await applyAppRoleGrants(client, { appUser: undefined });
@@ -302,7 +302,7 @@ describe("applyAppRoleGrants", () => {
     // side effect of replaying migrations.
     const { client, calls } = makeClient();
 
-    await applyAppRoleGrants(client, { appUser: "monize_app" });
+    await applyAppRoleGrants(client, { appUser: "artha_app" });
 
     for (const call of calls) {
       expect(call.text).not.toBe(APP_ROLE_UPSERT_SQL);

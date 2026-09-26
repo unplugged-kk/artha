@@ -103,7 +103,7 @@ export function trimIntradayToFirstDayClose<T extends { timestamp: string }>(
  * sessionStorage prefix for cached intraday responses. Per-tab, so the data
  * persists during a navigation but not across browser sessions.
  */
-export const INTRADAY_CACHE_PREFIX = 'monize-intraday|';
+export const INTRADAY_CACHE_PREFIX = 'artha-intraday|';
 
 export interface IntradayCachePayload {
   fetchedAt: number;

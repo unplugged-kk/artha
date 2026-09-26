@@ -120,7 +120,7 @@ export const aiApi = {
       ? '/api/v1/ai/relay/query/stream'
       : '/api/v1/ai/query/stream';
     // Attachments flow to both paths. On the relay path the backend stores them
-    // and exposes each to the agent as a monize-attachment:// MCP resource.
+    // and exposes each to the agent as a artha-attachment:// MCP resource.
     const body = {
       query,
       conversationHistory,

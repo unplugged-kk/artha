@@ -711,7 +711,7 @@ describe('useInvestmentData – pruning stale account IDs', () => {
     mockGetPortfolioSummary.mockResolvedValue(mockSummary);
     mockGetAllAccounts.mockResolvedValue([]);
     // Pre-populate localStorage with accounts that no longer exist
-    localStorage.setItem('monize-investments-accounts', JSON.stringify(['stale-id']));
+    localStorage.setItem('artha-investments-accounts', JSON.stringify(['stale-id']));
   });
 
   it('prunes stale account IDs from localStorage when accounts load', async () => {

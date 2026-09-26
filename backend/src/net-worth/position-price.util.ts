@@ -10,7 +10,7 @@ export { PricePoint } from "../common/time-series/price-boundary.util";
  * store, with a legacy transaction-derived fallback.
  *
  * **`skipPriceUpdates` does not appear here, and must not.** That flag governs
- * whether Monize fetches external provider prices for a security; it says
+ * whether Artha fetches external provider prices for a security; it says
  * nothing about which stored observations are eligible to value a position.
  * Valuing a skip-flagged security from its transaction prices while ignoring a
  * manually entered `security_prices` row is issue #1242: a 401(k) whose latest

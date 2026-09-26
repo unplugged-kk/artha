@@ -157,7 +157,7 @@ export function GemInstrumentSelect({
    * the opposite of the intent: the fund this role should point at was the one
    * fund the picker said nothing about, buried somewhere in "Your instruments"
    * among everything else the portfolio holds, while the recommendations on
-   * offer were exactly the instruments Monize did not have yet. The advice
+   * offer were exactly the instruments Artha did not have yet. The advice
    * disappeared the moment it became actionable in one click.
    *
    * So both stay, and `owned` decides what picking one does: select the

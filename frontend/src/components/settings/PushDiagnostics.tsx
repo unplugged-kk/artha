@@ -23,7 +23,7 @@ import { getErrorMessage } from '@/lib/errors';
 const logger = createLogger('PushDiagnostics');
 
 /**
- * Everything this browser and device report to Monize about notifications, in
+ * Everything this browser and device report to Artha about notifications, in
  * one read-only dump.
  *
  * It exists because the failure users hit is invisible to the ordinary panel:

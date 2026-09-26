@@ -376,7 +376,7 @@ describe('InsightsList', () => {
     });
 
     expect(
-      screen.getByText(/claude mcp add --transport http monize/),
+      screen.getByText(/claude mcp add --transport http artha/),
     ).toBeInTheDocument();
   });
 

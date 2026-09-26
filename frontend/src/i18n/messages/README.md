@@ -1,6 +1,6 @@
 # Frontend translations
 
-This folder holds per-locale UI strings for Monize. Each locale lives in its own
+This folder holds per-locale UI strings for Artha. Each locale lives in its own
 folder and is split into small JSON files (namespaces) so translation work can
 be done in focused PRs.
 

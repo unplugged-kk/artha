@@ -22,7 +22,7 @@ describe('IncompleteLogoutNotice', () => {
   });
 
   it('warns that only this browser was signed out', () => {
-    window.sessionStorage.setItem('monize:logout-incomplete', '1');
+    window.sessionStorage.setItem('artha:logout-incomplete', '1');
     render(<IncompleteLogoutNotice />);
     expect(screen.getByRole('alert')).toBeInTheDocument();
     expect(screen.getByText(/only this browser was signed out/i)).toBeInTheDocument();
@@ -32,7 +32,7 @@ describe('IncompleteLogoutNotice', () => {
   });
 
   it('clears the warning when the retry reaches the server', async () => {
-    window.sessionStorage.setItem('monize:logout-incomplete', '1');
+    window.sessionStorage.setItem('artha:logout-incomplete', '1');
     render(<IncompleteLogoutNotice />);
 
     await act(async () => {
@@ -42,13 +42,13 @@ describe('IncompleteLogoutNotice', () => {
     await waitFor(() => {
       expect(screen.queryByRole('alert')).not.toBeInTheDocument();
     });
-    expect(window.sessionStorage.getItem('monize:logout-incomplete')).toBeNull();
+    expect(window.sessionStorage.getItem('artha:logout-incomplete')).toBeNull();
   });
 
   // The session is still live, so the warning has to survive a failed retry
   // rather than disappearing and leaving the ordinary signed-out screen.
   it('keeps warning when the retry also fails', async () => {
-    window.sessionStorage.setItem('monize:logout-incomplete', '1');
+    window.sessionStorage.setItem('artha:logout-incomplete', '1');
     mockApiLogout.mockRejectedValue(new Error('still offline'));
     render(<IncompleteLogoutNotice />);
 
@@ -58,6 +58,6 @@ describe('IncompleteLogoutNotice', () => {
     await act(async () => {});
 
     expect(screen.getByRole('alert')).toBeInTheDocument();
-    expect(window.sessionStorage.getItem('monize:logout-incomplete')).toBe('1');
+    expect(window.sessionStorage.getItem('artha:logout-incomplete')).toBe('1');
   });
 });

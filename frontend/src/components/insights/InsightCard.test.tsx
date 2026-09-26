@@ -40,7 +40,7 @@ describe('InsightCard', () => {
     const { container } = render(
       <InsightCard
         insight={makeInsight({
-          description: `Spending on [Dining](monize://category/${uuid}) is up.`,
+          description: `Spending on [Dining](artha://category/${uuid}) is up.`,
         })}
         onDismiss={vi.fn()}
         isDismissing={false}

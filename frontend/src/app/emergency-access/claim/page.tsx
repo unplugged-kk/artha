@@ -207,7 +207,7 @@ export default function EmergencyClaimPage() {
       <div className="max-w-md w-full space-y-8">
         <div>
           <Image
-            src="/icons/monize-logo-transparent.svg"
+            src="/icons/artha-logo-transparent.svg"
             alt="Artha"
             width={96}
             height={96}

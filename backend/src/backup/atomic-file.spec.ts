@@ -20,7 +20,7 @@ describe("atomic backup file writes", () => {
   let dir: string;
 
   beforeEach(() => {
-    dir = mkdtempSync(join(tmpdir(), "monize-atomic-spec-"));
+    dir = mkdtempSync(join(tmpdir(), "artha-atomic-spec-"));
   });
 
   afterEach(() => {
@@ -31,19 +31,19 @@ describe("atomic backup file writes", () => {
 
   describe("writeFileAtomic", () => {
     it("leaves the final name holding the complete contents", async () => {
-      const target = join(dir, "monize-backup-daily-2026-04-01.json.gz");
+      const target = join(dir, "artha-backup-daily-2026-04-01.json.gz");
 
       await writeFileAtomic(target, Buffer.from("complete payload"));
 
       expect(await fs.readFile(target, "utf-8")).toBe("complete payload");
       // No temporary file survives a successful write.
       expect(await listing()).toEqual([
-        "monize-backup-daily-2026-04-01.json.gz",
+        "artha-backup-daily-2026-04-01.json.gz",
       ]);
     });
 
     it("does not create the final name when the write fails", async () => {
-      const target = join(dir, "monize-backup-daily-2026-04-02.json.gz");
+      const target = join(dir, "artha-backup-daily-2026-04-02.json.gz");
       // A Buffer view whose byteLength is a lie makes the write throw after the
       // temporary file exists -- the shape of an ENOSPC or a short write.
       const broken = Object.create(Buffer.prototype) as Buffer;
@@ -58,7 +58,7 @@ describe("atomic backup file writes", () => {
     });
 
     it("leaves the previous artifact intact when the write fails", async () => {
-      const target = join(dir, "monize-backup-daily-2026-04-03.json.gz");
+      const target = join(dir, "artha-backup-daily-2026-04-03.json.gz");
       await fs.writeFile(target, "yesterday's good backup");
       const broken = Object.create(Buffer.prototype) as Buffer;
 
@@ -72,19 +72,19 @@ describe("atomic backup file writes", () => {
     });
 
     it("replaces an existing artifact in one step", async () => {
-      const target = join(dir, "monize-backup-daily-2026-04-04.json.gz");
+      const target = join(dir, "artha-backup-daily-2026-04-04.json.gz");
       await fs.writeFile(target, "old");
 
       await writeFileAtomic(target, Buffer.from("new"));
 
       expect(await fs.readFile(target, "utf-8")).toBe("new");
       expect(await listing()).toEqual([
-        "monize-backup-daily-2026-04-04.json.gz",
+        "artha-backup-daily-2026-04-04.json.gz",
       ]);
     });
 
     it("gives concurrent writers distinct temporary files", async () => {
-      const target = join(dir, "monize-backup-daily-2026-04-05.json.gz");
+      const target = join(dir, "artha-backup-daily-2026-04-05.json.gz");
 
       // Exclusive creation plus a unique suffix: two jobs for the same date must
       // not share a temporary file and interleave their bytes into it.
@@ -96,7 +96,7 @@ describe("atomic backup file writes", () => {
       const contents = await fs.readFile(target, "utf-8");
       expect(["aaaa", "bbbb"]).toContain(contents);
       expect(await listing()).toEqual([
-        "monize-backup-daily-2026-04-05.json.gz",
+        "artha-backup-daily-2026-04-05.json.gz",
       ]);
     });
   });
@@ -115,7 +115,7 @@ describe("atomic backup file writes", () => {
    * is being asserted is still what the directory looks like afterwards.
    */
   describe("writeFileAtomic under a short write", () => {
-    const target = () => join(dir, "monize-backup-daily-2026-01-01.json.gz");
+    const target = () => join(dir, "artha-backup-daily-2026-01-01.json.gz");
     const payload = Buffer.from("0123456789ABCDEF", "utf-8");
 
     /** Wrap the next opened handle so its `write` behaves as `impl` says. */
@@ -162,7 +162,7 @@ describe("atomic backup file writes", () => {
       await writeFileAtomic(target(), payload);
 
       expect(await listing()).toEqual([
-        "monize-backup-daily-2026-01-01.json.gz",
+        "artha-backup-daily-2026-01-01.json.gz",
       ]);
       expect(await fs.readFile(target())).toEqual(payload);
       expect(call).toBeGreaterThan(1);
@@ -204,15 +204,15 @@ describe("atomic backup file writes", () => {
       // already there.
       expect(await fs.readFile(target())).toEqual(previous);
       expect(await listing()).toEqual([
-        "monize-backup-daily-2026-01-01.json.gz",
+        "artha-backup-daily-2026-01-01.json.gz",
       ]);
     });
   });
 
   describe("copyFileAtomic", () => {
     it("promotes a daily backup to a weekly name", async () => {
-      const daily = join(dir, "monize-backup-daily-2026-04-14.json.gz");
-      const weekly = join(dir, "monize-backup-weekly-2026-04-14.json.gz");
+      const daily = join(dir, "artha-backup-daily-2026-04-14.json.gz");
+      const weekly = join(dir, "artha-backup-weekly-2026-04-14.json.gz");
       await fs.writeFile(daily, "payload");
 
       await copyFileAtomic(daily, weekly);
@@ -222,7 +222,7 @@ describe("atomic backup file writes", () => {
     });
 
     it("leaves the destination alone when the source is missing", async () => {
-      const weekly = join(dir, "monize-backup-weekly-2026-04-21.json.gz");
+      const weekly = join(dir, "artha-backup-weekly-2026-04-21.json.gz");
       await fs.writeFile(weekly, "last week's backup");
 
       await expect(
@@ -239,7 +239,7 @@ describe("atomic backup file writes", () => {
     it("removes a temporary file older than the grace period", async () => {
       const stale = join(
         dir,
-        ".monize-backup-tmp-999-1-monize-backup-daily-2026-04-01.json.gz",
+        ".artha-backup-tmp-999-1-artha-backup-daily-2026-04-01.json.gz",
       );
       await fs.writeFile(stale, "partial");
       const old = Date.now() - 2 * 60 * 60 * 1000;
@@ -254,7 +254,7 @@ describe("atomic backup file writes", () => {
     it("leaves a recent temporary file alone", async () => {
       const fresh = join(
         dir,
-        ".monize-backup-tmp-999-2-monize-backup-daily-2026-04-02.json.gz",
+        ".artha-backup-tmp-999-2-artha-backup-daily-2026-04-02.json.gz",
       );
       await fs.writeFile(fresh, "in progress");
 
@@ -268,19 +268,19 @@ describe("atomic backup file writes", () => {
 
     it("never touches a real backup", async () => {
       await fs.writeFile(
-        join(dir, "monize-backup-daily-2026-04-03.json.gz"),
+        join(dir, "artha-backup-daily-2026-04-03.json.gz"),
         "x",
       );
       const old = Date.now() - 365 * 24 * 60 * 60 * 1000;
       await fs.utimes(
-        join(dir, "monize-backup-daily-2026-04-03.json.gz"),
+        join(dir, "artha-backup-daily-2026-04-03.json.gz"),
         new Date(old),
         new Date(old),
       );
 
       expect(await cleanStaleTempFiles(dir, Date.now())).toBe(0);
       expect(await listing()).toEqual([
-        "monize-backup-daily-2026-04-03.json.gz",
+        "artha-backup-daily-2026-04-03.json.gz",
       ]);
     });
 
@@ -295,10 +295,10 @@ describe("atomic backup file writes", () => {
 
   describe("isTempBackupName", () => {
     it("does not classify a real backup as temporary", () => {
-      expect(isTempBackupName("monize-backup-daily-2026-04-01.json.gz")).toBe(
+      expect(isTempBackupName("artha-backup-daily-2026-04-01.json.gz")).toBe(
         false,
       );
-      expect(isTempBackupName("monize-backup-weekly-2026-04-01.mzbe")).toBe(
+      expect(isTempBackupName("artha-backup-weekly-2026-04-01.mzbe")).toBe(
         false,
       );
     });
@@ -307,7 +307,7 @@ describe("atomic backup file writes", () => {
       // Derived from the writer rather than hardcoded, so the two cannot drift:
       // a temp prefix that stopped matching would make retention count partial
       // files as backups again.
-      const target = join(dir, "monize-backup-daily-2026-04-06.json.gz");
+      const target = join(dir, "artha-backup-daily-2026-04-06.json.gz");
       let observed: string | undefined;
       const real = fs.rename;
       const spy = jest
@@ -335,7 +335,7 @@ describe("atomic backup file writes", () => {
    * something a second process cannot reproduce.
    */
   it("gives every write a temp name no other process can be holding", async () => {
-    const dir = mkdtempSync(join(tmpdir(), "monize-atomic-uuid-"));
+    const dir = mkdtempSync(join(tmpdir(), "artha-atomic-uuid-"));
     const seen = new Set<string>();
     const originalRename = fs.rename;
     const spy = jest

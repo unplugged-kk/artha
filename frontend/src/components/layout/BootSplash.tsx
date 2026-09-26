@@ -1,6 +1,6 @@
 import { BOOT_BACKGROUND, BOOT_FOREGROUND, type ResolvedTheme } from '@/lib/pwa-theme';
 
-export const BOOT_SPLASH_ID = 'monize-boot-splash';
+export const BOOT_SPLASH_ID = 'artha-boot-splash';
 
 // How long the boot screen waits before admitting something is wrong. Long
 // enough that a slow-but-working boot never shows it, short enough that a
@@ -14,7 +14,7 @@ export interface BootSplashStrings {
 }
 
 interface BootSplashProps {
-  // The resolved theme from the monize-resolved-theme cookie, or null when
+  // The resolved theme from the artha-resolved-theme cookie, or null when
   // the cookie is absent -- in which case the palette follows the system
   // preference via prefers-color-scheme.
   bootTheme: ResolvedTheme | null;
@@ -70,7 +70,7 @@ html.dark #${BOOT_SPLASH_ID} { ${darkRules} }
   border: 3px solid currentColor;
   border-top-color: transparent;
   opacity: 0.4;
-  animation: monize-boot-spin 0.9s linear infinite;
+  animation: artha-boot-spin 0.9s linear infinite;
 }
 #${BOOT_SPLASH_ID} .boot-splash-slow {
   position: absolute;
@@ -81,15 +81,15 @@ html.dark #${BOOT_SPLASH_ID} { ${darkRules} }
   line-height: 1.5;
   opacity: 0;
   visibility: hidden;
-  animation: monize-boot-reveal 0.4s ease-out ${SLOW_REVEAL_SECONDS}s forwards;
+  animation: artha-boot-reveal 0.4s ease-out ${SLOW_REVEAL_SECONDS}s forwards;
 }
 #${BOOT_SPLASH_ID} .boot-splash-slow a {
   color: inherit;
   font-weight: 600;
   text-decoration: underline;
 }
-@keyframes monize-boot-spin { to { transform: rotate(360deg); } }
-@keyframes monize-boot-reveal { to { opacity: 1; visibility: visible; } }
+@keyframes artha-boot-spin { to { transform: rotate(360deg); } }
+@keyframes artha-boot-reveal { to { opacity: 1; visibility: visible; } }
 @media (prefers-reduced-motion: reduce) {
   #${BOOT_SPLASH_ID} .boot-splash-spinner { display: none; }
 }
@@ -106,7 +106,7 @@ html.dark #${BOOT_SPLASH_ID} { ${darkRules} }
       {/* eslint-disable-next-line @next/next/no-img-element -- next/image needs
           the JS runtime; this overlay must render before (or without) it */}
       <img
-        src="/icons/monize-logo-transparent.svg"
+        src="/icons/artha-logo-transparent.svg"
         alt=""
         className="boot-splash-logo"
       />

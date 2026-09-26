@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { AssistantTable } from './AssistantTable';
 import {
   AI_ENTITY_LINK_EVENT,
-  isMonizeHref,
+  isArthaHref,
   resolveEntityHref,
 } from '@/lib/ai-entity-links';
 
@@ -16,12 +16,12 @@ interface AssistantMarkdownProps {
 
 /**
  * react-markdown's default transform strips unknown schemes, so the
- * assistant's `monize://` entity URIs would never reach the `a` renderer
+ * assistant's `artha://` entity URIs would never reach the `a` renderer
  * without being allowed through here. Everything else keeps the default
  * sanitization (http/https/mailto/relative pass, javascript: etc. blocked).
  */
 function urlTransform(url: string): string {
-  return isMonizeHref(url) ? url : defaultUrlTransform(url);
+  return isArthaHref(url) ? url : defaultUrlTransform(url);
 }
 
 /**
@@ -102,7 +102,7 @@ export function AssistantMarkdown({ content }: AssistantMarkdownProps) {
         ),
         a: ({ children, href }) => {
           // Entity deep-links: navigate in-app (same tab) so the filter or
-          // highlight applies on the Transactions page. A monize: href that
+          // highlight applies on the Transactions page. A artha: href that
           // fails the strict parse renders as plain text rather than a dead
           // link -- the model may have hallucinated or mangled the id.
           const entityHref = resolveEntityHref(href);
@@ -119,7 +119,7 @@ export function AssistantMarkdown({ content }: AssistantMarkdownProps) {
               </Link>
             );
           }
-          if (isMonizeHref(href)) {
+          if (isArthaHref(href)) {
             return <>{children}</>;
           }
           return (

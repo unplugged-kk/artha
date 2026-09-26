@@ -191,7 +191,7 @@ describe('MnyVerificationReport', () => {
 
       expect(screen.getByText('Holdings verification')).toBeInTheDocument();
       expect(screen.getByText('VOO')).toBeInTheDocument();
-      // Money's lots and Monize's holding, both through the shared quantity
+      // Money's lots and Artha's holding, both through the shared quantity
       // formatter so the report reads in the user's number locale.
       expect(screen.getAllByText('137.5')).toHaveLength(2);
     });

@@ -57,7 +57,7 @@ export const usePreferencesStore = create<PreferencesState>()(
       },
     }),
     {
-      name: 'monize-preferences',
+      name: 'artha-preferences',
       storage: createJSONStorage(() => localStorage),
       // Persist only the cached preferences, never `isLoaded`: it must
       // start false on every load so PreferencesLoader refetches for the

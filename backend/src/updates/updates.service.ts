@@ -12,7 +12,7 @@ import { withScopedDb } from "../common/db/scoped-db";
 const backendPkg = require("../../package.json") as { version: string };
 
 const GITHUB_LATEST_RELEASE_URL =
-  "https://api.github.com/repos/kenlasko/monize/releases/latest";
+  "https://api.github.com/repos/kenlasko/artha/releases/latest";
 const FETCH_TIMEOUT_MS = 10_000;
 
 interface GithubRelease {

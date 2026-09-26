@@ -25,7 +25,7 @@ export const MNY_MAX_YEAR = 2199;
 /** Handle values Money uses to mean "no reference". */
 const NULL_HANDLES: ReadonlySet<number> = new Set([0, -1]);
 
-/** Scale of Monize money columns, `decimal(20,4)`. */
+/** Scale of Artha money columns, `decimal(20,4)`. */
 const AMOUNT_SCALE = 10000;
 
 /** Trimmed text, or an empty string when absent. */

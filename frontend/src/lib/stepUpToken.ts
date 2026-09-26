@@ -107,7 +107,7 @@ export class StepUpRequiredError extends Error {
 }
 
 /**
- * OIDC users can't enroll Monize-managed 2FA and have no local password, so
+ * OIDC users can't enroll Artha-managed 2FA and have no local password, so
  * step-up sends the user through `GET /auth/oidc/reauth?purpose=...`, which asks
  * the identity provider to challenge them (`prompt=login`). The OIDC callback
  * hands back a signed, purpose-bound, one-time artifact in the URL fragment,

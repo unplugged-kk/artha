@@ -27,7 +27,7 @@ import {
  * second source of truth for one value is how the currency default drifted
  * across twenty-three call sites.
  */
-export const VAPID_SUBJECT = "https://github.com/kenlasko/monize";
+export const VAPID_SUBJECT = "https://github.com/unplugged-kk/artha";
 
 /** What the browser is told, and the only shape `/push/config` ever returns. */
 export interface PublicPushConfig {

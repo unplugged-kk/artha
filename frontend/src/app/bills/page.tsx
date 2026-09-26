@@ -125,7 +125,7 @@ function BillsContent() {
   const [futureTransactions, setFutureTransactions] = useState<FutureTransaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { showForm, editingItem: editingTransaction, openCreate, openEdit, close, isEditing, modalProps, setFormDirty, unsavedChangesDialog, formSubmitRef } = useFormModal<ScheduledTransaction>();
-  const [filterType, setFilterType] = useLocalStorage<'all' | 'bills' | 'deposits'>('monize-bills-filter-type', 'all');
+  const [filterType, setFilterType] = useLocalStorage<'all' | 'bills' | 'deposits'>('artha-bills-filter-type', 'all');
   const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
   const filters = useBillsFilters();
   const [calendarMonth, setCalendarMonth] = useState(new Date());
@@ -733,7 +733,7 @@ function BillsContent() {
         <PageHeader
           title={t('page.title')}
           subtitle={t('page.subtitle')}
-          helpUrl="https://github.com/kenlasko/monize/wiki/Bills-and-Deposits"
+          helpUrl="https://github.com/unplugged-kk/artha/wiki/Bills-and-Deposits"
           actions={<Button onClick={handleCreateNew}>{t('page.newButton')}</Button>}
         />
         {/* Summary Cards */}

@@ -1,6 +1,6 @@
-/* Monize marketing site — handwritten CSS, no build step */
+/* Artha marketing site — handwritten CSS, no build step */
 
-/* ============ Monize site — assets/css/styles.css ============ */
+/* ============ Artha site — assets/css/styles.css ============ */
 *,*::before,*::after{box-sizing:border-box}
 :root{
   --bg:#070b16;--bg2:#0b1223;--card:#101a2f;--card2:#16223c;--line:#22314f;

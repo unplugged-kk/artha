@@ -1,26 +1,26 @@
-Monize has been deployed successfully!
+Artha has been deployed successfully!
 
 Components:
-  - Backend:  monize-backend  (port {{ .Values.backend.service.port }})
-  - Frontend: monize-frontend (port {{ .Values.frontend.service.port }})
+  - Backend:  artha-backend  (port {{ .Values.backend.service.port }})
+  - Frontend: artha-frontend (port {{ .Values.frontend.service.port }})
 
 {{- if .Values.httpRoute.enabled }}
 
 Access via HTTPRoute (Gateway API):
-  Hostname: {{ include "monize.hostname" . }}
+  Hostname: {{ include "artha.hostname" . }}
   Gateway:  {{ (index .Values.httpRoute.parentRefs 0).namespace }}/{{ (index .Values.httpRoute.parentRefs 0).name }}
 {{- end }}
 
 {{- if .Values.ingress.enabled }}
 
 Access via Ingress:
-  Hostname: {{ include "monize.hostname" . }}
+  Hostname: {{ include "artha.hostname" . }}
   {{- if .Values.ingress.className }}
   Class:    {{ .Values.ingress.className }}
   {{- end }}
 {{- end }}
 
-Public URL: {{ include "monize.publicAppUrl" . }}
+Public URL: {{ include "artha.publicAppUrl" . }}
 
 {{- if not .Values.backend.persistence.backups.enabled }}
 
@@ -35,7 +35,7 @@ NOTE: automatic backups have nowhere durable to write.
   Or mount your own claim with backend.persistence.backups.existingClaim.
 {{- end }}
 {{- if not .Values.backend.persistence.attachments.enabled }}
-{{- if eq (include "monize.attachmentProvider" .) "local" }}
+{{- if eq (include "artha.attachmentProvider" .) "local" }}
 
 NOTE: ATTACHMENT_STORAGE_PROVIDER=local has nowhere durable to write.
 

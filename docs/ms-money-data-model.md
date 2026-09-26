@@ -11,7 +11,7 @@ that were never observed say so.
 > `poc/import-from-dotmny:migration/ms-money-data-model.md` -- a path in that
 > branch's tree, not in this one -- from PR #192 by
 > **marksimpson**, derived from analysis of a real 30-year Money file. That
-> analysis is the foundation of Monize's `.mny` importer and the single most
+> analysis is the foundation of Artha's `.mny` importer and the single most
 > valuable thing the proof of concept produced.
 >
 > This version carries corrections found while building the native importer.
@@ -35,7 +35,7 @@ arrive as JavaScript `Date` objects and need no parsing.
 >
 > The real "no date" sentinel is **year 10000** (`+010000-02-28`). It is common:
 > 1,320 of the 2,292 date values in `money2002.mny` are it. Jet's own zero date
-> (1899-12-30) also appears. Monize normalises anything outside 1900–2199 to
+> (1899-12-30) also appears. Artha normalises anything outside 1900–2199 to
 > null (`model/mny-values.ts`, `toDate`).
 
 ## Key tables
@@ -59,7 +59,7 @@ arrive as JavaScript `Date` objects and need no parsing.
 | `BILL` | Scheduled transaction instances |
 
 Not every table exists in every Money version. `BILL` is absent from Money 2001
-entirely, which is what crash-looped the proof of concept. Monize reads every
+entirely, which is what crash-looped the proof of concept. Artha reads every
 table through `getTableOrNull` and every column through a spec with a declared
 default, so an absent table yields zero rows and an absent column yields the
 default -- both reported rather than thrown (`tables/table-reader.ts`).
@@ -100,7 +100,7 @@ concept did.
 
 A file has exactly one of the two columns. Reading only `hpay` drops every payee
 on a Money 2001 or 2002 file; reading only `lHpay` drops them on a Money Plus
-file. Monize's reader takes a list of column aliases, newest first.
+file. Artha's reader takes a list of column aliases, newest first.
 
 ## DHD (file defaults)
 
@@ -186,7 +186,7 @@ Every tree descends from one of two roots: `INCOME` (`hcat` 130) and `EXPENSE`
 
 ### Account types (`at`)
 
-| at | Meaning | Monize type |
+| at | Meaning | Artha type |
 |----|---------|-------------|
 | 0 | Bank (chequing/savings) | CHEQUING |
 | 1 | Credit card | CREDIT_CARD |
@@ -203,7 +203,7 @@ outside this table is skipped with a counted warning, never guessed at.
 ### Investment account pairs
 
 An investment account (`at = 5`) points at its cash sleeve through `hacctRel`.
-This maps exactly onto Monize's linked INVESTMENT_CASH + INVESTMENT_BROKERAGE
+This maps exactly onto Artha's linked INVESTMENT_CASH + INVESTMENT_BROKERAGE
 pair. Not every investment account has one.
 
 > **Correction.** A `z ` prefix on an account name is *not* a Money closure
@@ -273,7 +273,7 @@ The original's table is reproduced in the **Correction** below; this one is what
 the files measure, read off `LOT` (which transaction opened and closed each tax
 lot) and `TRN_XFER` (whether Money records a cash counterpart at all).
 
-| act | Meaning | `TRN_INV` row? | Cash counterpart? | Monize action |
+| act | Meaning | `TRN_INV` row? | Cash counterpart? | Artha action |
 |-----|---------|:--------------:|:-----------------:|---------------|
 | 0 | Buy, Money 2001-era | yes | — | BUY |
 | 1 | Buy | yes | 2,015 of 2,029 | BUY |
@@ -298,7 +298,7 @@ lot) and `TRN_XFER` (whether Money records a cash counterpart at all).
 
 `act` 5 and 14 have never been observed in any available file; 12 has been
 observed, and issue #1149 supplies Money's own name for it ("Add Shares") --
-Monize keeps mapping it to REINVEST so the stated value survives as cost basis.
+Artha keeps mapping it to REINVEST so the stated value survives as cost basis.
 The `act` 10 / 24 / 26 / 27 / 29 / 30 family was named by issue #1149's reporter
 against Money's own register (the labels match Money's QIF vocabulary --
 `ReinvInt`, `CGShort`, `CGLong`, `ReinvSh`, `ReinvLg`), but no file measured
@@ -335,14 +335,14 @@ times in 1,090, while `act` 12 does so **zero** times in 92 -- exactly like the
 `fEmpMatch` set, which is what the units appear to be: an employer's side of a
 plan contribution, credited without passing through the member's cash.
 
-REINVEST is the Monize action that matches: a value and a position, no cash leg,
+REINVEST is the Artha action that matches: a value and a position, no cash leg,
 cost basis preserved.
 
 Issue #1149 supplied Money's own name for the code: it is the "Add Shares"
 activity, which Money also uses for zero-quantity account true-ups and
 sub-account transfers that leave the parent account unchanged (those rows
 carry a price and a memo but move nothing, and import as valueless REINVEST
-rows). The REINVEST mapping is kept deliberately -- Monize's ADD_SHARES
+rows). The REINVEST mapping is kept deliberately -- Artha's ADD_SHARES
 records shares with no cost, so mapping to it would discard the stated value
 that Money's Add Shares preserves as basis.
 
@@ -410,7 +410,7 @@ identifies the whole family, and it is the only reliable handle on it.
 > **Correction.** The original reference had `0x80` as "voided" and `0x8000` as
 > "auto-entered". Both are wrong, and the first one is expensive: `0x80` is the
 > bit *every loan and mortgage payment* carries, so every loan payment imported
-> with status VOID. Monize's balance logic then excluded them, and each loan and
+> with status VOID. Artha's balance logic then excluded them, and each loan and
 > mortgage sat frozen at its opening balance with a full register above it.
 > 1,084 of the file's 33,734 transactions imported voided; the real number is 31.
 >
@@ -441,7 +441,7 @@ identifies the whole family, and it is the only reliable handle on it.
 > The phantom rule is `frq != -1` and nothing else.
 >
 > *Voided rows are real rows.* They should be imported with a VOID status, which
-> Monize's balance logic already excludes from totals. Dropping them loses the
+> Artha's balance logic already excludes from totals. Dropping them loses the
 > record that the transaction existed at all. The void bit is `0x100`; `0x80`
 > marks a debt-account row and voids nothing (see the `grftt` table above).
 >
@@ -473,7 +473,7 @@ Amount, category and memo live on the child's own `TRN` row, not here.
 category leg.** This is how Money records a loan payment: the principal is a
 transfer into the loan account, the interest is an ordinary category leg.
 Importing the child as category-only loses the transfer, which is the second
-half of the loans-import bug. In Monize it becomes a
+half of the loans-import bug. In Artha it becomes a
 `transaction_splits.kind = 'transfer'` row wired to the counterpart, and the
 counterpart is imported exactly once.
 
@@ -488,13 +488,13 @@ Both sides exist as separate `TRN` rows with their own amounts. Because the
 pairing is exact, a `.mny` importer must never fall back to matching transfers
 by name and amount the way a QIF importer has to.
 
-### The cash counterpart of a trade, and which side Monize keeps
+### The cash counterpart of a trade, and which side Artha keeps
 
 A `TRN_XFER` pairing whose far side carries `hsec` is never an ordinary
 transfer: the investment row is *both* the cash arriving and the trade. Where
-the near side sits decides which of Monize's three shapes it becomes.
+the near side sits decides which of Artha's three shapes it becomes.
 
-| Near side | What Money is recording | What Monize does | Issue |
+| Near side | What Money is recording | What Artha does | Issue |
 |---|---|---|---|
 | A top-level row in the brokerage's own cash companion (`ACCT.hacctRel`) | The cash half of the trade | **Drops** the row. `writeInvestments` creates that sleeve transaction from the investment row's `cashAmount` and links the two through `investment_transactions.transaction_id` | #1175 |
 | A top-level row in any other account | The cash the trade was paid for with, in the account that paid | **Keeps** the row and makes it the trade's cash leg. The trade records the account as its `funding_account_id`, which is what a natively entered trade funded from elsewhere already stores | #1212 |
@@ -541,11 +541,11 @@ transaction replay (still Money's own data) for any security the file records no
 lot for at all. Treating the absent lot as zero shares flagged every such
 position as a discrepancy the correct import never introduced.
 
-Monize does **not** import holdings from `LOT`. Holdings come only from the
+Artha does **not** import holdings from `LOT`. Holdings come only from the
 canonical rebuild over imported transactions -- a second, private fold is what
 left the proof of concept with negative positions. `LOT` is used instead as an
 independent check: open lots against the action replay, and both against what
-Monize ended up holding, with any disagreement reported as a verification
+Artha ended up holding, with any disagreement reported as a verification
 warning rather than a failed import.
 
 ## SEC (securities)
@@ -566,7 +566,7 @@ for foreign ones (`GB:VOD`, `US:VT`), and empty for many funds.
 > `3` mutual fund, `4` currency). **The codes shift between releases.** The same
 > Amex index securities are `sct` 6 in Money 2001 and 2002 and `sct` 7 in Money
 > Plus, and `sct` 3 is a unit trust in one of them. Any fixed mapping mislabels
-> some file, so Monize deliberately leaves `securityType` null for the user to
+> some file, so Artha deliberately leaves `securityType` null for the user to
 > set.
 >
 > **`sct = 4` is a money-market fund, not a currency.** Money Plus's own
@@ -580,7 +580,7 @@ for foreign ones (`GB:VOD`, `US:VT`), and empty for many funds.
 >
 > Currencies are not in `SEC` at all in any file measured -- they live in `CRNC`,
 > whose `szSymbol` always has the shape `/GBPUS`. That symbol shape is the entire
-> test Monize applies to a `SEC` row (`isCurrencyPseudoSecurity`); no `sct` code
+> test Artha applies to a `SEC` row (`isCurrencyPseudoSecurity`); no `sct` code
 > is read for meaning anywhere.
 
 ## SEC_SPLIT (stock splits)
@@ -654,7 +654,7 @@ reduce each series to one representative before doing anything else.
 
 > **Correction.** The original records `st = 1` as "active". No file available
 > to this project has ever contained a `BILL` row, so no value of `st` has been
-> observed and the claim cannot be checked. Monize therefore **filters on
+> observed and the claim cannot be checked. Artha therefore **filters on
 > nothing**: series are selected by date horizon and shape, the raw `st` rides
 > along on every candidate, and `npm run mny:inspect` prints its distribution so
 > one run against a real file settles it. A plausible-looking constant here

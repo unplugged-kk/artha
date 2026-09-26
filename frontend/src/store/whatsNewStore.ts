@@ -13,7 +13,7 @@ import { create } from 'zustand';
  * so in-memory state would be gone by the time the host reads it. Per-tab and
  * cleared with the tab, which is the closest the browser gets to "this login".
  */
-const LOGIN_PENDING_KEY = 'monize:whats-new-login-pending';
+const LOGIN_PENDING_KEY = 'artha:whats-new-login-pending';
 
 export function markWhatsNewPendingForLogin(): void {
   try {
@@ -48,7 +48,7 @@ export function consumeWhatsNewPendingForLogin(): boolean {
  * gates it, so this can only surface a version the user has neither
  * acknowledged nor disabled.
  */
-const ANNOUNCED_VERSION_KEY = 'monize:whats-new-announced-version';
+const ANNOUNCED_VERSION_KEY = 'artha:whats-new-announced-version';
 
 /**
  * Records `version` as announced and reports whether it differs from what was

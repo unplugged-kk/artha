@@ -64,7 +64,7 @@ function loadServiceWorker(fetchImpl: (request: unknown) => Promise<unknown>): H
   });
   vm.runInContext(swSource, context);
 
-  const dispatchNavigation = (url = 'https://monize.test/dashboard') => {
+  const dispatchNavigation = (url = 'https://artha.test/dashboard') => {
     let captured: Promise<Response> | undefined;
     const event = {
       request: { method: 'GET', mode: 'navigate', url },
@@ -141,7 +141,7 @@ describe('service worker navigation fallback', () => {
     });
 
     await harness.dispatchMessage({
-      type: 'monize-offline-strings',
+      type: 'artha-offline-strings',
       payload: {
         lang: 'fr',
         dir: 'ltr',
@@ -169,7 +169,7 @@ describe('service worker navigation fallback', () => {
     });
 
     await harness.dispatchMessage({
-      type: 'monize-offline-strings',
+      type: 'artha-offline-strings',
       payload: {
         theme: 'dark',
         background: 'rgb(39, 23, 1)',
@@ -187,7 +187,7 @@ describe('service worker navigation fallback', () => {
     });
 
     await harness.dispatchMessage({
-      type: 'monize-offline-strings',
+      type: 'artha-offline-strings',
       payload: {
         theme: 'dark',
         background: '}body{background:url(javascript:x)',
@@ -210,7 +210,7 @@ describe('service worker navigation fallback', () => {
 
     await harness.dispatchMessage({ type: 'something-else' });
     await harness.dispatchMessage({
-      type: 'monize-offline-strings',
+      type: 'artha-offline-strings',
       payload: { title: { evil: true }, message: 42 },
     });
 
@@ -226,7 +226,7 @@ describe('service worker navigation fallback', () => {
       request: {
         method: 'GET',
         mode: 'cors',
-        url: 'https://monize.test/api/v1/accounts',
+        url: 'https://artha.test/api/v1/accounts',
       },
       respondWith: () => {
         intercepted = true;

@@ -54,7 +54,7 @@ export interface MnyAccountVerification {
   readonly accountId: string | null;
   /** Final balance computed from the Money file by the parser. */
   readonly expectedBalance: number;
-  /** Balance Monize holds after the import. */
+  /** Balance Artha holds after the import. */
   readonly importedBalance: number;
   /** `importedBalance - expectedBalance`, rounded to four places. */
   readonly delta: number;
@@ -67,7 +67,7 @@ export interface MnyAccountVerification {
  * One holding's line in the verification report.
  *
  * Three independent readings of the same position: what Money's open tax lots
- * say, what replaying the mapped actions produces, and what Monize actually
+ * say, what replaying the mapped actions produces, and what Artha actually
  * holds once `HoldingsService` has rebuilt from the imported rows. The lots are
  * the authority -- they are the record Money itself reconciles against.
  */
@@ -78,7 +78,7 @@ export interface MnyHoldingVerification {
   readonly lotQuantity: number;
   /** Shares the mapper's own action replay produces. */
   readonly replayQuantity: number;
-  /** Shares Monize holds after the import. */
+  /** Shares Artha holds after the import. */
   readonly importedQuantity: number;
   /** `importedQuantity - lotQuantity`. */
   readonly delta: number;
@@ -116,7 +116,7 @@ export interface MnyImportResult {
 }
 
 /**
- * A balance is considered reconciled within half a cent. Money and Monize both
+ * A balance is considered reconciled within half a cent. Money and Artha both
  * store four decimal places, but a file whose amounts were entered in a
  * different currency's minor unit can differ in the fourth place without
  * anything being wrong.

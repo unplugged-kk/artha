@@ -62,8 +62,8 @@ function PayeesContent() {
   const [statusFilter, setStatusFilter] = useState<PayeeStatusFilter>('active');
   const [categoryFilter, setCategoryFilter] = useState<PayeeCategoryFilter>('all');
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortField, setSortField] = useLocalStorage<SortField>('monize-payees-sort-field', 'name');
-  const [sortDirection, setSortDirection] = useLocalStorage<SortDirection>('monize-payees-sort-dir', 'asc');
+  const [sortField, setSortField] = useLocalStorage<SortField>('artha-payees-sort-field', 'name');
+  const [sortDirection, setSortDirection] = useLocalStorage<SortDirection>('artha-payees-sort-dir', 'asc');
   const [mergePayee, setMergePayee] = useState<Payee | null>(null);
   const { showForm, editingItem, openCreate, openEdit, close, isEditing, modalProps, setFormDirty, unsavedChangesDialog, formSubmitRef } = useFormModal<Payee>();
 
@@ -295,7 +295,7 @@ function PayeesContent() {
         <PageHeader
           title={t('page.title')}
           subtitle={t('page.subtitle')}
-          helpUrl="https://github.com/kenlasko/monize/wiki/Categories-and-Payees"
+          helpUrl="https://github.com/unplugged-kk/artha/wiki/Categories-and-Payees"
           actions={
             <>
               {/* The four bulk operations live behind one trigger: they are

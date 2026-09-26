@@ -148,7 +148,7 @@ export class DelegationService {
    * `id = app_real_user_id()`. From the owner's session the delegate's row is
    * therefore invisible, and under enforcement the read returns zero rows --
    * which is indistinguishable from "no such user". That is not hypothetical:
-   * the Add-delegate email lookup reported an existing Monize account as new,
+   * the Add-delegate email lookup reported an existing Artha account as new,
    * `listDelegates` rendered every delegate with a blank name and email, and
    * `revokeDelegate` concluded a full account owned nothing.
    *
@@ -981,7 +981,7 @@ export class DelegationService {
   }
 
   /**
-   * Whether a Monize login already exists for this email (existing full
+   * Whether a Artha login already exists for this email (existing full
    * account or a delegate of another owner). Used by the Add-delegate UI
    * to skip the password / invite controls -- such a user keeps their own
    * credentials and is only granted the additional shared access.
@@ -1013,7 +1013,7 @@ export class DelegationService {
    * none of which the owner's own scope can see or write (`users_self`). Under
    * enforcement the lookup missed an existing account and the insert that
    * followed hit the unique index on `users.email`, so granting access to
-   * anyone who already had a Monize login failed outright.
+   * anyone who already had a Artha login failed outright.
    *
    * Wrapped whole rather than per-statement, on the `AdminService.createUser`
    * pattern, because the read and the write have to agree: deciding "no such
@@ -1343,7 +1343,7 @@ export class DelegationService {
       }
     }
 
-    // Joint visibility is only offered to delegates who are full Monize
+    // Joint visibility is only offered to delegates who are full Artha
     // accounts -- never an owner-provisioned credential identity.
     if (
       grants.some((g) => g.canRead && g.isJoint) &&

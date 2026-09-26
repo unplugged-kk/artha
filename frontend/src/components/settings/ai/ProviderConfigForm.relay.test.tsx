@@ -57,7 +57,7 @@ describe('ProviderConfigForm — MCP Relay provider type', () => {
 
     // Connect instructions (literal command + loop prompt) are shown.
     expect(
-      screen.getByText(/claude mcp add --transport http monize/),
+      screen.getByText(/claude mcp add --transport http artha/),
     ).toBeInTheDocument();
     expect(
       screen.getByText(/Loop forever: call get_next_prompt/),

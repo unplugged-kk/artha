@@ -86,7 +86,7 @@ const SERIES_COLORS: Record<SeriesKey, { positive: string; negative: string }> =
   capitalGains: { positive: CHART_SERIES[4], negative: chartColors.expense },
 };
 
-const ACCOUNTS_STORAGE_KEY = 'monize-reports-dividend-income-accounts';
+const ACCOUNTS_STORAGE_KEY = 'artha-reports-dividend-income-accounts';
 
 export function DividendIncomeReport() {
   const t = useTranslations('reports');

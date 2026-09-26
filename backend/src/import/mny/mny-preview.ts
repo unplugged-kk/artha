@@ -23,7 +23,7 @@ import { MnyEra, MnyFileCounts, MnyParsedFile } from "./mny-parser.service";
 export interface MnyPreviewAccount {
   /** Import-local key; the wizard sends per-account options keyed by `handle`. */
   readonly key: string;
-  /** `ACCT.hacct`, or null for the cash side Monize adds to an investment pair. */
+  /** `ACCT.hacct`, or null for the cash side Artha adds to an investment pair. */
   readonly handle: number | null;
   readonly name: string;
   /** Name as Money recorded it, so a renamed account is visible as such. */
@@ -51,12 +51,12 @@ export interface MnyPreviewBill {
   /** Representative `BILL.hbill` -- the selection key. */
   readonly handle: number;
   readonly name: string;
-  /** Monize name of the account the bill posts from. */
+  /** Artha name of the account the bill posts from. */
   readonly accountName: string;
   readonly amount: number;
   readonly currencyCode: string;
   readonly frequency: FrequencyType;
-  /** True when the Money interval had no exact Monize frequency. */
+  /** True when the Money interval had no exact Artha frequency. */
   readonly approximate: boolean;
   readonly nextDueDate: string;
   readonly isTransfer: boolean;

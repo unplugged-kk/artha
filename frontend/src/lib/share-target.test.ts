@@ -166,7 +166,7 @@ describe('stash keys', () => {
   it('recovers a bundle id from an index key and only from an index key', () => {
     expect(shareBundleIdFromIndexKey(shareIndexKey('abc'))).toBe('abc');
     expect(
-      shareBundleIdFromIndexKey(`https://monize.test${shareIndexKey('abc')}`),
+      shareBundleIdFromIndexKey(`https://artha.test${shareIndexKey('abc')}`),
     ).toBe('abc');
     expect(shareBundleIdFromIndexKey(shareFileKey('abc', 0))).toBeNull();
     expect(shareBundleIdFromIndexKey('/_next/static/chunk.js')).toBeNull();

@@ -31,7 +31,7 @@ import { MnyWarning } from "./mny-warnings";
 export interface MappedAccount {
   /**
    * Identity within this import. A Money account maps to `acct-<hacct>`; the
-   * cash side Monize requires for an investment account that has no Money
+   * cash side Artha requires for an investment account that has no Money
    * companion is `acct-<hacct>-cash`.
    */
   readonly key: string;
@@ -40,7 +40,7 @@ export interface MappedAccount {
    * synthesized investment cash side.
    */
   readonly handle: number | null;
-  /** Name Monize will use, after de-duplication and pair suffixing. */
+  /** Name Artha will use, after de-duplication and pair suffixing. */
   readonly name: string;
   /** Name as Money recorded it, for the review table and warnings. */
   readonly moneyName: string;
@@ -58,7 +58,7 @@ export interface MappedAccount {
   readonly favourite: boolean;
   /**
    * True for Money's watch accounts (`ACCT.fWatch`): they track quotes, not
-   * money, so their Monize accounts are excluded from net worth.
+   * money, so their Artha accounts are excluded from net worth.
    */
   readonly excludeFromNetWorth: boolean;
   readonly description: string | null;
@@ -74,7 +74,7 @@ export interface MappedAccounts {
   readonly accounts: readonly MappedAccount[];
   /** Money `hacct` -> account key. An excluded account is absent. */
   readonly keyByHandle: ReadonlyMap<number, string>;
-  /** Money `hacct` -> currency of the Monize account it maps to. */
+  /** Money `hacct` -> currency of the Artha account it maps to. */
   readonly currencyByHandle: ReadonlyMap<number, string>;
   /** Accounts left out by an unknown type or by the wizard's selection. */
   readonly skipped: number;
@@ -88,10 +88,10 @@ export interface MappedAccounts {
 export interface MappedCategory {
   /** `CAT.hcat`. */
   readonly handle: number;
-  /** Monize parent name, or null for a top-level category. */
+  /** Artha parent name, or null for a top-level category. */
   readonly parentName: string | null;
   /**
-   * Monize category name. A Money tree deeper than two levels is flattened
+   * Artha category name. A Money tree deeper than two levels is flattened
    * into a colon-joined child name (`Utilities:Gas:Winter` -> parent
    * `Utilities`, name `Gas:Winter`).
    */
@@ -221,7 +221,7 @@ export interface MappedTransactions {
  *
  * Money pairs a trade with the row that funds it through `TRN_XFER`, and that
  * row is a real posting in a real account -- a paycheque's investment leg, or a
- * purchase paid for out of a chequing account. Monize's own model has a place
+ * purchase paid for out of a chequing account. Artha's own model has a place
  * for both shapes, so the pairing is honoured rather than turned into a
  * transfer into the brokerage's cash sleeve plus a second cash row leaving it
  * again (issues #1211 and #1212, the split and top-level halves of the same
@@ -292,7 +292,7 @@ export interface MappedSecurity {
   /** `SEC.hsec`. */
   readonly handle: number;
   /**
-   * Symbol Monize will use: trimmed, unique within the import and within the
+   * Symbol Artha will use: trimmed, unique within the import and within the
    * `securities` column width. Never shared with another security -- PR #192
    * upserted on `(user_id, symbol)` and collapsed distinct funds into one.
    */
@@ -455,7 +455,7 @@ export interface MappedBill {
   readonly amount: number;
   readonly currencyCode: string;
   readonly frequency: FrequencyType;
-  /** True when Monize cannot express the exact Money recurrence interval. */
+  /** True when Artha cannot express the exact Money recurrence interval. */
   readonly approximate: boolean;
   readonly nextDueDate: string;
   readonly endDate: string | null;

@@ -22,7 +22,7 @@ interface SecurityKeyInformationProps {
 /**
  * The reference facts about the instrument, beside the chart.
  *
- * Every row comes from a field Monize actually stores, and rows without a value
+ * Every row comes from a field Artha actually stores, and rows without a value
  * are dropped by `KeyValueList` -- so a thinly-filled security shows a short
  * list rather than a column of dashes. Fields the schema has no column for
  * (ISIN, market cap) are simply absent until there is somewhere to keep them.

@@ -338,7 +338,7 @@ describe("mapBills", () => {
 
     it("rolls a stale due date forward to the next occurrence", () => {
       // Money's newest instance is where the series stood when the file was
-      // last used. Written through unchanged, a monthly bill arrives in Monize
+      // last used. Written through unchanged, a monthly bill arrives in Artha
       // a year overdue instead of due next month.
       const result = mapBills(
         input({
@@ -617,7 +617,7 @@ describe("mapBills", () => {
         }),
       );
 
-      // Three times a week is 2.3 days, which no Monize type expresses, so it
+      // Three times a week is 2.3 days, which no Artha type expresses, so it
       // rounds down to the nearest that still fires at least as often.
       expect(result.bills[0].frequency).toBe(FrequencyType.DAILY);
       expect(result.bills[0].approximate).toBe(true);
@@ -766,7 +766,7 @@ describe("mapBills", () => {
         }),
       );
 
-      // Three-weekly spacing matches no Monize type, so the inference declines
+      // Three-weekly spacing matches no Artha type, so the inference declines
       // and the code's downgrade -- three times a week, rounded down to DAILY
       // and flagged -- stands.
       expect(result.bills[0].frequency).toBe(FrequencyType.DAILY);

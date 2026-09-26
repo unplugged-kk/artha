@@ -732,7 +732,7 @@ const cases: Array<{ name: string; schema: OutputSchema; raw: unknown }> = [
           filename: "chart.png",
           mediaType: "image/png",
           kind: "image",
-          uri: "monize-attachment://att-1",
+          uri: "artha-attachment://att-1",
         },
       ],
     },
@@ -819,7 +819,7 @@ describe("tool-output-schemas", () => {
 
     it("returns validated structured content for tools that declare an output schema", async () => {
       const server = new McpServer(
-        { name: "monize-test", version: "0.0.0" },
+        { name: "artha-test", version: "0.0.0" },
         { capabilities: { tools: {} } },
       );
 

@@ -99,7 +99,7 @@ function BudgetsContent() {
         <PageHeader
           title={t('pages.list.title')}
           subtitle={t('pages.list.subtitle')}
-          helpUrl="https://github.com/kenlasko/monize/wiki/Budgets"
+          helpUrl="https://github.com/unplugged-kk/artha/wiki/Budgets"
           actions={
             <Button onClick={() => setShowWizard(true)}>
               {t('pages.list.newBudget')}

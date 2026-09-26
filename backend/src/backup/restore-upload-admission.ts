@@ -106,7 +106,7 @@ export const DEFAULT_RECEIVE_TIMEOUT_MS = 120_000;
 const PARSED_CONTENT_TYPES = ["application/gzip", "application/octet-stream"];
 
 /** Where the handler's release hook is stashed for the controller to find. */
-const RESERVATION = Symbol("monize.restoreUploadReservation");
+const RESERVATION = Symbol("artha.restoreUploadReservation");
 
 /**
  * Releases the admission reservation for this request, if it holds one.

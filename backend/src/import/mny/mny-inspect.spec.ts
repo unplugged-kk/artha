@@ -78,13 +78,13 @@ describe("summarise", () => {
 });
 
 describe("mappingSummary", () => {
-  it("reports the Monize accounts a real file maps to, with balances", () => {
+  it("reports the Artha accounts a real file maps to, with balances", () => {
     const lines = mappingSummary(
       readMnyTables(openMnyFile(readMnyFixture("money2002"))),
     );
 
     expect(lines).toContain("  base currency:   GBP");
-    // Two Money investment accounts become two Monize pairs.
+    // Two Money investment accounts become two Artha pairs.
     expect(lines).toContain("  accounts:        4 (0 skipped)");
     expect(
       lines.some((line) => line.includes("None Investment - Brokerage")),
@@ -169,7 +169,7 @@ describe("mappingSummary", () => {
 
 describe("signSummary", () => {
   it("counts how TRN.amt is signed and lists the columns TRN has", () => {
-    // Monize has no income/expense column: the sign of `amount` is the
+    // Artha has no income/expense column: the sign of `amount` is the
     // direction. No committed fixture has a banking transaction, so whether
     // Money signs `amt` at all can only be read off a real file -- which is
     // what this block exists to answer.

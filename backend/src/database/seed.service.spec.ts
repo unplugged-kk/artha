@@ -168,7 +168,7 @@ describe("SeedService", () => {
 
       expect(userInsertCall).toBeDefined();
       // email
-      expect(userInsertCall[1][0]).toBe("demo@monize.com");
+      expect(userInsertCall[1][0]).toBe("demo@artha.local");
       // hashed password
       expect(userInsertCall[1][1]).toBe("$2a$10$hashedpassword");
       // first name

@@ -1503,7 +1503,7 @@ describe("an auth page renders inside AuthShell", () => {
     const shell = sources[SHELL];
     expect(shell, `${SHELL} not found -- update SHELL in this test`).toBeTruthy();
     expect(shell.includes(HAND_ROLLED_SHELL)).toBe(true);
-    expect(shell.includes("monize-logo-transparent")).toBe(true);
+    expect(shell.includes("artha-logo-transparent")).toBe(true);
   });
 });
 

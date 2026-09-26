@@ -60,7 +60,7 @@ describe("OAuthInteractionController", () => {
       getMcpResourceUrl: jest
         .fn()
         .mockReturnValue(
-          overrides.mcpResourceUrl ?? "https://app.monize.test/api/v1/mcp",
+          overrides.mcpResourceUrl ?? "https://app.artha.test/api/v1/mcp",
         ),
     } as any;
     const jwtService = {
@@ -81,7 +81,7 @@ describe("OAuthInteractionController", () => {
     const configService = {
       get: jest
         .fn()
-        .mockReturnValue(overrides.publicUrl ?? "https://app.monize.test"),
+        .mockReturnValue(overrides.publicUrl ?? "https://app.artha.test"),
     } as any;
     const controller = new OAuthInteractionController(
       providerService,
@@ -193,7 +193,7 @@ describe("OAuthInteractionController", () => {
         interactionDetails: jest.fn().mockResolvedValue({
           uid: "u",
           prompt: { name: "consent" },
-          params: { client_id: "claude-desktop", scope: "monize:read" },
+          params: { client_id: "claude-desktop", scope: "artha:read" },
         }),
       });
       const req = { cookies: { auth_token: "valid" } } as any;
@@ -215,8 +215,8 @@ describe("OAuthInteractionController", () => {
           params: {
             client_id: "claude-desktop",
             client_name: "Claude Desktop",
-            scope: "monize:read monize:write",
-            resource: "https://app.monize.test/api/v1/mcp",
+            scope: "artha:read artha:write",
+            resource: "https://app.artha.test/api/v1/mcp",
           },
         }),
       });
@@ -274,7 +274,7 @@ describe("OAuthInteractionController", () => {
         interactionDetails: jest.fn().mockResolvedValue({
           uid: "live-uid",
           prompt: { name: "consent" },
-          params: { client_id: "claude-desktop", scope: "monize:read" },
+          params: { client_id: "claude-desktop", scope: "artha:read" },
         }),
       });
       const req = {
@@ -287,7 +287,7 @@ describe("OAuthInteractionController", () => {
 
       expect(res.redirect).toHaveBeenCalledWith(
         302,
-        "https://app.monize.test/api/v1/oauth-consent/live-uid",
+        "https://app.artha.test/api/v1/oauth-consent/live-uid",
       );
       expect(res.send).not.toHaveBeenCalled();
     });
@@ -297,7 +297,7 @@ describe("OAuthInteractionController", () => {
         interactionDetails: jest.fn().mockResolvedValue({
           uid: "u1",
           prompt: { name: "consent" },
-          params: { client_id: "claude-desktop", scope: "monize:read" },
+          params: { client_id: "claude-desktop", scope: "artha:read" },
         }),
       });
       const req = {
@@ -333,9 +333,9 @@ describe("OAuthInteractionController", () => {
 
   describe("POST /oauth-consent/:uid/confirm", () => {
     const consentDetails = {
-      missingOIDCScope: ["openid", "profile", "monize:read", "monize:write"],
+      missingOIDCScope: ["openid", "profile", "artha:read", "artha:write"],
       missingResourceScopes: {
-        "https://app.monize.test/api/v1/mcp": ["monize:read", "monize:write"],
+        "https://app.artha.test/api/v1/mcp": ["artha:read", "artha:write"],
       },
     };
 
@@ -397,7 +397,7 @@ describe("OAuthInteractionController", () => {
 
       expect(res.redirect).toHaveBeenCalledWith(
         303,
-        "https://app.monize.test/api/v1/oauth-consent/live-uid",
+        "https://app.artha.test/api/v1/oauth-consent/live-uid",
       );
       expect(grant.save).not.toHaveBeenCalled();
       expect(interactionFinished).not.toHaveBeenCalled();
@@ -490,10 +490,10 @@ describe("OAuthInteractionController", () => {
           prompt: {
             name: "consent",
             details: {
-              missingOIDCScope: ["openid", "profile", "monize:read"],
+              missingOIDCScope: ["openid", "profile", "artha:read"],
               missingOIDCClaims: ["sub", "email"],
               missingResourceScopes: {
-                "https://app.monize.test/api/v1/mcp": ["monize:read"],
+                "https://app.artha.test/api/v1/mcp": ["artha:read"],
               },
             },
           },
@@ -508,15 +508,15 @@ describe("OAuthInteractionController", () => {
       await controller.confirm(req, res);
 
       // OIDC identity scopes (openid, profile) AND the resource scope are all
-      // granted -- not just the monize:* subset -- so the consent check clears
+      // granted -- not just the artha:* subset -- so the consent check clears
       // and the provider stops re-prompting with a new uid.
       expect(grant.addOIDCScope).toHaveBeenCalledWith(
-        "openid profile monize:read",
+        "openid profile artha:read",
       );
       expect(grant.addOIDCClaims).toHaveBeenCalledWith(["sub", "email"]);
       expect(grant.addResourceScope).toHaveBeenCalledWith(
-        "https://app.monize.test/api/v1/mcp",
-        "monize:read",
+        "https://app.artha.test/api/v1/mcp",
+        "artha:read",
       );
       expect(interactionFinished).toHaveBeenCalledWith(
         req,
@@ -587,7 +587,7 @@ describe("OAuthInteractionController", () => {
         interactionDetails: jest.fn().mockResolvedValue({
           uid: "u1",
           prompt: { name: "consent" },
-          params: { client_id: "claude-desktop", scope: "monize:read" },
+          params: { client_id: "claude-desktop", scope: "artha:read" },
         }),
       });
       const req = { cookies: {}, originalUrl: "/oauth-consent/u1" } as any;
@@ -603,7 +603,7 @@ describe("OAuthInteractionController", () => {
         interactionDetails: jest.fn().mockResolvedValue({
           uid: "u1",
           prompt: { name: "consent" },
-          params: { client_id: "unknown-client", scope: "monize:read" },
+          params: { client_id: "unknown-client", scope: "artha:read" },
         }),
       });
       const req = { cookies: { auth_token: "tok" } } as any;
@@ -617,7 +617,7 @@ describe("OAuthInteractionController", () => {
         interactionDetails: jest.fn().mockResolvedValue({
           uid: "u1",
           prompt: { name: "consent" },
-          params: { client_id: "", scope: "monize:read" },
+          params: { client_id: "", scope: "artha:read" },
         }),
       });
       const req = { cookies: { auth_token: "tok" } } as any;
@@ -631,7 +631,7 @@ describe("OAuthInteractionController", () => {
         interactionDetails: jest.fn().mockResolvedValue({
           uid: "u1",
           prompt: { name: "consent" },
-          params: { client_id: "claude-desktop", scope: "monize:read" },
+          params: { client_id: "claude-desktop", scope: "artha:read" },
         }),
       });
       provider.Client.find = jest.fn().mockRejectedValue(new Error("db down"));
@@ -648,7 +648,7 @@ describe("OAuthInteractionController", () => {
         interactionDetails: jest.fn().mockResolvedValue({
           uid: "u1",
           prompt: { name: "login" },
-          params: { client_id: "claude-desktop", scope: "monize:read" },
+          params: { client_id: "claude-desktop", scope: "artha:read" },
         }),
         jwtVerify: jest
           .fn()
@@ -666,7 +666,7 @@ describe("OAuthInteractionController", () => {
         interactionDetails: jest.fn().mockResolvedValue({
           uid: "u1",
           prompt: { name: "login" },
-          params: { client_id: "claude-desktop", scope: "monize:read" },
+          params: { client_id: "claude-desktop", scope: "artha:read" },
         }),
         findUser: jest.fn().mockResolvedValue({
           id: "u1",
@@ -689,7 +689,7 @@ describe("OAuthInteractionController", () => {
         interactionDetails: jest.fn().mockResolvedValue({
           uid: "u1",
           prompt: { name: "login" },
-          params: { client_id: "claude-desktop", scope: "monize:read" },
+          params: { client_id: "claude-desktop", scope: "artha:read" },
         }),
         findUser: jest.fn().mockResolvedValue({
           id: "u1",
@@ -712,7 +712,7 @@ describe("OAuthInteractionController", () => {
         interactionDetails: jest.fn().mockResolvedValue({
           uid: "u1",
           prompt: { name: "login" },
-          params: { client_id: "claude-desktop", scope: "monize:read" },
+          params: { client_id: "claude-desktop", scope: "artha:read" },
         }),
         jwtVerify: jest.fn().mockRejectedValue(new Error("invalid")),
       });
@@ -730,7 +730,7 @@ describe("OAuthInteractionController", () => {
         interactionDetails: jest.fn().mockResolvedValue({
           uid: "u1",
           prompt: { name: "consent" },
-          params: { client_id: "claude-desktop", scope: "monize:read" },
+          params: { client_id: "claude-desktop", scope: "artha:read" },
         }),
         findUser: jest.fn().mockResolvedValue({
           id: "u1",
@@ -752,7 +752,7 @@ describe("OAuthInteractionController", () => {
         interactionDetails: jest.fn().mockResolvedValue({
           uid: "u1",
           prompt: { name: "login" },
-          params: { client_id: "claude-desktop", scope: "monize:read" },
+          params: { client_id: "claude-desktop", scope: "artha:read" },
         }),
         findUser: jest.fn().mockResolvedValue(null),
         publicUrl: "https://example.com/",
@@ -773,7 +773,7 @@ describe("OAuthInteractionController", () => {
         interactionDetails: jest.fn().mockResolvedValue({
           uid: "u1",
           prompt: { name: "login" },
-          params: { client_id: "claude-desktop", scope: "monize:read" },
+          params: { client_id: "claude-desktop", scope: "artha:read" },
         }),
         findUser: jest.fn().mockResolvedValue(null),
         publicUrl: undefined,
@@ -787,9 +787,9 @@ describe("OAuthInteractionController", () => {
 
   describe("confirm branches", () => {
     const consentDetails = {
-      missingOIDCScope: ["openid", "monize:read"],
+      missingOIDCScope: ["openid", "artha:read"],
       missingResourceScopes: {
-        "https://app.monize.test/api/v1/mcp": ["monize:read"],
+        "https://app.artha.test/api/v1/mcp": ["artha:read"],
       },
     };
 
@@ -822,7 +822,7 @@ describe("OAuthInteractionController", () => {
       const res = makeRes();
       await controller.confirm(req, res);
       expect(GrantMock.find).toHaveBeenCalledWith("g1");
-      expect(existing.addOIDCScope).toHaveBeenCalledWith("openid monize:read");
+      expect(existing.addOIDCScope).toHaveBeenCalledWith("openid artha:read");
       expect(existing.save).toHaveBeenCalled();
     });
 
@@ -881,7 +881,7 @@ describe("OAuthInteractionController", () => {
         // Nothing was added to the foreign grant, and it was not saved.
         expect(foreign.addOIDCScope).not.toHaveBeenCalled();
         expect(foreign.save).not.toHaveBeenCalled();
-        expect(created.addOIDCScope).toHaveBeenCalledWith("openid monize:read");
+        expect(created.addOIDCScope).toHaveBeenCalledWith("openid artha:read");
         expect(created.save).toHaveBeenCalled();
       },
     );

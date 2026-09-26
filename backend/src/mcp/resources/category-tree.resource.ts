@@ -10,7 +10,7 @@ export class McpCategoryTreeResource {
   register(server: McpServer) {
     server.registerResource(
       "categories",
-      "monize://categories",
+      "artha://categories",
       {
         // Reference data a model reads to resolve a name to an id.
         cacheHint: { ttlMs: 60_000, cacheScope: "private" },
@@ -22,7 +22,7 @@ export class McpCategoryTreeResource {
         if (!user) {
           return {
             contents: [
-              { uri: "monize://categories", text: "Error: No user context" },
+              { uri: "artha://categories", text: "Error: No user context" },
             ],
           };
         }
@@ -30,7 +30,7 @@ export class McpCategoryTreeResource {
           return {
             contents: [
               {
-                uri: "monize://categories",
+                uri: "artha://categories",
                 text: 'Error: Insufficient scope. Requires "read" scope.',
               },
             ],
@@ -43,7 +43,7 @@ export class McpCategoryTreeResource {
           return {
             contents: [
               {
-                uri: "monize://categories",
+                uri: "artha://categories",
                 mimeType: "application/json",
                 text: JSON.stringify(tree, null, 2),
               },
@@ -53,7 +53,7 @@ export class McpCategoryTreeResource {
           return {
             contents: [
               {
-                uri: "monize://categories",
+                uri: "artha://categories",
                 text: "Error: An error occurred while loading categories",
               },
             ],

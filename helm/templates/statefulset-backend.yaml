@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: monize-backend
+  name: artha-backend
   namespace: {{ .Values.global.namespace }}
   labels:
-    {{- include "monize.backend.labels" . | nindent 4 }}
+    {{- include "artha.backend.labels" . | nindent 4 }}
     {{- with .Values.backend.extraLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -13,18 +13,18 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  serviceName: monize-backend
+  serviceName: artha-backend
   updateStrategy:
     type: RollingUpdate
   replicas: {{ .Values.backend.replicas }}
   revisionHistoryLimit: 2
   selector:
     matchLabels:
-      {{- include "monize.backend.selectorLabels" . | nindent 6 }}
+      {{- include "artha.backend.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "monize.backend.labels" . | nindent 8 }}
+        {{- include "artha.backend.labels" . | nindent 8 }}
         {{- with .Values.backend.extraLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -35,7 +35,7 @@ spec:
       automountServiceAccountToken: false
       affinity: null
       containers:
-        - name: monize-backend
+        - name: artha-backend
           image: "{{ .Values.backend.image.registry }}/{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           {{- with .Values.backend.securityContext }}
@@ -142,12 +142,12 @@ spec:
         {{- if .Values.backend.persistence.backups.enabled }}
         - name: backups
           persistentVolumeClaim:
-            claimName: {{ .Values.backend.persistence.backups.existingClaim | default "monize-backend-backups" }}
+            claimName: {{ .Values.backend.persistence.backups.existingClaim | default "artha-backend-backups" }}
         {{- end }}
         {{- if .Values.backend.persistence.attachments.enabled }}
         - name: attachments
           persistentVolumeClaim:
-            claimName: {{ .Values.backend.persistence.attachments.existingClaim | default "monize-backend-attachments" }}
+            claimName: {{ .Values.backend.persistence.attachments.existingClaim | default "artha-backend-attachments" }}
         {{- end }}
         {{- with .Values.backend.extraVolumes }}
         {{- toYaml . | nindent 8 }}

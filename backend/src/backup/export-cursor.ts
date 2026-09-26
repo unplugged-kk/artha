@@ -65,7 +65,7 @@ function assertBatchSize(batchSize: number): number {
 /**
  * Builds the reader bound to one snapshot transaction and one user id (`$1`).
  *
- * The cursor name is generated here and nowhere else -- it is `monize_export_`
+ * The cursor name is generated here and nowhere else -- it is `artha_export_`
  * plus a counter, never anything derived from a request -- because a cursor name
  * cannot be a bind parameter and therefore has to be interpolated. The row count
  * in `FETCH FORWARD` cannot be a parameter either, which is why `assertBatchSize`
@@ -93,7 +93,7 @@ export function createExportReader(
 
     async *rows(sql: string, batchSize: number) {
       const size = assertBatchSize(batchSize);
-      const name = `monize_export_${(declared += 1)}`;
+      const name = `artha_export_${(declared += 1)}`;
       await query(`DECLARE ${name} NO SCROLL CURSOR FOR ${sql}`, [userId]);
       try {
         for (;;) {

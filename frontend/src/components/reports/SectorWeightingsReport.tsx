@@ -185,7 +185,7 @@ function CustomTooltip({ active, payload, formatCurrencyFull, defaultCurrency, l
   );
 }
 
-const ACCOUNTS_STORAGE_KEY = 'monize-reports-sector-weightings-accounts';
+const ACCOUNTS_STORAGE_KEY = 'artha-reports-sector-weightings-accounts';
 
 export function SectorWeightingsReport() {
   const t = useTranslations('reports');

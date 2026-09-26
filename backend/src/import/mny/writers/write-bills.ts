@@ -8,7 +8,7 @@ import { FUNDING_ACCOUNT_ACTIONS } from "../../../securities/investment-replay.u
 import { MappedBill } from "../model/mny-import-model";
 
 /**
- * Writer for the bills the wizard selected, as Monize scheduled transactions.
+ * Writer for the bills the wizard selected, as Artha scheduled transactions.
  *
  * Two rules carry the history here (design section 3, issue 2):
  *

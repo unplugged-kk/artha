@@ -119,12 +119,12 @@ describe('AssistantMarkdown', () => {
     expect(link?.textContent).toBe('Docs');
   });
 
-  describe('entity deep-links (monize:// hrefs)', () => {
+  describe('entity deep-links (artha:// hrefs)', () => {
     const uuid = '123e4567-e89b-42d3-a456-426614174000';
 
     it('renders a payee link as an in-app link without target _blank', () => {
       const { container } = render(
-        <AssistantMarkdown content={`Top payee: [Costco](monize://payee/${uuid})`} />,
+        <AssistantMarkdown content={`Top payee: [Costco](artha://payee/${uuid})`} />,
       );
       const link = container.querySelector('a');
       expect(link).not.toBeNull();
@@ -137,11 +137,11 @@ describe('AssistantMarkdown', () => {
       const { container } = render(
         <AssistantMarkdown
           content={[
-            `[Chequing](monize://account/${uuid})`,
-            `[Groceries](monize://category/${uuid})`,
-            `[March rent](monize://transaction/${uuid})`,
-            `[AAPL](monize://security/${uuid})`,
-            `[Netflix](monize://scheduled/${uuid})`,
+            `[Chequing](artha://account/${uuid})`,
+            `[Groceries](artha://category/${uuid})`,
+            `[March rent](artha://transaction/${uuid})`,
+            `[AAPL](artha://security/${uuid})`,
+            `[Netflix](artha://scheduled/${uuid})`,
           ].join(' ')}
         />,
       );
@@ -159,7 +159,7 @@ describe('AssistantMarkdown', () => {
 
     it('dispatches the entity link event on click', () => {
       const { container } = render(
-        <AssistantMarkdown content={`[Costco](monize://payee/${uuid})`} />,
+        <AssistantMarkdown content={`[Costco](artha://payee/${uuid})`} />,
       );
       const handler = vi.fn();
       window.addEventListener(AI_ENTITY_LINK_EVENT, handler);
@@ -168,11 +168,11 @@ describe('AssistantMarkdown', () => {
       expect(handler).toHaveBeenCalledTimes(1);
     });
 
-    it('renders an invalid monize URI as plain text, not a link', () => {
+    it('renders an invalid artha URI as plain text, not a link', () => {
       const { container } = render(
         <AssistantMarkdown
           content={
-            'A [bad id](monize://payee/not-a-uuid) and a [bad type](monize://widget/123e4567-e89b-42d3-a456-426614174000)'
+            'A [bad id](artha://payee/not-a-uuid) and a [bad type](artha://widget/123e4567-e89b-42d3-a456-426614174000)'
           }
         />,
       );
@@ -184,7 +184,7 @@ describe('AssistantMarkdown', () => {
     it('keeps external links opening in a new tab (default sanitizer intact)', () => {
       const { container } = render(
         <AssistantMarkdown
-          content={`[Docs](https://example.com) and [Costco](monize://payee/${uuid})`}
+          content={`[Docs](https://example.com) and [Costco](artha://payee/${uuid})`}
         />,
       );
       const links = [...container.querySelectorAll('a')];

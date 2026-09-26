@@ -118,7 +118,7 @@ const VIEWER_ID = 'user-1';
 
 function signIn(id: string | null) {
   useAuthStore.setState({
-    user: id ? ({ id, email: 'reader@monize.test' } as User) : null,
+    user: id ? ({ id, email: 'reader@artha.test' } as User) : null,
     isAuthenticated: id !== null,
   });
 }

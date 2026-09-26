@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://monize.net/sitemap.xml
+Sitemap: https://artha.net/sitemap.xml

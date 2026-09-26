@@ -225,7 +225,7 @@
     "step3": "Starten Sie eine Agentenschleife, damit Claude auf Anfragen von Artha wartet:",
     "loopPrompt": "Loop forever: call get_next_prompt; if hasPrompt is false, call it again; otherwise handle the request with the Artha tools and call post_response with the answer; then repeat.",
     "codexHeading": "Oder verwenden Sie Codex",
-    "codexNote": "Fügen Sie dies zu ~/.codex/config.toml hinzu, setzen Sie MONIZE_TOKEN auf Ihr Token, führen Sie dann codex aus und fügen Sie den obigen Prompt ein.",
+    "codexNote": "Fügen Sie dies zu ~/.codex/config.toml hinzu, setzen Sie ARTHA_TOKEN auf Ihr Token, führen Sie dann codex aus und fügen Sie den obigen Prompt ein.",
     "copy": "Kopieren",
     "copied": "In die Zwischenablage kopiert"
   }

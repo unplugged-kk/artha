@@ -8,7 +8,7 @@ import { GemAssetRole } from "./entities/gem-strategy-asset.entity";
  * The signal names one instrument, but what the strategy is actually asking for
  * is exposure to a market. A portfolio holding a world tracker is not "0% in
  * emerging markets" merely because the ticker differs from the target's -- part
- * of it already is, and only the rest has to move. Monize lets a security be
+ * of it already is, and only the rest has to move. Artha lets a security be
  * described by country, asset class and sector weightings, so when the target
  * carries that description the comparison is made against the contents rather
  * than against the ticker.
@@ -345,7 +345,7 @@ export function matchHolding(params: {
    * markets and stop, so the stricter rule turned the entire column into "no
    * data" -- an emerging-markets target against a world tracker that visibly
    * holds Taiwan and China reported nothing at all, which the user reads as
-   * "Monize cannot see the overlap", not as "the description is partial".
+   * "Artha cannot see the overlap", not as "the description is partial".
    *
    * So the number is shown, and it is labelled as a lower bound: at least this
    * much of the holding is in the target's markets, possibly more. `partial`

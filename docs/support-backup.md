@@ -2,11 +2,11 @@
 
 A **support backup** is a de-identified copy of a user's data they can attach to
 a GitHub issue so a maintainer can reproduce a bug without seeing real names or
-amounts. It is a normal Monize backup file (`version: 1`) and restores through
+amounts. It is a normal Artha backup file (`version: 1`) and restores through
 the ordinary restore flow into a throwaway instance — nothing new is needed to
 open it.
 
-Discussion: https://github.com/kenlasko/monize/discussions/896
+Discussion: https://github.com/unplugged-kk/artha/discussions/896
 
 ## What it does
 

@@ -385,7 +385,7 @@ export function GemSettingsForm({
     try {
       for (const { role, region: _region, ...values } of missing) {
         // Owned means the symbol is taken, which is the only sense in which
-        // Monize can hold the same instrument twice -- it cannot. Reusing it
+        // Artha can hold the same instrument twice -- it cannot. Reusing it
         // is not an approximation of creating it; creating it is impossible,
         // and asking anyway is what made this button fail with "Security with
         // symbol EXUS already exists" on a portfolio that had EXUS.

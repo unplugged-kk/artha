@@ -4,7 +4,7 @@ import { isCurrencyPseudoSecurity } from "../model/mny-model";
 import { MnyWarning } from "../model/mny-warnings";
 
 /**
- * `SEC` mapped onto Monize securities.
+ * `SEC` mapped onto Artha securities.
  *
  * Three PR #192 defects are fixed here, and each one loses data silently when it
  * is not:
@@ -28,12 +28,12 @@ import { MnyWarning } from "../model/mny-warnings";
  * the DAX, the FTSE, the Hang Seng, the Nikkei, the TSX and the Straits Times
  * sitting under the same code as two ETFs actually owned. What does separate
  * them is activity: 31 of 98 securities appear in no `TRN` row and no `LOT`,
- * and they carry 17,025 of the file's 69,076 prices. Monize has nowhere to show
+ * and they carry 17,025 of the file's 69,076 prices. Artha has nowhere to show
  * an index, and a security with no position is a row the user has to clean up,
  * so the whole quarter is left behind. `dedupePrices` keys off the imported
  * securities, so their price history drops out with them.
  *
- * `SEC.sct` is deliberately **not** mapped onto Monize's `securityType`: the
+ * `SEC.sct` is deliberately **not** mapped onto Artha's `securityType`: the
  * same Amex index securities are `sct` 6 in Money 2001/2002 and 7 in Money Plus,
  * so any mapping would mislabel some file. The column stays null and the user
  * can set it.

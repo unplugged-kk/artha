@@ -314,7 +314,7 @@ describe('SectorWeightingsReport', () => {
 
   it('restores the persisted account selection', async () => {
     window.localStorage.setItem(
-      'monize-reports-sector-weightings-accounts',
+      'artha-reports-sector-weightings-accounts',
       JSON.stringify(['acc-1']),
     );
     mockGetSectorWeightings.mockResolvedValue({
@@ -334,7 +334,7 @@ describe('SectorWeightingsReport', () => {
 
   it('drops persisted account IDs that no longer exist', async () => {
     window.localStorage.setItem(
-      'monize-reports-sector-weightings-accounts',
+      'artha-reports-sector-weightings-accounts',
       JSON.stringify(['acc-1', 'gone']),
     );
     mockGetSectorWeightings.mockResolvedValue({
@@ -349,7 +349,7 @@ describe('SectorWeightingsReport', () => {
     render(<SectorWeightingsReport />);
     await waitFor(() => {
       expect(
-        window.localStorage.getItem('monize-reports-sector-weightings-accounts'),
+        window.localStorage.getItem('artha-reports-sector-weightings-accounts'),
       ).toBe(JSON.stringify(['acc-1']));
     });
   });

@@ -2,10 +2,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: monize-frontend
+  name: artha-frontend
   namespace: {{ .Values.global.namespace }}
   labels:
-    {{- include "monize.frontend.labels" . | nindent 4 }}
+    {{- include "artha.frontend.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -25,14 +25,14 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    - host: {{ include "monize.hostname" . | quote }}
+    - host: {{ include "artha.hostname" . | quote }}
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: monize-frontend-service
+                name: artha-frontend-service
                 port:
                   number: {{ .Values.frontend.service.port }}
 {{- end }}

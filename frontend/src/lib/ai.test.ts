@@ -312,7 +312,7 @@ describe('aiApi', () => {
       await new Promise((resolve) => setTimeout(resolve, 20));
 
       // The backend stores them and exposes each to the agent as an
-      // monize-attachment:// MCP resource, so they ride the relay path too.
+      // artha-attachment:// MCP resource, so they ride the relay path too.
       expect(mockFetch.mock.calls[0][0]).toBe('/api/v1/ai/relay/query/stream');
       const body = JSON.parse(mockFetch.mock.calls[0][1].body);
       expect(body.attachments).toEqual(attachments);

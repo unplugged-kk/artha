@@ -918,7 +918,7 @@ describe('DividendYieldGrowthReport', () => {
 
   it('restores the persisted account selection', async () => {
     window.localStorage.setItem(
-      'monize-reports-dividend-yield-growth-accounts',
+      'artha-reports-dividend-yield-growth-accounts',
       JSON.stringify(['acc-1']),
     );
     mockGetTransactions.mockResolvedValue({ data: [], pagination: { hasMore: false } });

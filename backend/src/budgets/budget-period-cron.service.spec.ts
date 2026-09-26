@@ -210,7 +210,7 @@ describe("BudgetPeriodCronService", () => {
 
     configService = {
       get: jest.fn().mockImplementation((key: string, defaultVal?: string) => {
-        if (key === "PUBLIC_APP_URL") return "https://monize.app";
+        if (key === "PUBLIC_APP_URL") return "https://artha.app";
         return defaultVal;
       }),
     };
@@ -672,7 +672,7 @@ describe("BudgetPeriodCronService", () => {
       await service.sendMonthlySummaryEmails(closedPeriods);
 
       const htmlArg = emailService.sendMail.mock.calls[0][2];
-      expect(htmlArg).toContain("https://monize.app/budgets");
+      expect(htmlArg).toContain("https://artha.app/budgets");
     });
   });
 });

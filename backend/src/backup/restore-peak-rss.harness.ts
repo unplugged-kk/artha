@@ -91,7 +91,7 @@ const MIB = 1024 * 1024;
 const newHarnessPassword = (): string => randomBytes(24).toString("base64url");
 
 /** Where the parent hands its per-run password to the children it forks. */
-const PASSWORD_ENV = "MONIZE_PEAK_RSS_PASSWORD";
+const PASSWORD_ENV = "ARTHA_PEAK_RSS_PASSWORD";
 
 /** What a case's rows look like, which is what decides its compression ratio. */
 type Profile = "repetitive" | "mixed" | "attachments";
@@ -416,7 +416,7 @@ function parseOptions(argv: string[]): Options {
 /** The child half: measure the one case it was told to, report over IPC. */
 async function runChild(options: Options): Promise<void> {
   const spec = HARNESS_CASES.find((entry) => entry.id === options.caseId);
-  const artifactPath = process.env.MONIZE_PEAK_RSS_ARTIFACT;
+  const artifactPath = process.env.ARTHA_PEAK_RSS_ARTIFACT;
   if (!spec || !artifactPath) {
     throw new Error(`Unknown case "${options.caseId}" or missing artifact`);
   }
@@ -507,7 +507,7 @@ function measureInChild(
       {
         env: {
           ...process.env,
-          MONIZE_PEAK_RSS_ARTIFACT: artifactPath,
+          ARTHA_PEAK_RSS_ARTIFACT: artifactPath,
           [PASSWORD_ENV]: password,
         },
         execArgv,
@@ -517,7 +517,7 @@ function measureInChild(
         stdio: [
           "ignore",
           "ignore",
-          process.env.MONIZE_PEAK_RSS_DEBUG ? "inherit" : "ignore",
+          process.env.ARTHA_PEAK_RSS_DEBUG ? "inherit" : "ignore",
           "ipc",
         ],
       },
@@ -553,7 +553,7 @@ const mib = (bytes: number) => `${(bytes / MIB).toFixed(1)}MiB`;
 
 /** The parent half: build each artifact, measure it, print and record. */
 async function runParent(options: Options): Promise<void> {
-  const workDir = mkdtempSync(join(tmpdir(), "monize-peak-rss-"));
+  const workDir = mkdtempSync(join(tmpdir(), "artha-peak-rss-"));
   // One password for this run's artifacts, minted here and passed to each child.
   // It never leaves the process tree and nothing outlives the run: the artifacts
   // are deleted in the `finally` below.

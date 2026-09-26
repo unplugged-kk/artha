@@ -46,7 +46,7 @@ type Position = { x: number; y: number };
 // top-left offset plus the corner the snap-cycle button last landed on.
 type Placement = { x: number; y: number; corner: Corner };
 
-const STORAGE_KEY = 'monize.aiBubble.placement';
+const STORAGE_KEY = 'artha.aiBubble.placement';
 
 function cornerToPosition(corner: Corner): Position {
   if (typeof window === 'undefined') return { x: EDGE_MARGIN, y: EDGE_MARGIN };

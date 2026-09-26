@@ -70,7 +70,7 @@ test.describe('Microsoft Money (.mny) import', () => {
     // failing, which is the regression that crash-looped PR #192.
     await expect(page.getByText(/has no BILL table/i)).toBeVisible();
 
-    // One Money investment account becomes Monize's linked cash + brokerage
+    // One Money investment account becomes Artha's linked cash + brokerage
     // pair, and the cash side has no Money handle to untick.
     await expect(
       page.getByText('Investments to Watch - Brokerage'),

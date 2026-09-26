@@ -70,7 +70,7 @@ vi.mock('@/hooks/useLocalStorage', async () => {
         },
         [key],
       );
-      if (key === 'monize-reports-portfolio-value-series-mode') {
+      if (key === 'artha-reports-portfolio-value-series-mode') {
         return [mockSeriesMode, vi.fn()];
       }
       return [value, persist];
@@ -454,13 +454,13 @@ describe('PortfolioValueReport', () => {
     await act(async () => { vi.advanceTimersByTime(350); });
 
     await waitFor(() => {
-      expect(mockStoredValues.get('monize-reports-portfolio-value-accounts')).toEqual(['acc-1']);
+      expect(mockStoredValues.get('artha-reports-portfolio-value-accounts')).toEqual(['acc-1']);
     });
     vi.useRealTimers();
   });
 
   it('restores the persisted account selection on mount', async () => {
-    mockStoredValues.set('monize-reports-portfolio-value-accounts', ['acc-2']);
+    mockStoredValues.set('artha-reports-portfolio-value-accounts', ['acc-2']);
     mockGetInvestmentsMonthly.mockResolvedValue([{ month: '2024-06-01', value: 50000 }]);
     mockGetPortfolioSummary.mockResolvedValue(emptyPortfolio);
     mockGetInvestmentAccounts.mockResolvedValue([
@@ -476,11 +476,11 @@ describe('PortfolioValueReport', () => {
     });
     expect(mockGetPortfolioSummary).toHaveBeenCalledWith(['acc-2']);
     // The stored selection is left alone when the account still exists.
-    expect(mockStoredValues.get('monize-reports-portfolio-value-accounts')).toEqual(['acc-2']);
+    expect(mockStoredValues.get('artha-reports-portfolio-value-accounts')).toEqual(['acc-2']);
   });
 
   it('drops persisted account IDs that no longer exist', async () => {
-    mockStoredValues.set('monize-reports-portfolio-value-accounts', ['acc-1', 'gone']);
+    mockStoredValues.set('artha-reports-portfolio-value-accounts', ['acc-1', 'gone']);
     mockGetInvestmentsMonthly.mockResolvedValue([{ month: '2024-06-01', value: 50000 }]);
     mockGetPortfolioSummary.mockResolvedValue(emptyPortfolio);
     mockGetInvestmentAccounts.mockResolvedValue([
@@ -489,7 +489,7 @@ describe('PortfolioValueReport', () => {
     render(<PortfolioValueReport />);
 
     await waitFor(() => {
-      expect(mockStoredValues.get('monize-reports-portfolio-value-accounts')).toEqual(['acc-1']);
+      expect(mockStoredValues.get('artha-reports-portfolio-value-accounts')).toEqual(['acc-1']);
     });
     await waitFor(() => {
       expect(mockGetInvestmentsMonthly).toHaveBeenCalledWith(

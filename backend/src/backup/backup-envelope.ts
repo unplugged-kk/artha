@@ -4,11 +4,11 @@ import { promisify } from "util";
 /**
  * The encrypted-backup envelope, shared by both container versions.
  *
- * Monize has two, and the second exists because the first cannot stream:
+ * Artha has two, and the second exists because the first cannot stream:
  *
  * ```
  * v1 (monolithic)
- *   bytes  0..3   magic       "MZBE"
+ *   bytes  0..3   magic       "ARBE"
  *   byte   4      version     0x01
  *   byte   5      kdf         0x01 = scrypt
  *   bytes  6..21  salt        16 bytes
@@ -17,7 +17,7 @@ import { promisify } from "util";
  *   bytes 50..    ciphertext  gzip(JSON)
  *
  * v2 (framed)
- *   bytes  0..3   magic       "MZBE"
+ *   bytes  0..3   magic       "ARBE"
  *   byte   4      version     0x02
  *   byte   5      kdf         0x01 = scrypt
  *   bytes  6..21  salt        16 bytes
@@ -56,7 +56,7 @@ const scryptAsync = promisify(crypto.scrypt) as (
   options: crypto.ScryptOptions,
 ) => Promise<Buffer>;
 
-export const MAGIC = Buffer.from("MZBE", "ascii");
+export const MAGIC = Buffer.from("ARBE", "ascii");
 /** Monolithic AES-256-GCM over the whole payload. Still written by the support export. */
 export const VERSION_MONOLITHIC = 0x01;
 /** Framed AES-256-GCM, written by every streaming export. */
@@ -97,7 +97,7 @@ export class BackupDecryptionError extends Error {
 }
 
 /**
- * The envelope version `buf` carries, or null if it is not a Monize envelope.
+ * The envelope version `buf` carries, or null if it is not a Artha envelope.
  *
  * `Buffer.isBuffer` guard is defensive: Express body-parser may deliver a string
  * or parsed JSON object depending on upstream middleware, and CodeQL's taint flow

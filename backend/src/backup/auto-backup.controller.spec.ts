@@ -155,7 +155,7 @@ describe("AutoBackupController", () => {
     it("should delegate to autoBackupService.runManualBackup", async () => {
       const expected = {
         message: "Backup completed successfully",
-        filename: "monize-backup-daily-2026-04-02.json.gz",
+        filename: "artha-backup-daily-2026-04-02.json.gz",
       };
       mockAutoBackupService.runManualBackup.mockResolvedValue(expected);
 

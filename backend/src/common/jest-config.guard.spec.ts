@@ -10,7 +10,7 @@ import { findRepoRoot, gitListFiles, requireRepoRoot } from "./repo-tree.util";
  * Every suite under `test/integration/` builds its schema through
  * `INTEGRATION_TYPEORM_OPTIONS` (`test/helpers/integration-setup.ts`) with
  * `synchronize: true` and `dropSchema: true` against the one shared
- * `monize_test` database. Two workers doing that concurrently drop the tables
+ * `artha_test` database. Two workers doing that concurrently drop the tables
  * out from under each other, which surfaces as
  * `duplicate key value violates unique constraint pg_type_typname_nsp_index`
  * or a "connection terminated" from a spec unrelated to the one that raced --

@@ -384,7 +384,7 @@ const RECONCILIATION_STATUS_KEYWORDS: Record<
 
 /**
  * Normalize a free-text reconciliation status string from a CSV row into the
- * TransactionStatus enum value that Monize understands. Uses a generous
+ * TransactionStatus enum value that Artha understands. Uses a generous
  * keyword map to handle variations across bank/spreadsheet exports. Empty
  * values and unrecognized tokens fall back to UNRECONCILED.
  */

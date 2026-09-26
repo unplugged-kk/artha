@@ -12,9 +12,9 @@ import {
  * currently gathering" out of the tail window.
  */
 const CARD_STALL = [
-  "I've identified 17 split transactions in your [WS Chequing](monize://account/acct-1) account where the category was set to [Business: Cell Phone](monize://category/cat-1).",
+  "I've identified 17 split transactions in your [WS Chequing](artha://account/acct-1) account where the category was set to [Business: Cell Phone](artha://category/cat-1).",
   "",
-  "Because these are split transactions, they must be updated by providing the full set of categories for each transaction. I am currently gathering the remaining split details for these 17 transactions so I can propose the updates to [Automobile: Accessories](monize://category/cat-2) while keeping your other categories unchanged.",
+  "Because these are split transactions, they must be updated by providing the full set of categories for each transaction. I am currently gathering the remaining split details for these 17 transactions so I can propose the updates to [Automobile: Accessories](artha://category/cat-2) while keeping your other categories unchanged.",
   "",
   "Please review and approve the confirmation cards that will appear shortly.",
 ].join("\n");
@@ -26,7 +26,7 @@ describe("isDeferredContinuation", () => {
    * the loop could never send.
    */
   const REPORTED = [
-    "I've identified the 17 split transactions in your [WS Chequing](monize://account/acct-1) account that contain the [Business: Cell Phone](monize://category/cat-1) category.",
+    "I've identified the 17 split transactions in your [WS Chequing](artha://account/acct-1) account that contain the [Business: Cell Phone](artha://category/cat-1) category.",
     "",
     "To update only that specific line while leaving the other categories in each split untouched, I need to resend the full list of splits for each transaction. I am currently gathering the complete split details for those 17 transactions so I can propose the correct updates for you. One moment.",
   ].join("\n");

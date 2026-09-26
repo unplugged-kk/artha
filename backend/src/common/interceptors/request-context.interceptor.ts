@@ -56,7 +56,7 @@ export class RequestContextInterceptor implements NestInterceptor {
   }
 
   /**
-   * Record that a human interactively used Monize.
+   * Record that a human interactively used Artha.
    *
    * `realUserId` -- the authenticated identity -- is deliberately the subject,
    * not the effective user. While a delegate acts, the effective user is the

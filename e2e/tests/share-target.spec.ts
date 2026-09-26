@@ -225,7 +225,7 @@ test.describe('Web Share Target', () => {
     ).toHaveCount(0);
   });
 
-  test('a file Monize cannot use is listed with its reason, not dropped', async ({
+  test('a file Artha cannot use is listed with its reason, not dropped', async ({
     authedPage: page,
   }) => {
     await page.goto('/dashboard');

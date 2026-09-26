@@ -1,6 +1,6 @@
 -- Add EVERY4MONTHS and EVERY2YEARS as supported frequencies for scheduled
 -- transactions. These are the last two cadences in Microsoft Money's bill
--- frequency picker that Monize had no type for -- "Every four months" and
+-- frequency picker that Artha had no type for -- "Every four months" and
 -- "Every other year" -- so a `.mny` import had to downgrade both.
 --
 -- Money records a bill's cadence as the pair (`BILL.frq`, `BILL.cFrqInst`):

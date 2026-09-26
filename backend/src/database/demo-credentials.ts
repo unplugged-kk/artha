@@ -12,5 +12,5 @@
  * `frontend/src/lib/demo-credentials.ts`, and a contract test on that side
  * reads this file to check the two agree.
  */
-export const DEMO_USER_EMAIL = "demo@monize.com";
+export const DEMO_USER_EMAIL = "demo@artha.local";
 export const DEMO_USER_PASSWORD = "Demo123!";

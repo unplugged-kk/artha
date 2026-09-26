@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Prune orphaned GHCR manifests for the Monize container packages: untagged
+# Prune orphaned GHCR manifests for the Artha container packages: untagged
 # leftovers, and the retired per-PR (`:pr-<n>`) preview tags.
 #
 # Why this exists: the CI publishes moving tags (`:latest`, `:beta`). Every
@@ -60,7 +60,7 @@
 set -euo pipefail
 
 OWNER="${OWNER:-kenlasko}"
-PACKAGES="${PACKAGES:-monize-backend monize-frontend}"
+PACKAGES="${PACKAGES:-artha-backend artha-frontend}"
 GRACE_DAYS="${GRACE_DAYS:-7}"
 DRY_RUN="${DRY_RUN:-true}"
 GH_API_TOKEN="${GH_API_TOKEN:?GH_API_TOKEN is required}"

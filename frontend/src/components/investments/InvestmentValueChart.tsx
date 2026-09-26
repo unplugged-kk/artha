@@ -51,9 +51,9 @@ const DAILY_RANGES = new Set(['1w', 'mtd', '1m', '3m', 'ytd', '1y', '2y']);
  * The page-level Refresh button broadcasts this event so the chart can clear
  * its sessionStorage cache and re-fetch when viewing an intraday range.
  */
-export const INVESTMENT_CHART_REFRESH_EVENT = 'monize:investment-chart-refresh';
+export const INVESTMENT_CHART_REFRESH_EVENT = 'artha:investment-chart-refresh';
 
-const RANGE_STORAGE_KEY = 'monize-investments-chart-range';
+const RANGE_STORAGE_KEY = 'artha-investments-chart-range';
 
 interface InvestmentValueChartProps {
   accountIds?: string[];

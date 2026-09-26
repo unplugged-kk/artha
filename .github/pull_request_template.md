@@ -1,4 +1,4 @@
-<!-- Before opening this PR, please read CONTRIBUTING.md. Monize follows a propose-first workflow: open a Discussion and get the approach approved before writing code. -->
+<!-- Before opening this PR, please read CONTRIBUTING.md. Artha follows a propose-first workflow: open a Discussion and get the approach approved before writing code. -->
 
 ## Linked discussion / issue
 

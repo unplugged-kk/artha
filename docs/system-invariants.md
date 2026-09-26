@@ -129,7 +129,7 @@ implied.
 | INV-SHARE-001 | A shared file reaches the server only through an endpoint that already existed | enforced |
 | INV-SHARE-002 | Nothing is imported, attached or saved from a share without an explicit action | enforced |
 | INV-SHARE-003 | The share stash holds only files within the declared limits, and outlives neither its lifetime nor the session | enforced |
-| INV-SHARE-004 | A share always lands on a Monize page that explains what happened | enforced |
+| INV-SHARE-004 | A share always lands on a Artha page that explains what happened | enforced |
 | INV-SHARE-005 | A stashed share belongs to one account, and no other account can see it | enforced |
 | INV-BACKUP-001 | A backup file is complete, verified and owner-namespaced | enforced |
 | INV-PUSH-001 | A push subscription belongs to the authenticated caller, and no request touches another account's device | enforced |
@@ -2438,7 +2438,7 @@ Status              enforced
 ```text
 Statement           On every path -- worker present or absent, body readable or
                     not, browser capable or not, bundle live, expired, empty or
-                    gone -- the user lands on a Monize page that says what
+                    gone -- the user lands on a Artha page that says what
                     happened and what to do next. A share never produces a
                     browser error page or a blank screen.
 Enforcement         `handleShareTarget` in the worker always resolves to a
@@ -2454,7 +2454,7 @@ Enforcement         `handleShareTarget` in the worker always resolves to a
                     `src/test/sw-share-target.test.ts`.
 Concurrency scope   per share
 Retry semantics     Every state names the way forward (share again, or add the
-                    files from inside Monize).
+                    files from inside Artha).
 Crash semantics     A stash that cannot be read is reported as nothing to
                     review, never as a share with no files in it.
 Status              enforced

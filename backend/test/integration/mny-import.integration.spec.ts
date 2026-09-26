@@ -1392,7 +1392,7 @@ describe("mny writers (integration)", () => {
       const job = await runImport("money2008");
 
       expect(job.status).toBe("completed");
-      // One Money investment account -> one linked Monize pair.
+      // One Money investment account -> one linked Artha pair.
       expect(job.result!.accountsCreated).toBe(2);
       expect(job.result!.verification).toHaveLength(2);
       for (const account of job.result!.verification) {
@@ -1758,7 +1758,7 @@ describe("mny writers (integration)", () => {
         expect(rows.every((row) => row.securityId !== null)).toBe(true);
       });
 
-      // The acceptance criterion for M2.4: what Monize holds must equal what
+      // The acceptance criterion for M2.4: what Artha holds must equal what
       // Money's open lots say, with no negative positions anywhere. PR #192
       // produced both wrong share counts and negative holdings.
       it("produces holdings equal to the LOT-derived positions", async () => {

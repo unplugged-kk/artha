@@ -43,7 +43,7 @@ describe("ReleaseNotesService", () => {
     expect(notes?.intro).toBe("Hello world.");
     expect(notes?.sections[0].heading).toBe("Feature");
     expect(notes?.releaseUrl).toBe(
-      "https://github.com/kenlasko/monize/releases/tag/v1.2.3",
+      "https://github.com/unplugged-kk/artha/releases/tag/v1.2.3",
     );
   });
 

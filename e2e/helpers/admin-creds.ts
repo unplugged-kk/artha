@@ -7,7 +7,7 @@ import { E2E_DEFAULT_PASSWORD } from './credentials';
 // secret is written to disk). The values are env-overridable with a fallback to
 // the standard E2E test credential.
 export const ADMIN_CREDS: TestUser = {
-  email: process.env.E2E_ADMIN_EMAIL ?? 'e2e-admin@monize.test',
+  email: process.env.E2E_ADMIN_EMAIL ?? 'e2e-admin@artha.test',
   password: process.env.E2E_ADMIN_PASSWORD ?? E2E_DEFAULT_PASSWORD,
   firstName: 'E2E',
   lastName: 'Admin',
