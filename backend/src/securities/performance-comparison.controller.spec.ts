@@ -1,9 +1,20 @@
-import { BadRequestException, ValidationPipe } from "@nestjs/common";
+import {
+  BadRequestException,
+  ParseUUIDPipe,
+  RequestMethod,
+  ValidationPipe,
+} from "@nestjs/common";
+import {
+  METHOD_METADATA,
+  PATH_METADATA,
+  ROUTE_ARGS_METADATA,
+} from "@nestjs/common/constants";
 import { Test } from "@nestjs/testing";
 import { PerformanceComparisonController } from "./performance-comparison.controller";
 import { PerformanceComparisonService } from "./performance-comparison.service";
 import { MarketIndexService } from "./market-index.service";
 import { PerformanceComparisonQueryDto } from "./dto/performance-comparison-query.dto";
+import { ALLOW_DELEGATE_KEY } from "../delegation/decorators/delegate-access.decorator";
 
 const USER = "11111111-1111-4111-8111-111111111111";
 const SEC_A = "22222222-2222-4222-8222-222222222222";
@@ -34,12 +45,15 @@ async function validate(query: Record<string, unknown>) {
 describe("PerformanceComparisonController", () => {
   let controller: PerformanceComparisonController;
   let comparison: jest.Mocked<
-    Pick<PerformanceComparisonService, "getComparison">
+    Pick<PerformanceComparisonService, "getComparison" | "getRollingReturns">
   >;
   let indexes: jest.Mocked<Pick<MarketIndexService, "listCatalog">>;
 
   beforeEach(async () => {
-    comparison = { getComparison: jest.fn().mockResolvedValue({}) };
+    comparison = {
+      getComparison: jest.fn().mockResolvedValue({}),
+      getRollingReturns: jest.fn().mockResolvedValue({}),
+    };
     indexes = { listCatalog: jest.fn().mockResolvedValue([]) };
     const moduleRef = await Test.createTestingModule({
       controllers: [PerformanceComparisonController],
@@ -165,6 +179,51 @@ describe("PerformanceComparisonController", () => {
     it("returns the catalog", async () => {
       await controller.listIndexes();
       expect(indexes.listCatalog).toHaveBeenCalled();
+    });
+  });
+  describe("getRollingReturns", () => {
+    const handler = PerformanceComparisonController.prototype.getRollingReturns;
+
+    it("is GET securities/:id/rolling-returns under the controller prefix", () => {
+      expect(
+        Reflect.getMetadata(PATH_METADATA, PerformanceComparisonController),
+      ).toBe("investments/performance");
+      expect(Reflect.getMetadata(PATH_METADATA, handler)).toBe(
+        "securities/:id/rolling-returns",
+      );
+      expect(Reflect.getMetadata(METHOD_METADATA, handler)).toBe(
+        RequestMethod.GET,
+      );
+    });
+
+    it("is owner-only: no @AllowDelegate()", () => {
+      expect(Reflect.getMetadata(ALLOW_DELEGATE_KEY, handler)).toBeUndefined();
+    });
+
+    it("is throttled to 60 requests a minute", () => {
+      expect(Reflect.getMetadata("THROTTLER:LIMITdefault", handler)).toBe(60);
+      expect(Reflect.getMetadata("THROTTLER:TTLdefault", handler)).toBe(60000);
+    });
+
+    it("parses the id with ParseUUIDPipe, which rejects a non-UUID with 400", async () => {
+      const args = Reflect.getMetadata(
+        ROUTE_ARGS_METADATA,
+        PerformanceComparisonController,
+        "getRollingReturns",
+      ) as Record<string, { data?: string; pipes: unknown[] }>;
+      const idArg = Object.values(args).find((arg) => arg.data === "id");
+      expect(idArg?.pipes).toContain(ParseUUIDPipe);
+      await expect(
+        new ParseUUIDPipe().transform("not-a-uuid", {
+          type: "param",
+          data: "id",
+        }),
+      ).rejects.toBeInstanceOf(BadRequestException);
+    });
+
+    it("derives the user from the token and passes the id through", async () => {
+      await controller.getRollingReturns({ user: { id: USER } }, SEC_A);
+      expect(comparison.getRollingReturns).toHaveBeenCalledWith(USER, SEC_A);
     });
   });
 });

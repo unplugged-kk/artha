@@ -23,6 +23,15 @@ jest.mock("../common/time-series/price-series.util", () => {
 });
 import { loadPriceSeries } from "../common/time-series/price-series.util";
 
+// The rolling-returns read takes "today" from the request; pinned per test.
+jest.mock("../common/date-utils", () => {
+  const actual = jest.requireActual("../common/date-utils");
+  return { ...actual, todayYMD: jest.fn(actual.todayYMD) };
+});
+import { todayYMD } from "../common/date-utils";
+const actualTodayYMD = jest.requireActual("../common/date-utils")
+  .todayYMD as () => string;
+
 const USER = "11111111-1111-4111-8111-111111111111";
 const SEC_A = "22222222-2222-4222-8222-222222222222";
 const SEC_B = "33333333-3333-4333-8333-333333333333";
@@ -933,5 +942,167 @@ describe("PerformanceComparisonService", () => {
     // prices it, because the lookup can only search backwards.
     expect(call.fromDate < "2025-01-01").toBe(true);
     expect(call.toDate).toBe("2025-12-31");
+  });
+  // --- rolling returns (docs/specs/fund-rolling-returns.md) ----------------
+
+  describe("getRollingReturns", () => {
+    const TODAY = "2026-07-01";
+
+    function fund(overrides: Partial<Security> = {}): Security {
+      return {
+        ...security(SEC_A, "AMFI120503", "INR"),
+        amfiSchemeCode: "120503",
+        ...overrides,
+      } as Security;
+    }
+
+    beforeEach(() => {
+      (todayYMD as jest.Mock).mockImplementation(() => TODAY);
+    });
+
+    afterEach(() => {
+      (todayYMD as jest.Mock).mockImplementation(actualTodayYMD);
+    });
+
+    it("404s a security the caller does not own before any price read", async () => {
+      securityRepo.find.mockResolvedValue([]);
+      await expect(service.getRollingReturns(USER, SEC_A)).rejects.toThrow(
+        NotFoundException,
+      );
+      expect(securityRepo.find).toHaveBeenCalledWith({
+        where: { userId: USER, id: expect.anything() },
+      });
+      expect(loadPriceSeries).not.toHaveBeenCalled();
+      expect(manager.query).not.toHaveBeenCalled();
+      expect(securityPriceService.backfillSecurityRange).not.toHaveBeenCalled();
+    });
+
+    it.each([null, "", "   "])(
+      "is NOT_AN_AMFI_FUND without a scheme code (%p), with no fetch and no read",
+      async (amfiSchemeCode) => {
+        securityRepo.find.mockResolvedValue([
+          fund({ amfiSchemeCode, historicalBackfillAttemptedAt: null }),
+        ]);
+        const view = await service.getRollingReturns(USER, SEC_A);
+        expect(view).toEqual({
+          securityId: SEC_A,
+          eligibility: "NOT_AN_AMFI_FUND",
+          currencyCode: "INR",
+          history: {
+            firstDate: null,
+            lastDate: null,
+            observationCount: 0,
+            excludedObservationCount: 0,
+            lastIsStale: false,
+          },
+          periods: [],
+        });
+        expect(loadPriceSeries).not.toHaveBeenCalled();
+        expect(manager.query).not.toHaveBeenCalled();
+        expect(
+          securityPriceService.backfillSecurityRange,
+        ).not.toHaveBeenCalled();
+      },
+    );
+
+    it("ensures five years of history, then reads the raw NAV series only", async () => {
+      securityRepo.find.mockResolvedValue([fund()]);
+      const ensure = jest.spyOn(
+        service as unknown as {
+          ensureSecuritiesHistory: (s: Security[], start: string) => unknown;
+        },
+        "ensureSecuritiesHistory",
+      );
+      (loadPriceSeries as jest.Mock).mockResolvedValue(
+        new Map([
+          [
+            SEC_A,
+            series(
+              [
+                ["2021-06-30", 80],
+                ["2023-06-30", 100],
+                ["2025-06-30", 160],
+                ["2026-06-30", 200],
+              ],
+              "RAW",
+            ),
+          ],
+        ]),
+      );
+
+      const view = await service.getRollingReturns(USER, SEC_A);
+
+      expect(ensure).toHaveBeenCalledWith(
+        [expect.objectContaining({ id: SEC_A })],
+        "2021-07-01",
+      );
+      expect(loadPriceSeries).toHaveBeenCalledTimes(1);
+      expect((loadPriceSeries as jest.Mock).mock.calls[0][1]).toEqual({
+        table: "security_prices",
+        ids: [SEC_A],
+        sampling: "day",
+        sources: ["amfi_nav", "manual"],
+        basis: "RAW",
+      });
+      expect(view.eligibility).toBe("ELIGIBLE");
+      expect(view.currencyCode).toBe("INR");
+      expect(view.history).toEqual({
+        firstDate: "2021-06-30",
+        lastDate: "2026-06-30",
+        observationCount: 4,
+        excludedObservationCount: 0,
+        lastIsStale: false,
+      });
+      expect(view.periods.map((p) => [p.period, p.mean])).toEqual([
+        ["1Y", 25],
+        ["3Y", 25.9855],
+        ["5Y", 20.1155],
+      ]);
+    });
+
+    it("answers NO_PRICE_HISTORY for every period when nothing is stored", async () => {
+      securityRepo.find.mockResolvedValue([fund()]);
+      (loadPriceSeries as jest.Mock).mockResolvedValue(new Map());
+      const view = await service.getRollingReturns(USER, SEC_A);
+      expect(view.periods.map((p) => p.status)).toEqual([
+        "NO_PRICE_HISTORY",
+        "NO_PRICE_HISTORY",
+        "NO_PRICE_HISTORY",
+      ]);
+    });
+
+    it("computes over stored rows when the provider fetch fails", async () => {
+      securityRepo.find.mockResolvedValue([
+        fund({ historicalBackfillAttemptedAt: null }),
+      ]);
+      // No usable history stored yet, so the fetch is due.
+      manager.query.mockResolvedValue([activityRow(SEC_A, null, null)]);
+      securityPriceService.backfillSecurityRange.mockRejectedValue(
+        new Error("mfapi down"),
+      );
+      (loadPriceSeries as jest.Mock).mockResolvedValue(
+        new Map([
+          [
+            SEC_A,
+            series(
+              [
+                ["2025-06-30", 160],
+                ["2026-06-30", 200],
+              ],
+              "RAW",
+            ),
+          ],
+        ]),
+      );
+
+      const view = await service.getRollingReturns(USER, SEC_A);
+
+      expect(securityPriceService.backfillSecurityRange).toHaveBeenCalledWith(
+        expect.objectContaining({ id: SEC_A }),
+        "10y",
+      );
+      expect(view.periods[0]).toMatchObject({ period: "1Y", mean: 25 });
+      expect(securityRepo.update).toHaveBeenCalled();
+    });
   });
 });
