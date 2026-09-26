@@ -2,7 +2,7 @@
 
 **How this works:** each mission rewrites this file as a current snapshot (never a diary). **This PR is never merged — it is overwritten.** The summary is at the top; matrices, evidence, and the next-mission brief are below.
 
-Last updated: 2026-09-26 - `main` at **`88aba19ec`** - **Mission 1 MERGED (PR #22)** - **Mission 2 COMPLETE - Fintrack audit, scope exhausted, no code change** - **Mission 3 MERGED (PR #23)** - **Mission 4 - Fund Rolling Returns: code PR #24 OPEN (not merged)** - **Mission 5A - Mutual-Fund Categories & Comparison: specification APPROVED, committed as documentation only, docs PR #25 OPEN (not merged); implementation intentionally NOT started** - next: merge PR #24, then the specification PR #25, then start **Mission 5B (implementation)**
+Last updated: 2026-09-26 - `main` at **`88aba19ec`** - **Mission 1 MERGED (PR #22)** - **Mission 2 COMPLETE - Fintrack audit, scope exhausted, no code change** - **Mission 3 MERGED (PR #23)** - **Mission 4 - Fund Rolling Returns: code PR #24 OPEN (not merged)** - **Mission 5A - Mutual-Fund Categories & Comparison: specification APPROVED, committed as documentation only, docs PR #25 OPEN (not merged); implementation intentionally NOT started** - **Artha de-branding (Monize removal): implemented on `fm/artha-debrand-01`, code PR #26 OPEN (not merged)** - next: merge PR #24, then the de-brand PR #26, then the spec PR #25, then start **Mission 5B (implementation)**
 
 ---
 
@@ -24,6 +24,7 @@ Last updated: 2026-09-26 - `main` at **`88aba19ec`** - **Mission 1 MERGED (PR #2
 - **Rolling status PR:** PR #5 (`fm/artha-mission-status`) — strictly one file, `docs/status/artha-mission-status.md`.
 - **Code PRs:** **PR #22** (Mission 1) and **PR #23** (Mission 3) **MERGED**; **PR #24** - `feat: fund rolling returns` (`fm/artha-finsight-rolling-returns` -> `main`) - **OPEN** (Mission 4).
 - **Documentation PRs:** **PR #25** - `docs: add mutual fund categories and comparison specification` (`fm/artha-fund-categories-spec` -> `main`) - **OPEN** (Mission 5A; docs only, no production change).
+- **Stabilization PRs:** **PR #26** - `chore: remove Monize branding from Artha` (`fm/artha-debrand-01` -> `main`) - **OPEN** (Artha de-branding; rename only, no feature work).
 - **Merged PRs:** #1-#23.
 
 ---
@@ -269,8 +270,24 @@ Negative controls re-run: `365` in place of `365.25` fails U2 (and two others); 
 
 ---
 
+## Artha de-branding — Monize removal
+
+**Status: IMPLEMENTED on `fm/artha-debrand-01` — code PR #26 OPEN (not merged). Rename only; no feature work.**
+
+- **Branch/commits:** `fm/artha-debrand-01` — `8208f9255` (rebrand, 478 files) and `1c8bd923d` (guard).
+- **PR:** **#26** - `chore: remove Monize branding from Artha` -> `main` - **OPEN**.
+- **Removed the upstream name from Artha's own surface:** README / CONTRIBUTING / SECURITY / CONTAINER_BUILD / the `CLAUDE.md` set, `docs/**` (except history), `website/**`, `.env.example` comments, helm docs and GitHub templates; Dockerfile labels and image names (`ghcr.io/unplugged-kk/artha-{backend,frontend}`); compose container/network names and host data dir (`./artha/…`); helm chart/labels/`artha-backend-service`; npm package names; demo credentials; database name + roles (`artha`, `artha_user`, `artha_app`, `artha_test`); backup magic `MZBE` -> `ARBE` (string **and** bytes); entity-link scheme `monize://` -> `artha://`; share header `X-Monize-Share-Name` -> `X-Artha-Share-Name`; MCP scope prefix `monize:` -> `artha:`.
+- **Kept deliberately (not missed):** `LICENSE` (AGPL-3.0-only) and the single README provenance line (attribution/source required by the licence); `docs/release-notes/**` and `docs/audits/**` (shipped history); `graft/` (untracked, regenerable).
+- **Guard:** `backend/src/common/no-monize.guard.spec.ts` fails if the token reappears outside those exemptions.
+- **Accepted pre-release breaks:** backups written before this change (`MZBE`) are no longer recognised; existing MCP clients must re-authorise; persisted `monize://` AI-chat links no longer resolve.
+- **Verification:** residual scan = the README provenance line only; backend typecheck + build; guards 65/65; backend targeted (`src/backup`, `src/oauth`, `src/updates`) 911 pass with the 5 pre-existing macOS `auto-backup.service.spec.ts` failures (same 5 on `main`); frontend type-check + i18n:check; frontend full suite 871 files / 16631 tests pass; `check-env-docs` / `check-docs-manifests` / `check-migration-prefixes` OK.
+- **Sequencing:** merge **PR #24 first**, then this rebrand (**PR #26**), then **PR #25** — the rebrand touches files PR #24 changed, so the code PR lands first to avoid a large rebase.
+
+---
+
 ## Known limitations
 
+- Artha de-branding: pre-change backup artifacts and persisted `monize://` AI links are not recognised after the rename, and MCP clients re-authorise; the help/wiki links now target the Artha repository (its wiki content is not yet written).
 - Mission 5A: the specification is documentation only and nothing is implemented; the comparison half cannot start until PR #24 is merged.
 - Date-aware / historical FX and multi-currency revaluation are covered by backend unit tests; the E2E stack pulls rates from an external provider, so an end-to-end conversion is not deterministic offline.
 - Firefox E2E runs in CI — Playwright browsers cannot be installed on the arm64 / Ubuntu 26.04 runner used for local verification.
@@ -286,7 +303,8 @@ Finsight: MF categories & comparison (specification APPROVED — Mission 5A / do
 **Sequence (owner-set):**
 
 1. **Merge PR #24** — Fund Rolling Returns (Mission 4). *First, because the Mission 5B comparison half depends on its approved engine.*
-2. **Merge the specification PR #25** — `docs/specs/fund-categories-and-comparison.md` (documentation only).
-3. **Start Mission 5B** — implement Mutual-Fund Categories & Comparison from the frozen specification, with three strictly-disjoint parallel tracks (Backend / Frontend / Tests) feeding one Integration & QA pass and **one** final code PR. The backend contract is the boundary for the frontend; the test track works from the frozen spec, so no two tracks implement the same logic.
+2. **Merge PR #26** — Artha de-branding (`fm/artha-debrand-01`). *Before PR #25, because it touches files PR #24 changed.*
+3. **Merge the specification PR #25** — `docs/specs/fund-categories-and-comparison.md` (documentation only).
+4. **Start Mission 5B** — implement Mutual-Fund Categories & Comparison from the frozen specification, with three strictly-disjoint parallel tracks (Backend / Frontend / Tests) feeding one Integration & QA pass and **one** final code PR. The backend contract is the boundary for the frontend; the test track works from the frozen spec, so no two tracks implement the same logic. The local-beta observation period (Compose, real usage, bug log) runs before or alongside this, on a frozen baseline.
 
 Not started, and out of Mission 5B by decision: risk metrics, fund overlap, market-cap allocation, peer benchmarking/ranking and plan-option inference — all recorded BLOCKED in the approved spec. Replacing the client trailing-return engine (`frontend/src/lib/security-detail.ts`) remains a separate follow-up.
