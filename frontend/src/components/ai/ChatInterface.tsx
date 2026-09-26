@@ -68,7 +68,7 @@ export function ChatInterface({
   // Relay mode is on when the user's highest-priority active provider is the
   // MCP relay; the chat then routes prompts to their own agent. Attachments
   // work in relay mode too: the backend stores them and exposes each to the
-  // agent as a monize-attachment:// MCP resource.
+  // agent as a artha-attachment:// MCP resource.
   const relayActive = !!aiStatus?.relayActive;
 
   useEffect(() => {

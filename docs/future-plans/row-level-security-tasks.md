@@ -84,7 +84,7 @@ Notes on the subtle rows:
 - **M1 is a prod DB change on next deploy** (migrations run at startup): it replaces
   `update_updated_at_column()`. Inert because the new function is exactly the old one while
   `app.preserve_timestamps` is unset — and M1's acceptance test proves that. M1 contains **no role or
-  grant statements** — a migration referencing `monize_app` would crash-loop any deployment where the
+  grant statements** — a migration referencing `artha_app` would crash-loop any deployment where the
   role does not exist (role and grants are db-init's job, F1).
 - **C5 is neutral, not inert:** it swaps the restore mechanism itself. It must work at `RLS_MODE=off`,
   which is why `withScopedDb` emits `app.preserve_timestamps` in **every** mode (see F2) and why C5
@@ -143,8 +143,8 @@ CNPG `managed.roles` requirement and the kustomize-overlay ConfigMap/Secret keys
 1. `db-init.ts`: role **and grants** per design Phase 1, running on every startup **before the
    existing "tables already exist" early return** (`db-init.ts:44-56` — placed after it, the logic
    never runs on an initialized DB and rotation silently breaks):
-   - When `DATABASE_APP_PASSWORD` is set: create/rotate `monize_app` — password via **parameterized**
-     `set_config('monize.app_password', $1, false)`, then the `DO $$` block from the design doc
+   - When `DATABASE_APP_PASSWORD` is set: create/rotate `artha_app` — password via **parameterized**
+     `set_config('artha.app_password', $1, false)`, then the `DO $$` block from the design doc
      (CREATE if absent, ALTER PASSWORD if present). Catch `insufficient_privilege` (42501) and
      continue with a warning naming CNPG `managed.roles` as the provisioning path. If unset, skip
      with a logged warning.
@@ -259,7 +259,7 @@ below actual also fails (prevents over-claiming).
   `app_real_user_id()` keep returning NULL by design — that is what makes the policies deny.
 
   **Verified against a real PostgreSQL 16** (not just review): applies and re-applies cleanly on a
-  fresh `schema.sql` install *and* on the pre-M1 schema; **no `monize_app` role existed in the
+  fresh `schema.sql` install *and* on the pre-M1 schema; **no `artha_app` role existed in the
   cluster** for either run; helpers return NULL/false unset, read both GUCs independently, revert at
   COMMIT on the same physical connection, treat empty string as unset, and raise 22P02 (not zero
   rows) on a non-UUID value; the `updated_at` trigger stamps `CURRENT_TIMESTAMP` exactly as before
@@ -272,9 +272,9 @@ below actual also fails (prevents over-claiming).
 **Do:** per design Phase 3 — `app_current_user_id()`, `app_real_user_id()`, and `app_bypass_rls()`
 helper functions; `CREATE OR REPLACE` of `update_updated_at_column()` with the
 `app.preserve_timestamps` check. Idempotent. Behavior-inert (no policy, no enable).
-**This migration must contain NO role or grant statements** — `GRANT ... TO monize_app` in a
+**This migration must contain NO role or grant statements** — `GRANT ... TO artha_app` in a
 migration crash-loops every deployment where the role does not exist (role + grants are db-init's
-job, F1). Reject the task if any SQL here mentions `monize_app` or an owner-role name.
+job, F1). Reject the task if any SQL here mentions `artha_app` or an owner-role name.
 
 **Accept:** migration applies cleanly on a fresh dev DB **with and without `DATABASE_APP_PASSWORD`
 set** and re-applies idempotently; `updated_at` trigger behavior unchanged when the GUC is unset
@@ -332,7 +332,7 @@ returns nothing.
 
   **Verified under actual enforcement, not just by review.** The policies are inert as shipped, so
   correctness was proved in a scratch PostgreSQL 16 database by enabling RLS on all 50 policied
-  tables, creating a non-owner `monize_app` role with the F1 grants, and seeding an owner, a
+  tables, creating a non-owner `artha_app` role with the F1 grants, and seeding an owner, a
   delegate, and an unrelated third user: no GUC → zero rows on direct *and* indirect tables; per-user
   GUC → only that user's rows; `WITH CHECK` rejects a cross-user INSERT and a UPDATE that reassigns
   `user_id`, on both direct and indirect tables; a cross-user UPDATE affects 0 rows; a non-UUID GUC
@@ -374,7 +374,7 @@ a wrong column name crash-loops the deploy):
 `schema_migrations` deliberately excluded — say so, with rationale, in a comment.
 **No `ENABLE ROW LEVEL SECURITY` and no role/grant statements anywhere in these files.**
 
-**Accept:** migrations apply + re-apply cleanly **on a DB without the `monize_app` role**;
+**Accept:** migrations apply + re-apply cleanly **on a DB without the `artha_app` role**;
 `SELECT count(*) FROM pg_policies` matches the enumerated table count; every policied table's owner
 column verified against schema.sql in the PR description; app behavior unchanged (policies inert
 without enable); schema.sql mirrored.
@@ -409,10 +409,10 @@ without enable); schema.sql mirrored.
   migrations replayed **twice** to another, `pg_dump` normalized and diffed — identical, 53 tables
   with RLS enabled on both sides. `npm run migration:lint` clean. Behaviour under enforcement,
   proved with a real non-owner role: owner sees both users' rows (this is `RLS_MODE=off` and it is
-  unchanged); `monize_app` with no GUC sees **zero**; with `app.current_user_id` sees only that
+  unchanged); `artha_app` with no GUC sees **zero**; with `app.current_user_id` sees only that
   user's rows, on a direct table *and* through an indirect `EXISTS`-to-parent policy; with
   `app.bypass_rls` sees everything; a cross-user INSERT is rejected by `WITH CHECK`; and
-  `monize_app` cannot `ALTER TABLE ... DISABLE ROW LEVEL SECURITY` (`must be owner of table`).
+  `artha_app` cannot `ALTER TABLE ... DISABLE ROW LEVEL SECURITY` (`must be owner of table`).
 
   **The D1 convention now has a test, not just a rule.** T1's harness applies the enable **in its
   filename position** rather than last (`applyRlsPolicies(ds, { includeEnable: true })`), which
@@ -495,7 +495,7 @@ suite (T2) passes against it.
 **Scope:** `backend/test/helpers/integration-setup.ts` (+ a new helper file if cleaner).
 
 **Do:** after `synchronize`, run `applyRlsPolicies(dataSource)`:
-1. Create `monize_app` in the test DB **before** anything references it, and apply the F1 grants
+1. Create `artha_app` in the test DB **before** anything references it, and apply the F1 grants
    (reuse/share db-init's grant SQL — the migrations no longer contain grants).
 2. Execute the actual RLS migration files read from disk (never duplicated SQL). **A `*_rls_*` glob
    is wrong and will silently under-apply.** It matches `111`–`114` and `118_security_documents_rls`
@@ -540,7 +540,7 @@ or unreadable (no silent skip); a raw `UPDATE` on a trigger-covered table in the
     real arm in the delegate's own session; favourites readable/insertable via the real arm only;
     owner-alone blindness to the delegate's favourites; delegate-own-session blindness to owner data.
   - **GUC scope**: a real `withUserContext` + `withScopedDb` (`RLS_MODE=enforce`) on a
-    single-connection pool connected as `monize_app`; after commit both identity GUCs read empty on
+    single-connection pool connected as `artha_app`; after commit both identity GUCs read empty on
     the same connection and a raw `SELECT` returns zero rows.
   - **Two seeder facts worth knowing:** several ownership/parent columns have **no FK constraint** in
     the synchronize-built schema (`auto_backup_settings.user_id`, `security_documents.user_id`,
@@ -563,7 +563,7 @@ buckets — `user_id` column / explicit **owner-column map** (`users → id`,
 delegate_user_id`, `emergency_access_settings|contacts → owner_user_id`) / explicit
 indirect-ownership map / explicit exemption list (`currencies`, `exchange_rates`, `oauth_payloads`,
 `schema_migrations`) — anything else **fails**. Missing `pg_policies` entry for a bucketed table
-fails. Then, per covered table, inside a transaction with `SET LOCAL ROLE monize_app`: userA/userB
+fails. Then, per covered table, inside a transaction with `SET LOCAL ROLE artha_app`: userA/userB
 visibility; unset/empty GUC → **zero rows**; **non-UUID garbage GUC → the statement raises
 `invalid input syntax for type uuid` (22P02), asserted as an error, not as empty results**;
 `WITH CHECK` cross-user insert rejection; `app.bypass_rls` cross-user read;
@@ -977,7 +977,7 @@ guards against (wrapping landing in a later PR than the conversion) never existe
   `oauth-metadata.controller` and the OIDC discovery documents (static config); the node-oidc-provider
   Express mount's `oauth_payloads` reads/writes (that table is deliberately **RLS-exempt**; the
   canonical rationale is `docs/row-level-security-contract.md` section 3).
-- **`oauth_payloads` hardening decision:** keep the `monize_app` DML grants and leave the table
+- **`oauth_payloads` hardening decision:** keep the `artha_app` DML grants and leave the table
   RLS-exempt (matches M2's exclusion list) — no owner-DataSource split. `oauth_payloads` is a
   short-lived opaque token/grant store keyed by random id, so an owner policy would add no
   isolation.
@@ -1018,7 +1018,7 @@ email-verification lookups, plus the audit. Wrapping only — no repository-to-`
   token-hash lookup (all MCP traffic), password-reset / email-verification token lookups, OIDC/OAuth
   callback and the MCP-connector OAuth flow's `oauth_payloads` access. While here, record the
   `oauth_payloads` hardening decision (design Phase 3: keep grants + RLS-exempt, or revoke
-  `monize_app` grants and use an owner DataSource for the OAuth module) in the PR.
+  `artha_app` grants and use an owner DataSource for the OAuth module) in the PR.
 - Then **audit every route reachable without `req.user`** (guard-less controllers, public decorators,
   every Passport strategy) and list the findings in the PR — each either wrapped, or explicitly
   justified as touching no user table.

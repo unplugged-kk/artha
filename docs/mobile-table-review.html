@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Monize mobile table review</title>
+<title>Artha mobile table review</title>
 <style>
   :root {
     --bg: #f2f4f8; --card: #ffffff; --line: #d9dee8; --text: #182033; --muted: #5d6779;
@@ -70,11 +70,11 @@
 <body>
 <div class="page">
   <header>
-    <h1>Monize mobile table review</h1>
-    <p>A checklist for reviewing the phone layout of Monize's tables on a real device. Open each link on a phone (or a window narrower than 640 px), compare with what the note says to look at, and mark OK or Remarks. Everything you type stays in this browser (localStorage).</p>
+    <h1>Artha mobile table review</h1>
+    <p>A checklist for reviewing the phone layout of Artha's tables on a real device. Open each link on a phone (or a window narrower than 640 px), compare with what the note says to look at, and mark OK or Remarks. Everything you type stays in this browser (localStorage).</p>
     <div class="base">
-      <label for="baseUrl">Your Monize address</label>
-      <input id="baseUrl" type="url" inputmode="url" placeholder="https://monize.example.com" autocomplete="url" spellcheck="false">
+      <label for="baseUrl">Your Artha address</label>
+      <input id="baseUrl" type="url" inputmode="url" placeholder="https://artha.example.com" autocomplete="url" spellcheck="false">
       <small>Every link below is built from this address. Leave it empty and the links stay inert.</small>
     </div>
     <div class="summary">
@@ -143,8 +143,8 @@
     { id: 'ai', group: 'keep', name: 'AI assistant tables', path: '/ai', what: 'Left as is by decision.' },
   ];
 
-  const LS_STATE = 'monize-mobile-table-review-v1';
-  const LS_BASE = 'monize-mobile-table-review-base';
+  const LS_STATE = 'artha-mobile-table-review-v1';
+  const LS_BASE = 'artha-mobile-table-review-base';
   const state = new Map();
   let base = '';
   const $ = (id) => document.getElementById(id);

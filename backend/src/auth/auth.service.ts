@@ -631,7 +631,7 @@ export class AuthService {
     const email = rawEmail?.toLowerCase().trim();
     // SECURITY: Only trust the IdP email if it is verified.
     // OIDC_REQUIRE_VERIFIED_EMAIL (default true) gates this. Set it to "false"
-    // to drop the requirement: Monize then trusts the IdP-provided email even
+    // to drop the requirement: Artha then trusts the IdP-provided email even
     // without an `email_verified` claim and merges directly into an existing
     // account matching that email -- including a local password account,
     // skipping the email-confirmation step (so it works without SMTP). This

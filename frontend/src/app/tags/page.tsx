@@ -44,8 +44,8 @@ function TagsContent() {
   const [transactionCounts, setTransactionCounts] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortField, setSortField] = useLocalStorage<SortField>('monize-tags-sort-field', 'name');
-  const [sortDirection, setSortDirection] = useLocalStorage<SortDirection>('monize-tags-sort-dir', 'asc');
+  const [sortField, setSortField] = useLocalStorage<SortField>('artha-tags-sort-field', 'name');
+  const [sortDirection, setSortDirection] = useLocalStorage<SortDirection>('artha-tags-sort-dir', 'asc');
   const [deleteTag, setDeleteTag] = useState<Tag | null>(null);
   const [deleteTransactionCount, setDeleteTransactionCount] = useState<number>(0);
   const { showForm, editingItem, openCreate, openEdit, close, isEditing, modalProps, setFormDirty, unsavedChangesDialog, formSubmitRef } = useFormModal<Tag>();

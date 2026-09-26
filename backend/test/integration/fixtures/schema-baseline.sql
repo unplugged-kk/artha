@@ -10,7 +10,7 @@
 -- migration-path.integration.spec.ts asserts this file does NOT already contain the
 -- objects under test, so a regeneration that swept them in cannot silently make the
 -- whole suite vacuous.
--- Monize - Database Schema
+-- Artha - Database Schema
 -- PostgreSQL Schema for Microsoft Money replacement
 
 -- Extensions
@@ -2610,7 +2610,7 @@ CREATE POLICY emergency_access_contacts_isolation ON emergency_access_contacts
 -- Enabling RLS does not affect the table owner, and at RLS_MODE=off -- the
 -- default, and where every deployment starts -- the app connects as the owner.
 -- So this is inert for a new install and stays inert until an operator moves
--- the app onto the unprivileged monize_app role. FORCE ROW LEVEL SECURITY is
+-- the app onto the unprivileged artha_app role. FORCE ROW LEVEL SECURITY is
 -- deliberately not used: it would apply policies to the owner as well and break
 -- db-init, db-migrate and backup restore.
 --

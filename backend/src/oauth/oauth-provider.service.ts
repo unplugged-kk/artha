@@ -385,7 +385,7 @@ export class OAuthProviderService implements OnModuleInit {
       }
 
       const rawScopes = token.scope ?? "";
-      // Translate the OAuth-issued scope set ("monize:read monize:write")
+      // Translate the OAuth-issued scope set ("artha:read artha:write")
       // into the comma-separated bare-name format the existing MCP tool
       // layer expects ("read,write"). The PAT path already supplies
       // scopes in that shape, so this normalisation lets every tool's
@@ -394,7 +394,7 @@ export class OAuthProviderService implements OnModuleInit {
       const scopes = rawScopes
         .split(/\s+/)
         .filter(Boolean)
-        .map((s) => (s.startsWith("monize:") ? s.slice("monize:".length) : s))
+        .map((s) => (s.startsWith("artha:") ? s.slice("artha:".length) : s))
         .join(",");
       // The grant, not the individual access token: an MCP client refreshes
       // access tokens routinely, and a session must survive that while still

@@ -36,7 +36,7 @@ describe("McpRecentTransactionsResource", () => {
   it("should register the resource", () => {
     expect(server.registerResource).toHaveBeenCalledWith(
       "recent-transactions",
-      "monize://recent-transactions",
+      "artha://recent-transactions",
       expect.any(Object),
       expect.any(Function),
     );
@@ -44,13 +44,13 @@ describe("McpRecentTransactionsResource", () => {
 
   it("should return error when no user context", async () => {
     ctx.setUser(undefined);
-    const result = await handler("monize://recent-transactions", ctx);
+    const result = await handler("artha://recent-transactions", ctx);
     expect(result.contents[0].text).toContain("Error");
   });
 
   it("should return error when scope check fails", async () => {
     ctx.setUser({ userId: "u1", scopes: "write" });
-    const result = await handler("monize://recent-transactions", ctx);
+    const result = await handler("artha://recent-transactions", ctx);
     expect(result.contents[0].text).toContain("Insufficient scope");
   });
 
@@ -73,7 +73,7 @@ describe("McpRecentTransactionsResource", () => {
       totalExpenses: -3000,
     });
 
-    const result = await handler("monize://recent-transactions", ctx);
+    const result = await handler("artha://recent-transactions", ctx);
     const parsed = JSON.parse(result.contents[0].text);
     expect(parsed.summary.totalIncome).toBe(5000);
     expect(parsed.recentTransactions).toHaveLength(1);
@@ -109,7 +109,7 @@ describe("McpRecentTransactionsResource", () => {
     });
     analyticsService.getSummary.mockResolvedValue({});
 
-    const result = await handler("monize://recent-transactions", ctx);
+    const result = await handler("artha://recent-transactions", ctx);
     const parsed = JSON.parse(result.contents[0].text);
     expect(parsed.recentTransactions).toHaveLength(3);
     const groceries = parsed.recentTransactions.find(
@@ -135,7 +135,7 @@ describe("McpRecentTransactionsResource", () => {
       totalExpenses: 0,
     });
 
-    await handler("monize://recent-transactions", ctx);
+    await handler("artha://recent-transactions", ctx);
 
     // 10th positional arg is excludeInvestmentLinked.
     const args = analyticsService.getSummary.mock.calls[0];

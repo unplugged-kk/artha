@@ -203,7 +203,7 @@ function AccountsContent() {
         <PageHeader
           title={t('page.title')}
           subtitle={t('page.subtitle')}
-          helpUrl="https://github.com/kenlasko/monize/wiki/Accounts"
+          helpUrl="https://github.com/unplugged-kk/artha/wiki/Accounts"
           actions={
             <Button
               {...tourAnchor(TOUR_ANCHORS.accountsAddButton)}

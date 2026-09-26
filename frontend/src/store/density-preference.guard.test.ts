@@ -6,7 +6,7 @@ import { describe, it, expect } from 'vitest';
  * Row density is remembered per view, by one store (`useDensityPreference`),
  * and it got that way by consolidating thirteen places that stored it
  * themselves --
- * eleven `useLocalStorage('monize-<view>-density')` calls, one hand-rolled
+ * eleven `useLocalStorage('artha-<view>-density')` calls, one hand-rolled
  * `accounts.filter.density`, and three surfaces that stored it nowhere at all
  * and so reset to `normal` on every remount (issue #1193).
  *

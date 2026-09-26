@@ -693,7 +693,7 @@ export class AiService {
     }
     if (request.responseFormat === "json") {
       parts.push(
-        "This is an automated analysis request from Monize, not a chat " +
+        "This is an automated analysis request from Artha, not a chat " +
           "message from the user. Respond with ONLY the JSON described " +
           "above -- no prose, no markdown code fences, and no commentary " +
           "before or after the JSON.",

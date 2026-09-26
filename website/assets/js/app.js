@@ -1,7 +1,7 @@
-/* Monize marketing site — vanilla JS, no dependencies */
+/* Artha marketing site — vanilla JS, no dependencies */
 (function(){
 
-/* ================= Monize site — assets/js/app.js ================= */
+/* ================= Artha site — assets/js/app.js ================= */
 (function(){
 'use strict';
 
@@ -9,10 +9,10 @@
    Primary: local copies in assets/img/screenshots (run scripts/fetch-assets.sh)
    Fallback: the project wiki on GitHub, so the site works before/without that step. */
 var LOCAL   = 'assets/img/screenshots/';
-var WIKI    = 'https://raw.githubusercontent.com/wiki/kenlasko/monize/images/';
-var REPORAW = 'https://raw.githubusercontent.com/kenlasko/monize/main/';
-var DEMO    = 'https://demo.monize.net';
-var GH      = 'https://github.com/kenlasko/monize';
+var WIKI    = 'https://raw.githubusercontent.com/wiki/unplugged-kk/artha/images/';
+var REPORAW = 'https://raw.githubusercontent.com/kenlasko/artha/main/';
+var DEMO    = 'https://demo.artha.net';
+var GH      = 'https://github.com/unplugged-kk/artha';
 
 var $  = function(s,r){ return (r||document).querySelector(s); };
 var $$ = function(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); };
@@ -174,7 +174,7 @@ var TOUR = [
   desc:'Forty-six built-in reports in ten categories, favouritable and searchable, plus a builder for the ones you invent.',
   shots:'reports-page:The report catalogue|report-spending-category:Spending by category|report-income-expenses:Income versus expenses|report-net-worth:Net worth over time|report-chart-table:Flip any report between chart and table|custom-report-builder:Custom report builder'},
  {id:'ai', em:'🤖', name:'AI Assistant', url:'/ai',
-  desc:'Ask questions in plain language, get streamed answers, and let Monize flag anomalies on its own.',
+  desc:'Ask questions in plain language, get streamed answers, and let Artha flag anomalies on its own.',
   shots:'ai-chat:Natural-language queries, answered from your own data|ai-settings:Bring your own provider, model and API key'},
  {id:'import', em:'📥', name:'Import', url:'/import',
   desc:'A four-step wizard for CSV, OFX/QFX and QIF — or a full Microsoft Money file in one go.',
@@ -209,7 +209,7 @@ var QA = [
 var CODE = [
  ['Docker Compose',[
   ['c','# 1 — grab it'],
-  ['','\ngit clone https://github.com/kenlasko/monize.git\ncd monize\n\n'],
+  ['','\ngit clone https://github.com/unplugged-kk/artha.git\ncd artha\n\n'],
   ['c','# 2 — configure'],
   ['','\ncp .env.example .env\n'],
   ['c','#   POSTGRES_PASSWORD=…'],
@@ -226,7 +226,7 @@ var CODE = [
  ]],
  ['Kubernetes',[
   ['c','# Helm charts ship in the repo'],
-  ['','\nhelm install monize ./helm\n\n'],
+  ['','\nhelm install artha ./helm\n\n'],
   ['c','# health probes for your cluster'],
   ['','\n'],
   ['k','livenessProbe'],
@@ -239,7 +239,7 @@ var CODE = [
   ['',': INTERNAL_API_URL\n  '],
   ['k','value'],
   ['',': '],
-  ['s','"http://monize-backend-service:3001"'],
+  ['s','"http://artha-backend-service:3001"'],
   ['','\n- '],
   ['k','name'],
   ['',': PUBLIC_APP_URL\n  '],
@@ -249,12 +249,12 @@ var CODE = [
  ]],
  ['Local dev',[
   ['c','# backend'],
-  ['','\ncd backend && npm install\ncreatedb monize\npsql monize < ../database/schema.sql\nnpm run start:dev\n\n'],
+  ['','\ncd backend && npm install\ncreatedb artha\npsql artha < ../database/schema.sql\nnpm run start:dev\n\n'],
   ['c','# frontend, second terminal'],
   ['','\ncd frontend && npm install\ncp ../.env.example .env.local\nnpm run dev']
  ]],
  ['Demo stack',[
-  ['c','# the same stack that powers demo.monize.net'],
+  ['c','# the same stack that powers demo.artha.net'],
   ['','\ndocker compose -f docker-compose.demo.yml up -d\n\n'],
   ['c','# seeded sample data, DEMO_MODE=true,'],
   ['','\n'],
@@ -280,10 +280,10 @@ var FORMATS = [
 ];
 
 var FAQ = [
- ['Is Monize free?','Yes. It is open source under the AGPL-3.0 licence — no subscription, no feature tiers and no paywall around your own data. You provide the server.'],
- ['Does Monize connect to my bank automatically?','No, and that is deliberate. Monize is import-driven: CSV, OFX/QFX, QIF or a full Microsoft Money file. Nothing hands your banking credentials to a third-party aggregator.'],
- ['Where does my financial data live?','On whatever machine you run it on, in your own PostgreSQL database. There is no Monize cloud and no telemetry.'],
- ['Do I have to use the AI features?','Not at all — they are off until you add a provider. If you do want them, you can point Monize at a local Ollama model so nothing leaves your network, and only the data needed for a specific question is ever sent.'],
+ ['Is Artha free?','Yes. It is open source under the AGPL-3.0 licence — no subscription, no feature tiers and no paywall around your own data. You provide the server.'],
+ ['Does Artha connect to my bank automatically?','No, and that is deliberate. Artha is import-driven: CSV, OFX/QFX, QIF or a full Microsoft Money file. Nothing hands your banking credentials to a third-party aggregator.'],
+ ['Where does my financial data live?','On whatever machine you run it on, in your own PostgreSQL database. There is no Artha cloud and no telemetry.'],
+ ['Do I have to use the AI features?','Not at all — they are off until you add a provider. If you do want them, you can point Artha at a local Ollama model so nothing leaves your network, and only the data needed for a specific question is ever sent.'],
  ['Can I really migrate 30 years of Microsoft Money?','That is the reason it exists. The author imported 30+ years of .mny data and reconciled every balance against the original file with no discrepancies. The wiki has a step-by-step guide.'],
  ['Will it work on my phone?','Yes. The interface is responsive and installable as a Progressive Web App, so it gets its own window and home-screen icon on desktop and mobile.'],
  ['Who wrote it, and should I worry?','It was written almost entirely with AI assistance by a self-described non-programmer — the project says so up front. It has been through repeated security audits, NPM audits and ZAP scans, and supports 2FA and OIDC, but read the caution note in the README and make your own call.'],
@@ -353,7 +353,7 @@ var SHOTS = (function(){
    is what `data-fallback` carries in the markup, not the path -- a path in an
    attribute is a path the page would follow wherever it pointed. */
 var REPO_FILES = (function(){
-  var m=Object.create(null); m.logo='frontend/public/icons/monize-logo.svg'; return m;
+  var m=Object.create(null); m.logo='frontend/public/icons/artha-logo.svg'; return m;
 })();
 /* Each returns null for anything outside its vocabulary. Callers treat null as
    "there is nothing to load" -- they never assign it to a src, because
@@ -476,7 +476,7 @@ var mq=$('#marq'), mtxt=M.MARQUEE.concat(M.MARQUEE);
 mtxt.forEach(function(t){ mq.appendChild(el('span',null,t)); });
 
 /* live star count (best effort, falls back to the baked-in number) */
-fetch('https://api.github.com/repos/kenlasko/monize').then(function(r){ return r.json(); }).then(function(d){
+fetch('https://api.github.com/repos/kenlasko/artha').then(function(r){ return r.json(); }).then(function(d){
   if(d && d.stargazers_count) $('#stars').textContent='★ '+d.stargazers_count;
 }).catch(function(){});
 
@@ -540,7 +540,7 @@ function budgetMock(){
 function paintTour(){
   var t=M.TOUR[ti], ss=shots(t), stBody=$('#stBody');
   $$('button',rail).forEach(function(b,i){ b.classList.toggle('on',i===ti); });
-  $('#stTitle').textContent=t.name; $('#stDesc').textContent=t.desc; $('#stUrl').textContent='demo.monize.net'+t.url;
+  $('#stTitle').textContent=t.name; $('#stDesc').textContent=t.desc; $('#stUrl').textContent='demo.artha.net'+t.url;
   clear(thumbs);
   if(!ss.length){
     stBody.classList.add('is-mock'); fill(stBody, budgetMock());

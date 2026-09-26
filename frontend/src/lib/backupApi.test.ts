@@ -341,7 +341,7 @@ describe('backupApi', () => {
 
   it('restoreBackup sends an .mzbe file untouched with the encrypted content-type', async () => {
     mockRestore();
-    const file = new File([new Uint8Array([0x4d, 0x5a, 0x42, 0x45])], 'backup.mzbe');
+    const file = new File([new Uint8Array([0x41, 0x52, 0x42, 0x45])], 'backup.mzbe');
     await backupApi.restoreBackup({ file, password: 'p', backupPassword: 'bk' });
     const call = restoreCall();
     expect(call[1]).toBe(file);
@@ -392,9 +392,9 @@ describe('backupApi', () => {
 });
 
 describe('isEncryptedBackupFile', () => {
-  it('detects the MZBE magic header regardless of file name', async () => {
+  it('detects the ARBE magic header regardless of file name', async () => {
     const file = new File(
-      [new Uint8Array([0x4d, 0x5a, 0x42, 0x45, 0x01, 0x01])],
+      [new Uint8Array([0x41, 0x52, 0x42, 0x45, 0x01, 0x01])],
       'renamed-backup.bin',
     );
     expect(await isEncryptedBackupFile(file)).toBe(true);

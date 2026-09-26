@@ -652,7 +652,7 @@ function parseQifAmount(amountStr: string): number | null {
  *     ratio multiplied by 10 as an integer. So a 2-for-1 forward split is
  *     stored as `Q20` (ratio 2.0), a 1-for-3 forward split as `Q30` (3.0),
  *     a 2-to-1 reverse split as `Q5` (0.5), and a 5-to-1 reverse as `Q2`
- *     (0.2). See Monize's docs for the reference.
+ *     (0.2). See Artha's docs for the reference.
  *   - Other QIF writers sometimes use "N:M" or "N/M" ratio notation for
  *     splits (e.g. "2:1" for 2-for-1) or a plain decimal (e.g. "2.0").
  *

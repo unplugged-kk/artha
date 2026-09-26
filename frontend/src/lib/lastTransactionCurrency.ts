@@ -8,7 +8,7 @@
  * remembered-date behaviour in `lastTransactionDate.ts`. An empty string means
  * "use the account currency" (which clears the stickiness).
  */
-export const LAST_TRANSACTION_CURRENCY_KEY = 'monize-last-transaction-currency';
+export const LAST_TRANSACTION_CURRENCY_KEY = 'artha-last-transaction-currency';
 
 // How long a remembered currency stays valid before falling back to the account
 // currency.

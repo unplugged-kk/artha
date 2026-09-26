@@ -26,11 +26,11 @@ import { PayeeContactLookupToggle } from './PayeeContactLookupToggle';
  *
  * Worth a link rather than more copy on the card: the setup is a Google Cloud
  * errand (create a project, enable Places API (New), restrict the key BY IP
- * because Monize calls Google from the server, not by HTTP referrer) and none
+ * because Artha calls Google from the server, not by HTTP referrer) and none
  * of it fits beside a switch.
  */
 const GOOGLE_PLACES_SETUP_URL =
-  'https://github.com/kenlasko/monize/wiki/Categories-and-Payees#setting-up-google-places';
+  'https://github.com/unplugged-kk/artha/wiki/Categories-and-Payees#setting-up-google-places';
 
 /**
  * How a provider is named in the picker.

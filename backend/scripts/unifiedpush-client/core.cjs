@@ -18,12 +18,12 @@ function origin(value) {
     fail("HTTPS_ORIGIN_REQUIRED");
   return url.origin;
 }
-function createState(monize, distributor) {
+function createState(artha, distributor) {
   const key = createECDH("prime256v1");
   key.generateKeys();
   return {
     version: 1,
-    monize: origin(monize),
+    artha: origin(artha),
     distributor: origin(distributor),
     topic: `up${randomBytes(24).toString("hex")}`,
     privateKey: key.getPrivateKey().toString("base64url"),
@@ -36,7 +36,7 @@ function createState(monize, distributor) {
 function validateState(s) {
   if (!s || s.version !== 1 || !/^up[a-f0-9]{48}$/.test(s.topic))
     fail("INVALID_STATE");
-  origin(s.monize);
+  origin(s.artha);
   origin(s.distributor);
   const key = createECDH("prime256v1");
   key.setPrivateKey(Buffer.from(s.privateKey, "base64url"));
@@ -88,8 +88,8 @@ async function api(
   body,
   fetcher = fetch,
 ) {
-  // Credentials go only to the explicitly configured Monize origin. Never follow redirects.
-  const res = await fetcher(`${state.monize}/api/v1/push/${path}`, {
+  // Credentials go only to the explicitly configured Artha origin. Never follow redirects.
+  const res = await fetcher(`${state.artha}/api/v1/push/${path}`, {
     method,
     headers: { ...credentials(session), "Content-Type": "application/json" },
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
@@ -98,7 +98,7 @@ async function api(
   });
   if (!res.ok) {
     await res.body?.cancel();
-    fail(`MONIZE_HTTP_${res.status}`);
+    fail(`ARTHA_HTTP_${res.status}`);
   }
   return res.status === 204 ? null : JSON.parse(await boundedText(res));
 }
@@ -118,7 +118,7 @@ async function register(state, session, fetcher = fetch) {
       auth: state.auth,
       applicationServerKey: config.publicKey,
       transport: "unifiedpush",
-      deviceName: "Monize ntfy CLI",
+      deviceName: "Artha ntfy CLI",
     },
     fetcher,
   );
@@ -166,12 +166,12 @@ function decryptEvent(state, event) {
     typeof payload.target === "string" &&
     /^\/(?!\/)/.test(payload.target) &&
     !/[\\\x00-\x20]/.test(payload.target)
-      ? new URL(payload.target, state.monize)
-      : new URL("/", state.monize);
+      ? new URL(payload.target, state.artha)
+      : new URL("/", state.artha);
   return {
     title: payload.title,
     body: payload.body,
-    target: target.origin === state.monize ? target.href : `${state.monize}/`,
+    target: target.origin === state.artha ? target.href : `${state.artha}/`,
   };
 }
 async function poll(state, receive, checkpoint, fetcher = fetch) {

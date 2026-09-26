@@ -15,7 +15,7 @@ export class McpFinancialSummaryResource {
   register(server: McpServer) {
     server.registerResource(
       "financial-summary",
-      "monize://financial-summary",
+      "artha://financial-summary",
       {
         // Live data: a cached answer here is a stale figure, not a stale name.
         cacheHint: { ttlMs: 0, cacheScope: "private" },
@@ -29,7 +29,7 @@ export class McpFinancialSummaryResource {
           return {
             contents: [
               {
-                uri: "monize://financial-summary",
+                uri: "artha://financial-summary",
                 text: "Error: No user context",
               },
             ],
@@ -39,7 +39,7 @@ export class McpFinancialSummaryResource {
           return {
             contents: [
               {
-                uri: "monize://financial-summary",
+                uri: "artha://financial-summary",
                 text: 'Error: Insufficient scope. Requires "read" scope.',
               },
             ],
@@ -76,7 +76,7 @@ export class McpFinancialSummaryResource {
           return {
             contents: [
               {
-                uri: "monize://financial-summary",
+                uri: "artha://financial-summary",
                 mimeType: "application/json",
                 text: JSON.stringify(
                   {
@@ -96,7 +96,7 @@ export class McpFinancialSummaryResource {
           return {
             contents: [
               {
-                uri: "monize://financial-summary",
+                uri: "artha://financial-summary",
                 text: "Error: An error occurred while loading financial summary",
               },
             ],

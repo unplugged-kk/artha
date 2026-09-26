@@ -7,7 +7,7 @@ import { resolveUserContext, hasScope } from "../mcp-context";
 /**
  * Serves attachments a user uploaded with a relayed chat prompt. The browser
  * stores the bytes in the in-memory RelayAttachmentStore and the relayed prompt
- * (get_next_prompt) hands the agent a `monize-attachment://<id>` URI per file;
+ * (get_next_prompt) hands the agent a `artha-attachment://<id>` URI per file;
  * the agent reads that URI here before answering. Images are returned as a
  * base64 blob; text/CSV and text-extractable PDFs are returned as text. A PDF
  * with no text layer (scanned/image-only) or one pdf-parse cannot read falls
@@ -27,13 +27,13 @@ export class McpRelayAttachmentResource {
       "relay-attachment",
       // Templated, with no list callback: attachments are ephemeral and
       // per-prompt, so they must not appear in resources/list.
-      new ResourceTemplate("monize-attachment://{id}", { list: undefined }),
+      new ResourceTemplate("artha-attachment://{id}", { list: undefined }),
       {
         // Live data: a cached answer here is a stale figure, not a stale name.
         cacheHint: { ttlMs: 0, cacheScope: "private" },
         title: "Chat attachment",
         description:
-          "A file the user uploaded with their current chat prompt. Read the monize-attachment:// URI from get_next_prompt's attachments to view an image or PDF.",
+          "A file the user uploaded with their current chat prompt. Read the artha-attachment:// URI from get_next_prompt's attachments to view an image or PDF.",
       },
       async (uri, variables, ctx) => {
         const user = resolveUserContext(ctx);

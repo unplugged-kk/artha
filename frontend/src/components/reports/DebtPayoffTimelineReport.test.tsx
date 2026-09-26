@@ -1023,7 +1023,7 @@ describe('DebtPayoffTimelineReport', () => {
 
   it('restores the persisted account selection instead of the first account', async () => {
     window.localStorage.setItem(
-      'monize-reports-debt-payoff-timeline-account',
+      'artha-reports-debt-payoff-timeline-account',
       JSON.stringify('loan-2'),
     );
     mockGetAllAccounts.mockResolvedValue([
@@ -1062,7 +1062,7 @@ describe('DebtPayoffTimelineReport', () => {
 
   it('falls back to the first account when the persisted one is gone', async () => {
     window.localStorage.setItem(
-      'monize-reports-debt-payoff-timeline-account',
+      'artha-reports-debt-payoff-timeline-account',
       JSON.stringify('deleted-loan'),
     );
     mockGetAllAccounts.mockResolvedValue([{

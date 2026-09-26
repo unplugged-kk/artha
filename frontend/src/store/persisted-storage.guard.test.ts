@@ -20,15 +20,15 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 const PERSISTED_STORE_KEYS: Record<string, string> = {
   'auth-storage':
     'pre-login: the isAuthenticated flag alone. The profile is refetched from the API, the token lives in an httpOnly cookie.',
-  'monize-preferences':
+  'artha-preferences':
     'pre-login: null until a session loads preferences; display settings only, cleared by logout().',
-  'monize:ai-chat-messages':
+  'artha:ai-chat-messages':
     'authenticated only: written after login, removed by logout() so conversations do not cross accounts.',
-  'monize-density':
+  'artha-density':
     'authenticated only: the store is imported by the list components, none of which the login page renders. One of three row-density levels -- a fact about the screen, not the account, so it survives logout deliberately.',
-  'monize-register-date-display':
+  'artha-register-date-display':
     'authenticated only: imported by the transaction register, which the login page never renders. A single boolean (drop the year from register dates on phone widths) -- a fact about the screen, not the account, so it survives logout deliberately.',
-  'monize-settings-sections':
+  'artha-settings-sections':
     'authenticated only: imported by the Settings page, which no unauthenticated route renders. One boolean per named Settings section, saying whether the reader has folded it away -- a fact about the screen, not the account, so it survives logout deliberately. It names sections, never their contents.',
 };
 
@@ -36,7 +36,7 @@ const PERSISTED_STORE_KEYS: Record<string, string> = {
 // entries ZAP reports on /login.
 const PRE_LOGIN_FOOTPRINT: Record<string, string> = {
   'auth-storage': '{"state":{"isAuthenticated":false},"version":0}',
-  'monize-preferences': '{"state":{"preferences":null},"version":0}',
+  'artha-preferences': '{"state":{"preferences":null},"version":0}',
 };
 
 const STORE_DIR = path.join(process.cwd(), 'src', 'store');

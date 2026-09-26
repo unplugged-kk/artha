@@ -13,7 +13,7 @@ import {
 import { APP_ROLE_ATTRIBUTES, APP_ROLE_UPSERT_SQL } from "./app-role";
 
 const SAFE: RuntimeRoleFacts = {
-  currentUser: "monize_app",
+  currentUser: "artha_app",
   directForbiddenAttributes: [],
   ownsDatabase: false,
   ownedPoliciedTables: 0,
@@ -33,7 +33,7 @@ const pgQuerier = (row: Record<string, unknown>) => ({
 });
 
 const SAFE_ROW = {
-  current_user_name: "monize_app",
+  current_user_name: "artha_app",
   rolsuper: false,
   rolbypassrls: false,
   rolreplication: false,
@@ -48,7 +48,7 @@ const SAFE_ROW = {
 
 describe("runtimeRoleViolations", () => {
   it("accepts an unprivileged non-owner role", () => {
-    expect(runtimeRoleViolations(SAFE, "monize_app")).toEqual([]);
+    expect(runtimeRoleViolations(SAFE, "artha_app")).toEqual([]);
   });
 
   // Each of these is a role PostgreSQL exempts from every policy, which is what
@@ -84,7 +84,7 @@ describe("runtimeRoleViolations", () => {
   ])("rejects %s", (_label, override, expected) => {
     const violations = runtimeRoleViolations(
       { ...SAFE, ...(override as Partial<RuntimeRoleFacts>) },
-      "monize_app",
+      "artha_app",
     );
 
     expect(violations).toHaveLength(1);
@@ -92,15 +92,15 @@ describe("runtimeRoleViolations", () => {
   });
 
   it("rejects a connection authenticated as a different role than configured", () => {
-    // The operator asked for monize_app; the pool handed us the owner. Selecting
+    // The operator asked for artha_app; the pool handed us the owner. Selecting
     // a username is not the same as connecting under it.
     const violations = runtimeRoleViolations(
-      { ...SAFE, currentUser: "monize" },
-      "monize_app",
+      { ...SAFE, currentUser: "artha" },
+      "artha_app",
     );
 
     expect(violations).toEqual([
-      'connected as "monize" but DATABASE_APP_USER names "monize_app"',
+      'connected as "artha" but DATABASE_APP_USER names "artha_app"',
     ]);
   });
 
@@ -109,15 +109,15 @@ describe("runtimeRoleViolations", () => {
     // next one on the following restart.
     const violations = runtimeRoleViolations(
       {
-        currentUser: "monize",
+        currentUser: "artha",
         directForbiddenAttributes: ["SUPERUSER", "BYPASSRLS", "REPLICATION"],
         ownsDatabase: true,
         ownedPoliciedTables: 53,
-        exemptReachableContexts: ["monize"],
-        inheritedOwnerRoles: ["monize"],
+        exemptReachableContexts: ["artha"],
+        inheritedOwnerRoles: ["artha"],
         inheritedForbiddenRoles: ["pg_execute_server_program"],
       },
-      "monize_app",
+      "artha_app",
     );
 
     // wrong-role + 3 attributes + owns-db + owns-tables + inherited-owner +
@@ -132,12 +132,12 @@ describe("runtimeRoleViolations -- exempt role membership (DR-V2)", () => {
     // membership in the owner (or in any BYPASSRLS role) passes every other
     // check while being one statement away from seeing every tenant.
     const violations = runtimeRoleViolations(
-      { ...SAFE, exemptReachableContexts: ["monize", "rds_superuser"] },
-      "monize_app",
+      { ...SAFE, exemptReachableContexts: ["artha", "rds_superuser"] },
+      "artha_app",
     );
 
     expect(violations).toHaveLength(1);
-    expect(violations[0]).toContain('"monize"');
+    expect(violations[0]).toContain('"artha"');
     expect(violations[0]).toContain('"rds_superuser"');
     expect(violations[0]).toContain("SET ROLE");
   });
@@ -150,7 +150,7 @@ describe("runtimeRoleViolations -- exempt role membership (DR-V2)", () => {
     // passed startup.
     const violations = runtimeRoleViolations(
       { ...SAFE, directForbiddenAttributes: ["REPLICATION"] },
-      "monize_app",
+      "artha_app",
     );
 
     expect(violations).toHaveLength(1);
@@ -164,7 +164,7 @@ describe("runtimeRoleViolations -- exempt role membership (DR-V2)", () => {
     // of pg_execute_server_program ran COPY ... TO PROGRAM and wrote a host file.
     const violations = runtimeRoleViolations(
       { ...SAFE, inheritedForbiddenRoles: ["pg_execute_server_program"] },
-      "monize_app",
+      "artha_app",
     );
 
     expect(violations).toHaveLength(1);
@@ -183,7 +183,7 @@ describe("runtimeRoleViolations -- exempt role membership (DR-V2)", () => {
     // actually granted, from the same list the SQL is generated from.
     const signal = runtimeRoleViolations(
       { ...SAFE, inheritedForbiddenRoles: ["pg_signal_backend"] },
-      "monize_app",
+      "artha_app",
     );
     expect(signal).toHaveLength(1);
     expect(signal[0]).toContain('"pg_signal_backend"');
@@ -200,7 +200,7 @@ describe("runtimeRoleViolations -- exempt role membership (DR-V2)", () => {
     // the last two and sent operators chasing an RLS problem that was not there.
     const violations = runtimeRoleViolations(
       { ...SAFE, exemptReachableContexts: ["repl_bridge"] },
-      "monize_app",
+      "artha_app",
     );
 
     expect(violations).toHaveLength(1);
@@ -213,7 +213,7 @@ describe("runtimeRoleViolations -- exempt role membership (DR-V2)", () => {
     // The query only reports memberships that are themselves exempt, so an
     // unrelated group grant is not a finding -- reporting it would train the
     // operator to ignore the message.
-    expect(runtimeRoleViolations(SAFE, "monize_app")).toEqual([]);
+    expect(runtimeRoleViolations(SAFE, "artha_app")).toEqual([]);
   });
 
   it("asks the database about membership rather than assuming none", () => {
@@ -230,12 +230,12 @@ describe("runtimeRoleViolations -- exempt role membership (DR-V2)", () => {
     // a live server -- `GRANT owner TO app WITH INHERIT TRUE, SET FALSE` yields
     // SET=false, USAGE=true, row_security_active=false, and every tenant's rows.
     const violations = runtimeRoleViolations(
-      { ...SAFE, inheritedOwnerRoles: ["monize_owner"] },
-      "monize_app",
+      { ...SAFE, inheritedOwnerRoles: ["artha_owner"] },
+      "artha_app",
     );
 
     expect(violations).toHaveLength(1);
-    expect(violations[0]).toContain('"monize_owner"');
+    expect(violations[0]).toContain('"artha_owner"');
     expect(violations[0]).toContain("inherits the privileges");
     // The remedy differs from a revoke, so the message has to say so.
     expect(violations[0]).toContain("INHERIT FALSE");
@@ -245,10 +245,10 @@ describe("runtimeRoleViolations -- exempt role membership (DR-V2)", () => {
     const violations = runtimeRoleViolations(
       {
         ...SAFE,
-        inheritedOwnerRoles: ["monize_owner"],
+        inheritedOwnerRoles: ["artha_owner"],
         exemptReachableContexts: ["some_superuser"],
       },
-      "monize_app",
+      "artha_app",
     );
 
     expect(violations).toHaveLength(2);
@@ -416,16 +416,16 @@ describe("readRuntimeRoleFacts", () => {
     expect(empty.exemptReachableContexts).toEqual([]);
     expect(empty.inheritedOwnerRoles).toEqual([]);
     expect(empty.inheritedForbiddenRoles).toEqual([]);
-    expect(runtimeRoleViolations(empty, "monize_app")).toEqual([]);
+    expect(runtimeRoleViolations(empty, "artha_app")).toEqual([]);
 
     const filled = await readRuntimeRoleFacts(
       arrayQuerier({
         ...SAFE_ROW,
-        exempt_reachable_contexts: '{monize,"odd role"}',
+        exempt_reachable_contexts: '{artha,"odd role"}',
       }),
     );
-    expect(filled.exemptReachableContexts).toEqual(["monize", "odd role"]);
-    expect(runtimeRoleViolations(filled, "monize_app")).toHaveLength(1);
+    expect(filled.exemptReachableContexts).toEqual(["artha", "odd role"]);
+    expect(runtimeRoleViolations(filled, "artha_app")).toHaveLength(1);
   });
 
   it("asks the database for a text[], not the name[] array_agg defaults to", () => {
@@ -474,7 +474,7 @@ describe("assertRuntimeRoleSafe", () => {
       const querier = arrayQuerier(SAFE_ROW);
 
       await expect(
-        assertRuntimeRoleSafe(querier, { mode, appUser: "monize_app" }),
+        assertRuntimeRoleSafe(querier, { mode, appUser: "artha_app" }),
       ).resolves.toBeNull();
       // Those modes connect as the owner deliberately; a check there would
       // fail every existing deployment.
@@ -486,12 +486,12 @@ describe("assertRuntimeRoleSafe", () => {
     await expect(
       assertRuntimeRoleSafe(arrayQuerier(SAFE_ROW), {
         mode: "enforce",
-        appUser: "monize_app",
+        appUser: "artha_app",
       }),
     ).resolves.toEqual(SAFE);
   });
 
-  it("defaults the expected role name to monize_app", async () => {
+  it("defaults the expected role name to artha_app", async () => {
     await expect(
       assertRuntimeRoleSafe(arrayQuerier(SAFE_ROW), {
         mode: "enforce",
@@ -513,7 +513,7 @@ describe("assertRuntimeRoleSafe", () => {
     await expect(
       assertRuntimeRoleSafe(arrayQuerier({ ...SAFE_ROW, rolbypassrls: true }), {
         mode: "enforce",
-        appUser: "monize_app",
+        appUser: "artha_app",
       }),
     ).rejects.toThrow(
       /RLS_MODE=enforce requires an unprivileged, non-owner runtime role[\s\S]*NOBYPASSRLS/,
@@ -526,7 +526,7 @@ describe("assertRuntimeRoleSafe", () => {
         arrayQuerier({ ...SAFE_ROW, owns_database: true }),
         {
           mode: "enforce",
-          appUser: "monize_app",
+          appUser: "artha_app",
         },
       ),
     ).rejects.toThrow(/owns this database/);
@@ -559,17 +559,17 @@ describe("readNamedRoleFacts", () => {
   it("passes the role name as a parameter and reads the same facts", async () => {
     const querier = arrayQuerier(SAFE_ROW);
 
-    await expect(readNamedRoleFacts(querier, "monize_app")).resolves.toEqual(
+    await expect(readNamedRoleFacts(querier, "artha_app")).resolves.toEqual(
       SAFE,
     );
     expect(querier.query).toHaveBeenCalledWith(NAMED_ROLE_FACTS_SQL, [
-      "monize_app",
+      "artha_app",
     ]);
   });
 
   it("reads the { rows } result shape pg returns", async () => {
     await expect(
-      readNamedRoleFacts(pgQuerier(SAFE_ROW), "monize_app"),
+      readNamedRoleFacts(pgQuerier(SAFE_ROW), "artha_app"),
     ).resolves.toEqual(SAFE);
   });
 
@@ -583,14 +583,14 @@ describe("readNamedRoleFacts", () => {
 });
 
 describe("assertRuntimeRoleSafeByName", () => {
-  it("accepts a safe role and defaults the name to monize_app", async () => {
+  it("accepts a safe role and defaults the name to artha_app", async () => {
     const querier = arrayQuerier(SAFE_ROW);
 
     await expect(
       assertRuntimeRoleSafeByName(querier, { appUser: undefined }),
     ).resolves.toBeUndefined();
     expect(querier.query).toHaveBeenCalledWith(NAMED_ROLE_FACTS_SQL, [
-      "monize_app",
+      "artha_app",
     ]);
   });
 
@@ -598,9 +598,9 @@ describe("assertRuntimeRoleSafeByName", () => {
     await expect(
       assertRuntimeRoleSafeByName(
         { query: jest.fn().mockResolvedValue([]) },
-        { appUser: "monize_app" },
+        { appUser: "artha_app" },
       ),
-    ).rejects.toThrow(/requires the runtime role 'monize_app' to exist/);
+    ).rejects.toThrow(/requires the runtime role 'artha_app' to exist/);
   });
 
   it.each([
@@ -611,14 +611,14 @@ describe("assertRuntimeRoleSafeByName", () => {
     ["a REPLICATION role", { rolreplication: true }],
     ["the database owner", { owns_database: true }],
     ["an owner of policied tables", { owned_policied_tables: "2" }],
-    ["an inherited owner", { inherited_owner_roles: ["monize"] }],
+    ["an inherited owner", { inherited_owner_roles: ["artha"] }],
     [
       "a forbidden predefined-role member",
       { inherited_forbidden_roles: ["pg_execute_server_program"] },
     ],
     [
       "a role with an exempt reachable context",
-      { exempt_reachable_contexts: ["monize"] },
+      { exempt_reachable_contexts: ["artha"] },
     ],
   ])(
     "gives the same verdict as the runtime check on %s",
@@ -632,13 +632,13 @@ describe("assertRuntimeRoleSafeByName", () => {
 
       await expect(
         assertRuntimeRoleSafeByName(arrayQuerier(row), {
-          appUser: "monize_app",
+          appUser: "artha_app",
         }),
       ).rejects.toThrow(/RLS_MODE=enforce requires an unprivileged/);
       await expect(
         assertRuntimeRoleSafe(arrayQuerier(row), {
           mode: "enforce",
-          appUser: "monize_app",
+          appUser: "artha_app",
         }),
       ).rejects.toThrow(/RLS_MODE=enforce requires an unprivileged/);
     },
@@ -648,7 +648,7 @@ describe("assertRuntimeRoleSafeByName", () => {
     await expect(
       assertRuntimeRoleSafeByName(
         arrayQuerier({ ...SAFE_ROW, rolsuper: true, owns_database: true }),
-        { appUser: "monize_app" },
+        { appUser: "artha_app" },
       ),
     ).rejects.toThrow(/SUPERUSER[\s\S]*owns this database/);
   });

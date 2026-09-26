@@ -11,7 +11,7 @@ The server writes files in two places: attachment bytes under the local
 filesystem provider, and each user's automatic backups.
 
 Automatic backup filenames carry only a tier and a date --
-`monize-backup-daily-2026-08-03.json.gz`. In a flat shared folder that gave every
+`artha-backup-daily-2026-08-03.json.gz`. In a flat shared folder that gave every
 user the same name for the same day. Whoever's cron ran last overwrote the rest,
 and one user's retention pass deleted another user's files. Both effects are
 silent: the backup reports success, and the loss is discovered only when a
@@ -37,7 +37,7 @@ consumers differ in both, deliberately, and conflating them has consequences:
 
 ```text
 Automatic backups   -- shard key is the USER id, terminal segment is a DIRECTORY
-<base>/<ab>/<cd>/<userId>/monize-backup-daily-2026-08-03.json.gz
+<base>/<ab>/<cd>/<userId>/artha-backup-daily-2026-08-03.json.gz
 
 Local attachments   -- shard key is the ATTACHMENT id, terminal segment is a FILE
 <base>/<ab>/<cd>/<attachmentId>

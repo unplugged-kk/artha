@@ -302,7 +302,7 @@ describe('InvestmentPerformanceReport', () => {
 
   it('restores the persisted account selection', async () => {
     window.localStorage.setItem(
-      'monize-reports-investment-performance-accounts',
+      'artha-reports-investment-performance-accounts',
       JSON.stringify(['acc-1']),
     );
     mockGetPortfolioSummary.mockResolvedValue(fullPortfolio);
@@ -315,7 +315,7 @@ describe('InvestmentPerformanceReport', () => {
 
   it('drops persisted account IDs that no longer exist once accounts load', async () => {
     window.localStorage.setItem(
-      'monize-reports-investment-performance-accounts',
+      'artha-reports-investment-performance-accounts',
       JSON.stringify(['acc-1', 'gone']),
     );
     mockGetPortfolioSummary.mockResolvedValue(fullPortfolio);
@@ -323,7 +323,7 @@ describe('InvestmentPerformanceReport', () => {
     render(<InvestmentPerformanceReport />);
     await waitFor(() => {
       expect(
-        window.localStorage.getItem('monize-reports-investment-performance-accounts'),
+        window.localStorage.getItem('artha-reports-investment-performance-accounts'),
       ).toBe(JSON.stringify(['acc-1']));
     });
   });

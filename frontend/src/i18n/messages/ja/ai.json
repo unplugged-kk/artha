@@ -225,7 +225,7 @@
     "step3": "エージェントループを開始して、Claude が Artha からのクエリを待機するようにします:",
     "loopPrompt": "Loop forever: call get_next_prompt; if hasPrompt is false, call it again; otherwise handle the request with the Artha tools and call post_response with the answer; then repeat.",
     "codexHeading": "または Codex を使う",
-    "codexNote": "これを ~/.codex/config.toml に追加し、MONIZE_TOKEN にトークンを設定してから codex を実行し、上記のプロンプトを貼り付けてください。",
+    "codexNote": "これを ~/.codex/config.toml に追加し、ARTHA_TOKEN にトークンを設定してから codex を実行し、上記のプロンプトを貼り付けてください。",
     "copy": "コピー",
     "copied": "クリップボードにコピーしました"
   }

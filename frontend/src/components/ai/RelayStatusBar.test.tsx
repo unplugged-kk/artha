@@ -49,7 +49,7 @@ describe('RelayStatusBar', () => {
       fireEvent.click(screen.getByText('How to connect'));
     });
     expect(
-      screen.getByText(/claude mcp add --transport http monize/),
+      screen.getByText(/claude mcp add --transport http artha/),
     ).toBeInTheDocument();
     expect(screen.getByText(/Loop forever: call get_next_prompt/)).toBeInTheDocument();
   });

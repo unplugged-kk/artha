@@ -5,7 +5,7 @@ import { describe, it, expect } from 'vitest';
  * truth for every figure addressed to a user, the way `useDateFormat()` is for
  * dates.
  *
- * Monize has had a preference-aware formatter (`useNumberFormat()`) and a
+ * Artha has had a preference-aware formatter (`useNumberFormat()`) and a
  * preference-blind one (`@/lib/format`) side by side for a long time, and the
  * second is the one a component reaches for when the first needs a hook. So a
  * Polish user with `numberFormat: 'pl-PL'` read `zl18,812.71` on the Securities

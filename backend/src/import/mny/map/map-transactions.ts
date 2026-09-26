@@ -26,7 +26,7 @@ import { MnyTransactionData } from "../tables/read-transactions";
 import { TransferIndex, indexTransfers } from "./map-transfers";
 
 /**
- * `TRN`, `TRN_SPLIT` and `TRN_XFER` mapped onto Monize transactions.
+ * `TRN`, `TRN_SPLIT` and `TRN_XFER` mapped onto Artha transactions.
  *
  * The two rules that carry the most history:
  *
@@ -41,7 +41,7 @@ import { TransferIndex, indexTransfers } from "./map-transfers";
  * **A split leg that is really a transfer stays a transfer.** PR #192 imported
  * every `TRN_SPLIT` child as a category-only row, so the principal leg of a loan
  * payment lost its transfer nature and showed blank. Here a child that appears
- * in `TRN_XFER` becomes a Monize transfer split pointing at the counterpart
+ * in `TRN_XFER` becomes a Artha transfer split pointing at the counterpart
  * transaction, which is imported exactly once as an ordinary row in the loan
  * account and links back to the *parent* payment -- the same wiring
  * `TransactionSplitService` produces for a hand-entered transfer split.
@@ -51,14 +51,14 @@ export interface MapTransactionsInput {
   readonly transactions: MnyTransactionData;
   /** Money `hacct` -> account key, from `mapAccounts`. Absent = not imported. */
   readonly accountKeyByHandle: ReadonlyMap<number, string>;
-  /** Money `hacct` -> the Monize account's currency. */
+  /** Money `hacct` -> the Artha account's currency. */
   readonly currencyByHandle: ReadonlyMap<number, string>;
   /** `BILL` rows, so their template transactions are not imported as postings. */
   readonly bills: readonly MnyBill[];
   /**
    * Brokerage account key -> its linked cash sleeve, from `mapAccounts`. A
    * transfer whose far side is an investment row lands in the sleeve, because
-   * that is where Monize keeps a brokerage's cash.
+   * that is where Artha keeps a brokerage's cash.
    */
   readonly cashKeyByAccountKey: ReadonlyMap<string, string>;
   /**
@@ -134,7 +134,7 @@ interface Indexes {
   readonly billTemplates: ReadonlySet<number>;
   readonly transfers: TransferIndex;
   /**
-   * Rows that are Money's own copy of a trade's cash leg, which Monize writes
+   * Rows that are Money's own copy of a trade's cash leg, which Artha writes
    * from the investment transaction instead. See `classifyTradeCashSides`.
    */
   readonly tradeCashLegs: ReadonlySet<number>;
@@ -240,7 +240,7 @@ function isPostingRow(
 
 /**
  * Whether a row is a real posting worth importing as a banking transaction:
- * a posting that Monize is not already writing from somewhere else.
+ * a posting that Artha is not already writing from somewhere else.
  */
 function isImportablePosting(
   row: MnyTransaction,
@@ -258,13 +258,13 @@ function isImportablePosting(
  * pairings.
  *
  * Money records the cash half of a trade as an ordinary `TRN` row paired to the
- * investment row. There are three shapes, and Monize has a distinct model for
+ * investment row. There are three shapes, and Artha has a distinct model for
  * each -- the whole point of this function is that they are one question asked
  * once rather than three predicates that can disagree:
  *
  * **The trade's own sleeve (issue #1175).** Money keeps an investment account's
  * cash in a companion account and writes the cash side there -- `act` 1 does it
- * 2,015 times in 2,029, `act` 3 1,090 in 1,090. Monize writes that row itself
+ * 2,015 times in 2,029, `act` 3 1,090 in 1,090. Artha writes that row itself
  * from the trade's `cashAmount`, linked through
  * `investment_transactions.transaction_id`, so importing Money's copy as well
  * put the same payment in the register three times: the purchase, a transfer in
@@ -466,7 +466,7 @@ function buildCashCounterparts(
   return counterparts;
 }
 
-/** The Monize account a row's transaction belongs in, or null when not imported. */
+/** The Artha account a row's transaction belongs in, or null when not imported. */
 function accountKeyOf(
   row: MnyTransaction | null,
   input: MapTransactionsInput,
@@ -480,7 +480,7 @@ function accountKeyOf(
  * The transaction id a transfer counterpart should point at.
  *
  * When the counterpart is itself a split leg, the link goes to that leg's
- * **parent** transaction -- Monize records the split's own leg on
+ * **parent** transaction -- Artha records the split's own leg on
  * `transaction_splits.linked_transaction_id`, and the far side points back at the
  * parent payment.
  */
@@ -572,7 +572,7 @@ function mapSplitChild(
  * The trade whose two-leg split this row can be collapsed into, or null.
  *
  * Money records a CD redemption that paid accrued interest as a split: the
- * investment leg for the principal, a second leg for the interest. Monize keeps
+ * investment leg for the principal, a second leg for the interest. Artha keeps
  * the interest on the redemption's own INTEREST companion, so the split has no
  * remaining purpose and the parent becomes the trade's single cash row.
  *
@@ -644,7 +644,7 @@ function mapOne(
     context,
   );
   // A redemption Money wrote as principal + interest is one movement of money
-  // in Monize: the interest lives on the trade's INTEREST companion, so this
+  // in Artha: the interest lives on the trade's INTEREST companion, so this
   // row records the whole payout and the trade adopts it.
   const splits = collapsedTradeHandle === null ? allSplits : [];
 
@@ -665,7 +665,7 @@ function mapOne(
 
   // A split parent is never itself a transfer: its transfer legs are splits.
   // Neither is a row funding a trade in another account -- Money pairs it with
-  // the trade, but in Monize that row *is* the trade's cash leg (issue #1212).
+  // the trade, but in Artha that row *is* the trade's cash leg (issue #1212).
   const partner =
     splits.length > 0 || context.externalFunders.has(handle)
       ? null
@@ -721,7 +721,7 @@ function mapOne(
  * Rows a real posting could not be made of, reported once each.
  *
  * A `tradeCashLegs` row is not one of them and deliberately raises nothing: it
- * is a perfectly usable posting that Monize writes from the trade instead, so
+ * is a perfectly usable posting that Artha writes from the trade instead, so
  * counting it as skipped would report data loss that did not happen. Its own
  * count travels as `MappedTransactions.tradeCashLegs`.
  */

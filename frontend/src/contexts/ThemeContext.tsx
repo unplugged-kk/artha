@@ -21,8 +21,8 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-const THEME_KEY = 'monize-theme';
-const COLOR_THEME_KEY = 'monize-color-theme';
+const THEME_KEY = 'artha-theme';
+const COLOR_THEME_KEY = 'artha-color-theme';
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>('system');

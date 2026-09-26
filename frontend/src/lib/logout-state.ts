@@ -13,7 +13,7 @@
  * belongs to this browsing session, and a closed tab has taken the risk with it
  * as far as this client can tell.
  */
-const KEY = 'monize:logout-incomplete';
+const KEY = 'artha:logout-incomplete';
 
 export function markLogoutIncomplete(): void {
   try {

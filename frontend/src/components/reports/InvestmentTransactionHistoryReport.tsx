@@ -50,7 +50,7 @@ interface ActionSummary {
   excludedCount: number;
 }
 
-const ACCOUNTS_STORAGE_KEY = 'monize-reports-investment-transactions-accounts';
+const ACCOUNTS_STORAGE_KEY = 'artha-reports-investment-transactions-accounts';
 
 export function InvestmentTransactionHistoryReport() {
   const t = useTranslations('reports');

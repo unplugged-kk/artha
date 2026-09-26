@@ -1,5 +1,5 @@
 /**
- * Single source of truth for the languages Monize supports in the UI.
+ * Single source of truth for the languages Artha supports in the UI.
  *
  * To add a new language, add an entry to SUPPORTED_LOCALES and create a
  * matching messages folder at `src/i18n/messages/{code}/` (copy from `en/`

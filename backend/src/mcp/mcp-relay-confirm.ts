@@ -35,5 +35,5 @@ export function emitRelayCard(
 export const RELAY_PREVIEW_SHOWN = {
   status: "preview_shown",
   message:
-    "A confirmation card was shown to the user in the Monize web chat. The action has NOT been performed yet -- it is applied only when the user approves the card there. Do not retry or say it is done; tell the user to review and approve the card.",
+    "A confirmation card was shown to the user in the Artha web chat. The action has NOT been performed yet -- it is applied only when the user approves the card there. Do not retry or say it is done; tell the user to review and approve the card.",
 } as const;

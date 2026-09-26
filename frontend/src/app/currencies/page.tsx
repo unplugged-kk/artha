@@ -46,8 +46,8 @@ function CurrenciesContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('active');
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortField, setSortField] = useLocalStorage<CurrencySortField>('monize-currencies-sort-field', 'code');
-  const [sortDirection, setSortDirection] = useLocalStorage<SortDirection>('monize-currencies-sort-dir', 'asc');
+  const [sortField, setSortField] = useLocalStorage<CurrencySortField>('artha-currencies-sort-field', 'code');
+  const [sortDirection, setSortDirection] = useLocalStorage<SortDirection>('artha-currencies-sort-dir', 'asc');
 
   const { defaultCurrency, getRate, refresh: refreshRates } = useExchangeRates();
 
@@ -226,7 +226,7 @@ function CurrenciesContent() {
         <PageHeader
           title={t('page.title')}
           subtitle={t('page.subtitle')}
-          helpUrl="https://github.com/kenlasko/monize/wiki/Currency-Management"
+          helpUrl="https://github.com/unplugged-kk/artha/wiki/Currency-Management"
           actions={
             <div className="flex gap-2">
               <Button

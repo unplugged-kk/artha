@@ -102,7 +102,7 @@ export type SecuritySortField =
 /**
  * Every field this list sorts by, with its position in the tier header's own
  * order. The phone's slim control header renders all nine: the chosen field is
- * persisted (`monize-securities-sort-field`, set on the Securities page) and
+ * persisted (`artha-securities-sort-field`, set on the Securities page) and
  * four of the nine columns are invisible at phone width (Exchange and Currency
  * below `sm`, Provider and Source below `md`), so a header offering fewer would
  * strand a phone on a sort order it can neither see nor undo. Favourite, Status

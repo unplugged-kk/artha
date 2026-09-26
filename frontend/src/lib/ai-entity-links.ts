@@ -1,7 +1,7 @@
 /**
  * Entity deep-links emitted by the AI assistant (both the native LLM path and
  * the MCP web-chat relay). The model formats entity mentions as markdown links
- * with a structured `monize://<entity-type>/<uuid>` href; this module is the
+ * with a structured `artha://<entity-type>/<uuid>` href; this module is the
  * single place that decides where those links actually navigate. Keeping the
  * mapping client-side means the AI contract stays stable if a destination
  * changes (e.g. a future dedicated payee page), and the strict parse means a
@@ -19,24 +19,24 @@
 export const AI_ENTITY_LINK_EVENT = 'ai:entityLinkNavigate';
 
 const ENTITY_URI_REGEX =
-  /^monize:\/\/(account|payee|category|transaction|security|scheduled)\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i;
+  /^artha:\/\/(account|payee|category|transaction|security|scheduled)\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i;
 
-export function isMonizeHref(href: string | undefined): boolean {
-  return typeof href === 'string' && /^monize:/i.test(href);
+export function isArthaHref(href: string | undefined): boolean {
+  return typeof href === 'string' && /^artha:/i.test(href);
 }
 
 /**
  * Collapse markdown links `[label](href)` down to their plain `label` text.
  * Used by compact previews (e.g. the dashboard insights widget) that show a
  * truncated snippet and can't render clickable links, so the raw
- * `[Groceries](monize://category/...)` markup would otherwise leak into the UI.
+ * `[Groceries](artha://category/...)` markup would otherwise leak into the UI.
  */
 export function stripLinkMarkup(text: string): string {
   return text.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1');
 }
 
 /**
- * Map a `monize://` entity URI to its in-app route, or null when the URI is
+ * Map a `artha://` entity URI to its in-app route, or null when the URI is
  * not a valid entity link (unknown type, malformed id, trailing junk).
  * Account/payee/category/transaction resolve to the Transactions page (single-
  * entity filters also surface the matching info sidebar; `targetTransactionId`

@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: monize-frontend
+  name: artha-frontend
   namespace: {{ .Values.global.namespace }}
   labels:
-    {{- include "monize.frontend.labels" . | nindent 4 }}
+    {{- include "artha.frontend.labels" . | nindent 4 }}
     {{- with .Values.frontend.extraLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -13,18 +13,18 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  serviceName: monize-frontend
+  serviceName: artha-frontend
   updateStrategy:
     type: RollingUpdate
   replicas: {{ .Values.frontend.replicas }}
   revisionHistoryLimit: 2
   selector:
     matchLabels:
-      {{- include "monize.frontend.selectorLabels" . | nindent 6 }}
+      {{- include "artha.frontend.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "monize.frontend.labels" . | nindent 8 }}
+        {{- include "artha.frontend.labels" . | nindent 8 }}
         {{- with .Values.frontend.extraLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -35,7 +35,7 @@ spec:
       automountServiceAccountToken: false
       affinity: null
       containers:
-        - name: monize-frontend
+        - name: artha-frontend
           image: "{{ .Values.frontend.image.registry }}/{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
           imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
           {{- with .Values.frontend.securityContext }}

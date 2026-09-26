@@ -11,8 +11,8 @@ import { isColorTheme, type ColorTheme } from './color-themes';
 // The mode cookie carries the *resolved* theme (light|dark), never 'system':
 // the consumers cannot evaluate a media query at manifest-generation time,
 // and the resolved value is what actually painted last.
-export const RESOLVED_THEME_COOKIE = 'monize-resolved-theme';
-export const COLOR_THEME_COOKIE = 'monize-color-theme';
+export const RESOLVED_THEME_COOKIE = 'artha-resolved-theme';
+export const COLOR_THEME_COOKIE = 'artha-color-theme';
 
 export type ResolvedTheme = 'light' | 'dark';
 

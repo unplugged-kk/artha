@@ -21,7 +21,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
  * the user is a fact about that screen, so a phone and a desktop signed into
  * the same account should not have to agree.
  */
-export const DATE_DISPLAY_STORAGE_KEY = 'monize-register-date-display';
+export const DATE_DISPLAY_STORAGE_KEY = 'artha-register-date-display';
 
 interface DateDisplayState {
   compactMobileDates: boolean;

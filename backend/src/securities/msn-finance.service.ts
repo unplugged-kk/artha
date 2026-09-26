@@ -37,7 +37,7 @@ const FETCH_TIMEOUT_MS = 10000;
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 const CACHE_MAX_SIZE = 500;
 
-// Monize exchange name → MSN ISO MIC / exchange code.
+// Artha exchange name → MSN ISO MIC / exchange code.
 const EXCHANGE_TO_MSN: Record<string, string> = {
   NASDAQ: "XNAS",
   NYSE: "XNYS",
@@ -635,7 +635,7 @@ export class MsnFinanceService implements QuoteProvider {
       "primaryExchange",
     );
     const exchange =
-      this.mapMsnExchangeToMonize(rawExchange) || this.scanExchangeCode(item);
+      this.mapMsnExchangeToArtha(rawExchange) || this.scanExchangeCode(item);
 
     // Name candidates. Ordering matters: MSN's `DisplayName` is unreliable
     // for mutual funds (it's often the *ticker* like "TDB164", not the
@@ -756,13 +756,13 @@ export class MsnFinanceService implements QuoteProvider {
     return preferred.length;
   }
 
-  private mapMsnExchangeToMonize(
+  private mapMsnExchangeToArtha(
     msnExchange: string | undefined,
   ): string | null {
     if (!msnExchange) return null;
     const upper = msnExchange.toUpperCase();
-    for (const [monize, msn] of Object.entries(EXCHANGE_TO_MSN)) {
-      if (msn === upper) return monize;
+    for (const [artha, msn] of Object.entries(EXCHANGE_TO_MSN)) {
+      if (msn === upper) return artha;
     }
     return msnExchange;
   }
@@ -780,8 +780,8 @@ export class MsnFinanceService implements QuoteProvider {
       if (typeof val !== "string") continue;
       const trimmed = val.trim().toUpperCase();
       if (!/^X[A-Z]{3}$|^[A-Z]{4}$/.test(trimmed)) continue;
-      const monize = this.mapMsnExchangeToMonize(trimmed);
-      if (monize) return monize;
+      const artha = this.mapMsnExchangeToArtha(trimmed);
+      if (artha) return artha;
     }
     return null;
   }

@@ -285,20 +285,20 @@ test("INSERT without ON CONFLICT is flagged; ON CONFLICT and WHERE NOT EXISTS pa
  * execute a fresh SECURITY DEFINER function.
  */
 test("a migration naming a role is flagged; PUBLIC is allowed", () => {
-  flags("CREATE ROLE monize_app LOGIN;", "role-or-grant-statement");
-  flags("ALTER ROLE monize_app NOSUPERUSER;", "role-or-grant-statement");
-  flags("DROP ROLE monize_app;", "role-or-grant-statement");
-  flags("CREATE USER monize_app PASSWORD 'x';", "role-or-grant-statement");
+  flags("CREATE ROLE artha_app LOGIN;", "role-or-grant-statement");
+  flags("ALTER ROLE artha_app NOSUPERUSER;", "role-or-grant-statement");
+  flags("DROP ROLE artha_app;", "role-or-grant-statement");
+  flags("CREATE USER artha_app PASSWORD 'x';", "role-or-grant-statement");
   flags(
-    "GRANT EXECUTE ON FUNCTION f(VARCHAR) TO monize_app;",
+    "GRANT EXECUTE ON FUNCTION f(VARCHAR) TO artha_app;",
     "role-or-grant-statement",
   );
-  flags("GRANT SELECT ON TABLE t TO monize_app;", "role-or-grant-statement");
-  flags("REVOKE ALL ON TABLE t FROM monize_app;", "role-or-grant-statement");
+  flags("GRANT SELECT ON TABLE t TO artha_app;", "role-or-grant-statement");
+  flags("REVOKE ALL ON TABLE t FROM artha_app;", "role-or-grant-statement");
   // A quoted role name is still a named role.
-  flags('GRANT SELECT ON t TO "monize_app";', "role-or-grant-statement");
+  flags('GRANT SELECT ON t TO "artha_app";', "role-or-grant-statement");
   // Role membership is a GRANT naming two roles.
-  flags("GRANT monize_admin TO monize_app;", "role-or-grant-statement");
+  flags("GRANT artha_admin TO artha_app;", "role-or-grant-statement");
 
   clean("REVOKE ALL ON FUNCTION f(VARCHAR) FROM PUBLIC;");
   clean("REVOKE ALL ON FUNCTION f(VARCHAR) FROM public;");
@@ -311,18 +311,18 @@ test("a migration naming a role is flagged; PUBLIC is allowed", () => {
 });
 
 test("every grantee in a list is checked, not just the first", () => {
-  // `FROM PUBLIC, monize_app` names a role exactly as much as `FROM monize_app`
+  // `FROM PUBLIC, artha_app` names a role exactly as much as `FROM artha_app`
   // does; reading only the first entry let the rest of the list through.
   flags(
-    "REVOKE ALL ON TABLE t FROM PUBLIC, monize_app;",
+    "REVOKE ALL ON TABLE t FROM PUBLIC, artha_app;",
     "role-or-grant-statement",
   );
   flags(
-    "GRANT SELECT ON TABLE t TO PUBLIC, monize_app;",
+    "GRANT SELECT ON TABLE t TO PUBLIC, artha_app;",
     "role-or-grant-statement",
   );
   flags(
-    'REVOKE ALL ON TABLE t FROM monize_app, "PUBLIC";',
+    'REVOKE ALL ON TABLE t FROM artha_app, "PUBLIC";',
     "role-or-grant-statement",
   );
   clean("REVOKE ALL ON TABLE t FROM PUBLIC, public;");
@@ -331,26 +331,26 @@ test("every grantee in a list is checked, not just the first", () => {
 test("the other statements that bind a role are flagged too", () => {
   // Each of these fails on an installation where the role does not exist, for
   // the same reason a GRANT does.
-  flags("ALTER TABLE t OWNER TO monize_app;", "role-or-grant-statement");
+  flags("ALTER TABLE t OWNER TO artha_app;", "role-or-grant-statement");
   flags(
-    "ALTER FUNCTION f(VARCHAR) OWNER TO monize_app;",
+    "ALTER FUNCTION f(VARCHAR) OWNER TO artha_app;",
     "role-or-grant-statement",
   );
   flags("REASSIGN OWNED BY old_owner TO new_owner;", "role-or-grant-statement");
-  flags("SET ROLE monize_app;", "role-or-grant-statement");
-  flags("SET LOCAL ROLE monize_app;", "role-or-grant-statement");
-  flags("SET SESSION AUTHORIZATION monize_app;", "role-or-grant-statement");
+  flags("SET ROLE artha_app;", "role-or-grant-statement");
+  flags("SET LOCAL ROLE artha_app;", "role-or-grant-statement");
+  flags("SET SESSION AUTHORIZATION artha_app;", "role-or-grant-statement");
 
   // A policy's TO clause binds it to roles the same way a GRANT does.
   flags(
-    "CREATE POLICY p ON t TO monize_app USING (true);",
+    "CREATE POLICY p ON t TO artha_app USING (true);",
     "role-or-grant-statement",
   );
   flags(
-    "CREATE POLICY p ON t FOR SELECT TO PUBLIC, monize_app USING (true);",
+    "CREATE POLICY p ON t FOR SELECT TO PUBLIC, artha_app USING (true);",
     "role-or-grant-statement",
   );
-  flags("ALTER POLICY p ON t TO monize_app;", "role-or-grant-statement");
+  flags("ALTER POLICY p ON t TO artha_app;", "role-or-grant-statement");
   // TO PUBLIC is the default made explicit; RENAME TO renames the policy, not
   // a role; and a column named granted_to inside the predicate is not a TO
   // clause.

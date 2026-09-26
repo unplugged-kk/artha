@@ -61,7 +61,7 @@ interface FrequencyBucket {
   totalDividends: number;
 }
 
-const ACCOUNTS_STORAGE_KEY = 'monize-reports-dividend-yield-growth-accounts';
+const ACCOUNTS_STORAGE_KEY = 'artha-reports-dividend-yield-growth-accounts';
 
 export function DividendYieldGrowthReport() {
   const t = useTranslations('reports');

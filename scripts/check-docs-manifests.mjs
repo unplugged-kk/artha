@@ -4,7 +4,7 @@
 //
 // The root README told readers to run `docker-compose up -d` against a
 // `docker-compose.yml` this repository has never contained, and `helm/README.md`
-// installed `./helm/monize` when the chart root is `helm/` -- so the documented
+// installed `./helm/artha` when the chart root is `helm/` -- so the documented
 // happy path failed before the application started, in both cases. The Helm
 // default-value tables had drifted too: registry, repository, pull policy and
 // the backend memory limit all disagreed with `helm/values.yaml`, while the
@@ -178,7 +178,7 @@ function checkHelmDefaults(relative, lines, values) {
 
     const actual = values.get(path);
     // An empty value in values.yaml means the effective default is derived in a
-    // template (`global.hostname: ""` becomes `monize.<domain>`), and the table
+    // template (`global.hostname: ""` becomes `artha.<domain>`), and the table
     // documents that derivation rather than the literal. Comparing them would
     // fail on correct documentation.
     if (actual === '') return;

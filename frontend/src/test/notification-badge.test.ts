@@ -113,7 +113,7 @@ describe('push notification badge', () => {
     // present is a badge shaped like its own bounding box.
     expect(opaque).toBeLessThan(alpha.length);
     // And a mask that is mostly present is a square with the corners nibbled.
-    // The Monize mark leaves well over a third of the frame empty.
+    // The Artha mark leaves well over a third of the frame empty.
     expect(transparent / alpha.length).toBeGreaterThan(0.3);
     expect(opaque).toBeGreaterThan(0);
   });

@@ -111,7 +111,7 @@ export function summarise(tables: MnyTables): string[] {
 /**
  * How `TRN.amt` is signed in this file, and every column `TRN` actually has.
  *
- * Monize has no income/expense column -- the sign of `amount` *is* the
+ * Artha has no income/expense column -- the sign of `amount` *is* the
  * direction -- so if Money does not sign `amt`, every row imports as income.
  * No committed fixture contains a single banking transaction, so this cannot be
  * answered from the corpus; it has to be read off a real file. The transfer
@@ -143,7 +143,7 @@ export function signSummary(tables: MnyTables, db: MnyDatabase): string[] {
     `  zero:            ${count((amount) => amount === 0)}`,
     `  transfer sides:  ${transferRows.length} (${transferPositive} positive)`,
     "",
-    "  Monize reads the direction from this sign alone. All-positive means the",
+    "  Artha reads the direction from this sign alone. All-positive means the",
     "  direction is carried by some other column -- these are the ones TRN has:",
     ...(trn
       ? chunkColumns(trn.columnNames).map((line) => `    ${line}`)
@@ -161,7 +161,7 @@ function chunkColumns(names: readonly string[], perLine = 8): string[] {
 }
 
 /**
- * What the mappers make of the file: which Monize accounts it produces, how many
+ * What the mappers make of the file: which Artha accounts it produces, how many
  * transactions land in each, and each account's final balance computed from the
  * file. These are the numbers the verification report reconciles against, so
  * running this against a real file is how a per-account discrepancy gets traced

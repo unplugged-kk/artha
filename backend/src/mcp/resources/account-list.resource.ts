@@ -10,7 +10,7 @@ export class McpAccountListResource {
   register(server: McpServer) {
     server.registerResource(
       "accounts",
-      "monize://accounts",
+      "artha://accounts",
       {
         // Reference data a model reads to resolve a name to an id.
         cacheHint: { ttlMs: 60_000, cacheScope: "private" },
@@ -22,7 +22,7 @@ export class McpAccountListResource {
         if (!user) {
           return {
             contents: [
-              { uri: "monize://accounts", text: "Error: No user context" },
+              { uri: "artha://accounts", text: "Error: No user context" },
             ],
           };
         }
@@ -30,7 +30,7 @@ export class McpAccountListResource {
           return {
             contents: [
               {
-                uri: "monize://accounts",
+                uri: "artha://accounts",
                 text: 'Error: Insufficient scope. Requires "read" scope.',
               },
             ],
@@ -46,7 +46,7 @@ export class McpAccountListResource {
           return {
             contents: [
               {
-                uri: "monize://accounts",
+                uri: "artha://accounts",
                 mimeType: "application/json",
                 text: JSON.stringify({ accounts, summary }, null, 2),
               },
@@ -56,7 +56,7 @@ export class McpAccountListResource {
           return {
             contents: [
               {
-                uri: "monize://accounts",
+                uri: "artha://accounts",
                 text: "Error: An error occurred while loading accounts",
               },
             ],

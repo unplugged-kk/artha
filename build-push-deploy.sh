@@ -1,13 +1,13 @@
 #!/bin/sh
-# This script builds and deploys the Monize backend and frontend to my private Kubernetes registry
-# then restarts the Monize pods to use the new images.
+# This script builds and deploys the Artha backend and frontend to my private Kubernetes registry
+# then restarts the Artha pods to use the new images.
 # THIS IS NOT INTENDED FOR PUBLIC USE. DO NOT USE THIS AS A TEMPLATE FOR YOUR OWN PROJECTS.
 
 set -e
 
-REGISTRY=registry.laskonet.com/monize
+REGISTRY=registry.laskonet.com/artha
 
-cd ~/monize
+cd ~/artha
 echo "Building backend..."
 docker build -t $REGISTRY/backend:latest --target production -f backend/Dockerfile .
 echo "Pushing backend..."
@@ -19,6 +19,6 @@ echo "Pushing frontend..."
 docker push $REGISTRY/frontend:latest
 
 echo "Restarting pods..."
-kubectl delete -n monize pod monize-backend-0 monize-frontend-0
+kubectl delete -n artha pod artha-backend-0 artha-frontend-0
 
 echo "Done. Pods will restart automatically."

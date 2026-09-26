@@ -28,7 +28,7 @@ describe("McpHttpController", () => {
     };
 
     configService = {
-      get: jest.fn().mockReturnValue("https://app.monize.test"),
+      get: jest.fn().mockReturnValue("https://app.artha.test"),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -343,7 +343,7 @@ describe("McpHttpController", () => {
     it("accepts OAuth bearer tokens validated by the provider", async () => {
       oauthProviderService.validateAccessToken.mockResolvedValue({
         userId: "33333333-3333-4333-8333-333333333333",
-        scopes: "monize:read",
+        scopes: "artha:read",
       });
 
       const req = {

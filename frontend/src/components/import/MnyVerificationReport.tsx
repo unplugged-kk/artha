@@ -24,7 +24,7 @@ interface MnyVerificationReportProps {
  *
  * The banner is the point of this screen. Both PR #192 testers said the same
  * thing: a 56-account, 30-year migration is impossible to trust without being
- * told, per account, that the balance Monize now holds equals the balance
+ * told, per account, that the balance Artha now holds equals the balance
  * computed from the Money file. "All 56 accounts match" is the answer; the table
  * is there for the cases where it is not.
  *

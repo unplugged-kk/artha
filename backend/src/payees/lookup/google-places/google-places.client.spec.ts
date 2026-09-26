@@ -390,7 +390,7 @@ describe("GooglePlacesClient", () => {
       (global.fetch as jest.Mock).mock.calls[0][1].headers;
 
     it("sends PUBLIC_APP_URL as the Referer", async () => {
-      env.PUBLIC_APP_URL = "https://monize.laskonet.com";
+      env.PUBLIC_APP_URL = "https://artha.laskonet.com";
       (global.fetch as jest.Mock).mockResolvedValue(okResponse({ places: [] }));
 
       await client.searchText({
@@ -401,11 +401,11 @@ describe("GooglePlacesClient", () => {
 
       // Origin plus a trailing slash: Google matches patterns like
       // `*.laskonet.com/*`, and a path would only narrow what matches.
-      expect(headersOfLastCall().Referer).toBe("https://monize.laskonet.com/");
+      expect(headersOfLastCall().Referer).toBe("https://artha.laskonet.com/");
     });
 
     it("reduces a URL carrying a path to its origin", async () => {
-      env.PUBLIC_APP_URL = "https://monize.laskonet.com/app/?x=1";
+      env.PUBLIC_APP_URL = "https://artha.laskonet.com/app/?x=1";
       (global.fetch as jest.Mock).mockResolvedValue(okResponse({ places: [] }));
 
       await client.searchText({
@@ -414,7 +414,7 @@ describe("GooglePlacesClient", () => {
         maxResults: 3,
       });
 
-      expect(headersOfLastCall().Referer).toBe("https://monize.laskonet.com/");
+      expect(headersOfLastCall().Referer).toBe("https://artha.laskonet.com/");
     });
 
     it("sends no Referer at all when PUBLIC_APP_URL is unset", async () => {

@@ -27,7 +27,7 @@ export const TOUR_AREA_ORDER: readonly TourArea[] = (
  * i18n key (within the `tours` namespace) for a tour's *name*.
  *
  * The introduction tour has two strings: `intro.basics.title` names it
- * ("Introduction to Monize") and `offer.introTitle` pitches it ("New here?
+ * ("Introduction to Artha") and `offer.introTitle` pitches it ("New here?
  * Take the introduction tour"). A catalog listing every tour wants the name;
  * `TourOfferList` in the What's New modal wants the pitch and deliberately
  * keeps using `offer.introTitle`.

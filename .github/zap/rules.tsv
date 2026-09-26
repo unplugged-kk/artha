@@ -1,4 +1,4 @@
-# ZAP baseline rule overrides for Monize.
+# ZAP baseline rule overrides for Artha.
 # Format: RULE_ID<TAB>THRESHOLD<TAB>URL_PATTERN
 # THRESHOLD: IGNORE | WARN | FAIL
 #
@@ -39,7 +39,7 @@
 # Reports every entry present in localStorage, whatever it holds. On /login the
 # app writes two zustand persist envelopes and nothing else:
 #   auth-storage        {"state":{"isAuthenticated":false},"version":0}
-#   monize-preferences  {"state":{"preferences":null},"version":0}
+#   artha-preferences  {"state":{"preferences":null},"version":0}
 # No token, profile or PII: auth/refresh tokens are httpOnly cookies the backend
 # owns, and the profile is refetched from the API on load. That claim is about
 # the source, so frontend/src/store/persisted-storage.guard.test.ts pins the

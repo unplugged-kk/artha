@@ -2196,7 +2196,7 @@ describe('TransactionForm', () => {
 
     it('uses last transaction date from sessionStorage if within one hour', async () => {
       sessionStorage.setItem(
-        'monize-last-transaction-date',
+        'artha-last-transaction-date',
         JSON.stringify({ date: '2024-01-15', savedAt: Date.now() - 30 * 60 * 1000 }),
       );
 
@@ -2210,7 +2210,7 @@ describe('TransactionForm', () => {
 
     it('ignores last transaction date from sessionStorage if older than one hour', async () => {
       sessionStorage.setItem(
-        'monize-last-transaction-date',
+        'artha-last-transaction-date',
         JSON.stringify({ date: '2024-01-15', savedAt: Date.now() - 61 * 60 * 1000 }),
       );
 
@@ -2224,7 +2224,7 @@ describe('TransactionForm', () => {
       });
 
       // Should also clean up the expired entry
-      expect(sessionStorage.getItem('monize-last-transaction-date')).toBeNull();
+      expect(sessionStorage.getItem('artha-last-transaction-date')).toBeNull();
     });
 
     it('uses transaction date when editing', async () => {

@@ -28,7 +28,7 @@ import { MnyWarning } from "../model/mny-warnings";
 import { MnyReferenceData } from "../tables/read-reference";
 
 /**
- * Money's reference tables (`CRNC`, `ACCT`, `CAT`, `PAY`) mapped onto Monize
+ * Money's reference tables (`CRNC`, `ACCT`, `CAT`, `PAY`) mapped onto Artha
  * entities. Pure functions over typed rows: nothing here touches the database,
  * and every judgement call that could lose data produces a warning.
  *
@@ -91,7 +91,7 @@ export function resolveBaseCurrency(
 
 /**
  * Makes a name unique within the import by appending ` (2)`, ` (3)`, ...
- * Comparison is case-insensitive because Monize's own uniqueness checks are.
+ * Comparison is case-insensitive because Artha's own uniqueness checks are.
  */
 function uniqueName(name: string, taken: Set<string>): string {
   const base = name === "" ? "Account" : name;
@@ -114,7 +114,7 @@ function uniqueName(name: string, taken: Set<string>): string {
  * Money models an investment account as an `at = 5` row plus an ordinary cash
  * account, cross-referenced through `hacctRel` (confirmed in `money2002.mny`:
  * `hacct` 2 is `at = 5` with `hacctRel` 3, and `hacct` 3 is the `at = 0` row
- * "None Investment (Cash)" pointing back). That is exactly Monize's
+ * "None Investment (Cash)" pointing back). That is exactly Artha's
  * INVESTMENT_CASH + INVESTMENT_BROKERAGE pair, so the companion must not also
  * become a standalone chequing account.
  */
@@ -185,7 +185,7 @@ function creditLimitFor(
   return usesLimit && limit > 0 ? limit : null;
 }
 
-/** The Monize pair for one Money investment account and its cash companion. */
+/** The Artha pair for one Money investment account and its cash companion. */
 function mapInvestmentPair(
   account: MnyAccount,
   companion: MnyAccount | null,
@@ -199,7 +199,7 @@ function mapInvestmentPair(
     ? `acct-${companion.handle}`
     : `acct-${handle}-cash`;
   const brokerageKey = `acct-${handle}`;
-  // Money keeps the cash balance on the companion; Monize does the same, and
+  // Money keeps the cash balance on the companion; Artha does the same, and
   // the brokerage side's value comes entirely from its holdings.
   const openingBalance = companion
     ? companion.openingBalance
@@ -245,7 +245,7 @@ function mapInvestmentPair(
 }
 
 /**
- * Maps `ACCT` onto Monize accounts, honouring the wizard's per-account include
+ * Maps `ACCT` onto Artha accounts, honouring the wizard's per-account include
  * and currency choices.
  *
  * Ordering matters to the caller: an investment pair's cash side comes first, so
@@ -401,10 +401,10 @@ function ancestorsOf(
 }
 
 /**
- * Maps `CAT` onto Monize's two-level tree.
+ * Maps `CAT` onto Artha's two-level tree.
  *
  * Money's own INCOME and EXPENSE roots are structure, not categories, so they
- * are dropped and their children become Monize's top level. A tree deeper than
+ * are dropped and their children become Artha's top level. A tree deeper than
  * that flattens: the level-1 ancestor stays the parent and the remaining path is
  * colon-joined into the child name, which keeps the distinction visible instead
  * of merging two subcategories into one.
@@ -445,9 +445,9 @@ export function mapCategories(
     }
 
     const ancestors = ancestorsOf(category, byHandle);
-    // ancestors[0] is Money's INCOME/EXPENSE root; ancestors[1] is what Monize
+    // ancestors[0] is Money's INCOME/EXPENSE root; ancestors[1] is what Artha
     // calls the parent.
-    const monizeParent = ancestors[1]?.name.trim() ?? null;
+    const arthaParent = ancestors[1]?.name.trim() ?? null;
     const intermediate = ancestors
       .slice(2)
       .map((ancestor) => ancestor.name.trim())
@@ -457,7 +457,7 @@ export function mapCategories(
     if (intermediate.length > 0) {
       warnings.push({
         code: "categoryFlattened",
-        subject: [monizeParent, childName].filter(Boolean).join(":"),
+        subject: [arthaParent, childName].filter(Boolean).join(":"),
       });
     }
 
@@ -475,12 +475,12 @@ export function mapCategories(
         );
       })();
 
-    const mappedCategory: MappedCategory = monizeParent
+    const mappedCategory: MappedCategory = arthaParent
       ? {
           handle: category.handle,
-          parentName: monizeParent,
+          parentName: arthaParent,
           name: childName,
-          fullName: `${monizeParent}:${childName}`,
+          fullName: `${arthaParent}:${childName}`,
           isIncome,
         }
       : {
@@ -495,8 +495,8 @@ export function mapCategories(
     if (!unique.has(mappedCategory.fullName)) {
       unique.set(mappedCategory.fullName, mappedCategory);
     }
-    if (monizeParent && ancestors[1]?.handle !== null) {
-      parentHandleByName.set(monizeParent, ancestors[1].handle as number);
+    if (arthaParent && ancestors[1]?.handle !== null) {
+      parentHandleByName.set(arthaParent, ancestors[1].handle as number);
     }
   }
 
@@ -551,7 +551,7 @@ export function isDegeneratePayeeName(name: string): boolean {
 }
 
 /**
- * Maps `PAY` onto Monize payees.
+ * Maps `PAY` onto Artha payees.
  *
  * @param referenced Handles an imported transaction uses, or null for all rows.
  */

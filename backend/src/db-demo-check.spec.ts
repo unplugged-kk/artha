@@ -42,7 +42,7 @@ describe("db-demo-check", () => {
 
     expect(mockQuery).toHaveBeenCalledWith(
       "SELECT id FROM users WHERE email = $1",
-      ["demo@monize.com"],
+      ["demo@artha.local"],
     );
     expect(mockExit).toHaveBeenCalledWith(0);
     expect(logSpy).toHaveBeenCalledWith(

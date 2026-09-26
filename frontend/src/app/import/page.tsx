@@ -338,7 +338,7 @@ function ImportContent() {
         <PageHeader
           title={t('page.title')}
           subtitle={t('page.subtitle')}
-          helpUrl="https://github.com/kenlasko/monize/wiki/Importing-from-Microsoft-Money"
+          helpUrl="https://github.com/unplugged-kk/artha/wiki/Importing-from-Microsoft-Money"
         />
 
         {wizard.step === 'upload' && (

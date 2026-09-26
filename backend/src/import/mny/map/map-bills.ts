@@ -25,7 +25,7 @@ import { MnyInvestmentData } from "../tables/read-investments";
 import { MnyTransactionData } from "../tables/read-transactions";
 
 /**
- * `BILL` rows mapped onto Monize scheduled transactions.
+ * `BILL` rows mapped onto Artha scheduled transactions.
  *
  * The table is an accumulation, not a list of bills: Money keeps an instance row
  * per occurrence, and decades of them add up -- PR #192 imported all 1,844 rows
@@ -281,7 +281,7 @@ function isActive(
  *
  * Money's newest instance is where the series stood when the file was last
  * used, which for any real import is in the past. Writing that date through
- * unchanged hands Monize a schedule that is months overdue on arrival, so the
+ * unchanged hands Artha a schedule that is months overdue on arrival, so the
  * bill lands looking like a backlog rather than a schedule. Rolling is bounded:
  * a daily series twenty years stale would otherwise iterate for ever.
  */

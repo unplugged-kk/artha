@@ -155,7 +155,7 @@ interface TotalUtilizationSlice {
   color: string;
 }
 
-const ACCOUNTS_STORAGE_KEY = 'monize-reports-credit-utilization-accounts';
+const ACCOUNTS_STORAGE_KEY = 'artha-reports-credit-utilization-accounts';
 
 export function CreditUtilizationReport() {
   const t = useTranslations('reports');

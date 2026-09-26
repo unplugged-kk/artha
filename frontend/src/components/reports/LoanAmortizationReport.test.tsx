@@ -1052,7 +1052,7 @@ describe('LoanAmortizationReport', () => {
 
   it('restores the persisted loan selection instead of the first loan', async () => {
     window.localStorage.setItem(
-      'monize-reports-loan-amortization-account',
+      'artha-reports-loan-amortization-account',
       JSON.stringify('loan-2'),
     );
     mockGetAllAccounts.mockResolvedValue([
@@ -1093,7 +1093,7 @@ describe('LoanAmortizationReport', () => {
 
   it('falls back to the first loan when the persisted account is gone', async () => {
     window.localStorage.setItem(
-      'monize-reports-loan-amortization-account',
+      'artha-reports-loan-amortization-account',
       JSON.stringify('deleted-loan'),
     );
     mockGetAllAccounts.mockResolvedValue([{

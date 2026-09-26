@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 /**
  * `Notification.requestPermission()` lives in exactly one file.
  *
- * The rule it protects is the difference between Monize and every news site
+ * The rule it protects is the difference between Artha and every news site
  * that asks for notifications before you have read a sentence: the browser
  * prompt appears only behind a click, on copy that has already said what the
  * notifications are for. Called on mount -- or from an effect, or a route

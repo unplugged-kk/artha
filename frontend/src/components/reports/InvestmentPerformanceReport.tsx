@@ -31,7 +31,7 @@ import { useMainAccountName } from '@/hooks/useMainAccountName';
 
 type HoldingsSortField = 'symbol' | 'quantity' | 'averageCost' | 'currentPrice' | 'marketValue' | 'gainLoss' | 'gainLossPercent';
 
-const ACCOUNTS_STORAGE_KEY = 'monize-reports-investment-performance-accounts';
+const ACCOUNTS_STORAGE_KEY = 'artha-reports-investment-performance-accounts';
 
 export function InvestmentPerformanceReport() {
   const t = useTranslations('reports');

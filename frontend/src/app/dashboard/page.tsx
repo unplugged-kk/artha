@@ -239,7 +239,7 @@ function DashboardContent() {
           <PageHeader
             title={user?.firstName ? t('page.welcomeWithName', { name: user.firstName }) : `${t('page.welcomePrefix')}!`}
             subtitle={t('page.subtitle')}
-            helpUrl="https://github.com/kenlasko/monize/wiki/Dashboard"
+            helpUrl="https://github.com/unplugged-kk/artha/wiki/Dashboard"
             compactMobileActions
             actions={
               !isDelegateView ? (

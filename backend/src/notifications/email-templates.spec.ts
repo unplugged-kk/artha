@@ -70,7 +70,7 @@ describe("Email Templates", () => {
       const html = billReminderTemplate(
         "Alice",
         sampleBills,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("Electric Company");
@@ -102,7 +102,7 @@ describe("Email Templates", () => {
         const html = billReminderTemplate(
           "Ala",
           polishBill,
-          "https://monize.app",
+          "https://artha.app",
           undefined,
           numberFormatterFor("pl-PL", "pl"),
         );
@@ -117,7 +117,7 @@ describe("Email Templates", () => {
         const html = billReminderTemplate(
           "Alice",
           polishBill,
-          "https://monize.app",
+          "https://artha.app",
           undefined,
           numberFormatterFor("en-US", "pl"),
         );
@@ -129,7 +129,7 @@ describe("Email Templates", () => {
         const html = billReminderTemplate(
           "Ala",
           polishBill,
-          "https://monize.app",
+          "https://artha.app",
           undefined,
           numberFormatterFor("browser", "pl"),
         );
@@ -142,17 +142,17 @@ describe("Email Templates", () => {
       const html = billReminderTemplate(
         "Alice",
         sampleBills,
-        "https://monize.app",
+        "https://artha.app",
       );
 
-      expect(html).toContain('href="https://monize.app/bills"');
+      expect(html).toContain('href="https://artha.app/bills"');
     });
 
     it("uses plural grammar for multiple bills", () => {
       const html = billReminderTemplate(
         "Alice",
         sampleBills,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("2 upcoming bills");
@@ -164,7 +164,7 @@ describe("Email Templates", () => {
       const html = billReminderTemplate(
         "Alice",
         singleBill,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("1 upcoming bill that needs attention");
@@ -175,7 +175,7 @@ describe("Email Templates", () => {
       const html = billReminderTemplate(
         "Alice",
         sampleBills,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("Upcoming Bill Reminder");
@@ -185,7 +185,7 @@ describe("Email Templates", () => {
       const html = billReminderTemplate(
         "Alice",
         sampleBills,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("Expense");
@@ -205,7 +205,7 @@ describe("Email Templates", () => {
       const html = billReminderTemplate(
         "Alice",
         incomeBills,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("Income");
@@ -216,7 +216,7 @@ describe("Email Templates", () => {
       const html = billReminderTemplate(
         "Alice",
         sampleBills,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain(">Type</th>");
@@ -242,7 +242,7 @@ describe("Email Templates", () => {
       const html = billReminderTemplate(
         "Alice",
         mixedBills,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("Expense");
@@ -321,16 +321,16 @@ describe("Email Templates", () => {
     it("includes the resetUrl in the reset button link", () => {
       const html = passwordResetTemplate(
         "Alice",
-        "https://monize.app/reset?token=abc123",
+        "https://artha.app/reset?token=abc123",
       );
 
-      expect(html).toContain('href="https://monize.app/reset?token=abc123"');
+      expect(html).toContain('href="https://artha.app/reset?token=abc123"');
     });
 
     it("includes the name in the greeting", () => {
       const html = passwordResetTemplate(
         "Bob",
-        "https://monize.app/reset?token=xyz",
+        "https://artha.app/reset?token=xyz",
       );
 
       expect(html).toContain("Hi Bob,");
@@ -339,7 +339,7 @@ describe("Email Templates", () => {
     it("includes the expiration notice", () => {
       const html = passwordResetTemplate(
         "Alice",
-        "https://monize.app/reset?token=abc123",
+        "https://artha.app/reset?token=abc123",
       );
 
       expect(html).toContain("This link will expire in 1 hour");
@@ -348,7 +348,7 @@ describe("Email Templates", () => {
     it("includes the safe-to-ignore notice", () => {
       const html = passwordResetTemplate(
         "Alice",
-        "https://monize.app/reset?token=abc123",
+        "https://artha.app/reset?token=abc123",
       );
 
       expect(html).toContain(
@@ -359,7 +359,7 @@ describe("Email Templates", () => {
     it('falls back to "there" when name is empty', () => {
       const html = passwordResetTemplate(
         "",
-        "https://monize.app/reset?token=abc123",
+        "https://artha.app/reset?token=abc123",
       );
 
       expect(html).toContain("Hi there,");
@@ -368,7 +368,7 @@ describe("Email Templates", () => {
     it("includes the Password Reset Request heading", () => {
       const html = passwordResetTemplate(
         "Alice",
-        "https://monize.app/reset?token=abc123",
+        "https://artha.app/reset?token=abc123",
       );
 
       expect(html).toContain("Password Reset Request");
@@ -379,18 +379,18 @@ describe("Email Templates", () => {
     it("includes the verify url in the verify button link", () => {
       const html = emailVerificationTemplate(
         "Alice",
-        "https://monize.app/verify-email?token=abc123",
+        "https://artha.app/verify-email?token=abc123",
       );
 
       expect(html).toContain(
-        'href="https://monize.app/verify-email?token=abc123"',
+        'href="https://artha.app/verify-email?token=abc123"',
       );
     });
 
     it("includes the name in the greeting", () => {
       const html = emailVerificationTemplate(
         "Bob",
-        "https://monize.app/verify-email?token=xyz",
+        "https://artha.app/verify-email?token=xyz",
       );
 
       expect(html).toContain("Hi Bob,");
@@ -399,7 +399,7 @@ describe("Email Templates", () => {
     it('falls back to "there" when name is empty', () => {
       const html = emailVerificationTemplate(
         "",
-        "https://monize.app/verify-email?token=abc123",
+        "https://artha.app/verify-email?token=abc123",
       );
 
       expect(html).toContain("Hi there,");
@@ -408,7 +408,7 @@ describe("Email Templates", () => {
     it("includes the 24-hour expiration notice", () => {
       const html = emailVerificationTemplate(
         "Alice",
-        "https://monize.app/verify-email?token=abc123",
+        "https://artha.app/verify-email?token=abc123",
       );
 
       expect(html).toContain("This link will expire in 24 hours");
@@ -417,7 +417,7 @@ describe("Email Templates", () => {
     it("escapes HTML in the verify url to prevent injection", () => {
       const html = emailVerificationTemplate(
         "Alice",
-        'https://monize.app/verify-email?token="><script>alert(1)</script>',
+        'https://artha.app/verify-email?token="><script>alert(1)</script>',
       );
 
       expect(html).not.toContain("<script>alert(1)</script>");
@@ -428,28 +428,28 @@ describe("Email Templates", () => {
     it("includes the invite url in the set-password button link", () => {
       const html = accountInviteTemplate(
         "Alice",
-        "https://monize.app/reset-password?token=abc123",
+        "https://artha.app/reset-password?token=abc123",
       );
 
       expect(html).toContain(
-        'href="https://monize.app/reset-password?token=abc123"',
+        'href="https://artha.app/reset-password?token=abc123"',
       );
     });
 
     it("includes the name in the greeting", () => {
-      const html = accountInviteTemplate("Bob", "https://monize.app/x");
+      const html = accountInviteTemplate("Bob", "https://artha.app/x");
 
       expect(html).toContain("Hi Bob,");
     });
 
     it('falls back to "there" when name is empty', () => {
-      const html = accountInviteTemplate("", "https://monize.app/x");
+      const html = accountInviteTemplate("", "https://artha.app/x");
 
       expect(html).toContain("Hi there,");
     });
 
     it("mentions that an administrator created the account", () => {
-      const html = accountInviteTemplate("Alice", "https://monize.app/x");
+      const html = accountInviteTemplate("Alice", "https://artha.app/x");
 
       expect(html).toContain("An administrator has created a Artha account");
       expect(html).toContain("This link will expire in 24 hours");
@@ -458,7 +458,7 @@ describe("Email Templates", () => {
     it("escapes HTML in the name to prevent injection", () => {
       const html = accountInviteTemplate(
         "<script>alert(1)</script>",
-        "https://monize.app/x",
+        "https://artha.app/x",
       );
 
       expect(html).not.toContain("<script>alert(1)</script>");
@@ -513,7 +513,7 @@ describe("Email Templates", () => {
       const html = budgetMonthlySummaryTemplate(
         "Alice",
         sampleSummaries,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("Monthly Budget Summary");
@@ -528,7 +528,7 @@ describe("Email Templates", () => {
       const html = budgetMonthlySummaryTemplate(
         "Alice",
         sampleSummaries,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("Monthly Household");
@@ -539,7 +539,7 @@ describe("Email Templates", () => {
       const html = budgetMonthlySummaryTemplate(
         "Alice",
         sampleSummaries,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("$4,000.00");
@@ -551,7 +551,7 @@ describe("Email Templates", () => {
       const html = budgetMonthlySummaryTemplate(
         "Alice",
         sampleSummaries,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("80.0% used");
@@ -561,7 +561,7 @@ describe("Email Templates", () => {
       const html = budgetMonthlySummaryTemplate(
         "Alice",
         sampleSummaries,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       // The progress bar div has width set to percentUsed capped at 100%
@@ -581,7 +581,7 @@ describe("Email Templates", () => {
       const html = budgetMonthlySummaryTemplate(
         "Alice",
         overBudgetSummary,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("width: 100%");
@@ -592,7 +592,7 @@ describe("Email Templates", () => {
       const html = budgetMonthlySummaryTemplate(
         "Alice",
         sampleSummaries,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("Over Budget");
@@ -613,7 +613,7 @@ describe("Email Templates", () => {
       const html = budgetMonthlySummaryTemplate(
         "Alice",
         underBudgetSummary,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).not.toContain("Over Budget");
@@ -623,7 +623,7 @@ describe("Email Templates", () => {
       const html = budgetMonthlySummaryTemplate(
         "Alice",
         sampleSummaries,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("Top Categories");
@@ -636,7 +636,7 @@ describe("Email Templates", () => {
       const html = budgetMonthlySummaryTemplate(
         "Alice",
         sampleSummaries,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("Health Score");
@@ -656,7 +656,7 @@ describe("Email Templates", () => {
       const html = budgetMonthlySummaryTemplate(
         "Alice",
         noHealthSummary,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).not.toContain("Health Score");
@@ -666,10 +666,10 @@ describe("Email Templates", () => {
       const html = budgetMonthlySummaryTemplate(
         "Alice",
         sampleSummaries,
-        "https://monize.app",
+        "https://artha.app",
       );
 
-      expect(html).toContain('href="https://monize.app/budgets"');
+      expect(html).toContain('href="https://artha.app/budgets"');
       expect(html).toContain("View Budget Dashboard");
     });
 
@@ -677,7 +677,7 @@ describe("Email Templates", () => {
       const html = budgetMonthlySummaryTemplate(
         "",
         sampleSummaries,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("Hi there,");
@@ -711,7 +711,7 @@ describe("Email Templates", () => {
       const html = budgetMonthlySummaryTemplate(
         '<script>alert("name")</script>',
         maliciousSummary,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).not.toContain("<script>");
@@ -725,7 +725,7 @@ describe("Email Templates", () => {
       const html = budgetMonthlySummaryTemplate(
         '<img src=x onerror="alert(1)">',
         sampleSummaries,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).not.toContain("<img");
@@ -752,7 +752,7 @@ describe("Email Templates", () => {
       const html = budgetMonthlySummaryTemplate(
         "Alice",
         multiSummaries,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("Monthly Household");
@@ -765,7 +765,7 @@ describe("Email Templates", () => {
       const html = budgetMonthlySummaryTemplate(
         "Alice",
         sampleSummaries,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       // Health score of 85 >= 80, so it should use green (#059669)
@@ -784,7 +784,7 @@ describe("Email Templates", () => {
       const html = budgetMonthlySummaryTemplate(
         "Alice",
         mediumHealthSummary,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("#d97706");
@@ -803,7 +803,7 @@ describe("Email Templates", () => {
       const html = budgetMonthlySummaryTemplate(
         "Alice",
         lowHealthSummary,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("#dc2626");
@@ -829,7 +829,7 @@ describe("Email Templates", () => {
       const html = mortgageReminderTemplate(
         "Alice",
         sampleMortgages,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("Hi Alice,");
@@ -839,7 +839,7 @@ describe("Email Templates", () => {
       const html = mortgageReminderTemplate(
         "Alice",
         sampleMortgages,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("Home Mortgage");
@@ -854,7 +854,7 @@ describe("Email Templates", () => {
       const html = mortgageReminderTemplate(
         "Alice",
         sampleMortgages,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("Mortgage Renewal Reminder");
@@ -864,7 +864,7 @@ describe("Email Templates", () => {
       const html = mortgageReminderTemplate(
         "Alice",
         sampleMortgages,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("2 mortgages");
@@ -874,7 +874,7 @@ describe("Email Templates", () => {
       const html = mortgageReminderTemplate(
         "Alice",
         [sampleMortgages[0]],
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("1 mortgage with an upcoming term renewal");
@@ -884,7 +884,7 @@ describe("Email Templates", () => {
       const html = mortgageReminderTemplate(
         "Alice",
         [{ name: "Home", termEndDate: "2026-04-17", daysUntilRenewal: 1 }],
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("1 day<");
@@ -895,7 +895,7 @@ describe("Email Templates", () => {
       const html = mortgageReminderTemplate(
         "Alice",
         [{ name: "Urgent", termEndDate: "2026-05-01", daysUntilRenewal: 15 }],
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("#dc2626");
@@ -905,7 +905,7 @@ describe("Email Templates", () => {
       const html = mortgageReminderTemplate(
         "Alice",
         [{ name: "Soon", termEndDate: "2026-06-15", daysUntilRenewal: 45 }],
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("#d97706");
@@ -915,10 +915,10 @@ describe("Email Templates", () => {
       const html = mortgageReminderTemplate(
         "Alice",
         sampleMortgages,
-        "https://monize.app",
+        "https://artha.app",
       );
 
-      expect(html).toContain('href="https://monize.app/accounts"');
+      expect(html).toContain('href="https://artha.app/accounts"');
       expect(html).toContain("View Accounts");
     });
 
@@ -926,7 +926,7 @@ describe("Email Templates", () => {
       const html = mortgageReminderTemplate(
         "",
         sampleMortgages,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).toContain("Hi there,");
@@ -942,7 +942,7 @@ describe("Email Templates", () => {
             daysUntilRenewal: 45,
           },
         ],
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).not.toContain("<script>");
@@ -953,7 +953,7 @@ describe("Email Templates", () => {
       const html = mortgageReminderTemplate(
         '<img src=x onerror="alert(1)">',
         sampleMortgages,
-        "https://monize.app",
+        "https://artha.app",
       );
 
       expect(html).not.toContain("<img");
@@ -1099,7 +1099,7 @@ describe("Email Templates", () => {
         { firstName: "Carol", email: "carol@example.com" },
         { firstName: "Dave", email: "dave@example.com" },
       ],
-      appUrl: "https://monize.example",
+      appUrl: "https://artha.example",
     };
 
     it("greets the owner and surfaces the inactivity window", () => {
@@ -1119,7 +1119,7 @@ describe("Email Templates", () => {
 
     it("links to /login on the public app URL", () => {
       const html = emergencyAccessReminderTemplate(baseData);
-      expect(html).toContain('href="https://monize.example/login"');
+      expect(html).toContain('href="https://artha.example/login"');
     });
 
     it("escapes injected HTML in contact data", () => {
@@ -1152,7 +1152,7 @@ describe("Email Templates", () => {
       contactFirstName: "Carol",
       ownerFullName: "Owner One",
       message: "Bank passwords are in the safe.\nCall my lawyer.",
-      claimUrl: "https://monize.example/emergency-access/claim?token=ABC",
+      claimUrl: "https://artha.example/emergency-access/claim?token=ABC",
       expiresAt: new Date("2030-01-01T00:00:00Z"),
     };
 
@@ -1165,7 +1165,7 @@ describe("Email Templates", () => {
     it("renders the claim URL", () => {
       const html = emergencyAccessGrantTemplate(baseData);
       expect(html).toContain(
-        'href="https://monize.example/emergency-access/claim?token=ABC"',
+        'href="https://artha.example/emergency-access/claim?token=ABC"',
       );
     });
 

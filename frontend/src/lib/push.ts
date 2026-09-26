@@ -166,7 +166,7 @@ function isIos(nav: Navigator): boolean {
 }
 
 /**
- * Whether this is Monize running as an installed iOS web app.
+ * Whether this is Artha running as an installed iOS web app.
  *
  * The one platform where "the prompt never appeared" is a real outcome rather
  * than a user dismissing it, so it is the one platform whose refusal message
@@ -663,7 +663,7 @@ export async function disablePushOnThisDevice(
  * classifies as a revocation -- the conservative half: nothing is re-registered
  * behind the user's back, and the Enable button is still there.
  */
-const REGISTERED_ENDPOINT_KEY = 'monize.push.registeredEndpoint';
+const REGISTERED_ENDPOINT_KEY = 'artha.push.registeredEndpoint';
 
 /**
  * The endpoint this browser registered, and WHOSE registration it was.
@@ -733,7 +733,7 @@ export function readRegisteredEndpoint(): RegisteredEndpointMarker | null {
 }
 
 /**
- * Whether Monize should ASK for notifications, and what it can honestly offer.
+ * Whether Artha should ASK for notifications, and what it can honestly offer.
  *
  * There is no way to grant this permission at install time: the web app manifest
  * has no such field, and `Notification.requestPermission()` is the only door --
@@ -749,7 +749,7 @@ export function readRegisteredEndpoint(): RegisteredEndpointMarker | null {
  * are for first.
  *
  * Three answers, because the reader's next action differs in each -- and the
- * two that offer no button are the ones Monize had nothing to say about at all:
+ * two that offer no button are the ones Artha had nothing to say about at all:
  * an iPhone user in a Safari tab, and anybody who has already refused.
  */
 export type PushPromptState =
@@ -769,7 +769,7 @@ export function pushPromptState(input: {
   support: PushSupport | null;
   /** Whether this browser already holds a live registration for the reader. */
   registeredHere: boolean;
-  /** Whether this window is Monize installed on iOS. */
+  /** Whether this window is Artha installed on iOS. */
   installedIosWebApp: boolean;
 }): PushPromptState {
   const { channelAvailable, support, registeredHere, installedIosWebApp } =
@@ -785,7 +785,7 @@ export function pushPromptState(input: {
   return null;
 }
 
-const PROMPT_DISMISSED_KEY = 'monize.push.promptDismissed';
+const PROMPT_DISMISSED_KEY = 'artha.push.promptDismissed';
 
 interface PromptDismissal {
   userId: string;
@@ -800,7 +800,7 @@ interface PromptDismissal {
  * person, so one account dismissing the ask must not silence it for the next
  * person to sign in. Per KIND because the three states ask for different things:
  * waving away "enable" says nothing about wanting to know that the browser is
- * blocking Monize later on.
+ * blocking Artha later on.
  */
 export function pushPromptDismissed(
   userId: string | null,

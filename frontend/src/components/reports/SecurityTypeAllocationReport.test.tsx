@@ -237,7 +237,7 @@ describe('SecurityTypeAllocationReport', () => {
 
   it('restores the persisted account selection', async () => {
     window.localStorage.setItem(
-      'monize-reports-security-type-allocation-accounts',
+      'artha-reports-security-type-allocation-accounts',
       JSON.stringify(['acc-1']),
     );
     mockGetPortfolioSummary.mockResolvedValue({ holdings: [] });

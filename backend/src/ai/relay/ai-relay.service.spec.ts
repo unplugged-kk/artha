@@ -601,7 +601,7 @@ describe("AiRelayService", () => {
       expect(ref.filename).toBe("chart.png");
       expect(ref.kind).toBe("image");
       expect(ref.mediaType).toBe("image/png");
-      expect(ref.uri).toBe(`monize-attachment://${ref.id}`);
+      expect(ref.uri).toBe(`artha-attachment://${ref.id}`);
       // The bytes themselves live in the store, keyed by the same user + id.
       expect(attachmentStore.get(USER, ref.id)?.data.length).toBeGreaterThan(0);
     });

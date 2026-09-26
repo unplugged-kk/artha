@@ -2,12 +2,12 @@ services:
   # PostgreSQL Database
   postgres:
     image: postgres:16-alpine
-    container_name: monize-postgres
+    container_name: artha-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-monize}
-      POSTGRES_USER: ${POSTGRES_USER:-monize_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-monize_password}
+      POSTGRES_DB: ${POSTGRES_DB:-artha}
+      POSTGRES_USER: ${POSTGRES_USER:-artha_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-artha_password}
       POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=en_US.UTF-8"
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -17,7 +17,7 @@ services:
     networks:
       - finance-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-monize_user} -d ${POSTGRES_DB:-monize}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-artha_user} -d ${POSTGRES_DB:-artha}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -28,7 +28,7 @@ services:
       context: .
       dockerfile: backend/Dockerfile
       target: development
-    container_name: monize-backend
+    container_name: artha-backend
     restart: unless-stopped
     depends_on:
       postgres:
@@ -38,14 +38,14 @@ services:
       PORT: ${BACKEND_PORT:-3000}
       DATABASE_HOST: postgres
       DATABASE_PORT: 5432
-      DATABASE_NAME: ${POSTGRES_DB:-monize}
-      DATABASE_USER: ${POSTGRES_USER:-monize_user}
-      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-monize_password}
+      DATABASE_NAME: ${POSTGRES_DB:-artha}
+      DATABASE_USER: ${POSTGRES_USER:-artha_user}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-artha_password}
       # Row-Level Security (defense-in-depth; off by default). See
       # docs/future-plans/row-level-security.md. Empty-safe so an untouched
       # .env boots unchanged.
       RLS_MODE: ${RLS_MODE:-off}
-      DATABASE_APP_USER: ${DATABASE_APP_USER:-monize_app}
+      DATABASE_APP_USER: ${DATABASE_APP_USER:-artha_app}
       DATABASE_APP_PASSWORD: ${DATABASE_APP_PASSWORD:-}
       JWT_SECRET: ${JWT_SECRET:?JWT_SECRET must be set in .env}
       JWT_EXPIRATION: ${JWT_EXPIRATION:-15m}
@@ -99,10 +99,10 @@ services:
       # otherwise shadow the copy baked into the image).
       - ./docs/release-notes:/app/release-notes:ro
       # Automatic backups are written to BACKUP_CONTAINER_DIR in the container.
-      - ${BACKUP_HOST_DIR:-./monize/backups}:${BACKUP_CONTAINER_DIR:-/data/backups}
+      - ${BACKUP_HOST_DIR:-./artha/backups}:${BACKUP_CONTAINER_DIR:-/data/backups}
       # Attachments are written to ATTACHMENT_CONTAINER_DIR in the container
       # when ATTACHMENT_STORAGE_PROVIDER=local.
-      - ${ATTACHMENT_HOST_DIR:-./monize/attachments}:${ATTACHMENT_CONTAINER_DIR:-/data/attachments}
+      - ${ATTACHMENT_HOST_DIR:-./artha/attachments}:${ATTACHMENT_CONTAINER_DIR:-/data/attachments}
       - /app/node_modules
     ports:
       - "127.0.0.1:${BACKEND_PORT:-3000}:3000"
@@ -116,7 +116,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       target: development
-    container_name: monize-frontend
+    container_name: artha-frontend
     restart: unless-stopped
     depends_on:
       - backend

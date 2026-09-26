@@ -10,9 +10,9 @@ import { getLocalDateString } from './utils';
  * under a distinct key, so entering one kind doesn't change the default for the
  * other.
  */
-export const LAST_TRANSACTION_DATE_KEY = 'monize-last-transaction-date';
+export const LAST_TRANSACTION_DATE_KEY = 'artha-last-transaction-date';
 export const LAST_INVESTMENT_TRANSACTION_DATE_KEY =
-  'monize-last-investment-transaction-date';
+  'artha-last-investment-transaction-date';
 
 // How long a remembered date stays valid before falling back to today.
 const REMEMBER_DURATION_MS = 60 * 60 * 1000; // 1 hour

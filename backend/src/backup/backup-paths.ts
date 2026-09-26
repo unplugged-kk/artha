@@ -8,7 +8,7 @@ import { dirname, resolve, sep } from "path";
  *
  * **The namespace was shared.** The default folder is deployment-wide and the
  * filenames carried frequency and date and nothing else. Two users keeping the
- * default therefore wrote `monize-backup-daily-2026-08-01.json.gz` to the same
+ * default therefore wrote `artha-backup-daily-2026-08-01.json.gz` to the same
  * path on the same day -- the second replaced the first -- and retention
  * enumerated the whole folder with global patterns and applied whichever user's
  * counts it was running for. A user with a 2-day window deleted a user with a

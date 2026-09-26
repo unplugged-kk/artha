@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-Monize is under active development. Security updates are applied to the latest
+Artha is under active development. Security updates are applied to the latest
 release on the `main` branch. Older versions are not supported.
 
 | Version | Supported          |
@@ -12,7 +12,7 @@ release on the `main` branch. Older versions are not supported.
 
 ## Reporting a Vulnerability
 
-We take the security of Monize seriously. If you believe you have found a
+We take the security of Artha seriously. If you believe you have found a
 security vulnerability, please report it to us privately. **Please do not
 disclose the issue publicly until we have had a chance to address it.**
 
@@ -21,7 +21,7 @@ disclose the issue publicly until we have had a chance to address it.**
 Please use one of the following channels to report a vulnerability:
 
 1. **GitHub Security Advisories (preferred):** Open a private advisory at
-   <https://github.com/kenlasko/monize/security/advisories/new>.
+   <https://github.com/unplugged-kk/artha/security/advisories/new>.
 2. **Email:** Send the details to the repository maintainer via the email
    address listed on their GitHub profile.
 
@@ -50,8 +50,8 @@ When you report a vulnerability, we will:
 
 The following are in scope for security reports:
 
-- The Monize backend (NestJS API).
-- The Monize frontend (Next.js app).
+- The Artha backend (NestJS API).
+- The Artha frontend (Next.js app).
 - Database migrations and schema definitions in `database/`.
 - Authentication, authorization, session management, and 2FA flows.
 - Handling of financial data, API keys, and other secrets.
@@ -69,7 +69,7 @@ The following are **out of scope**:
 
 ## Security Best Practices for Self-Hosted Deployments
 
-If you self-host Monize, please follow these guidelines:
+If you self-host Artha, please follow these guidelines:
 
 - Set `JWT_SECRET` and `ENCRYPTION_KEY` (formerly `AI_ENCRYPTION_KEY`, still accepted) to strong, random values of at least
   32 characters. Never reuse the example values from `.env.example`.
@@ -94,4 +94,4 @@ We follow a **coordinated disclosure** model:
 4. After users have had a reasonable time to update (typically 30 days), the
    reporter may publicly disclose the details if they wish.
 
-Thank you for helping keep Monize and its users safe.
+Thank you for helping keep Artha and its users safe.

@@ -394,7 +394,7 @@ export const getNextPromptOutput = toolOutput({
   // that never relays does not carry it in every request's tool list.
   guidance: str.optional(),
   history: rows().optional(),
-  // Each ref points at a `monize-attachment://<id>` resource the agent reads.
+  // Each ref points at a `artha-attachment://<id>` resource the agent reads.
   attachments: z.array(looseObject({ id: str, uri: str })).optional(),
 });
 

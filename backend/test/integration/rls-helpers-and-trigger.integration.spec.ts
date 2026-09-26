@@ -90,7 +90,7 @@ describe("RLS helpers and updated_at trigger (migration 111)", () => {
       expect(sql).not.toMatch(/\bGRANT\b/i);
       expect(sql).not.toMatch(/\bREVOKE\b/i);
       expect(sql).not.toMatch(/\b(CREATE|ALTER|DROP)\s+ROLE\b/i);
-      expect(sql).not.toMatch(/monize_app/i);
+      expect(sql).not.toMatch(/artha_app/i);
     });
 
     it("is idempotent -- re-applying changes nothing", async () => {

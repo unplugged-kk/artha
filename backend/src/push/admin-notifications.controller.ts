@@ -15,7 +15,7 @@ export interface RotateVapidResult {
 }
 
 /**
- * Instance-level notification settings: which delivery channels this Monize
+ * Instance-level notification settings: which delivery channels this Artha
  * deployment offers, and the Web Push identity behind one of them.
  *
  * Deliberately nothing per user. An administrator decides whether the

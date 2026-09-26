@@ -143,9 +143,9 @@ function TransactionsContent() {
   const [showScheduleForm, setShowScheduleForm] = useState(false);
   const [showPayeeForm, setShowPayeeForm] = useState(false);
   const [editingPayee, setEditingPayee] = useState<Payee | undefined>();
-  const [accountWidgetCollapsed, setAccountWidgetCollapsed] = useLocalStorage<boolean>('monize-transactions-account-widget-collapsed', false);
-  const [payeeWidgetCollapsed, setPayeeWidgetCollapsed] = useLocalStorage<boolean>('monize-transactions-payee-widget-collapsed', false);
-  const [categoryWidgetCollapsed, setCategoryWidgetCollapsed] = useLocalStorage<boolean>('monize-transactions-category-widget-collapsed', false);
+  const [accountWidgetCollapsed, setAccountWidgetCollapsed] = useLocalStorage<boolean>('artha-transactions-account-widget-collapsed', false);
+  const [payeeWidgetCollapsed, setPayeeWidgetCollapsed] = useLocalStorage<boolean>('artha-transactions-payee-widget-collapsed', false);
+  const [categoryWidgetCollapsed, setCategoryWidgetCollapsed] = useLocalStorage<boolean>('artha-transactions-category-widget-collapsed', false);
   const [showBulkUpdate, setShowBulkUpdate] = useState(false);
   const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
   const [bulkSelectMode, setBulkSelectMode] = useState(false);
@@ -993,7 +993,7 @@ function TransactionsContent() {
         <PageHeader
           title={t('page.title')}
           subtitle={t('page.subtitle')}
-          helpUrl="https://github.com/kenlasko/monize/wiki/Transactions"
+          helpUrl="https://github.com/unplugged-kk/artha/wiki/Transactions"
           actions={
             <Button
               {...tourAnchor(TOUR_ANCHORS.transactionsNewButton)}

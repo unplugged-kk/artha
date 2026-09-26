@@ -633,7 +633,7 @@ describe("OAuthProviderService", () => {
         isExpired: false,
         accountId: "u",
         aud: "https://other/mcp",
-        scope: "monize:read",
+        scope: "artha:read",
       });
       expect(await svc.validateAccessToken("t")).toBeNull();
     });
@@ -648,7 +648,7 @@ describe("OAuthProviderService", () => {
         isExpired: false,
         accountId: "u",
         aud: ["https://x/y", "https://z/w"],
-        scope: "monize:read",
+        scope: "artha:read",
       });
       expect(await svc.validateAccessToken("t")).toBeNull();
     });
@@ -663,7 +663,7 @@ describe("OAuthProviderService", () => {
         isExpired: false,
         accountId: ACCOUNT_ID,
         aud: "https://app.test/api/v1/mcp",
-        scope: "monize:read monize:write",
+        scope: "artha:read artha:write",
       });
       expect(await svc.validateAccessToken("t")).toEqual({
         userId: ACCOUNT_ID,
@@ -681,7 +681,7 @@ describe("OAuthProviderService", () => {
         isExpired: false,
         accountId: ACCOUNT_ID,
         aud: ["https://app.test/api/v1/mcp", "extra"],
-        scope: "monize:read",
+        scope: "artha:read",
       });
       expect(await svc.validateAccessToken("t")).toEqual({
         userId: ACCOUNT_ID,
@@ -699,7 +699,7 @@ describe("OAuthProviderService", () => {
         isExpired: false,
         accountId: ACCOUNT_ID,
         resource: "https://app.test/api/v1/mcp",
-        scope: "monize:read",
+        scope: "artha:read",
       });
       expect(await svc.validateAccessToken("t")).toEqual({
         userId: ACCOUNT_ID,
@@ -717,12 +717,12 @@ describe("OAuthProviderService", () => {
         isExpired: false,
         accountId: ACCOUNT_ID,
         aud: "https://app.test/api/v1/mcp",
-        scope: "monize:read",
+        scope: "artha:read",
       });
       expect(await svc.validateAccessToken("t")).toBeNull();
     });
 
-    it("treats a non-monize: scope as a bare scope", async () => {
+    it("treats a non-artha: scope as a bare scope", async () => {
       const { svc, find } = await setup({
         id: ACCOUNT_ID,
         isActive: true,

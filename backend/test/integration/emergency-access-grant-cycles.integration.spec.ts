@@ -47,7 +47,7 @@ describe("emergency access across grant cycles", () => {
   let owner: string;
 
   const CONTACT_EMAIL = "carol@example.com";
-  const APP_URL = "https://monize.test";
+  const APP_URL = "https://artha.test";
 
   const emailDouble = {
     getStatus: () => ({ configured: true }),

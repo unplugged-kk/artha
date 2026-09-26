@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useTheme } from '@/contexts/ThemeContext';
 import { getLocaleDir } from '@/i18n/config';
 
-export const OFFLINE_STRINGS_MESSAGE_TYPE = 'monize-offline-strings';
+export const OFFLINE_STRINGS_MESSAGE_TYPE = 'artha-offline-strings';
 
 // The service worker's offline fallback page is synthesized inside sw.js,
 // where next-intl and the theme CSS cannot reach. This component hands the

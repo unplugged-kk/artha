@@ -1,6 +1,6 @@
 # Downloads every screenshot the site uses into assets\img\screenshots\
 # Run from anywhere:  powershell -ExecutionPolicy Bypass -File scripts\fetch-screenshots.ps1
-$base = "https://raw.githubusercontent.com/wiki/kenlasko/monize/images"
+$base = "https://raw.githubusercontent.com/wiki/unplugged-kk/artha/images"
 $out  = Join-Path $PSScriptRoot "..\assets\img\screenshots"
 New-Item -ItemType Directory -Force -Path $out | Out-Null
 $names = @(

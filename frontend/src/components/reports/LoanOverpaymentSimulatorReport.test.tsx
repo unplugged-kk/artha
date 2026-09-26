@@ -182,7 +182,7 @@ describe('LoanOverpaymentSimulatorReport', () => {
 
   it('restores the persisted account selection instead of the first account', async () => {
     window.localStorage.setItem(
-      'monize-reports-loan-overpayment-simulator-account',
+      'artha-reports-loan-overpayment-simulator-account',
       JSON.stringify('mtg-1'),
     );
     mockGetAll.mockResolvedValue([
@@ -198,7 +198,7 @@ describe('LoanOverpaymentSimulatorReport', () => {
 
   it('falls back to the first account when the persisted one is gone', async () => {
     window.localStorage.setItem(
-      'monize-reports-loan-overpayment-simulator-account',
+      'artha-reports-loan-overpayment-simulator-account',
       JSON.stringify('deleted-loan'),
     );
     mockGetAll.mockResolvedValue([makeAccount()]);

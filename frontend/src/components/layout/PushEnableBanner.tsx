@@ -29,7 +29,7 @@ import { useRereadOnVisible } from '@/hooks/useRereadOnVisible';
 const logger = createLogger('PushEnableBanner');
 
 /**
- * The ask Monize was missing.
+ * The ask Artha was missing.
  *
  * Before this, notifications existed only for somebody who went looking:
  * Settings -> Notifications -> Enable on this device, with nothing anywhere

@@ -1,6 +1,6 @@
 import { parseReleaseNotes } from "./release-notes.parser";
 
-const RELEASE_URL = "https://github.com/kenlasko/monize/releases/tag/v1.2.3";
+const RELEASE_URL = "https://github.com/unplugged-kk/artha/releases/tag/v1.2.3";
 
 describe("parseReleaseNotes", () => {
   it("extracts the intro paragraph before the first section", () => {
@@ -120,7 +120,7 @@ describe("parseReleaseNotes", () => {
       "",
       "- Did a thing.",
       "",
-      "**Full Changelog**: https://github.com/kenlasko/monize/compare/v1.2.2...v1.2.3",
+      "**Full Changelog**: https://github.com/unplugged-kk/artha/compare/v1.2.2...v1.2.3",
     ].join("\n");
 
     const notes = parseReleaseNotes(md, "1.2.3", RELEASE_URL);
@@ -139,7 +139,7 @@ describe("parseReleaseNotes", () => {
       "",
       "- Updated the container build script for the new DNS domain.",
       "",
-      "**Full Changelog**: https://github.com/kenlasko/monize/compare/v1.9.14...v1.9.15",
+      "**Full Changelog**: https://github.com/unplugged-kk/artha/compare/v1.9.14...v1.9.15",
     ].join("\n");
 
     const notes = parseReleaseNotes(md, "1.9.15", RELEASE_URL);

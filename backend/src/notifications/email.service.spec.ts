@@ -25,7 +25,7 @@ describe("EmailService", () => {
             SMTP_USER: "user@example.com",
             SMTP_PASSWORD: "password123",
             SMTP_PORT: 587,
-            EMAIL_FROM: "noreply@monize.app",
+            EMAIL_FROM: "noreply@artha.app",
           };
           return config[key] ?? defaultVal;
         }),
@@ -204,7 +204,7 @@ describe("EmailService", () => {
             SMTP_USER: "user@example.com",
             SMTP_PASSWORD: "password123",
             SMTP_PORT: 465,
-            EMAIL_FROM: "noreply@monize.app",
+            EMAIL_FROM: "noreply@artha.app",
           };
           return config[key] ?? defaultVal;
         }),

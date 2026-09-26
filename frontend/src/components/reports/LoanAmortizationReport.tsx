@@ -42,7 +42,7 @@ interface PaymentRow {
   isProjected: boolean;
 }
 
-const ACCOUNT_STORAGE_KEY = 'monize-reports-loan-amortization-account';
+const ACCOUNT_STORAGE_KEY = 'artha-reports-loan-amortization-account';
 
 /** Stable empty lists, so "nothing loaded yet" is not a new dependency each render. */
 const NO_TRANSACTIONS: Transaction[] = [];

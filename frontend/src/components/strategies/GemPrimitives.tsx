@@ -12,7 +12,7 @@ import { CARD_CLASS } from "@/components/ui/Card";
 
 /**
  * Small building blocks shared by the GEM report cards. They compose the
- * existing Monize card/typography conventions -- no new component library --
+ * existing Artha card/typography conventions -- no new component library --
  * and centralize two rules the report leans on everywhere: an unknown value
  * renders as an explicit marker (never a zero), and any figure carrying a
  * positive/negative meaning also carries a sign, so colour is never the only

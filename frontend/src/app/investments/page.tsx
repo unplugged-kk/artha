@@ -71,7 +71,7 @@ function InvestmentsContent() {
   // An AI write (e.g. an investment transaction from the chat bubble) mutates
   // the same data as an undo/redo, so refresh the same way.
   useOnAiAction(refreshAfterWrite);
-  const [transactionView, setTransactionView] = useLocalStorage<InvestmentTransactionView>('monize-investments-transaction-view', 'brokerage');
+  const [transactionView, setTransactionView] = useLocalStorage<InvestmentTransactionView>('artha-investments-transaction-view', 'brokerage');
   // Tracks whether the investment transaction form currently shows a currency
   // conversion section so the modal can be widened to fit it without scrolling.
   const [investmentFormNeedsConversion, setInvestmentFormNeedsConversion] = useState(false);
@@ -171,7 +171,7 @@ function InvestmentsContent() {
           <PageHeader
             title={t('page.title')}
             subtitle={t('page.subtitle')}
-            helpUrl="https://github.com/kenlasko/monize/wiki/Investments"
+            helpUrl="https://github.com/unplugged-kk/artha/wiki/Investments"
             actions={
               <>
                 <div className="flex items-stretch gap-3 w-full sm:w-auto">

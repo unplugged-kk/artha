@@ -21,7 +21,7 @@ import type { LoanRateChange } from '@/types/loan-rate-change';
 
 const DEBT_ACCOUNT_TYPES: AccountType[] = ['LOAN', 'MORTGAGE', 'LINE_OF_CREDIT'];
 
-const ACCOUNT_STORAGE_KEY = 'monize-reports-loan-overpayment-simulator-account';
+const ACCOUNT_STORAGE_KEY = 'artha-reports-loan-overpayment-simulator-account';
 
 /**
  * Reports-section entry point for the loan overpayment simulator. Owns an

@@ -300,7 +300,7 @@ describe('MonteCarloReport', () => {
     it('restores the last-active scenario from localStorage on mount', async () => {
       const saved = scenario({ id: 'remembered', name: 'Remembered scn' });
       window.localStorage.setItem(
-        'monize-monte-carlo-active-id',
+        'artha-monte-carlo-active-id',
         'remembered',
       );
       mockApi.list.mockResolvedValueOnce([saved]);
@@ -802,20 +802,20 @@ describe('MonteCarloReport', () => {
         fireEvent.click(hide);
       });
       expect(
-        window.localStorage.getItem('monize-monte-carlo-inputs-collapsed'),
+        window.localStorage.getItem('artha-monte-carlo-inputs-collapsed'),
       ).toBe('1');
     });
 
     it('honours the persisted collapsed state on mount', async () => {
       const saved = scenario({ id: 'cached', name: 'Cached scn' });
-      window.localStorage.setItem('monize-monte-carlo-active-id', 'cached');
+      window.localStorage.setItem('artha-monte-carlo-active-id', 'cached');
       // Pre-populate the result cache so the initial-load effect rehydrates it.
       window.localStorage.setItem(
-        'monize:monte-carlo-results',
+        'artha:monte-carlo-results',
         JSON.stringify({ cached: simResult() }),
       );
       // Persisted toggle state from a previous session.
-      window.localStorage.setItem('monize-monte-carlo-inputs-collapsed', '1');
+      window.localStorage.setItem('artha-monte-carlo-inputs-collapsed', '1');
       mockApi.list.mockResolvedValueOnce([saved]);
       await renderReport();
       await waitFor(() => {
@@ -1325,7 +1325,7 @@ describe('MonteCarloReport', () => {
 
     it('drops a stale active-id when the matching scenario is gone', async () => {
       window.localStorage.setItem(
-        'monize-monte-carlo-active-id',
+        'artha-monte-carlo-active-id',
         'never-existed',
       );
       mockApi.list.mockResolvedValueOnce([scenario()]);
@@ -1333,7 +1333,7 @@ describe('MonteCarloReport', () => {
       // Form renders normally; active id was cleared so the stored id is gone.
       await screen.findByText('Contribution phase');
       expect(
-        window.localStorage.getItem('monize-monte-carlo-active-id'),
+        window.localStorage.getItem('artha-monte-carlo-active-id'),
       ).toBeNull();
     });
   });

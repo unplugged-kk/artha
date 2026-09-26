@@ -28,7 +28,7 @@ describe("McpCategoryTreeResource", () => {
   it("should register the resource", () => {
     expect(server.registerResource).toHaveBeenCalledWith(
       "categories",
-      "monize://categories",
+      "artha://categories",
       expect.any(Object),
       expect.any(Function),
     );
@@ -36,13 +36,13 @@ describe("McpCategoryTreeResource", () => {
 
   it("should return error when no user context", async () => {
     ctx.setUser(undefined);
-    const result = await handler("monize://categories", ctx);
+    const result = await handler("artha://categories", ctx);
     expect(result.contents[0].text).toContain("Error");
   });
 
   it("should return error when scope check fails", async () => {
     ctx.setUser({ userId: "u1", scopes: "write" });
-    const result = await handler("monize://categories", ctx);
+    const result = await handler("artha://categories", ctx);
     expect(result.contents[0].text).toContain("Insufficient scope");
   });
 
@@ -52,7 +52,7 @@ describe("McpCategoryTreeResource", () => {
       { id: "c1", name: "Food", children: [{ id: "c2", name: "Groceries" }] },
     ]);
 
-    const result = await handler("monize://categories", ctx);
+    const result = await handler("artha://categories", ctx);
     const parsed = JSON.parse(result.contents[0].text);
     expect(parsed[0].name).toBe("Food");
     expect(parsed[0].children).toHaveLength(1);

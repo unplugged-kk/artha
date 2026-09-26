@@ -2238,7 +2238,7 @@ describe("McpTransactionsTools", () => {
       const both = await handlers["manage_transactions"](
         createArgs([
           {
-            attachmentUri: "monize-attachment://x",
+            attachmentUri: "artha-attachment://x",
             fileData: PNG_B64,
             fileName: "r.png",
           },
@@ -2256,7 +2256,7 @@ describe("McpTransactionsTools", () => {
     it("rejects an unknown or expired relay attachment reference", async () => {
       relayAttachmentStore.get.mockReturnValue(undefined);
       const result = await handlers["manage_transactions"](
-        createArgs([{ attachmentUri: "monize-attachment://gone" }]),
+        createArgs([{ attachmentUri: "artha-attachment://gone" }]),
         ctx,
       );
       expect(result.isError).toBe(true);
@@ -2352,7 +2352,7 @@ describe("McpTransactionsTools", () => {
         data: PNG_BYTES,
       });
       const result = await handlers["manage_transactions"](
-        createArgs([{ attachmentUri: "monize-attachment://ref-9" }]),
+        createArgs([{ attachmentUri: "artha-attachment://ref-9" }]),
         ctx,
       );
       expect(relayAttachmentStore.get).toHaveBeenCalledWith(UUID_USER, "ref-9");

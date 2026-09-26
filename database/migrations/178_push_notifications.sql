@@ -3,7 +3,7 @@
 -- Two tables with deliberately different lifetimes:
 --
 --   * push_instance_config is the deployment's push identity -- one VAPID key
---     pair per Monize instance, generated on first start so a self-hosted
+--     pair per Artha instance, generated on first start so a self-hosted
 --     administrator registers nothing with Google, Apple or Firebase. The
 --     private half is AES-256-GCM ciphertext under ENCRYPTION_KEY, so an
 --     instance without that variable stores no key at all rather than a
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS push_subscriptions (
 -- Globally unique, not unique per user, and that is the security property.
 --
 -- A push subscription belongs to a browser profile and an origin, NOT to a
--- Monize session: two people sharing one browser get the same endpoint and the
+-- Artha session: two people sharing one browser get the same endpoint and the
 -- same encryption keys from pushManager.subscribe(). Scoped per user, both rows
 -- would survive and a notification addressed to the first account would be
 -- decrypted and displayed on the device the second account is now using.

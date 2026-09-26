@@ -11,7 +11,7 @@ import { tr } from "../../i18n/translate";
  * The destructive surfaces -- account deletion, data deletion, backup restore,
  * and the .mny import's wipe-first mode -- each require a second proof of
  * identity beyond the session. For a local account that is the password. For an
- * OIDC account there is no Monize-managed password, and the previous
+ * OIDC account there is no Artha-managed password, and the previous
  * implementation resolved that by testing whether a client-supplied string was
  * non-empty: the frontend sent the literal `"oidc-session-confirmed"`, the
  * backend accepted anything, and the specs pinned the sentinel as expected

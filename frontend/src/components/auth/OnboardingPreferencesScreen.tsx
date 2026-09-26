@@ -26,7 +26,7 @@ export function OnboardingPreferencesScreen({
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <Image
-            src="/icons/monize-logo-transparent.svg"
+            src="/icons/artha-logo-transparent.svg"
             alt="Artha"
             width={96}
             height={96}

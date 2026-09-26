@@ -502,7 +502,7 @@ export class McpHttpController implements OnModuleDestroy {
     const resourceMetadata = `${publicUrl}/.well-known/oauth-protected-resource`;
     res.setHeader(
       "WWW-Authenticate",
-      `Bearer realm="monize", resource_metadata="${resourceMetadata}"`,
+      `Bearer realm="artha", resource_metadata="${resourceMetadata}"`,
     );
     res.status(401).json({
       jsonrpc: "2.0",

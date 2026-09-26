@@ -1181,7 +1181,7 @@ describe("BackupService", () => {
         const { res, headers, chunks } = responseDouble();
         res.setHeader(
           "Content-Disposition",
-          'attachment; filename="monize-backup-2026-08-05.json.gz"',
+          'attachment; filename="artha-backup-2026-08-05.json.gz"',
         );
 
         await service.streamExport(userId, res);
@@ -1212,7 +1212,7 @@ describe("BackupService", () => {
         const { res, headers } = responseDouble();
         res.setHeader(
           "Content-Disposition",
-          'attachment; filename="monize-backup-2026-08-05.mzbe"',
+          'attachment; filename="artha-backup-2026-08-05.mzbe"',
         );
 
         await service.streamExport(userId, res, "backup-secret");
@@ -1237,7 +1237,7 @@ describe("BackupService", () => {
         const { res, headers } = responseDouble();
         res.setHeader(
           "Content-Disposition",
-          'attachment; filename="monize-backup-2026-08-05.json.gz"',
+          'attachment; filename="artha-backup-2026-08-05.json.gz"',
         );
 
         await service.streamExport(userId, res);
@@ -1588,9 +1588,9 @@ describe("BackupService", () => {
       await service.streamExport(userId, res, "secret");
 
       const written = Buffer.concat(chunks);
-      // Magic header check -- the file starts with MZBE, and it is the framed
+      // Magic header check -- the file starts with ARBE, and it is the framed
       // container version.
-      expect(written.subarray(0, 4).toString("ascii")).toBe("MZBE");
+      expect(written.subarray(0, 4).toString("ascii")).toBe("ARBE");
       expect(written[4]).toBe(2);
       expect(res.writableEnded).toBe(true);
     });
@@ -1641,7 +1641,7 @@ describe("BackupService", () => {
     it("returns an encrypted envelope when a password is provided", async () => {
       mockDataSource.query.mockResolvedValue([]);
       const { buffer: buf } = await service.exportToBuffer(userId, "pw");
-      expect(buf.subarray(0, 4).toString("ascii")).toBe("MZBE");
+      expect(buf.subarray(0, 4).toString("ascii")).toBe("ARBE");
     });
   });
 
@@ -5328,7 +5328,7 @@ describe("BackupService", () => {
 
     it("does not spend the re-authentication when the file is unusable", async () => {
       // The artifact is single-use and the round trip that mints it loses the
-      // file selection, so a wrong backup password or a non-Monize file must not
+      // file selection, so a wrong backup password or a non-Artha file must not
       // cost one. Nothing is written either way.
       mockUserRepo.findOne.mockResolvedValue({
         ...mockUser,

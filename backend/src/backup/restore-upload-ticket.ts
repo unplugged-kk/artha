@@ -53,7 +53,7 @@ import type { IncomingMessage } from "http";
  */
 
 /** Domain separator: this key signs tickets and nothing else. */
-const KEY_CONTEXT = "monize.restore-upload-ticket.v1";
+const KEY_CONTEXT = "artha.restore-upload-ticket.v1";
 
 /** The header the upload carries its ticket in. */
 export const RESTORE_TICKET_HEADER = "x-restore-upload-ticket";

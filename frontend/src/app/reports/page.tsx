@@ -43,7 +43,7 @@ function ReportsContent() {
   const t = useTranslations('reports');
   const router = useRouter();
   const { density } = useDensityPreference('reports');
-  const [categoryFilter, setCategoryFilter] = useLocalStorage<ReportCategory | 'all'>('monize-reports-category', 'all');
+  const [categoryFilter, setCategoryFilter] = useLocalStorage<ReportCategory | 'all'>('artha-reports-category', 'all');
   // `?category=` overrides the remembered filter for this visit, so a link can
   // guarantee a given report is on screen whatever the user last filtered by
   // (a guided tour pointing at one uses this). Applied once per param value via
@@ -88,12 +88,12 @@ function ReportsContent() {
 
   // One-time migration: move localStorage favourites to backend
   useEffect(() => {
-    const stored = localStorage.getItem('monize-favourite-reports');
+    const stored = localStorage.getItem('artha-favourite-reports');
     if (!stored || !preferences) return;
     try {
       const ids = JSON.parse(stored) as string[];
       if (!Array.isArray(ids) || ids.length === 0) {
-        localStorage.removeItem('monize-favourite-reports');
+        localStorage.removeItem('artha-favourite-reports');
         return;
       }
       // Fetch latest from server to merge correctly with other devices
@@ -103,12 +103,12 @@ function ReportsContent() {
         updateStorePreferences({ favouriteReportIds: merged });
         return userSettingsApi.updatePreferences({ favouriteReportIds: merged });
       }).then(() => {
-        localStorage.removeItem('monize-favourite-reports');
+        localStorage.removeItem('artha-favourite-reports');
       }).catch((error) => {
         logger.error('Failed to migrate favourite reports:', error);
       });
     } catch {
-      localStorage.removeItem('monize-favourite-reports');
+      localStorage.removeItem('artha-favourite-reports');
     }
   }, [preferences !== null]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -314,7 +314,7 @@ function ReportsContent() {
         <PageHeader
           title={t('page.title')}
           subtitle={t('page.subtitle')}
-          helpUrl="https://github.com/kenlasko/monize/wiki/Reports"
+          helpUrl="https://github.com/unplugged-kk/artha/wiki/Reports"
           actions={
             <NewReportButton
               onNewStandard={() => router.push('/reports/custom/new')}

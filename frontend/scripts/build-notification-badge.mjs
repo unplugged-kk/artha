@@ -1,5 +1,5 @@
 /**
- * Rasterizes the Monize glyph into the monochrome mask Chrome needs for a
+ * Rasterizes the Artha glyph into the monochrome mask Chrome needs for a
  * notification badge.
  *
  * Chrome on Android draws `badge` as a MASK: it keeps the alpha channel, throws
@@ -21,7 +21,7 @@ import { fileURLToPath } from 'node:url';
 import { deflateSync } from 'node:zlib';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const SOURCE_SVG = resolve(here, '../public/icons/monize-logo-transparent.svg');
+const SOURCE_SVG = resolve(here, '../public/icons/artha-logo-transparent.svg');
 const OUTPUT_PNG = resolve(here, '../public/icons/badge-monochrome.png');
 
 // A notification badge is drawn at 24dp; 96px is that at xxxhdpi, the largest

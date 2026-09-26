@@ -225,7 +225,7 @@
     "step3": "Claude'un Artha'den gelen sorguları dinlemesi için bir aracı döngüsü başlatın:",
     "loopPrompt": "Loop forever: call get_next_prompt; if hasPrompt is false, call it again; otherwise handle the request with the Artha tools and call post_response with the answer; then repeat.",
     "codexHeading": "Veya Codex kullanın",
-    "codexNote": "Bunu ~/.codex/config.toml dosyasına ekleyin, MONIZE_TOKEN değerini belirtecinize ayarlayın, ardından codex'i çalıştırın ve yukarıdaki istemi yapıştırın.",
+    "codexNote": "Bunu ~/.codex/config.toml dosyasına ekleyin, ARTHA_TOKEN değerini belirtecinize ayarlayın, ardından codex'i çalıştırın ve yukarıdaki istemi yapıştırın.",
     "copy": "Kopyala",
     "copied": "Panoya kopyalandı"
   }

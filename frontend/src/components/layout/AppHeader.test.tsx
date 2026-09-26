@@ -137,14 +137,14 @@ describe('AppHeader', () => {
   });
 
   it('clears the incomplete-logout flag on a confirmed logout', async () => {
-    window.sessionStorage.setItem('monize:logout-incomplete', '1');
+    window.sessionStorage.setItem('artha:logout-incomplete', '1');
     render(<AppHeader />);
     fireEvent.click(screen.getByRole('button', { name: /logout/i }));
 
     await waitFor(() => {
       expect(mockLogout).toHaveBeenCalled();
     });
-    expect(window.sessionStorage.getItem('monize:logout-incomplete')).toBeNull();
+    expect(window.sessionStorage.getItem('artha:logout-incomplete')).toBeNull();
     expect(toast.success).toHaveBeenCalled();
     expect(toast.error).not.toHaveBeenCalled();
   });
@@ -165,7 +165,7 @@ describe('AppHeader', () => {
     expect(toast.success).not.toHaveBeenCalled();
     expect(toast.error).toHaveBeenCalled();
     // and the login screen is told to keep warning until a retry succeeds
-    expect(window.sessionStorage.getItem('monize:logout-incomplete')).toBe('1');
+    expect(window.sessionStorage.getItem('artha:logout-incomplete')).toBe('1');
   });
 
   it('renders the Tools dropdown button', () => {

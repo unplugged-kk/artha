@@ -79,8 +79,8 @@ import { preferredCurrency } from '@/lib/default-currency';
 const logger = createLogger('PortfolioValueReport');
 
 const DAILY_RANGES = new Set(['1w', '1m', '3m', 'ytd', '1y']);
-const RANGE_STORAGE_KEY = 'monize-reports-portfolio-value-range';
-const ACCOUNTS_STORAGE_KEY = 'monize-reports-portfolio-value-accounts';
+const RANGE_STORAGE_KEY = 'artha-reports-portfolio-value-range';
+const ACCOUNTS_STORAGE_KEY = 'artha-reports-portfolio-value-accounts';
 
 function CustomTooltip({ active, payload, fmtFull, portfolioLabel }: {
   active?: boolean;
@@ -158,7 +158,7 @@ export function PortfolioValueReport() {
   // Whether the chart stacks per-security contribution bands instead of a
   // single portfolio-total area. Persisted so the choice survives navigation.
   const [seriesMode, setSeriesMode] = useLocalStorage<'total' | 'securities'>(
-    'monize-reports-portfolio-value-series-mode',
+    'artha-reports-portfolio-value-series-mode',
     'total',
   );
   const [breakdown, setBreakdown] = useState<SecuritiesBreakdown | null>(null);

@@ -9,7 +9,7 @@ import { createLogger } from '@/lib/logger';
 const logger = createLogger('UpdateAvailableBanner');
 
 /**
- * Admin-only banner that alerts operators when a newer Monize release is
+ * Admin-only banner that alerts operators when a newer Artha release is
  * available upstream on GitHub. Dismissal is stored per-version on the user's
  * preferences, so a dismissed banner re-appears once the next release lands.
  */

@@ -1,11 +1,11 @@
 # Importing from Microsoft Money
 
-Monize reads Microsoft Money `.mny` files directly. Not a QIF export of one --
+Artha reads Microsoft Money `.mny` files directly. Not a QIF export of one --
 the file itself, with its accounts, transactions, transfers, splits, securities,
 price history, exchange rates and scheduled bills intact.
 
 There is nothing to install. Money does not need to be on the machine, and the
-file never leaves your Monize server.
+file never leaves your Artha server.
 
 ## Before you start
 
@@ -14,17 +14,17 @@ file describes, and if an account of the same name already exists it adds
 transactions to it rather than working out which ones you already have. On a
 profile that already has data you will get duplicates.
 
-If you have been trying Monize out and want to start over from Money, the review
+If you have been trying Artha out and want to start over from Money, the review
 step offers **Start fresh**, which runs the same Delete My Data operation as
 Settings → Danger Zone before the import begins. It asks you to type a
 confirmation word and re-enter your password, and it cannot be undone.
 
-**Work from a copy.** Monize never writes to the file, but a spare copy of three
+**Work from a copy.** Artha never writes to the file, but a spare copy of three
 decades of finances costs nothing.
 
-**Money 97 and 98 files are not supported.** Those predate the format Monize
+**Money 97 and 98 files are not supported.** Those predate the format Artha
 reads. Open the file once in the free Money Plus Sunset edition and save it; that
-converts it, and the result imports normally. Monize detects these files and
+converts it, and the result imports normally. Artha detects these files and
 says so rather than failing obscurely.
 
 `.mbf` backup archives are also unsupported. Restore the backup in Money first
@@ -32,7 +32,7 @@ and import the resulting `.mny`.
 
 ## Importing
 
-1. Go to **Import** and choose your `.mny` file. Monize reads it on the server
+1. Go to **Import** and choose your `.mny` file. Artha reads it on the server
    and shows a preview -- nothing is written yet.
 
 2. **If the file asks for a password**, type it. Every Money file is encrypted,
@@ -54,7 +54,7 @@ and import the resulting `.mny`.
      before rather than after.
    - **Scheduled bills** appear as a checkbox list. Money keeps one row per
      occurrence, so a long history holds thousands of them for a handful of real
-     bills; Monize detects the live series and pre-ticks those. An unticked bill
+     bills; Artha detects the live series and pre-ticks those. An unticked bill
      is simply not created.
    - **Notes about this file** collects anything ambiguous -- securities sharing
      a symbol, an action code Money did not document, a repeat interval with no
@@ -65,7 +65,7 @@ and import the resulting `.mny`.
    phase is running.
 
 5. **Check the verification report.** Every account is listed with the balance
-   computed from your Money file, the balance it ended up with in Monize, and
+   computed from your Money file, the balance it ended up with in Artha, and
    the difference. Investment accounts additionally compare share counts against
    Money's own open tax lots. A green run says every account reconciles; anything
    that does not is listed with the delta so you can look at it directly. The
@@ -80,12 +80,12 @@ and import the resulting `.mny`.
 | Import closed accounts | on | Closed accounts keep their history and are created closed |
 | Import price history | on | Money's own record of what each security was worth, day by day |
 | Import exchange rates | on | Historical rates, so past foreign-currency transactions convert the way Money had them |
-| Start fresh | off | Removes your existing Monize data before importing. Typed confirmation and password required |
+| Start fresh | off | Removes your existing Artha data before importing. Typed confirmation and password required |
 
 ## What is imported
 
 - **Accounts** of every type, with opening balances, currencies, and closed and
-  favourite flags. A Money investment account becomes Monize's linked cash and
+  favourite flags. A Money investment account becomes Artha's linked cash and
   brokerage pair, matching how Money itself stores them. Money's watch accounts
   ("Investments to Watch") are created excluded from net worth, since they track
   quotes rather than money you hold.
@@ -113,12 +113,12 @@ and import the resulting `.mny`.
 
 ## What is not imported (v1)
 
-- **Budgets.** Money's budget tables have no clean equivalent in Monize's.
+- **Budgets.** Money's budget tables have no clean equivalent in Artha's.
 - **Savings goals.** No equivalent entity.
 - **Classifications** beyond ordinary categories.
 - **Attachments** embedded in the file.
 - **Categories deeper than two levels** are flattened into `Parent:Child` names;
-  Monize's category tree is two levels deep.
+  Artha's category tree is two levels deep.
 
 ## Known limitations
 
@@ -127,7 +127,7 @@ the same file twice creates the transactions twice.
 
 **Foreign-currency cost basis.** Money stores a foreign holding's cost basis
 converted to your base currency at the historical rate, not in the security's own
-currency. Monize imports what the file says; a holding bought in a currency other
+currency. Artha imports what the file says; a holding bought in a currency other
 than your base one can therefore show a cost basis that differs from what you
 paid in the original currency. The verification report flags these, and the share
 counts themselves are unaffected.
@@ -138,7 +138,7 @@ available to this project, so their handling is inferred. Any transaction mapped
 through one carries a note in the report rather than being silently accepted.
 
 **Securities sharing a symbol.** Money allows two funds with the same ticker.
-Monize's symbols are unique per user, so the second gets a suffix (`VOO-2`) and a
+Artha's symbols are unique per user, so the second gets a suffix (`VOO-2`) and a
 note in the report -- never collapsed into the first. A security with no symbol
 gets a generated placeholder and is excluded from automatic price updates.
 
@@ -173,7 +173,7 @@ Two self-hosting failures look like the app is broken and are configuration:
 ## Accuracy, and how to check it
 
 The verification report is the point. Balances are computed from the Money file
-by the same rule Monize computes its own, and share counts are compared against
+by the same rule Artha computes its own, and share counts are compared against
 Money's open tax lots -- so a discrepancy shows up as a number rather than as a
 suspicion. If an account does not reconcile, the report names it and says by how
 much.

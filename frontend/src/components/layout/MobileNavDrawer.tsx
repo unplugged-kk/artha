@@ -103,7 +103,7 @@ export function MobileNavDrawer({
             className="flex items-center gap-2 text-xl font-bold text-blue-600 dark:text-blue-400"
           >
             <Image
-              src="/icons/monize-logo-transparent.svg"
+              src="/icons/artha-logo-transparent.svg"
               alt="Artha"
               width={28}
               height={28}

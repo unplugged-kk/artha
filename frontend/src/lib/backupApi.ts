@@ -183,19 +183,19 @@ export interface BackupEncryptionStatus {
 // user for the password the backup was originally made with.
 export const BACKUP_PASSWORD_REQUIRED_CODE = 'BACKUP_PASSWORD_REQUIRED';
 
-// Encrypted Monize backups begin with the ASCII magic "MZBE" (see the backend
+// Encrypted Artha backups begin with the ASCII magic "ARBE" (see the backend
 // backup-crypto.util envelope format). Sniffing the first four bytes lets the
 // restore UI show a backup-password field only when one is actually needed.
-const MZBE_MAGIC = [0x4d, 0x5a, 0x42, 0x45];
+const ARBE_MAGIC = [0x41, 0x52, 0x42, 0x45];
 
 export async function isEncryptedBackupFile(file: File): Promise<boolean> {
   try {
     const header = new Uint8Array(
-      await file.slice(0, MZBE_MAGIC.length).arrayBuffer(),
+      await file.slice(0, ARBE_MAGIC.length).arrayBuffer(),
     );
     if (
-      header.length === MZBE_MAGIC.length &&
-      MZBE_MAGIC.every((byte, i) => header[i] === byte)
+      header.length === ARBE_MAGIC.length &&
+      ARBE_MAGIC.every((byte, i) => header[i] === byte)
     ) {
       return true;
     }
@@ -312,7 +312,7 @@ export const backupApi = {
     backupPassword?: string;
   }): Promise<RestoreResult> => {
     // Three accepted file shapes:
-    //   *.mzbe       -> Monize encrypted envelope, sent as-is
+    //   *.mzbe       -> Artha encrypted envelope, sent as-is
     //   *.gz/*.json.gz -> already gzipped, sent as-is
     //   anything else -> assume raw JSON, gzip it client-side
     const ext = params.file.name.toLowerCase();

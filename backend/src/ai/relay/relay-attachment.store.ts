@@ -5,9 +5,9 @@ import { validateAttachments } from "../query/attachment-validation";
 import { RelayAttachmentRef } from "./ai-relay.types";
 
 /** URI scheme the agent reads to fetch a relayed attachment as an MCP resource. */
-export const ATTACHMENT_URI_SCHEME = "monize-attachment";
+export const ATTACHMENT_URI_SCHEME = "artha-attachment";
 
-/** Build the `monize-attachment://<id>` resource URI for an attachment id. */
+/** Build the `artha-attachment://<id>` resource URI for an attachment id. */
 export function attachmentUri(id: string): string {
   return `${ATTACHMENT_URI_SCHEME}://${id}`;
 }
@@ -46,7 +46,7 @@ export interface StoredAttachment {
  * Mirrors the AiRelayService broker's ephemeral design: nothing touches the DB
  * or disk, and a multi-replica deployment would need a shared backplane. The
  * agent never receives the bytes directly -- it reads them through the
- * `monize-attachment://<id>` MCP resource, which looks them up here scoped to
+ * `artha-attachment://<id>` MCP resource, which looks them up here scoped to
  * the calling user. The nested map keying makes a cross-user read structurally
  * impossible: an id is only ever resolved within its owner's bucket.
  */

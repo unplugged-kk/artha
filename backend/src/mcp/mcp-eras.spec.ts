@@ -50,9 +50,9 @@ const written: string[] = [];
 /** The definition under test: one read tool and one confirmed write. */
 function buildServer(): McpServer {
   const server = new McpServer(
-    { name: "monize", version: "9.9.9" },
+    { name: "artha", version: "9.9.9" },
     {
-      instructions: "Monize test server.",
+      instructions: "Artha test server.",
       capabilities: { tools: {}, resources: {}, prompts: {} },
       inputRequired: { maxRounds: 2, legacyShim: false },
       requestState: { verify: codec.verify },

@@ -142,7 +142,7 @@ describe("RLS enable migration (M3, migration 123)", () => {
       expect(sql).not.toMatch(/\bGRANT\b/i);
       expect(sql).not.toMatch(/\bREVOKE\b/i);
       expect(sql).not.toMatch(/\b(CREATE|ALTER|DROP)\s+ROLE\b/i);
-      expect(sql).not.toMatch(/monize_app/i);
+      expect(sql).not.toMatch(/artha_app/i);
     });
 
     it("derives its target list from pg_policies rather than hard-coding tables", () => {

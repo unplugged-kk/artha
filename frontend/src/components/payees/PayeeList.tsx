@@ -99,7 +99,7 @@ export type SortDirection = 'asc' | 'desc';
 /**
  * Every field this list sorts by, with its position in the tier header's own
  * order. The phone's slim control header renders all six: the chosen field is
- * persisted (`monize-payees-sort-field`, set on the Payees page) and FIVE of
+ * persisted (`artha-payees-sort-field`, set on the Payees page) and FIVE of
  * the six columns they name are hidden at phone width (Default Category below
  * `sm`, Count below `md`, Aliases, Last Used and Created below `lg`; only Name
  * survives), so a header offering fewer would strand a phone on a sort order it

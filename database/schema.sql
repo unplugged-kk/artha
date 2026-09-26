@@ -1,4 +1,4 @@
--- Monize - Database Schema
+-- Artha - Database Schema
 -- PostgreSQL Schema for Microsoft Money replacement
 
 -- Extensions
@@ -2540,7 +2540,7 @@ CREATE INDEX idx_gem_strategy_signals_user ON gem_strategy_signals(user_id);
 -- Web Push transport (migration 178).
 --
 -- push_instance_config is the deployment's push identity: one VAPID key pair
--- per Monize instance, generated on first start so a self-hosted administrator
+-- per Artha instance, generated on first start so a self-hosted administrator
 -- registers nothing with Google, Apple or Firebase. The private half is
 -- AES-256-GCM ciphertext under ENCRYPTION_KEY; an instance without that
 -- variable stores no key at all rather than a plaintext secret. Deployment-wide
@@ -2618,7 +2618,7 @@ CREATE TABLE push_subscriptions (
 -- Globally unique, not unique per user, and that is the security property.
 --
 -- A push subscription belongs to a browser profile and an origin, NOT to a
--- Monize session: two people sharing one browser get the same endpoint and the
+-- Artha session: two people sharing one browser get the same endpoint and the
 -- same encryption keys from pushManager.subscribe(). Scoped per user, both rows
 -- would survive and a notification addressed to the first account would be
 -- decrypted and displayed on the device the second account is now using.
@@ -3407,7 +3407,7 @@ CREATE POLICY emergency_access_contacts_isolation ON emergency_access_contacts
 -- Enabling RLS does not affect the table owner, and at RLS_MODE=off -- the
 -- default, and where every deployment starts -- the app connects as the owner.
 -- So this is inert for a new install and stays inert until an operator moves
--- the app onto the unprivileged monize_app role. FORCE ROW LEVEL SECURITY is
+-- the app onto the unprivileged artha_app role. FORCE ROW LEVEL SECURITY is
 -- deliberately not used: it would apply policies to the owner as well and break
 -- db-init, db-migrate and backup restore.
 --

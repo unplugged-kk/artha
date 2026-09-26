@@ -515,8 +515,8 @@ describe('InvestmentTransactionForm', () => {
   });
 
   describe('Remembering the last entered date', () => {
-    const INVESTMENT_DATE_KEY = 'monize-last-investment-transaction-date';
-    const REGULAR_DATE_KEY = 'monize-last-transaction-date';
+    const INVESTMENT_DATE_KEY = 'artha-last-investment-transaction-date';
+    const REGULAR_DATE_KEY = 'artha-last-transaction-date';
 
     beforeEach(() => {
       sessionStorage.clear();

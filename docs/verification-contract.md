@@ -349,7 +349,7 @@ differences produce failures that look like regressions and are not.
   `net-worth.service.spec.ts` are the ones that bite.
 - `npm test` in `backend/` runs `test:unit && test:integration` -- the two CI
   commands above, in that order, never concurrently. The integration suites share
-  one `monize_test` and rebuild its schema (`synchronize` + `dropSchema`), so a
+  one `artha_test` and rebuild its schema (`synchronize` + `dropSchema`), so a
   second Jest worker is a race rather than a speedup: the parallel config pins
   `roots: ["<rootDir>/src"]` and `test/jest-e2e.json` pins `maxWorkers: 1`, both
   asserted by `backend/src/common/jest-config.guard.spec.ts`. The default command

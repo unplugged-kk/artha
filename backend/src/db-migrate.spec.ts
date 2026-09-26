@@ -387,10 +387,10 @@ describe("db-migrate runMigrations()", () => {
       expect(mockOn).toHaveBeenCalledWith("notice", expect.any(Function));
       const handler = mockOn.mock.calls.find((c) => c[0] === "notice")![1];
       handler({
-        message: "Insufficient privilege to grant DML to role monize_app",
+        message: "Insufficient privilege to grant DML to role artha_app",
       });
       expect(warnSpy).toHaveBeenCalledWith(
-        "Postgres: Insufficient privilege to grant DML to role monize_app",
+        "Postgres: Insufficient privilege to grant DML to role artha_app",
       );
     } finally {
       warnSpy.mockRestore();
@@ -640,7 +640,7 @@ describe("formatRunnerFailure()", () => {
     const report = formatRunnerFailure(
       pgError("password authentication failed", {
         code: "42501",
-        detail: "role monize_user",
+        detail: "role artha_user",
         hint: "check DATABASE_PASSWORD",
       }),
     );
@@ -650,7 +650,7 @@ describe("formatRunnerFailure()", () => {
     );
     expect(report).toContain("password authentication failed");
     expect(report).toContain("42501 (insufficient_privilege)");
-    expect(report).toContain("role monize_user");
+    expect(report).toContain("role artha_user");
     expect(report).toContain("check DATABASE_PASSWORD");
     expect(report).toContain("Nothing was migrated.");
     expect(report).toContain("docs/database-migrations.md");

@@ -66,14 +66,14 @@ describe('densityStore', () => {
 
   describe('migrating the twelve per-view keys', () => {
     it('carries each key into its own view rather than picking a winner', () => {
-      window.localStorage.setItem('monize-transactions-density', JSON.stringify('dense'));
-      window.localStorage.setItem('monize-tags-density', JSON.stringify('compact'));
+      window.localStorage.setItem('artha-transactions-density', JSON.stringify('dense'));
+      window.localStorage.setItem('artha-tags-density', JSON.stringify('compact'));
 
       expect(migrateLegacyDensity()).toEqual({ transactions: 'dense', tags: 'compact' });
     });
 
     it("reads the account list's differently-prefixed key too", () => {
-      // `accounts.filter.density` was the one key not under the `monize-`
+      // `accounts.filter.density` was the one key not under the `artha-`
       // prefix, and so the one most easily missed.
       window.localStorage.setItem('accounts.filter.density', JSON.stringify('compact'));
 
@@ -102,18 +102,18 @@ describe('densityStore', () => {
     });
 
     it('accepts a bare unquoted value as well as a JSON string', () => {
-      window.localStorage.setItem('monize-transactions-density', 'compact');
+      window.localStorage.setItem('artha-transactions-density', 'compact');
 
       expect(migrateLegacyDensity()).toEqual({ transactions: 'compact' });
     });
 
     it('drops a value outside the three levels rather than adopting it', () => {
-      window.localStorage.setItem('monize-transactions-density', JSON.stringify('enormous'));
-      window.localStorage.setItem('monize-payees-density', JSON.stringify('dense'));
+      window.localStorage.setItem('artha-transactions-density', JSON.stringify('enormous'));
+      window.localStorage.setItem('artha-payees-density', JSON.stringify('dense'));
 
       // The junk entry is skipped without taking its neighbour down with it.
       expect(migrateLegacyDensity()).toEqual({ payees: 'dense' });
-      expect(window.localStorage.getItem('monize-transactions-density')).toBeNull();
+      expect(window.localStorage.getItem('artha-transactions-density')).toBeNull();
     });
 
     it('returns an empty map when nothing was stored', () => {

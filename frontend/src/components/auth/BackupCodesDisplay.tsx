@@ -35,7 +35,7 @@ export function BackupCodesDisplay({ codes, onDone }: BackupCodesDisplayProps) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'monize-backup-codes.txt';
+    a.download = 'artha-backup-codes.txt';
     a.click();
     URL.revokeObjectURL(url);
   };

@@ -4,7 +4,7 @@ import { InvestmentAction } from "./entities/investment-transaction.entity";
 /**
  * The actions that may carry accrued interest.
  *
- * REDEEM only in Monize's stored model and public API. Microsoft Money Plus can
+ * REDEEM only in Artha's stored model and public API. Microsoft Money Plus can
  * encode a register activity displayed as "Redeem CD/Bond" as SELL plus a
  * positive `TRN_INV.amtInt`; the importer normalizes that measured variant to
  * REDEEM before it reaches this boundary. See

@@ -10,14 +10,14 @@
  *   - `shadow`  : identity GUCs emitted per transaction, runtime still the owner
  *                 (policies bypassed) -- exercises the whole mechanism safely.
  *   - `enforce` : identity GUCs emitted and runtime connects as the
- *                 unprivileged `monize_app` role.
+ *                 unprivileged `artha_app` role.
  */
 export const RLS_MODES = ["off", "shadow", "enforce"] as const;
 
 export type RlsMode = (typeof RLS_MODES)[number];
 
 /** Default runtime role name when `DATABASE_APP_USER` is not set. */
-export const DEFAULT_APP_USER = "monize_app";
+export const DEFAULT_APP_USER = "artha_app";
 
 /**
  * Parse and validate a raw `RLS_MODE` value. An unset/blank value defaults to
@@ -63,7 +63,7 @@ export interface RlsDatabaseAuth {
 /**
  * Choose the DB credentials the runtime connects with, based on the RLS mode.
  *
- * At `enforce` the runtime must connect as the unprivileged `monize_app` role,
+ * At `enforce` the runtime must connect as the unprivileged `artha_app` role,
  * so a missing `DATABASE_APP_PASSWORD` is a fatal misconfiguration -- throwing
  * here refuses the boot rather than silently connecting as the owner (which
  * would bypass every policy and defeat enforcement). In `off`/`shadow` the
@@ -77,7 +77,7 @@ export function resolveRlsDatabaseAuth(
     if (!input.appPassword) {
       throw new Error(
         "RLS_MODE=enforce requires DATABASE_APP_PASSWORD (the unprivileged " +
-          "monize_app role's password). Set it, or use RLS_MODE=shadow/off.",
+          "artha_app role's password). Set it, or use RLS_MODE=shadow/off.",
       );
     }
     return {

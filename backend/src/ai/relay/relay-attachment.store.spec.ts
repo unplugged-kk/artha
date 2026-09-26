@@ -37,7 +37,7 @@ describe("RelayAttachmentStore", () => {
     expect(ref.filename).toBe("chart.png");
     expect(ref.kind).toBe("image");
     expect(ref.mediaType).toBe("image/png");
-    expect(ref.uri).toBe(`monize-attachment://${ref.id}`);
+    expect(ref.uri).toBe(`artha-attachment://${ref.id}`);
 
     const stored = store.get(USER, ref.id);
     expect(stored?.data.length).toBeGreaterThan(0);

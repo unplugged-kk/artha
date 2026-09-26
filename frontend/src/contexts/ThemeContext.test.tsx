@@ -111,12 +111,12 @@ describe('ThemeContext', () => {
       result.current.setTheme('dark');
     });
 
-    expect(localStorage.setItem).toHaveBeenCalledWith('monize-theme', 'dark');
+    expect(localStorage.setItem).toHaveBeenCalledWith('artha-theme', 'dark');
     expect(result.current.theme).toBe('dark');
   });
 
   it('reads persisted theme from localStorage on mount', () => {
-    localStorage.setItem('monize-theme', 'dark');
+    localStorage.setItem('artha-theme', 'dark');
 
     const { result } = renderHook(() => useTheme(), {
       wrapper: ThemeProvider,
@@ -138,7 +138,7 @@ describe('ThemeContext', () => {
       result.current.setColorTheme('nord');
     });
 
-    expect(localStorage.setItem).toHaveBeenCalledWith('monize-color-theme', 'nord');
+    expect(localStorage.setItem).toHaveBeenCalledWith('artha-color-theme', 'nord');
     expect(result.current.colorTheme).toBe('nord');
     expect(document.documentElement.getAttribute('data-theme')).toBe('nord');
   });
@@ -158,7 +158,7 @@ describe('ThemeContext', () => {
   });
 
   it('reads persisted colour theme from localStorage on mount', () => {
-    localStorage.setItem('monize-color-theme', 'solarized');
+    localStorage.setItem('artha-color-theme', 'solarized');
 
     const { result } = renderHook(() => useTheme(), { wrapper: ThemeProvider });
     expect(result.current.colorTheme).toBe('solarized');
@@ -166,7 +166,7 @@ describe('ThemeContext', () => {
   });
 
   it('ignores invalid stored colour theme values', () => {
-    localStorage.setItem('monize-color-theme', 'neon-disco');
+    localStorage.setItem('artha-color-theme', 'neon-disco');
 
     const { result } = renderHook(() => useTheme(), { wrapper: ThemeProvider });
     expect(result.current.colorTheme).toBe('default');
@@ -185,7 +185,7 @@ describe('ThemeContext', () => {
   });
 
   it('ignores invalid stored theme values', () => {
-    localStorage.setItem('monize-theme', 'invalid-theme');
+    localStorage.setItem('artha-theme', 'invalid-theme');
     const { result } = renderHook(() => useTheme(), { wrapper: ThemeProvider });
     expect(result.current.theme).toBe('system');
   });
@@ -250,11 +250,11 @@ describe('ThemeContext', () => {
   it('mirrors the resolved theme and palette into cookies for the boot surfaces', () => {
     const { result } = renderHook(() => useTheme(), { wrapper: ThemeProvider });
 
-    expect(Cookies.set).toHaveBeenCalledWith('monize-resolved-theme', 'light', {
+    expect(Cookies.set).toHaveBeenCalledWith('artha-resolved-theme', 'light', {
       sameSite: 'lax',
       expires: 365,
     });
-    expect(Cookies.set).toHaveBeenCalledWith('monize-color-theme', 'default', {
+    expect(Cookies.set).toHaveBeenCalledWith('artha-color-theme', 'default', {
       sameSite: 'lax',
       expires: 365,
     });
@@ -262,7 +262,7 @@ describe('ThemeContext', () => {
     act(() => {
       result.current.setTheme('dark');
     });
-    expect(Cookies.set).toHaveBeenCalledWith('monize-resolved-theme', 'dark', {
+    expect(Cookies.set).toHaveBeenCalledWith('artha-resolved-theme', 'dark', {
       sameSite: 'lax',
       expires: 365,
     });
@@ -270,7 +270,7 @@ describe('ThemeContext', () => {
     act(() => {
       result.current.setColorTheme('nord');
     });
-    expect(Cookies.set).toHaveBeenCalledWith('monize-color-theme', 'nord', {
+    expect(Cookies.set).toHaveBeenCalledWith('artha-color-theme', 'nord', {
       sameSite: 'lax',
       expires: 365,
     });

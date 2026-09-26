@@ -11,7 +11,7 @@ import { GemAssetRole } from "@/types/gem-strategy";
  * Suggestions come in regional listings because the same index is bought
  * through a different fund depending on where the account is. A US brokerage
  * buys the US-listed ETF; a European one generally cannot, and buys the UCITS
- * equivalent instead. Monize has no regional setting to choose between them, so
+ * equivalent instead. Artha has no regional setting to choose between them, so
  * the picker offers both and the investor picks the listing their broker
  * actually trades -- the exchange and currency are theirs to confirm when the
  * instrument is created.

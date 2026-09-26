@@ -347,7 +347,7 @@ most real funds are described in part. Requiring both sides of the comparison
 to account for their whole fund before an exposure could be reported therefore
 blanked the entire column: a portfolio of four world and thematic trackers, two
 of them visibly holding the target's largest markets, showed "No data" against
-every row and 0% overall. That reads as "Monize cannot see the overlap", which
+every row and 0% overall. That reads as "Artha cannot see the overlap", which
 is a worse falsehood than the imprecision it was avoiding.
 
 So the overlap of the *described* parts is reported, and it is reported as a
@@ -575,7 +575,7 @@ strategy accounts and an instrument to each role, and sets the cadence, the
 momentum window and the cost assumptions. Saving returns the refreshed report,
 so a complete configuration produces its first signal immediately.
 
-Prerequisites, since the strategy only reads what already exists in Monize:
+Prerequisites, since the strategy only reads what already exists in Artha:
 
 1. A security per role. The Settings tab fills every unassigned role with the
    ETF GEM is usually run with in one click (`frontend/src/lib/gem-suggested-securities.ts`),

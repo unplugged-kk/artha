@@ -65,7 +65,7 @@ import {
 import { preferredCurrency } from "../../common/default-currency.util";
 
 /**
- * Runs a `.mny` import: staged bytes in, Monize rows and a verification report
+ * Runs a `.mny` import: staged bytes in, Artha rows and a verification report
  * out.
  *
  * The whole **write** is one transaction, so a failure *before it commits*
@@ -339,7 +339,7 @@ export class MnyImportService {
           detail: `delta ${account.delta}`,
         })),
       // The mapper's own LOT check compares against its replay; this one
-      // compares against what Monize actually ended up holding, which is the
+      // compares against what Artha actually ended up holding, which is the
       // number the user sees in their portfolio.
       ...holdings
         .filter((holding) => !holding.matches)
@@ -653,7 +653,7 @@ export class MnyImportService {
     });
   }
 
-  /** Money `hcat` -> Monize category id, through the mapper's full names. */
+  /** Money `hcat` -> Artha category id, through the mapper's full names. */
   private categoryIdsByHandle(
     parsed: MnyParsedFile,
     idByFullName: ReadonlyMap<string, string>,
@@ -668,7 +668,7 @@ export class MnyImportService {
     );
   }
 
-  /** Money `hpay` -> Monize payee id, through the mapper's names. */
+  /** Money `hpay` -> Artha payee id, through the mapper's names. */
   private payeeIdsByHandle(
     parsed: MnyParsedFile,
     idByName: ReadonlyMap<string, string>,
@@ -729,7 +729,7 @@ export class MnyImportService {
   }
 
   /**
-   * Compares what Monize now holds against Money's open tax lots.
+   * Compares what Artha now holds against Money's open tax lots.
    *
    * The mapper already cross-checked its own replay against the lots; this is
    * the reading that matters to the user, because it is what their portfolio

@@ -59,7 +59,7 @@ const LOOKUPABLE_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
  */
 type EmailLookup =
   | { state: 'known'; email: string; exists: boolean }
-  // `detail` is the server's or axios's own words, untranslated. Monize is
+  // `detail` is the server's or axios's own words, untranslated. Artha is
   // self-hosted, so the person hitting this is usually the one who can fix it,
   // and "403" or "Request failed with status code 500" is the difference
   // between a diagnosis and a shrug.
@@ -150,7 +150,7 @@ export function SharedAccessSection() {
   // this effect re-run and cancel the request it is waiting for.
   const lookupChecking = emailIsLookupable && currentLookup === null;
 
-  // Debounced check: if the email already has a Monize login (existing
+  // Debounced check: if the email already has a Artha login (existing
   // full account, or a delegate of another owner), the owner only links
   // the additional access -- no password / invite is set here.
   useEffect(() => {

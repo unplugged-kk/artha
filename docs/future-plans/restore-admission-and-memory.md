@@ -229,7 +229,7 @@ developer laptop.
   (`/sys/fs/cgroup/memory.peak`) after each case. The in-process sample explains the
   shape; the cgroup number is the verdict, because it is what the kernel kills on.
 - The matrix, from `docs/testing-contract.md`'s adversarial list plus what this path
-  actually varies: plain and encrypted artifacts (MZBE v1 and v2); compression ratios
+  actually varies: plain and encrypted artifacts (ARBE v1 and v2); compression ratios
   at both ends (highly repetitive text, incompressible attachment bytes); artifact
   sizes at and just under the resolved wire limit; an attachment-heavy artifact, since
   base64 rows are the irreducible row cost; and each case repeated with concurrent

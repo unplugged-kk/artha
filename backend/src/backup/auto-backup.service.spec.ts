@@ -234,7 +234,7 @@ describe("AutoBackupService", () => {
     });
     jest.setSystemTime(SUITE_CLOCK);
 
-    root = mkdtempSync(join(tmpdir(), "monize-backup-spec-"));
+    root = mkdtempSync(join(tmpdir(), "artha-backup-spec-"));
     defaultEnv = { BACKUP_CONTAINER_DIR: root };
 
     isDemo = false;
@@ -405,13 +405,13 @@ describe("AutoBackupService", () => {
 
     it("should default the folder path to BACKUP_CONTAINER_DIR when configured", async () => {
       service = await createService({
-        BACKUP_CONTAINER_DIR: "/mnt/monize-backups",
+        BACKUP_CONTAINER_DIR: "/mnt/artha-backups",
       });
       mockSettingsRepo.findOne.mockResolvedValue(null);
 
       const result = await service.getSettings(userId);
 
-      expect(result.folderPath).toBe("/mnt/monize-backups");
+      expect(result.folderPath).toBe("/mnt/artha-backups");
     });
 
     it("should trim a configured BACKUP_CONTAINER_DIR", async () => {
@@ -516,7 +516,7 @@ describe("AutoBackupService", () => {
     });
 
     it("refuses to enable a folder outside the permitted roots", async () => {
-      const outside = mkdtempSync(join(tmpdir(), "monize-elsewhere-"));
+      const outside = mkdtempSync(join(tmpdir(), "artha-elsewhere-"));
       try {
         mockSettingsRepo.findOne.mockResolvedValue(
           createSettings({ folderPath: outside }),
@@ -608,7 +608,7 @@ describe("AutoBackupService", () => {
      * `validateFolder` probes the *shared* root, so every user validating the
      * same folder writes a test file into one directory -- and the cron probes a
      * per-user folder that every replica fires for. The probe name was
-     * `.monize-write-test-${Date.now()}`, which two calls in the same millisecond
+     * `.artha-write-test-${Date.now()}`, which two calls in the same millisecond
      * pick identically: both writes succeed, the first unlink removes the file,
      * and the second gets ENOENT and reports the folder as not writable.
      *
@@ -628,7 +628,7 @@ describe("AutoBackupService", () => {
     it("leaves no probe file behind", async () => {
       await service.validateFolder(root);
       const left = readdirSync(root).filter((name) =>
-        name.startsWith(".monize-write-test-"),
+        name.startsWith(".artha-write-test-"),
       );
       expect(left).toEqual([]);
     });
@@ -791,7 +791,7 @@ describe("AutoBackupService", () => {
       // than /data/backups. Probing only the default reported "no storage" for
       // a working configured root, and the banner then refused to re-arm a
       // schedule that would have saved and run.
-      const other = mkdtempSync(join(tmpdir(), "monize-backup-other-"));
+      const other = mkdtempSync(join(tmpdir(), "artha-backup-other-"));
       try {
         const svc = await createService({
           BACKUP_CONTAINER_DIR: join(root, "does-not-exist", "nested"),
@@ -817,7 +817,7 @@ describe("AutoBackupService", () => {
       // the same containment the write does -- before touching the filesystem,
       // or it leaves a probe file outside the approved volume and then reports a
       // configuration available that `resolveUserFolder` refuses.
-      const outside = mkdtempSync(join(tmpdir(), "monize-capability-outside-"));
+      const outside = mkdtempSync(join(tmpdir(), "artha-capability-outside-"));
       // Observe the real `writeFile` rather than replacing it: an empty
       // directory afterwards is also what a probe that cleaned up after itself
       // would leave, so the directory listing alone cannot tell "never wrote"
@@ -845,7 +845,7 @@ describe("AutoBackupService", () => {
     });
 
     it("refuses a stored root symlinked out of the permitted roots (F3RB-R1-001)", async () => {
-      const outside = mkdtempSync(join(tmpdir(), "monize-capability-target-"));
+      const outside = mkdtempSync(join(tmpdir(), "artha-capability-target-"));
       const link = join(root, "stored-escape");
       try {
         await fs.symlink(outside, link);
@@ -866,7 +866,7 @@ describe("AutoBackupService", () => {
     it("still reports an enabled-but-out-of-policy row as unavailable rather than throwing", async () => {
       // The admin has to be able to load the page and switch such a schedule
       // off; capability answering "no" is what the banner needs, not an error.
-      const outside = mkdtempSync(join(tmpdir(), "monize-capability-enabled-"));
+      const outside = mkdtempSync(join(tmpdir(), "artha-capability-enabled-"));
       try {
         mockSettingsRepo.findOne.mockResolvedValue(
           createSettings({ enabled: true, folderPath: outside }),
@@ -883,7 +883,7 @@ describe("AutoBackupService", () => {
     it("leaves no probe file behind when reporting the capability", async () => {
       await service.describeCapability(userId);
       expect(
-        readdirSync(root).filter((n) => n.startsWith(".monize-write-test-")),
+        readdirSync(root).filter((n) => n.startsWith(".artha-write-test-")),
       ).toEqual([]);
     });
   });
@@ -925,7 +925,7 @@ describe("AutoBackupService", () => {
 
   describe("permitted roots", () => {
     it("refuses a writable directory outside every permitted root", async () => {
-      const outside = mkdtempSync(join(tmpdir(), "monize-elsewhere-"));
+      const outside = mkdtempSync(join(tmpdir(), "artha-elsewhere-"));
       try {
         const result = await service.validateFolder(outside);
 
@@ -947,7 +947,7 @@ describe("AutoBackupService", () => {
     });
 
     it("accepts a directory an operator has permitted", async () => {
-      const second = mkdtempSync(join(tmpdir(), "monize-second-root-"));
+      const second = mkdtempSync(join(tmpdir(), "artha-second-root-"));
       try {
         service = await createService({ BACKUP_ALLOWED_ROOTS: second });
 
@@ -961,7 +961,7 @@ describe("AutoBackupService", () => {
     });
 
     it("refuses a symlink inside a permitted root that points out of it", async () => {
-      const outside = mkdtempSync(join(tmpdir(), "monize-symlink-target-"));
+      const outside = mkdtempSync(join(tmpdir(), "artha-symlink-target-"));
       const escape = join(root, "escape");
       try {
         await fs.symlink(outside, escape);
@@ -990,7 +990,7 @@ describe("AutoBackupService", () => {
         // a symlink anywhere in `<root>/<ab>/<cd>/<userId>` used to redirect the
         // write while the base still looked clean. The final path has to be
         // canonicalised too.
-        const outside = mkdtempSync(join(tmpdir(), "monize-shard-target-"));
+        const outside = mkdtempSync(join(tmpdir(), "artha-shard-target-"));
         const linkPath = pick(folderFor());
         try {
           await fs.mkdir(join(linkPath, ".."), { recursive: true });
@@ -1123,7 +1123,7 @@ describe("AutoBackupService", () => {
         }),
       );
       expect(await listBackups(folderFor())).toEqual([
-        expect.stringMatching(/^monize-backup-daily-/),
+        expect.stringMatching(/^artha-backup-daily-/),
       ]);
     });
 
@@ -1136,7 +1136,7 @@ describe("AutoBackupService", () => {
 
       expect(await listBackups(folderFor())).toEqual([
         expect.stringMatching(
-          /^monize-backup-daily-\d{4}-\d{2}-\d{2}\.json\.gz$/,
+          /^artha-backup-daily-\d{4}-\d{2}-\d{2}\.json\.gz$/,
         ),
       ]);
     });
@@ -1152,7 +1152,7 @@ describe("AutoBackupService", () => {
       // Nothing lands flat in the base: only the shard directory appears there.
       expect(
         (await listBackups(root)).filter((name) =>
-          name.startsWith("monize-backup-"),
+          name.startsWith("artha-backup-"),
         ),
       ).toEqual([]);
     });
@@ -1223,7 +1223,7 @@ describe("AutoBackupService", () => {
 
       expect(result.message).toBe("Backup completed successfully");
       expect(result.filename).toMatch(
-        /^monize-backup-daily-\d{4}-\d{2}-\d{2}\.json\.gz$/,
+        /^artha-backup-daily-\d{4}-\d{2}-\d{2}\.json\.gz$/,
       );
       expect(mockSettingsRepo.save).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -1258,7 +1258,7 @@ describe("AutoBackupService", () => {
         "secret",
       );
       expect(result.filename).toMatch(
-        /^monize-backup-daily-\d{4}-\d{2}-\d{2}\.mzbe$/,
+        /^artha-backup-daily-\d{4}-\d{2}-\d{2}\.mzbe$/,
       );
       expect(await listBackups(folderFor())).toEqual([
         expect.stringMatching(/\.mzbe$/),
@@ -1332,7 +1332,7 @@ describe("AutoBackupService", () => {
 
   /**
    * Every user keeping the default folder wrote
-   * `monize-backup-daily-<date>.json.gz` to the same path, so the second job of
+   * `artha-backup-daily-<date>.json.gz` to the same path, so the second job of
    * the day replaced the first's artifact -- and retention then enumerated the
    * whole folder and applied whichever user's counts it was running for. One
    * replica and two users was enough.
@@ -1359,7 +1359,7 @@ describe("AutoBackupService", () => {
       await fs.mkdir(folderFor(), { recursive: true });
       for (const day of ["01", "02", "03"]) {
         await fs.writeFile(
-          join(folderFor(), `monize-backup-daily-2026-04-${day}.json.gz`),
+          join(folderFor(), `artha-backup-daily-2026-04-${day}.json.gz`),
           "A",
         );
       }
@@ -1377,9 +1377,9 @@ describe("AutoBackupService", () => {
 
       // B's aggressive retention must not touch A's history.
       expect(await listBackups(folderFor())).toEqual([
-        "monize-backup-daily-2026-04-01.json.gz",
-        "monize-backup-daily-2026-04-02.json.gz",
-        "monize-backup-daily-2026-04-03.json.gz",
+        "artha-backup-daily-2026-04-01.json.gz",
+        "artha-backup-daily-2026-04-02.json.gz",
+        "artha-backup-daily-2026-04-03.json.gz",
       ]);
     });
   });
@@ -1435,7 +1435,7 @@ describe("AutoBackupService", () => {
       await service.handleAutoBackupCron();
 
       expect(await listBackups(folderFor())).toEqual([
-        expect.stringMatching(/^monize-backup-daily-/),
+        expect.stringMatching(/^artha-backup-daily-/),
       ]);
     });
 
@@ -1484,7 +1484,7 @@ describe("AutoBackupService", () => {
 
       const left = await listBackups(folderFor());
       expect(left).toHaveLength(1);
-      expect(left[0]).toMatch(/^monize-backup-daily-/);
+      expect(left[0]).toMatch(/^artha-backup-daily-/);
       expect(left.filter((n) => n.startsWith("."))).toEqual([]);
     });
 
@@ -1757,8 +1757,8 @@ describe("AutoBackupService", () => {
         ]);
         await fs.mkdir(folderFor(), { recursive: true });
         const existing = [
-          "monize-backup-daily-2026-04-01.json.gz",
-          "monize-backup-daily-2026-04-02.json.gz",
+          "artha-backup-daily-2026-04-01.json.gz",
+          "artha-backup-daily-2026-04-02.json.gz",
         ];
         for (const name of existing) {
           await fs.writeFile(join(folderFor(), name), "x");
@@ -1818,7 +1818,7 @@ describe("AutoBackupService", () => {
       const result = await service.runManualBackup(userId);
 
       expect(result.filename).toMatch(
-        /^monize-backup-partial-\d{4}-\d{2}-\d{2}\.json\.gz$/,
+        /^artha-backup-partial-\d{4}-\d{2}-\d{2}\.json\.gz$/,
       );
       expect(await listBackups(folderFor())).toEqual([result.filename]);
     });
@@ -1918,18 +1918,18 @@ describe("AutoBackupService", () => {
       );
       // Three complete dailies already on disk, retention set to keep 1.
       await seed([
-        "monize-backup-daily-2026-04-01.json.gz",
-        "monize-backup-daily-2026-04-02.json.gz",
-        "monize-backup-daily-2026-04-03.json.gz",
+        "artha-backup-daily-2026-04-01.json.gz",
+        "artha-backup-daily-2026-04-02.json.gz",
+        "artha-backup-daily-2026-04-03.json.gz",
       ]);
 
       await service.runManualBackup(userId);
 
       // A complete backup would have deleted the two oldest; a partial must not.
       const remaining = await listBackups(folderFor());
-      expect(remaining).toContain("monize-backup-daily-2026-04-01.json.gz");
-      expect(remaining).toContain("monize-backup-daily-2026-04-02.json.gz");
-      expect(remaining).toContain("monize-backup-daily-2026-04-03.json.gz");
+      expect(remaining).toContain("artha-backup-daily-2026-04-01.json.gz");
+      expect(remaining).toContain("artha-backup-daily-2026-04-02.json.gz");
+      expect(remaining).toContain("artha-backup-daily-2026-04-03.json.gz");
     });
 
     it("does not promote a partial to weekly or monthly", async () => {
@@ -1959,8 +1959,8 @@ describe("AutoBackupService", () => {
         }),
       ]);
       await seed([
-        "monize-backup-daily-2026-04-01.json.gz",
-        "monize-backup-daily-2026-04-02.json.gz",
+        "artha-backup-daily-2026-04-01.json.gz",
+        "artha-backup-daily-2026-04-02.json.gz",
       ]);
 
       await service.handleAutoBackupCron();
@@ -1971,8 +1971,8 @@ describe("AutoBackupService", () => {
         expect.objectContaining({ lastBackupStatus: "partial" }),
       );
       const remaining = await listBackups(folderFor());
-      expect(remaining).toContain("monize-backup-daily-2026-04-01.json.gz");
-      expect(remaining).toContain("monize-backup-daily-2026-04-02.json.gz");
+      expect(remaining).toContain("artha-backup-daily-2026-04-01.json.gz");
+      expect(remaining).toContain("artha-backup-daily-2026-04-02.json.gz");
     });
 
     it("a later complete backup resumes normal promotion and retention", async () => {
@@ -1986,13 +1986,13 @@ describe("AutoBackupService", () => {
         }),
       );
       await seed([
-        "monize-backup-daily-2026-04-01.json.gz",
-        "monize-backup-daily-2026-04-02.json.gz",
+        "artha-backup-daily-2026-04-01.json.gz",
+        "artha-backup-daily-2026-04-02.json.gz",
       ]);
       // First run partial: everything preserved.
       await service.runManualBackup(userId);
       expect(await listBackups(folderFor())).toContain(
-        "monize-backup-daily-2026-04-01.json.gz",
+        "artha-backup-daily-2026-04-01.json.gz",
       );
 
       // Storage recovers; the next backup is complete and retention runs.
@@ -2009,7 +2009,7 @@ describe("AutoBackupService", () => {
       await service.runManualBackup(userId);
 
       const remaining = await listBackups(folderFor());
-      expect(remaining).not.toContain("monize-backup-daily-2026-04-01.json.gz");
+      expect(remaining).not.toContain("artha-backup-daily-2026-04-01.json.gz");
       expect(mockSettingsRepo.save).toHaveBeenLastCalledWith(
         expect.objectContaining({ lastBackupStatus: "success" }),
       );
@@ -2083,7 +2083,7 @@ describe("AutoBackupService", () => {
           "enforceRetention",
         )
         .mockReturnValue([
-          "monize-backup-daily-2026-04-01.json.gz: EACCES: permission denied",
+          "artha-backup-daily-2026-04-01.json.gz: EACCES: permission denied",
         ]);
 
       await service.handleAutoBackupCron();
@@ -2097,7 +2097,7 @@ describe("AutoBackupService", () => {
           data: expect.objectContaining({
             reason: "retention",
             error: expect.stringContaining(
-              "monize-backup-daily-2026-04-01.json.gz",
+              "artha-backup-daily-2026-04-01.json.gz",
             ),
           }),
         }),
@@ -2193,8 +2193,8 @@ describe("AutoBackupService", () => {
       await service.handleAutoBackupCron();
 
       expect(await contents()).toEqual({
-        "monize-backup-daily-2026-04-15.json.gz": "complete-02:00",
-        "monize-backup-partial-2026-04-15.json.gz": "partial-08:00",
+        "artha-backup-daily-2026-04-15.json.gz": "complete-02:00",
+        "artha-backup-partial-2026-04-15.json.gz": "partial-08:00",
       });
     });
 
@@ -2212,9 +2212,9 @@ describe("AutoBackupService", () => {
           retentionMonthly: 0,
         }),
       );
-      await put("monize-backup-daily-2026-04-01.json.gz", "complete-day-1");
-      await put("monize-backup-daily-2026-04-02.json.gz", "complete-day-2");
-      await put("monize-backup-daily-2026-04-03.json.gz", "complete-day-3");
+      await put("artha-backup-daily-2026-04-01.json.gz", "complete-day-1");
+      await put("artha-backup-daily-2026-04-02.json.gz", "complete-day-2");
+      await put("artha-backup-daily-2026-04-03.json.gz", "complete-day-3");
 
       for (const day of ["04", "05", "06"]) {
         await withClockAt(`2026-04-${day}T02:00:00Z`, async () => {
@@ -2254,10 +2254,10 @@ describe("AutoBackupService", () => {
       // directory somebody else mounted. A fresh service instance and a settings
       // row that remembers nothing must sweep both tiers correctly from the
       // listing alone.
-      await put("monize-backup-daily-2026-04-01.json.gz", "complete-day-1");
-      await put("monize-backup-daily-2026-04-02.json.gz", "complete-day-2");
-      await put("monize-backup-partial-2026-04-03.json.gz", "partial-day-3");
-      await put("monize-backup-partial-2026-04-04.json.gz", "partial-day-4");
+      await put("artha-backup-daily-2026-04-01.json.gz", "complete-day-1");
+      await put("artha-backup-daily-2026-04-02.json.gz", "complete-day-2");
+      await put("artha-backup-partial-2026-04-03.json.gz", "partial-day-3");
+      await put("artha-backup-partial-2026-04-04.json.gz", "partial-day-4");
       mockSettingsRepo.findOne.mockResolvedValue(
         createSettings({
           enabled: true,
@@ -2274,8 +2274,8 @@ describe("AutoBackupService", () => {
       await restarted.runManualBackup(userId);
 
       expect(await contents()).toEqual({
-        "monize-backup-daily-2026-04-15.json.gz": "complete-today",
-        "monize-backup-partial-2026-04-04.json.gz": "partial-day-4",
+        "artha-backup-daily-2026-04-15.json.gz": "complete-today",
+        "artha-backup-partial-2026-04-04.json.gz": "partial-day-4",
       });
     });
 
@@ -2294,8 +2294,8 @@ describe("AutoBackupService", () => {
       // Two replicas, or a manual run beside a cron one: sharing one filename
       // made the outcome a race whose loser was a whole recovery point.
       expect(await contents()).toEqual({
-        "monize-backup-daily-2026-04-15.json.gz": "complete-bytes",
-        "monize-backup-partial-2026-04-15.json.gz": "partial-bytes",
+        "artha-backup-daily-2026-04-15.json.gz": "complete-bytes",
+        "artha-backup-partial-2026-04-15.json.gz": "partial-bytes",
       });
     });
 
@@ -2313,11 +2313,11 @@ describe("AutoBackupService", () => {
         await service.runManualBackup(userId);
 
         expect(await contents()).toEqual({
-          [`monize-backup-daily-2026-04-${weeklyDay}.json.gz`]:
+          [`artha-backup-daily-2026-04-${weeklyDay}.json.gz`]:
             "complete-promoted",
-          [`monize-backup-weekly-2026-04-${weeklyDay}.json.gz`]:
+          [`artha-backup-weekly-2026-04-${weeklyDay}.json.gz`]:
             "complete-promoted",
-          [`monize-backup-partial-2026-04-${weeklyDay}.json.gz`]:
+          [`artha-backup-partial-2026-04-${weeklyDay}.json.gz`]:
             "partial-later",
         });
       });
@@ -2327,10 +2327,10 @@ describe("AutoBackupService", () => {
       // The other half of giving partials a tier: they must not accumulate
       // without bound while storage is broken. The only thing a partial run may
       // delete is an older partial.
-      await put("monize-backup-daily-2026-04-01.json.gz", "complete-day-1");
-      await put("monize-backup-daily-2026-04-02.json.gz", "complete-day-2");
-      await put("monize-backup-partial-2026-04-03.json.gz", "partial-day-3");
-      await put("monize-backup-partial-2026-04-04.json.gz", "partial-day-4");
+      await put("artha-backup-daily-2026-04-01.json.gz", "complete-day-1");
+      await put("artha-backup-daily-2026-04-02.json.gz", "complete-day-2");
+      await put("artha-backup-partial-2026-04-03.json.gz", "partial-day-3");
+      await put("artha-backup-partial-2026-04-04.json.gz", "partial-day-4");
       mockSettingsRepo.findOne.mockResolvedValue(
         createSettings({
           enabled: true,
@@ -2345,9 +2345,9 @@ describe("AutoBackupService", () => {
       await service.runManualBackup(userId);
 
       expect(await contents()).toEqual({
-        "monize-backup-daily-2026-04-01.json.gz": "complete-day-1",
-        "monize-backup-daily-2026-04-02.json.gz": "complete-day-2",
-        "monize-backup-partial-2026-04-15.json.gz": "partial-today",
+        "artha-backup-daily-2026-04-01.json.gz": "complete-day-1",
+        "artha-backup-daily-2026-04-02.json.gz": "complete-day-2",
+        "artha-backup-partial-2026-04-15.json.gz": "partial-today",
       });
     });
   });
@@ -2503,16 +2503,16 @@ describe("AutoBackupService", () => {
         }),
       );
       await seed([
-        "monize-backup-daily-2026-04-01.json.gz",
-        "monize-backup-daily-2026-04-02.json.gz",
-        "monize-backup-daily-2026-04-03.json.gz",
+        "artha-backup-daily-2026-04-01.json.gz",
+        "artha-backup-daily-2026-04-02.json.gz",
+        "artha-backup-daily-2026-04-03.json.gz",
       ]);
 
       await service.runManualBackup(userId);
 
       const remaining = await listBackups(folderFor());
-      expect(remaining).not.toContain("monize-backup-daily-2026-04-01.json.gz");
-      expect(remaining).toContain("monize-backup-daily-2026-04-03.json.gz");
+      expect(remaining).not.toContain("artha-backup-daily-2026-04-01.json.gz");
+      expect(remaining).toContain("artha-backup-daily-2026-04-03.json.gz");
     });
 
     it("should keep the most recent N weekly backups independently", async () => {
@@ -2526,18 +2526,18 @@ describe("AutoBackupService", () => {
         }),
       );
       await seed([
-        "monize-backup-weekly-2026-03-07.json.gz",
-        "monize-backup-weekly-2026-03-14.json.gz",
-        "monize-backup-weekly-2026-03-21.json.gz",
+        "artha-backup-weekly-2026-03-07.json.gz",
+        "artha-backup-weekly-2026-03-14.json.gz",
+        "artha-backup-weekly-2026-03-21.json.gz",
       ]);
 
       await service.runManualBackup(userId);
 
       const remaining = await listBackups(folderFor());
       expect(remaining).not.toContain(
-        "monize-backup-weekly-2026-03-07.json.gz",
+        "artha-backup-weekly-2026-03-07.json.gz",
       );
-      expect(remaining).toContain("monize-backup-weekly-2026-03-21.json.gz");
+      expect(remaining).toContain("artha-backup-weekly-2026-03-21.json.gz");
     });
 
     it("should keep the most recent N monthly backups independently", async () => {
@@ -2551,15 +2551,15 @@ describe("AutoBackupService", () => {
         }),
       );
       await seed([
-        "monize-backup-monthly-26-01.json.gz",
-        "monize-backup-monthly-26-02.json.gz",
+        "artha-backup-monthly-26-01.json.gz",
+        "artha-backup-monthly-26-02.json.gz",
       ]);
 
       await service.runManualBackup(userId);
 
       const remaining = await listBackups(folderFor());
-      expect(remaining).not.toContain("monize-backup-monthly-26-01.json.gz");
-      expect(remaining).toContain("monize-backup-monthly-26-02.json.gz");
+      expect(remaining).not.toContain("artha-backup-monthly-26-01.json.gz");
+      expect(remaining).toContain("artha-backup-monthly-26-02.json.gz");
     });
 
     it("counts files left flat in the base folder by an older version", async () => {
@@ -2575,12 +2575,12 @@ describe("AutoBackupService", () => {
         }),
       );
       await seed([
-        "monize-backup-daily-2026-04-03.json.gz",
-        "monize-backup-daily-2026-04-04.json.gz",
+        "artha-backup-daily-2026-04-03.json.gz",
+        "artha-backup-daily-2026-04-04.json.gz",
       ]);
       const legacyNames = [
-        "monize-backup-daily-2026-04-01.json.gz",
-        "monize-backup-daily-2026-04-02.json.gz",
+        "artha-backup-daily-2026-04-01.json.gz",
+        "artha-backup-daily-2026-04-02.json.gz",
       ];
       for (const name of legacyNames) {
         await fs.writeFile(join(root, name), "legacy");
@@ -2595,8 +2595,8 @@ describe("AutoBackupService", () => {
         await expect(fs.access(join(root, name))).rejects.toThrow();
       }
       const remaining = await listBackups(folderFor());
-      expect(remaining).toContain("monize-backup-daily-2026-04-03.json.gz");
-      expect(remaining).toContain("monize-backup-daily-2026-04-04.json.gz");
+      expect(remaining).toContain("artha-backup-daily-2026-04-03.json.gz");
+      expect(remaining).toContain("artha-backup-daily-2026-04-04.json.gz");
     });
 
     it("keeps the sharded copy over the legacy one on an equal date", async () => {
@@ -2611,16 +2611,16 @@ describe("AutoBackupService", () => {
           retentionMonthly: 0,
         }),
       );
-      const legacy = join(root, "monize-backup-daily-2026-04-01.json.gz");
+      const legacy = join(root, "artha-backup-daily-2026-04-01.json.gz");
       await fs.writeFile(legacy, "legacy");
-      await seed(["monize-backup-daily-2026-04-01.json.gz"]);
+      await seed(["artha-backup-daily-2026-04-01.json.gz"]);
 
       await service.runManualBackup(userId);
 
       // The sharded file is known to be this user's; the flat one is anyone's.
       await expect(fs.access(legacy)).rejects.toThrow();
       expect(await listBackups(folderFor())).toContain(
-        "monize-backup-daily-2026-04-01.json.gz",
+        "artha-backup-daily-2026-04-01.json.gz",
       );
     });
 
@@ -2633,8 +2633,8 @@ describe("AutoBackupService", () => {
         await service.runManualBackup(userId);
 
         expect(await listBackups(folderFor())).toEqual([
-          "monize-backup-daily-2026-04-14.json.gz",
-          "monize-backup-weekly-2026-04-14.json.gz",
+          "artha-backup-daily-2026-04-14.json.gz",
+          "artha-backup-weekly-2026-04-14.json.gz",
         ]);
       });
     });
@@ -2648,8 +2648,8 @@ describe("AutoBackupService", () => {
         await service.runManualBackup(userId);
 
         expect(await listBackups(folderFor())).toEqual([
-          "monize-backup-daily-2026-04-01.json.gz",
-          "monize-backup-monthly-26-04.json.gz",
+          "artha-backup-daily-2026-04-01.json.gz",
+          "artha-backup-monthly-26-04.json.gz",
         ]);
       });
     });
@@ -2689,8 +2689,8 @@ describe("AutoBackupService", () => {
         }),
       );
       await seed([
-        "monize-backup-daily-2026-04-01.json.gz",
-        ".monize-backup-tmp-999-1-monize-backup-daily-2026-04-02.json.gz",
+        "artha-backup-daily-2026-04-01.json.gz",
+        ".artha-backup-tmp-999-1-artha-backup-daily-2026-04-02.json.gz",
       ]);
 
       await service.runManualBackup(userId);
@@ -2698,7 +2698,7 @@ describe("AutoBackupService", () => {
       // Two real artifacts now exist (April 1 and today), which is the limit --
       // so April 1 survives. Had the temp file been counted, it would not have.
       expect(await listBackups(folderFor())).toContain(
-        "monize-backup-daily-2026-04-01.json.gz",
+        "artha-backup-daily-2026-04-01.json.gz",
       );
     });
 
@@ -2712,10 +2712,10 @@ describe("AutoBackupService", () => {
           retentionMonthly: 0,
         }),
       );
-      await seed(["monize-backup-daily-2026-04-01.json.gz"]);
+      await seed(["artha-backup-daily-2026-04-01.json.gz"]);
       await fs.mkdir(folderFor(otherUserId), { recursive: true });
       await fs.writeFile(
-        join(folderFor(otherUserId), "monize-backup-daily-2026-04-01.json.gz"),
+        join(folderFor(otherUserId), "artha-backup-daily-2026-04-01.json.gz"),
         "theirs",
       );
 
@@ -2725,7 +2725,7 @@ describe("AutoBackupService", () => {
       // and still never crossed into the other user's folder.
       expect(await listBackups(folderFor())).toEqual([result.filename]);
       expect(await listBackups(folderFor(otherUserId))).toEqual([
-        "monize-backup-daily-2026-04-01.json.gz",
+        "artha-backup-daily-2026-04-01.json.gz",
       ]);
     });
   });

@@ -19,7 +19,7 @@ const { createState, decryptEvent } = require("./unifiedpush-client/core.cjs");
 // configuration a loopback exception (asserted separately below).
 let directory, server, certificate, port;
 const received = [];
-const recipient = createState("https://monize.example", "https://ntfy.example");
+const recipient = createState("https://artha.example", "https://ntfy.example");
 const vapid = webpush.generateVAPIDKeys();
 const payload = {
   title: "Test TLS",
@@ -27,7 +27,7 @@ const payload = {
   target: "/settings",
 };
 before(async () => {
-  directory = mkdtempSync(join(tmpdir(), "monize-push-tls-"));
+  directory = mkdtempSync(join(tmpdir(), "artha-push-tls-"));
   const keyPath = join(directory, "key.pem");
   const certPath = join(directory, "cert.pem");
   execFileSync(
@@ -117,7 +117,7 @@ test("real HTTPS delivery preserves SNI and carries decryptable Web Push", async
       encoding: "base64",
       message: wire.bytes.toString("base64"),
     }),
-    { ...payload, target: "https://monize.example/settings" },
+    { ...payload, target: "https://artha.example/settings" },
   );
 });
 test("pinning an IP does not bypass certificate hostname validation", async () => {

@@ -17,7 +17,7 @@ import { SHARE_PAGE_PATH, sharePageUrl } from '@/lib/share-target';
  *
  * The worker stashes files whether or not anyone is signed in, and the sign-in
  * that follows can lose the `returnTo` (an OIDC round trip, or the user simply
- * opening Monize from the launcher instead of following the redirect). Without
+ * opening Artha from the launcher instead of following the redirect). Without
  * this banner those files would sit on the device until they expired, with
  * nothing on any screen pointing at them.
  *

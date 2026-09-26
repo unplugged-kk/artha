@@ -1498,7 +1498,7 @@ describe("EmergencyAccessMonitorService", () => {
     expect(emailService.sendMail).toHaveBeenCalledTimes(2);
   });
 
-  it("localizes the grant email to the contact's own account language when they are a Monize user", async () => {
+  it("localizes the grant email to the contact's own account language when they are a Artha user", async () => {
     settingsRepo.find.mockResolvedValue([
       {
         ownerUserId: userId,

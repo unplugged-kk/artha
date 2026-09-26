@@ -13,7 +13,7 @@ import type {
 
 // Key for persisting the AI conversation in the browser's localStorage.
 // Cleared on logout via authStore so conversations don't leak between accounts.
-export const AI_CHAT_STORAGE_KEY = 'monize:ai-chat-messages';
+export const AI_CHAT_STORAGE_KEY = 'artha:ai-chat-messages';
 
 export interface ToolCallRecord {
   name: string;

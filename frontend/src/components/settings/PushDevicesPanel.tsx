@@ -139,7 +139,7 @@ export function PushDevicesPanel() {
     // must not depend on a global still being what it was when it subscribed.
     const worker = navigator.serviceWorker;
     const onMessage = (event: MessageEvent) => {
-      if (event.data?.type !== 'monize-push-subscription-changed') return;
+      if (event.data?.type !== 'artha-push-subscription-changed') return;
       void refreshDevices().catch(() => setDevicesFailed(true));
     };
     worker.addEventListener('message', onMessage);

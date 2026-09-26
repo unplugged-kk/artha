@@ -261,7 +261,7 @@ describe('AutoBackupSection', () => {
     });
     (backupApi.runAutoBackup as ReturnType<typeof vi.fn>).mockResolvedValue({
       message: 'Backup completed',
-      filename: 'monize-backup-2026-04-02T10-00-00.json.gz',
+      filename: 'artha-backup-2026-04-02T10-00-00.json.gz',
     });
 
     await renderAutoBackupSection();
@@ -273,7 +273,7 @@ describe('AutoBackupSection', () => {
     await waitFor(() => {
       expect(backupApi.runAutoBackup).toHaveBeenCalled();
       expect(toast.success).toHaveBeenCalledWith(
-        'Backup created: monize-backup-2026-04-02T10-00-00.json.gz',
+        'Backup created: artha-backup-2026-04-02T10-00-00.json.gz',
       );
     });
   });

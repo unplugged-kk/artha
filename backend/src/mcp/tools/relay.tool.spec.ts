@@ -55,7 +55,7 @@ describe("McpRelayTools", () => {
             filename: "chart.png",
             mediaType: "image/png",
             kind: "image",
-            uri: "monize-attachment://att-1",
+            uri: "artha-attachment://att-1",
           },
         ],
       };
@@ -65,7 +65,7 @@ describe("McpRelayTools", () => {
       const result = await handlers.get_next_prompt({}, ctx());
       const body = parse(result);
       expect(body.attachments).toHaveLength(1);
-      expect(body.attachments[0].uri).toBe("monize-attachment://att-1");
+      expect(body.attachments[0].uri).toBe("artha-attachment://att-1");
     });
 
     it("returns hasPrompt:false when the poll window elapses (still listening)", async () => {

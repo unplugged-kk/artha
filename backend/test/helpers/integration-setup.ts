@@ -26,7 +26,7 @@ import { settlePendingActionHistoryWrites } from "@/action-history/action-histor
  * of copying the env-var defaults, so a config change lives in one place.
  *
  * **`dropSchema` means suites using this cannot run concurrently.** Every suite
- * drops and rebuilds the schema of the one shared `monize_test` database, so a
+ * drops and rebuilds the schema of the one shared `artha_test` database, so a
  * second worker starting up pulls the tables out from under a running suite --
  * which surfaces as "connection terminated" from an unrelated spec rather than
  * as anything resembling its cause. `test/jest-e2e.json` therefore pins
@@ -37,9 +37,9 @@ export const INTEGRATION_TYPEORM_OPTIONS: TypeOrmModuleOptions = {
   type: "postgres",
   host: process.env.DATABASE_HOST || "localhost",
   port: parseInt(process.env.DATABASE_PORT || "5432"),
-  username: process.env.DATABASE_USER || "monize_user",
-  password: process.env.DATABASE_PASSWORD || "monize_password",
-  database: process.env.DATABASE_NAME || "monize_test",
+  username: process.env.DATABASE_USER || "artha_user",
+  password: process.env.DATABASE_PASSWORD || "artha_password",
+  database: process.env.DATABASE_NAME || "artha_test",
   entities: [__dirname + "/../../src/**/*.entity{.ts,.js}"],
   synchronize: true,
   dropSchema: true,

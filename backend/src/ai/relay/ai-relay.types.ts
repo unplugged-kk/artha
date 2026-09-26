@@ -4,7 +4,7 @@
  * The relay lets a user's own MCP agent (Claude CLI/Desktop on their
  * subscription) drive the in-app AI chat: the browser enqueues a prompt, the
  * agent long-polls `get_next_prompt` to claim it, does the work against the
- * Monize MCP tools, and pushes the answer back with `post_response`. No LLM API
+ * Artha MCP tools, and pushes the answer back with `post_response`. No LLM API
  * key lives on the server in this mode.
  */
 
@@ -20,7 +20,7 @@ export interface RelayAttachmentRef {
   filename: string;
   mediaType: string;
   kind: "image" | "pdf" | "text";
-  /** MCP resource URI (`monize-attachment://<id>`) the agent reads to view the file. */
+  /** MCP resource URI (`artha-attachment://<id>`) the agent reads to view the file. */
   uri: string;
 }
 

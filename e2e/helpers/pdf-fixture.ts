@@ -8,7 +8,7 @@
  * review. The cross-reference offsets are computed, not typed, so the file is
  * well-formed however the objects below are edited.
  */
-export function minimalPdf(text = 'Monize receipt'): Buffer {
+export function minimalPdf(text = 'Artha receipt'): Buffer {
   const content = [
     '0.9 0.9 0.9 rg',
     '40 640 320 120 re f',

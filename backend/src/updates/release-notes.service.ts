@@ -8,7 +8,7 @@ import { parseReleaseNotes, ReleaseNotes } from "./release-notes.parser";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const backendPkg = require("../../package.json") as { version: string };
 
-const RELEASE_URL_BASE = "https://github.com/kenlasko/monize/releases/tag/v";
+const RELEASE_URL_BASE = "https://github.com/unplugged-kk/artha/releases/tag/v";
 
 // Only plain MAJOR.MINOR.PATCH(-suffix) versions map to a notes file. Guards
 // the file lookup against anything path-like even though the version is always

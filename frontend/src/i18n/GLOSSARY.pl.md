@@ -1,6 +1,6 @@
 # Polish financial terminology glossary
 
-Canonical Polish terms for Monize's UI translation (`messages/pl/*.json`). The
+Canonical Polish terms for Artha's UI translation (`messages/pl/*.json`). The
 goal is consistency across every namespace: the same English concept must map to
 the same Polish word everywhere.
 
@@ -56,7 +56,7 @@ finance app, the deviation is noted with a rationale.
 
 Informal-neutral imperative for actions: "Zapisz", "Anuluj", "Usuń", "Edytuj",
 "Utwórz", "Konfiguruj". Prefer the verb form over the noun form for buttons
-(e.g. "Edytuj", not "Edycja"). Do not translate brand names (Monize),
+(e.g. "Edytuj", not "Edycja"). Do not translate brand names (Artha),
 currency/ticker codes, or technical identifiers (env var names, MSN, ETF).
 
 ## Plural forms

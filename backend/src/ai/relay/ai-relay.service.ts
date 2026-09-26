@@ -594,7 +594,7 @@ export class AiRelayService {
    * Stream the agent's tool activity to the browser as `tool_start` /
    * `tool_result` events -- the same channel the native AI Assistant uses to
    * show "Looking up ..." chips. Called by the MCP server's per-call wrapper for
-   * every Monize tool the agent invokes while handling a relayed prompt, so the
+   * every Artha tool the agent invokes while handling a relayed prompt, so the
    * user sees real-time progress without the agent having to narrate explicitly.
    */
   reportToolActivity(

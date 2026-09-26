@@ -75,7 +75,7 @@ function CustomTooltip({ active, payload, formatCurrencyFull, holdingLabel }: {
   );
 }
 
-const ACCOUNTS_STORAGE_KEY = 'monize-reports-geographic-allocation-accounts';
+const ACCOUNTS_STORAGE_KEY = 'artha-reports-geographic-allocation-accounts';
 
 export function GeographicAllocationReport() {
   const t = useTranslations('reports');

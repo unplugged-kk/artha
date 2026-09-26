@@ -10,12 +10,12 @@ interface ConsentParams {
 }
 
 const SCOPE_LABELS: Record<string, { title: string; description: string }> = {
-  "monize:read": {
+  "artha:read": {
     title: "Read your financial data",
     description:
       "View accounts, transactions, budgets, categories, payees, holdings, and reports.",
   },
-  "monize:write": {
+  "artha:write": {
     title: "Modify your financial data",
     description:
       "Create and update transactions, categories, payees, and other records.",
@@ -69,7 +69,7 @@ export function renderConsentPage(params: ConsentParams): string {
     --secondary-bg: #ffffff;
     --secondary-hover: #f1f5f9;
   }
-  /* Track the OS-level theme. The wider Monize app supports an explicit
+  /* Track the OS-level theme. The wider Artha app supports an explicit
      three-way (light / dark / system) preference, but the consent page
      is a one-screen flyway that loads with no client-side state — there
      is nowhere to retrieve the user's selection from, and the page never

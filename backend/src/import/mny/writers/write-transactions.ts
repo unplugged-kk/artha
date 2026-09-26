@@ -25,11 +25,11 @@ export { INSERT_CHUNK_SIZE };
 
 export interface WriteTransactionsInput {
   readonly transactions: readonly MappedTransaction[];
-  /** Import-local account key -> Monize account id. */
+  /** Import-local account key -> Artha account id. */
   readonly accountIdByKey: ReadonlyMap<string, string>;
-  /** Money `hcat` -> Monize category id, for transactions and category splits. */
+  /** Money `hcat` -> Artha category id, for transactions and category splits. */
   readonly categoryIdByHandle: ReadonlyMap<number, string>;
-  /** Money `hpay` -> Monize payee id. */
+  /** Money `hpay` -> Artha payee id. */
   readonly payeeIdByHandle: ReadonlyMap<number, string>;
   /** Money `hpay` -> the payee's name, stored alongside the id. */
   readonly payeeNameByHandle: ReadonlyMap<number, string>;

@@ -53,6 +53,6 @@ describe('BootSplash', () => {
   it('uses the transparent brand logo, not the boxed one', () => {
     const { container } = render(<BootSplash bootTheme={null} strings={strings} />);
     const img = container.querySelector('img');
-    expect(img).toHaveAttribute('src', '/icons/monize-logo-transparent.svg');
+    expect(img).toHaveAttribute('src', '/icons/artha-logo-transparent.svg');
   });
 });

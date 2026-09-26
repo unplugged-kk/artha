@@ -16,7 +16,7 @@ describe("LocalStorageProvider", () => {
     ({ get: () => dir }) as unknown as ConfigService;
 
   beforeEach(async () => {
-    baseDir = await fs.mkdtemp(join(tmpdir(), "monize-attach-"));
+    baseDir = await fs.mkdtemp(join(tmpdir(), "artha-attach-"));
     provider = new LocalStorageProvider(configFor(baseDir));
   });
 

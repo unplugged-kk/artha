@@ -248,7 +248,7 @@ describe('BackupRestoreSection', () => {
       expect(toast.success).toHaveBeenCalledWith('Backup downloaded successfully');
     });
 
-    expect(capturedDownload).toBe(`monize-backup-${getLocalDateString()}.json.gz`);
+    expect(capturedDownload).toBe(`artha-backup-${getLocalDateString()}.json.gz`);
     expect(capturedDownload).not.toContain('2099-12-31');
 
     isoSpy.mockRestore();
@@ -294,7 +294,7 @@ describe('BackupRestoreSection', () => {
       expect(toast.success).toHaveBeenCalledWith('Backup downloaded successfully');
     });
 
-    expect(capturedDownload).toBe('monize-backup-2026-07-18.json.gz');
+    expect(capturedDownload).toBe('artha-backup-2026-07-18.json.gz');
 
     vi.useRealTimers();
   });
@@ -838,9 +838,9 @@ describe('BackupRestoreSection', () => {
   });
 
   describe('restore: encrypted backups', () => {
-    // Real MZBE magic header so the component detects the file as encrypted.
+    // Real ARBE magic header so the component detects the file as encrypted.
     const encryptedFile = (name = 'backup.mzbe') =>
-      new File([new Uint8Array([0x4d, 0x5a, 0x42, 0x45, 0x01, 0x01])], name);
+      new File([new Uint8Array([0x41, 0x52, 0x42, 0x45, 0x01, 0x01])], name);
 
     it('shows a backup-password field and sends both passwords on confirm', async () => {
       const restoreMock = backupApi.restoreBackup as ReturnType<typeof vi.fn>;
@@ -1055,7 +1055,7 @@ describe('BackupRestoreSection', () => {
           screen.getByLabelText('Select backup file') as HTMLInputElement,
           {
             target: {
-              files: [new File([new Uint8Array([0x4d, 0x5a, 0x42, 0x45])], 'b.mzbe')],
+              files: [new File([new Uint8Array([0x41, 0x52, 0x42, 0x45])], 'b.mzbe')],
             },
           },
         );

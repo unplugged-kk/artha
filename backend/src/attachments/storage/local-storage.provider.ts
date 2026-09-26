@@ -10,7 +10,7 @@ import { assertSafeStorageKey } from "./storage-key.util";
 
 /**
  * Folder attachment bytes are written to when ATTACHMENT_CONTAINER_DIR is unset.
- * Monize runs in a container, so this is a container path: mount a host folder
+ * Artha runs in a container, so this is a container path: mount a host folder
  * there (see .env.example and the docker-compose files).
  */
 export const DEFAULT_ATTACHMENT_CONTAINER_DIR = "/data/attachments";

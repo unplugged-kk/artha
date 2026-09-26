@@ -347,7 +347,7 @@ vi.mock('@/components/investments/InvestmentValueChart', () => ({
       <span data-testid="value-chart-refresh-key">{String(refreshKey ?? '')}</span>
     </div>
   ),
-  INVESTMENT_CHART_REFRESH_EVENT: 'monize:investment-chart-refresh',
+  INVESTMENT_CHART_REFRESH_EVENT: 'artha:investment-chart-refresh',
 }));
 
 const mockCashAccounts = [
@@ -893,17 +893,17 @@ describe('InvestmentsPage', () => {
     it('removes stale account IDs that no longer exist', async () => {
       // Pre-populate with stale IDs
       const staleIds = ['old-1', 'old-2', 'old-3', 'old-4', 'old-5', 'old-6', 'old-7', 'old-8', 'old-9', 'old-10'];
-      mockLocalStorageState['monize-investments-accounts'] = {
+      mockLocalStorageState['artha-investments-accounts'] = {
         value: staleIds,
         setter: vi.fn((newValue: any) => {
-          mockLocalStorageState['monize-investments-accounts'].value = newValue;
+          mockLocalStorageState['artha-investments-accounts'].value = newValue;
         }),
       };
 
       await renderPage();
 
       await waitFor(() => {
-        const setter = mockLocalStorageState['monize-investments-accounts'].setter;
+        const setter = mockLocalStorageState['artha-investments-accounts'].setter;
         expect(setter).toHaveBeenCalledWith([]);
       });
     });
@@ -911,17 +911,17 @@ describe('InvestmentsPage', () => {
     it('keeps valid IDs and removes only stale ones', async () => {
       // Mix of valid (brok-1, brok-2) and stale IDs
       const mixedIds = ['brok-1', 'stale-id-1', 'brok-2', 'stale-id-2'];
-      mockLocalStorageState['monize-investments-accounts'] = {
+      mockLocalStorageState['artha-investments-accounts'] = {
         value: mixedIds,
         setter: vi.fn((newValue: any) => {
-          mockLocalStorageState['monize-investments-accounts'].value = newValue;
+          mockLocalStorageState['artha-investments-accounts'].value = newValue;
         }),
       };
 
       await renderPage();
 
       await waitFor(() => {
-        const setter = mockLocalStorageState['monize-investments-accounts'].setter;
+        const setter = mockLocalStorageState['artha-investments-accounts'].setter;
         expect(setter).toHaveBeenCalledWith(['brok-1', 'brok-2']);
       });
     });
@@ -929,24 +929,24 @@ describe('InvestmentsPage', () => {
     it('removes cash account IDs that exist but are not selectable', async () => {
       // cash-1 and cash-2 exist in accounts but are INVESTMENT_CASH (not shown in dropdown)
       const mixedIds = ['brok-1', 'cash-1', 'brok-2', 'cash-2'];
-      mockLocalStorageState['monize-investments-accounts'] = {
+      mockLocalStorageState['artha-investments-accounts'] = {
         value: mixedIds,
         setter: vi.fn((newValue: any) => {
-          mockLocalStorageState['monize-investments-accounts'].value = newValue;
+          mockLocalStorageState['artha-investments-accounts'].value = newValue;
         }),
       };
 
       await renderPage();
 
       await waitFor(() => {
-        const setter = mockLocalStorageState['monize-investments-accounts'].setter;
+        const setter = mockLocalStorageState['artha-investments-accounts'].setter;
         expect(setter).toHaveBeenCalledWith(['brok-1', 'brok-2']);
       });
     });
 
     it('does not call setter when all IDs are valid', async () => {
       const validIds = ['brok-1', 'brok-2'];
-      mockLocalStorageState['monize-investments-accounts'] = {
+      mockLocalStorageState['artha-investments-accounts'] = {
         value: validIds,
         setter: vi.fn(),
       };
@@ -959,7 +959,7 @@ describe('InvestmentsPage', () => {
       });
 
       // Setter should NOT be called for pruning (all IDs are valid)
-      const setter = mockLocalStorageState['monize-investments-accounts'].setter;
+      const setter = mockLocalStorageState['artha-investments-accounts'].setter;
       // The setter might be called for other reasons (account change effects),
       // but should never be called with a different array than what was set
       const pruningCalls = setter.mock.calls.filter(
@@ -970,7 +970,7 @@ describe('InvestmentsPage', () => {
 
     it('does not prune when selectedAccountIds is empty', async () => {
       // Default empty selection - no pruning needed
-      mockLocalStorageState['monize-investments-accounts'] = {
+      mockLocalStorageState['artha-investments-accounts'] = {
         value: [],
         setter: vi.fn(),
       };
@@ -982,7 +982,7 @@ describe('InvestmentsPage', () => {
       });
 
       // Setter should not be called for pruning
-      const setter = mockLocalStorageState['monize-investments-accounts'].setter;
+      const setter = mockLocalStorageState['artha-investments-accounts'].setter;
       const pruningCalls = setter.mock.calls.filter(
         (call: any[]) => Array.isArray(call[0]),
       );
@@ -1069,12 +1069,12 @@ describe('InvestmentsPage', () => {
 
     it('passes startingBalance from API response to TransactionList', async () => {
       // Filter to single account so startingBalance is passed through
-      mockLocalStorageState['monize-investments-accounts'] = {
+      mockLocalStorageState['artha-investments-accounts'] = {
         value: ['brok-1'],
         setter: vi.fn((newValue: any) => {
-          mockLocalStorageState['monize-investments-accounts'].value =
+          mockLocalStorageState['artha-investments-accounts'].value =
             typeof newValue === 'function'
-              ? newValue(mockLocalStorageState['monize-investments-accounts'].value)
+              ? newValue(mockLocalStorageState['artha-investments-accounts'].value)
               : newValue;
         }),
       };
@@ -1108,12 +1108,12 @@ describe('InvestmentsPage', () => {
 
     it('passes isSingleAccountView=true when filtering to single account', async () => {
       // Filter to a single brokerage account (brok-1), which links to cash-1
-      mockLocalStorageState['monize-investments-accounts'] = {
+      mockLocalStorageState['artha-investments-accounts'] = {
         value: ['brok-1'],
         setter: vi.fn((newValue: any) => {
-          mockLocalStorageState['monize-investments-accounts'].value =
+          mockLocalStorageState['artha-investments-accounts'].value =
             typeof newValue === 'function'
-              ? newValue(mockLocalStorageState['monize-investments-accounts'].value)
+              ? newValue(mockLocalStorageState['artha-investments-accounts'].value)
               : newValue;
         }),
       };
@@ -1197,7 +1197,7 @@ describe('InvestmentsPage', () => {
       // register without passing through the toggle. Loading the options only
       // on that click left both pickers reading "No options found" for exactly
       // the users who use the cash view most.
-      mockLocalStorageState['monize-investments-transaction-view'] = {
+      mockLocalStorageState['artha-investments-transaction-view'] = {
         value: 'cash',
         setter: vi.fn(),
       };

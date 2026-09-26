@@ -51,7 +51,7 @@ import {
 } from "./dto/update-auto-backup-settings.dto";
 import { tr } from "../i18n/translate";
 
-const BACKUP_FILE_PREFIX = "monize-backup-";
+const BACKUP_FILE_PREFIX = "artha-backup-";
 
 /**
  * Role that may see and change automatic backup settings. Everyone else is
@@ -62,26 +62,26 @@ const BACKUP_ADMIN_ROLE = "admin";
 
 /**
  * Folder automatic backups are written to when BACKUP_CONTAINER_DIR is unset.
- * Monize runs in a container, so this is a container path: mount a host folder
+ * Artha runs in a container, so this is a container path: mount a host folder
  * there (see .env.example and the docker-compose files).
  */
 export const DEFAULT_BACKUP_CONTAINER_DIR = "/data/backups";
 
-// File extensions: .json.gz for unencrypted, .mzbe for encrypted Monize backups.
+// File extensions: .json.gz for unencrypted, .mzbe for encrypted Artha backups.
 // Retention enforcement matches both so we can clean up legacy and encrypted
 // files uniformly.
 const DAILY_FILE_PATTERN =
-  /^monize-backup-daily-(\d{4}-\d{2}-\d{2})\.(json\.gz|mzbe)$/;
+  /^artha-backup-daily-(\d{4}-\d{2}-\d{2})\.(json\.gz|mzbe)$/;
 const WEEKLY_FILE_PATTERN =
-  /^monize-backup-weekly-(\d{4}-\d{2}-\d{2})\.(json\.gz|mzbe)$/;
+  /^artha-backup-weekly-(\d{4}-\d{2}-\d{2})\.(json\.gz|mzbe)$/;
 const MONTHLY_FILE_PATTERN =
-  /^monize-backup-monthly-(\d{2}-\d{2})\.(json\.gz|mzbe)$/;
+  /^artha-backup-monthly-(\d{2}-\d{2})\.(json\.gz|mzbe)$/;
 /**
  * An artifact that could not include every attachment it names. Its own tier,
  * and deliberately not `daily-` -- see `PARTIAL_TIER_NAME`.
  */
 const PARTIAL_FILE_PATTERN =
-  /^monize-backup-partial-(\d{4}-\d{2}-\d{2})\.(json\.gz|mzbe)$/;
+  /^artha-backup-partial-(\d{4}-\d{2}-\d{2})\.(json\.gz|mzbe)$/;
 
 /**
  * The tier name a partial artifact is published under (F3RB-001, issue #1069).
@@ -185,7 +185,7 @@ function parseYearMonthString(ym: string): Date | null {
  *
  * **Layout.** Each user's backups live in their own folder under the configured
  * base, fanned out by user id exactly the way attachment bytes are:
- * `<BACKUP_CONTAINER_DIR>/<ab>/<cd>/<userId>/monize-backup-daily-<date>.json.gz`
+ * `<BACKUP_CONTAINER_DIR>/<ab>/<cd>/<userId>/artha-backup-daily-<date>.json.gz`
  * (see `common/shard-path.util.ts`). The filenames carry only a tier and a
  * date, so a flat shared folder gave every user the same name for the same day
  * -- whoever ran last overwrote the others, and one user's retention pass
@@ -458,7 +458,7 @@ export class AutoBackupService {
       // folder's syntax unless the same call enables the schedule, and a
       // deployment upgraded from before confinement can already hold an
       // arbitrary path -- so a stored root may be outside BACKUP_ALLOWED_ROOTS.
-      // Probing it first would create and delete a `.monize-write-test-*` file
+      // Probing it first would create and delete a `.artha-write-test-*` file
       // outside the approved volume and then report a configuration available
       // that `resolveUserFolder` refuses.
       const root = await this.assertAllowedRoot(configured);
@@ -1799,7 +1799,7 @@ export class AutoBackupService {
     // enabling backups; in the cron it aborts that user's backup.
     const testFile = this.safePath(
       safePath,
-      `.monize-write-test-${randomUUID()}`,
+      `.artha-write-test-${randomUUID()}`,
     );
     try {
       await fs.writeFile(testFile, "");

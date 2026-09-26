@@ -455,7 +455,7 @@ describe("isIncomeCategoryType", () => {
 
 /**
  * Every cadence Microsoft Money's bill frequency picker offers, with the
- * `(BILL.frq, BILL.cFrqInst)` pair it stores and the Monize frequency it is.
+ * `(BILL.frq, BILL.cFrqInst)` pair it stores and the Artha frequency it is.
  *
  * This is evidence, not a reference table. Each row was read out of a Money
  * Plus Sunset file in which one bill per cadence was created with the picker's
@@ -502,7 +502,7 @@ describe("mapFrequency", () => {
     },
   );
 
-  it("covers every Monize frequency exactly once", () => {
+  it("covers every Artha frequency exactly once", () => {
     // The two lists are the same length on purpose: EVERY4MONTHS and
     // EVERY2YEARS were added for the last two picker entries that had no type.
     // A frequency added here without a Money cadence, or a cadence that starts

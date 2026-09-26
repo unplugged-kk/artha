@@ -5,7 +5,7 @@
  * so it renders Polish and other Latin-Extended characters wrong (e.g. `ł`
  * printed as `B`). We embed a subset of Roboto (Latin, Latin Extended-A/B,
  * Cyrillic, Greek, punctuation and currency symbols -- covering every European
- * locale Monize ships) so text drawn with this font is proper UTF-8.
+ * locale Artha ships) so text drawn with this font is proper UTF-8.
  *
  * CJK / Devanagari are intentionally out of scope: those fonts are megabytes
  * each and cannot be embedded in every PDF. Text in those scripts falls back to

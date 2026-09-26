@@ -31,7 +31,7 @@ import { cashKeyByAccountKey } from "./map-reference";
 import { MnyTransactionData } from "../tables/read-transactions";
 
 /**
- * `TRN` rows carrying a security, mapped onto Monize investment transactions.
+ * `TRN` rows carrying a security, mapped onto Artha investment transactions.
  *
  * Every rule here answers a specific way PR #192 corrupted positions (issue 4 in
  * the design's assessment table):

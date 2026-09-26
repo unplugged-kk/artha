@@ -2,7 +2,7 @@ services:
   # PostgreSQL Database
   postgres:
     image: postgres:16-alpine
-    container_name: monize-postgres
+    container_name: artha-postgres
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -11,7 +11,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - monize-network
+      - artha-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
@@ -20,8 +20,8 @@ services:
 
   # Backend API (NestJS)
   backend:
-    image: ghcr.io/kenlasko/monize-backend:latest
-    container_name: monize-backend
+    image: ghcr.io/unplugged-kk/artha-backend:latest
+    container_name: artha-backend
     restart: unless-stopped
     read_only: true
     tmpfs:
@@ -45,7 +45,7 @@ services:
       # docs/future-plans/row-level-security.md and the runbook before enabling.
       # Empty-safe so an existing .env without these keys upgrades unchanged.
       RLS_MODE: ${RLS_MODE:-off}
-      DATABASE_APP_USER: ${DATABASE_APP_USER:-monize_app}
+      DATABASE_APP_USER: ${DATABASE_APP_USER:-artha_app}
       DATABASE_APP_PASSWORD: ${DATABASE_APP_PASSWORD:-}
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION: ${JWT_EXPIRATION:-15m}
@@ -95,12 +95,12 @@ services:
       DISABLE_HTTPS_HEADERS: ${DISABLE_HTTPS_HEADERS:-false}
     volumes:
       # Automatic backups are written to BACKUP_CONTAINER_DIR in the container.
-      - ${BACKUP_HOST_DIR:-./monize/backups}:${BACKUP_CONTAINER_DIR:-/data/backups}
+      - ${BACKUP_HOST_DIR:-./artha/backups}:${BACKUP_CONTAINER_DIR:-/data/backups}
       # Attachments are written to ATTACHMENT_CONTAINER_DIR in the container
       # when ATTACHMENT_STORAGE_PROVIDER=local.
-      - ${ATTACHMENT_HOST_DIR:-./monize/attachments}:${ATTACHMENT_CONTAINER_DIR:-/data/attachments}
+      - ${ATTACHMENT_HOST_DIR:-./artha/attachments}:${ATTACHMENT_CONTAINER_DIR:-/data/attachments}
     networks:
-      - monize-network
+      - artha-network
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://localhost:' + (process.env.PORT || 3000) + '/api/v1/health/live').then(r => { if (!r.ok) process.exit(1) }).catch(() => process.exit(1))"]
       interval: 30s
@@ -110,8 +110,8 @@ services:
 
   # Frontend (Next.js)
   frontend:
-    image: ghcr.io/kenlasko/monize-frontend:latest
-    container_name: monize-frontend
+    image: ghcr.io/unplugged-kk/artha-frontend:latest
+    container_name: artha-frontend
     restart: unless-stopped
     read_only: true
     tmpfs:
@@ -132,7 +132,7 @@ services:
     ports:
       - "${FRONTEND_PORT:-3000}:${FRONTEND_PORT:-3000}"
     networks:
-      - monize-network
+      - artha-network
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://localhost:' + (process.env.PORT || 3000) + '/api/v1/health/live').then(r => { if (!r.ok) process.exit(1) }).catch(() => process.exit(1))"]
       interval: 30s
@@ -140,7 +140,7 @@ services:
       retries: 3
 
 networks:
-  monize-network:
+  artha-network:
     driver: bridge
 
 volumes:

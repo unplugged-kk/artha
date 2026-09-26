@@ -22,7 +22,7 @@ jest.mock("bcryptjs", () => ({
  * it computes it under. That blindness is the whole bug: every read below was
  * issued under the caller's own scope, and `users_self` answers a question
  * about somebody else's row with zero rows rather than an error. Nothing threw,
- * nothing logged, and the Add-delegate form quietly reported an existing Monize
+ * nothing logged, and the Add-delegate form quietly reported an existing Artha
  * account as new.
  *
  * So these tests assert the identity, twice over and at two different levels:

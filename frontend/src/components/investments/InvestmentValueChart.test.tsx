@@ -804,7 +804,7 @@ describe('InvestmentValueChart', () => {
       const { rerender } = render(<InvestmentValueChart refreshKey={0} />);
       await screen.findByText('Portfolio Value Over Time');
       await waitFor(() =>
-        expect(window.sessionStorage.getItem('monize-intraday|1d||CAD')).toBeTruthy(),
+        expect(window.sessionStorage.getItem('artha-intraday|1d||CAD')).toBeTruthy(),
       );
       const before = vi.mocked(investmentsApi.getIntradayValue).mock.calls.length;
 
@@ -997,7 +997,7 @@ describe('InvestmentValueChart', () => {
     };
     // Seed the session-storage cache manually
     window.sessionStorage.setItem(
-      `monize-intraday|1d||CAD`,
+      `artha-intraday|1d||CAD`,
       JSON.stringify(cachedPayload),
     );
 

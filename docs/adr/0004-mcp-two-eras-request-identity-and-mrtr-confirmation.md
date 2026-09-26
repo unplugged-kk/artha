@@ -5,7 +5,7 @@ Date: 2026-09-03
 
 ## Context
 
-MCP revision 2026-07-28 removes the two things the Monize MCP server was built
+MCP revision 2026-07-28 removes the two things the Artha MCP server was built
 on. Sessions are gone: there is no `initialize`, no `Mcp-Session-Id`, and each
 request carries its own `_meta` envelope. Server-initiated requests are gone
 too: a server can no longer send an `elicitation/create` and wait, which is how

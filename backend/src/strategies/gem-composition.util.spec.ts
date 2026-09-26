@@ -230,7 +230,7 @@ describe("gem-composition.util", () => {
      * format, not an edge case: the securities editor drops the "Other" bucket
      * and the DTO says the slices need not sum to 1. The overlap computed over
      * it is a floor, and the floor is shown -- withholding it turned the whole
-     * exposure column into "no data" for real funds, which reads as "Monize
+     * exposure column into "no data" for real funds, which reads as "Artha
      * cannot see the overlap" rather than "the description is partial".
      *
      * Minimal mutation: return `overlap: null` when either side is partial.

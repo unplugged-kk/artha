@@ -426,12 +426,12 @@ describe("PayeeLookupSettingsService", () => {
         // The whole fix is usually one string: a restriction written
         // *.laskonet.com/* does not match a bare laskonet.com, and the user
         // cannot compare against a value nothing tells them.
-        places.referer.mockReturnValue("https://monize.laskonet.com/");
+        places.referer.mockReturnValue("https://artha.laskonet.com/");
 
         const result = await service.testKey(USER, "draft-key");
 
         expect(result.available).toBe(false);
-        expect(result.error).toContain("https://monize.laskonet.com/");
+        expect(result.error).toContain("https://artha.laskonet.com/");
         // Google's own "<empty>" is now wrong as well as unhelpful: a referrer
         // IS being sent, it just is not on the allow-list.
         expect(result.error).not.toMatch(/<empty>/);

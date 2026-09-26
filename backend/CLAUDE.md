@@ -30,7 +30,7 @@ npm run migration:lint:test # Self-test for the migration lint
 
 ### The parallel config cannot see `test/`, and `npm test` serializes the two suites
 
-`test/integration/*` rebuilds the schema of the one shared `monize_test`
+`test/integration/*` rebuilds the schema of the one shared `artha_test`
 database (`synchronize` + `dropSchema`), so two Jest workers running any two of
 those suites race each other -- `pg_type_typname_nsp_index` conflicts, or a
 "connection terminated" reported by whichever spec was innocent. The root Jest
@@ -40,7 +40,7 @@ specs are owned by `test/jest-e2e.json`, which pins `maxWorkers: 1`, and
 `npm test` runs `test:unit` then `test:integration` (through
 `backend/scripts/test-chain.mjs`) so the default command runs everything without ever
 running the two in parallel. That makes `npm test` require a reachable
-PostgreSQL (`pretest:integration` creates `monize_test` if it is missing);
+PostgreSQL (`pretest:integration` creates `artha_test` if it is missing);
 `npm run test:unit` is the offline path.
 `src/common/jest-config.guard.spec.ts` fails if any of those facts stops being
 true.
@@ -554,7 +554,7 @@ A lookup that fails is a fact about *that* lookup. A stale scenario id says noth
 - **A new column referencing `currencies(code)`** must keep `src/currencies/currency-references.spec.ts` green -- both SQL functions and the TypeScript constant.
 - **A new table** must be exported or listed in `INTENTIONALLY_EXCLUDED_TABLES` with a reason, and classified in the support backup rules.
 
-**A file's name is its identity, so anything that decides whether it may be deleted has to be in the name.** An automatic backup that could not include every attachment is published as `monize-backup-partial-<date>` in its own retention tier, and the name is chosen *after* the export from what the export found -- `writeFileAtomic` replaces a final name by design, so a partial artifact written under the `daily-` name had already destroyed that day's complete copy before any status column could say so. State beside the file cannot govern a decision the write has already made; the durable copy of the fact goes *inside* the document (`completeness` in the envelope).
+**A file's name is its identity, so anything that decides whether it may be deleted has to be in the name.** An automatic backup that could not include every attachment is published as `artha-backup-partial-<date>` in its own retention tier, and the name is chosen *after* the export from what the export found -- `writeFileAtomic` replaces a final name by design, so a partial artifact written under the `daily-` name had already destroyed that day's complete copy before any status column could say so. State beside the file cannot govern a decision the write has already made; the durable copy of the fact goes *inside* the document (`completeness` in the envelope).
 
 **Nothing in the export path may hold a whole table, a whole artifact, or a whole attachment set.** Rows come through the cursor in `src/backup/export-cursor.ts`, the document is serialised a row at a time under the chunk budget in `export-json-stream.ts`, and an object store is opened one object at a time. A `manager.query` for an export table, a `JSON.stringify` over an array of rows, or an array of base64 built before serialising are each the same defect (issue #1070). The guards in `src/backup/export-streaming.spec.ts` assert the ordering (batched fetches, loads interleaved with writes, reads that stop when the client does) rather than the memory.
 

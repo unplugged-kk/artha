@@ -8,7 +8,7 @@ import { ToolAnnotations } from "@modelcontextprotocol/server";
  * explicitly -- `readOnlyHint`, `destructiveHint`, `idempotentHint`, and
  * `openWorldHint` -- so no tool relies on the SDK's implicit defaults
  * (`destructiveHint`/`idempotentHint` default to true/false respectively, which
- * is wrong for our read-only tools). Every Monize tool operates over the
+ * is wrong for our read-only tools). Every Artha tool operates over the
  * authenticated user's own closed financial dataset, so `openWorldHint` is
  * always `false` (no external/open-world interaction).
  *

@@ -53,7 +53,7 @@ describe("MCP transport RLS context smoke (real withScopedDb)", () => {
         },
         {
           provide: ConfigService,
-          useValue: { get: jest.fn().mockReturnValue("https://monize.test") },
+          useValue: { get: jest.fn().mockReturnValue("https://artha.test") },
         },
       ],
     }).compile();

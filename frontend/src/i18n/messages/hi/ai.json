@@ -225,7 +225,7 @@
     "step3": "एक एजेंट लूप शुरू करें ताकि Claude Artha से क्वेरी सुने:",
     "loopPrompt": "Loop forever: call get_next_prompt; if hasPrompt is false, call it again; otherwise handle the request with the Artha tools and call post_response with the answer; then repeat.",
     "codexHeading": "या Codex का उपयोग करें",
-    "codexNote": "इसे ~/.codex/config.toml में जोड़ें, MONIZE_TOKEN को अपने टोकन पर सेट करें, फिर codex चलाएं और ऊपर दिया गया प्रॉम्प्ट पेस्ट करें।",
+    "codexNote": "इसे ~/.codex/config.toml में जोड़ें, ARTHA_TOKEN को अपने टोकन पर सेट करें, फिर codex चलाएं और ऊपर दिया गया प्रॉम्प्ट पेस्ट करें।",
     "copy": "कॉपी करें",
     "copied": "क्लिपबोर्ड पर कॉपी किया गया"
   }

@@ -53,7 +53,7 @@ export function AuthShell({
       <div className={cn('w-full space-y-6', wide ? 'max-w-lg' : 'max-w-md')}>
         <div className="text-center">
           <Image
-            src="/icons/monize-logo-transparent.svg"
+            src="/icons/artha-logo-transparent.svg"
             alt="Artha"
             width={88}
             height={88}

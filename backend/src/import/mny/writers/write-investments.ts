@@ -29,7 +29,7 @@ import { INSERT_CHUNK_SIZE, chunk } from "./chunk";
  */
 
 export interface WrittenSecurities {
-  /** `SEC.hsec` -> the Monize security id it landed in. */
+  /** `SEC.hsec` -> the Artha security id it landed in. */
   readonly idByHandle: ReadonlyMap<number, string>;
   readonly created: number;
   /** Securities matched to a row this user already had. */
@@ -118,9 +118,9 @@ function resolveReference(
 
 export interface WriteInvestmentsInput {
   readonly transactions: readonly MappedInvestmentTransaction[];
-  /** Import-local account key -> Monize account id. */
+  /** Import-local account key -> Artha account id. */
   readonly accountIdByKey: ReadonlyMap<string, string>;
-  /** `SEC.hsec` -> Monize security id. */
+  /** `SEC.hsec` -> Artha security id. */
   readonly securityIdByHandle: ReadonlyMap<number, string>;
   readonly categoryIdByHandle: ReadonlyMap<number, string>;
   readonly payeeIdByHandle: ReadonlyMap<number, string>;
@@ -154,7 +154,7 @@ export interface WrittenInvestments {
  *
  * A cash leg is a plain transaction in the account's cash sleeve, linked from
  * the investment row through `transaction_id`. It is not a transfer pair: the
- * brokerage side of a Monize investment pair carries no cash balance of its own,
+ * brokerage side of a Artha investment pair carries no cash balance of its own,
  * so mirroring the leg there would invent a balance the Money file never had and
  * make the verification report disagree with itself.
  *

@@ -102,10 +102,10 @@ export interface DelegateSummary {
     lastName: string | null;
     hasPassword: boolean;
     // False when the delegate's password is their own (they have their own
-    // Monize account, or are a delegate for another owner too); the owner
+    // Artha account, or are a delegate for another owner too); the owner
     // cannot reset it in that case.
     canResetPassword: boolean;
-    // True when the delegate is a full Monize account in their own right;
+    // True when the delegate is a full Artha account in their own right;
     // gates the Joint toggle (joint shares require a real account).
     isFullAccount?: boolean;
   };

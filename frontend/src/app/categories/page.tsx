@@ -47,8 +47,8 @@ function CategoriesContent() {
   const [showImportDialog, setShowImportDialog] = useState(false);
   const [filterType, setFilterType] = useState<'all' | 'income' | 'expense'>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortField, setSortField] = useLocalStorage<SortField>('monize-categories-sort-field', 'name');
-  const [sortDirection, setSortDirection] = useLocalStorage<SortDirection>('monize-categories-sort-dir', 'asc');
+  const [sortField, setSortField] = useLocalStorage<SortField>('artha-categories-sort-field', 'name');
+  const [sortDirection, setSortDirection] = useLocalStorage<SortDirection>('artha-categories-sort-dir', 'asc');
   const { showForm, editingItem, openCreate, openEdit, close, isEditing, modalProps, setFormDirty, unsavedChangesDialog, formSubmitRef } = useFormModal<Category>();
 
   const loadCategories = useCallback(async () => {
@@ -170,7 +170,7 @@ function CategoriesContent() {
         <PageHeader
           title={t('page.title')}
           subtitle={t('page.subtitle')}
-          helpUrl="https://github.com/kenlasko/monize/wiki/Categories-and-Payees"
+          helpUrl="https://github.com/unplugged-kk/artha/wiki/Categories-and-Payees"
           actions={<Button onClick={openCreate}>{t('page.newButton')}</Button>}
         />
         {/* Summary Cards */}

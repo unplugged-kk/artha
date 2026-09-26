@@ -7,7 +7,7 @@ import {
 } from './push';
 
 /**
- * When Monize may ask for notifications, and what it can honestly offer.
+ * When Artha may ask for notifications, and what it can honestly offer.
  *
  * The whole point is that this is a DECISION, not a page-load side effect: the
  * browser prompt is always behind a click, so this function decides only which
@@ -78,7 +78,7 @@ describe('the prompt dismissal', () => {
   const withStore = (initial?: string) => {
     const store = new Map<string, string>();
     if (initial !== undefined) {
-      store.set('monize.push.promptDismissed', initial);
+      store.set('artha.push.promptDismissed', initial);
     }
     vi.stubGlobal('window', {
       localStorage: {
@@ -97,7 +97,7 @@ describe('the prompt dismissal', () => {
 
     expect(pushPromptDismissed('user-1', 'enable')).toBe(true);
     // Waving away the offer says nothing about wanting to know, later, that the
-    // browser has started blocking Monize.
+    // browser has started blocking Artha.
     expect(pushPromptDismissed('user-1', 'blocked')).toBe(false);
   });
 

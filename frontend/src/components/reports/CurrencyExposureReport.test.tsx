@@ -369,7 +369,7 @@ describe('CurrencyExposureReport', () => {
 
   it('restores the persisted account selection', async () => {
     window.localStorage.setItem(
-      'monize-reports-currency-exposure-accounts',
+      'artha-reports-currency-exposure-accounts',
       JSON.stringify(['acc-1']),
     );
     mockGetPortfolioSummary.mockResolvedValue({ holdings: [] });

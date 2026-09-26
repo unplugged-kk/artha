@@ -116,7 +116,7 @@ describe('formatCellValue', () => {
 
   it('formats a plain number through the supplied number formatter', () => {
     // Not `(1234567).toLocaleString()`: that is the BROWSER's locale, and the
-    // whole point of routing through the bundle is that Monize's configured
+    // whole point of routing through the bundle is that Artha's configured
     // `numberFormat` overrides it (issue #1316).
     expect(formatCellValue(1234567, 'number', fmts)).toBe('N(1234567,0)');
   });

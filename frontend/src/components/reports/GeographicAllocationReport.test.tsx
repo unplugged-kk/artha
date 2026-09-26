@@ -423,7 +423,7 @@ describe('GeographicAllocationReport', () => {
 
   it('restores the persisted account selection', async () => {
     window.localStorage.setItem(
-      'monize-reports-geographic-allocation-accounts',
+      'artha-reports-geographic-allocation-accounts',
       JSON.stringify(['acc-1']),
     );
     mockGetPortfolioSummary.mockResolvedValue({ holdings: [] });

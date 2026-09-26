@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { usePersistedAccountFilter, usePersistedAccountId } from './usePersistedAccountFilter';
 
-const KEY = 'monize-reports-test-accounts';
+const KEY = 'artha-reports-test-accounts';
 
 describe('usePersistedAccountFilter', () => {
   beforeEach(() => {

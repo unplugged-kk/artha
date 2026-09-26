@@ -357,7 +357,7 @@ describe('MnyReviewStep', () => {
     expect(defaultProps.onBack).toHaveBeenCalled();
   });
 
-  it('cannot untick the cash side Monize adds to an investment pair', () => {
+  it('cannot untick the cash side Artha adds to an investment pair', () => {
     // It has no Money handle of its own, so there is nothing to exclude.
     render(
       <MnyReviewStep

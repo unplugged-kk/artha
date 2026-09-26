@@ -118,7 +118,7 @@ async function listRealTools(): Promise<{
   bytesByTool: Map<string, number>;
 }> {
   const server = new McpServer(
-    { name: "monize-budget", version: "0.0.0" },
+    { name: "artha-budget", version: "0.0.0" },
     { capabilities: { tools: {} } },
   );
   for (const { name, config } of collectToolConfigs()) {

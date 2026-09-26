@@ -77,7 +77,7 @@ beforeEach(() => {
 });
 
 // Viewport is jsdom's default 1024x768; panel is 420x600 with a 16px margin.
-const PLACEMENT_KEY = 'monize.aiBubble.placement';
+const PLACEMENT_KEY = 'artha.aiBubble.placement';
 const DEFAULT_LEFT = `${1024 - 420 - 16}px`; // bottom-right
 const DEFAULT_TOP = `${768 - 600 - 16}px`;
 

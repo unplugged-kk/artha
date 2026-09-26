@@ -42,7 +42,7 @@ display and for the cash row, and is stored in neither row's `total_amount`.
 
 ### 1.2 Scope
 
-`REDEEM` only in Monize's stored model and public API. Real Money Plus data has
+`REDEEM` only in Artha's stored model and public API. Real Money Plus data has
 two encodings for a register activity displayed as "Redeem CD/Bond": `act` 30,
 and `act` 2 (`SELL`) with positive `TRN_INV.amtInt` and a principal-plus-interest
 cash split. The importer normalizes the measured SELL-shaped variant to REDEEM;
@@ -178,6 +178,6 @@ Per `docs/verification-contract.md` and the adversarial list in
 
 - Backfilling redemptions already imported as split legs. Re-importing is the
   fix; no migration touches existing financial data.
-- Accepting accrued interest on a native Monize `SELL` API request (section 1.2).
+- Accepting accrued interest on a native Artha `SELL` API request (section 1.2).
 - Accrued interest inside an embedded investment split (invariant 6).
 - The QIF/CSV import path: Money's QIF export has no redeem action.

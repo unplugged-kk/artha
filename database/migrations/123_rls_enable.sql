@@ -7,7 +7,7 @@
 -- deploy on its own schedule.
 --
 -- Sequencing (see docs/future-plans/row-level-security-runbook.md): flip A is
--- the privilege drop -- the app connects as the unprivileged monize_app role
+-- the privilege drop -- the app connects as the unprivileged artha_app role
 -- instead of the owner, with policies still inert, which proves the role, its
 -- grants and every context-wrapping path work without changing a single query
 -- result. Only after flip A has soaked does this file ship. Deploying the two

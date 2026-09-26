@@ -111,8 +111,8 @@ jobs:
         # alongside production postgres bumps so CI matches what we ship.
         image: postgres:16-alpine@sha256:16bc17c64a573ef34162af9298258d1aec548232985b33ed7b1eac33ba35c229
         env:
-          POSTGRES_DB: monize_test
-          POSTGRES_USER: monize_test
+          POSTGRES_DB: artha_test
+          POSTGRES_USER: artha_test
           POSTGRES_PASSWORD: test_password
         ports:
           - 5432:5432
@@ -127,8 +127,8 @@ jobs:
     env:
       DATABASE_HOST: localhost
       DATABASE_PORT: 5432
-      DATABASE_NAME: monize_test
-      DATABASE_USER: monize_test
+      DATABASE_NAME: artha_test
+      DATABASE_USER: artha_test
       DATABASE_PASSWORD: test_password
       JWT_SECRET: test-jwt-secret-for-ci-minimum-32-characters-long
       NODE_ENV: test
@@ -403,7 +403,7 @@ jobs:
         # resource it exists to produce -- a template that silently rendered
         # nothing would leave the valid statefulsets/services and pass the parse.
         run: |
-          helm template monize ./helm > "$RUNNER_TEMP/rendered.yaml"
+          helm template artha ./helm > "$RUNNER_TEMP/rendered.yaml"
           grep -q '^kind: HTTPRoute$' "$RUNNER_TEMP/rendered.yaml" \
             || { echo "default values rendered no HTTPRoute (httpRoute.enabled defaults true)"; exit 1; }
       # Each variant the README documents. Rendering only the defaults would
@@ -415,14 +415,14 @@ jobs:
       # here as well, since parsing a doc that never rendered cannot fail.
       - name: Render with Ingress enabled
         run: |
-          helm template monize ./helm \
+          helm template artha ./helm \
             --set ingress.enabled=true \
             --set httpRoute.enabled=false \
             --set ingress.className=nginx > "$RUNNER_TEMP/rendered-ingress.yaml"
           grep -q '^kind: Ingress$' "$RUNNER_TEMP/rendered-ingress.yaml" \
             || { echo "ingress.enabled=true rendered no Ingress -- the value flag is not turning the resource on"; exit 1; }
       - name: Render with HTTPRoute disabled
-        run: helm template monize ./helm --set httpRoute.enabled=false > "$RUNNER_TEMP/rendered-minimal.yaml"
+        run: helm template artha ./helm --set httpRoute.enabled=false > "$RUNNER_TEMP/rendered-minimal.yaml"
       # PyYAML happens to be present on the current ubuntu-latest image, which
       # is not the same as this job declaring it. An undeclared dependency that
       # disappears in a runner-image bump turns the check below into an
@@ -829,19 +829,19 @@ jobs:
       matrix:
         include:
           - name: backend
-            image: ghcr.io/kenlasko/monize-backend
+            image: ghcr.io/unplugged-kk/artha-backend
             context: .
             file: backend/Dockerfile
             workdir: backend
-            title: Monize Backend
-            description: Backend for Monize, a self-hosted personal finance app
+            title: Artha Backend
+            description: Backend for Artha, a self-hosted personal finance app
           - name: frontend
-            image: ghcr.io/kenlasko/monize-frontend
+            image: ghcr.io/unplugged-kk/artha-frontend
             context: frontend
             file: frontend/Dockerfile
             workdir: frontend
-            title: Monize Frontend
-            description: Frontend for Monize, a self-hosted personal finance app
+            title: Artha Frontend
+            description: Frontend for Artha, a self-hosted personal finance app
     steps:
       - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
         with:
@@ -900,8 +900,8 @@ jobs:
           annotations: |
             index:org.opencontainers.image.title=${{ matrix.title }}
             index:org.opencontainers.image.description=${{ matrix.description }}
-            index:org.opencontainers.image.source=https://github.com/kenlasko/monize
-            index:org.opencontainers.image.url=https://github.com/kenlasko/monize
+            index:org.opencontainers.image.source=https://github.com/unplugged-kk/artha
+            index:org.opencontainers.image.url=https://github.com/unplugged-kk/artha
             index:org.opencontainers.image.authors=ken.lasko@gmail.com
             index:org.opencontainers.image.vendor=Ken Lasko
             index:org.opencontainers.image.revision=${{ needs.prepare-release.outputs.git_sha }}
@@ -1199,19 +1199,19 @@ jobs:
       matrix:
         include:
           - name: backend
-            image: ghcr.io/kenlasko/monize-backend
+            image: ghcr.io/unplugged-kk/artha-backend
             context: .
             file: backend/Dockerfile
             workdir: backend
-            title: Monize Backend
-            description: Backend for Monize, a self-hosted personal finance app
+            title: Artha Backend
+            description: Backend for Artha, a self-hosted personal finance app
           - name: frontend
-            image: ghcr.io/kenlasko/monize-frontend
+            image: ghcr.io/unplugged-kk/artha-frontend
             context: frontend
             file: frontend/Dockerfile
             workdir: frontend
-            title: Monize Frontend
-            description: Frontend for Monize, a self-hosted personal finance app
+            title: Artha Frontend
+            description: Frontend for Artha, a self-hosted personal finance app
     steps:
       - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
         with:
@@ -1271,8 +1271,8 @@ jobs:
           annotations: |
             index:org.opencontainers.image.title=${{ matrix.title }}
             index:org.opencontainers.image.description=${{ matrix.description }}
-            index:org.opencontainers.image.source=https://github.com/kenlasko/monize
-            index:org.opencontainers.image.url=https://github.com/kenlasko/monize
+            index:org.opencontainers.image.source=https://github.com/unplugged-kk/artha
+            index:org.opencontainers.image.url=https://github.com/unplugged-kk/artha
             index:org.opencontainers.image.authors=ken.lasko@gmail.com
             index:org.opencontainers.image.vendor=Ken Lasko
             index:org.opencontainers.image.revision=${{ needs.prepare-preview.outputs.git_sha }}

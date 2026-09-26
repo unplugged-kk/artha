@@ -271,7 +271,7 @@ describe('GEM strategy tour copy', () => {
     }
   });
 
-  it('never claims Monize trades for the user', () => {
+  it('never claims Artha trades for the user', () => {
     // The copy's whole job on this report. A rewrite that drops these is the
     // failure this test exists to catch.
     //
@@ -284,7 +284,7 @@ describe('GEM strategy tour copy', () => {
     expect(steps.save.body).toMatch(/does not place a trade/i);
   });
 
-  it('separates adding a Monize record from buying the investment', () => {
+  it('separates adding a Artha record from buying the investment', () => {
     // The fill-missing shortcut creates security rows immediately. A user who
     // reads that as "GEM bought this for me" has been actively misled.
     expect(steps.addInstruments.body).toMatch(

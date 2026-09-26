@@ -26,11 +26,11 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PG_IMAGE="postgres:16-alpine"
 PG_PASSWORD="verify_schema_pw"
-CONTAINER="monize-verify-schema-$$"
+CONTAINER="artha-verify-schema-$$"
 
 cleanup() {
   docker rm -f "$CONTAINER" >/dev/null 2>&1 || true
-  rm -f /tmp/monize-schema-dump.sql /tmp/monize-migrations-dump.sql
+  rm -f /tmp/artha-schema-dump.sql /tmp/artha-migrations-dump.sql
 }
 trap cleanup EXIT
 
@@ -112,9 +112,9 @@ DUMP_OPTS=(--schema-only --no-comments --no-owner --no-privileges --no-tablespac
 
 echo "Dumping schemas..."
 docker exec -e PGPASSWORD="$PG_PASSWORD" "$CONTAINER" \
-  pg_dump "${DUMP_OPTS[@]}" -U postgres db_schema > /tmp/monize-schema-dump.sql
+  pg_dump "${DUMP_OPTS[@]}" -U postgres db_schema > /tmp/artha-schema-dump.sql
 docker exec -e PGPASSWORD="$PG_PASSWORD" "$CONTAINER" \
-  pg_dump "${DUMP_OPTS[@]}" -U postgres db_migrations > /tmp/monize-migrations-dump.sql
+  pg_dump "${DUMP_OPTS[@]}" -U postgres db_migrations > /tmp/artha-migrations-dump.sql
 
 # Normalize: strip pg_dump headers, SET statements, comments, blank lines,
 # and the per-run \restrict/\unrestrict tokens pg_dump adds for security
@@ -132,7 +132,7 @@ normalize() {
     "$1"
 }
 
-if diff -u <(normalize /tmp/monize-schema-dump.sql) <(normalize /tmp/monize-migrations-dump.sql) > /tmp/monize-schema-diff.txt; then
+if diff -u <(normalize /tmp/artha-schema-dump.sql) <(normalize /tmp/artha-migrations-dump.sql) > /tmp/artha-schema-diff.txt; then
   # Deliberately precise about what was proven. Both databases start from the
   # current schema.sql (older migrations were rolled into it), so this shows the
   # retained migrations are no-ops when replayed on top of it -- which is also how
@@ -148,7 +148,7 @@ echo "FAIL: replaying the migrations on top of schema.sql changes the schema"
 echo
 echo "Diff (schema.sql <-> migrations applied to fresh db):"
 echo "-----------------------------------------------------"
-cat /tmp/monize-schema-diff.txt
+cat /tmp/artha-schema-diff.txt
 echo "-----------------------------------------------------"
 echo
 echo "Fix: update database/schema.sql to match the migrations,"

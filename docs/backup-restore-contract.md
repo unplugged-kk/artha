@@ -1,6 +1,6 @@
 # Backup and restore contract
 
-What a Monize backup promises, what it deliberately does not, and where the
+What a Artha backup promises, what it deliberately does not, and where the
 boundaries are. Written because these guarantees were spread across five files
 and a set of assumptions, and the gaps between them were where the defects lived:
 an audit found a backup that could not be restored, attachments that came back
@@ -454,7 +454,7 @@ cryptographic step-up in the repository rather than two.
 
 The wire names are historical. The header is `X-Restore-OIDC-Token` and the field
 is `oidcIdToken` (`backend/src/backup/backup-format.ts`,
-`frontend/src/lib/backupApi.ts`), but the value is a Monize-minted
+`frontend/src/lib/backupApi.ts`), but the value is a Artha-minted
 re-authentication artifact, **not** an OIDC ID token — nothing verifies it against
 the provider's JWKS, and it would fail if it did. Do not add ID-token claim
 checks here on the strength of the name.
@@ -782,7 +782,7 @@ What is irreducible: one row. A 10 MiB attachment is 13.6 MiB of base64 whatever
 the budget says, because a row is serialised whole. The floor is therefore the
 largest single attachment, not the largest table.
 
-**The framed encrypted container (`MZBE` v2).** AES-GCM's auth tag covers the whole
+**The framed encrypted container (`ARBE` v2).** AES-GCM's auth tag covers the whole
 message, so a single-tag envelope cannot emit a byte until the last byte of
 plaintext exists — which is exactly why the encrypted export buffered. v2 seals
 256 KiB frames, each with its own tag, following the STREAM construction: the
@@ -824,7 +824,7 @@ this one, and it is what would replace a measured multiple with a bound.
   symlink inside a permitted directory cannot lead out of one.
 - **Completeness is part of an artifact's identity, not a note beside it
   (F3RB-001, issue #1069).** A run that knows its artifact is incomplete publishes
-  it as `monize-backup-partial-<date>.<ext>`, in its own retention tier; nothing
+  it as `artha-backup-partial-<date>.<ext>`, in its own retention tier; nothing
   named `daily-`, `weekly-` or `monthly-` is ever written by such a run. The name
   is chosen *after* the export, from what the export found, because
   `writeFileAtomic` replaces a final name by design: choosing it first destroyed
@@ -919,8 +919,8 @@ Known and unresolved; none of these is a bug report waiting to be filed:
   encrypted **envelope** carries its own version and accepts both containers
   (§6), which is a separate number and deliberately not strict.
 - **A framed envelope does not open on an older instance.** Encrypted downloads
-  are `MZBE` v2 as of issue #1070, and a build from before it recognises only v1 —
-  it reports the file as not being in the encrypted Monize format. Restoring
+  are `ARBE` v2 as of issue #1070, and a build from before it recognises only v1 —
+  it reports the file as not being in the encrypted Artha format. Restoring
   backwards across that boundary means an unencrypted export, or restoring on a
   build at least as new as the one that produced the file. The reverse direction
   is fine: every version reads v1.

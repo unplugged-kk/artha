@@ -5,7 +5,7 @@ decisions below were confirmed with the feature's requester (the branch author);
 they still need the maintainer's sign-off before this ships to `main`. Scope from
 discussion #1291 (the `investments` group, "significant portfolio movement") and
 the maintainer's answer "investment / portfolio-movement alerts: your choice,
-could be useful" (kenlasko/monize#1291, 2026-09-01; recorded in
+could be useful" (kenlasko/artha#1291, 2026-09-01; recorded in
 `notification-preferences.md` Section 16.1).
 
 Owner: notification-center. Related: #1291, `notification-preferences.md`,

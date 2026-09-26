@@ -84,7 +84,7 @@ describe("computeExpectedBalances", () => {
     expect(balances.get("acct-1")).toBe(84.75);
   });
 
-  it("excludes voided transactions, as Monize's own balance query does", () => {
+  it("excludes voided transactions, as Artha's own balance query does", () => {
     const balances = computeExpectedBalances(
       accountsWith(0),
       transactionsWith([

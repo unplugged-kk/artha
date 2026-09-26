@@ -77,7 +77,7 @@ function prefixArgs(level, args, now = new Date()) {
  * Idempotent: a second call on the same console is a no-op.
  */
 function installConsoleTimestamps(target) {
-  if (target.__monizeTimestamps) {
+  if (target.__arthaTimestamps) {
     return target;
   }
 
@@ -86,7 +86,7 @@ function installConsoleTimestamps(target) {
     target[method] = (...args) => original(...prefixArgs(method, args));
   }
 
-  Object.defineProperty(target, '__monizeTimestamps', { value: true });
+  Object.defineProperty(target, '__arthaTimestamps', { value: true });
   return target;
 }
 

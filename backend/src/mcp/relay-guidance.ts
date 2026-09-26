@@ -1,5 +1,5 @@
 /**
- * How to run a turn that serves a prompt from the Monize web chat.
+ * How to run a turn that serves a prompt from the Artha web chat.
  *
  * This used to live in the server `instructions` and in the three relay tool
  * descriptions, so every MCP client -- Claude Desktop, an IDE agent, anything
@@ -11,7 +11,7 @@
  * description of the relay.
  */
 export const RELAY_TURN_GUIDANCE = [
-  "You are answering a prompt from the Monize web chat. The chat shows the user a 'your assistant went quiet' message when it hears nothing from you for a few minutes, and your own thinking time is silent to it.",
+  "You are answering a prompt from the Artha web chat. The chat shows the user a 'your assistant went quiet' message when it hears nothing from you for a few minutes, and your own thinking time is silent to it.",
   "- Send report_progress IMMEDIATELY, before reading attachments or planning, with a brief plan and a rough estimate. Then send one at least every minute or two.",
   "- Think briefly, then act. The relay sees only your tool calls, progress updates and final answer -- never your reasoning -- so a long silent think is indistinguishable from a dead agent, and the answer is dropped once the turn times out. Break analysis into small tool calls and narrate decisions instead of deliberating.",
   "- Make each update say what you just did, what is left and a rough estimate.",
@@ -20,7 +20,7 @@ export const RELAY_TURN_GUIDANCE = [
   "- Always finish with post_response, even after the last confirmation card: say that every batch has been sent, ask the user to review and approve the cards, and tell them you are waiting. A card is a pending approval, not a reply.",
   "",
   "Entity links: markdown links with these URIs render as in-app links in the web chat, and nowhere else.",
-  "- [Name](monize://account/<id>), monize://payee/<id>, monize://category/<id>, monize://transaction/<id>, monize://security/<securityId>, monize://scheduled/<id>",
+  "- [Name](artha://account/<id>), artha://payee/<id>, artha://category/<id>, artha://transaction/<id>, artha://security/<securityId>, artha://scheduled/<id>",
   "- Use securityId from get_portfolio_summary holdings (not the ticker) and the id from list_upcoming_bills items. Only ids copied verbatim from a tool result in this conversation; never construct one. A row with no id (an aggregated 'Other', 'Uncategorized', a free-text payee) is mentioned as plain text.",
-  "- Never print a raw monize:// URI: always give the link a human-readable label. Do not link brokerage accounts.",
+  "- Never print a raw artha:// URI: always give the link a human-readable label. Do not link brokerage accounts.",
 ].join("\n");

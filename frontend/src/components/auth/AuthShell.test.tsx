@@ -20,7 +20,7 @@ describe('AuthShell', () => {
     // The boxed logo bakes in a white background rect and renders as a white
     // square in dark mode; the shell must use the transparent mark.
     const logo = getByAltText('Artha') as HTMLImageElement;
-    expect(logo.src).toContain('monize-logo-transparent');
+    expect(logo.src).toContain('artha-logo-transparent');
   });
 
   it('wraps the body in the shared Card surface', () => {

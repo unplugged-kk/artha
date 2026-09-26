@@ -21,14 +21,14 @@ import { uuidString } from "./schema-fragments";
 
 /**
  * Reverse-relay control tools. These do not touch the financial dataset -- they
- * route a chat prompt from the Monize web UI to this agent and the answer back
+ * route a chat prompt from the Artha web UI to this agent and the answer back
  * -- so both carry the READ_ONLY annotation (the hint describes effect on the
  * user's data, which is none here). The agent does the actual work through the
  * other MCP tools between `get_next_prompt` and `post_response`.
  *
  * Usage pattern the agent is told to follow: loop forever -- call
  * `get_next_prompt`; if `hasPrompt` is false, call it again; otherwise handle
- * the request with the Monize tools, narrating progress with `report_progress`
+ * the request with the Artha tools, narrating progress with `report_progress`
  * as it goes, then call `post_response` with the final answer, then loop.
  */
 @Injectable()
@@ -42,7 +42,7 @@ export class McpRelayTools {
         title: "Wait for the next chat prompt",
         annotations: READ_ONLY,
         description:
-          "Long-poll for the next prompt typed in the Monize web chat. " +
+          "Long-poll for the next prompt typed in the Artha web chat. " +
           "{ hasPrompt: false }: call again immediately to keep listening. " +
           "{ hasPrompt: false, stop: true }: the user has gone inactive -- stop " +
           "the polling loop and exit cleanly; they will reconnect you. " +

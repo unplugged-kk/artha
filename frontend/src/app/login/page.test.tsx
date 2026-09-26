@@ -444,7 +444,7 @@ describe('LoginPage', () => {
     // Wait for demo credentials to be pre-filled by the useEffect
     await waitFor(() => {
       const emailInput = screen.getByLabelText(/email/i) as HTMLInputElement;
-      expect(emailInput.value).toBe('demo@monize.com');
+      expect(emailInput.value).toBe('demo@artha.local');
     });
 
     await act(async () => {

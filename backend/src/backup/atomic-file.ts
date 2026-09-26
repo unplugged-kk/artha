@@ -21,14 +21,14 @@ import { basename, dirname, join } from "path";
  * reader sees either the previous artifact or the complete new one.
  *
  * Temporary names start with a dot and carry the pid, so they are invisible to
- * the retention patterns (which anchor on `monize-backup-`) and attributable
+ * the retention patterns (which anchor on `artha-backup-`) and attributable
  * when one is left behind. `cleanStaleTempFiles` removes leftovers separately
  * from retention, because a crashed write is not a backup and must not count
  * against the number of backups kept.
  */
 
-/** Prefix marking a partial write. Deliberately not `monize-backup-`. */
-const TEMP_PREFIX = ".monize-backup-tmp-";
+/** Prefix marking a partial write. Deliberately not `artha-backup-`. */
+const TEMP_PREFIX = ".artha-backup-tmp-";
 
 /** How long a temporary file must be untouched before it is considered stale. */
 const STALE_TEMP_AGE_MS = 60 * 60 * 1000;

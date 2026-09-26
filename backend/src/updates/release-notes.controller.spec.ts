@@ -11,7 +11,7 @@ describe("ReleaseNotesController", () => {
     version: "1.12.1",
     intro: "Intro.",
     sections: [],
-    releaseUrl: "https://github.com/kenlasko/monize/releases/tag/v1.12.1",
+    releaseUrl: "https://github.com/unplugged-kk/artha/releases/tag/v1.12.1",
   };
 
   beforeEach(async () => {
