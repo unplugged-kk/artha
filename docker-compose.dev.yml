@@ -13,7 +13,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./database/migrations:/docker-entrypoint-initdb.d:ro
     ports:
-      - "127.0.0.1:5432:5432"
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-5432}:5432"
     networks:
       - finance-network
     healthcheck:
@@ -105,7 +105,7 @@ services:
       - ${ATTACHMENT_HOST_DIR:-./artha/attachments}:${ATTACHMENT_CONTAINER_DIR:-/data/attachments}
       - /app/node_modules
     ports:
-      - "127.0.0.1:${BACKEND_PORT:-3000}:3000"
+      - "127.0.0.1:${BACKEND_HOST_PORT:-3000}:3000"
     networks:
       - finance-network
     command: sh -c "npm run build && node dist/db-init.js && node dist/db-migrate.js && if [ \"$$DEMO_MODE\" = 'true' ]; then node dist/database/seed.js; fi && npm run start:dev"
