@@ -2,7 +2,7 @@
 
 **How this works:** each mission rewrites this file as a current snapshot (never a diary). **This PR is never merged — it is overwritten.** The summary is at the top; matrices, evidence, and the next-mission brief are below.
 
-Last updated: 2026-09-26 - `main` at **`88aba19ec`** - **Mission 1 MERGED (PR #22)** - **Mission 2 COMPLETE - Fintrack audit, scope exhausted, no code change** - **Mission 3 MERGED (PR #23)** - **Mission 4 - Fund Rolling Returns: code PR #24 OPEN (not merged)** - **Mission 5A - Mutual-Fund Categories & Comparison: specification APPROVED, committed as documentation only, docs PR #25 OPEN (not merged); implementation intentionally NOT started** - **Artha de-branding (Monize removal): implemented on `fm/artha-debrand-01`, code PR #26 OPEN (not merged)** - next: merge PR #24, then the de-brand PR #26, then the spec PR #25, then start **Mission 5B (implementation)**
+Last updated: 2026-09-26 - `main` at **`5ab3f6188`** - **Mission 1 MERGED (#22)** - **Mission 2 COMPLETE - Fintrack audit, scope exhausted, no code change** - **Mission 3 MERGED (#23)** - **Mission 4 - Fund Rolling Returns MERGED (#24)** - **Mission 5A - MF categories/comparison specification MERGED (#25)** - **Artha de-branding MERGED (#26)** - **LOCAL BETA ACTIVE on `fm/artha-local-beta-01` (PR #27 OPEN); real-world observation period started, feature development FROZEN** - next: **Beta Bug Triage & Stabilization**, then **Mission 5B**
 
 ---
 
@@ -20,12 +20,12 @@ Last updated: 2026-09-26 - `main` at **`88aba19ec`** - **Mission 1 MERGED (PR #2
 
 ## Current repository state
 
-- **main SHA:** `88aba19ec` - `Merge pull request #23` (Mission 3).
+- **main SHA:** `5ab3f6188` - `Merge pull request #25` (MF categories/comparison specification).
 - **Rolling status PR:** PR #5 (`fm/artha-mission-status`) — strictly one file, `docs/status/artha-mission-status.md`.
-- **Code PRs:** **PR #22** (Mission 1) and **PR #23** (Mission 3) **MERGED**; **PR #24** - `feat: fund rolling returns` (`fm/artha-finsight-rolling-returns` -> `main`) - **OPEN** (Mission 4).
-- **Documentation PRs:** **PR #25** - `docs: add mutual fund categories and comparison specification` (`fm/artha-fund-categories-spec` -> `main`) - **OPEN** (Mission 5A; docs only, no production change).
-- **Stabilization PRs:** **PR #26** - `chore: remove Monize branding from Artha` (`fm/artha-debrand-01` -> `main`) - **OPEN** (Artha de-branding; rename only, no feature work).
-- **Merged PRs:** #1-#23.
+- **Merged code PRs:** **PR #22** (Mission 1), **PR #23** (Mission 3), **PR #24** (Fund Rolling Returns), **PR #26** (Artha de-branding) — all **MERGED**.
+- **Merged docs PRs:** **PR #25** (MF categories/comparison specification) — **MERGED**.
+- **Open PRs:** **PR #27** - `chore: establish Artha local beta environment` (`fm/artha-local-beta-01` -> `main`) — the local beta deployment fix + handover document.
+- **Merged PRs:** #1-#26.
 
 ---
 
@@ -285,10 +285,26 @@ Negative controls re-run: `365` in place of `365.25` fails U2 (and two others); 
 
 ---
 
+## Local beta — real-world observation period
+
+**Status: ACTIVE.** `main` @ `5ab3f6188`; deployment fix + handover on `fm/artha-local-beta-01`, PR #27 OPEN. **Feature development is frozen for the observation period.**
+
+- **Compose:** `docker compose -f docker-compose.dev.yml up -d` (builds the local source). Host ports relocated to postgres `55432`, backend `3200`, frontend `3201`, because the machine already runs an unrelated `contentforge` stack on 5432/3000 and a native Postgres on 5433; `POSTGRES_HOST_PORT` / `BACKEND_HOST_PORT` were added to the compose (documented in `.env.example`).
+- **Environment:** Docker 29.6.1 / Compose v5.5.1; macOS 24 GiB / 15 CPU host, Docker VM ~6 GiB / 2 CPU; `postgres:16-alpine`.
+- **Startup verified:** postgres healthy; `db-init` + `db-migrate` clean; **194 migrations**; `artha` / `artha_user`; backend `/live` and `/ready` 200; frontend `/login` 200; proxy → backend 200.
+- **Smoke results:** auth (register/login 201, CSRF honoured); INR account 5000 + −250.50 expense → balance **4749.50**, 1 txn; backend restart ready ~50 s and frontend reconnects; full stop/start → data intact; **cross-user isolation** (user B `GET`/`PATCH` A's account → 404, sees 0 of A's rows); **rolling returns** FX-A → 1Y 25 / 3Y 25.9855 / 5Y 20.1155; non-existent scheme code handled gracefully (no fabricated value); `POST /backup/export` 201.
+- **Finding:** **BETA-001 (P2)** — KOSPI market-index refresh fails on boot (`ON CONFLICT DO UPDATE … [21000]`), logged once, non-fatal; likely a duplicate row in the batch upsert. No P0/P1 seen.
+- **Deferred:** backup **restore** round-trip, full multi-currency / missing-FX, the UI journeys (import / SMS / budgets / goals / reports) and the Playwright matrix.
+- **Handover:** `docs/beta/artha-local-beta-01.md`.
+- **Rule:** use Artha normally; record observations (date / screen / what I did / expected / actual / evidence); **do not patch the baseline** during observation.
+
+---
+
 ## Known limitations
 
+- Local beta: BETA-001 (P2, KOSPI index refresh); backup restore not yet round-tripped; the beta runs the development targets, which are heavier than the production images.
 - Artha de-branding: pre-change backup artifacts and persisted `monize://` AI links are not recognised after the rename, and MCP clients re-authorise; the help/wiki links now target the Artha repository (its wiki content is not yet written).
-- Mission 5A: the specification is documentation only and nothing is implemented; the comparison half cannot start until PR #24 is merged.
+- Mission 5A: the specification is merged on `main`; implementation (Mission 5B) is deferred until after the beta observation period and the stabilization mission.
 - Date-aware / historical FX and multi-currency revaluation are covered by backend unit tests; the E2E stack pulls rates from an external provider, so an end-to-end conversion is not deterministic offline.
 - Firefox E2E runs in CI — Playwright browsers cannot be installed on the arm64 / Ubuntu 26.04 runner used for local verification.
 - Mission 4: GitHub Actions credits are exhausted, so CI will not run on PR #24; local validation is the evidence. IDCW vs Growth cannot be detected (no plan-option field), so every fund's card carries the IDCW caption. The client trailing-return engine on the Security performance card (per-row adjusted/raw splice, unbounded baseline, wall clock) is unchanged.
@@ -300,11 +316,12 @@ Finsight: MF categories & comparison (specification APPROVED — Mission 5A / do
 
 ## Next mission
 
-**Sequence (owner-set):**
+**Sequence:**
 
-1. **Merge PR #24** — Fund Rolling Returns (Mission 4). *First, because the Mission 5B comparison half depends on its approved engine.*
-2. **Merge PR #26** — Artha de-branding (`fm/artha-debrand-01`). *Before PR #25, because it touches files PR #24 changed.*
-3. **Merge the specification PR #25** — `docs/specs/fund-categories-and-comparison.md` (documentation only).
-4. **Start Mission 5B** — implement Mutual-Fund Categories & Comparison from the frozen specification, with three strictly-disjoint parallel tracks (Backend / Frontend / Tests) feeding one Integration & QA pass and **one** final code PR. The backend contract is the boundary for the frontend; the test track works from the frozen spec, so no two tracks implement the same logic. The local-beta observation period (Compose, real usage, bug log) runs before or alongside this, on a frozen baseline.
+1. **Local beta observation** — `main` @ `5ab3f6188` deployed with `docker-compose.dev.yml` (PR #27); use Artha as the real finance application for several days and collect observations **without patching the baseline**.
+2. **Beta Bug Triage & Stabilization** — reproduce each observation, classify P0–P3, fix confirmed defects, add regression tests, verify, and produce one stabilization PR.
+3. **Mission 5B** — implement Mutual-Fund Categories & Comparison from the frozen specification, with three strictly-disjoint parallel tracks (Backend / Frontend / Tests) feeding one Integration & QA pass and **one** final code PR.
+
+(The three code/docs PRs #24 / #26 / #25 are already merged; #27 is the beta deployment.)
 
 Not started, and out of Mission 5B by decision: risk metrics, fund overlap, market-cap allocation, peer benchmarking/ranking and plan-option inference — all recorded BLOCKED in the approved spec. Replacing the client trailing-return engine (`frontend/src/lib/security-detail.ts`) remains a separate follow-up.
