@@ -2,7 +2,7 @@
 
 **How this works:** each mission rewrites this file as a current snapshot (never a diary). **This PR is never merged — it is overwritten.** The summary is at the top; matrices, evidence, and the next-mission brief are below.
 
-Last updated: 2026-09-26 · `main` at **`cfe995483`** · **Mission 1 MERGED (PR #22)** · **Mission 2 COMPLETE — Fintrack audit, scope exhausted, no code change** · next mission: **Mission 3 — Finsight Completion Audit & Implementation**
+Last updated: 2026-09-26 · `main` at **`cfe995483`** · **Mission 1 MERGED (PR #22)** · **Mission 2 COMPLETE — Fintrack audit, scope exhausted, no code change** · **Mission 3 — Finsight: one PARTIAL gap implemented, code PR #23 OPEN (not merged)** · next mission: **Mission 4 — Finsight fund rolling returns (spec first)**
 
 ---
 
@@ -131,15 +131,79 @@ The complete backend unit suite (98 minutes, 646 suites) and the full chromium+f
 
 ---
 
+## Mission 3 — Finsight Completion
+
+**Status: ONE PARTIAL GAP IMPLEMENTED — code PR #23 open (`fm/artha-finsight-01`, not merged).** Baseline `main` `cfe995483`.
+
+**Conclusion:** the Finsight market-data, valuation, allocation, return (CAGR/XIRR/TWR), realized-gain, watchlist, benchmark, report, alert and AI stack is already absorbed natively in Artha. Exactly one selected capability was PARTIAL: **portfolio concentration / diversification** — computed by the server (`concentration.util.ts`, `f9a0a4a35`) and quoted by AI/MCP, but never displayed because the frontend `PortfolioSummary` type dropped the field. PR #23 surfaces it on the investments page. Every other row is DONE, BLOCKED on data, NOT DONE pending an approved financial spec, or REJECTED.
+
+**Evidence inspected.** Finsight: `/Users/kishore/git/Onefinance/finsight-ai/` — `README.md` feature list; `fullstack/backend-scaffold/src/routes/{analytics,portfolio,mutualFunds,stocks,news}.ts`; `fullstack/backend-scaffold/src/db/schema.ts`; `fullstack/ai-engine/src/main.py`; `shared/symbol-aliases.json`. Harvest record: PR #5 revision `e19da578d` (Fintrack + Finsight adoption snapshot). Artha: current `origin/main` files named in the matrix. **Limitation:** capability-by-capability mapping with targeted source reads on both sides — not a complete line-by-line source diff.
+
+### Finsight adoption matrix
+
+| Capability | Finsight source | Artha evidence (`main`) | Status | Action |
+|---|---|---|---|---|
+| NSE/BSE equities (`.NS`/`.BO`) | `services/market-data/*` | `instrument-key.util.ts` | DONE | none |
+| AMFI NAVs + history | `services/market-data/*` | `amfi-nav.service.ts`, `security_prices` | DONE | none |
+| Provider aliases | `shared/symbol-aliases.json` | `instrument_aliases`, `instrument-alias.entity.ts` | DONE | none |
+| Portfolio valuation | `routes/portfolio.ts` | `PortfolioService.getPortfolioSummary` | DONE | none |
+| Allocation: security / tag / sector / country / asset class | `routes/analytics.ts` | `buildAllocation*`, `sector-weighting.service.ts` | DONE | none |
+| Allocation: instrument type | `routes/analytics.ts` | `SecurityTypeAllocationWidget`, `SecurityTypeAllocationReport` | DONE | none |
+| CAGR / XIRR / TWR | `routes/portfolio.ts:220-221` (`cagr: 0, xirr: 0`) | `calculateCAGR`, `xirr.util.ts`, `calculateTWR` | DONE (Finsight impl REJECTED) | none |
+| Realized gains | — | `calculateRealizedGains` | DONE | none |
+| **Concentration / diversification** | `routes/analytics.ts:22` (`diversificationScore: 0`) | `concentration.util.ts` + LLM/MCP; UI missing on `main` | **PARTIAL → implemented in PR #23** | awaiting owner merge |
+| Watchlists | `db/schema.ts` | `backend/src/watchlists/*`, `/watchlists`, `e2e/tests/watchlists.spec.ts` (PR #13) | DONE | none |
+| Index / benchmark comparison | — | `market_index_prices`, `performance-comparison.service.ts` | DONE | none |
+| Investment reports / alerts | — | `investment-reports/**`, `notification-center/**` | DONE | none |
+| AI assistant, portfolio-grounded | `ai-engine/src/main.py:33` (static insight) | `backend/src/ai/**`, `mcp/**`, `getLlmSummary` | DONE (Finsight impl REJECTED) | none |
+| Risk stats (σ, Sharpe, Sortino, drawdown, VaR) | `routes/analytics.ts:26-27,70-79` (zeros) | no flow-adjusted periodic return series (`/net-worth/investments-daily` is value incl. contributions; `calculateTWR` chains at transaction boundaries) | BLOCKED | needs a return-series spec |
+| Market-cap allocation | `routes/analytics.ts`, `routes/stocks.ts` | no market-cap data | BLOCKED | needs a data source |
+| Fund rolling returns | `routes/mutualFunds.ts:53-62` (empty) | AMFI series stored in full; no calculation | NOT DONE | new calculation — approved spec required before implementation (project rule) |
+| MF category explorer / comparison | `routes/mutualFunds.ts` | no category model (mfapi `scheme_category` not captured) | NOT DONE | schema + spec, later mission |
+| Fund overlap | `routes/mutualFunds.ts:69` (`overlap: 0`) | no fund-holdings data | BLOCKED | needs holdings source |
+| Screener | `routes/stocks.ts:82` (filters not modelled) | none | REJECTED as source; concept DEFERRED | — |
+| News | `routes/news.ts` | `security-news.service.ts` | PARTIAL (unchanged) | outside this scope |
+| Sentiment / events | `routes/news.ts`, `db/schema.ts` | none | DEFERRED | — |
+
+**REJECTED — source implementation invalid / not suitable for Artha:** hard-coded zero CAGR/XIRR, zero/empty analytics stubs (diversification, Sharpe, Sortino, drawdown, attribution, rolling, overlap — each `SELECT 1` then literals), static AI "insight", orphaned provider adapters, float valuation, FX-blind aggregation, stored-never-rebuilt cost basis. None ported.
+
+### Implemented (PR #23)
+
+- `frontend/src/types/investment.ts` — `PortfolioSummary.concentration?` (+ `ConcentrationMeasure`, `ConcentrationPosition`), optional for rolling deploys.
+- `frontend/src/components/investments/PortfolioConcentrationCard.tsx` — renders the server figures only: effective holdings of N, largest position, top-5 share, Herfindahl index for both bases (Holdings / Including cash), and the five largest positions; `partial` names the excluded holdings; `unavailable` / null basis reads "Not available", never zero.
+- `frontend/src/app/investments/page.tsx` — card under the summary/allocation row.
+- i18n `investments.concentration.*`: `en`, regenerated `xx`, translated into all 18 full locales.
+- Commits: `5cdade79f` (feature), `70490bd97` (translations). No backend, schema, migration, calculation, FX, cost-basis or AI change.
+
+### Validation (Mission 3)
+
+| Gate | Result |
+|---|---|
+| Frontend type-check / lint | clean / 0 errors (1 pre-existing `public/sw.js` warning) |
+| Frontend i18n:check + i18n suites | clean, 1777 passed |
+| Frontend unit, full (`TZ=UTC`) | 871 files, 16631 passed |
+| Frontend build | clean |
+| Backend typecheck / build | clean / clean (no backend change) |
+| Backend concentration + portfolio specs | 164 passed |
+| E2E `investments.spec.ts` (chromium, local stack) | 6 passed, incl. the 2 new concentration journeys |
+| E2E regression (securities, security-detail, watchlists, currencies, investment-account-consolidation, reports, artha-foundation A/C/F/G/H) | all passed |
+
+**E2E journeys:** (1) fresh INR user, two INR BUYs (60×100, 20×100) from a 10,000 opening balance — page matches `/portfolio/summary` exactly (`1.6 of 2` / `2.3 of 3`, `75.0%` / `60.0%`, HHI `0.625` / `0.440`, positions 75.0% / 25.0%), and again after reload; (2) cash-only brokerage — holdings basis "Not available", cash-inclusive 100.0%.
+
+**Financial correctness:** presentation of an existing server calculation; no client money arithmetic, no second valuation/FX/return/cost-basis path. **Security/RLS:** no backend change; the card reads the same authenticated, RLS-scoped `/portfolio/summary` response.
+
+---
+
 ## Known limitations
 
 - Date-aware / historical FX and multi-currency revaluation are covered by backend unit tests; the E2E stack pulls rates from an external provider, so an end-to-end conversion is not deterministic offline.
 - Firefox E2E runs in CI — Playwright browsers cannot be installed on the arm64 / Ubuntu 26.04 runner used for local verification.
+- Local E2E (Mission 3) ran on a 6 GB / 2 CPU Docker VM: the Next dev server was OOM-killed while compiling every route (artha-foundation "every primary route", and once in reports). Affected specs passed after a container restart; the full-route sweep is left to CI on PR #23.
 
 ## Deferred — later missions
 
-Finsight analytics, India instrument/tax/Account-Aggregator specifics, CAS/broker imports, advanced risk metrics, and new AI/MCP capability. (Fintrack is no longer deferred — audited in Mission 2, scope exhausted.)
+Finsight: fund rolling returns and MF category/comparison (NOT DONE, spec first); risk statistics, market-cap allocation and fund overlap (BLOCKED on data); screener, sentiment/events (DEFERRED). Also India instrument/tax/Account-Aggregator specifics, CAS/broker imports, and new AI/MCP capability. (Fintrack: exhausted in Mission 2.)
 
 ## Next mission
 
-**Mission 3 — Finsight Completion Audit & Implementation**, to begin from the latest merged `main` (currently `cfe995483`).
+After the owner merges PR #23: **Mission 4 — Finsight fund rolling returns**, starting from the latest merged `main` with a short financial spec (window alignment on non-trading days, annualization, missing-NAV policy, test matrix) for owner approval before any implementation. The AMFI NAV series it needs is already stored in full.
