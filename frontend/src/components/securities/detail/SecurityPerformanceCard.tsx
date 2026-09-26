@@ -100,6 +100,13 @@ export function SecurityPerformanceCard({
             {t('performance.excludesDividends')}
           </p>
         ))}
+      {/* A fund's Rolling returns card quotes 3Y/5Y per annum; these are
+          cumulative, so say so rather than let the two read as disagreeing. */}
+      {hasAny && (
+        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          {t('performance.cumulativeNote')}
+        </p>
+      )}
     </div>
   );
 }

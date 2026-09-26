@@ -68,6 +68,7 @@ const mockGetSecurities = vi.fn();
 const mockGetSecurityDocuments = vi.fn();
 const mockGetSecurityNews = vi.fn();
 const mockRefreshSelectedPrices = vi.fn();
+const mockGetFundRollingReturns = vi.fn();
 
 vi.mock('@/lib/investments', () => ({
   investmentsApi: {
@@ -85,6 +86,8 @@ vi.mock('@/lib/investments', () => ({
     getSecurityDocuments: (...args: unknown[]) =>
       mockGetSecurityDocuments(...args),
     getSecurityNews: (...args: unknown[]) => mockGetSecurityNews(...args),
+    getFundRollingReturns: (...args: unknown[]) =>
+      mockGetFundRollingReturns(...args),
     updateSecurity: vi.fn(),
   },
 }));
@@ -219,6 +222,33 @@ describe('SecurityDetailPage', () => {
     mockGetSecurities.mockResolvedValue([security]);
     mockGetSecurityDocuments.mockResolvedValue([]);
     mockGetSecurityNews.mockResolvedValue({ provider: 'yahoo', items: [] });
+    mockGetFundRollingReturns.mockResolvedValue({
+      securityId: 'sec-1',
+      eligibility: 'ELIGIBLE',
+      currencyCode: 'INR',
+      history: {
+        firstDate: null,
+        lastDate: null,
+        observationCount: 0,
+        excludedObservationCount: 0,
+        lastIsStale: false,
+      },
+      periods: (['1Y', '3Y', '5Y'] as const).map((period, i) => ({
+        period,
+        months: [12, 36, 60][i],
+        annualized: i > 0,
+        status: 'NO_PRICE_HISTORY',
+        completeness: 'complete',
+        windowCount: 0,
+        missingWindowCount: 0,
+        min: null,
+        max: null,
+        median: null,
+        mean: null,
+        positiveShare: null,
+        gaps: [],
+      })),
+    });
     mockGetSecurityTransactionHistory.mockResolvedValue({
       securityId: 'sec-1',
       symbol: 'AAPL',
@@ -721,6 +751,39 @@ describe('SecurityDetailPage', () => {
       expect(
         screen.queryByRole('button', { name: 'Remove from favourites' }),
       ).toBeNull();
+    });
+  });
+
+  describe('rolling returns', () => {
+    const amfiFund = (amfiSchemeCode: string | null) =>
+      detailFixture({ security: { ...security, amfiSchemeCode } });
+
+    it('shows the card for an AMFI fund, between the overview row and the accounts', async () => {
+      mockGetSecurityDetail.mockResolvedValue(amfiFund('119551'));
+      await renderPage();
+
+      const card = await screen.findByRole('region', { name: 'Rolling returns' });
+      expect(mockGetFundRollingReturns).toHaveBeenCalledWith('sec-1');
+      const performance = screen.getByText('Security performance');
+      const accounts = screen.getByText('Accounts');
+      expect(
+        performance.compareDocumentPosition(card) & Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy();
+      expect(
+        card.compareDocumentPosition(accounts) & Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy();
+    });
+
+    it.each([
+      ['no scheme code', null],
+      ['a blank scheme code', '   '],
+    ])('shows no card and asks nothing for %s', async (_label, code) => {
+      mockGetSecurityDetail.mockResolvedValue(amfiFund(code));
+      await renderPage();
+
+      expect(screen.getByText('Security performance')).toBeInTheDocument();
+      expect(screen.queryByText('Rolling returns')).toBeNull();
+      expect(mockGetFundRollingReturns).not.toHaveBeenCalled();
     });
   });
 

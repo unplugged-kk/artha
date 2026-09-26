@@ -111,7 +111,46 @@
     },
     "includesDividends": "Includes dividends",
     "excludesDividends": "Excludes dividends",
-    "excludesDividendsTitle": "This provider supplies no adjusted-close series, so these returns are measured on price alone. For a fund that pays out, they understate the return by its yield."
+    "excludesDividendsTitle": "This provider supplies no adjusted-close series, so these returns are measured on price alone. For a fund that pays out, they understate the return by its yield.",
+    "cumulativeNote": "3Y and 5Y are cumulative over the whole period, not per year."
+  },
+  "rollingReturns": {
+    "title": "Rolling returns",
+    "subject": "Every holding period of this length in the fund's NAV history: how it went at worst, typically and at best, and how often it ended positive.",
+    "loadFailed": "Rolling returns could not be loaded.",
+    "retry": "Retry",
+    "columns": {
+      "period": "Period",
+      "worst": "Worst",
+      "median": "Median",
+      "best": "Best",
+      "positive": "Positive",
+      "windows": "Periods measured"
+    },
+    "periods": {
+      "1Y": "1 year",
+      "3Y": "3 years",
+      "5Y": "5 years"
+    },
+    "perAnnum": "p.a.",
+    "absolute": "absolute",
+    "windowRange": "{start} to {end}",
+    "missingCount": "{count, plural, one {{shown} missing} other {{shown} missing}}",
+    "notAvailable": "n/a",
+    "status": {
+      "INSUFFICIENT_HISTORY": "The stored NAV history is shorter than this period.",
+      "ALL_WINDOWS_MISSING": "No period could be measured: {count, plural, one {its start date has} other {every one of its {shown} start dates has}} no NAV within 14 days.",
+      "NO_PRICE_HISTORY": "No NAV history is stored for this fund yet."
+    },
+    "incompleteHeading": "Some periods could not be measured",
+    "incomplete": "{period}: {count, plural, one {{shown} period has} other {{shown} periods have}} no NAV within 14 days of its start date, so the figures describe only the periods that could be measured. Missing periods end {ranges}.",
+    "gapRange": "{from} to {to}",
+    "gapMore": "{count, plural, one {and {shown} more range} other {and {shown} more ranges}}",
+    "asOf": "Based on NAVs up to {date}.",
+    "stale": "The latest NAV is from {date}, more than 14 days ago. The NAV feed may be behind, so recent periods are missing.",
+    "excluded": "{count, plural, one {{shown} NAV row was left out because it was} other {{shown} NAV rows were left out because they were}} zero, negative or dated in the future.",
+    "basisNote": "1-year figures are absolute; 3- and 5-year figures are annualized (p.a.).",
+    "idcwNote": "Based on NAV. For IDCW (dividend) plans, payouts are not added back."
   },
   "positionInfo": {
     "title": "Position info",
