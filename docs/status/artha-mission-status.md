@@ -2,7 +2,7 @@
 
 **How this works:** each mission rewrites this file as a current snapshot (never a diary). **This PR is never merged — it is overwritten.** The summary is at the top; matrices, evidence, and the next-mission brief are below.
 
-Last updated: 2026-09-25 · `main` at **`cfe995483`** · **Mission 1 MERGED (PR #22)** · next mission: **Mission 2 — Fintrack Completion Audit & Implementation**
+Last updated: 2026-09-26 · `main` at **`cfe995483`** · **Mission 1 MERGED (PR #22)** · **Mission 2 COMPLETE — Fintrack audit, scope exhausted, no code change** · next mission: **Mission 3 — Finsight Completion Audit & Implementation**
 
 ---
 
@@ -83,6 +83,54 @@ The complete backend unit suite (98 minutes, 646 suites) and the full chromium+f
 
 ---
 
+## Mission 2 — Fintrack Completion
+
+**Status: COMPLETE — SCOPE EXHAUSTED / AUDIT ONLY.** No code change, no code PR, no `fm/artha-fintrack-01` branch.
+
+**Conclusion:** the selected Fintrack scope has been exhausted. Every Fintrack capability adopted into Artha is already implemented and verified on `main` at `cfe995483`. The remaining Fintrack capabilities are either explicitly NOT ADOPTED / REJECTED or belong to later Finsight/Artha scope. There is no valid implementation gap for this mission, so none was invented.
+
+### Adopted Fintrack capabilities — all DONE
+
+| Capability | Artha evidence (`origin/main`) |
+|---|---|
+| Daily transaction ledger / date grouping (Today/Yesterday, per-day income/expense) | `frontend/src/lib/transaction-day-groups.ts` + `TransactionList.dayGroups.test.tsx` — FX / VOID / transfer / split correct, integer-scaled, currency-mix withheld |
+| Payment methods (UPI/IMPS/NEFT/RTGS/CARD/CASH/CHEQUE/OTHER) | schema enum + indexes; `TransactionRow`, `TransactionForm`, `TransactionFilterPanel`, `import/payment-method-detector.util` |
+| UPI VPA + reference / RRN | schema `upi_vpa` / `upi_reference`; transaction entity, DTOs, form, row, `import/sms/parsers/upi-sms.parser`, `transaction-search.util` |
+| Indian bank SMS intake + review | `backend/src/import/sms/*`, `sms_sender_registry`, `SmsIntakeStep` (PR #17 — the one concept explicitly "Rebuilt from Fintrack", `india_phase2` migration L126) |
+| Merchant / payee normalization | `payee_aliases` + `merchant_references` (global, `normalized_name` / `canonical_name` / `country_code`) |
+| Credit-card / billing-cycle experience | `CREDIT_CARD` account type, `statement_due_day` / `statement_settlement_day`, `statement-cycle.service`, `credit-card-detail/*` (StatementPanel, PayoffCalculator, InterestAndFeesPanel), `credit-utilization`, dashboard widgets |
+| Budgets | `budgets.service`, `budget-alert.service`, `BudgetHeatmap` |
+| Goals / emergency fund | PR #20 |
+| Investments / SIP plans | investment engine, `sip-plan-comparison.service` |
+| Recurring / calendar | scheduled-transactions + bills |
+| Reports | `built-in-reports`, `reports/` engine |
+| Import → ledger → rules / idempotency | `import/*`, `rules.controller`, `import-identity.util` |
+| Data export | backup / export (JSON / CSV / PDF) |
+
+### REJECTED / NOT ADOPTED
+
+| Item | Reason |
+|---|---|
+| Fintrack localStorage card reward-points / "unbilled" fields | Not in the selected Artha architecture; Artha models cards by balance + statement cycle + utilization (correct accounting model). No such columns in Artha schema. |
+| Fintrack AI Insights (OpenAI scoring) implementation | Belongs to the separate Finsight direction; Mission 2 scope excludes new AI. |
+| Fintrack `ft-*` visual system (Kimi dark theme) | Artha has its own established design system; a second design system is out of scope. |
+
+### Evidence inspected
+
+- **Fintrack:** `/Users/kishore/git/Onefinance/fintrack-app/` — `HANDOVER.md` (the project's authoritative agent handover / feature record), `README.md`, Prisma models, and the application page / navigation inventory (Kimi nav), with targeted source verification.
+- **Artha:** current `origin/main` (`cfe995483`) — schema, the transaction day-grouping / payment-method / UPI / SMS-intake / merchant-normalization / credit-card / budgeting / goals / investment-SIP / scheduled-transaction / reports / import-rules / export implementations and their contracts.
+- **Limitation (stated honestly):** this audit used Fintrack's authoritative handover plus the page/nav inventory mapped capability-by-capability against Artha, with targeted source verification in Artha. It did **not** perform a complete line-by-line Fintrack↔Artha source diff.
+
+### No-change confirmation
+
+- No Artha source code modified.
+- No `fm/artha-fintrack-01` branch created.
+- No code PR opened.
+- No scope expansion; no Finsight / tax / Account-Aggregator / new-India-instrument / new-AI work started.
+- Selected Fintrack scope is **exhausted**.
+
+---
+
 ## Known limitations
 
 - Date-aware / historical FX and multi-currency revaluation are covered by backend unit tests; the E2E stack pulls rates from an external provider, so an end-to-end conversion is not deterministic offline.
@@ -90,8 +138,8 @@ The complete backend unit suite (98 minutes, 646 suites) and the full chromium+f
 
 ## Deferred — later missions
 
-Fintrack features, Finsight analytics, India instrument/tax/Account-Aggregator specifics, CAS/broker imports, advanced risk metrics, and new AI/MCP capability.
+Finsight analytics, India instrument/tax/Account-Aggregator specifics, CAS/broker imports, advanced risk metrics, and new AI/MCP capability. (Fintrack is no longer deferred — audited in Mission 2, scope exhausted.)
 
 ## Next mission
 
-**Mission 2 — Fintrack Completion Audit & Implementation**. PR #22 is merged; Mission 2 is ready to begin from `main` at `cfe995483`.
+**Mission 3 — Finsight Completion Audit & Implementation**, to begin from the latest merged `main` (currently `cfe995483`).
