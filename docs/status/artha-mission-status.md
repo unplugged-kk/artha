@@ -2,7 +2,7 @@
 
 **How this works:** each mission rewrites this file as a current snapshot (never a diary). **This PR is never merged — it is overwritten.** The summary is at the top; matrices, evidence, and the next-mission brief are below.
 
-Last updated: 2026-09-26 · `main` at **`cfe995483`** · **Mission 1 MERGED (PR #22)** · **Mission 2 COMPLETE — Fintrack audit, scope exhausted, no code change** · **Mission 3 — Finsight: one PARTIAL gap implemented, code PR #23 OPEN (not merged)** · next mission: **Mission 4 — Finsight fund rolling returns (spec first)**
+Last updated: 2026-09-26 - `main` at **`88aba19ec`** - **Mission 1 MERGED (PR #22)** - **Mission 2 COMPLETE - Fintrack audit, scope exhausted, no code change** - **Mission 3 MERGED (PR #23)** - **Mission 4 - Fund Rolling Returns: code PR #24 OPEN (not merged)** - next mission: **Mission 5 - replace the client trailing-return engine with a server answer (spec first)**
 
 ---
 
@@ -20,10 +20,10 @@ Last updated: 2026-09-26 · `main` at **`cfe995483`** · **Mission 1 MERGED (PR 
 
 ## Current repository state
 
-- **main SHA:** `cfe995483` — `Merge pull request #22`.
+- **main SHA:** `88aba19ec` - `Merge pull request #23` (Mission 3).
 - **Rolling status PR:** PR #5 (`fm/artha-mission-status`) — strictly one file, `docs/status/artha-mission-status.md`.
-- **Code PR:** **PR #22** — `feat: complete initial Artha productization` (`fm/artha-productization-01` → `main`) — **MERGED**.
-- **Merged PRs:** #1–#22.
+- **Code PRs:** **PR #22** (Mission 1) and **PR #23** (Mission 3) **MERGED**; **PR #24** - `feat: fund rolling returns` (`fm/artha-finsight-rolling-returns` -> `main`) - **OPEN** (Mission 4).
+- **Merged PRs:** #1-#23.
 
 ---
 
@@ -133,7 +133,7 @@ The complete backend unit suite (98 minutes, 646 suites) and the full chromium+f
 
 ## Mission 3 — Finsight Completion
 
-**Status: ONE PARTIAL GAP IMPLEMENTED — code PR #23 open (`fm/artha-finsight-01`, not merged).** Baseline `main` `cfe995483`.
+**Status: ONE PARTIAL GAP IMPLEMENTED - code PR #23 MERGED (`main` `88aba19ec`).** Baseline `main` `cfe995483`.
 
 **Conclusion:** the Finsight market-data, valuation, allocation, return (CAGR/XIRR/TWR), realized-gain, watchlist, benchmark, report, alert and AI stack is already absorbed natively in Artha. Exactly one selected capability was PARTIAL: **portfolio concentration / diversification** — computed by the server (`concentration.util.ts`, `f9a0a4a35`) and quoted by AI/MCP, but never displayed because the frontend `PortfolioSummary` type dropped the field. PR #23 surfaces it on the investments page. Every other row is DONE, BLOCKED on data, NOT DONE pending an approved financial spec, or REJECTED.
 
@@ -151,14 +151,14 @@ The complete backend unit suite (98 minutes, 646 suites) and the full chromium+f
 | Allocation: instrument type | `routes/analytics.ts` | `SecurityTypeAllocationWidget`, `SecurityTypeAllocationReport` | DONE | none |
 | CAGR / XIRR / TWR | `routes/portfolio.ts:220-221` (`cagr: 0, xirr: 0`) | `calculateCAGR`, `xirr.util.ts`, `calculateTWR` | DONE (Finsight impl REJECTED) | none |
 | Realized gains | — | `calculateRealizedGains` | DONE | none |
-| **Concentration / diversification** | `routes/analytics.ts:22` (`diversificationScore: 0`) | `concentration.util.ts` + LLM/MCP; UI missing on `main` | **PARTIAL → implemented in PR #23** | awaiting owner merge |
+| **Concentration / diversification** | `routes/analytics.ts:22` (`diversificationScore: 0`) | `concentration.util.ts` + LLM/MCP; UI missing on `main` | **PARTIAL -> implemented in PR #23** | merged |
 | Watchlists | `db/schema.ts` | `backend/src/watchlists/*`, `/watchlists`, `e2e/tests/watchlists.spec.ts` (PR #13) | DONE | none |
 | Index / benchmark comparison | — | `market_index_prices`, `performance-comparison.service.ts` | DONE | none |
 | Investment reports / alerts | — | `investment-reports/**`, `notification-center/**` | DONE | none |
 | AI assistant, portfolio-grounded | `ai-engine/src/main.py:33` (static insight) | `backend/src/ai/**`, `mcp/**`, `getLlmSummary` | DONE (Finsight impl REJECTED) | none |
 | Risk stats (σ, Sharpe, Sortino, drawdown, VaR) | `routes/analytics.ts:26-27,70-79` (zeros) | no flow-adjusted periodic return series (`/net-worth/investments-daily` is value incl. contributions; `calculateTWR` chains at transaction boundaries) | BLOCKED | needs a return-series spec |
 | Market-cap allocation | `routes/analytics.ts`, `routes/stocks.ts` | no market-cap data | BLOCKED | needs a data source |
-| Fund rolling returns | `routes/mutualFunds.ts:53-62` (empty) | AMFI series stored in full; no calculation | NOT DONE | new calculation — approved spec required before implementation (project rule) |
+| Fund rolling returns | `routes/mutualFunds.ts:53-62` (empty) | AMFI series stored in full | **IMPLEMENTED in PR #24 (Mission 4)** | awaiting owner merge |
 | MF category explorer / comparison | `routes/mutualFunds.ts` | no category model (mfapi `scheme_category` not captured) | NOT DONE | schema + spec, later mission |
 | Fund overlap | `routes/mutualFunds.ts:69` (`overlap: 0`) | no fund-holdings data | BLOCKED | needs holdings source |
 | Screener | `routes/stocks.ts:82` (filters not modelled) | none | REJECTED as source; concept DEFERRED | — |
@@ -194,16 +194,56 @@ The complete backend unit suite (98 minutes, 646 suites) and the full chromium+f
 
 ---
 
+## Mission 4 - Fund Rolling Returns
+
+**Status: IMPLEMENTED - code PR #24 OPEN (`fm/artha-finsight-rolling-returns`, not merged).** Baseline `main` `88aba19ec`.
+
+**Workflow:** 5 parallel read-only audits (financial spec, data, architecture, Finsight source, test design) -> one synthesis with a frozen API contract, file ownership map and test plan -> approved spec `docs/specs/fund-rolling-returns.md` (commit `e6c2c9741`) -> 3 parallel implementation branches on disjoint files (backend, frontend, tests) -> one integration branch with docs, translations, review and full local validation.
+
+**Spec decisions (all ten accepted as recommended):** distribution-only view (worst / median / best / % positive / count), trailing figure left on the existing card; periods 1Y / 3Y / 5Y; actual days / 365.25 with 1Y absolute; `amfi_nav` + `manual` rows, transaction prices excluded; IDCW computed and always captioned; stats shown with explicit missing-window disclosure; existing performance card captioned only; no AI/MCP tool; read-time `ensureSecuritiesHistory`; owner-only route.
+
+### What shipped (PR #24)
+
+- Backend: `loadPriceSeries` gains optional `fromDate`, a parameterized `sources` filter and `basis: "RAW"`; pure `computeRollingReturns` (`rolling-returns.util.ts`); `PerformanceComparisonService.getRollingReturns`; `GET /api/v1/investments/performance/securities/:id/rolling-returns` (JWT, `ParseUUIDPipe`, 404 before any read, no delegate, throttled 60/min).
+- Formula: start = last usable NAV at or before the same calendar date N months earlier, at most 14 days older; 1Y `(Pe/Ps - 1)`, 3Y/5Y `(Pe/Ps)^(365.25/d) - 1`; missing windows counted and located, never 0; a period the history does not span is `INSUFFICIENT_HISTORY`.
+- Frontend: `FundRollingReturnsCard` on the security detail Overview tab (AMFI funds only; responsive table / phone cards; n/a with reason; incomplete, stale and IDCW notes; error with retry); cumulative caption on `SecurityPerformanceCard`; all 21 locales.
+- Docs: INV-ROLLING-001..003 (`enforced`) in `docs/system-invariants.md` + verification matrix rows; the client trailing engine's 151-day-baseline test recorded as a located, open known-wrong test.
+- No schema, migration, FX or cost-basis change.
+
+### Validation (Mission 4, local)
+
+| Gate | Result |
+|---|---|
+| Backend typecheck / eslint / build | clean / 0 errors / clean |
+| Backend unit (`TZ=UTC npm run test:unit`) | 16414 passed; 5 pre-existing macOS-only `auto-backup.service.spec.ts` failures (same 5 on `main` `88aba19ec`); parity guard fixed in-branch and re-run green |
+| Backend integration (disposable `postgres:16-alpine`, serial) | 44 suites, 517 passed |
+| Negative controls | 365, annualized 1Y, unbounded lookup, `setUTCFullYear`, no `sources` filter, no RAW basis: each fails its named test |
+| Frontend type-check / lint / i18n:check / build | clean / 0 errors (1 pre-existing `sw.js` warning) / clean / clean |
+| Frontend unit, full (`TZ=UTC`) | 872 files, 16657 passed |
+| E2E (chromium, `--workers=1`, local stack) | fund-rolling-returns, security-detail, gem-strategy, investments, securities, watchlists, artha-foundation: 40 passed; "every primary route" OOM-kills the dev server locally, left to CI |
+| Visual | 1280 light, 390 light, 1280 dark: no defects |
+
+**E2E journeys:** an AMFI fund seeded with FX-A shows 1Y +25.00%, 3Y +25.99%, 5Y +20.12%, equal to the awaited API response; no card and no request for a fund without a scheme code; another user gets 404 and sees nothing.
+
+### Remaining Finsight gaps after Mission 4
+
+- MF category explorer / comparison: NOT DONE (no category model; mfapi `scheme_category` not captured).
+- Risk statistics, market-cap allocation, fund overlap: BLOCKED on data.
+- Client trailing-return engine (`frontend/src/lib/security-detail.ts`): known defect, follow-up.
+
+---
+
 ## Known limitations
 
 - Date-aware / historical FX and multi-currency revaluation are covered by backend unit tests; the E2E stack pulls rates from an external provider, so an end-to-end conversion is not deterministic offline.
 - Firefox E2E runs in CI — Playwright browsers cannot be installed on the arm64 / Ubuntu 26.04 runner used for local verification.
-- Local E2E (Mission 3) ran on a 6 GB / 2 CPU Docker VM: the Next dev server was OOM-killed while compiling every route (artha-foundation "every primary route", and once in reports). Affected specs passed after a container restart; the full-route sweep is left to CI on PR #23.
+- Mission 4: GitHub Actions credits are exhausted, so CI will not run on PR #24; local validation is the evidence. IDCW vs Growth cannot be detected (no plan-option field), so every fund's card carries the IDCW caption. The client trailing-return engine on the Security performance card (per-row adjusted/raw splice, unbounded baseline, wall clock) is unchanged.
+- Local E2E (Missions 3 and 4) ran on a 6 GB / 2 CPU Docker VM: the Next dev server was OOM-killed while compiling every route (artha-foundation "every primary route", and once in reports). Affected specs passed after a container restart; the full-route sweep is left to CI on PR #23.
 
 ## Deferred — later missions
 
-Finsight: fund rolling returns and MF category/comparison (NOT DONE, spec first); risk statistics, market-cap allocation and fund overlap (BLOCKED on data); screener, sentiment/events (DEFERRED). Also India instrument/tax/Account-Aggregator specifics, CAS/broker imports, and new AI/MCP capability. (Fintrack: exhausted in Mission 2.)
+Finsight: MF category/comparison (NOT DONE, schema + spec first); fund rolling returns as an AI/MCP tool (both layers in one PR); risk statistics, market-cap allocation and fund overlap (BLOCKED on data); screener, sentiment/events (DEFERRED). Also India instrument/tax/Account-Aggregator specifics, CAS/broker imports, and new AI/MCP capability. (Fintrack: exhausted in Mission 2.)
 
 ## Next mission
 
-After the owner merges PR #23: **Mission 4 — Finsight fund rolling returns**, starting from the latest merged `main` with a short financial spec (window alignment on non-trading days, annualization, missing-NAV policy, test matrix) for owner approval before any implementation. The AMFI NAV series it needs is already stored in full.
+After the owner merges PR #24: **Mission 5 - replace the client trailing-return engine with a server answer.** Evidence: the Security performance card's 1Y/3Y/5Y figures come from `computePeriodReturn` in `frontend/src/lib/security-detail.ts`, which splices adjusted and raw closes per row, accepts an unbounded baseline (the 151-day case is recorded as a known-wrong test in `docs/verification-contract.md`) and reads the wall clock; the bounded server path built in Mission 4 (`loadPriceSeries` + `observationAt`) is the natural replacement. Start from the latest merged `main` with a short spec (basis choice per instrument, lag bound, trailing-window labels, test matrix) for owner approval. Alternative if the owner prefers breadth: MF categories (capture mfapi `scheme_category`, schema + spec).
