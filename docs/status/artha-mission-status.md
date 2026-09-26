@@ -2,7 +2,7 @@
 
 **How this works:** each mission rewrites this file as a current snapshot (never a diary). **This PR is never merged — it is overwritten.** The summary is at the top; matrices, evidence, and the next-mission brief are below.
 
-Last updated: 2026-09-26 - `main` at **`88aba19ec`** - **Mission 1 MERGED (PR #22)** - **Mission 2 COMPLETE - Fintrack audit, scope exhausted, no code change** - **Mission 3 MERGED (PR #23)** - **Mission 4 - Fund Rolling Returns: code PR #24 OPEN (not merged)** - next mission: **Mission 5 - replace the client trailing-return engine with a server answer (spec first)**
+Last updated: 2026-09-26 - `main` at **`88aba19ec`** - **Mission 1 MERGED (PR #22)** - **Mission 2 COMPLETE - Fintrack audit, scope exhausted, no code change** - **Mission 3 MERGED (PR #23)** - **Mission 4 - Fund Rolling Returns: code PR #24 OPEN (not merged)** - **Mission 5A - Mutual-Fund Categories & Comparison: specification APPROVED, committed as documentation only, docs PR #25 OPEN (not merged); implementation intentionally NOT started** - next: merge PR #24, then the specification PR #25, then start **Mission 5B (implementation)**
 
 ---
 
@@ -23,6 +23,7 @@ Last updated: 2026-09-26 - `main` at **`88aba19ec`** - **Mission 1 MERGED (PR #2
 - **main SHA:** `88aba19ec` - `Merge pull request #23` (Mission 3).
 - **Rolling status PR:** PR #5 (`fm/artha-mission-status`) — strictly one file, `docs/status/artha-mission-status.md`.
 - **Code PRs:** **PR #22** (Mission 1) and **PR #23** (Mission 3) **MERGED**; **PR #24** - `feat: fund rolling returns` (`fm/artha-finsight-rolling-returns` -> `main`) - **OPEN** (Mission 4).
+- **Documentation PRs:** **PR #25** - `docs: add mutual fund categories and comparison specification` (`fm/artha-fund-categories-spec` -> `main`) - **OPEN** (Mission 5A; docs only, no production change).
 - **Merged PRs:** #1-#23.
 
 ---
@@ -253,8 +254,24 @@ Negative controls re-run: `365` in place of `365.25` fails U2 (and two others); 
 
 ---
 
+## Mission 5A — Mutual-Fund Categories & Comparison (specification)
+
+**Status: SPECIFICATION APPROVED — committed as documentation only; docs PR #25 OPEN (not merged). Implementation intentionally NOT started.**
+
+- **Approved spec:** `docs/specs/fund-categories-and-comparison.md` (commit `360ea08a8` on `fm/artha-fund-categories-spec`; documentation PR #25).
+- **Mission type:** read-only evidence + specification. **No production source code, schema, migration, API, UI or test was changed.**
+- **Category decision:** capture the AMFI classification (`scheme_category`, `scheme_type`, `fund_house`) **verbatim** from the **existing** mfapi/AMFI provider into four new nullable `securities` columns (`fund_house`, `fund_scheme_type`, `fund_category`, `fund_classification_updated_at`); a staleness-gated refresh that writes **only when the provider answered** (never clobbers a known category, never stamps freshness on a failure); **no heuristic inference** (rejects Finsight's `h.sector || 'Equity'`, name-regex AMC guessing and the `'Mid Cap'` default); a missing category renders **Uncategorised**; **no category history** (labels are as-of-now).
+- **Comparison decision:** side-by-side **rolling-return distributions** (worst/median/best/%positive/count) of the caller's **own AMFI funds**, **grouped by AMFI category**, **reusing the single approved engine** (`computeRollingReturns`) and the existing wire types; one batched endpoint `GET /api/v1/investments/performance/funds/comparison`; placement in the existing Security Performance report; **column sorting only** — no ranking, no score, no "best fund", no peer benchmark (no fund universe).
+- **Recorded BLOCKED:** risk analytics (volatility/drawdown/Sharpe/VaR), fund overlap, peer benchmarking/ranking, market-cap allocation, and plan-option (Direct/Regular, Growth/IDCW) inference.
+- **Invariants:** `INV-FUNDCAT-001/002`, `INV-FUNDCMP-001/002/003`, with a full test matrix and named negative controls.
+- **Dependency:** the comparison half **requires the Fund Rolling Returns capability (PR #24)** to be merged first; the category half is independent.
+- **Finsight evidence:** the original `mutualFunds` router is stubs (`compare` -> `{}`, `rollingReturns` -> `[]`, `portfolioOverlap` -> `0`) over a `mutual_funds` table that is never populated; the original UI's "category" is a sector/name heuristic. Nothing was copied.
+
+---
+
 ## Known limitations
 
+- Mission 5A: the specification is documentation only and nothing is implemented; the comparison half cannot start until PR #24 is merged.
 - Date-aware / historical FX and multi-currency revaluation are covered by backend unit tests; the E2E stack pulls rates from an external provider, so an end-to-end conversion is not deterministic offline.
 - Firefox E2E runs in CI — Playwright browsers cannot be installed on the arm64 / Ubuntu 26.04 runner used for local verification.
 - Mission 4: GitHub Actions credits are exhausted, so CI will not run on PR #24; local validation is the evidence. IDCW vs Growth cannot be detected (no plan-option field), so every fund's card carries the IDCW caption. The client trailing-return engine on the Security performance card (per-row adjusted/raw splice, unbounded baseline, wall clock) is unchanged.
@@ -262,8 +279,14 @@ Negative controls re-run: `365` in place of `365.25` fails U2 (and two others); 
 
 ## Deferred — later missions
 
-Finsight: MF category/comparison (NOT DONE, schema + spec first); fund rolling returns as an AI/MCP tool (both layers in one PR); risk statistics, market-cap allocation and fund overlap (BLOCKED on data); screener, sentiment/events (DEFERRED). Also India instrument/tax/Account-Aggregator specifics, CAS/broker imports, and new AI/MCP capability. (Fintrack: exhausted in Mission 2.)
+Finsight: MF categories & comparison (specification APPROVED — Mission 5A / docs PR #25; implementation NOT started, pending PR #24); fund rolling returns as an AI/MCP tool (both layers in one PR); risk statistics, market-cap allocation and fund overlap (BLOCKED on data); screener, sentiment/events (DEFERRED). Also India instrument/tax/Account-Aggregator specifics, CAS/broker imports, and new AI/MCP capability. (Fintrack: exhausted in Mission 2.)
 
 ## Next mission
 
-After the owner merges PR #24: **Mission 5 - replace the client trailing-return engine with a server answer.** Evidence: the Security performance card's 1Y/3Y/5Y figures come from `computePeriodReturn` in `frontend/src/lib/security-detail.ts`, which splices adjusted and raw closes per row, accepts an unbounded baseline (the 151-day case is recorded as a known-wrong test in `docs/verification-contract.md`) and reads the wall clock; the bounded server path built in Mission 4 (`loadPriceSeries` + `observationAt`) is the natural replacement. Start from the latest merged `main` with a short spec (basis choice per instrument, lag bound, trailing-window labels, test matrix) for owner approval. Alternative if the owner prefers breadth: MF categories (capture mfapi `scheme_category`, schema + spec).
+**Sequence (owner-set):**
+
+1. **Merge PR #24** — Fund Rolling Returns (Mission 4). *First, because the Mission 5B comparison half depends on its approved engine.*
+2. **Merge the specification PR #25** — `docs/specs/fund-categories-and-comparison.md` (documentation only).
+3. **Start Mission 5B** — implement Mutual-Fund Categories & Comparison from the frozen specification, with three strictly-disjoint parallel tracks (Backend / Frontend / Tests) feeding one Integration & QA pass and **one** final code PR. The backend contract is the boundary for the frontend; the test track works from the frozen spec, so no two tracks implement the same logic.
+
+Not started, and out of Mission 5B by decision: risk metrics, fund overlap, market-cap allocation, peer benchmarking/ranking and plan-option inference — all recorded BLOCKED in the approved spec. Replacing the client trailing-return engine (`frontend/src/lib/security-detail.ts`) remains a separate follow-up.
