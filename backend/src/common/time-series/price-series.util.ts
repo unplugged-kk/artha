@@ -59,11 +59,24 @@ export interface LoadPriceSeriesParams {
   table: PriceSeriesTable;
   /** Security ids, or index codes. */
   ids: readonly string[];
-  /** Inclusive lower bound, ISO `yyyy-MM-dd`. */
-  fromDate: string;
+  /** Inclusive lower bound, ISO `yyyy-MM-dd`. Omitted means "from the start". */
+  fromDate?: string;
   /** Inclusive upper bound, ISO `yyyy-MM-dd`. Omitted means "to the end". */
   toDate?: string;
   sampling?: PriceSampling;
+  /**
+   * Only rows whose `security_prices.source` is one of these. Omitted means
+   * every source. A NAV series wants the provider's published values and the
+   * user's own corrections, never a transaction-derived trade price spliced in.
+   */
+  sources?: readonly string[];
+  /**
+   * Force the raw `close_price` basis for the whole series instead of letting
+   * the window decide. For an instrument that has exactly one basis (a mutual
+   * fund NAV), a stray `adjusted_close` surviving on a row would otherwise flip
+   * the series to ADJUSTED and drop every genuine value.
+   */
+  basis?: "RAW";
 }
 
 interface SeriesRow {
@@ -98,14 +111,32 @@ export async function loadPriceSeries(
   params: LoadPriceSeriesParams,
 ): Promise<Map<string, LoadedPriceSeries>> {
   const series = new Map<string, LoadedPriceSeries>();
-  const { table, ids, fromDate, toDate, sampling = "day" } = params;
+  const {
+    table,
+    ids,
+    fromDate,
+    toDate,
+    sampling = "day",
+    sources,
+    basis,
+  } = params;
   if (ids.length === 0) return series;
 
   const { idColumn, idCast } = TABLE_SHAPES[table];
-  const values: unknown[] = [ids, fromDate];
+  const values: unknown[] = [ids];
+  const lowerBound = fromDate
+    ? `AND price_date >= $${values.push(fromDate)}::date`
+    : "";
   const upperBound = toDate
     ? `AND price_date <= $${values.push(toDate)}::date`
     : "";
+  const sourceFilter = sources
+    ? `AND source = ANY($${values.push(sources)}::text[])`
+    : "";
+  // Forcing RAW reports the series as unadjusted, so `chosen` keeps every row's
+  // close_price rather than the adjusted subset.
+  const hasAdjusted =
+    basis === "RAW" ? "false" : "bool_or(adjusted_close IS NOT NULL)";
 
   // `scoped` is the window; `basis` decides, per instrument, whether that window
   // holds any adjusted data at all; `chosen` keeps one basis throughout.
@@ -114,12 +145,13 @@ export async function loadPriceSeries(
         SELECT ${idColumn} AS series_id, price_date, close_price, adjusted_close
           FROM ${table}
          WHERE ${idColumn} = ANY($1::${idCast})
-           AND price_date >= $2::date
+           ${lowerBound}
            ${upperBound}
+           ${sourceFilter}
            AND close_price IS NOT NULL
       ),
       basis AS (
-        SELECT series_id, bool_or(adjusted_close IS NOT NULL) AS has_adjusted
+        SELECT series_id, ${hasAdjusted} AS has_adjusted
           FROM scoped
          GROUP BY series_id
       ),

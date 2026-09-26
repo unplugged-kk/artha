@@ -189,4 +189,99 @@ describe("loadPriceSeries", () => {
     expect(params).toEqual([["sec-a"], "2025-01-01", "week"]);
     expect(sql).toContain("date_trunc($3, price_date)");
   });
+  /**
+   * A mutual fund's NAV series (`docs/specs/fund-rolling-returns.md` section
+   * 4.1): provider NAVs and manual corrections only, on the raw basis, over the
+   * whole stored history.
+   */
+  describe("NAV series options", () => {
+    it("filters by source as a parameter, inside the scoped window", async () => {
+      const { manager, query } = managerReturning([]);
+      await loadPriceSeries(manager, {
+        table: "security_prices",
+        ids: ["sec-a"],
+        fromDate: "2025-01-01",
+        sources: ["amfi_nav", "manual"],
+      });
+      const [sql, params] = query.mock.calls[0];
+      expect(params).toEqual([["sec-a"], "2025-01-01", ["amfi_nav", "manual"]]);
+      const scoped = (sql as string).slice(
+        (sql as string).indexOf("WITH scoped AS"),
+        (sql as string).indexOf("basis AS"),
+      );
+      expect(scoped).toContain("AND source = ANY($3::text[])");
+      expect(sql).not.toContain("amfi_nav");
+    });
+
+    it("keeps the sampling parameter after the source parameter", async () => {
+      const { manager, query } = managerReturning([]);
+      await loadPriceSeries(manager, {
+        table: "security_prices",
+        ids: ["sec-a"],
+        fromDate: "2025-01-01",
+        toDate: "2025-12-31",
+        sources: ["manual"],
+        sampling: "month",
+      });
+      const [sql, params] = query.mock.calls[0];
+      expect(params).toEqual([
+        ["sec-a"],
+        "2025-01-01",
+        "2025-12-31",
+        ["manual"],
+        "month",
+      ]);
+      expect(sql).toContain("source = ANY($4::text[])");
+      expect(sql).toContain("date_trunc($5, price_date)");
+    });
+
+    it("applies no source filter when sources is omitted", async () => {
+      const { manager, query } = managerReturning([]);
+      await loadPriceSeries(manager, {
+        table: "security_prices",
+        ids: ["sec-a"],
+        fromDate: "2025-01-01",
+      });
+      expect(query.mock.calls[0][0]).not.toContain("source = ANY");
+    });
+
+    it("has no lower bound when fromDate is omitted", async () => {
+      const { manager, query } = managerReturning([]);
+      await loadPriceSeries(manager, {
+        table: "security_prices",
+        ids: ["sec-a"],
+        toDate: "2025-12-31",
+      });
+      const [sql, params] = query.mock.calls[0];
+      expect(sql).not.toContain("price_date >=");
+      expect(params).toEqual([["sec-a"], "2025-12-31"]);
+      expect(sql).toContain("price_date <= $2::date");
+    });
+
+    it("basis RAW reads close_price for every row and reports RAW", async () => {
+      const { manager, query } = managerReturning([
+        {
+          series_id: "sec-a",
+          price_date: "2025-01-02",
+          close_price: "10.5",
+          has_adjusted: false,
+        },
+      ]);
+      const series = await loadPriceSeries(manager, {
+        table: "security_prices",
+        ids: ["sec-a"],
+        basis: "RAW",
+      });
+      const sql = (query.mock.calls[0][0] as string).replace(/\s+/g, " ");
+      // The per-series decision is pinned to false, so `chosen` takes every
+      // row's close_price and never drops a row for lacking an adjusted close.
+      expect(sql).toContain("SELECT series_id, false AS has_adjusted");
+      expect(sql).not.toContain("bool_or(adjusted_close IS NOT NULL)");
+      expect(sql).not.toMatch(/COALESCE\s*\(\s*adjusted_close/i);
+      expect(series.get("sec-a")).toEqual({
+        basis: "RAW",
+        points: [{ date: "2025-01-02", close: 10.5 }],
+      });
+    });
+  });
 });
