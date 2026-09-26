@@ -94,3 +94,91 @@ export interface PerformanceComparisonView {
    */
   status: "complete" | "incomplete";
 }
+
+/*
+ * The wire shape of a mutual fund's rolling returns.
+ *
+ * `docs/specs/fund-rolling-returns.md` is the contract these types encode; the
+ * frontend declares them identically in `frontend/src/types/investment.ts`.
+ */
+
+/** Rolling window lengths, in this fixed order in every response. */
+export type RollingReturnPeriod = "1Y" | "3Y" | "5Y";
+
+export type RollingReturnEligibility = "ELIGIBLE" | "NOT_AN_AMFI_FUND";
+
+/**
+ * OK                   - windowCount >= 1
+ * ALL_WINDOWS_MISSING  - candidate windows exist, none resolved a start NAV
+ * INSUFFICIENT_HISTORY - usable NAVs exist but span less than the period
+ * NO_PRICE_HISTORY     - no usable NAV at all
+ */
+export type RollingPeriodStatus =
+  | "OK"
+  | "ALL_WINDOWS_MISSING"
+  | "INSUFFICIENT_HISTORY"
+  | "NO_PRICE_HISTORY";
+
+/** The window that produced an extreme; dates are the observations used. */
+export interface RollingReturnExtreme {
+  /** Percentage points, 4dp. */
+  returnPct: number;
+  /** YYYY-MM-DD */
+  startDate: string;
+  /** YYYY-MM-DD */
+  endDate: string;
+}
+
+/** A run of consecutive missing windows, by window END date, inclusive. */
+export interface RollingReturnGap {
+  from: string;
+  to: string;
+}
+
+export interface RollingPeriodResult {
+  period: RollingReturnPeriod;
+  /** 12 | 36 | 60 */
+  months: number;
+  /** false for 1Y (absolute), true for 3Y and 5Y (per annum). */
+  annualized: boolean;
+  status: RollingPeriodStatus;
+  /** "incomplete" iff missingWindowCount > 0. */
+  completeness: "complete" | "incomplete";
+  windowCount: number;
+  missingWindowCount: number;
+  /** null unless status === "OK". Ties: earliest endDate. */
+  min: RollingReturnExtreme | null;
+  max: RollingReturnExtreme | null;
+  /** Percentage points, 4dp; null unless status === "OK". */
+  median: number | null;
+  mean: number | null;
+  /** 0-100, 4dp, share of computed windows with return > 0; null unless OK. */
+  positiveShare: number | null;
+  /** Oldest first; [] when complete. */
+  gaps: RollingReturnGap[];
+}
+
+export interface FundRollingReturnsHistory {
+  /** First/last usable NAV date; null when none. */
+  firstDate: string | null;
+  lastDate: string | null;
+  /** Usable observations. */
+  observationCount: number;
+  /** Rows dropped: non-positive, non-finite, or dated after today. */
+  excludedObservationCount: number;
+  /** lastDate more than 14 days before today; false when lastDate is null. */
+  lastIsStale: boolean;
+}
+
+export interface FundRollingReturnsView {
+  securityId: string;
+  eligibility: RollingReturnEligibility;
+  /** The security's currency, for labelling only (INR for AMFI). */
+  currencyCode: string;
+  /**
+   * NOT_AN_AMFI_FUND: firstDate/lastDate null, counts 0, lastIsStale false.
+   */
+  history: FundRollingReturnsHistory;
+  /** Exactly ["1Y","3Y","5Y"] in order when ELIGIBLE; [] when NOT_AN_AMFI_FUND. */
+  periods: RollingPeriodResult[];
+}
