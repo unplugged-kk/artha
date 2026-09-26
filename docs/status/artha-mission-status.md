@@ -225,6 +225,26 @@ The complete backend unit suite (98 minutes, 646 suites) and the full chromium+f
 
 **E2E journeys:** an AMFI fund seeded with FX-A shows 1Y +25.00%, 3Y +25.99%, 5Y +20.12%, equal to the awaited API response; no card and no request for a fund without a scheme code; another user gets 404 and sees nothing.
 
+### Final integration QA (independent re-run)
+
+The final integration/QA pass re-ran the decisive gates on the integration tip `698db6dd2` (24 GiB host; Docker VM 2 CPUs / 6 GiB).
+
+| Gate | Command | Result |
+|---|---|---|
+| Backend typecheck | `npm run typecheck` | pass |
+| Backend build | `npm run build` | pass |
+| Backend eslint (no `--fix`) | `npx eslint "src/**/*.ts" "test/**/*.ts"` | 0 errors, 0 warnings |
+| Backend unit — rolling returns, loader, service, controller | `TZ=UTC npx jest <4 specs>` | 94 passed |
+| Backend unit — guards + every `loadPriceSeries` consumer | `TZ=UTC npx jest invariant-catalog-parity doc-paths source-comment-paths jest-config security-price.service market-index.service gem-price.service` | 271 passed |
+| Backend integration — full, real PostgreSQL | `TZ=UTC npx jest --config test/jest-e2e.json --runInBand` (`postgres:16-alpine`) | 44 suites, 517 passed — incl. `schema-entity-parity`, `rls-enforcement`, `rls-enable`, `rls-harness` |
+| Migration lint | `npm run migration:lint` | OK |
+| Frontend type-check / lint / i18n:check / build | `npm run type-check` / `lint` / `i18n:check` / `build` | clean / 0 errors (1 pre-existing `sw.js` warning) / clean / clean |
+| Frontend unit — full | `NODE_ENV=test TZ=UTC npx vitest run` | 872 files, 16657 passed |
+| E2E — rolling returns + investment regression (chromium, `--workers=1`, local stack) | `fund-rolling-returns` + security-detail, investments, securities, gem-strategy, watchlists, currencies, investment-account-consolidation | 3 + 44 passed |
+| Schema | `git diff origin/main...HEAD -- database/` | empty — no schema change |
+
+Negative controls re-run: `365` in place of `365.25` fails U2 (and two others); dropping `basis: "RAW"` fails the stray-`adjusted_close` integration case by name. All three implementation branches (backend, frontend, tests) are ancestors of the integration tip; the diff vs `main` is 45 files, every one inside the rolling-returns scope.
+
 ### Remaining Finsight gaps after Mission 4
 
 - MF category explorer / comparison: NOT DONE (no category model; mfapi `scheme_category` not captured).
