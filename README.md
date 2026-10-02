@@ -203,7 +203,7 @@ artha/
 │   │   ├── ai/                # AI assistant (providers, query engine, usage tracking)
 │   │   ├── mcp/               # Model Context Protocol server
 │   │   ├── tags/               # Transaction tags
-│   │   ├── import/            # QIF, CSV, OFX/QFX and Microsoft Money (.mny) file import
+│   │   ├── import/            # QIF, CSV, OFX/QFX, Microsoft Money (.mny) and Excel (.xlsx) file import
 │   │   ├── health/            # Health check endpoints
 │   │   └── main.ts            # Application entry point
 │   └── Dockerfile
@@ -230,6 +230,13 @@ artha/
 ├── .env.example               # Environment variables template
 └── README.md
 ```
+
+### Where things live
+
+- **Feature specs:** `docs/specs/` — one file per feature, written before implementation.
+- **Architecture decisions:** `docs/adr/`.
+- **Financial contracts:** `docs/financial-calculation-contract.md`, `docs/time-series-contract.md`.
+- **Repo context graph:** `graft/` indexes the codebase for fast lookup — run `graft build` once, then `graft ask "<question>" --source`.
 
 ## Getting Started
 
