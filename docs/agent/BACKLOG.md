@@ -9,7 +9,7 @@
 - [x] T7 `action_history.actor_type` (user|ai|mcp) and `tool_name`, via ambient actor context set by the AI confirm path and the MCP transport (`tier` deliberately not added: it belongs to categorization output). Verified: schema.sql apply, 195-migration replay, migration alone on old schema, real-DB integration spec
 - [x] T8 (calculators only; entities need DB, see T5) India asset metadata: EPF/PPF/NPS/FD/RD/SGB/physical gold maturity and interest calculators (pure TS), then entities
 - [REMOVED: already exists, securities/amfi-nav.service.ts] T9 AMFI NAV fetcher in market data
-- [x] T10 (pure detectors only; not scheduled or wired to alerts/AI/MCP) Deterministic detectors: spending spike (>2 sigma), subscription increase, low-balance projection
+- [x] T10 (GET /anomalies: category spikes + subscription increases on real data, integration-tested; duplicates + low-balance detectors exist but are not exposed; no alerts/cron/AI/MCP) Deterministic detectors: spending spike (>2 sigma), subscription increase, low-balance projection
 - [x] T11 (simulators exposed to AI + MCP as plan_simulate; Monte Carlo/goals reuse not done) Debt snowball/avalanche + FIRE simulators (reuse `monte-carlo`, `goals`)
 - [x] T12 (pure metrics, prompt and number-verifier only; no LLM call, table or cron) Weekly coach report (deterministic metrics, LLM narrative with citations)
 - [ ] (NOT STARTED: frontend wizard needs frontend deps, i18n catalogs and a browser check) T13 Onboarding wizard (frontend, English catalogs only)
