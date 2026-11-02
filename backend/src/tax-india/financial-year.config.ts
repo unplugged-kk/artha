@@ -28,8 +28,20 @@ export interface DeductionLimits {
   readonly section80DSelfSenior: number;
 }
 
+export interface CapitalGainsRules {
+  /** Holding period (months) above which listed equity gains are long-term. */
+  readonly equityLongTermMonths: number;
+  readonly equityStcgRate: number;
+  readonly equityLtcgRate: number;
+  /** Annual LTCG exemption on equity, whole rupees. */
+  readonly equityLtcgExemption: number;
+  /** Equity bought before this date needs 31-Jan-2018 grandfathering (not modelled). */
+  readonly grandfatheringCutoff: string;
+}
+
 export interface FinancialYearRules {
   readonly label: string;
+  readonly capitalGains: CapitalGainsRules;
   readonly cessRate: number;
   /** Taxable income above which surcharge applies; engine refuses beyond it. */
   readonly surchargeThreshold: number;
@@ -40,6 +52,13 @@ export interface FinancialYearRules {
 
 const FY_2025_26: FinancialYearRules = {
   label: "FY2025-26",
+  capitalGains: {
+    equityLongTermMonths: 12,
+    equityStcgRate: 0.2,
+    equityLtcgRate: 0.125,
+    equityLtcgExemption: 125_000,
+    grandfatheringCutoff: "2018-02-01",
+  },
   cessRate: 0.04,
   surchargeThreshold: 5_000_000,
   oldRegime: {
