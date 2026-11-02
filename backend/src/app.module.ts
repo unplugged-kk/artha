@@ -66,6 +66,7 @@ import { WatchlistsModule } from "./watchlists/watchlists.module";
 import { RulesModule } from "./rules/rules.module";
 import { GoalsModule } from "./goals/goals.module";
 import { AnomaliesModule } from "./anomalies/anomalies.module";
+import { CategorizationModule } from "./categorization/categorization.module";
 import { I18nModule } from "./i18n/i18n.module";
 
 @Module({
@@ -182,6 +183,7 @@ import { I18nModule } from "./i18n/i18n.module";
     RulesModule,
     GoalsModule,
     AnomaliesModule,
+    CategorizationModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: GlobalExceptionFilter },

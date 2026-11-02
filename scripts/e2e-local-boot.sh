@@ -98,6 +98,21 @@ expect "plan_simulate via MCP" "$SIM" "300 150 150"
 BAD=$(rpc "$SID" '{"jsonrpc":"2.0","id":5,"method":"tools/call","params":{"name":"india_tax","arguments":{"operation":"compare_regimes"}}}' | python3 -c 'import sys,json;print(json.load(sys.stdin)["result"].get("isError",False))')
 expect "india_tax without income is an error, not zero" "$BAD" "True"
 
+
+# ---- Categorization suggestion over HTTP (cookie auth + CSRF header) ----
+psql $H -d $DB -q -v ON_ERROR_STOP=1 -c "INSERT INTO categories (user_id,name,is_income) VALUES ('$UID_','Food & Dining',false)" || { echo "FAIL seed category"; fail=1; }
+suggest() { curl -s -b $JAR -H "x-csrf-token: $CSRF" -H 'content-type: application/json' -d "$1" localhost:3101/api/v1/categorization/suggest; }
+expect "suggest: known merchant resolves to the user's category" \
+  "$(suggest '{"payee":"SWIGGY *4421"}' | python3 -c 'import sys,json;d=json.load(sys.stdin);print(d["decision"]["status"],d["decision"]["tier"],d["categoryName"])')" "categorized merchant_default Food & Dining"
+expect "suggest: unknown payee asks for AI, never guesses" \
+  "$(suggest '{"payee":"Zzz Unknown Shop"}' | python3 -c 'import sys,json;print(json.load(sys.stdin)["decision"]["status"])')" "needs_ai"
+expect "suggest: empty payee is rejected" \
+  "$(curl -s -o /dev/null -w '%{http_code}' -b $JAR -H "x-csrf-token: $CSRF" -H 'content-type: application/json' -d '{"payee":""}' localhost:3101/api/v1/categorization/suggest)" "400"
+expect "suggest: missing CSRF header is refused" \
+  "$(curl -s -o /dev/null -w '%{http_code}' -b $JAR -H 'content-type: application/json' -d '{"payee":"x"}' localhost:3101/api/v1/categorization/suggest)" "403"
+expect "suggest: anonymous POST is refused (CSRF guard runs before auth, so 403 not 401)" \
+  "$(curl -s -o /dev/null -w '%{http_code}' -H 'content-type: application/json' -d '{"payee":"x"}' localhost:3101/api/v1/categorization/suggest)" "403"
+
 grep -aci "error" /tmp/e2e-main.log | xargs -I{} echo "server log error lines: {}"
 [ $fail = 0 ] && echo "E2E OK" || echo "E2E FAILED"
 exit $fail

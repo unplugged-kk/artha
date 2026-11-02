@@ -5,7 +5,7 @@
 - [x] T3 Tax engine wired as AI tools AND MCP tools (`tax_compare_regimes`, `tax_deduction_headroom`), both layers, with evidence field
 - [REMOVED: duplicate of backend/src/import/sms/ (composite parser, review_needed flow, sender registry)] T4 SMS parser (HDFC, ICICI, SBI, Axis, Kotak templates, UPI VPA extraction), pure TS with fixtures
 - [REMOVED: duplicate; SMS review flow already exists in backend/src/import/sms/] T5 Ingestion review queue: entity, migration, `schema.sql`, service, controller (nothing posts without confirmation)
-- [x] T6 (pure decision core only; not wired to RulesService, DB history or the AI fallback) Categorization pipeline tiers 2-4 (merchant defaults, historical payee pattern, AI fallback) logging the tier on the result
+- [x] T6 (POST /categorization/suggest wires tiers 1-3: RulesService, merchant reference + user category resolution, payee history; reports the deciding tier. Tier 4 is reported as needs_ai only; the AI call and any write stay in the existing confirmed-action flow) Categorization pipeline tiers 2-4 (merchant defaults, historical payee pattern, AI fallback) logging the tier on the result
 - [x] T7 `action_history.actor_type` (user|ai|mcp) and `tool_name`, via ambient actor context set by the AI confirm path and the MCP transport (`tier` deliberately not added: it belongs to categorization output). Verified: schema.sql apply, 195-migration replay, migration alone on old schema, real-DB integration spec
 - [x] T8 (calculators only; entities need DB, see T5) India asset metadata: EPF/PPF/NPS/FD/RD/SGB/physical gold maturity and interest calculators (pure TS), then entities
 - [REMOVED: already exists, securities/amfi-nav.service.ts] T9 AMFI NAV fetcher in market data
