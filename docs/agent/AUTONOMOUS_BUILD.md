@@ -18,7 +18,9 @@ exists. Do not rebuild it; extend it.
 | Goals | `backend/src/goals/` | Reuse for FIRE/goal simulator |
 | Forecast, insights | `backend/src/ai/forecast`, `ai/insights` | Wrap, do not duplicate |
 | Monte Carlo | `backend/src/monte-carlo` | Reuse for FIRE |
-| India: tax, EPF/PPF/NPS/SGB/FD, SMS/Gmail, AMFI | Not present | Real gap: the moat. Do first |
+| India: SMS intake | EXISTS: `backend/src/import/sms/` (UPI/card/ATM/cheque/transfer parsers, `sms_sender_registry`, review_needed import) | Extend only. An earlier version of this table wrongly said "not present"; it was grepped from docs, not source |
+| India: tax engine | PARTIAL: `tax_rules` table + `tax-india/` pure calculator (this branch); `aa_consents`, `india_holdings_ext` tables exist | Decide: load `tax-india` rules from `tax_rules` rather than the TS config |
+| India: EPF/PPF/NPS/SGB/FD entities, Gmail, AMFI | Check source first (`grep -ri` in backend/src, not docs) | Calculators exist in `india-assets/`; entities unverified |
 | Multi-tenancy | RLS (`withScopedDb`) already isolates users | Phase 5 tenant_id is mostly unnecessary; skip |
 | Observability, CI | Existing health + CI | Low priority |
 
@@ -44,6 +46,7 @@ anything. When a choice is open, take the default written here, record it in
 
 ### Loop (repeat until a stop condition)
 1. Take the first unchecked task in `BACKLOG.md` whose dependencies are done.
+1b. BEFORE building, grep backend/src and database/schema.sql for the feature. Two backlog items duplicated existing code because research only read docs.
 2. Spec: for anything financial, write a short spec first (invariants, numeric
    examples, missing-data policy, test matrix) in `docs/specs/`, commit it.
 3. Tests first, then implementation. Pure deterministic logic goes in small

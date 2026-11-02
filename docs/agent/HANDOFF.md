@@ -12,3 +12,6 @@ Newest entries last.
 - T6 (categorization decision core) and T12 (coach metrics + verifyNarrative) done as pure modules, 18 tests.
 - STATE AT STOP: T1-T4, T6, T8, T10-T12 delivered as tested pure modules; only T1-T3 are user-reachable (india_tax AI+MCP tool). T5, T7 blocked on PostgreSQL; T9 blocked on network; T13 not started.
 - Suggested next agent: (1) start PostgreSQL, do T5+T7 with scripts/verify-schema.sh; (2) wire detectors/simulators/coach/categorization/SMS parser into services, AI executor AND MCP together, mind the tools/list byte budget; (3) T9, T13.
+- CORRECTION: T4 (SMS parser) and T5 (review queue) duplicated existing `backend/src/import/sms/`; my `india-ingestion/` module was removed and the uncommitted T5 migration reverted. Research had only read docs, not source.
+- LOCAL DB: PostgreSQL 16 is installed but stopped each session. Start with `pg_ctlcluster 16 main start`; role artha_user/artha_password (superuser) and db artha_test were created. An integration spec (category-delete-set-null) passed against it via `npx jest -c test/jest-e2e.json <path>`.
+- OPEN QUESTION for the owner: should tax-india load rules from the existing `tax_rules` table (DB-versioned) instead of TS config? Not decided.
