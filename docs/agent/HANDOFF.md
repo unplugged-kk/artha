@@ -9,3 +9,6 @@ Newest entries last.
 - T4 done: backend/src/india-ingestion/sms-parser.ts (HDFC/ICICI/SBI/Axis/Kotak fixtures, UPI VPA/ref, null date when ambiguous, OTP rejected). Real bank formats vary; fixtures are representative, not exhaustive. Next: T5 review queue.
 - T8 calculators done (FD, RD, PPF, EPF, NPS, SGB; backend/src/india-assets). RD checked against an independent per-deposit sum. Entities/UI not built. T5/T7 BLOCKED: no PostgreSQL running in this sandbox. Reordered to pure/offline work: T6 tiers, T10, T11 next.
 - T10 detectors + T11 debt/FIRE simulators done as pure modules (backend/src/finance-detectors, finance-simulators; 22 tests). NOT yet wired to AI/MCP/alerts/cron: each wiring needs both layers (see T3 pattern) and tools-list byte budget review.
+- T6 (categorization decision core) and T12 (coach metrics + verifyNarrative) done as pure modules, 18 tests.
+- STATE AT STOP: T1-T4, T6, T8, T10-T12 delivered as tested pure modules; only T1-T3 are user-reachable (india_tax AI+MCP tool). T5, T7 blocked on PostgreSQL; T9 blocked on network; T13 not started.
+- Suggested next agent: (1) start PostgreSQL, do T5+T7 with scripts/verify-schema.sh; (2) wire detectors/simulators/coach/categorization/SMS parser into services, AI executor AND MCP together, mind the tools/list byte budget; (3) T9, T13.

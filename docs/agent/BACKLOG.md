@@ -5,11 +5,11 @@
 - [x] T3 Tax engine wired as AI tools AND MCP tools (`tax_compare_regimes`, `tax_deduction_headroom`), both layers, with evidence field
 - [x] T4 SMS parser (HDFC, ICICI, SBI, Axis, Kotak templates, UPI VPA extraction), pure TS with fixtures
 - [ ] (BLOCKED: needs a running PostgreSQL to verify migration, schema.sql, RLS and backup guards; not attempted unverified) T5 Ingestion review queue: entity, migration, `schema.sql`, service, controller (nothing posts without confirmation)
-- [ ] T6 Categorization pipeline tiers 2-4 (merchant defaults, historical payee pattern, AI fallback) logging the tier on the result
+- [x] T6 (pure decision core only; not wired to RulesService, DB history or the AI fallback) Categorization pipeline tiers 2-4 (merchant defaults, historical payee pattern, AI fallback) logging the tier on the result
 - [ ] (BLOCKED: same DB constraint as T5) T7 `action_history` columns `actor_type`, `tool_name`, `tier` (migration + schema.sql + writers)
 - [x] T8 (calculators only; entities need DB, see T5) India asset metadata: EPF/PPF/NPS/FD/RD/SGB/physical gold maturity and interest calculators (pure TS), then entities
-- [ ] T9 AMFI NAV fetcher in market data
+- [ ] (BLOCKED: needs outbound access to amfiindia.com; sandbox proxy not verified) T9 AMFI NAV fetcher in market data
 - [x] T10 (pure detectors only; not scheduled or wired to alerts/AI/MCP) Deterministic detectors: spending spike (>2 sigma), subscription increase, low-balance projection
 - [x] T11 (pure simulators only; Monte Carlo/goals reuse and AI/MCP wiring not done) Debt snowball/avalanche + FIRE simulators (reuse `monte-carlo`, `goals`)
-- [ ] T12 Weekly coach report (deterministic metrics, LLM narrative with citations)
-- [ ] T13 Onboarding wizard (frontend, English catalogs only)
+- [x] T12 (pure metrics, prompt and number-verifier only; no LLM call, table or cron) Weekly coach report (deterministic metrics, LLM narrative with citations)
+- [ ] (NOT STARTED: frontend wizard needs frontend deps, i18n catalogs and a browser check) T13 Onboarding wizard (frontend, English catalogs only)
