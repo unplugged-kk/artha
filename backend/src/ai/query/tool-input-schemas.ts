@@ -7,6 +7,7 @@ import {
   booleanArg,
 } from "../../common/tool-schemas";
 import { INDIA_TAX_OPERATIONS } from "../../tax-india/tax-llm";
+import { planSimulateSchema as planSimulateSchemaRef } from "../../finance-simulators/simulate-llm";
 import { MAX_BULK_ACTION_ROWS } from "../actions/ai-action.types";
 import { MAX_ATTACHMENTS as MAX_CHAT_ATTACHMENTS } from "./dto/ai-query.dto";
 import {
@@ -202,6 +203,8 @@ export const calculateSchema = z.object({
   values: z.array(numberArg()).min(1).max(100),
   label: z.string().max(200).optional(),
 });
+
+export { planSimulateSchema } from "../../finance-simulators/simulate-llm";
 
 export const indiaTaxSchema = z.object({
   operation: z.enum(INDIA_TAX_OPERATIONS),
@@ -710,6 +713,7 @@ export const toolInputSchemas: Record<string, z.ZodSchema> = {
   list_upcoming_bills: getUpcomingBillsSchema,
   calculate: calculateSchema,
   india_tax: indiaTaxSchema,
+  plan_simulate: planSimulateSchemaRef,
   render_chart: renderChartSchema,
   manage_transactions: manageTransactionsSchema,
   manage_payees: managePayeesSchema,

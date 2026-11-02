@@ -363,6 +363,20 @@ export const indiaTaxOutput = toolOutput({
 });
 
 // ---------------------------------------------------------------------------
+// plan-simulate.tool.ts
+// ---------------------------------------------------------------------------
+
+export const planSimulateOutput = toolOutput({
+  operation: str,
+  evidence: looseObject({}),
+  snowball: looseObject({}).optional(),
+  avalanche: looseObject({}).optional(),
+  base: looseObject({}).optional(),
+  withExtra: looseObject({}).nullable().optional(),
+  monthsSaved: num.optional(),
+});
+
+// ---------------------------------------------------------------------------
 // budgets.tool.ts
 // ---------------------------------------------------------------------------
 

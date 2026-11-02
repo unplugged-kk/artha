@@ -14,6 +14,7 @@ import { McpInvestmentsTools } from "./tools/investments.tool";
 import { McpScheduledTools } from "./tools/scheduled.tool";
 import { McpCalculateTools } from "./tools/calculate.tool";
 import { McpIndiaTaxTools } from "./tools/india-tax.tool";
+import { McpPlanSimulateTools } from "./tools/plan-simulate.tool";
 import { McpBudgetsTools } from "./tools/budgets.tool";
 import { McpRelayTools } from "./tools/relay.tool";
 import { McpAccountListResource } from "./resources/account-list.resource";
@@ -50,6 +51,7 @@ describe("McpServerService", () => {
         { provide: McpScheduledTools, useValue: mockToolProvider },
         { provide: McpCalculateTools, useValue: mockToolProvider },
         { provide: McpIndiaTaxTools, useValue: mockToolProvider },
+        { provide: McpPlanSimulateTools, useValue: mockToolProvider },
         { provide: McpBudgetsTools, useValue: mockToolProvider },
         { provide: McpRelayTools, useValue: mockToolProvider },
         {
@@ -113,7 +115,7 @@ describe("McpServerService", () => {
 
   it("should register all tools", () => {
     service.createServer();
-    expect(mockToolProvider.register).toHaveBeenCalledTimes(11);
+    expect(mockToolProvider.register).toHaveBeenCalledTimes(12);
   });
 
   it("should register all resources", () => {

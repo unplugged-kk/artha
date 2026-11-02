@@ -10,6 +10,6 @@
 - [x] T8 (calculators only; entities need DB, see T5) India asset metadata: EPF/PPF/NPS/FD/RD/SGB/physical gold maturity and interest calculators (pure TS), then entities
 - [REMOVED: already exists, securities/amfi-nav.service.ts] T9 AMFI NAV fetcher in market data
 - [x] T10 (pure detectors only; not scheduled or wired to alerts/AI/MCP) Deterministic detectors: spending spike (>2 sigma), subscription increase, low-balance projection
-- [x] T11 (pure simulators only; Monte Carlo/goals reuse and AI/MCP wiring not done) Debt snowball/avalanche + FIRE simulators (reuse `monte-carlo`, `goals`)
+- [x] T11 (simulators exposed to AI + MCP as plan_simulate; Monte Carlo/goals reuse not done) Debt snowball/avalanche + FIRE simulators (reuse `monte-carlo`, `goals`)
 - [x] T12 (pure metrics, prompt and number-verifier only; no LLM call, table or cron) Weekly coach report (deterministic metrics, LLM narrative with citations)
 - [ ] (NOT STARTED: frontend wizard needs frontend deps, i18n catalogs and a browser check) T13 Onboarding wizard (frontend, English catalogs only)

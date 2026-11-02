@@ -47,6 +47,7 @@ const TOOL_BYTE_BUDGET: Record<string, number> = {
   list_upcoming_bills: 3000,
   calculate: 1200,
   india_tax: 1800,
+  plan_simulate: 2200,
   get_budget_status: 2550,
   get_next_prompt: 1400,
   post_response: 1050,
@@ -55,7 +56,9 @@ const TOOL_BYTE_BUDGET: Record<string, number> = {
 
 // Raised 50_500 -> 52_200 for the india_tax tool (measured 52_153 total): a
 // new read tool is the only thing that moved it. Not slack.
-const TOTAL_BYTE_BUDGET = 52_200;
+// Raised 52_200 -> 54_400 for plan_simulate (measured 54_329; the tool is ~2.2KB
+// because of the nested debts schema).
+const TOTAL_BYTE_BUDGET = 54_400;
 const INSTRUCTIONS_BYTE_BUDGET = 2_600;
 
 /**
@@ -82,6 +85,7 @@ const EXPECTED_TOOL_ORDER = [
   "list_upcoming_bills",
   "calculate",
   "india_tax",
+  "plan_simulate",
   "get_budget_status",
   "get_next_prompt",
   "post_response",
@@ -294,6 +298,7 @@ describe("tools/list payload budget", () => {
     // provider doubles are enough to read them back off the server.
     const noopProvider = { register: () => {} } as any;
     const service = new McpServerService(
+      noopProvider,
       noopProvider,
       noopProvider,
       noopProvider,

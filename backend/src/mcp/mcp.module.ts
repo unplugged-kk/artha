@@ -28,6 +28,7 @@ import { McpInvestmentsTools } from "./tools/investments.tool";
 import { McpScheduledTools } from "./tools/scheduled.tool";
 import { McpCalculateTools } from "./tools/calculate.tool";
 import { McpIndiaTaxTools } from "./tools/india-tax.tool";
+import { McpPlanSimulateTools } from "./tools/plan-simulate.tool";
 import { McpBudgetsTools } from "./tools/budgets.tool";
 import { McpRelayTools } from "./tools/relay.tool";
 
@@ -74,6 +75,7 @@ import { McpSpendingAnalysisPrompt } from "./prompts/spending-analysis.prompt";
     McpScheduledTools,
     McpCalculateTools,
     McpIndiaTaxTools,
+    McpPlanSimulateTools,
     McpBudgetsTools,
     McpAccountListResource,
     McpCategoryTreeResource,

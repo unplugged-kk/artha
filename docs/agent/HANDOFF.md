@@ -16,3 +16,4 @@ Newest entries last.
 - LOCAL DB: PostgreSQL 16 is installed but stopped each session. Start with `pg_ctlcluster 16 main start`; role artha_user/artha_password (superuser) and db artha_test were created. An integration spec (category-delete-set-null) passed against it via `npx jest -c test/jest-e2e.json <path>`.
 - OPEN QUESTION for the owner: should tax-india load rules from the existing `tax_rules` table (DB-versioned) instead of TS config? Not decided.
 - T7 done and verified end to end on local PostgreSQL 16 (scratch db artha_schema built from schema.sql; all 195 migrations replayed; migration:lint OK; integration spec test/integration/action-history-actor passes). T9 removed: AMFI already exists.
+- T11 wired: plan_simulate tool (debt_payoff, fire) in AI executor + MCP via finance-simulators/simulate-llm.ts. NOTE for owner: tools/list grew 50.5KB -> 54.3KB across india_tax + plan_simulate (~560 tokens per MCP request); consider trimming or making these opt-in.
