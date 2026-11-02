@@ -9,7 +9,7 @@
 - [ ] (BLOCKED: same DB constraint as T5) T7 `action_history` columns `actor_type`, `tool_name`, `tier` (migration + schema.sql + writers)
 - [x] T8 (calculators only; entities need DB, see T5) India asset metadata: EPF/PPF/NPS/FD/RD/SGB/physical gold maturity and interest calculators (pure TS), then entities
 - [ ] T9 AMFI NAV fetcher in market data
-- [ ] T10 Deterministic detectors: spending spike (>2 sigma), subscription increase, low-balance projection
-- [ ] T11 Debt snowball/avalanche + FIRE simulators (reuse `monte-carlo`, `goals`)
+- [x] T10 (pure detectors only; not scheduled or wired to alerts/AI/MCP) Deterministic detectors: spending spike (>2 sigma), subscription increase, low-balance projection
+- [x] T11 (pure simulators only; Monte Carlo/goals reuse and AI/MCP wiring not done) Debt snowball/avalanche + FIRE simulators (reuse `monte-carlo`, `goals`)
 - [ ] T12 Weekly coach report (deterministic metrics, LLM narrative with citations)
 - [ ] T13 Onboarding wizard (frontend, English catalogs only)
