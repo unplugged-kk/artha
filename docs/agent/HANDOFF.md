@@ -15,3 +15,4 @@ Newest entries last.
 - CORRECTION: T4 (SMS parser) and T5 (review queue) duplicated existing `backend/src/import/sms/`; my `india-ingestion/` module was removed and the uncommitted T5 migration reverted. Research had only read docs, not source.
 - LOCAL DB: PostgreSQL 16 is installed but stopped each session. Start with `pg_ctlcluster 16 main start`; role artha_user/artha_password (superuser) and db artha_test were created. An integration spec (category-delete-set-null) passed against it via `npx jest -c test/jest-e2e.json <path>`.
 - OPEN QUESTION for the owner: should tax-india load rules from the existing `tax_rules` table (DB-versioned) instead of TS config? Not decided.
+- T7 done and verified end to end on local PostgreSQL 16 (scratch db artha_schema built from schema.sql; all 195 migrations replayed; migration:lint OK; integration spec test/integration/action-history-actor passes). T9 removed: AMFI already exists.

@@ -6,9 +6,9 @@
 - [REMOVED: duplicate of backend/src/import/sms/ (composite parser, review_needed flow, sender registry)] T4 SMS parser (HDFC, ICICI, SBI, Axis, Kotak templates, UPI VPA extraction), pure TS with fixtures
 - [REMOVED: duplicate; SMS review flow already exists in backend/src/import/sms/] T5 Ingestion review queue: entity, migration, `schema.sql`, service, controller (nothing posts without confirmation)
 - [x] T6 (pure decision core only; not wired to RulesService, DB history or the AI fallback) Categorization pipeline tiers 2-4 (merchant defaults, historical payee pattern, AI fallback) logging the tier on the result
-- [ ] (UNBLOCKED: local PostgreSQL 16 now works, see HANDOFF) T7 `action_history` columns `actor_type`, `tool_name`, `tier` (migration + schema.sql + writers)
+- [x] T7 `action_history.actor_type` (user|ai|mcp) and `tool_name`, via ambient actor context set by the AI confirm path and the MCP transport (`tier` deliberately not added: it belongs to categorization output). Verified: schema.sql apply, 195-migration replay, migration alone on old schema, real-DB integration spec
 - [x] T8 (calculators only; entities need DB, see T5) India asset metadata: EPF/PPF/NPS/FD/RD/SGB/physical gold maturity and interest calculators (pure TS), then entities
-- [ ] (BLOCKED: needs outbound access to amfiindia.com; sandbox proxy not verified) T9 AMFI NAV fetcher in market data
+- [REMOVED: already exists, securities/amfi-nav.service.ts] T9 AMFI NAV fetcher in market data
 - [x] T10 (pure detectors only; not scheduled or wired to alerts/AI/MCP) Deterministic detectors: spending spike (>2 sigma), subscription increase, low-balance projection
 - [x] T11 (pure simulators only; Monte Carlo/goals reuse and AI/MCP wiring not done) Debt snowball/avalanche + FIRE simulators (reuse `monte-carlo`, `goals`)
 - [x] T12 (pure metrics, prompt and number-verifier only; no LLM call, table or cron) Weekly coach report (deterministic metrics, LLM narrative with citations)

@@ -5,6 +5,7 @@ import {
   Inject,
   Injectable,
 } from "@nestjs/common";
+import { runAsActor } from "../../action-history/action-actor.context";
 import { createHash, timingSafeEqual } from "crypto";
 import { plainToInstance } from "class-transformer";
 import { validateOrReject } from "class-validator";
@@ -175,9 +176,9 @@ export class AiActionsService {
     // both pass; release it if the write fails so the user can retry.
     this.consumed.set(descriptor.actionId, descriptor.expiresAt);
     try {
-      const result = await this.execute(
-        userId,
-        descriptor as AiActionDescriptor,
+      const result = await runAsActor(
+        { actorType: "ai", toolName: descriptor.type ?? null },
+        () => this.execute(userId, descriptor as AiActionDescriptor),
       );
       // Record one write per entity actually created (bulk actions create
       // best-effort, so this may be fewer than the proposed count).
