@@ -53,7 +53,9 @@ const TOOL_BYTE_BUDGET: Record<string, number> = {
   report_progress: 1250,
 };
 
-const TOTAL_BYTE_BUDGET = 50_500;
+// Raised 50_500 -> 52_200 for the india_tax tool (measured 52_153 total): a
+// new read tool is the only thing that moved it. Not slack.
+const TOTAL_BYTE_BUDGET = 52_200;
 const INSTRUCTIONS_BYTE_BUDGET = 2_600;
 
 /**

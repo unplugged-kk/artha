@@ -113,7 +113,7 @@ describe("McpServerService", () => {
 
   it("should register all tools", () => {
     service.createServer();
-    expect(mockToolProvider.register).toHaveBeenCalledTimes(10);
+    expect(mockToolProvider.register).toHaveBeenCalledTimes(11);
   });
 
   it("should register all resources", () => {
