@@ -81,7 +81,9 @@ export const FINANCIAL_YEARS: Readonly<Record<string, FinancialYearRules>> = {
   "FY2025-26": FY_2025_26,
 };
 
-export function getFinancialYearRules(label: string): FinancialYearRules | null {
+export function getFinancialYearRules(
+  label: string,
+): FinancialYearRules | null {
   return FINANCIAL_YEARS[label] ?? null;
 }
 

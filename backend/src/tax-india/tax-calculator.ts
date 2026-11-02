@@ -121,9 +121,21 @@ export function compareRegimes(
 
 export interface DeductionHeadroom {
   readonly financialYear: string;
-  readonly section80C: { readonly limit: number; readonly used: number; readonly headroom: number };
-  readonly section80CCD1B: { readonly limit: number; readonly used: number; readonly headroom: number };
-  readonly section80D: { readonly limit: number; readonly used: number; readonly headroom: number };
+  readonly section80C: {
+    readonly limit: number;
+    readonly used: number;
+    readonly headroom: number;
+  };
+  readonly section80CCD1B: {
+    readonly limit: number;
+    readonly used: number;
+    readonly headroom: number;
+  };
+  readonly section80D: {
+    readonly limit: number;
+    readonly used: number;
+    readonly headroom: number;
+  };
 }
 
 export function deductionHeadroom(

@@ -111,7 +111,11 @@ describe("deductionHeadroom", () => {
       { section80C: 200_000, section80CCD1B: 20_000 },
       rules,
     );
-    expect(h.section80C).toEqual({ limit: 150_000, used: 200_000, headroom: 0 });
+    expect(h.section80C).toEqual({
+      limit: 150_000,
+      used: 200_000,
+      headroom: 0,
+    });
     expect(h.section80CCD1B.headroom).toBe(30_000);
     expect(h.section80D.limit).toBe(25_000);
   });
