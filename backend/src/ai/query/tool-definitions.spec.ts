@@ -21,6 +21,7 @@ describe("FINANCIAL_TOOLS", () => {
     "list_upcoming_bills",
     "get_budget_status",
     "calculate",
+    "india_tax",
     "render_chart",
     "manage_transactions",
     "manage_payees",

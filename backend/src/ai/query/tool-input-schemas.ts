@@ -6,6 +6,7 @@ import {
   numberArg,
   booleanArg,
 } from "../../common/tool-schemas";
+import { INDIA_TAX_OPERATIONS } from "../../tax-india/tax-llm";
 import { MAX_BULK_ACTION_ROWS } from "../actions/ai-action.types";
 import { MAX_ATTACHMENTS as MAX_CHAT_ATTACHMENTS } from "./dto/ai-query.dto";
 import {
@@ -200,6 +201,16 @@ export const calculateSchema = z.object({
   operation: z.enum(["percentage", "difference", "ratio", "sum", "average"]),
   values: z.array(numberArg()).min(1).max(100),
   label: z.string().max(200).optional(),
+});
+
+export const indiaTaxSchema = z.object({
+  operation: z.enum(INDIA_TAX_OPERATIONS),
+  financialYear: z.string().max(12).optional(),
+  grossIncome: numberArg(z.number().min(0).max(1e10)).optional(),
+  section80C: numberArg(z.number().min(0).max(1e10)).optional(),
+  section80CCD1B: numberArg(z.number().min(0).max(1e10)).optional(),
+  section80D: numberArg(z.number().min(0).max(1e10)).optional(),
+  seniorCitizen: booleanArg().optional(),
 });
 
 /**
@@ -698,6 +709,7 @@ export const toolInputSchemas: Record<string, z.ZodSchema> = {
   get_budget_status: getBudgetStatusSchema,
   list_upcoming_bills: getUpcomingBillsSchema,
   calculate: calculateSchema,
+  india_tax: indiaTaxSchema,
   render_chart: renderChartSchema,
   manage_transactions: manageTransactionsSchema,
   manage_payees: managePayeesSchema,

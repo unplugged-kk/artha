@@ -347,6 +347,22 @@ export const calculateOutput = toolOutput({
 });
 
 // ---------------------------------------------------------------------------
+// india-tax.tool.ts
+// ---------------------------------------------------------------------------
+
+export const indiaTaxOutput = toolOutput({
+  operation: str,
+  financialYear: str,
+  supported: bool.optional(),
+  reason: str.optional(),
+  better: str.optional(),
+  saving: num.optional(),
+  old: looseObject({}).optional(),
+  new: looseObject({}).optional(),
+  evidence: looseObject({}),
+});
+
+// ---------------------------------------------------------------------------
 // budgets.tool.ts
 // ---------------------------------------------------------------------------
 

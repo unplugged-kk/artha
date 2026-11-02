@@ -46,6 +46,7 @@ const TOOL_BYTE_BUDGET: Record<string, number> = {
   manage_investment_transactions: 4500,
   list_upcoming_bills: 3000,
   calculate: 1200,
+  india_tax: 1800,
   get_budget_status: 2550,
   get_next_prompt: 1400,
   post_response: 1050,
@@ -78,6 +79,7 @@ const EXPECTED_TOOL_ORDER = [
   "manage_investment_transactions",
   "list_upcoming_bills",
   "calculate",
+  "india_tax",
   "get_budget_status",
   "get_next_prompt",
   "post_response",
@@ -290,6 +292,7 @@ describe("tools/list payload budget", () => {
     // provider doubles are enough to read them back off the server.
     const noopProvider = { register: () => {} } as any;
     const service = new McpServerService(
+      noopProvider,
       noopProvider,
       noopProvider,
       noopProvider,

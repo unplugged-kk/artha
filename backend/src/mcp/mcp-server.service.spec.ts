@@ -13,6 +13,7 @@ import { McpReportsTools } from "./tools/reports.tool";
 import { McpInvestmentsTools } from "./tools/investments.tool";
 import { McpScheduledTools } from "./tools/scheduled.tool";
 import { McpCalculateTools } from "./tools/calculate.tool";
+import { McpIndiaTaxTools } from "./tools/india-tax.tool";
 import { McpBudgetsTools } from "./tools/budgets.tool";
 import { McpRelayTools } from "./tools/relay.tool";
 import { McpAccountListResource } from "./resources/account-list.resource";
@@ -48,6 +49,7 @@ describe("McpServerService", () => {
         { provide: McpInvestmentsTools, useValue: mockToolProvider },
         { provide: McpScheduledTools, useValue: mockToolProvider },
         { provide: McpCalculateTools, useValue: mockToolProvider },
+        { provide: McpIndiaTaxTools, useValue: mockToolProvider },
         { provide: McpBudgetsTools, useValue: mockToolProvider },
         { provide: McpRelayTools, useValue: mockToolProvider },
         {
