@@ -38,3 +38,9 @@ Newest entries last.
 - Logo: one source, `frontend/scripts/build-app-icons.mjs`. Rerun it, then the badge script, after any change to the mark.
 - Accessibility: `scripts/a11y-audit.cjs` went from 604 to 2 violations, and the last 2 are fixed but not re-measured on a clean build. Start the backend with `RATE_LIMIT_MAX=100000`, and delete `.next` before measuring.
 - Design: `docs/design/README.md` and the mock in `docs/design/mockups/`. Three layout changes await the owner's decision.
+
+## E2E run on the native stack (Node 22.23.4, Chromium)
+
+- Command: start the stack with `scripts/install-native.sh --start` against a database with NO users (the first registered user is the admin the suite logs in as; a database that already holds the demo user makes 3 admin and backup tests fail for setup reasons), then `BASE_URL=http://localhost:3000 CHROMIUM_PATH=<chrome> npx playwright test --config playwright.local.config.ts` from `e2e/`.
+- Result: 198 of 199 passed in one run with `--grep-invert "enforces a second factor"`; that test passes on its own. 
+- Open defect: after the "enforces a second factor at login" test the backend process exits with `ERR_INTERNAL_ASSERTION` in `ServerResponse.detachSocket`, every time (reproduced twice). It is a Node internal assertion, the sandbox runs Node 22.23.4 and the production images use Node 24, and Node 24 could not be tried here. Unproven whether it also happens on Node 24; check before blaming the app, and check with `docker-compose.e2e.yml` (Node 24) first.
