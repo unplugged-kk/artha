@@ -33,6 +33,7 @@ import { usePriceRefresh } from '@/hooks/usePriceRefresh';
 import { createLogger } from '@/lib/logger';
 import { TOUR_ANCHORS, tourAnchor } from '@/lib/tours/anchors';
 import { TourBanner } from '@/components/dashboard/TourBanner';
+import { WhereYouStand } from '@/components/dashboard/WhereYouStand';
 
 const logger = createLogger('Dashboard');
 
@@ -260,6 +261,14 @@ function DashboardContent() {
           />
 
           {!isDelegateView && <GettingStarted />}
+
+          {!isDelegateView && (
+            <WhereYouStand
+              netWorthData={netWorthData}
+              scheduledTransactions={scheduledTransactions}
+              isLoading={isLoading}
+            />
+          )}
 
           {/* Widget grid: consecutive visible widgets pair up into rows */}
           <div

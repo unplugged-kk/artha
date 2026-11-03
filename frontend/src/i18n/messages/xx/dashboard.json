@@ -257,5 +257,16 @@
     "weekdayLabel": "[XX-Weekday-XX]",
     "viewOverview": "[XX-Overview-XX]",
     "viewByDay": "[XX-By day-XX]"
+  },
+  "standing": {
+    "title": "[XX-Where you stand-XX]",
+    "netWorth": "[XX-Net worth-XX]",
+    "changeUp": "[XX-Up {amount} since last month-XX]",
+    "changeDown": "[XX-Down {amount} since last month-XX]",
+    "assetsAndDebts": "[XX-Assets-XX]",
+    "liabilities": "[XX-Debts: {amount}-XX]",
+    "dueSoon": "[XX-Due in the next 7 days-XX]",
+    "dueSoonHint": "[XX-{count, plural, one {bill or deposit} other {bills and deposits}}-XX]",
+    "unavailable": "[XX-Not available yet-XX]"
   }
 }

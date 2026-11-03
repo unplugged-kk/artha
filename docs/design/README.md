@@ -64,7 +64,9 @@ The two that remained were gray-400 text in a settings list; they are fixed in t
 - Transactions opens on the register with the chart folded (remembered per device).
 - The top navigation no longer wraps a label onto two lines: measured at 1280 and 1440px, every item is 36px tall and the page does not scroll sideways. A fresh-build axe run over the six pages in light, dark and phone width reported no violations.
 
-Not built yet: the dashboard summary strip and the quieter notifications banner.
+- The dashboard opens with a "Where you stand" strip: net worth with its change since last month, assets with debts, and how many bills and deposits fall due in the next 7 days (a count, so no currency is mixed). No data shows as "Not available yet", never zero.
+
+Not built yet: the "Needs your attention" list and the quieter notifications banner.
 
 ## Proposed layout (needs your decision)
 

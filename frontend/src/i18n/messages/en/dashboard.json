@@ -257,5 +257,16 @@
     "weekdayLabel": "Weekday",
     "viewOverview": "Overview",
     "viewByDay": "By day"
+  },
+  "standing": {
+    "title": "Where you stand",
+    "netWorth": "Net worth",
+    "changeUp": "Up {amount} since last month",
+    "changeDown": "Down {amount} since last month",
+    "assetsAndDebts": "Assets",
+    "liabilities": "Debts: {amount}",
+    "dueSoon": "Due in the next 7 days",
+    "dueSoonHint": "{count, plural, one {bill or deposit} other {bills and deposits}}",
+    "unavailable": "Not available yet"
   }
 }
