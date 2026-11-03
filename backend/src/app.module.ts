@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { resolveDatabaseConnection } from "./common/db/database-connection";
 import {
   APP_FILTER,
   APP_GUARD,
@@ -91,31 +92,27 @@ import { I18nModule } from "./i18n/i18n.module";
         // flag flip. No pool-size change: connections are held only for each
         // short tenant transaction (see the RLS design doc, Phase 1).
         const rlsMode = parseRlsMode(configService.get("RLS_MODE"));
+        const conn = resolveDatabaseConnection((key) =>
+          configService.get<string>(key),
+        );
         const { username, password } = resolveRlsDatabaseAuth({
           mode: rlsMode,
-          databaseUser: configService.get("DATABASE_USER"),
-          databasePassword: configService.get("DATABASE_PASSWORD"),
+          databaseUser: conn.user,
+          databasePassword: conn.password,
           appUser: configService.get("DATABASE_APP_USER"),
           appPassword: configService.get("DATABASE_APP_PASSWORD"),
         });
         return {
           type: "postgres",
-          host: configService.get("DATABASE_HOST"),
-          port: configService.get("DATABASE_PORT"),
+          host: conn.host,
+          port: conn.port,
           username,
           password,
-          database: configService.get("DATABASE_NAME"),
+          database: conn.database,
           entities: [__dirname + "/**/*.entity{.ts,.js}"],
           synchronize: false, // Use migrations in production
           logging: ["error"],
-          ssl:
-            configService.get("DATABASE_SSL") === "true"
-              ? {
-                  rejectUnauthorized:
-                    configService.get("DATABASE_SSL_REJECT_UNAUTHORIZED") !==
-                    "false",
-                }
-              : false,
+          ssl: conn.ssl,
         };
       },
     }),

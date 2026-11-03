@@ -13,15 +13,18 @@ import { DEMO_USER_EMAIL } from "./database/demo-credentials";
  * startup. As a compiled script it logs through the Nest `Logger` like the
  * rest of the boot sequence.
  */
+import { resolveDatabaseConnection } from "./common/db/database-connection";
 const logger = new Logger("DbDemoCheck");
 
 export async function demoUserExists(): Promise<boolean> {
+  const conn = resolveDatabaseConnection((key) => process.env[key]);
   const client = new Client({
-    host: process.env.DATABASE_HOST,
-    port: parseInt(process.env.DATABASE_PORT || "5432", 10),
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE_NAME,
+    host: conn.host,
+    port: conn.port,
+    user: conn.user,
+    password: conn.password,
+    database: conn.database,
+    ssl: conn.ssl,
   });
 
   await client.connect();

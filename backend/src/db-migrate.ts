@@ -17,6 +17,7 @@ const MIGRATIONS_DIRNAME = "migrations";
  * log with the Nest app, so it logs through the Nest `Logger` (usable outside
  * an application context) instead of `console`.
  */
+import { resolveDatabaseConnection } from "./common/db/database-connection";
 const logger = new Logger("DbMigrate");
 
 /** Where a human goes when a migration fails at startup. */
@@ -271,12 +272,14 @@ function safePath(base: string, relative: string): string | null {
 export async function runMigrations() {
   logger.log("Running database migrations");
 
+  const conn = resolveDatabaseConnection((key) => process.env[key]);
   const client = new Client({
-    host: process.env.DATABASE_HOST || "localhost",
-    port: parseInt(process.env.DATABASE_PORT || "5432", 10),
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE_NAME,
+    host: conn.host,
+    port: conn.port,
+    user: conn.user,
+    password: conn.password,
+    database: conn.database,
+    ssl: conn.ssl,
   });
 
   // Surface Postgres NOTICE/WARNING messages, exactly as db-init does. The

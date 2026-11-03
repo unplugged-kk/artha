@@ -159,6 +159,7 @@ function reportEncryptionKeyStatus(configService: ConfigService): void {
   );
 }
 
+import { resolveTrustProxyHops } from "./common/trust-proxy.util";
 async function bootstrap() {
   logger.log("Starting application");
 
@@ -187,8 +188,13 @@ async function bootstrap() {
   // "Database error". Refuse here instead.
   await assertRequiredDbFunctionsOrExit(app.get(DataSource));
 
-  // Trust first proxy (Docker/nginx) so req.ip reflects the real client IP
-  app.getHttpAdapter().getInstance().set("trust proxy", 1);
+  // Trust the configured number of proxy hops (default 1: Docker/nginx/Railway)
+  // so req.ip reflects the real client IP. Behind Cloudflare in front of
+  // another proxy, TRUST_PROXY_HOPS=2.
+  app
+    .getHttpAdapter()
+    .getInstance()
+    .set("trust proxy", resolveTrustProxyHops(process.env.TRUST_PROXY_HOPS));
 
   // Backup restore accepts gzip-compressed binary (compressed on the client
   // to avoid multi-minute uploads of large JSON files). Encrypted backups

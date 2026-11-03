@@ -15,7 +15,19 @@ const SCHEMA_FILENAME = "schema.sql";
  * an application context) rather than `console` -- otherwise the first lines of
  * every startup are the only unformatted ones in the file.
  */
+import { resolveDatabaseConnection } from "./common/db/database-connection";
 const logger = new Logger("DbInit");
+
+function resolveConnectionOrExit() {
+  try {
+    return resolveDatabaseConnection((key) => process.env[key]);
+  } catch (error) {
+    logger.error(
+      error instanceof Error ? error.message : "Invalid database settings",
+    );
+    process.exit(1);
+  }
+}
 
 function requiredEnv(name: string, fallback?: string): string {
   const value = process.env[name] || fallback;
@@ -44,12 +56,14 @@ function safePath(base: string, relative: string): string | null {
 export async function initDatabase() {
   logger.log("Checking database initialization");
 
+  const conn = resolveConnectionOrExit();
   const client = new Client({
-    host: process.env.DATABASE_HOST || "localhost",
-    port: parseInt(process.env.DATABASE_PORT || "5432", 10),
-    user: requiredEnv("DATABASE_USER"),
-    password: requiredEnv("DATABASE_PASSWORD"),
-    database: requiredEnv("DATABASE_NAME"),
+    host: conn.host,
+    port: conn.port,
+    user: conn.user ?? requiredEnv("DATABASE_USER"),
+    password: conn.password ?? requiredEnv("DATABASE_PASSWORD"),
+    database: conn.database ?? requiredEnv("DATABASE_NAME"),
+    ssl: conn.ssl,
   });
 
   // Surface Postgres NOTICE/WARNING messages (e.g. the insufficient-privilege
