@@ -12,6 +12,7 @@ That shape decides what each platform can host. The backend needs a place to run
 
 | Target | Frontend | Backend | Database | Guide | Verified |
 |---|---|---|---|---|---|
+| Docker Desktop (Mac, Windows, Linux) | compose | compose | compose | [docker-desktop.md](docker-desktop.md) | compose files parse; **not started** (no Docker daemon in the sandbox) |
 | Ubuntu server, Docker | compose | compose | compose | `docker-compose.prod.yml`, root `README.md` | existing CI |
 | Ubuntu, no Docker | `next start` | `node` | `apt` PostgreSQL | [native.md](native.md) | installed, built, migrated, started and stopped on Ubuntu 24.04 with PostgreSQL 16 |
 | macOS, local | `next start` | `node` | Homebrew PostgreSQL | [native.md](native.md) | **not run** (no Mac available); same script |
