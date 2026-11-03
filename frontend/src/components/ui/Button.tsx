@@ -15,7 +15,7 @@ const baseStyles =
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 focus-visible:ring-blue-500 dark:bg-blue-500 dark:hover:bg-blue-600 dark:active:bg-blue-700',
+    'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 focus-visible:ring-blue-500',
   secondary:
     'bg-gray-600 text-white hover:bg-gray-700 active:bg-gray-800 focus-visible:ring-gray-500 dark:bg-gray-500 dark:hover:bg-gray-600 dark:active:bg-gray-700',
   outline:
@@ -23,7 +23,7 @@ const variants: Record<ButtonVariant, string> = {
   ghost:
     'text-gray-700 hover:bg-gray-100 active:bg-gray-200 focus-visible:ring-gray-500 dark:text-gray-200 dark:hover:bg-gray-700 dark:active:bg-gray-600',
   danger:
-    'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 focus-visible:ring-red-500 dark:bg-red-500 dark:hover:bg-red-600 dark:active:bg-red-700',
+    'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 focus-visible:ring-red-500',
 };
 
 const sizes: Record<ButtonSize, string> = {

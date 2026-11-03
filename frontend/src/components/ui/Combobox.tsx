@@ -640,6 +640,7 @@ export function Combobox({
           <button
             type="button"
             tabIndex={-1}
+            aria-label={t('multiSelect.clear')}
             onMouseDown={(e) => {
               e.preventDefault();
               setInputValue('');

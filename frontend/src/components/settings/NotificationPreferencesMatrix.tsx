@@ -349,7 +349,7 @@ export function NotificationPreferencesMatrix({
           trigger -- so the two column explanations become footnotes there.
           ONCE each, not once per row: the same sentence repeated under every
           category is what a phone has least room for. */}
-      <ul className="mt-3 space-y-1 text-xs text-gray-400 md:hidden dark:text-gray-500">
+      <ul className="mt-3 space-y-1 text-xs text-gray-500 md:hidden dark:text-gray-400">
         <li>
           <span className="font-medium text-gray-500 dark:text-gray-400">
             {t('throttle.label')}
@@ -364,7 +364,7 @@ export function NotificationPreferencesMatrix({
         </li>
       </ul>
 
-      <div className="mt-3 space-y-2 text-xs text-gray-400 dark:text-gray-500">
+      <div className="mt-3 space-y-2 text-xs text-gray-500 dark:text-gray-400">
         {!emailAvailable && <p>{t('emailUnavailable')}</p>}
         {!pushAvailable && <p>{t('pushUnavailable')}</p>}
         {/* The one action on this surface that can turn the push column into a

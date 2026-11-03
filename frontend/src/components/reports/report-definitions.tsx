@@ -512,15 +512,15 @@ export const builtInReports: Report[] = [
 ];
 
 export const categoryColors: Record<ReportCategory, string> = {
-  spending: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-  income: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-  networth: 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300',
-  tax: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
-  debt: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
-  investment: 'bg-lime-100 text-lime-800 dark:bg-lime-900/30 dark:text-lime-300',
-  insights: 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300',
-  maintenance: 'bg-gray-100 text-gray-800 dark:bg-gray-700/50 dark:text-gray-300',
-  bills: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
-  budget: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300',
-  custom: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
+  spending: 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300',
+  income: 'bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-300',
+  networth: 'bg-teal-100 text-teal-800 dark:bg-teal-950 dark:text-teal-300',
+  tax: 'bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300',
+  debt: 'bg-orange-100 text-orange-800 dark:bg-orange-950 dark:text-orange-300',
+  investment: 'bg-lime-100 text-lime-800 dark:bg-lime-950 dark:text-lime-300',
+  insights: 'bg-pink-100 text-pink-800 dark:bg-pink-950 dark:text-pink-300',
+  maintenance: 'bg-gray-100 text-gray-800 dark:bg-gray-950 dark:text-gray-300',
+  bills: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-950 dark:text-yellow-300',
+  budget: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300',
+  custom: 'bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300',
 };

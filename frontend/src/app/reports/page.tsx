@@ -369,12 +369,16 @@ function ReportsContent() {
               const colorClass = report.color || 'bg-purple-500';
 
               return (
-                <button
+                <div
                   key={report.id}
                   {...reportTourAnchor(report)}
-                  onClick={() => handleReportClick(report.id)}
-                  className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/50 overflow-hidden hover:shadow-lg dark:hover:shadow-gray-700/70 transition-shadow text-left group flex flex-col h-full"
+                  className="relative bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/50 overflow-hidden hover:shadow-lg dark:hover:shadow-gray-700/70 transition-shadow group flex flex-col h-full"
                 >
+                  <button
+                    type="button"
+                    onClick={() => handleReportClick(report.id)}
+                    className="flex flex-col flex-1 w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500"
+                  >
                   {/* Preview Area */}
                   <div
                     className={`h-32 ${!bgColor ? `${colorClass} bg-opacity-10 dark:bg-opacity-20` : ''} flex items-center justify-center relative flex-shrink-0`}
@@ -387,23 +391,6 @@ function ReportsContent() {
                       <div className="text-gray-700 dark:text-gray-200">
                         {report.icon}
                       </div>
-                    </div>
-                    <div
-                      role="button"
-                      tabIndex={0}
-                      onClick={(e) => handleToggleFavourite(e, report)}
-                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleToggleFavourite(e as unknown as React.MouseEvent, report); } }}
-                      className="absolute top-3 left-3 p-1 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
-                      title={isReportFavourite(report) ? t('page.removeFavourite') : t('page.addFavourite')}
-                    >
-                      <svg
-                        className={`w-5 h-5 ${isReportFavourite(report) ? 'text-yellow-500' : 'text-gray-300 dark:text-gray-500'}`}
-                        fill={isReportFavourite(report) ? 'currentColor' : 'none'}
-                        stroke="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
                     </div>
                     <span className={`absolute top-3 right-3 px-2 py-1 text-xs font-medium rounded ${categoryColors[report.category]}`}>
                       {t(`page.categories.${report.category}` as Parameters<typeof t>[0])}
@@ -418,7 +405,26 @@ function ReportsContent() {
                       {getReportDescription(report)}
                     </p>
                   </div>
-                </button>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => handleToggleFavourite(e, report)}
+                    aria-pressed={isReportFavourite(report)}
+                    aria-label={isReportFavourite(report) ? t('page.removeFavourite') : t('page.addFavourite')}
+                    title={isReportFavourite(report) ? t('page.removeFavourite') : t('page.addFavourite')}
+                    className="absolute top-3 left-3 p-1 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                  >
+                    <svg
+ aria-hidden="true"
+                        className={`w-5 h-5 ${isReportFavourite(report) ? 'text-yellow-500' : 'text-gray-300 dark:text-gray-500'}`}
+                        fill={isReportFavourite(report) ? 'currentColor' : 'none'}
+                        stroke="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                  </button>
+                </div>
               );
             })}
           </div>
@@ -431,12 +437,16 @@ function ReportsContent() {
               const colorClass = report.color || 'bg-purple-500';
 
               return (
-                <button
+                <div
                   key={report.id}
                   {...reportTourAnchor(report)}
-                  onClick={() => handleReportClick(report.id)}
-                  className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/50 p-4 hover:shadow-md dark:hover:shadow-gray-700/70 transition-shadow text-left flex items-center gap-4 group"
+                  className="relative bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/50 p-4 pr-12 hover:shadow-md dark:hover:shadow-gray-700/70 transition-shadow flex items-center gap-4 pr-12 group"
                 >
+                  <button
+                    type="button"
+                    onClick={() => handleReportClick(report.id)}
+                    className="flex items-center gap-4 flex-1 min-w-0 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg"
+                  >
                   <div
                     className={`${!bgColor ? `${colorClass} bg-opacity-20 dark:bg-opacity-30` : ''} rounded-lg p-3 flex-shrink-0`}
                     style={bgColor ? { backgroundColor: `${bgColor}40` } : undefined}
@@ -458,15 +468,17 @@ function ReportsContent() {
                       {getReportDescription(report)}
                     </p>
                   </div>
-                  <div
-                    role="button"
-                    tabIndex={0}
+                  </button>
+                  <button
+                    type="button"
                     onClick={(e) => handleToggleFavourite(e, report)}
-                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleToggleFavourite(e as unknown as React.MouseEvent, report); } }}
-                    className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex-shrink-0"
+                    aria-pressed={isReportFavourite(report)}
+                    aria-label={isReportFavourite(report) ? t('page.removeFavourite') : t('page.addFavourite')}
                     title={isReportFavourite(report) ? t('page.removeFavourite') : t('page.addFavourite')}
+                    className="absolute top-1/2 right-4 -translate-y-1/2 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                   >
                     <svg
+ aria-hidden="true"
                       className={`w-4 h-4 ${isReportFavourite(report) ? 'text-yellow-500' : 'text-gray-300 dark:text-gray-500'}`}
                       fill={isReportFavourite(report) ? 'currentColor' : 'none'}
                       stroke="currentColor"
@@ -474,8 +486,8 @@ function ReportsContent() {
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
-                  </div>
-                </button>
+                  </button>
+                </div>
               );
             })}
           </div>

@@ -155,7 +155,7 @@ export function UpcomingBills({ scheduledTransactions, accounts, isLoading, maxI
     const date = parseLocalDate(dateStr);
     const days = differenceInDays(date, today);
     if (days <= 0) return 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30';
-    if (days <= 2) return 'text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/30';
+    if (days <= 2) return 'text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/30';
     return 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30';
   };
 
@@ -292,7 +292,7 @@ export function UpcomingBills({ scheduledTransactions, accounts, isLoading, maxI
                     </span>
                     <span className="hidden sm:inline">{getTypeBadge(type)}</span>
                     {!item.autoPost && (
-                      <span className="hidden sm:inline px-1.5 py-0.5 bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400 text-xs rounded" title={t('upcomingBills.manualTitle')}>
+                      <span className="hidden sm:inline px-1.5 py-0.5 bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 text-xs rounded" title={t('upcomingBills.manualTitle')}>
                         {t('upcomingBills.manual')}
                       </span>
                     )}

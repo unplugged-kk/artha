@@ -234,7 +234,7 @@ export function PushEnableBanner() {
           <button
             type="button"
             onClick={handleDismiss}
-            className="text-blue-700/70 underline hover:text-blue-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:text-blue-300/70 dark:hover:text-blue-100 dark:focus-visible:ring-offset-blue-900"
+            className="text-blue-800 underline hover:text-blue-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:text-blue-200 dark:hover:text-blue-100 dark:focus-visible:ring-offset-blue-900"
           >
             {t('dismiss')}
           </button>

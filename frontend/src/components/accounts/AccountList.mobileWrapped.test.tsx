@@ -5,6 +5,17 @@ import { Account } from '@/types/account';
 import { useDensityStore } from '@/store/densityStore';
 
 /**
+ * Group header rows. The disclosure state lives on a real button inside the row:
+ * `aria-expanded` is not allowed on a plain table row, so rows are found by the
+ * button they hold.
+ */
+function groupHeaderRows(root: ParentNode = document): HTMLTableRowElement[] {
+  return Array.from(root.querySelectorAll<HTMLTableRowElement>('tbody tr')).filter(
+    (tr) => tr.querySelector('button[aria-expanded]'),
+  );
+}
+
+/**
  * Model B: on a phone the density toggle picks the LAYOUT, not only the row
  * height. At Normal density each account is a wrapped card in a single `<td>`
  * -- which is how the type and status this table hides below `sm`/`md` get
@@ -129,13 +140,13 @@ function renderList(accounts: Account[]) {
 /** Account rows: every body row except the group headers. */
 function accountRows(container: HTMLElement): HTMLTableRowElement[] {
   return Array.from(container.querySelectorAll('tbody tr')).filter(
-    (row) => !row.hasAttribute('aria-expanded'),
+    (row) => !row.querySelector('button[aria-expanded]'),
   ) as HTMLTableRowElement[];
 }
 
 function groupRows(container: HTMLElement): HTMLTableRowElement[] {
   return Array.from(
-    container.querySelectorAll<HTMLTableRowElement>('tbody tr[aria-expanded]'),
+    groupHeaderRows(container),
   );
 }
 

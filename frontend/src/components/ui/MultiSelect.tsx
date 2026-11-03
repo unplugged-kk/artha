@@ -305,7 +305,7 @@ export function MultiSelect({
         <div className="flex items-center justify-between">
           <span className={cn(
             'truncate',
-            value.length === 0 && 'text-gray-400 dark:text-gray-400'
+            value.length === 0 && 'text-gray-500 dark:text-gray-400'
           )}>
             {displayText}
           </span>

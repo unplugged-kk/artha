@@ -145,15 +145,29 @@ function GroupHeaderLabel({
   label,
   count,
   isCollapsed,
+  onToggle,
   labelClassName = '',
 }: {
   label: string;
   count: string;
   isCollapsed: boolean;
+  onToggle: () => void;
   labelClassName?: string;
 }) {
+  // The disclosure control is a real button: `aria-expanded` is not allowed on
+  // a plain table row, and a row that only a mouse can click is closed to the
+  // keyboard. The row's own click still toggles (a larger target for a pointer),
+  // so the button stops the event rather than toggling twice.
   return (
-    <>
+    <button
+      type="button"
+      aria-expanded={!isCollapsed}
+      onClick={(e) => {
+        e.stopPropagation();
+        onToggle();
+      }}
+      className="flex items-center gap-2 min-w-0 text-left rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+    >
       <svg
         className={`w-4 h-4 text-gray-500 dark:text-gray-400 transition-transform ${isCollapsed ? '-rotate-90' : ''}`}
         fill="none"
@@ -164,8 +178,8 @@ function GroupHeaderLabel({
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
       </svg>
       <span className={`font-semibold text-gray-700 dark:text-gray-200 ${labelClassName}`}>{label}</span>
-      <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">{count}</span>
-    </>
+      <span className="text-xs text-gray-600 dark:text-gray-400 whitespace-nowrap">{count}</span>
+    </button>
   );
 }
 
@@ -1003,7 +1017,6 @@ export function AccountList({ accounts, institutions, brokerageMarketValues, unp
                   key={`group-${item.type}`}
                   className="group bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer select-none"
                   onClick={() => toggleGroup(item.type)}
-                  aria-expanded={!item.isCollapsed}
                 >
                   {/* Every row of the wrapped layout is one cell, so the group
                       header is too: its label and its total share that cell
@@ -1024,6 +1037,7 @@ export function AccountList({ accounts, institutions, brokerageMarketValues, unp
                             label={formatAccountType(item.type, tc)}
                             count={t('list.groupCount', { count: item.count })}
                             isCollapsed={item.isCollapsed}
+                            onToggle={() => toggleGroup(item.type)}
                             labelClassName="truncate"
                           />
                         </div>
@@ -1044,6 +1058,7 @@ export function AccountList({ accounts, institutions, brokerageMarketValues, unp
                         label={formatAccountType(item.type, tc)}
                         count={t('list.groupCount', { count: item.count })}
                         isCollapsed={item.isCollapsed}
+                        onToggle={() => toggleGroup(item.type)}
                       />
                     </div>
                   </td>
