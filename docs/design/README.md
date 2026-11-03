@@ -59,6 +59,13 @@ The two that remained were gray-400 text in a settings list; they are fixed in t
 - **A clean build before measuring.** An incremental `next build` served an old stylesheet beside new scripts. Delete `.next` before measuring a CSS change.
 - **A unit guard reads source; the audit reads pixels.** The token guard passed while the served CSS was stale. Both are needed.
 
+## Built from the proposal
+
+- Transactions opens on the register with the chart folded (remembered per device).
+- The top navigation no longer wraps a label onto two lines: measured at 1280 and 1440px, every item is 36px tall and the page does not scroll sideways. A fresh-build axe run over the six pages in light, dark and phone width reported no violations.
+
+Not built yet: the dashboard summary strip and the quieter notifications banner.
+
 ## Proposed layout (needs your decision)
 
 The mock proposes three changes. None is built yet, because they change what users see and where, and that is yours to judge by eye.

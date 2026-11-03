@@ -351,13 +351,13 @@ export function AppHeader() {
               visibleNavLinks.length > 0 ||
               visibleToolsLinks.length > 0 ||
               showAiMenu) && (
-              <nav className="hidden xl:ml-8 xl:flex xl:items-center xl:space-x-4">
+              <nav className="hidden xl:ml-8 xl:flex xl:items-center xl:space-x-1 2xl:space-x-4">
                 {visibleNavLinks.map((link) => (
                   <button
                     key={link.href}
                     {...NAV_TOUR_ANCHORS[link.href]}
                     onClick={() => router.push(link.href)}
-                    className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                    className={`px-3 py-2 text-sm font-medium whitespace-nowrap rounded-md transition-colors ${
                       isNavSectionActive(pathname, link.href)
                         ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200'
                         : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700'
