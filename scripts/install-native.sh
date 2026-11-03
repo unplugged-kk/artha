@@ -20,6 +20,11 @@
 #   --db-user NAME   role to create/use              (default: artha_user)
 #   --skip-build     reuse an earlier build
 #   --start          start the servers once everything is ready
+#   --public         let the FRONTEND listen on every network interface (default:
+#                    this machine only). The backend never does. Put a TLS reverse
+#                    proxy in front first, and make it overwrite X-Real-IP and
+#                    X-Forwarded-For: the frontend trusts them as the visitor's
+#                    address, so without that anyone can choose theirs.
 #   --stop           stop servers started with --start, then exit
 #
 # The generated .env.native is for plain-HTTP local use (DISABLE_HTTPS_HEADERS is
@@ -37,6 +42,8 @@ INSTALL_DEPS=0
 SKIP_BUILD=0
 START=0
 STOP=0
+FRONTEND_HOST="127.0.0.1"
+BACKEND_HOST="127.0.0.1"
 BACKEND_PORT=3001
 FRONTEND_PORT=3000
 
@@ -49,9 +56,10 @@ while [ $# -gt 0 ]; do
     --skip-build)   SKIP_BUILD=1 ;;
     --start)        START=1 ;;
     --stop)         STOP=1 ;;
+    --public)       FRONTEND_HOST="0.0.0.0" ;;
     --db-name)      shift; DB_NAME="${1:?--db-name needs a value}" ;;
     --db-user)      shift; DB_USER="${1:?--db-user needs a value}" ;;
-    -h|--help)      sed -n '2,28p' "$0"; exit 0 ;;
+    -h|--help)      sed -n '2,36p' "$0"; exit 0 ;;
     *)              die "unknown option: $1 (try --help)" ;;
   esac
   shift
@@ -68,7 +76,11 @@ stop_servers() {
     local pidfile="$STATE_DIR/$name.pid"
     if [ -f "$pidfile" ]; then
       local pid; pid="$(cat "$pidfile")"
-      if kill -0 "$pid" 2>/dev/null; then kill "$pid" && stopped=1; fi
+      if kill -0 "$pid" 2>/dev/null; then
+        kill "$pid" 2>/dev/null && stopped=1
+        for _ in 1 2 3 4 5 6 7 8 9 10; do kill -0 "$pid" 2>/dev/null || break; sleep 1; done
+        kill -0 "$pid" 2>/dev/null && kill -9 "$pid" 2>/dev/null
+      fi
       rm -f "$pidfile"
     fi
   done
@@ -118,6 +130,17 @@ admin_psql() {
     sudo -u postgres psql -X -v ON_ERROR_STOP=1 -d postgres "$@"
   fi
 }
+# SQL arrives on stdin, never as an argument: a password in argv is visible to
+# every local user in `ps`, and the statement is also kept out of the server log.
+admin_sql() {
+  if [ "$OS" = "Darwin" ]; then
+    psql -X -q -v ON_ERROR_STOP=1 -d postgres -f -
+  elif [ "$(id -u)" -eq 0 ]; then
+    su postgres -c "psql -X -q -v ON_ERROR_STOP=1 -d postgres -f -"
+  else
+    sudo -u postgres psql -X -q -v ON_ERROR_STOP=1 -d postgres -f -
+  fi
+}
 pg_ready() { admin_psql -tAc "select 1" >/dev/null 2>&1; }
 pg_ready || die "cannot reach PostgreSQL as an administrator; is it running? (Linux: sudo service postgresql start)"
 
@@ -147,7 +170,7 @@ LOCAL_AUTH_ENABLED=true
 REGISTRATION_ENABLED=true
 PUBLIC_APP_URL=http://localhost:$FRONTEND_PORT
 CORS_ORIGIN=http://localhost:$FRONTEND_PORT
-INTERNAL_API_URL=http://localhost:$BACKEND_PORT
+INTERNAL_API_URL=http://127.0.0.1:$BACKEND_PORT
 DISABLE_HTTPS_HEADERS=true
 EOF
   set -a; . "$ENV_FILE"; set +a
@@ -155,10 +178,14 @@ fi
 
 say "preparing database '$DB_NAME' for role '$DB_USER'"
 if [ "$(admin_psql -tAc "select 1 from pg_roles where rolname='$DB_USER'" | tr -d '[:space:]')" = "1" ]; then
-  admin_psql -qc "ALTER ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASSWORD'"
+  ROLE_VERB="ALTER"
 else
-  admin_psql -qc "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASSWORD'"
+  ROLE_VERB="CREATE"
 fi
+# Single quotes in a reused password are doubled; the generated one is hex.
+SQL_PASSWORD="${DB_PASSWORD//\'/\'\'}"
+printf "SET log_statement = 'none';\nSET log_min_duration_statement = -1;\nSET log_min_error_statement = 'panic';\n%s ROLE %s WITH LOGIN PASSWORD '%s';\n" \
+  "$ROLE_VERB" "$DB_USER" "$SQL_PASSWORD" | admin_sql
 if [ "$(admin_psql -tAc "select 1 from pg_database where datname='$DB_NAME'" | tr -d '[:space:]')" != "1" ]; then
   admin_psql -qc "CREATE DATABASE $DB_NAME OWNER $DB_USER"
 fi
@@ -184,16 +211,40 @@ say "applying schema and migrations"
 if [ "$START" = 1 ]; then
   stop_servers >/dev/null
   mkdir -p "$STATE_DIR"
-  say "starting the backend on :$BACKEND_PORT"
-  (cd backend && PORT="$BACKEND_PORT" nohup node dist/main.js > "$STATE_DIR/backend.log" 2>&1 & echo $! > "$STATE_DIR/backend.pid")
-  say "starting the frontend on :$FRONTEND_PORT"
-  (cd frontend && PORT="$FRONTEND_PORT" nohup npx next start -p "$FRONTEND_PORT" > "$STATE_DIR/frontend.log" 2>&1 & echo $! > "$STATE_DIR/frontend.pid")
+  # Something already answering on a port would make the new server fail to bind
+  # while the old one passes the health check below, so refuse up front.
+  for port in "$BACKEND_PORT" "$FRONTEND_PORT"; do
+    if curl -s -o /dev/null -m 2 "http://127.0.0.1:$port/" 2>/dev/null; then
+      die "port $port is already in use by something this script did not start"
+    fi
+  done
+  say "starting the backend on $BACKEND_HOST:$BACKEND_PORT (this machine only)"
+  # `exec` makes the recorded PID the server's own, not a wrapper's, so --stop
+  # stops the server rather than orphaning it.
+  (cd backend && exec env PORT="$BACKEND_PORT" LISTEN_HOST="$BACKEND_HOST" node dist/main.js) > "$STATE_DIR/backend.log" 2>&1 &
+  echo $! > "$STATE_DIR/backend.pid"
+  if [ "$FRONTEND_HOST" = "0.0.0.0" ]; then
+    say "WARNING: the frontend is listening on every interface (--public). Put a TLS reverse proxy in front that overwrites X-Real-IP and X-Forwarded-For."
+  fi
+  say "starting the frontend on $FRONTEND_HOST:$FRONTEND_PORT"
+  (cd frontend && exec env PORT="$FRONTEND_PORT" ./node_modules/.bin/next start -H "$FRONTEND_HOST" -p "$FRONTEND_PORT") > "$STATE_DIR/frontend.log" 2>&1 &
+  echo $! > "$STATE_DIR/frontend.pid"
   for _ in $(seq 1 60); do
-    curl -sf "http://localhost:$BACKEND_PORT/api/v1/health/live" >/dev/null 2>&1 && break
+    curl -sf "http://127.0.0.1:$BACKEND_PORT/api/v1/health/live" >/dev/null 2>&1 && break
     sleep 1
   done
-  curl -sf "http://localhost:$BACKEND_PORT/api/v1/health/live" >/dev/null 2>&1 \
+  curl -sf "http://127.0.0.1:$BACKEND_PORT/api/v1/health/live" >/dev/null 2>&1 \
     || die "the backend did not become healthy; see $STATE_DIR/backend.log"
+  for _ in $(seq 1 60); do
+    curl -sf "http://127.0.0.1:$FRONTEND_PORT/login" >/dev/null 2>&1 && break
+    sleep 1
+  done
+  curl -sf "http://127.0.0.1:$FRONTEND_PORT/login" >/dev/null 2>&1 \
+    || die "the frontend did not answer; see $STATE_DIR/frontend.log"
+  for name in backend frontend; do
+    kill -0 "$(cat "$STATE_DIR/$name.pid")" 2>/dev/null \
+      || die "the $name process exited; see $STATE_DIR/$name.log"
+  done
   say "backend is healthy"
   say "open http://localhost:$FRONTEND_PORT   (stop with: scripts/install-native.sh --stop)"
 else

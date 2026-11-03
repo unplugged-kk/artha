@@ -13,7 +13,7 @@ That shape decides what each platform can host. The backend needs a place to run
 | Target | Frontend | Backend | Database | Guide | Verified |
 |---|---|---|---|---|---|
 | Ubuntu server, Docker | compose | compose | compose | `docker-compose.prod.yml`, root `README.md` | existing CI |
-| Ubuntu, no Docker | `next start` | `node` | `apt` PostgreSQL | [native.md](native.md) | script written; Ubuntu verification run in progress (see native.md) |
+| Ubuntu, no Docker | `next start` | `node` | `apt` PostgreSQL | [native.md](native.md) | installed, built, migrated, started and stopped on Ubuntu 24.04 with PostgreSQL 16 |
 | macOS, local | `next start` | `node` | Homebrew PostgreSQL | [native.md](native.md) | **not run** (no Mac available); same script |
 | Railway | Railway service | Railway service | Railway PostgreSQL | [railway.md](railway.md) | config written; **not deployed** |
 | Vercel | Vercel | Railway, a VPS or any container host | any PostgreSQL | [vercel.md](vercel.md) | config written; **not deployed**; has limits |
@@ -30,6 +30,7 @@ That shape decides what each platform can host. The backend needs a place to run
 | `DATABASE_URL` | backend | One connection string (`postgresql://user:pass@host:5432/db?sslmode=require`). Replaces the separate `DATABASE_*` variables. Use the **direct** connection, not a transaction pooler: the app relies on per-connection session settings and advisory locks. |
 | `PUBLIC_APP_URL`, `CORS_ORIGIN` | backend | The public address of the **frontend**, with `https://`. |
 | `INTERNAL_API_URL` | frontend | Where the frontend reaches the backend. Read at runtime. |
+| `LISTEN_HOST` | backend | Address to bind. Unset binds every interface (containers need that). `127.0.0.1` keeps the backend reachable only through the frontend. |
 | `TRUST_PROXY_HOPS` | backend | Proxies in front of the backend, so rate limiting sees real client addresses. `1` for a compose stack or Railway's private network. |
 | `CLIENT_IP_HEADER` | frontend | Set to `CF-Connecting-IP` behind Cloudflare, and only if the frontend is reachable through Cloudflare alone. |
 | `DISABLE_HTTPS_HEADERS` | both | `true` only for plain-HTTP local use. Leave `false` behind TLS. |

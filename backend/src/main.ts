@@ -159,6 +159,7 @@ function reportEncryptionKeyStatus(configService: ConfigService): void {
   );
 }
 
+import { resolveListenHost } from "./common/listen-host.util";
 import { resolveTrustProxyHops } from "./common/trust-proxy.util";
 async function bootstrap() {
   logger.log("Starting application");
@@ -554,7 +555,12 @@ async function bootstrap() {
   server.headersTimeout = 605000; // must be > requestTimeout
 
   const port = process.env.PORT || 3001;
-  await app.listen(port);
+  const listenHost = resolveListenHost(process.env.LISTEN_HOST);
+  if (listenHost) {
+    await app.listen(port, listenHost);
+  } else {
+    await app.listen(port);
+  }
 
   logger.log(`Application is running on: http://localhost:${port}`);
   if (process.env.NODE_ENV !== "production") {
