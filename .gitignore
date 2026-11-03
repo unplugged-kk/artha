@@ -88,3 +88,7 @@ e2e/test-results-push/
 
 # graft's local graph cache — regenerable, not committed (run `graft build`).
 /graft/
+
+# Native (no-Docker) install: generated secrets and process state
+/.env.native
+/.native/

@@ -72,3 +72,40 @@ describe('assertedClientAddress', () => {
     ).toBe('198.51.100.9');
   });
 });
+
+describe('assertedClientAddress with an operator-named header', () => {
+  const h = (init: Record<string, string>) => new Headers(init);
+
+  it('prefers the named header over X-Real-IP and X-Forwarded-For', () => {
+    expect(
+      assertedClientAddress(
+        h({ 'cf-connecting-ip': '203.0.113.9', 'x-real-ip': '172.70.0.1', 'x-forwarded-for': '198.51.100.7' }),
+        'cf-connecting-ip',
+      ),
+    ).toBe('203.0.113.9');
+  });
+
+  it('is case-insensitive about the configured name', () => {
+    expect(assertedClientAddress(h({ 'cf-connecting-ip': '203.0.113.9' }), 'CF-Connecting-IP')).toBe('203.0.113.9');
+  });
+
+  it('falls back to the usual headers when the named one is absent or empty', () => {
+    expect(assertedClientAddress(h({ 'x-real-ip': '198.51.100.7' }), 'cf-connecting-ip')).toBe('198.51.100.7');
+    expect(assertedClientAddress(h({ 'cf-connecting-ip': ' ', 'x-real-ip': '198.51.100.7' }), 'cf-connecting-ip')).toBe('198.51.100.7');
+  });
+
+  it('is unchanged when nothing is configured', () => {
+    expect(assertedClientAddress(h({ 'x-real-ip': '198.51.100.7', 'cf-connecting-ip': '203.0.113.9' }))).toBe('198.51.100.7');
+    expect(assertedClientAddress(h({}), undefined)).toBeNull();
+  });
+
+  it('ignores a configured name that is not a plain header token', () => {
+    for (const bad of ['x real ip', 'a:b', 'x\r\nhost', '../etc', 'a'.repeat(65)]) {
+      expect(assertedClientAddress(h({ 'x-real-ip': '198.51.100.7' }), bad)).toBe('198.51.100.7');
+    }
+  });
+
+  it('reads only the first entry of a list, as for the other headers', () => {
+    expect(assertedClientAddress(h({ 'cf-connecting-ip': '203.0.113.9, 10.0.0.1' }), 'cf-connecting-ip')).toBe('203.0.113.9');
+  });
+});

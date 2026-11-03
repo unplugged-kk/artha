@@ -30,11 +30,26 @@
  * a genuine loopback connection. Unknown is a state; a consumer has to be able
  * to say so.
  */
-export function assertedClientAddress(headers: Headers): string | null {
+export function assertedClientAddress(
+  headers: Headers,
+  preferredHeader?: string,
+): string | null {
+  // An operator whose edge sets a header of its own (Cloudflare's
+  // `CF-Connecting-IP`) names it, and it wins: behind Cloudflare in front of
+  // another proxy, `X-Real-IP` carries the edge's address for every visitor.
+  // Only safe when the origin is reachable through that edge alone -- a header
+  // anyone can send is no better than the two below. A name that is not a plain
+  // header token is ignored, so a typo cannot select an unrelated header.
+  if (preferredHeader && PLAIN_HEADER_NAME.test(preferredHeader.trim())) {
+    const preferred = firstAddress(headers.get(preferredHeader.trim()));
+    if (preferred) return preferred;
+  }
   const realIp = firstAddress(headers.get('x-real-ip'));
   if (realIp) return realIp;
   return firstAddress(headers.get('x-forwarded-for'));
 }
+
+const PLAIN_HEADER_NAME = /^[A-Za-z0-9-]{1,64}$/;
 
 /** The first entry of a comma-separated address list, trimmed; null when empty. */
 function firstAddress(value: string | null): string | null {
