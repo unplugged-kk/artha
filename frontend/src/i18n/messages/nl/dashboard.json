@@ -60,6 +60,14 @@
       "import": {
         "title": "Importeren vanuit QIF",
         "description": "Importeer rekeningen en transacties uit QIF-bestanden"
+      },
+      "ai": {
+        "title": "Koppel een AI-aanbieder",
+        "description": "Zet de assistent, inzichten en wekelijkse coach aan"
+      },
+      "notifications": {
+        "title": "Kies meldingen",
+        "description": "Kies hoe je op de hoogte wordt gehouden van rekeningen en budgetten"
       }
     }
   },

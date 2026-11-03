@@ -60,6 +60,14 @@
       "import": {
         "title": "Importar de QIF",
         "description": "Importar contas e transações de ficheiros QIF"
+      },
+      "ai": {
+        "title": "Ligue um fornecedor de IA",
+        "description": "Ative o assistente, as análises e o coach semanal"
+      },
+      "notifications": {
+        "title": "Escolha as notificações",
+        "description": "Escolha como receber avisos sobre contas e orçamentos"
       }
     }
   },

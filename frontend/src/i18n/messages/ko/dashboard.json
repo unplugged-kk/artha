@@ -60,6 +60,14 @@
       "import": {
         "title": "QIF에서 가져오기",
         "description": "QIF 파일에서 계정과 거래를 가져오세요"
+      },
+      "ai": {
+        "title": "AI 제공자 연결",
+        "description": "어시스턴트, 인사이트, 주간 코치를 켭니다"
+      },
+      "notifications": {
+        "title": "알림 선택",
+        "description": "청구서와 예산 소식을 받을 방법을 고르세요"
       }
     }
   },

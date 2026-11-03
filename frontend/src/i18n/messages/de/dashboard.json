@@ -60,6 +60,14 @@
       "import": {
         "title": "Aus QIF importieren",
         "description": "Konten und Buchungen aus QIF-Dateien importieren"
+      },
+      "ai": {
+        "title": "KI-Anbieter verbinden",
+        "description": "Assistent, Einblicke und Wochen-Coach aktivieren"
+      },
+      "notifications": {
+        "title": "Benachrichtigungen wählen",
+        "description": "Lege fest, wie du über Rechnungen und Budgets informiert wirst"
       }
     }
   },

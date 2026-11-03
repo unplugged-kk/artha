@@ -60,6 +60,14 @@
       "import": {
         "title": "QIF'ten içe aktar",
         "description": "QIF dosyalarından hesapları ve işlemleri içe aktarın"
+      },
+      "ai": {
+        "title": "Bir yapay zeka sağlayıcısı bağlayın",
+        "description": "Asistanı, içgörüleri ve haftalık koçu açın"
+      },
+      "notifications": {
+        "title": "Bildirimleri seçin",
+        "description": "Fatura ve bütçelerden nasıl haberdar olacağınızı seçin"
       }
     }
   },

@@ -28,6 +28,8 @@ describe('GettingStarted', () => {
     expect(screen.getByText('Set up categories')).toBeInTheDocument();
     expect(screen.getByText('Add your first account')).toBeInTheDocument();
     expect(screen.getByText('Import from QIF')).toBeInTheDocument();
+    expect(screen.getByText('Connect an AI provider')).toBeInTheDocument();
+    expect(screen.getByText('Choose notifications')).toBeInTheDocument();
   });
 
   it('renders links to appropriate pages', () => {
@@ -38,6 +40,31 @@ describe('GettingStarted', () => {
     expect(hrefs).toContain('/categories');
     expect(hrefs).toContain('/accounts');
     expect(hrefs).toContain('/import');
+    expect(hrefs).toContain('/settings/ai');
+    expect(hrefs).toContain('/settings#notifications');
+  });
+
+  it('offers six distinct steps, none repeated', () => {
+    render(<GettingStarted />);
+    const hrefs = screen.getAllByRole('link').map((l) => l.getAttribute('href'));
+    expect(hrefs).toHaveLength(6);
+    expect(new Set(hrefs).size).toBe(6);
+  });
+
+  it('every step is a real link a keyboard can reach, with a name and a description', () => {
+    render(<GettingStarted />);
+    for (const link of screen.getAllByRole('link')) {
+      expect(link.getAttribute('tabindex')).not.toBe('-1');
+      expect((link.textContent ?? '').trim().length).toBeGreaterThan(10);
+    }
+  });
+
+  it('decorative step icons are hidden from assistive technology', () => {
+    const { container } = render(<GettingStarted />);
+    const aiLink = container.querySelector('a[href="/settings/ai"] svg');
+    const bellLink = container.querySelector('a[href="/settings#notifications"] svg');
+    expect(aiLink?.getAttribute('aria-hidden')).toBe('true');
+    expect(bellLink?.getAttribute('aria-hidden')).toBe('true');
   });
 
   it('calls updatePreferences on dismiss', () => {

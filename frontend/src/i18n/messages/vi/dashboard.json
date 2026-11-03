@@ -60,6 +60,14 @@
       "import": {
         "title": "Nhập từ QIF",
         "description": "Nhập tài khoản và giao dịch từ tệp QIF"
+      },
+      "ai": {
+        "title": "Kết nối nhà cung cấp AI",
+        "description": "Bật trợ lý, thông tin chi tiết và huấn luyện viên hằng tuần"
+      },
+      "notifications": {
+        "title": "Chọn thông báo",
+        "description": "Chọn cách nhận tin về hóa đơn và ngân sách"
       }
     }
   },

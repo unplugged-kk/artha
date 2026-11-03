@@ -60,6 +60,14 @@
       "import": {
         "title": "[XX-Import from QIF-XX]",
         "description": "[XX-Import accounts and transactions from QIF files-XX]"
+      },
+      "ai": {
+        "title": "[XX-Connect an AI provider-XX]",
+        "description": "[XX-Turn on the assistant, insights and weekly coach-XX]"
+      },
+      "notifications": {
+        "title": "[XX-Choose notifications-XX]",
+        "description": "[XX-Pick how you hear about bills and budgets-XX]"
       }
     }
   },

@@ -60,6 +60,14 @@
       "import": {
         "title": "QIF からインポートする",
         "description": "QIF ファイルから勘定科目と取引をインポートしてください"
+      },
+      "ai": {
+        "title": "AIプロバイダーを接続",
+        "description": "アシスタント、インサイト、週次コーチを有効にします"
+      },
+      "notifications": {
+        "title": "通知を選択",
+        "description": "請求書や予算の通知方法を選びます"
       }
     }
   },
