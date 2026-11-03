@@ -66,9 +66,9 @@ describe("detectSubscriptionIncrease", () => {
   });
 
   it("tolerates cents-level wobble on a fixed price", () => {
-    const r = detectSubscriptionIncrease(
-      monthly(100, 101, 100, 120),
-    ) as { flagged: boolean };
+    const r = detectSubscriptionIncrease(monthly(100, 101, 100, 120)) as {
+      flagged: boolean;
+    };
     expect(r.flagged).toBe(true);
   });
 

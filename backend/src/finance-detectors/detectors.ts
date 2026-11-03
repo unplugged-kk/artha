@@ -88,7 +88,8 @@ export function detectSubscriptionIncrease(
   const median = ordered[Math.floor(ordered.length / 2)];
   const isFixedPrice =
     median > 0 &&
-    (ordered[ordered.length - 1] - ordered[0]) / median <= FIXED_PRICE_TOLERANCE;
+    (ordered[ordered.length - 1] - ordered[0]) / median <=
+      FIXED_PRICE_TOLERANCE;
   const increase = latest - previous;
   const increasePct = previous === 0 ? 0 : (increase / previous) * 100;
   return {
