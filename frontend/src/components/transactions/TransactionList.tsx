@@ -24,6 +24,7 @@ import {
 import { TransactionActionSheet } from './TransactionActionSheet';
 import { useDateFormat } from '@/hooks/useDateFormat';
 import { useNumberFormat } from '@/hooks/useNumberFormat';
+import { gainLossColor } from '@/lib/format';
 import { getLocalDateString } from '@/lib/utils';
 import { useTableDensity } from '@/hooks/useTableDensity';
 import { useDensityPreference, type DensityView } from '@/store/densityStore';
@@ -543,7 +544,7 @@ export function TransactionList({
     const formatted = formatCurrency(absAmount, currencyCode);
 
     return (
-      <span className={isNegative ? 'text-red-600' : 'text-green-600'}>
+      <span className={gainLossColor(amount)}>
         {isNegative ? '-' : '+'}{formatted}
       </span>
     );

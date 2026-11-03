@@ -42,6 +42,8 @@ export const STOCK: Decls = {
   '--color-gray-800': '#1e2939',
   '--color-gray-900': '#101828',
   '--color-gray-950': '#030712',
+  '--color-green-400': '#05df72',
+  '--color-red-400': '#ff6467',
   '--color-blue-400': '#51a2ff',
   '--color-blue-500': '#2b7fff',
   '--color-blue-600': '#155dfc',

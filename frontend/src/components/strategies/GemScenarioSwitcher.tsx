@@ -165,7 +165,7 @@ export function GemScenarioSwitcher({
             disabled={busy}
             title={t("gem.scenarios.delete")}
             aria-label={t("gem.scenarios.delete")}
-            className="rounded p-1 text-gray-400 hover:text-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50 dark:hover:text-red-400"
+            className="rounded p-1 text-gray-400 hover:text-red-600 dark:hover:text-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50 dark:hover:text-red-400"
           >
             <TrashIcon className="h-4 w-4" aria-hidden="true" />
           </button>

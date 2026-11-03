@@ -1,5 +1,6 @@
 'use client';
 
+import { CATEGORY_CHIP_CLASS, categoryChipStyle } from '@/lib/category-chip';
 import { useState, memo, type JSX, type ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 import { ScheduledTransaction } from '@/types/scheduled-transaction';
@@ -112,20 +113,13 @@ function ScheduledCategoryMarker({
     </span>
   ) : transaction.category ? (
     <span
-      className={`inline-flex text-xs font-medium rounded-full ${badgePadding}${cap}`}
+      className={`${CATEGORY_CHIP_CLASS} inline-flex text-xs font-medium rounded-full ${badgePadding}${cap}`}
       // Only where the label can be cut: `CategoryPill` pairs its inner
       // `truncate` with a `title`, and copying the truncation without the
       // recovery leaves the one surface that shows a category unable to
       // read it. The tier chip is uncut, so it keeps no attribute at all.
       title={bounded ? transaction.category.name : undefined}
-      style={{
-        backgroundColor: categoryColor
-          ? `color-mix(in srgb, ${categoryColor} 15%, var(--category-bg-base, #e5e7eb))`
-          : 'var(--category-bg-base, #e5e7eb)',
-        color: categoryColor
-          ? `color-mix(in srgb, ${categoryColor} 85%, var(--category-text-mix, #000))`
-          : 'var(--category-text-base, #6b7280)',
-      }}
+      style={categoryChipStyle(categoryColor)}
     >
       {bound(transaction.category.name)}
     </span>
