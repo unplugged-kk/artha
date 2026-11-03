@@ -70,7 +70,7 @@ The two that remained were gray-400 text in a settings list; they are fixed in t
 
 The demo showed "Enbridge Gas now costs 259% more", a seasonal utility read as a price rise. A subscription increase is now flagged only for a fixed price: it needs at least three charges, and the charges before the latest must agree within 5%. A variable bill is never called a price rise.
 
-Not built yet: the quieter notifications banner.
+- The notifications banner is neutral grey and a line thinner; only its single action keeps the accent colour. It is not moved: its blocked state is deliberately shown app-wide (see frontend/CLAUDE.md), so I made it quieter rather than hiding it. Not seen in a screenshot, because a "What's New" dialog covered it in my captures; the audit over six pages reported no violations.
 
 ## Proposed layout (needs your decision)
 
