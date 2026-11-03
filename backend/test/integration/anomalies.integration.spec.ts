@@ -168,6 +168,29 @@ describe("Anomaly detection (integration)", () => {
     });
   });
 
+  it("does not report a variable utility bill as a price increase", async () => {
+    const user = await createTestUserDirect(dataSource);
+    const account = await createTestAccount(dataSource, user.id);
+    const bills: Array<[string, number]> = [
+      ["01", 40],
+      ["02", 95],
+      ["03", 60],
+      ["04", 45],
+      ["05", 70],
+      ["06", 215],
+    ];
+    for (const [m, amount] of bills) {
+      await addTxn(user.id, account.id, `2026-${m}-01`, -amount, {
+        payeeName: "Gas Utility",
+      });
+    }
+
+    const report = await withUserContext(user.id, () =>
+      service.detect(user.id, AS_OF),
+    );
+    expect(report.subscriptionIncreases).toEqual([]);
+  });
+
   it("never reports another user's spending", async () => {
     const a = await createTestUserDirect(dataSource);
     const b = await createTestUserDirect(dataSource);

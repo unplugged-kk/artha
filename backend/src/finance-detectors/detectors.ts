@@ -59,20 +59,41 @@ export type PriceIncreaseResult =
       readonly increasePct: number;
     };
 
-/** Latest charge vs the previous one for the same recurring payee. */
+/**
+ * The charges before the latest must agree to within this fraction of their
+ * median for a payee to count as a fixed price. A utility or a card payment
+ * moves with usage, so a rise there is not a price change.
+ */
+export const FIXED_PRICE_TOLERANCE = 0.05;
+/** How many charges before the latest are used to establish a fixed price. */
+const FIXED_PRICE_BASELINE_CHARGES = 3;
+
+/**
+ * Latest charge vs the previous one for a recurring payee, flagged only when
+ * the earlier charges show a fixed price. Two charges cannot show that, so a
+ * payee needs at least three before it can be called clean or flagged.
+ */
 export function detectSubscriptionIncrease(
   charges: readonly Charge[],
   minIncreasePct = 1,
 ): PriceIncreaseResult {
-  if (charges.length < 2) return { status: "insufficient_history" };
+  if (charges.length < 3) return { status: "insufficient_history" };
   const sorted = [...charges].sort((a, b) => a.date.localeCompare(b.date));
   const latest = toPaise(sorted[sorted.length - 1].amount);
-  const previous = toPaise(sorted[sorted.length - 2].amount);
+  const baseline = sorted
+    .slice(-1 - FIXED_PRICE_BASELINE_CHARGES, -1)
+    .map((c) => toPaise(c.amount));
+  const previous = baseline[baseline.length - 1];
+  const ordered = [...baseline].sort((a, b) => a - b);
+  const median = ordered[Math.floor(ordered.length / 2)];
+  const isFixedPrice =
+    median > 0 &&
+    (ordered[ordered.length - 1] - ordered[0]) / median <= FIXED_PRICE_TOLERANCE;
   const increase = latest - previous;
   const increasePct = previous === 0 ? 0 : (increase / previous) * 100;
   return {
     status: "ok",
-    flagged: previous > 0 && increasePct >= minIncreasePct,
+    flagged: isFixedPrice && previous > 0 && increasePct >= minIncreasePct,
     previous: fromPaise(previous),
     latest: fromPaise(latest),
     increase: fromPaise(increase),

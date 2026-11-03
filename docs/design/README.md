@@ -68,7 +68,7 @@ The two that remained were gray-400 text in a settings list; they are fixed in t
 
 - A "Needs your attention" list under it, from `GET /anomalies` (category spikes in their own currency, subscription increases as a percentage only because the endpoint returns no currency for them). A failed lookup says so rather than claiming nothing stands out.
 
-Known limitation: the demo shows "Enbridge Gas now costs 259% more", a seasonal utility. The detector compares consecutive charges, so a variable bill reads as a price rise. Worth a tolerance or a fixed-amount check on the backend.
+The demo showed "Enbridge Gas now costs 259% more", a seasonal utility read as a price rise. A subscription increase is now flagged only for a fixed price: it needs at least three charges, and the charges before the latest must agree within 5%. A variable bill is never called a price rise.
 
 Not built yet: the quieter notifications banner.
 

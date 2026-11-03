@@ -37,28 +37,58 @@ describe("detectSpendingSpike", () => {
 });
 
 describe("detectSubscriptionIncrease", () => {
-  it("flags a price rise and reports it exactly", () => {
-    const r = detectSubscriptionIncrease([
-      { date: "2025-02-01", amount: 199 },
-      { date: "2025-01-01", amount: 149 },
-    ]);
+  const monthly = (...amounts: number[]) =>
+    amounts.map((amount, i) => ({
+      date: `2025-${String(i + 1).padStart(2, "0")}-01`,
+      amount,
+    }));
+
+  it("flags a price rise on a fixed price and reports it exactly", () => {
+    const r = detectSubscriptionIncrease(monthly(149, 149, 149, 199));
     expect(r).toMatchObject({ flagged: true, increase: 50, previous: 149 });
   });
 
-  it("a single charge is insufficient, not clean", () => {
-    expect(
-      detectSubscriptionIncrease([{ date: "2025-01-01", amount: 9 }]),
-    ).toEqual({
+  it("is insufficient with fewer than three charges, not clean", () => {
+    expect(detectSubscriptionIncrease(monthly(9))).toEqual({
+      status: "insufficient_history",
+    });
+    expect(detectSubscriptionIncrease(monthly(149, 199))).toEqual({
       status: "insufficient_history",
     });
   });
 
-  it("an unchanged or lower price is not flagged", () => {
-    const r = detectSubscriptionIncrease([
-      { date: "2025-01-01", amount: 149 },
-      { date: "2025-02-01", amount: 149 },
-    ]) as { flagged: boolean };
+  it("does not call a variable bill a price rise", () => {
+    // A gas bill: 40, 95, 60, then 215 in winter.
+    const r = detectSubscriptionIncrease(monthly(40, 95, 60, 215)) as {
+      flagged: boolean;
+    };
     expect(r.flagged).toBe(false);
+  });
+
+  it("tolerates cents-level wobble on a fixed price", () => {
+    const r = detectSubscriptionIncrease(
+      monthly(100, 101, 100, 120),
+    ) as { flagged: boolean };
+    expect(r.flagged).toBe(true);
+  });
+
+  it("orders by date, whatever order the charges arrive in", () => {
+    const shuffled = monthly(149, 149, 149, 199).reverse();
+    expect(detectSubscriptionIncrease(shuffled)).toMatchObject({
+      flagged: true,
+      previous: 149,
+    });
+  });
+
+  it("an unchanged or lower price is not flagged", () => {
+    const r = detectSubscriptionIncrease(monthly(149, 149, 149, 149)) as {
+      flagged: boolean;
+    };
+    expect(r.flagged).toBe(false);
+    const lower = detectSubscriptionIncrease(monthly(149, 149, 149, 99)) as {
+      flagged: boolean;
+    };
+    expect(lower.flagged).toBe(false);
   });
 });
 
