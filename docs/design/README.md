@@ -66,7 +66,11 @@ The two that remained were gray-400 text in a settings list; they are fixed in t
 
 - The dashboard opens with a "Where you stand" strip: net worth with its change since last month, assets with debts, and how many bills and deposits fall due in the next 7 days (a count, so no currency is mixed). No data shows as "Not available yet", never zero.
 
-Not built yet: the "Needs your attention" list and the quieter notifications banner.
+- A "Needs your attention" list under it, from `GET /anomalies` (category spikes in their own currency, subscription increases as a percentage only because the endpoint returns no currency for them). A failed lookup says so rather than claiming nothing stands out.
+
+Known limitation: the demo shows "Enbridge Gas now costs 259% more", a seasonal utility. The detector compares consecutive charges, so a variable bill reads as a price rise. Worth a tolerance or a fixed-amount check on the backend.
+
+Not built yet: the quieter notifications banner.
 
 ## Proposed layout (needs your decision)
 

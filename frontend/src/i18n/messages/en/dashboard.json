@@ -268,5 +268,13 @@
     "dueSoon": "Due in the next 7 days",
     "dueSoonHint": "{count, plural, one {bill or deposit} other {bills and deposits}}",
     "unavailable": "Not available yet"
+  },
+  "attention": {
+    "title": "Needs your attention",
+    "none": "Nothing stands out right now.",
+    "unavailable": "Could not check for unusual activity. Try again later.",
+    "uncategorized": "Uncategorized",
+    "spike": "{category} is at {current} this month, above its usual {usual}.",
+    "subscription": "{payee} now costs {percent} more than its previous charge."
   }
 }
