@@ -113,6 +113,14 @@ expect "suggest: missing CSRF header is refused" \
 expect "suggest: anonymous POST is refused (CSRF guard runs before auth, so 403 not 401)" \
   "$(curl -s -o /dev/null -w '%{http_code}' -H 'content-type: application/json' -d '{"payee":"x"}' localhost:3101/api/v1/categorization/suggest)" "403"
 
+
+# ---- Weekly coach over HTTP ----
+expect "coach metrics: unknown savings rate for a user with no activity that week" \
+  "$(curl -s -b $JAR 'localhost:3101/api/v1/coach/weekly?asOf=2026-06-20' | python3 -c 'import sys,json;d=json.load(sys.stdin);print({m["id"]:m["value"] for m in d["metrics"]}["savings_rate"])')" "None"
+expect "coach narrative: no AI provider is reported, figures still returned" \
+  "$(curl -s -b $JAR -H "x-csrf-token: $CSRF" -X POST 'localhost:3101/api/v1/coach/weekly?asOf=2026-06-20' | python3 -c 'import sys,json;d=json.load(sys.stdin);print(d["narrative"]["status"],d["narrative"]["reason"],len(d["metrics"]))')" "unavailable no_ai_provider 5"
+expect "coach: malformed date rejected" "$(curl -s -o /dev/null -w '%{http_code}' -b $JAR 'localhost:3101/api/v1/coach/weekly?asOf=junk')" "400"
+
 grep -aci "error" /tmp/e2e-main.log | xargs -I{} echo "server log error lines: {}"
 [ $fail = 0 ] && echo "E2E OK" || echo "E2E FAILED"
 exit $fail

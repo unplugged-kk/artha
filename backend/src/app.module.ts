@@ -67,6 +67,7 @@ import { RulesModule } from "./rules/rules.module";
 import { GoalsModule } from "./goals/goals.module";
 import { AnomaliesModule } from "./anomalies/anomalies.module";
 import { CategorizationModule } from "./categorization/categorization.module";
+import { CoachModule } from "./coach/coach.module";
 import { I18nModule } from "./i18n/i18n.module";
 
 @Module({
@@ -184,6 +185,7 @@ import { I18nModule } from "./i18n/i18n.module";
     GoalsModule,
     AnomaliesModule,
     CategorizationModule,
+    CoachModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: GlobalExceptionFilter },

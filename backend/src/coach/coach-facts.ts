@@ -8,6 +8,8 @@ export interface CoachMetricInput {
   readonly income: number;
   readonly spending: number;
   readonly budgeted: number | null;
+  /** Spent against that budget over the budget's own period (not the week). */
+  readonly budgetSpent: number | null;
   readonly netWorthStart: number | null;
   readonly netWorthEnd: number | null;
   readonly currency: string;
@@ -27,8 +29,8 @@ export function computeCoachMetrics(i: CoachMetricInput): CoachMetric[] {
   const savingsRate =
     i.income > 0 ? r2(((i.income - i.spending) / i.income) * 100) : null;
   const budgetAdherence =
-    i.budgeted !== null && i.budgeted > 0
-      ? r2((i.spending / i.budgeted) * 100)
+    i.budgeted !== null && i.budgeted > 0 && i.budgetSpent !== null
+      ? r2((i.budgetSpent / i.budgeted) * 100)
       : null;
   const netWorthChange =
     i.netWorthStart !== null && i.netWorthEnd !== null

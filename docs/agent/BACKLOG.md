@@ -11,5 +11,5 @@
 - [REMOVED: already exists, securities/amfi-nav.service.ts] T9 AMFI NAV fetcher in market data
 - [x] T10 (GET /anomalies: category spikes + subscription increases on real data, integration-tested; duplicates + low-balance detectors exist but are not exposed; no alerts/cron/AI/MCP) Deterministic detectors: spending spike (>2 sigma), subscription increase, low-balance projection
 - [x] T11 (simulators exposed to AI + MCP as plan_simulate; Monte Carlo/goals reuse not done) Debt snowball/avalanche + FIRE simulators (reuse `monte-carlo`, `goals`)
-- [x] T12 (pure metrics, prompt and number-verifier only; no LLM call, table or cron) Weekly coach report (deterministic metrics, LLM narrative with citations)
+- [x] T12 (GET /coach/weekly deterministic metrics; POST /coach/weekly adds an AI narrative that is rejected if it quotes any number not computed, one retry naming the offending numbers; on demand, not stored, no cron) Weekly coach report (deterministic metrics, LLM narrative with citations)
 - [ ] (NOT STARTED: frontend wizard needs frontend deps, i18n catalogs and a browser check) T13 Onboarding wizard (frontend, English catalogs only)
