@@ -51,6 +51,11 @@ Artha is running in my [Kubernetes cluster](https://github.com/kenlasko/k8s).
 
 
 ## Features
+### Dashboard
+- A "Where you stand" strip: net worth and its change since last month, assets with debts, and how many bills and deposits fall due in the next 7 days. Missing data reads "Not available yet", never zero
+- A "Needs your attention" list: categories spending above their usual range, and subscriptions whose fixed price went up. A variable bill such as a utility is not treated as a price rise. A failed lookup is reported, not shown as "all clear"
+- Transactions opens on the register, with the balance chart folded (remembered per device)
+
 ### Account Management
 - Ten account types: Chequing, Savings, Credit Card, Loan, Mortgage, Line of Credit, Investment, Cash, Asset and Other
 - Investment accounts with brokerage and investment-cash sub-types
@@ -85,7 +90,9 @@ Artha is running in my [Kubernetes cluster](https://github.com/kenlasko/k8s).
 - Historical price backfill
 
 ### Multi-Currency Support
-- 44 currencies with built-in symbol and formatting metadata (USD, CAD, EUR, GBP, JPY, CHF, AUD, CNY and more), created on demand rather than pre-seeded
+- 44 currencies with built-in symbol and formatting metadata, created on demand rather than pre-seeded: INR (the default), USD, AED, SAR, KWD, BHD, OMR, PKR, BDT, EUR, GBP, JPY, CAD, AUD, SGD and more
+- Correct decimal places per currency (three for KWD, BHD and OMR; none for JPY, KRW, IDR and VND)
+- An account holds one currency and a transaction in any other currency is refused, never silently converted (`e2e/tests/multi-currency.spec.ts`)
 - Daily exchange rate updates
 - Automatic currency conversion for reporting
 - Per-account currency settings
@@ -368,6 +375,18 @@ reach them.
 
 ## Deployment
 
+Artha is a frontend, a backend and PostgreSQL. Pick the guide for where you run it; `docs/deployment/README.md` has the comparison table and the settings every platform needs.
+
+| Where | Guide | Status |
+|---|---|---|
+| Docker Desktop (Mac, Windows, Linux) | [docker-desktop.md](docs/deployment/docker-desktop.md) | compose files parse; not started in the sandbox it was prepared in |
+| Ubuntu or macOS, no Docker | [native.md](docs/deployment/native.md) (`scripts/install-native.sh`) | run end to end on Ubuntu 24.04; macOS not run |
+| Railway | [railway.md](docs/deployment/railway.md) | configuration written; not deployed |
+| Vercel (frontend only) | [vercel.md](docs/deployment/vercel.md) | configuration written; not deployed; large uploads such as `.mny` imports do not fit through its proxy |
+| Cloudflare Tunnel | [cloudflare.md](docs/deployment/cloudflare.md) | configuration renders; not deployed |
+
+The backend is a long-running server (scheduled jobs, in-memory MCP sessions), so it needs a container or VM and cannot run as a serverless function. Run a single replica.
+
 ### Docker Compose (Production)
 
 1. Create `.env` from the example and set production values:
@@ -400,6 +419,15 @@ Example environment for K8s:
 - name: PUBLIC_APP_URL
   value: "https://money.example.com"
 ```
+
+## Testing
+
+- Backend: `npm run test:unit` (offline) and `npm run test:integration` (needs PostgreSQL), from `backend/`
+- Frontend: `npm run test` (Vitest), from `frontend/`
+- End to end: `e2e/` (Playwright). `docker-compose.e2e.yml` is the CI path. To run the suite against an already running stack, such as the native install, use `e2e/playwright.local.config.ts` with `BASE_URL`, on a database that has no users yet (the first user registered becomes the administrator the suite signs in as)
+- Accessibility: `scripts/a11y-audit.cjs` runs axe-core (WCAG 2.2 AA) over six pages in light, dark and phone width
+
+Design notes are in `docs/design/` and a scan of comparable products with suggested additions is in `docs/research/competitors.md`.
 
 ## API Documentation
 
