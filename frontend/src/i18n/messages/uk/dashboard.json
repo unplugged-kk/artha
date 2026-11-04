@@ -257,5 +257,24 @@
     "weekdayLabel": "Будні",
     "viewOverview": "Огляд",
     "viewByDay": "За днем"
+  },
+  "standing": {
+    "title": "Ваше становище",
+    "netWorth": "Чисті активи",
+    "changeUp": "На {amount} більше, ніж минулого місяця",
+    "changeDown": "На {amount} менше, ніж минулого місяця",
+    "assetsAndDebts": "Активи",
+    "liabilities": "Борги: {amount}",
+    "dueSoon": "До сплати протягом 7 днів",
+    "dueSoonHint": "рахунки та надходження",
+    "unavailable": "Поки що недоступно"
+  },
+  "attention": {
+    "title": "Потребує уваги",
+    "none": "Наразі нічого незвичного.",
+    "unavailable": "Не вдалося перевірити незвичну активність. Спробуйте пізніше.",
+    "uncategorized": "Без категорії",
+    "spike": "У категорії «{category}» цього місяця {current}, що вище за звичні {usual}.",
+    "subscription": "«{payee}» тепер коштує на {percent} більше, ніж попередній платіж."
   }
 }

@@ -257,5 +257,24 @@
     "weekdayLabel": "평일",
     "viewOverview": "개요",
     "viewByDay": "요일별"
+  },
+  "standing": {
+    "title": "현재 상황",
+    "netWorth": "순자산",
+    "changeUp": "지난달보다 {amount} 증가",
+    "changeDown": "지난달보다 {amount} 감소",
+    "assetsAndDebts": "자산",
+    "liabilities": "부채: {amount}",
+    "dueSoon": "앞으로 7일 이내 만기",
+    "dueSoonHint": "청구 및 입금",
+    "unavailable": "아직 사용할 수 없음"
+  },
+  "attention": {
+    "title": "확인이 필요한 항목",
+    "none": "지금은 눈에 띄는 항목이 없습니다.",
+    "unavailable": "비정상적인 활동을 확인하지 못했습니다. 나중에 다시 시도하세요.",
+    "uncategorized": "분류 없음",
+    "spike": "{category}은(는) 이번 달 {current}로, 평소 {usual}보다 높습니다.",
+    "subscription": "{payee}의 요금이 이전 청구보다 {percent} 올랐습니다."
   }
 }

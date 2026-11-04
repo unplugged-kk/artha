@@ -257,5 +257,24 @@
     "weekdayLabel": "Giorni feriali",
     "viewOverview": "Panoramica",
     "viewByDay": "Per giorno"
+  },
+  "standing": {
+    "title": "La tua situazione",
+    "netWorth": "Patrimonio netto",
+    "changeUp": "{amount} in più rispetto al mese scorso",
+    "changeDown": "{amount} in meno rispetto al mese scorso",
+    "assetsAndDebts": "Attività",
+    "liabilities": "Debiti: {amount}",
+    "dueSoon": "In scadenza nei prossimi 7 giorni",
+    "dueSoonHint": "fatture e depositi",
+    "unavailable": "Non ancora disponibile"
+  },
+  "attention": {
+    "title": "Richiede la tua attenzione",
+    "none": "Al momento non c'è nulla di rilevante.",
+    "unavailable": "Impossibile verificare attività insolite. Riprova più tardi.",
+    "uncategorized": "Senza categoria",
+    "spike": "{category} è a {current} questo mese, sopra il valore abituale di {usual}.",
+    "subscription": "{payee} ora costa il {percent} in più rispetto all'addebito precedente."
   }
 }

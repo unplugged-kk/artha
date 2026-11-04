@@ -257,5 +257,24 @@
     "weekdayLabel": "Dia de Semana",
     "viewOverview": "Visão Geral",
     "viewByDay": "Por Dia"
+  },
+  "standing": {
+    "title": "A sua situação",
+    "netWorth": "Património líquido",
+    "changeUp": "{amount} a mais do que no mês passado",
+    "changeDown": "{amount} a menos do que no mês passado",
+    "assetsAndDebts": "Ativos",
+    "liabilities": "Dívidas: {amount}",
+    "dueSoon": "Vence nos próximos 7 dias",
+    "dueSoonHint": "faturas e depósitos",
+    "unavailable": "Ainda não disponível"
+  },
+  "attention": {
+    "title": "Precisa da sua atenção",
+    "none": "De momento, nada se destaca.",
+    "unavailable": "Não foi possível verificar atividade invulgar. Tente novamente mais tarde.",
+    "uncategorized": "Sem categoria",
+    "spike": "{category} está em {current} este mês, acima do habitual ({usual}).",
+    "subscription": "{payee} custa agora mais {percent} do que a cobrança anterior."
   }
 }

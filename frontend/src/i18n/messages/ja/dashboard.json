@@ -257,5 +257,24 @@
     "weekdayLabel": "平日",
     "viewOverview": "概要",
     "viewByDay": "曜日別"
+  },
+  "standing": {
+    "title": "現在の状況",
+    "netWorth": "純資産",
+    "changeUp": "先月より{amount}増加",
+    "changeDown": "先月より{amount}減少",
+    "assetsAndDebts": "資産",
+    "liabilities": "負債：{amount}",
+    "dueSoon": "今後7日以内の期日",
+    "dueSoonHint": "請求と入金",
+    "unavailable": "まだ利用できません"
+  },
+  "attention": {
+    "title": "確認が必要な項目",
+    "none": "現時点で目立つ項目はありません。",
+    "unavailable": "通常と異なる動きを確認できませんでした。後でもう一度お試しください。",
+    "uncategorized": "未分類",
+    "spike": "{category}は今月{current}で、通常の{usual}を上回っています。",
+    "subscription": "{payee}は前回の請求より{percent}高くなっています。"
   }
 }

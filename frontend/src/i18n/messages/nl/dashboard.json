@@ -257,5 +257,24 @@
     "weekdayLabel": "Weekdag",
     "viewOverview": "Overzicht",
     "viewByDay": "Per dag"
+  },
+  "standing": {
+    "title": "Waar u staat",
+    "netWorth": "Nettovermogen",
+    "changeUp": "{amount} meer dan vorige maand",
+    "changeDown": "{amount} minder dan vorige maand",
+    "assetsAndDebts": "Bezittingen",
+    "liabilities": "Schulden: {amount}",
+    "dueSoon": "Vervalt de komende 7 dagen",
+    "dueSoonHint": "rekeningen en stortingen",
+    "unavailable": "Nog niet beschikbaar"
+  },
+  "attention": {
+    "title": "Vraagt uw aandacht",
+    "none": "Op dit moment valt niets op.",
+    "unavailable": "Ongebruikelijke activiteit kon niet worden gecontroleerd. Probeer het later opnieuw.",
+    "uncategorized": "Zonder categorie",
+    "spike": "{category} staat deze maand op {current}, boven het gebruikelijke {usual}.",
+    "subscription": "{payee} kost nu {percent} meer dan de vorige afschrijving."
   }
 }

@@ -569,6 +569,10 @@
     "rateUnresolved": "Tidak ada kurs {from} ke {to}. Masukkan satu — tanpanya dampak kas tidak dapat dihitung, dan kedua mata uang tidak sama."
   },
   "charts": {
+    "fold": {
+      "show": "Tampilkan grafik",
+      "hide": "Sembunyikan grafik"
+    },
     "balanceHistory": {
       "title": "Riwayat Saldo",
       "noData": "Tidak ada data saldo yang tersedia",

@@ -569,6 +569,10 @@
     "rateUnresolved": "No hay tipo de {from} a {to} disponible. Introduce uno — sin él no se puede calcular el impacto en efectivo, y las dos monedas no son iguales."
   },
   "charts": {
+    "fold": {
+      "show": "Mostrar gráfico",
+      "hide": "Ocultar gráfico"
+    },
     "balanceHistory": {
       "title": "Historial de saldo",
       "noData": "No hay datos de saldo disponibles",

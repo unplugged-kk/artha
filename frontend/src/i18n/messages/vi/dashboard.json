@@ -257,5 +257,24 @@
     "weekdayLabel": "Ngày thường",
     "viewOverview": "Tổng quan",
     "viewByDay": "Theo ngày"
+  },
+  "standing": {
+    "title": "Tình hình của bạn",
+    "netWorth": "Giá trị ròng",
+    "changeUp": "Cao hơn {amount} so với tháng trước",
+    "changeDown": "Thấp hơn {amount} so với tháng trước",
+    "assetsAndDebts": "Tài sản",
+    "liabilities": "Nợ: {amount}",
+    "dueSoon": "Đến hạn trong 7 ngày tới",
+    "dueSoonHint": "hóa đơn và khoản gửi",
+    "unavailable": "Chưa có sẵn"
+  },
+  "attention": {
+    "title": "Cần bạn chú ý",
+    "none": "Hiện chưa có gì đáng chú ý.",
+    "unavailable": "Không thể kiểm tra hoạt động bất thường. Hãy thử lại sau.",
+    "uncategorized": "Chưa phân loại",
+    "spike": "{category} tháng này là {current}, cao hơn mức thông thường {usual}.",
+    "subscription": "{payee} hiện đắt hơn {percent} so với lần thanh toán trước."
   }
 }

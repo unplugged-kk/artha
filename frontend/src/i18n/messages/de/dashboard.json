@@ -257,5 +257,24 @@
     "weekdayLabel": "Wochentag",
     "viewOverview": "Übersicht",
     "viewByDay": "Nach Tag"
+  },
+  "standing": {
+    "title": "Ihre Lage",
+    "netWorth": "Nettovermögen",
+    "changeUp": "{amount} mehr als im Vormonat",
+    "changeDown": "{amount} weniger als im Vormonat",
+    "assetsAndDebts": "Vermögenswerte",
+    "liabilities": "Schulden: {amount}",
+    "dueSoon": "Fällig in den nächsten 7 Tagen",
+    "dueSoonHint": "Rechnungen und Einzahlungen",
+    "unavailable": "Noch nicht verfügbar"
+  },
+  "attention": {
+    "title": "Braucht Ihre Aufmerksamkeit",
+    "none": "Im Moment fällt nichts auf.",
+    "unavailable": "Ungewöhnliche Aktivitäten konnten nicht geprüft werden. Versuchen Sie es später erneut.",
+    "uncategorized": "Ohne Kategorie",
+    "spike": "{category} liegt diesen Monat bei {current} und damit über dem üblichen Wert von {usual}.",
+    "subscription": "{payee} kostet jetzt {percent} mehr als die vorherige Abbuchung."
   }
 }

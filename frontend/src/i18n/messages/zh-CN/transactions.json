@@ -569,6 +569,10 @@
     "rateUnresolved": "没有 {from} 兑 {to} 的汇率。请输入——没有它就无法计算现金影响，且两种货币并不等值。"
   },
   "charts": {
+    "fold": {
+      "show": "显示图表",
+      "hide": "隐藏图表"
+    },
     "balanceHistory": {
       "title": "余额历史",
       "noData": "无余额数据",

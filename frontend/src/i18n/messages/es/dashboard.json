@@ -257,5 +257,24 @@
     "weekdayLabel": "Día de semana",
     "viewOverview": "Resumen",
     "viewByDay": "Por día"
+  },
+  "standing": {
+    "title": "Su situación",
+    "netWorth": "Patrimonio neto",
+    "changeUp": "{amount} más que el mes pasado",
+    "changeDown": "{amount} menos que el mes pasado",
+    "assetsAndDebts": "Activos",
+    "liabilities": "Deudas: {amount}",
+    "dueSoon": "Vence en los próximos 7 días",
+    "dueSoonHint": "facturas y depósitos",
+    "unavailable": "Aún no disponible"
+  },
+  "attention": {
+    "title": "Requiere su atención",
+    "none": "Por ahora no destaca nada.",
+    "unavailable": "No se pudo comprobar si hay actividad inusual. Inténtelo de nuevo más tarde.",
+    "uncategorized": "Sin categoría",
+    "spike": "{category} está en {current} este mes, por encima de lo habitual ({usual}).",
+    "subscription": "{payee} cuesta ahora un {percent} más que el cargo anterior."
   }
 }

@@ -569,6 +569,10 @@
     "rateUnresolved": "{from}→{to} 환율이 없습니다. 입력하세요 — 없으면 현금 영향액을 계산할 수 없고, 두 통화는 같지 않습니다."
   },
   "charts": {
+    "fold": {
+      "show": "차트 표시",
+      "hide": "차트 숨기기"
+    },
     "balanceHistory": {
       "title": "잔액 이력",
       "noData": "잔액 데이터가 없습니다",

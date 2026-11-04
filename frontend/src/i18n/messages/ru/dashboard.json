@@ -257,5 +257,24 @@
     "weekdayLabel": "Будни",
     "viewOverview": "Обзор",
     "viewByDay": "По дням"
+  },
+  "standing": {
+    "title": "Ваше положение",
+    "netWorth": "Чистые активы",
+    "changeUp": "На {amount} больше, чем в прошлом месяце",
+    "changeDown": "На {amount} меньше, чем в прошлом месяце",
+    "assetsAndDebts": "Активы",
+    "liabilities": "Долги: {amount}",
+    "dueSoon": "К оплате в ближайшие 7 дней",
+    "dueSoonHint": "счета и поступления",
+    "unavailable": "Пока недоступно"
+  },
+  "attention": {
+    "title": "Требует внимания",
+    "none": "Сейчас ничего необычного.",
+    "unavailable": "Не удалось проверить необычную активность. Повторите попытку позже.",
+    "uncategorized": "Без категории",
+    "spike": "В категории «{category}» в этом месяце {current}, что выше обычных {usual}.",
+    "subscription": "«{payee}» теперь стоит на {percent} больше, чем предыдущий платёж."
   }
 }

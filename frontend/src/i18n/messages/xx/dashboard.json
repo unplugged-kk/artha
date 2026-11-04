@@ -266,7 +266,7 @@
     "assetsAndDebts": "[XX-Assets-XX]",
     "liabilities": "[XX-Debts: {amount}-XX]",
     "dueSoon": "[XX-Due in the next 7 days-XX]",
-    "dueSoonHint": "[XX-{count, plural, one {bill or deposit} other {bills and deposits}}-XX]",
+    "dueSoonHint": "[XX-bills and deposits-XX]",
     "unavailable": "[XX-Not available yet-XX]"
   },
   "attention": {

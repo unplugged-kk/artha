@@ -569,6 +569,10 @@
     "rateUnresolved": "{from} → {to} kuru yok. Bir kur girin — onsuz nakit etkisi hesaplanamaz ve iki para birimi eşit değildir."
   },
   "charts": {
+    "fold": {
+      "show": "Grafiği göster",
+      "hide": "Grafiği gizle"
+    },
     "balanceHistory": {
       "title": "Bakiye Geçmişi",
       "noData": "Bakiye verisi mevcut değil",
