@@ -257,5 +257,24 @@
     "weekdayLabel": "Dzień powszedni",
     "viewOverview": "Przegląd",
     "viewByDay": "Wg dnia"
+  },
+  "standing": {
+    "title": "Twoja sytuacja",
+    "netWorth": "Wartość netto",
+    "changeUp": "O {amount} więcej niż w zeszłym miesiącu",
+    "changeDown": "O {amount} mniej niż w zeszłym miesiącu",
+    "assetsAndDebts": "Aktywa",
+    "liabilities": "Zadłużenie: {amount}",
+    "dueSoon": "Termin w ciągu najbliższych 7 dni",
+    "dueSoonHint": "rachunki i wpłaty",
+    "unavailable": "Jeszcze niedostępne"
+  },
+  "attention": {
+    "title": "Wymaga uwagi",
+    "none": "Obecnie nic się nie wyróżnia.",
+    "unavailable": "Nie udało się sprawdzić nietypowej aktywności. Spróbuj ponownie później.",
+    "uncategorized": "Bez kategorii",
+    "spike": "{category} wynosi w tym miesiącu {current}, powyżej zwykłego poziomu {usual}.",
+    "subscription": "{payee} kosztuje teraz o {percent} więcej niż poprzednia opłata."
   }
 }

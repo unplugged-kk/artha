@@ -266,7 +266,7 @@
     "assetsAndDebts": "Assets",
     "liabilities": "Debts: {amount}",
     "dueSoon": "Due in the next 7 days",
-    "dueSoonHint": "{count, plural, one {bill or deposit} other {bills and deposits}}",
+    "dueSoonHint": "bills and deposits",
     "unavailable": "Not available yet"
   },
   "attention": {

@@ -257,5 +257,24 @@
     "weekdayLabel": "平日",
     "viewOverview": "概覽",
     "viewByDay": "依星期幾"
+  },
+  "standing": {
+    "title": "您的財務狀況",
+    "netWorth": "淨資產",
+    "changeUp": "比上個月增加 {amount}",
+    "changeDown": "比上個月減少 {amount}",
+    "assetsAndDebts": "資產",
+    "liabilities": "負債：{amount}",
+    "dueSoon": "未來 7 天內到期",
+    "dueSoonHint": "帳單與存款",
+    "unavailable": "尚無法使用"
+  },
+  "attention": {
+    "title": "需要您留意",
+    "none": "目前沒有異常。",
+    "unavailable": "無法檢查異常活動，請稍後再試。",
+    "uncategorized": "未分類",
+    "spike": "{category}本月為 {current}，高於平常的 {usual}。",
+    "subscription": "{payee}現在比上一次扣款高出 {percent}。"
   }
 }

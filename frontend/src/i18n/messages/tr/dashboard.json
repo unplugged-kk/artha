@@ -257,5 +257,24 @@
     "weekdayLabel": "Hafta İçi",
     "viewOverview": "Genel Bakış",
     "viewByDay": "Güne Göre"
+  },
+  "standing": {
+    "title": "Durumunuz",
+    "netWorth": "Net değer",
+    "changeUp": "Geçen aya göre {amount} fazla",
+    "changeDown": "Geçen aya göre {amount} az",
+    "assetsAndDebts": "Varlıklar",
+    "liabilities": "Borçlar: {amount}",
+    "dueSoon": "Önümüzdeki 7 gün içinde vadesi gelen",
+    "dueSoonHint": "fatura ve mevduatlar",
+    "unavailable": "Henüz kullanılamıyor"
+  },
+  "attention": {
+    "title": "Dikkat gerektirenler",
+    "none": "Şu an dikkat çeken bir şey yok.",
+    "unavailable": "Olağandışı hareketler kontrol edilemedi. Daha sonra tekrar deneyin.",
+    "uncategorized": "Kategorisiz",
+    "spike": "{category} bu ay {current} ile olağan {usual} düzeyinin üzerinde.",
+    "subscription": "{payee} artık önceki ödemeden {percent} daha pahalı."
   }
 }

@@ -569,6 +569,10 @@
     "rateUnresolved": "Không có tỷ giá {from} sang {to}. Hãy nhập — thiếu nó thì không tính được tác động tiền mặt, và hai loại tiền tệ không bằng nhau."
   },
   "charts": {
+    "fold": {
+      "show": "Hiện biểu đồ",
+      "hide": "Ẩn biểu đồ"
+    },
     "balanceHistory": {
       "title": "Lịch sử số dư",
       "noData": "Không có dữ liệu số dư",

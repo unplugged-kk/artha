@@ -257,5 +257,24 @@
     "weekdayLabel": "Hari Kerja",
     "viewOverview": "Ikhtisar",
     "viewByDay": "Per Hari"
+  },
+  "standing": {
+    "title": "Posisi Anda",
+    "netWorth": "Kekayaan bersih",
+    "changeUp": "{amount} lebih tinggi dari bulan lalu",
+    "changeDown": "{amount} lebih rendah dari bulan lalu",
+    "assetsAndDebts": "Aset",
+    "liabilities": "Utang: {amount}",
+    "dueSoon": "Jatuh tempo dalam 7 hari ke depan",
+    "dueSoonHint": "tagihan dan setoran",
+    "unavailable": "Belum tersedia"
+  },
+  "attention": {
+    "title": "Perlu perhatian Anda",
+    "none": "Saat ini tidak ada yang menonjol.",
+    "unavailable": "Tidak dapat memeriksa aktivitas tidak biasa. Coba lagi nanti.",
+    "uncategorized": "Tanpa kategori",
+    "spike": "{category} sebesar {current} bulan ini, di atas kebiasaan {usual}.",
+    "subscription": "{payee} kini {percent} lebih mahal dari tagihan sebelumnya."
   }
 }

@@ -569,6 +569,10 @@
     "rateUnresolved": "Geen koers van {from} naar {to} beschikbaar. Voer er een in — zonder is het kaseffect niet te bepalen, en de twee valuta's zijn niet gelijk."
   },
   "charts": {
+    "fold": {
+      "show": "Grafiek tonen",
+      "hide": "Grafiek verbergen"
+    },
     "balanceHistory": {
       "title": "Saldobeloop",
       "noData": "Geen saldogegevens beschikbaar",

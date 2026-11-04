@@ -569,6 +569,10 @@
     "rateUnresolved": "Nessun tasso da {from} a {to} disponibile. Inseriscine uno — senza non si può calcolare l'impatto di cassa, e le due valute non sono uguali."
   },
   "charts": {
+    "fold": {
+      "show": "Mostra grafico",
+      "hide": "Nascondi grafico"
+    },
     "balanceHistory": {
       "title": "Storico saldo",
       "noData": "Nessun dato saldo disponibile",

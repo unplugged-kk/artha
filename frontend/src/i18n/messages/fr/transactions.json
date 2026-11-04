@@ -569,6 +569,10 @@
     "rateUnresolved": "Aucun taux de {from} vers {to} n'est disponible. Saisissez-en un — sans lui, l'impact de trésorerie ne peut pas être calculé, et les deux devises ne sont pas égales."
   },
   "charts": {
+    "fold": {
+      "show": "Afficher le graphique",
+      "hide": "Masquer le graphique"
+    },
     "balanceHistory": {
       "title": "Historique du solde",
       "noData": "Aucune donnée de solde disponible",

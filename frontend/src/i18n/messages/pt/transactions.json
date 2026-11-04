@@ -569,6 +569,10 @@
     "rateUnresolved": "Não há taxa de {from} para {to} disponível. Introduza uma — sem ela o impacto de caixa não pode ser calculado, e as duas moedas não são iguais."
   },
   "charts": {
+    "fold": {
+      "show": "Mostrar gráfico",
+      "hide": "Ocultar gráfico"
+    },
     "balanceHistory": {
       "title": "Histórico de Saldo",
       "noData": "Sem dados de saldo disponíveis",

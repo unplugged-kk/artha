@@ -257,5 +257,24 @@
     "weekdayLabel": "工作日",
     "viewOverview": "概览",
     "viewByDay": "按日"
+  },
+  "standing": {
+    "title": "您的财务状况",
+    "netWorth": "净资产",
+    "changeUp": "比上月增加 {amount}",
+    "changeDown": "比上月减少 {amount}",
+    "assetsAndDebts": "资产",
+    "liabilities": "负债：{amount}",
+    "dueSoon": "未来 7 天内到期",
+    "dueSoonHint": "账单和存款",
+    "unavailable": "暂不可用"
+  },
+  "attention": {
+    "title": "需要您关注",
+    "none": "目前没有异常。",
+    "unavailable": "无法检查异常活动，请稍后再试。",
+    "uncategorized": "未分类",
+    "spike": "{category}本月为 {current}，高于通常的 {usual}。",
+    "subscription": "{payee}现在比上一次扣款高出 {percent}。"
   }
 }

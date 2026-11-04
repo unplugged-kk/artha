@@ -569,6 +569,10 @@
     "rateUnresolved": "Brak kursu z {from} na {to}. Wprowadź go — bez niego nie da się wyliczyć wpływu gotówkowego, a obie waluty nie są równe."
   },
   "charts": {
+    "fold": {
+      "show": "Pokaż wykres",
+      "hide": "Ukryj wykres"
+    },
     "balanceHistory": {
       "title": "Historia salda",
       "noData": "Brak danych o saldzie",
