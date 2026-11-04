@@ -32,6 +32,14 @@ import { McpUserContext, toAuthInfo } from "./mcp-context";
 import { OAuthProviderService } from "../oauth/oauth-provider.service";
 import { ConfigService } from "@nestjs/config";
 import { withUserContext } from "../common/db/with-context";
+import { runAsActor } from "../action-history/action-actor.context";
+
+/** User context for an MCP request, with writes attributed to the MCP client. */
+function withMcpActor<T>(userId: string, fn: () => Promise<T>): Promise<T> {
+  return withUserContext(userId, () =>
+    runAsActor({ actorType: "mcp", toolName: null }, fn),
+  );
+}
 
 const SkipPasswordCheck = () => SetMetadata(SKIP_PASSWORD_CHECK_KEY, true);
 
@@ -259,7 +267,7 @@ export class McpHttpController implements OnModuleDestroy {
     if (!authResult) return;
 
     if (!(await this.isLegacy(req))) {
-      await withUserContext(authResult.userId, () =>
+      await withMcpActor(authResult.userId, () =>
         this.modernNode(req, res, req.body),
       );
       return;
@@ -289,7 +297,7 @@ export class McpHttpController implements OnModuleDestroy {
       if (!this.authorizeExistingSession(sessionId, authResult, res)) {
         return;
       }
-      await withUserContext(authResult.userId, () =>
+      await withMcpActor(authResult.userId, () =>
         transport.handleRequest(req, res, req.body),
       );
       return;
@@ -324,7 +332,7 @@ export class McpHttpController implements OnModuleDestroy {
 
     const server = this.mcpServerService.createServer();
     await server.connect(transport);
-    await withUserContext(authResult.userId, () =>
+    await withMcpActor(authResult.userId, () =>
       transport.handleRequest(req, res, req.body),
     );
 
@@ -376,7 +384,7 @@ export class McpHttpController implements OnModuleDestroy {
       return;
     }
 
-    await withUserContext(authResult.userId, () =>
+    await withMcpActor(authResult.userId, () =>
       transport.handleRequest(req, res),
     );
   }
@@ -417,7 +425,7 @@ export class McpHttpController implements OnModuleDestroy {
       return;
     }
 
-    await withUserContext(authResult.userId, () =>
+    await withMcpActor(authResult.userId, () =>
       transport.handleRequest(req, res),
     );
     this.destroySession(sessionId);

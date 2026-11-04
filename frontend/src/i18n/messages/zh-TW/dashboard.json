@@ -60,6 +60,14 @@
       "import": {
         "title": "從 QIF 匯入",
         "description": "從 QIF 檔案匯入科目及交易"
+      },
+      "ai": {
+        "title": "連接 AI 供應商",
+        "description": "啟用助理、洞察與每週教練"
+      },
+      "notifications": {
+        "title": "選擇通知",
+        "description": "選擇接收帳單與預算提醒的方式"
       }
     }
   },

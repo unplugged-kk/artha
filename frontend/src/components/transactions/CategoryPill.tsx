@@ -2,6 +2,7 @@
 
 import { getIconComponent } from '@/components/ui/IconPicker';
 import { DensityLevel } from '@/hooks/useTableDensity';
+import { CATEGORY_CHIP_CLASS, categoryChipStyle } from '@/lib/category-chip';
 
 interface CategoryPillProps {
   name: string;
@@ -32,17 +33,10 @@ export function CategoryPill({
   maxWidthClass = 'max-w-[160px]',
   onClick,
 }: CategoryPillProps) {
-  const className = `inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full ${maxWidthClass} ${
+  const className = `${CATEGORY_CHIP_CLASS} inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full ${maxWidthClass} ${
     density === 'dense' ? 'px-1.5 py-0.5' : 'px-2 py-1'
   }${onClick ? ' hover:opacity-80 transition-opacity' : ''}`;
-  const style = {
-    backgroundColor: color
-      ? `color-mix(in srgb, ${color} 15%, var(--category-bg-base, #e5e7eb))`
-      : 'var(--category-bg-base, #e5e7eb)',
-    color: color
-      ? `color-mix(in srgb, ${color} 85%, var(--category-text-mix, #000))`
-      : 'var(--category-text-base, #6b7280)',
-  };
+  const style = categoryChipStyle(color);
   const body = (
     <>
       {icon && (

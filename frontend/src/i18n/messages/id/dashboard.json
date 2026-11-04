@@ -60,6 +60,14 @@
       "import": {
         "title": "Impor dari QIF",
         "description": "Impor akun dan transaksi dari file QIF"
+      },
+      "ai": {
+        "title": "Hubungkan penyedia AI",
+        "description": "Aktifkan asisten, wawasan, dan pelatih mingguan"
+      },
+      "notifications": {
+        "title": "Pilih notifikasi",
+        "description": "Pilih cara Anda mendapat kabar tentang tagihan dan anggaran"
       }
     }
   },

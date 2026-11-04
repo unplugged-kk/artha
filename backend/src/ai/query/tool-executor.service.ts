@@ -68,6 +68,11 @@ import {
 import { RelayAttachmentStore } from "../relay/relay-attachment.store";
 import { AttachmentRefDescriptor } from "../actions/ai-action.types";
 import { executeCalculation, CalculateInput } from "./calculate-tool";
+import { runIndiaTax, IndiaTaxToolInput } from "../../tax-india/tax-llm";
+import {
+  runPlanSimulation,
+  PlanSimulateInput,
+} from "../../finance-simulators/simulate-llm";
 import { sanitizePromptValue } from "../../common/sanitization.util";
 import { formatDidYouMean } from "../../common/name-suggestions.util";
 import {
@@ -240,6 +245,12 @@ export class ToolExecutorService {
           break;
         case "calculate":
           result = this.calculate(validatedInput);
+          break;
+        case "india_tax":
+          result = this.indiaTax(validatedInput);
+          break;
+        case "plan_simulate":
+          result = this.planSimulate(validatedInput);
           break;
         case "render_chart":
           result = this.renderChart(validatedInput);
@@ -2490,6 +2501,50 @@ export class ToolExecutorService {
           type: "report",
           description: `Built-in report: ${type}`,
           dateRange: `${startDate} to ${endDate}`,
+        },
+      ],
+    };
+  }
+
+  private planSimulate(input: Record<string, unknown>): ToolResult {
+    const out = runPlanSimulation(input as unknown as PlanSimulateInput);
+    if ("error" in out) {
+      return {
+        data: { error: out.error },
+        summary: out.error as string,
+        sources: [],
+        isError: true,
+      };
+    }
+    return {
+      data: out,
+      summary: `Plan simulation: ${out.operation}`,
+      sources: [
+        {
+          type: "calculation",
+          description: `${out.operation} simulation (deterministic, from stated inputs)`,
+        },
+      ],
+    };
+  }
+
+  private indiaTax(input: Record<string, unknown>): ToolResult {
+    const out = runIndiaTax(input as unknown as IndiaTaxToolInput);
+    if ("error" in out) {
+      return {
+        data: { error: out.error },
+        summary: out.error as string,
+        sources: [],
+        isError: true,
+      };
+    }
+    return {
+      data: out,
+      summary: `India tax ${out.operation} for ${(out.evidence as { financialYear: string }).financialYear}`,
+      sources: [
+        {
+          type: "calculation",
+          description: `India tax ${out.operation} (deterministic rules engine)`,
         },
       ],
     };

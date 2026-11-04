@@ -64,6 +64,12 @@ export class ActionHistory {
   @Column({ type: "jsonb", name: "description_params", nullable: true })
   descriptionParams: Record<string, any> | null;
 
+  @Column({ type: "varchar", length: 16, name: "actor_type", default: "user" })
+  actorType: "user" | "ai" | "mcp";
+
+  @Column({ type: "varchar", length: 64, name: "tool_name", nullable: true })
+  toolName: string | null;
+
   @CreateDateColumn({ name: "created_at", type: "timestamptz" })
   createdAt: Date;
 }

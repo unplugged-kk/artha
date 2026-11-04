@@ -19,7 +19,7 @@ const DESTRUCTIVE_TOOLS = new Set([
   "manage_investment_transactions",
 ]);
 
-const EXPECTED_TOOL_COUNT = 20;
+const EXPECTED_TOOL_COUNT = 22;
 
 describe("MCP tool spec compliance", () => {
   const configs = collectToolConfigs();

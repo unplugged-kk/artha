@@ -1,0 +1,30 @@
+# Cloudflare Tunnel in front of the production stack.
+#
+#   docker compose -f docker-compose.prod.yml -f docker-compose.cloudflare.yml up -d
+#
+# The tunnel dials OUT to Cloudflare, so nothing is published on the host and no
+# inbound port has to be opened. Create the tunnel in the Cloudflare dashboard
+# (Zero Trust > Networks > Tunnels), copy its token into CLOUDFLARE_TUNNEL_TOKEN,
+# and give it one public hostname pointing at  http://frontend:3000 .
+#
+# CLIENT_IP_HEADER makes the frontend read the visitor's address from the header
+# Cloudflare sets rather than from X-Real-IP. That is only safe because the
+# frontend is reachable through the tunnel alone: the `ports: !reset []` below
+# removes the published port, so nobody can reach it and send the header
+# themselves.
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN:?set CLOUDFLARE_TUNNEL_TOKEN to the tunnel token}
+    depends_on:
+      - frontend
+    networks:
+      - artha-network
+    restart: unless-stopped
+
+  frontend:
+    ports: !reset []
+    environment:
+      CLIENT_IP_HEADER: CF-Connecting-IP

@@ -114,17 +114,41 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-/* Category badge colour variables for light/dark mode */
+/* Money text colours.
+
+   The stock Tailwind green-600 and red-600 are 3.2:1 and 4.8:1 on white and
+   worse on a tinted card, and they are what every gain, loss and balance in
+   the app is drawn in (about 340 call sites). Defining them here, in the one
+   place, lifts all of them to at least 4.5:1 against the page and card of every
+   palette without touching a component. `money-contrast.test.ts` holds that
+   for every theme in both modes. The dark-mode pair (green-400 and red-400) is
+   stock and already clears the floor. */
+:root {
+  --color-green-600: #006b2d;
+  --color-red-600: #b30f19;
+}
+
+/* Category badge colour variables for light/dark mode. The no-colour fallback
+   text is gray-600 on gray-200 (light) and gray-300 on gray-700 (dark): the
+   previous gray-500 and gray-400 measured 3.9:1 and 3.6:1. */
 :root {
   --category-bg-base: var(--color-gray-200);
-  --category-text-base: var(--color-gray-500);
-  --category-text-mix: #000;
+  --category-text-base: var(--color-gray-600);
 }
 
 .dark {
   --category-bg-base: var(--color-gray-700);
-  --category-text-base: var(--color-gray-400);
-  --category-text-mix: #fff;
+  --category-text-base: var(--color-gray-300);
+}
+
+/* The chip's text colour for each mode is computed in lib/category-chip.ts and
+   arrives as two custom properties; a chip with no colour falls back to the
+   neutral token, which already follows the mode. */
+.category-chip {
+  color: var(--chip-fg-light, var(--category-text-base));
+}
+.dark .category-chip {
+  color: var(--chip-fg-dark, var(--category-text-base));
 }
 
 /* Chart colour tokens. Recharts components reference these as

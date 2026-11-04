@@ -440,7 +440,15 @@ vi.mock('@/hooks/useFormModal', () => ({
 }));
 
 vi.mock('@/hooks/useLocalStorage', () => ({
-  useLocalStorage: (_key: string, defaultValue: any) => [defaultValue, vi.fn()],
+  // Every key reads its default except the chart fold, which the cases below
+  // set explicitly through localStorage.
+  useLocalStorage: (key: string, defaultValue: any) => {
+    if (key === 'artha-transactions-chart-folded') {
+      const stored = window.localStorage.getItem(key);
+      return [stored === null ? defaultValue : JSON.parse(stored), vi.fn()];
+    }
+    return [defaultValue, vi.fn()];
+  },
 }));
 
 vi.mock('@/hooks/useDateFormat', () => ({
@@ -508,9 +516,15 @@ const mockLongPayees = [
   { id: 'long-pay-3', name: 'Grocery Chain Supermarket Location Three', defaultCategoryId: null },
 ];
 
+// The chart starts folded in production; most cases here are about the chart,
+// so they start unfolded. The fold itself has its own describe block.
+const unfoldChart = () =>
+  window.localStorage.setItem('artha-transactions-chart-folded', JSON.stringify(false));
+
 describe('TransactionsPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    unfoldChart();
     mockGetAll.mockResolvedValue({ data: [], pagination: { page: 1, totalPages: 1, total: 0 } });
     mockGetSummary.mockResolvedValue({ totalIncome: 0, totalExpenses: 0, netCashFlow: 0, transactionCount: 0 });
     mockGetAllAccounts.mockResolvedValue([]);
@@ -847,6 +861,7 @@ describe('TransactionsPage', () => {
       // a shared mock across tests in this file. Clear it so each test starts
       // with no filters active.
       window.localStorage.clear();
+      unfoldChart();
     });
 
     it('renders Account Balances chart when no category/payee/tag filter is active and multiple accounts have transactions', async () => {
@@ -1294,6 +1309,7 @@ describe('TransactionsPage', () => {
   describe('Account Info Widget', () => {
     beforeEach(() => {
       window.localStorage.clear();
+      unfoldChart();
     });
 
     it('shows the chart-derived current balance, not the stale account balance', async () => {
@@ -2493,5 +2509,19 @@ describe('TransactionsPage', () => {
       // Category should show all split categories
       expect(rows[0][3]).toBe('Groceries; Dining');
     });
+  });
+});
+
+describe('TransactionsPage chart fold', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    window.localStorage.clear();
+  });
+
+  it('starts with the chart folded and offers to show it', async () => {
+    render(<TransactionsPage />);
+    const toggle = await screen.findByRole('button', { name: /show chart/i });
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByTestId('chart-balance-history')).not.toBeInTheDocument();
   });
 });

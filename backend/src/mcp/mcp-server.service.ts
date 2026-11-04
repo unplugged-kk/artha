@@ -12,6 +12,8 @@ import { McpReportsTools } from "./tools/reports.tool";
 import { McpInvestmentsTools } from "./tools/investments.tool";
 import { McpScheduledTools } from "./tools/scheduled.tool";
 import { McpCalculateTools } from "./tools/calculate.tool";
+import { McpIndiaTaxTools } from "./tools/india-tax.tool";
+import { McpPlanSimulateTools } from "./tools/plan-simulate.tool";
 import { McpBudgetsTools } from "./tools/budgets.tool";
 import { McpRelayTools } from "./tools/relay.tool";
 import { McpAccountListResource } from "./resources/account-list.resource";
@@ -48,6 +50,8 @@ export class McpServerService {
     private readonly investmentsTools: McpInvestmentsTools,
     private readonly scheduledTools: McpScheduledTools,
     private readonly calculateTools: McpCalculateTools,
+    private readonly indiaTaxTools: McpIndiaTaxTools,
+    private readonly planSimulateTools: McpPlanSimulateTools,
     private readonly budgetsTools: McpBudgetsTools,
     private readonly relayTools: McpRelayTools,
     private readonly relayService: AiRelayService,
@@ -163,6 +167,8 @@ export class McpServerService {
     this.investmentsTools.register(server);
     this.scheduledTools.register(server);
     this.calculateTools.register(server);
+    this.indiaTaxTools.register(server);
+    this.planSimulateTools.register(server);
     this.budgetsTools.register(server);
     this.relayTools.register(server);
 

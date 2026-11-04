@@ -60,6 +60,14 @@
       "import": {
         "title": "Import from QIF",
         "description": "Import accounts and transactions from QIF files"
+      },
+      "ai": {
+        "title": "Connect an AI provider",
+        "description": "Turn on the assistant, insights and weekly coach"
+      },
+      "notifications": {
+        "title": "Choose notifications",
+        "description": "Pick how you hear about bills and budgets"
       }
     }
   },
@@ -249,5 +257,24 @@
     "weekdayLabel": "Weekday",
     "viewOverview": "Overview",
     "viewByDay": "By day"
+  },
+  "standing": {
+    "title": "Where you stand",
+    "netWorth": "Net worth",
+    "changeUp": "Up {amount} since last month",
+    "changeDown": "Down {amount} since last month",
+    "assetsAndDebts": "Assets",
+    "liabilities": "Debts: {amount}",
+    "dueSoon": "Due in the next 7 days",
+    "dueSoonHint": "{count, plural, one {bill or deposit} other {bills and deposits}}",
+    "unavailable": "Not available yet"
+  },
+  "attention": {
+    "title": "Needs your attention",
+    "none": "Nothing stands out right now.",
+    "unavailable": "Could not check for unusual activity. Try again later.",
+    "uncategorized": "Uncategorized",
+    "spike": "{category} is at {current} this month, above its usual {usual}.",
+    "subscription": "{payee} now costs {percent} more than its previous charge."
   }
 }

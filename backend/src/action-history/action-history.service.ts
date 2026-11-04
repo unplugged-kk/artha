@@ -32,6 +32,7 @@ import {
   lockHoldingScope,
 } from "../common/db/locks";
 import { LEDGER_MOVEMENT_PREDICATE } from "../common/ledger-balance.sql";
+import { currentActor } from "./action-actor.context";
 
 export interface RecordActionParams {
   entityType: string;
@@ -336,8 +337,11 @@ export class ActionHistoryService {
           isUndone: true,
         });
 
+        const actor = currentActor();
         const action = repo.create({
           userId,
+          actorType: actor.actorType,
+          toolName: actor.toolName,
           entityType: params.entityType,
           entityId: params.entityId,
           action: params.action,

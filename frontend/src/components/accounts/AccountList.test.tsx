@@ -1,3 +1,4 @@
+import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, act, within } from '@/test/render';
 import * as nextNavigation from 'next/navigation';
@@ -5,6 +6,17 @@ import { AccountList } from './AccountList';
 import { Account } from '@/types/account';
 import { accountsApi } from '@/lib/accounts';
 import { useDensityStore } from '@/store/densityStore';
+
+/**
+ * Group header rows. The disclosure state lives on a real button inside the row:
+ * `aria-expanded` is not allowed on a plain table row, so rows are found by the
+ * button they hold.
+ */
+function groupHeaderRows(root: ParentNode = document): HTMLTableRowElement[] {
+  return Array.from(root.querySelectorAll<HTMLTableRowElement>('tbody tr')).filter(
+    (tr) => tr.querySelector('button[aria-expanded]'),
+  );
+}
 
 vi.mock('@/lib/accounts', () => ({
   accountsApi: {
@@ -1690,9 +1702,7 @@ describe('AccountList', () => {
       );
 
       // Group total: 1000 CAD + (500 USD * 1.4) = 1700 CAD
-      const chequingHeader = document.querySelector<HTMLTableRowElement>(
-        'tr[aria-expanded]',
-      );
+      const chequingHeader = groupHeaderRows()[0];
       expect(chequingHeader).toBeTruthy();
       expect(chequingHeader!.textContent).toContain('$1700.00');
     });
@@ -1736,9 +1746,7 @@ describe('AccountList', () => {
       );
 
       // Group total: 1000 CAD market value + (500 USD market value * 1.4) = 1700 CAD
-      const investmentHeader = document.querySelector<HTMLTableRowElement>(
-        'tr[aria-expanded]',
-      );
+      const investmentHeader = groupHeaderRows()[0];
       expect(investmentHeader).toBeTruthy();
       expect(investmentHeader!.textContent).toContain('$1700.00');
     });
@@ -1776,16 +1784,49 @@ describe('AccountList', () => {
       // CHEQUING group total: 1000 + 500 (future) + 250 = 1750
       // CREDIT_CARD group total: -750
       const chequingHeaderRow = Array.from(
-        document.querySelectorAll<HTMLTableRowElement>('tr[aria-expanded]'),
+        groupHeaderRows(),
       ).find((tr) => tr.textContent?.includes('Chequing'));
       const creditHeaderRow = Array.from(
-        document.querySelectorAll<HTMLTableRowElement>('tr[aria-expanded]'),
+        groupHeaderRows(),
       ).find((tr) => tr.textContent?.includes('Credit Card'));
 
       expect(chequingHeaderRow).toBeTruthy();
       expect(creditHeaderRow).toBeTruthy();
       expect(chequingHeaderRow!.textContent).toContain('$1750.00');
       expect(creditHeaderRow!.textContent).toContain('$-750.00');
+    });
+
+    it('exposes each group as a real disclosure button; the row itself carries no aria-expanded', async () => {
+      // `aria-expanded` is not allowed on a plain table row (axe:
+      // aria-conditional-attr), and a row only a mouse can click is closed to
+      // the keyboard. The state lives on a button inside the row.
+      const user = userEvent.setup();
+      const accounts = [
+        createAccount({ id: 'c1', name: 'Cheq A', accountType: 'CHEQUING' }),
+        createAccount({ id: 's1', name: 'Sav A', accountType: 'SAVINGS' }),
+      ];
+      render(
+        <AccountList accounts={accounts} onEdit={mockOnEdit} defaultCurrency="CAD" convertToDefault={exchangeMocks.convertToDefault} onRefresh={mockOnRefresh} />
+      );
+
+      const rows = groupHeaderRows();
+      expect(rows).toHaveLength(2);
+      for (const row of rows) expect(row).not.toHaveAttribute('aria-expanded');
+
+      const toggle = rows[0].querySelector('button[aria-expanded]') as HTMLButtonElement;
+      expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+      // One click toggles once: the row also listens for clicks, so the button
+      // must not let the event reach it a second time.
+      await user.click(toggle);
+      expect(toggle).toHaveAttribute('aria-expanded', 'false');
+      expect(screen.queryByText('Cheq A')).not.toBeInTheDocument();
+
+      // And the keyboard can open it again.
+      toggle.focus();
+      await user.keyboard('{Enter}');
+      expect(toggle).toHaveAttribute('aria-expanded', 'true');
+      expect(screen.getByText('Cheq A')).toBeInTheDocument();
     });
 
     it('collapses a group when its header is clicked and hides the rows', () => {
@@ -1801,7 +1842,7 @@ describe('AccountList', () => {
       expect(screen.getByText('Cheq A')).toBeInTheDocument();
 
       const groupRows = Array.from(
-        document.querySelectorAll<HTMLTableRowElement>('tr[aria-expanded]'),
+        groupHeaderRows(),
       );
       const chequingHeader = groupRows.find((tr) =>
         tr.textContent?.includes('Chequing'),
@@ -1823,9 +1864,7 @@ describe('AccountList', () => {
         <AccountList accounts={accounts} onEdit={mockOnEdit} defaultCurrency="CAD" convertToDefault={exchangeMocks.convertToDefault} onRefresh={mockOnRefresh} />
       );
 
-      const groupRow = document.querySelector<HTMLTableRowElement>(
-        'tr[aria-expanded]',
-      );
+      const groupRow = groupHeaderRows()[0];
       expect(groupRow).toBeTruthy();
       fireEvent.click(groupRow!);
 
@@ -1923,9 +1962,7 @@ describe('AccountList', () => {
       );
 
       // Two linked pairs + one standalone account = 3 logical investment accounts.
-      const investmentHeader = document.querySelector<HTMLTableRowElement>(
-        'tr[aria-expanded]',
-      );
+      const investmentHeader = groupHeaderRows()[0];
       expect(investmentHeader).toBeTruthy();
       expect(investmentHeader!.textContent).toContain('3 accounts');
     });
@@ -2709,7 +2746,7 @@ describe('AccountList', () => {
       );
 
       // The group header total for CREDIT_CARD should be negative
-      const headerRow = document.querySelector<HTMLTableRowElement>('tr[aria-expanded]');
+      const headerRow = groupHeaderRows()[0];
       expect(headerRow).toBeTruthy();
       expect(headerRow!.textContent).toContain('$-1000.00');
     });
@@ -2723,7 +2760,7 @@ describe('AccountList', () => {
         <AccountList accounts={accounts} onEdit={mockOnEdit} defaultCurrency="CAD" convertToDefault={exchangeMocks.convertToDefault} onRefresh={mockOnRefresh} />
       );
 
-      const groupRow = document.querySelector<HTMLTableRowElement>('tr[aria-expanded]')!;
+      const groupRow = groupHeaderRows()[0]!;
 
       // Collapse
       fireEvent.click(groupRow);

@@ -205,11 +205,15 @@ export function ApiAccessSection() {
 
       {/* MCP Server URL */}
       <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-        <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+        <label
+          htmlFor="mcp-server-url"
+          className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"
+        >
           {t('mcpServerUrlLabel')}
         </label>
         <div className="flex gap-2">
           <input
+            id="mcp-server-url"
             type="text"
             readOnly
             value={mcpServerUrl}
@@ -328,6 +332,7 @@ export function ApiAccessSection() {
                 <input
                   type="text"
                   readOnly
+                  aria-label={t('createdModal.title')}
                   value={createdToken}
                   className="flex-1 text-sm font-mono bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-gray-900 dark:text-gray-100"
                 />

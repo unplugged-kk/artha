@@ -85,7 +85,7 @@ export function UpdateAvailableBanner() {
         type="button"
         onClick={handleDismiss}
         aria-label={t('updateBanner.dismissAriaLabel')}
-        className="ml-2 text-blue-700/70 dark:text-blue-300/70 hover:text-blue-900 dark:hover:text-blue-100"
+        className="ml-2 text-blue-800 dark:text-blue-200 hover:text-blue-900 dark:hover:text-blue-100"
       >
         {t('updateBanner.dismiss')}
       </button>

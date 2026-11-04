@@ -6,6 +6,8 @@ import { McpReportsTools } from "../tools/reports.tool";
 import { McpInvestmentsTools } from "../tools/investments.tool";
 import { McpScheduledTools } from "../tools/scheduled.tool";
 import { McpCalculateTools } from "../tools/calculate.tool";
+import { McpIndiaTaxTools } from "../tools/india-tax.tool";
+import { McpPlanSimulateTools } from "../tools/plan-simulate.tool";
 import { McpBudgetsTools } from "../tools/budgets.tool";
 import { McpRelayTools } from "../tools/relay.tool";
 
@@ -70,6 +72,8 @@ export function collectToolConfigs(): CapturedToolConfig[] {
     ) as unknown as ToolProvider,
     new McpScheduledTools({} as any) as unknown as ToolProvider,
     new McpCalculateTools() as unknown as ToolProvider,
+    new McpIndiaTaxTools() as unknown as ToolProvider,
+    new McpPlanSimulateTools() as unknown as ToolProvider,
     new McpBudgetsTools({} as any) as unknown as ToolProvider,
     new McpRelayTools({} as any) as unknown as ToolProvider,
   ];

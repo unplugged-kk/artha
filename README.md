@@ -227,6 +227,7 @@ artha/
 ├── docker-compose.demo.yml    # Demo environment
 ├── docker-compose.e2e.yml     # End-to-end test environment
 ├── docker-compose.zap.yml     # ZAP security-scan environment
+├── docker-compose.cloudflare.yml # Cloudflare Tunnel overlay for the production stack
 ├── .env.example               # Environment variables template
 └── README.md
 ```

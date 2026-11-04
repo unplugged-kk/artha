@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Artha: proposed dashboard and register</title>
+<!--
+  A reviewable mock, not production code. Two screens in one file:
+    new-ui.html#dashboard   new-ui.html#register
+  Add ?theme=dark for the dark palette.
+  Colours are the shipped tokens: money text at 4.5:1 or better on both pages,
+  brand blue and gold from frontend/scripts/build-app-icons.mjs, tabular figures
+  everywhere a number is read. No emoji, no one-sided coloured borders, status is
+  never colour alone (a sign or a word always travels with it).
+-->
+<style>
+:root{
+  --page:#f6f7f9; --card:#ffffff; --line:#e3e6eb; --ink:#101828; --ink2:#4a5565; --ink3:#697384;
+  --blue:#2f5fd8; --btn:#2f5fd8; --blue-soft:#e8eefc; --gold:#f5a623; --gold-ink:#8a5200; --gold-soft:#fff4de;
+  --in:#006b2d; --out:#b30f19; --in-soft:#e6f4ec; --out-soft:#fbe9ea;
+  --shadow:0 1px 2px rgba(16,24,40,.06);
+}
+:root.dark{
+  --page:#0d1320; --card:#151d2e; --line:#26324a; --ink:#f1f4fa; --ink2:#b8c2d6; --ink3:#93a0b8;
+  --blue:#7ea2ff; --btn:#2f5fd8; --blue-soft:#1b2a4d; --gold:#f5a623; --gold-ink:#f7c26b; --gold-soft:#33260f;
+  --in:#5fe39a; --out:#ff8a8a; --in-soft:#14301f; --out-soft:#3a1a1d;
+  --shadow:none;
+}
+*{box-sizing:border-box}
+html{font-variant-numeric:tabular-nums}
+body{margin:0;background:var(--page);color:var(--ink);font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:inherit}
+.top{display:flex;align-items:center;gap:28px;padding:0 32px;height:60px;background:var(--card);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;letter-spacing:-.01em}
+.brand svg{width:30px;height:30px}
+nav{display:flex;gap:6px;flex:1}
+nav a{padding:8px 12px;border-radius:8px;text-decoration:none;color:var(--ink2);font-weight:500;white-space:nowrap}
+nav a[aria-current]{background:var(--blue-soft);color:var(--blue)}
+.who{color:var(--ink2);font-size:14px}
+main{max-width:1240px;margin:0 auto;padding:28px 32px 64px}
+h1{font-size:26px;letter-spacing:-.015em;margin:0 0 4px}
+.sub{color:var(--ink2);margin:0 0 24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.pad{padding:20px 22px}
+.label{font-size:12.5px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin:0 0 8px}
+.big{font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1.1}
+.in{color:var(--in)} .out{color:var(--out)} .muted{color:var(--ink2)}
+.delta{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;margin-top:8px}
+.chip{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--blue-soft);color:var(--blue)}
+.chip.gold{background:var(--gold-soft);color:var(--gold-ink)}
+.chip.in{background:var(--in-soft);color:var(--in)} .chip.out{background:var(--out-soft);color:var(--out)}
+
+/* Dashboard */
+.hero{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:18px;margin-bottom:18px}
+.spark{display:flex;align-items:flex-end;gap:5px;height:44px;margin-top:14px}
+.spark i{flex:1;background:var(--blue);opacity:.28;border-radius:3px 3px 0 0}
+.spark i:last-child{opacity:1}
+.grid{display:grid;grid-template-columns:1.6fr 1fr;gap:18px}
+.attn{list-style:none;margin:0;padding:0}
+.attn li{display:flex;gap:14px;align-items:flex-start;padding:14px 22px;border-top:1px solid var(--line)}
+.attn li:first-child{border-top:0}
+.attn b{display:block}
+.attn .go{margin-left:auto;white-space:nowrap;color:var(--blue);font-weight:600;font-size:14px;text-decoration:none;padding-top:2px}
+.head{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid var(--line)}
+.head h2{font-size:16px;margin:0}
+.head a{color:var(--blue);font-weight:600;font-size:14px;text-decoration:none}
+.row{display:flex;align-items:center;gap:14px;padding:12px 22px;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0}
+.row .name{flex:1;min-width:0}
+.row .name small{display:block;color:var(--ink3);font-size:13px}
+.amt{font-weight:600;text-align:right;white-space:nowrap}
+.dot{width:34px;height:34px;border-radius:10px;background:var(--blue-soft);color:var(--blue);display:grid;place-items:center;font-weight:700;font-size:13px}
+
+/* Register */
+.tools{display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.field{padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink2);min-width:170px}
+.btn{padding:10px 16px;border-radius:10px;border:1px solid transparent;background:var(--btn);color:#fff;font-weight:600}
+.btn.ghost{background:var(--card);border-color:var(--line);color:var(--ink)}
+.fold{display:flex;align-items:center;justify-content:space-between;padding:12px 22px;color:var(--ink2)}
+table{width:100%;border-collapse:collapse}
+th{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);font-weight:600}
+td{padding:12px 14px;border-top:1px solid var(--line);vertical-align:middle}
+.r{text-align:right}
+tr.day td{background:var(--page);font-weight:600;color:var(--ink2);font-size:13px;padding:8px 14px}
+.pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px}
+.pager{display:flex;justify-content:space-between;padding:14px 22px;border-top:1px solid var(--line);color:var(--ink2)}
+section[hidden]{display:none}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+@media (max-width:900px){.hero,.grid{grid-template-columns:1fr}nav{display:none}main{padding:20px 16px 48px}.top{padding:0 16px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <svg viewBox="0 0 1000 1000" role="img" aria-label="Artha"><path fill="#3b6ff0" d="M120,900 L420,100 L580,100 L880,900 L690,900 L500,380 L310,900 Z M368.46,740 L631.54,740 L595,640 L405,640 Z"/><path fill="#f5a623" d="M368.46,740 L631.54,740 L595,640 L405,640 Z"/></svg>
+    Artha
+  </div>
+  <nav aria-label="Primary">
+    <a href="#dashboard" id="n-dash">Dashboard</a><a href="#register" id="n-reg">Transactions</a><a href="#">Bills and deposits</a><a href="#">Investments</a><a href="#">Accounts</a><a href="#">Budgets</a><a href="#">Reports</a>
+  </nav>
+  <span class="who">Demo</span>
+</header>
+<main>
+
+<section id="dashboard">
+  <h1>Where you stand</h1>
+  <p class="sub">Tuesday 3 November. Everything below is computed from your ledger.</p>
+
+  <div class="hero">
+    <div class="card pad">
+      <p class="label">Net worth</p>
+      <div class="big">$119,650.00</div>
+      <div class="delta in">+$4,210.00 <span class="muted" style="font-weight:500">(+3.6%) since 1 October</span></div>
+      <div class="spark" aria-hidden="true"><i style="height:52%"></i><i style="height:58%"></i><i style="height:55%"></i><i style="height:66%"></i><i style="height:72%"></i><i style="height:70%"></i><i style="height:84%"></i><i style="height:100%"></i></div>
+    </div>
+    <div class="card pad">
+      <p class="label">This month</p>
+      <div class="big">+$1,184.50</div>
+      <div class="delta"><span class="in">$5,320.00 in</span><span class="muted">and</span><span class="out">$4,135.50 out</span></div>
+      <p class="muted" style="margin:10px 0 0;font-size:14px">Savings rate <b>22%</b>, up from 19% last month.</p>
+    </div>
+    <div class="card pad">
+      <p class="label">Due in the next 7 days</p>
+      <div class="big out">-$385.99</div>
+      <div class="delta muted">3 bills, all covered by Primary Chequing</div>
+      <p style="margin:10px 0 0"><span class="chip">Balance after bills $4,986.73</span></p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card" style="overflow:hidden">
+      <div class="head"><h2>Needs your attention</h2><span class="chip gold">3 items</span></div>
+      <ul class="attn">
+        <li><span class="dot" style="background:var(--out-soft);color:var(--out)">Up</span><div><b>Dining is $289.50 above its usual range</b><span class="muted">$400.00 so far this month against about $110 a month. Checked against the last 3 months.</span></div><a class="go" href="#">Review</a></li>
+        <li><span class="dot" style="background:var(--gold-soft);color:var(--gold-ink)">Fee</span><div><b>Streamly went from $149.00 to $199.00</b><span class="muted">A 33.6% increase on the 1 November charge.</span></div><a class="go" href="#">See charges</a></li>
+        <li><span class="dot">Due</span><div><b>Car Insurance, $185.00, in 2 days</b><span class="muted">Pays from Primary Chequing. Manual, so it will not post by itself.</span></div><a class="go" href="#">Post now</a></li>
+      </ul>
+    </div>
+    <div class="card" style="overflow:hidden">
+      <div class="head"><h2>Accounts</h2><a href="#">All accounts</a></div>
+      <div class="row"><span class="dot">PC</span><div class="name">Primary Chequing<small>TD Canada Trust</small></div><div class="amt">$5,372.72</div></div>
+      <div class="row"><span class="dot">ER</span><div class="name">Emergency Fund<small>Savings</small></div><div class="amt">$21,000.00</div></div>
+      <div class="row"><span class="dot">TF</span><div class="name">TFSA<small>Investment</small></div><div class="amt">$28,750.00</div></div>
+      <div class="row"><span class="dot">VR</span><div class="name">Visa Rewards<small>Credit card</small></div><div class="amt out">-$502.38</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="register" hidden>
+  <h1>Transactions</h1>
+  <p class="sub">Primary Chequing, 1 to 3 November</p>
+  <div class="tools">
+    <span class="field">Search payee or note</span><span class="field">Account: Primary Chequing</span><span class="field">Category: any</span>
+    <button class="btn ghost" type="button">More filters</button><span style="flex:1"></span><button class="btn" type="button">New transaction</button>
+  </div>
+  <div class="card" style="overflow:hidden">
+    <div class="fold"><span>Balances over time</span><button class="btn ghost" type="button" aria-expanded="false">Show chart</button></div>
+    <table>
+      <thead><tr><th>Date</th><th>Payee</th><th>Category</th><th class="r">Amount</th><th class="r">Balance</th></tr></thead>
+      <tbody>
+        <tr class="day"><td colspan="5">Tuesday 3 November</td></tr>
+        <tr><td>3 Nov</td><td>Swiggy</td><td><span class="pill" style="background:var(--gold-soft);color:var(--gold-ink)">Food and dining</span></td><td class="r out">-$18.40</td><td class="r">$5,372.72</td></tr>
+        <tr><td>3 Nov</td><td>Salary, Acme Ltd</td><td><span class="pill chip in">Income</span></td><td class="r in">+$2,660.00</td><td class="r">$5,391.12</td></tr>
+        <tr class="day"><td colspan="5">Monday 2 November</td></tr>
+        <tr><td>2 Nov</td><td>Streamly</td><td><span class="pill" style="background:var(--blue-soft);color:var(--blue)">Subscriptions</span></td><td class="r out">-$199.00</td><td class="r">$2,731.12</td></tr>
+        <tr><td>2 Nov</td><td>Corner Store</td><td><span class="pill" style="background:var(--in-soft);color:var(--in)">Groceries</span></td><td class="r out">-$64.18</td><td class="r">$2,930.12</td></tr>
+        <tr><td>2 Nov</td><td>Transfer to Emergency Fund</td><td><span class="pill" style="background:var(--page);color:var(--ink2)">Transfer</span></td><td class="r muted">-$500.00</td><td class="r">$2,994.30</td></tr>
+      </tbody>
+    </table>
+    <div class="pager"><span>Showing 1 to 6 of 6</span><span>Page 1 of 1</span></div>
+  </div>
+</section>
+
+</main>
+<script>
+(function(){
+  var q=new URLSearchParams(location.search);
+  if(q.get('theme')==='dark')document.documentElement.classList.add('dark');
+  function show(){
+    var h=(location.hash||'#dashboard').slice(1);
+    ['dashboard','register'].forEach(function(id){document.getElementById(id).hidden=(id!==h)});
+    var d=document.getElementById('n-dash'),r=document.getElementById('n-reg');
+    d.toggleAttribute('aria-current',h==='dashboard');r.toggleAttribute('aria-current',h==='register');
+  }
+  window.addEventListener('hashchange',show);show();
+})();
+</script>
+</body>
+</html>

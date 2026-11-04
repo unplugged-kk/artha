@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@/test/render';
+import userEvent from '@testing-library/user-event';
 import { useDensityStore } from '@/store/densityStore';
 import type { DensityLevel } from '@/hooks/useTableDensity';
 import ReportsPage from './page';
@@ -822,7 +823,8 @@ describe('ReportsPage', () => {
       expect(screen.getByText('Tax Summary')).toBeInTheDocument();
     });
     // Favourite 'tax-summary'
-    const taxCard = screen.getByText('Tax Summary').closest('button')!;
+    // The star is a sibling of the open-report button, inside the card wrapper.
+    const taxCard = screen.getByText('Tax Summary').closest('button')!.parentElement!;
     const star = taxCard.querySelector('[title="Add to favourites"]')!;
     fireEvent.click(star);
     // Server fetch should include 'net-worth' from other device
@@ -1096,22 +1098,39 @@ describe('ReportsPage', () => {
     expect(mockSetCategoryFilter).toHaveBeenCalledWith('all');
   });
 
-  it('handles keydown Enter on favourite star (normal view)', async () => {
+  it('the favourite star is a real button, not nested inside the card\'s button', async () => {
+    // A button holding another focusable control is invalid and unreliable for
+    // assistive technology (axe: nested-interactive). The star is a sibling.
+    render(<ReportsPage />);
+    await waitFor(() => expect(screen.getByText('Spending by Category')).toBeInTheDocument());
+    for (const star of screen.getAllByTitle('Add to favourites')) {
+      expect(star.tagName).toBe('BUTTON');
+      expect(star.parentElement!.closest('button')).toBeNull();
+      expect(star).toHaveAttribute('aria-pressed', 'false');
+      expect(star).toHaveAccessibleName('Add to favourites');
+    }
+  });
+
+  it('activates the favourite star from the keyboard with Enter (normal view)', async () => {
+    const user = userEvent.setup();
     render(<ReportsPage />);
     await waitFor(() => expect(screen.getByText('Spending by Category')).toBeInTheDocument());
     const stars = screen.getAllByTitle('Add to favourites');
-    fireEvent.keyDown(stars[0], { key: 'Enter' });
+    stars[0].focus();
+    await user.keyboard('{Enter}');
     // Optimistic update should fire
     expect(mockUpdatePreferences).toHaveBeenCalledWith({
       favouriteReportIds: ['spending-by-category'],
     });
   });
 
-  it('handles keydown Space on favourite star (normal view)', async () => {
+  it('activates the favourite star from the keyboard with Space (normal view)', async () => {
+    const user = userEvent.setup();
     render(<ReportsPage />);
     await waitFor(() => expect(screen.getByText('Spending by Category')).toBeInTheDocument());
     const stars = screen.getAllByTitle('Add to favourites');
-    fireEvent.keyDown(stars[0], { key: ' ' });
+    stars[0].focus();
+    await user.keyboard(' ');
     expect(mockUpdatePreferences).toHaveBeenCalledWith({
       favouriteReportIds: ['spending-by-category'],
     });
@@ -1125,12 +1144,15 @@ describe('ReportsPage', () => {
     expect(mockUpdatePreferences).not.toHaveBeenCalled();
   });
 
-  it('handles keydown Enter on favourite star in compact view', async () => {
+  it('activates the favourite star from the keyboard with Enter in compact view', async () => {
+    const user = userEvent.setup();
     useDensityStore.setState({ densities: { reports: 'compact' } });
     render(<ReportsPage />);
     await waitFor(() => expect(screen.getByText('Spending by Category')).toBeInTheDocument());
     const stars = screen.getAllByTitle('Add to favourites');
-    fireEvent.keyDown(stars[0], { key: 'Enter' });
+    expect(stars[0].parentElement!.closest('button')).toBeNull();
+    stars[0].focus();
+    await user.keyboard('{Enter}');
     expect(mockUpdatePreferences).toHaveBeenCalledWith({
       favouriteReportIds: ['spending-by-category'],
     });

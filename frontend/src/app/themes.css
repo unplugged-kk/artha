@@ -392,6 +392,10 @@ html.dark[data-theme='solarized'] {
 
 /* ===== High contrast -- maximum legibility, saturated accents ===== */
 html[data-theme='highcontrast'] {
+  /* The chip base, not the gray ramp's gray-200 (a mid grey here): a chip needs a
+     light base in light mode so its tinted text can clear 4.5:1 (see
+     lib/category-chip.ts). */
+  --category-bg-base: #dcdcdc;
   --color-gray-50: #ffffff;
   --color-gray-100: #f0f0f0;
   --color-gray-200: #b0b0b0;
@@ -450,6 +454,7 @@ html[data-theme='highcontrast'] {
    second directly, which is why it also clears the card-vs-page floor the
    guard applies to every other theme rather than needing an exemption. */
 html.dark[data-theme='highcontrast'] {
+  --category-bg-base: #1f1f1f;
   --color-gray-100: #ffffff;
   --color-gray-200: #f2f2f2;
   --color-gray-300: #e8e8e8;

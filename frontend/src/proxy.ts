@@ -193,7 +193,10 @@ export async function proxy(request: NextRequest) {
     // X-Forwarded-For rather than X-Real-IP (Traefik, most load balancers)
     // recorded loopback against every push registration and trusted device,
     // indistinguishable from a real connection from the server itself.
-    const clientIp = assertedClientAddress(request.headers);
+    const clientIp = assertedClientAddress(
+      request.headers,
+      process.env.CLIENT_IP_HEADER,
+    );
     if (clientIp) headers.set('x-forwarded-for', clientIp);
     else headers.delete('x-forwarded-for');
     // Forward resolved locale so the backend nestjs-i18n HeaderResolver picks

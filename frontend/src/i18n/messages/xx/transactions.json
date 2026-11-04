@@ -569,6 +569,10 @@
     "rateUnresolved": "[XX-No {from} to {to} rate is available. Enter one — the cash impact cannot be worked out without it, and the two currencies are not equal.-XX]"
   },
   "charts": {
+    "fold": {
+      "show": "[XX-Show chart-XX]",
+      "hide": "[XX-Hide chart-XX]"
+    },
     "balanceHistory": {
       "title": "[XX-Balance History-XX]",
       "noData": "[XX-No balance data available-XX]",

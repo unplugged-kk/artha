@@ -143,6 +143,9 @@ function TransactionsContent() {
   const [showScheduleForm, setShowScheduleForm] = useState(false);
   const [showPayeeForm, setShowPayeeForm] = useState(false);
   const [editingPayee, setEditingPayee] = useState<Payee | undefined>();
+  // The register is the job on this page, so the chart starts folded and the
+  // choice is remembered on this device.
+  const [chartFolded, setChartFolded] = useLocalStorage<boolean>('artha-transactions-chart-folded', true);
   const [accountWidgetCollapsed, setAccountWidgetCollapsed] = useLocalStorage<boolean>('artha-transactions-account-widget-collapsed', false);
   const [payeeWidgetCollapsed, setPayeeWidgetCollapsed] = useLocalStorage<boolean>('artha-transactions-payee-widget-collapsed', false);
   const [categoryWidgetCollapsed, setCategoryWidgetCollapsed] = useLocalStorage<boolean>('artha-transactions-category-widget-collapsed', false);
@@ -1172,7 +1175,19 @@ function TransactionsContent() {
               </div>
             );
           }
-          return chart;
+          return (
+            <div className="mb-4">
+              <button
+                type="button"
+                onClick={() => setChartFolded(!chartFolded)}
+                aria-expanded={!chartFolded}
+                className="inline-flex items-center gap-1 text-sm text-blue-700 dark:text-blue-300 hover:underline focus-visible:ring-2 focus-visible:ring-blue-500 rounded motion-reduce:transition-none"
+              >
+                {chartFolded ? t('charts.fold.show') : t('charts.fold.hide')}
+              </button>
+              {!chartFolded && <div className="mt-2">{chart}</div>}
+            </div>
+          );
         })()}
 
         {/* Account Edit Modal (shared with the Accounts page) */}

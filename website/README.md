@@ -125,7 +125,7 @@ assignment, `insertAdjacentHTML`, `document.write`, `Math.random`, or a
 has no build step, no framework escaping and no CSP behind it, so the DOM-builder
 shape is the whole defence - and Bearer fails the pipeline on the alternative.
 
-Brand colour is `--brand` in `styles.css` (teal `#4fa091`, taken from the app logo).
+The brand colours come from the app logo and are defined once in `frontend/scripts/build-app-icons.mjs`: blue `#3b6ff0`, gold `#f5a623` (the `--gold` variable in `styles.css`) and navy `#0f2557`.
 
 ## Layout on a phone
 

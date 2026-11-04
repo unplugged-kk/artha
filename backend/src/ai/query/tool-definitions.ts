@@ -411,6 +411,68 @@ export const FINANCIAL_TOOLS: AiToolDefinition[] = [
     },
   },
   {
+    name: "india_tax",
+    description:
+      "Indian income tax from figures the user states (nothing is read from the ledger): old vs new regime comparison and remaining 80C/80CCD(1B)/80D headroom, in whole rupees. If the result has supported:false the case is outside the modelled rules (e.g. surcharge); say so and do not estimate it yourself. Quote the numbers as returned.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        operation: {
+          type: "string",
+          enum: ["compare_regimes", "deduction_headroom"],
+        },
+        financialYear: {
+          type: "string",
+          description: "e.g. FY2025-26 (default).",
+        },
+        grossIncome: {
+          type: "number",
+          description: "Annual gross income; required for compare_regimes.",
+        },
+        section80C: { type: "number" },
+        section80CCD1B: { type: "number" },
+        section80D: { type: "number" },
+        seniorCitizen: { type: "boolean" },
+      },
+      required: ["operation"],
+    },
+  },
+  {
+    name: "plan_simulate",
+    description:
+      "What-if planning from figures the user states (nothing is read from the ledger): debt_payoff compares snowball and avalanche; fire projects the corpus and timeline, with optional extraMonthlySavings for a side-by-side. Quote numbers exactly as returned; a status other than paid_off/reachable means the goal is not met under those inputs.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        operation: { type: "string", enum: ["debt_payoff", "fire"] },
+        debts: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              name: { type: "string" },
+              balance: { type: "number" },
+              aprPct: { type: "number" },
+              minPayment: { type: "number" },
+            },
+            required: ["name", "balance", "aprPct", "minPayment"],
+          },
+        },
+        extraMonthly: { type: "number" },
+        currentCorpus: { type: "number" },
+        monthlySavings: { type: "number" },
+        realAnnualReturnPct: {
+          type: "number",
+          description: "Annual return after inflation, percent.",
+        },
+        annualExpenses: { type: "number" },
+        withdrawalRatePct: { type: "number", description: "Default 4." },
+        extraMonthlySavings: { type: "number" },
+      },
+      required: ["operation"],
+    },
+  },
+  {
     name: "render_chart",
     description:
       "Render a chart in the chat so the user can see the data visually. Call this AFTER gathering numbers with another tool (list_transactions, generate_report, compare_periods, etc.). Choose the chart type that fits the data: 'pie' for category breakdowns with 6 or fewer slices, 'bar' for larger breakdowns or period comparisons, 'line' or 'area' for time series (months or weeks). Pass a compact subset of the data (at most 10-15 data points) and aggregate the long tail into an 'Other' bucket. Values must be positive numbers (use absolute values for expenses). Do not narrate the chart's existence in your reply; just render it and summarize the findings.",

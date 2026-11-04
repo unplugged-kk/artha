@@ -202,7 +202,7 @@ export function PushEnableBanner() {
   if (pushPromptDismissed(userId, state.kind)) return null;
 
   return (
-    <div className="border-b border-blue-200 bg-blue-50 px-4 py-2 text-sm text-blue-800 dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-200">
+    <div className="border-b border-gray-200 bg-gray-50 px-4 py-1.5 text-sm text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200">
       <div className="mx-auto flex max-w-5xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-center">
         <span className="text-center sm:text-left">
           <span className="font-semibold">
@@ -226,7 +226,7 @@ export function PushEnableBanner() {
               type="button"
               onClick={handleEnable}
               disabled={isEnabling}
-              className="rounded-md bg-blue-600 px-3 py-1 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 motion-reduce:transition-none dark:focus-visible:ring-offset-blue-900"
+              className="rounded-md bg-blue-600 px-3 py-1 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 motion-reduce:transition-none dark:focus-visible:ring-offset-gray-800"
             >
               {isEnabling ? t('enabling') : t('enableButton')}
             </button>
@@ -234,7 +234,7 @@ export function PushEnableBanner() {
           <button
             type="button"
             onClick={handleDismiss}
-            className="text-blue-700/70 underline hover:text-blue-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:text-blue-300/70 dark:hover:text-blue-100 dark:focus-visible:ring-offset-blue-900"
+            className="text-gray-700 underline hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:text-gray-200 dark:hover:text-gray-50 dark:focus-visible:ring-offset-gray-800"
           >
             {t('dismiss')}
           </button>

@@ -2296,7 +2296,10 @@ CREATE TABLE action_history (
     description VARCHAR(500) NOT NULL,
     description_key VARCHAR(100),
     description_params JSONB,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    actor_type VARCHAR(16) NOT NULL DEFAULT 'user',
+    tool_name VARCHAR(64),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT chk_action_history_actor_type CHECK (actor_type IN ('user', 'ai', 'mcp'))
 );
 
 CREATE INDEX idx_action_history_user_created ON action_history(user_id, created_at DESC);

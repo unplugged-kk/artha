@@ -1,8 +1,8 @@
 import { FINANCIAL_TOOLS } from "./tool-definitions";
 
 describe("FINANCIAL_TOOLS", () => {
-  it("defines exactly 18 tools", () => {
-    expect(FINANCIAL_TOOLS).toHaveLength(18);
+  it("defines exactly 20 tools", () => {
+    expect(FINANCIAL_TOOLS).toHaveLength(20);
   });
 
   it("has unique tool names", () => {
@@ -21,6 +21,8 @@ describe("FINANCIAL_TOOLS", () => {
     "list_upcoming_bills",
     "get_budget_status",
     "calculate",
+    "india_tax",
+    "plan_simulate",
     "render_chart",
     "manage_transactions",
     "manage_payees",
