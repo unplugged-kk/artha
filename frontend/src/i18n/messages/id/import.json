@@ -30,19 +30,22 @@
     "importFailed": "Impor gagal",
     "importedFromFiles": "Berhasil mengimpor {imported} transaksi dari {files} file",
     "imported": "Berhasil mengimpor {imported} transaksi",
-    "mnySingleFileOnly": "Impor berkas Microsoft Money satu per satu -- berkas .mny memuat satu profil utuh."
+    "mnySingleFileOnly": "Impor berkas Microsoft Money satu per satu -- berkas .mny memuat satu profil utuh.",
+    "xlsxSingleFileOnly": "Impor satu berkas Excel dalam satu waktu.",
+    "xlsxNoSheets": "Buku kerja itu tidak memiliki sheet untuk diimpor.",
+    "xlsxParseFailed": "Gagal membaca berkas Excel itu"
   },
   "page": {
     "title": "Impor Transaksi",
-    "subtitle": "Impor transaksi dari file QIF, OFX/QFX, atau CSV, atau bawa satu berkas Microsoft Money (.mny) utuh"
+    "subtitle": "Impor transaksi dari file QIF, OFX/QFX, CSV, atau Excel (.xlsx), atau bawa satu berkas Microsoft Money (.mny) utuh"
   },
   "upload": {
     "heading": "Unggah File Transaksi",
-    "instructions": "Pilih satu atau lebih file untuk diimpor. Format yang didukung: QIF, OFX/QFX, CSV, dan Microsoft Money (.mny).\nAnda dapat memilih beberapa file dengan tipe yang sama untuk impor massal. Impor berkas Microsoft Money satu per satu — berkas .mny memuat satu profil utuh.",
+    "instructions": "Pilih satu atau lebih file untuk diimpor. Format yang didukung: QIF, OFX/QFX, CSV, Excel (.xlsx), dan Microsoft Money (.mny).\nAnda dapat memilih beberapa file dengan tipe yang sama untuk impor massal. Impor berkas Excel dan Microsoft Money satu per satu — satu workbook atau berkas .mny dibaca sebagai satu berkas.",
     "importingTo": "Mengimpor ke:",
     "clickToSelect": "Klik untuk memilih file",
     "processing": "Memproses...",
-    "acceptedFormats": "QIF, OFX, QFX, CSV, atau Microsoft Money (.mny)",
+    "acceptedFormats": "QIF, OFX, QFX, CSV, Excel (.xlsx), atau Microsoft Money (.mny)",
     "mnyFailedHeading": "Berkas Microsoft Money itu tidak dapat dibuka",
     "wikiNotice": {
       "title": "Sebelum Anda mengimpor",
@@ -73,6 +76,18 @@
     "filesCount": "{count} file,",
     "transactionCount": "{count} transaksi",
     "totalTransactionCount": "{count} transaksi"
+  },
+  "xlsxSelectSheet": {
+    "heading": "Pilih Sheet",
+    "description": "Pilih sheet dan baris tempat header kolom berada. Baris di atas header dilewati, dan pembacaan berhenti di baris kosong pertama setelah data.",
+    "sheetLabel": "Sheet",
+    "headerRowLabel": "Baris header",
+    "rowsCount": "{count} baris",
+    "emptySheet": "(kosong)",
+    "previewHeading": "Pratinjau",
+    "noPreview": "Tidak ada baris untuk dipratinjau.",
+    "cancel": "Pilih berkas lain",
+    "confirm": "Lanjutkan"
   },
   "csvMapping": {
     "heading": "Pemetaan Kolom CSV",

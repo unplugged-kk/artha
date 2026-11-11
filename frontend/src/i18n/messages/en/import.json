@@ -6,6 +6,9 @@
     "createAccountFailed": "Failed to create account",
     "loadDataFailed": "Failed to load data",
     "mixedFileTypes": "All files must be the same type. Cannot mix QIF, OFX, and CSV files.",
+    "xlsxSingleFileOnly": "Import one Excel file at a time.",
+    "xlsxNoSheets": "That workbook has no sheets to import.",
+    "xlsxParseFailed": "Failed to read that Excel file",
     "loadedCsvFiles": "Loaded {count} CSV files for import",
     "loadedFiles": "Loaded {count} files for import",
     "parseFilesFailed": "Failed to parse file(s)",
@@ -34,15 +37,15 @@
   },
   "page": {
     "title": "Import Transactions",
-    "subtitle": "Import transactions from QIF, OFX/QFX, or CSV files, or bring across a whole Microsoft Money (.mny) file"
+    "subtitle": "Import transactions from QIF, OFX/QFX, CSV, or Excel (.xlsx) files, or bring across a whole Microsoft Money (.mny) file"
   },
   "upload": {
     "heading": "Upload Transaction Files",
-    "instructions": "Select one or more files to import. Supported formats: QIF, OFX/QFX, CSV, and Microsoft Money (.mny).\nYou can select multiple files of the same type for bulk import. Import Microsoft Money files one at a time — a .mny file holds a whole profile.",
+    "instructions": "Select one or more files to import. Supported formats: QIF, OFX/QFX, CSV, Excel (.xlsx), and Microsoft Money (.mny).\nYou can select multiple files of the same type for bulk import. Import Excel and Microsoft Money files one at a time — a workbook or .mny file is read as a single file.",
     "importingTo": "Importing to:",
     "clickToSelect": "Click to select file(s)",
     "processing": "Processing...",
-    "acceptedFormats": "QIF, OFX, QFX, CSV, or Microsoft Money (.mny)",
+    "acceptedFormats": "QIF, OFX, QFX, CSV, Excel (.xlsx), or Microsoft Money (.mny)",
     "mnyFailedHeading": "That Microsoft Money file could not be opened",
     "wikiNotice": {
       "title": "Before you import",
@@ -73,6 +76,18 @@
     "filesCount": "{count} files,",
     "transactionCount": "{count} transaction{plural}",
     "totalTransactionCount": "{count} transactions"
+  },
+  "xlsxSelectSheet": {
+    "heading": "Select Sheet",
+    "description": "Pick the sheet and the row its column headers are on. Rows above the header are skipped, and reading stops at the first blank row after the data.",
+    "sheetLabel": "Sheet",
+    "headerRowLabel": "Header row",
+    "rowsCount": "{count} rows",
+    "emptySheet": "(empty)",
+    "previewHeading": "Preview",
+    "noPreview": "No rows to preview.",
+    "cancel": "Choose a different file",
+    "confirm": "Continue"
   },
   "csvMapping": {
     "heading": "CSV Column Mapping",

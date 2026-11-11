@@ -322,7 +322,15 @@
     "mnyStagedFileMissing": "Le fichier Money envoyé n'est plus disponible. Veuillez l'envoyer à nouveau.",
     "mnyImportAlreadyRunning": "Un import est déjà en cours. Attendez qu'il se termine avant d'en lancer un autre.",
     "mnyJobNotFound": "Tâche d'import introuvable",
-    "mnyFileTooLarge": "Ce fichier Money dépasse la limite d'import de {{ limit }} Mo."
+    "mnyFileTooLarge": "Ce fichier Money dépasse la limite d'import de {{ limit }} Mo.",
+    "xlsxNoFile": "Aucun fichier Excel n'a été téléversé",
+    "xlsxNotAnExcelFile": "Ce fichier n'est pas un fichier Excel (.xlsx)",
+    "xlsxFileTooLarge": "Ce fichier Excel dépasse la limite d'import de {{ limit }} Mo.",
+    "xlsxUnreadableFile": "Ce fichier n'a pas pu être lu comme un classeur Excel.",
+    "xlsxSheetNotFound": "La feuille \"{{ sheetName }}\" est introuvable dans ce classeur.",
+    "xlsxInvalidHeaderRow": "La ligne {{ headerRow }} n'est pas une ligne d'en-tête valide pour cette feuille.",
+    "xlsxEmptyHeader": "La ligne {{ headerRow }} de \"{{ sheetName }}\" ne contient aucun en-tête de colonne. Choisissez une autre ligne.",
+    "xlsxNoDataRows": "\"{{ sheetName }}\" ne contient aucune ligne de données après la ligne {{ headerRow }}."
   },
   "monteCarlo": {
     "scenarioNotFound": "Scénario {{ id }} introuvable",

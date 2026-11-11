@@ -322,7 +322,15 @@
     "mnyStagedFileMissing": "O arquivo do Money enviado não está mais disponível. Envie-o novamente.",
     "mnyImportAlreadyRunning": "Já existe uma importação em andamento. Aguarde a conclusão antes de iniciar outra.",
     "mnyJobNotFound": "Tarefa de importação não encontrada",
-    "mnyFileTooLarge": "Este arquivo do Money é maior que o limite de importação de {{ limit }} MB."
+    "mnyFileTooLarge": "Este arquivo do Money é maior que o limite de importação de {{ limit }} MB.",
+    "xlsxNoFile": "Nenhum arquivo do Excel foi enviado",
+    "xlsxNotAnExcelFile": "Esse arquivo não é um arquivo do Excel (.xlsx)",
+    "xlsxFileTooLarge": "Esse arquivo do Excel é maior que o limite de importação de {{ limit }} MB.",
+    "xlsxUnreadableFile": "Não foi possível ler esse arquivo como uma pasta de trabalho do Excel.",
+    "xlsxSheetNotFound": "A planilha \"{{ sheetName }}\" não foi encontrada nesta pasta de trabalho.",
+    "xlsxInvalidHeaderRow": "A linha {{ headerRow }} não é uma linha de cabeçalho válida para esta planilha.",
+    "xlsxEmptyHeader": "A linha {{ headerRow }} de \"{{ sheetName }}\" não tem cabeçalhos de coluna. Escolha outra linha.",
+    "xlsxNoDataRows": "\"{{ sheetName }}\" não tem linhas de dados após a linha {{ headerRow }}."
   },
   "monteCarlo": {
     "scenarioNotFound": "Cenário {{ id }} não encontrado",

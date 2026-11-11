@@ -58,8 +58,10 @@
     "class-validator": "^0.14.3",
     "cookie-parser": "^1.4.7",
     "date-fns": "^4.1.0",
+    "exceljs": "^4.4.0",
     "he": "^1.2.0",
     "helmet": "^8.1.0",
+    "http_ece": "1.2.0",
     "libphonenumber-js": "^1.13.12",
     "mdb-reader": "^3.2.0",
     "nestjs-i18n": "^10.8.4",
@@ -80,8 +82,7 @@
     "ua-parser-js": "^2.0.10",
     "undici": "^8.5.0",
     "web-push": "^3.6.7",
-    "zod": "^4.3.6",
-    "http_ece": "1.2.0"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

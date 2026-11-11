@@ -30,19 +30,22 @@
     "importFailed": "Import mislukt",
     "importedFromFiles": "Succesvol {imported} transacties geïmporteerd uit {files} bestanden",
     "imported": "Succesvol {imported} transacties geïmporteerd",
-    "mnySingleFileOnly": "Importeer Microsoft Money-bestanden één voor één -- een .mny-bestand bevat een volledig profiel."
+    "mnySingleFileOnly": "Importeer Microsoft Money-bestanden één voor één -- een .mny-bestand bevat een volledig profiel.",
+    "xlsxSingleFileOnly": "Importeer één Excel-bestand tegelijk.",
+    "xlsxNoSheets": "Die werkmap bevat geen bladen om te importeren.",
+    "xlsxParseFailed": "Dat Excel-bestand kon niet worden gelezen"
   },
   "page": {
     "title": "Transacties importeren",
-    "subtitle": "Importeer transacties vanuit QIF-, OFX/QFX- of CSV-bestanden, of neem een volledig Microsoft Money-bestand (.mny) over"
+    "subtitle": "Importeer transacties vanuit QIF-, OFX/QFX-, CSV- of Excel-bestanden (.xlsx), of neem een volledig Microsoft Money-bestand (.mny) over"
   },
   "upload": {
     "heading": "Transactiebestanden uploaden",
-    "instructions": "Selecteer een of meer bestanden om te importeren. Ondersteunde indelingen: QIF, OFX/QFX, CSV en Microsoft Money (.mny).\nJe kunt meerdere bestanden van hetzelfde type selecteren voor bulkimport. Importeer Microsoft Money-bestanden één voor één — een .mny-bestand bevat een volledig profiel.",
+    "instructions": "Selecteer een of meer bestanden om te importeren. Ondersteunde indelingen: QIF, OFX/QFX, CSV, Excel (.xlsx) en Microsoft Money (.mny).\nJe kunt meerdere bestanden van hetzelfde type selecteren voor bulkimport. Importeer Excel- en Microsoft Money-bestanden één voor één — een werkmap of .mny-bestand wordt als één bestand gelezen.",
     "importingTo": "Importeren naar:",
     "clickToSelect": "Klik om bestand(en) te selecteren",
     "processing": "Verwerken...",
-    "acceptedFormats": "QIF, OFX, QFX, CSV of Microsoft Money (.mny)",
+    "acceptedFormats": "QIF, OFX, QFX, CSV, Excel (.xlsx) of Microsoft Money (.mny)",
     "mnyFailedHeading": "Dit Microsoft Money-bestand kon niet worden geopend",
     "wikiNotice": {
       "title": "Voordat u importeert",
@@ -73,6 +76,18 @@
     "filesCount": "{count} bestanden,",
     "transactionCount": "{count} transactie{plural}",
     "totalTransactionCount": "{count} transacties"
+  },
+  "xlsxSelectSheet": {
+    "heading": "Blad selecteren",
+    "description": "Kies het blad en de rij met de kolomkoppen. Rijen boven de koprij worden overgeslagen, en het lezen stopt bij de eerste lege rij na de gegevens.",
+    "sheetLabel": "Blad",
+    "headerRowLabel": "Koprij",
+    "rowsCount": "{count} rijen",
+    "emptySheet": "(leeg)",
+    "previewHeading": "Voorbeeld",
+    "noPreview": "Geen rijen om te bekijken.",
+    "cancel": "Ander bestand kiezen",
+    "confirm": "Doorgaan"
   },
   "csvMapping": {
     "heading": "CSV-kolomkoppeling",

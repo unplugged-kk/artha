@@ -96,6 +96,15 @@ vi.mock('@/lib/import-mny', () => ({
   },
 }));
 
+const mockXlsxSheets = vi.fn();
+const mockXlsxToCsv = vi.fn();
+vi.mock('@/lib/import-xlsx', () => ({
+  xlsxImportApi: {
+    sheets: (...args: any[]) => mockXlsxSheets(...args),
+    toCsv: (...args: any[]) => mockXlsxToCsv(...args),
+  },
+}));
+
 vi.mock('@/lib/logger', () => ({
   createLogger: () => ({ debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() }),
 }));
@@ -688,6 +697,137 @@ describe('useImportWizard - CSV upload', () => {
 
     await act(async () => { await result.current.handleDeleteColumnMapping('m1'); });
     expect(mockDeleteColumnMapping).toHaveBeenCalled();
+  });
+});
+
+describe('useImportWizard - xlsx upload', () => {
+  const sheetsResponse = {
+    sheets: [
+      { name: 'Transactions', rowCount: 41, guessedHeaderRow: 4, previewRows: [] },
+      { name: 'Dashboard', rowCount: 0, guessedHeaderRow: 1, previewRows: [] },
+    ],
+  };
+
+  it('lists sheets and moves to xlsxSelectSheet, defaulting to the first non-empty sheet', async () => {
+    mockXlsxSheets.mockResolvedValue(sheetsResponse);
+    const { result } = renderHook(() => useImportWizard());
+    await waitFor(() => expect(mockGetCurrencies).toHaveBeenCalled());
+
+    await act(async () => {
+      await result.current.handleFileSelect(fileEvent([makeFile('Budget.xlsx', '')]));
+    });
+
+    expect(mockXlsxSheets).toHaveBeenCalledWith(expect.any(File));
+    expect(result.current.step).toBe('xlsxSelectSheet');
+    expect(result.current.xlsxFileName).toBe('Budget.xlsx');
+    expect(result.current.xlsxSheetName).toBe('Transactions');
+    expect(result.current.xlsxHeaderRow).toBe(4);
+  });
+
+  it('rejects more than one xlsx file at once', async () => {
+    const { result } = renderHook(() => useImportWizard());
+    await waitFor(() => expect(mockGetCurrencies).toHaveBeenCalled());
+
+    await act(async () => {
+      await result.current.handleFileSelect(
+        fileEvent([makeFile('a.xlsx', ''), makeFile('b.xlsx', '')]),
+      );
+    });
+
+    expect(mockXlsxSheets).not.toHaveBeenCalled();
+    expect(result.current.step).toBe('upload');
+  });
+
+  it('reports an empty workbook rather than opening the sheet picker', async () => {
+    mockXlsxSheets.mockResolvedValue({ sheets: [] });
+    const { result } = renderHook(() => useImportWizard());
+    await waitFor(() => expect(mockGetCurrencies).toHaveBeenCalled());
+
+    await act(async () => {
+      await result.current.handleFileSelect(fileEvent([makeFile('Empty.xlsx', '')]));
+    });
+
+    expect(result.current.step).toBe('upload');
+  });
+
+  it('changing the sheet re-guesses the header row from that sheet', async () => {
+    mockXlsxSheets.mockResolvedValue(sheetsResponse);
+    const { result } = renderHook(() => useImportWizard());
+    await waitFor(() => expect(mockGetCurrencies).toHaveBeenCalled());
+
+    await act(async () => {
+      await result.current.handleFileSelect(fileEvent([makeFile('Budget.xlsx', '')]));
+    });
+    act(() => {
+      result.current.handleXlsxSheetChange('Dashboard');
+    });
+
+    expect(result.current.xlsxSheetName).toBe('Dashboard');
+    expect(result.current.xlsxHeaderRow).toBe(1);
+  });
+
+  it('cancel returns to the upload step and clears xlsx state', async () => {
+    mockXlsxSheets.mockResolvedValue(sheetsResponse);
+    const { result } = renderHook(() => useImportWizard());
+    await waitFor(() => expect(mockGetCurrencies).toHaveBeenCalled());
+
+    await act(async () => {
+      await result.current.handleFileSelect(fileEvent([makeFile('Budget.xlsx', '')]));
+    });
+    act(() => {
+      result.current.handleXlsxCancel();
+    });
+
+    expect(result.current.step).toBe('upload');
+    expect(result.current.xlsxFileName).toBe('');
+  });
+
+  it('confirm converts the sheet to CSV and hands it to the existing CSV flow', async () => {
+    mockXlsxSheets.mockResolvedValue(sheetsResponse);
+    mockXlsxToCsv.mockResolvedValue({ content: 'Date,Amount\n2026-08-25,500' });
+    mockParseCsvHeaders.mockResolvedValue({
+      headers: ['Date', 'Amount'],
+      sampleRows: [['2026-08-25', '500']],
+      rowCount: 1,
+    });
+    const { result } = renderHook(() => useImportWizard());
+    await waitFor(() => expect(mockGetCurrencies).toHaveBeenCalled());
+
+    await act(async () => {
+      await result.current.handleFileSelect(fileEvent([makeFile('Budget.xlsx', '')]));
+    });
+    await act(async () => {
+      await result.current.handleXlsxConfirm();
+    });
+
+    expect(mockXlsxToCsv).toHaveBeenCalledWith(expect.any(File), 'Transactions', 4);
+    expect(mockParseCsvHeaders).toHaveBeenCalledWith('Date,Amount\n2026-08-25,500');
+    expect(result.current.step).toBe('csvColumnMapping');
+    expect(result.current.fileType).toBe('csv');
+    expect(result.current.csvHeaders).toEqual(['Date', 'Amount']);
+    expect(result.current.importFiles).toEqual([
+      expect.objectContaining({
+        fileName: 'Budget.xlsx',
+        fileContent: 'Date,Amount\n2026-08-25,500',
+        fileType: 'csv',
+      }),
+    ]);
+  });
+
+  it('confirm reports an error and stays on the sheet picker when the conversion fails', async () => {
+    mockXlsxSheets.mockResolvedValue(sheetsResponse);
+    mockXlsxToCsv.mockRejectedValue(new Error('boom'));
+    const { result } = renderHook(() => useImportWizard());
+    await waitFor(() => expect(mockGetCurrencies).toHaveBeenCalled());
+
+    await act(async () => {
+      await result.current.handleFileSelect(fileEvent([makeFile('Budget.xlsx', '')]));
+    });
+    await act(async () => {
+      await result.current.handleXlsxConfirm();
+    });
+
+    expect(result.current.step).toBe('xlsxSelectSheet');
   });
 });
 

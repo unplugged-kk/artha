@@ -7,6 +7,7 @@ import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { UploadStep } from '@/components/import/UploadStep';
+import { SelectXlsxSheetStep } from '@/components/import/SelectXlsxSheetStep';
 import { SmsIntakeStep } from '@/components/import/SmsIntakeStep';
 import { SelectAccountStep } from '@/components/import/SelectAccountStep';
 import { CsvColumnMappingStep } from '@/components/import/CsvColumnMappingStep';
@@ -111,6 +112,21 @@ function ImportContent() {
             mnyError={
               wizard.mny.passwordPrompt ? null : wizard.mny.uploadError
             }
+          />
+        );
+
+      case 'xlsxSelectSheet':
+        return (
+          <SelectXlsxSheetStep
+            fileName={wizard.xlsxFileName}
+            sheets={wizard.xlsxSheets}
+            sheetName={wizard.xlsxSheetName}
+            headerRow={wizard.xlsxHeaderRow}
+            isLoading={wizard.isLoading}
+            onSheetChange={wizard.handleXlsxSheetChange}
+            onHeaderRowChange={wizard.handleXlsxHeaderRowChange}
+            onCancel={wizard.handleXlsxCancel}
+            onConfirm={wizard.handleXlsxConfirm}
           />
         );
 

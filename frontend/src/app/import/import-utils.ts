@@ -6,9 +6,14 @@ export { formatAccountType, isInvestmentBrokerageAccount } from '@/lib/account-u
  * multipart and never read with `File.text()`, and it skips the mapping steps
  * entirely because the file already carries exact accounts, categories and
  * transfer links.
+ *
+ * `xlsx` is likewise binary and uploaded as multipart, but only ever exists
+ * transiently as the detected file type: once the user picks a sheet and
+ * header row, its content becomes plain CSV and `fileType` moves to `csv`, so
+ * nothing downstream of the sheet picker ever sees `xlsx`.
  */
-export type ImportFileType = 'qif' | 'ofx' | 'csv' | 'mny';
-export type ImportStep = 'upload' | 'csvColumnMapping' | 'selectAccount' | 'mapCategories' | 'mapSecurities' | 'mapAccounts' | 'review' | 'multiAccountReview' | 'mnyReview' | 'mnyImporting' | 'complete';
+export type ImportFileType = 'qif' | 'ofx' | 'csv' | 'mny' | 'xlsx';
+export type ImportStep = 'upload' | 'xlsxSelectSheet' | 'csvColumnMapping' | 'selectAccount' | 'mapCategories' | 'mapSecurities' | 'mapAccounts' | 'review' | 'multiAccountReview' | 'mnyReview' | 'mnyImporting' | 'complete';
 export type MatchConfidence = 'exact' | 'partial' | 'type' | 'none';
 
 export interface ImportFileData {

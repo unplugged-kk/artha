@@ -133,7 +133,7 @@ describe('UploadStep', () => {
     render(<UploadStep preselectedAccount={undefined} isLoading={false} onFileSelect={onFileSelect} />);
 
     const input = document.getElementById('import-file') as HTMLInputElement;
-    expect(input.accept).toBe('.qif,.ofx,.qfx,.csv,.mny');
+    expect(input.accept).toBe('.qif,.ofx,.qfx,.csv,.mny,.xlsx');
     expect(input.multiple).toBe(true);
   });
 
@@ -149,7 +149,7 @@ describe('UploadStep', () => {
       'Microsoft Money (.mny)',
     );
     expect(
-      screen.getByText(/QIF, OFX, QFX, CSV, or Microsoft Money \(\.mny\)/),
+      screen.getByText(/QIF, OFX, QFX, CSV, Excel \(\.xlsx\), or Microsoft Money \(\.mny\)/),
     ).toBeInTheDocument();
   });
 

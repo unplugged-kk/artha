@@ -332,7 +332,15 @@
     "mnyStagedFileMissing": "[XX-The uploaded Money file is no longer available. Please upload it again.-XX]",
     "mnyImportAlreadyRunning": "[XX-An import is already running. Wait for it to finish before starting another.-XX]",
     "mnyJobNotFound": "[XX-Import job not found-XX]",
-    "mnyFileTooLarge": "[XX-That Money file is larger than the {{ limit }} MB import limit.-XX]"
+    "mnyFileTooLarge": "[XX-That Money file is larger than the {{ limit }} MB import limit.-XX]",
+    "xlsxNoFile": "[XX-No Excel file was uploaded-XX]",
+    "xlsxNotAnExcelFile": "[XX-That file is not an Excel (.xlsx) file-XX]",
+    "xlsxFileTooLarge": "[XX-That Excel file is larger than the {{ limit }} MB import limit.-XX]",
+    "xlsxUnreadableFile": "[XX-That file could not be read as an Excel workbook.-XX]",
+    "xlsxSheetNotFound": "[XX-Sheet \"{{ sheetName }}\" was not found in this workbook.-XX]",
+    "xlsxInvalidHeaderRow": "[XX-Row {{ headerRow }} is not a valid header row for this sheet.-XX]",
+    "xlsxEmptyHeader": "[XX-Row {{ headerRow }} of \"{{ sheetName }}\" has no column headers. Pick a different row.-XX]",
+    "xlsxNoDataRows": "[XX-\"{{ sheetName }}\" has no data rows after row {{ headerRow }}.-XX]"
   },
   "monteCarlo": {
     "scenarioNotFound": "[XX-Scenario {{ id }} not found-XX]",

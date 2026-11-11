@@ -322,7 +322,15 @@
     "mnyStagedFileMissing": "Het geüploade Money-bestand is niet langer beschikbaar. Upload het opnieuw.",
     "mnyImportAlreadyRunning": "Er loopt al een import. Wacht tot deze klaar is voordat u een nieuwe start.",
     "mnyJobNotFound": "Importtaak niet gevonden",
-    "mnyFileTooLarge": "Dit Money-bestand is groter dan de importlimiet van {{ limit }} MB."
+    "mnyFileTooLarge": "Dit Money-bestand is groter dan de importlimiet van {{ limit }} MB.",
+    "xlsxNoFile": "Er is geen Excel-bestand geüpload",
+    "xlsxNotAnExcelFile": "Dat bestand is geen Excel-bestand (.xlsx)",
+    "xlsxFileTooLarge": "Dat Excel-bestand is groter dan de importlimiet van {{ limit }} MB.",
+    "xlsxUnreadableFile": "Dat bestand kon niet worden gelezen als Excel-werkmap.",
+    "xlsxSheetNotFound": "Blad \"{{ sheetName }}\" is niet gevonden in deze werkmap.",
+    "xlsxInvalidHeaderRow": "Rij {{ headerRow }} is geen geldige kopregel voor dit blad.",
+    "xlsxEmptyHeader": "Rij {{ headerRow }} van \"{{ sheetName }}\" heeft geen kolomkoppen. Kies een andere rij.",
+    "xlsxNoDataRows": "\"{{ sheetName }}\" heeft geen gegevensrijen na rij {{ headerRow }}."
   },
   "monteCarlo": {
     "scenarioNotFound": "Scenario {{ id }} niet gevonden",

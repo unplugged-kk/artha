@@ -322,7 +322,15 @@
     "mnyStagedFileMissing": "アップロードした Money ファイルは既に利用できません。もう一度アップロードしてください。",
     "mnyImportAlreadyRunning": "インポートが既に実行中です。完了してから次を開始してください。",
     "mnyJobNotFound": "インポートジョブが見つかりません",
-    "mnyFileTooLarge": "この Money ファイルはインポート上限の {{ limit }} MB を超えています。"
+    "mnyFileTooLarge": "この Money ファイルはインポート上限の {{ limit }} MB を超えています。",
+    "xlsxNoFile": "Excel ファイルがアップロードされていません",
+    "xlsxNotAnExcelFile": "そのファイルは Excel (.xlsx) ファイルではありません",
+    "xlsxFileTooLarge": "この Excel ファイルはインポート上限の {{ limit }} MB を超えています。",
+    "xlsxUnreadableFile": "そのファイルは Excel ブックとして読み取れませんでした。",
+    "xlsxSheetNotFound": "このブックにシート \"{{ sheetName }}\" が見つかりません。",
+    "xlsxInvalidHeaderRow": "{{ headerRow }} 行目はこのシートの有効なヘッダー行ではありません。",
+    "xlsxEmptyHeader": "\"{{ sheetName }}\" の {{ headerRow }} 行目には列見出しがありません。別の行を選んでください。",
+    "xlsxNoDataRows": "\"{{ sheetName }}\" には {{ headerRow }} 行目以降にデータ行がありません。"
   },
   "monteCarlo": {
     "scenarioNotFound": "シナリオ {{ id }} が見つかりません",

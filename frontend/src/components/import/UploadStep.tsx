@@ -102,7 +102,7 @@ export function UploadStep({
         <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center">
           <input
             type="file"
-            accept=".qif,.ofx,.qfx,.csv,.mny"
+            accept=".qif,.ofx,.qfx,.csv,.mny,.xlsx"
             multiple
             onChange={onFileSelect}
             className="hidden"

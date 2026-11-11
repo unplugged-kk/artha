@@ -30,19 +30,22 @@
     "importFailed": "Échec de l'importation",
     "importedFromFiles": "{imported} transactions importées avec succès depuis {files} fichiers",
     "imported": "{imported} transactions importées avec succès",
-    "mnySingleFileOnly": "Importez les fichiers Microsoft Money un par un -- un fichier .mny contient un profil complet."
+    "mnySingleFileOnly": "Importez les fichiers Microsoft Money un par un -- un fichier .mny contient un profil complet.",
+    "xlsxSingleFileOnly": "Importez un fichier Excel à la fois.",
+    "xlsxNoSheets": "Ce classeur ne contient aucune feuille à importer.",
+    "xlsxParseFailed": "Impossible de lire ce fichier Excel"
   },
   "page": {
     "title": "Importer des transactions",
-    "subtitle": "Importez des transactions depuis des fichiers QIF, OFX/QFX ou CSV, ou reprenez un fichier Microsoft Money (.mny) complet"
+    "subtitle": "Importez des transactions depuis des fichiers QIF, OFX/QFX, CSV ou Excel (.xlsx), ou reprenez un fichier Microsoft Money (.mny) complet"
   },
   "upload": {
     "heading": "Téléverser des fichiers de transactions",
-    "instructions": "Sélectionnez un ou plusieurs fichiers à importer. Formats acceptés : QIF, OFX/QFX, CSV et Microsoft Money (.mny).\nVous pouvez sélectionner plusieurs fichiers du même type pour une importation en masse. Importez les fichiers Microsoft Money un par un — un fichier .mny contient un profil complet.",
+    "instructions": "Sélectionnez un ou plusieurs fichiers à importer. Formats acceptés : QIF, OFX/QFX, CSV, Excel (.xlsx) et Microsoft Money (.mny).\nVous pouvez sélectionner plusieurs fichiers du même type pour une importation en masse. Importez les fichiers Excel et Microsoft Money un par un — un classeur ou un fichier .mny est lu comme un seul fichier.",
     "importingTo": "Importation vers :",
     "clickToSelect": "Cliquer pour sélectionner le ou les fichiers",
     "processing": "Traitement en cours…",
-    "acceptedFormats": "QIF, OFX, QFX, CSV ou Microsoft Money (.mny)",
+    "acceptedFormats": "QIF, OFX, QFX, CSV, Excel (.xlsx) ou Microsoft Money (.mny)",
     "mnyFailedHeading": "Ce fichier Microsoft Money n'a pas pu être ouvert",
     "wikiNotice": {
       "title": "Avant d'importer",
@@ -73,6 +76,18 @@
     "filesCount": "{count} fichiers,",
     "transactionCount": "{count} transaction{plural}",
     "totalTransactionCount": "{count} transactions"
+  },
+  "xlsxSelectSheet": {
+    "heading": "Sélectionner la feuille",
+    "description": "Choisissez la feuille et la ligne où se trouvent les en-têtes de colonnes. Les lignes au-dessus de l'en-tête sont ignorées, et la lecture s'arrête à la première ligne vide après les données.",
+    "sheetLabel": "Feuille",
+    "headerRowLabel": "Ligne d'en-tête",
+    "rowsCount": "{count} lignes",
+    "emptySheet": "(vide)",
+    "previewHeading": "Aperçu",
+    "noPreview": "Aucune ligne à afficher.",
+    "cancel": "Choisir un autre fichier",
+    "confirm": "Continuer"
   },
   "csvMapping": {
     "heading": "Mappage des colonnes CSV",

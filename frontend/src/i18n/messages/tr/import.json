@@ -30,19 +30,22 @@
     "importFailed": "İçe aktarma başarısız",
     "importedFromFiles": "{files} dosyadan {imported} işlem başarıyla içe aktarıldı",
     "imported": "{imported} işlem başarıyla içe aktarıldı",
-    "mnySingleFileOnly": "Microsoft Money dosyalarını tek tek içe aktarın -- bir .mny dosyası bütün bir profili içerir."
+    "mnySingleFileOnly": "Microsoft Money dosyalarını tek tek içe aktarın -- bir .mny dosyası bütün bir profili içerir.",
+    "xlsxSingleFileOnly": "Excel dosyalarını tek tek içe aktarın.",
+    "xlsxNoSheets": "Bu çalışma kitabında içe aktarılacak sayfa yok.",
+    "xlsxParseFailed": "Bu Excel dosyası okunamadı"
   },
   "page": {
     "title": "İşlem İçe Aktar",
-    "subtitle": "QIF, OFX/QFX veya CSV dosyalarından işlem içe aktarın ya da bütün bir Microsoft Money (.mny) dosyasını aktarın"
+    "subtitle": "QIF, OFX/QFX, CSV veya Excel (.xlsx) dosyalarından işlem içe aktarın ya da bütün bir Microsoft Money (.mny) dosyasını aktarın"
   },
   "upload": {
     "heading": "İşlem Dosyaları Yükle",
-    "instructions": "İçe aktarmak için bir veya daha fazla dosya seçin. Desteklenen biçimler: QIF, OFX/QFX, CSV ve Microsoft Money (.mny).\nToplu içe aktarma için aynı türden birden fazla dosya seçebilirsiniz. Microsoft Money dosyalarını tek tek içe aktarın — bir .mny dosyası bütün bir profili içerir.",
+    "instructions": "İçe aktarmak için bir veya daha fazla dosya seçin. Desteklenen biçimler: QIF, OFX/QFX, CSV, Excel (.xlsx) ve Microsoft Money (.mny).\nToplu içe aktarma için aynı türden birden fazla dosya seçebilirsiniz. Excel ve Microsoft Money dosyalarını tek tek içe aktarın — bir çalışma kitabı veya .mny dosyası tek bir dosya olarak okunur.",
     "importingTo": "İçe aktarılıyor:",
     "clickToSelect": "Dosya(ları) seçmek için tıklayın",
     "processing": "İşleniyor...",
-    "acceptedFormats": "QIF, OFX, QFX, CSV veya Microsoft Money (.mny)",
+    "acceptedFormats": "QIF, OFX, QFX, CSV, Excel (.xlsx) veya Microsoft Money (.mny)",
     "mnyFailedHeading": "Bu Microsoft Money dosyası açılamadı",
     "wikiNotice": {
       "title": "İçe aktarmadan önce",
@@ -73,6 +76,18 @@
     "filesCount": "{count} dosya,",
     "transactionCount": "{count} işlem",
     "totalTransactionCount": "{count} işlem"
+  },
+  "xlsxSelectSheet": {
+    "heading": "Sayfa Seç",
+    "description": "Sütun başlıklarının bulunduğu sayfayı ve satırı seçin. Başlığın üzerindeki satırlar atlanır ve okuma, verilerden sonraki ilk boş satırda durur.",
+    "sheetLabel": "Sayfa",
+    "headerRowLabel": "Başlık satırı",
+    "rowsCount": "{count} satır",
+    "emptySheet": "(boş)",
+    "previewHeading": "Önizleme",
+    "noPreview": "Önizlenecek satır yok.",
+    "cancel": "Başka bir dosya seç",
+    "confirm": "Devam et"
   },
   "csvMapping": {
     "heading": "CSV Sütun Eşleştirmesi",

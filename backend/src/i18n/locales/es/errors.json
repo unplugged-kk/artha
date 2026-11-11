@@ -322,7 +322,15 @@
     "mnyStagedFileMissing": "El archivo de Money subido ya no está disponible. Vuelva a subirlo.",
     "mnyImportAlreadyRunning": "Ya hay una importación en curso. Espere a que termine antes de iniciar otra.",
     "mnyJobNotFound": "Tarea de importación no encontrada",
-    "mnyFileTooLarge": "Ese archivo de Money supera el límite de importación de {{ limit }} MB."
+    "mnyFileTooLarge": "Ese archivo de Money supera el límite de importación de {{ limit }} MB.",
+    "xlsxNoFile": "No se subió ningún archivo de Excel",
+    "xlsxNotAnExcelFile": "Ese archivo no es un archivo de Excel (.xlsx)",
+    "xlsxFileTooLarge": "Ese archivo de Excel supera el límite de importación de {{ limit }} MB.",
+    "xlsxUnreadableFile": "No se pudo leer ese archivo como un libro de Excel.",
+    "xlsxSheetNotFound": "No se encontró la hoja \"{{ sheetName }}\" en este libro.",
+    "xlsxInvalidHeaderRow": "La fila {{ headerRow }} no es una fila de encabezado válida para esta hoja.",
+    "xlsxEmptyHeader": "La fila {{ headerRow }} de \"{{ sheetName }}\" no tiene encabezados de columna. Elige otra fila.",
+    "xlsxNoDataRows": "\"{{ sheetName }}\" no tiene filas de datos después de la fila {{ headerRow }}."
   },
   "monteCarlo": {
     "scenarioNotFound": "Escenario {{ id }} no encontrado",

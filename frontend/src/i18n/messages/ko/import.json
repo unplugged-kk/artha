@@ -30,19 +30,22 @@
     "importFailed": "가져오기에 실패했습니다",
     "importedFromFiles": "{files}개 파일에서 {imported}건의 거래를 성공적으로 가져왔습니다",
     "imported": "{imported}건의 거래를 성공적으로 가져왔습니다",
-    "mnySingleFileOnly": "Microsoft Money 파일은 한 번에 하나씩 가져오세요. .mny 파일에는 프로필 전체가 들어 있습니다."
+    "mnySingleFileOnly": "Microsoft Money 파일은 한 번에 하나씩 가져오세요. .mny 파일에는 프로필 전체가 들어 있습니다.",
+    "xlsxSingleFileOnly": "Excel 파일은 한 번에 하나씩 가져오세요.",
+    "xlsxNoSheets": "이 통합 문서에는 가져올 시트가 없습니다.",
+    "xlsxParseFailed": "해당 Excel 파일을 읽지 못했습니다"
   },
   "page": {
     "title": "거래 가져오기",
-    "subtitle": "QIF, OFX/QFX 또는 CSV 파일에서 거래를 가져오거나 Microsoft Money (.mny) 파일 전체를 가져옵니다"
+    "subtitle": "QIF, OFX/QFX, CSV 또는 Excel (.xlsx) 파일에서 거래를 가져오거나 Microsoft Money (.mny) 파일 전체를 가져옵니다"
   },
   "upload": {
     "heading": "거래 파일 업로드",
-    "instructions": "가져올 파일을 하나 이상 선택하세요. 지원 형식: QIF, OFX/QFX, CSV, Microsoft Money (.mny).\n대량 가져오기를 위해 동일한 유형의 파일을 여러 개 선택할 수 있습니다. Microsoft Money 파일은 한 번에 하나씩 가져오세요. .mny 파일에는 프로필 전체가 들어 있습니다.",
+    "instructions": "가져올 파일을 하나 이상 선택하세요. 지원 형식: QIF, OFX/QFX, CSV, Excel (.xlsx), Microsoft Money (.mny).\n대량 가져오기를 위해 동일한 유형의 파일을 여러 개 선택할 수 있습니다. Excel 및 Microsoft Money 파일은 한 번에 하나씩 가져오세요. 통합 문서나 .mny 파일은 하나의 파일로 읽힙니다.",
     "importingTo": "가져오기 대상:",
     "clickToSelect": "파일을 선택하려면 클릭하세요",
     "processing": "처리 중...",
-    "acceptedFormats": "QIF, OFX, QFX, CSV 또는 Microsoft Money (.mny)",
+    "acceptedFormats": "QIF, OFX, QFX, CSV, Excel (.xlsx) 또는 Microsoft Money (.mny)",
     "mnyFailedHeading": "이 Microsoft Money 파일을 열 수 없습니다",
     "wikiNotice": {
       "title": "가져오기 전에",
@@ -73,6 +76,18 @@
     "filesCount": "파일 {count}개,",
     "transactionCount": "{count}건의 거래",
     "totalTransactionCount": "총 {count}건의 거래"
+  },
+  "xlsxSelectSheet": {
+    "heading": "시트 선택",
+    "description": "열 머리글이 있는 시트와 행을 선택하세요. 머리글 위쪽 행은 건너뛰며, 데이터 뒤에 나오는 첫 빈 행에서 읽기가 멈춥니다.",
+    "sheetLabel": "시트",
+    "headerRowLabel": "머리글 행",
+    "rowsCount": "{count}행",
+    "emptySheet": "(비어 있음)",
+    "previewHeading": "미리보기",
+    "noPreview": "미리 볼 행이 없습니다.",
+    "cancel": "다른 파일 선택",
+    "confirm": "계속"
   },
   "csvMapping": {
     "heading": "CSV 열 매핑",
