@@ -68,9 +68,12 @@ none of the touched files had changed on `main` in the intervening 39 commits.
   `capture/`, `checks/`, `investigation.cany/`, `inbox/`, `craft.json`). It
   rebuilds another product's layout at the root of a workspace whose root is
   not an app, and it also changes the root `package.json` into a Next.js app.
-  It is preserved on the local-only branch `fm/artha-local-beta-01`
-  (`0a19e6311`, with its later layout tweaks in `d793c8e7c`) and in the backup
-  ref `backup/pre-recovery-2026-11-11`; it is not pushed.
+  It is kept off this branch and off `main`. It now lives on
+  `fm/artha-local-beta-01` (`0a19e6311` site, `d14e1038a` layout tweaks,
+  `a7eebbce6` content updates) and is pushed there, so PR #27 carries it too;
+  that PR is the beta-environment PR and mixing the two is a reason to split
+  or close it. The generated `capture/`, `checks/` and `investigation.cany/`
+  artifacts stay uncommitted in every case.
 - Local agent tooling: `.claude/settings.json` hook/statusline config,
   `.claude/helpers/`, `.agents/`, `.cursor/`, `.gemini/`, `.codex/`,
   `.commandcode/`, `.context/`, `.mcp.json`, `opencode.json`.
@@ -160,5 +163,6 @@ on `main` and are imported; the deletions would have broken the build.
 4. `docs/beta/artha-local-beta-01.md` for the beta baseline and BETA-001.
 
 The beta observation period is still the product context: fix defects through
-a triage mission, do not resume feature development in place. PR #27 is open
-and stale; refresh or close it before merging anything else into that branch.
+a triage mission, do not resume feature development in place. PR #27 is open,
+stale, and now also carries the marketing-likeness experiment; split it or
+close it before merging anything else into that branch.
