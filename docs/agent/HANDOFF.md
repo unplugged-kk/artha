@@ -470,6 +470,10 @@ cd e2e && BASE_URL=http://localhost:3001 npx playwright test \
   tests/fund-comparison.spec.ts --project=chromium --workers=1 --retries=0
 ```
 
+**Commit and PR.** `36002cbb9` on `fm/artha-fund-comparison-ui-01`, pushed;
+PR https://github.com/unplugged-kk/artha/pull/36 (base
+`fm/artha-fund-comparison-01`).
+
 **Next action.** (1) Hand #34's four baseline failures and the E2E apt timeout
 to the owner as environment/baseline, then merge in the order above once
 authorized. (2) N3 is functionally complete; the next unfinished backlog item is
