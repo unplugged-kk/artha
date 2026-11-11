@@ -30,19 +30,22 @@
     "importFailed": "Import nie powiódł się",
     "importedFromFiles": "Pomyślnie zaimportowano {imported, plural, one {# transakcję} few {# transakcje} many {# transakcji} other {# transakcji}} z {files, plural, one {# pliku} few {# plików} many {# plików} other {# plików}}",
     "imported": "Pomyślnie zaimportowano {imported, plural, one {# transakcję} few {# transakcje} many {# transakcji} other {# transakcji}}",
-    "mnySingleFileOnly": "Importuj pliki Microsoft Money pojedynczo -- plik .mny zawiera cały profil."
+    "mnySingleFileOnly": "Importuj pliki Microsoft Money pojedynczo -- plik .mny zawiera cały profil.",
+    "xlsxSingleFileOnly": "Importuj jeden plik Excel naraz.",
+    "xlsxNoSheets": "Ten skoroszyt nie ma arkuszy do zaimportowania.",
+    "xlsxParseFailed": "Nie udało się odczytać tego pliku Excel"
   },
   "page": {
     "title": "Import transakcji",
-    "subtitle": "Importuj transakcje z plików QIF, OFX/QFX lub CSV albo przenieś cały plik Microsoft Money (.mny)"
+    "subtitle": "Importuj transakcje z plików QIF, OFX/QFX, CSV lub Excel (.xlsx) albo przenieś cały plik Microsoft Money (.mny)"
   },
   "upload": {
     "heading": "Prześlij pliki z transakcjami",
-    "instructions": "Wybierz jeden lub więcej plików do zaimportowania. Obsługiwane formaty: QIF, OFX/QFX, CSV i Microsoft Money (.mny).\nMożesz wybrać wiele plików tego samego typu do importu zbiorczego. Pliki Microsoft Money importuj pojedynczo — plik .mny zawiera cały profil.",
+    "instructions": "Wybierz jeden lub więcej plików do zaimportowania. Obsługiwane formaty: QIF, OFX/QFX, CSV, Excel (.xlsx) i Microsoft Money (.mny).\nMożesz wybrać wiele plików tego samego typu do importu zbiorczego. Pliki Excel i Microsoft Money importuj pojedynczo — skoroszyt lub plik .mny jest odczytywany jako jeden plik.",
     "importingTo": "Importowanie do:",
     "clickToSelect": "Kliknij, aby wybrać plik(i)",
     "processing": "Przetwarzanie...",
-    "acceptedFormats": "QIF, OFX, QFX, CSV lub Microsoft Money (.mny)",
+    "acceptedFormats": "QIF, OFX, QFX, CSV, Excel (.xlsx) lub Microsoft Money (.mny)",
     "mnyFailedHeading": "Nie udało się otworzyć tego pliku Microsoft Money",
     "wikiNotice": {
       "title": "Zanim zaimportujesz",
@@ -73,6 +76,18 @@
     "filesCount": "{count} plików,",
     "transactionCount": "{count, plural, one {# transakcja} few {# transakcje} many {# transakcji} other {# transakcji}}",
     "totalTransactionCount": "{count} transakcji"
+  },
+  "xlsxSelectSheet": {
+    "heading": "Wybierz arkusz",
+    "description": "Wybierz arkusz i wiersz, w którym znajdują się nagłówki kolumn. Wiersze powyżej nagłówka są pomijane, a odczyt zatrzymuje się na pierwszym pustym wierszu po danych.",
+    "sheetLabel": "Arkusz",
+    "headerRowLabel": "Wiersz nagłówka",
+    "rowsCount": "{count} wierszy",
+    "emptySheet": "(pusty)",
+    "previewHeading": "Podgląd",
+    "noPreview": "Brak wierszy do podglądu.",
+    "cancel": "Wybierz inny plik",
+    "confirm": "Kontynuuj"
   },
   "csvMapping": {
     "heading": "Mapowanie kolumn CSV",

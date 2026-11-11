@@ -819,30 +819,38 @@ describe("PerformanceComparisonService", () => {
   });
 
   it("backfills toward a named window's own start", async () => {
-    const stale = {
-      ...security(SEC_A, "VTI"),
-      historicalBackfillAttemptedAt: null,
-    };
-    securityRepo.find.mockResolvedValue([stale]);
-    manager.query.mockResolvedValue([
-      activityRow(SEC_A, "2025-02-03", "2010-01-15"),
-    ]);
-    (loadPriceSeries as jest.Mock).mockResolvedValue(
-      new Map([[SEC_A, dense("2024-12-30", "2025-12-30", 100, 125)]]),
-    );
+    // Pinned: the provider range is measured back from today, so on a real
+    // clock this fixed four-year window would drift into a deeper tier as
+    // time passes and the assertion would fail for no code change.
+    (todayYMD as jest.Mock).mockImplementation(() => "2025-12-31");
+    try {
+      const stale = {
+        ...security(SEC_A, "VTI"),
+        historicalBackfillAttemptedAt: null,
+      };
+      securityRepo.find.mockResolvedValue([stale]);
+      manager.query.mockResolvedValue([
+        activityRow(SEC_A, "2025-02-03", "2010-01-15"),
+      ]);
+      (loadPriceSeries as jest.Mock).mockResolvedValue(
+        new Map([[SEC_A, dense("2024-12-30", "2025-12-30", 100, 125)]]),
+      );
 
-    await service.getComparison(USER, {
-      securityIds: [SEC_A],
-      indexCodes: [],
-      startDate: "2022-01-01",
-      endDate: "2025-12-31",
-    });
+      await service.getComparison(USER, {
+        securityIds: [SEC_A],
+        indexCodes: [],
+        startDate: "2022-01-01",
+        endDate: "2025-12-31",
+      });
 
-    // Four years back fits inside the five-year range.
-    expect(securityPriceService.backfillSecurityRange).toHaveBeenCalledWith(
-      expect.objectContaining({ id: SEC_A }),
-      "5y",
-    );
+      // Four years back fits inside the five-year range.
+      expect(securityPriceService.backfillSecurityRange).toHaveBeenCalledWith(
+        expect.objectContaining({ id: SEC_A }),
+        "5y",
+      );
+    } finally {
+      (todayYMD as jest.Mock).mockImplementation(actualTodayYMD);
+    }
   });
 
   it("survives a backfill failure and reports the exclusion instead", async () => {

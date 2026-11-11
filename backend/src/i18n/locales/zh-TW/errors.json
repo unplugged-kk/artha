@@ -322,7 +322,15 @@
     "mnyStagedFileMissing": "上傳的 Money 檔案已無法使用，請重新上傳。",
     "mnyImportAlreadyRunning": "已有匯入正在進行。請等待完成後再開始新的匯入。",
     "mnyJobNotFound": "找不到匯入工作",
-    "mnyFileTooLarge": "這個 Money 檔案超過 {{ limit }} MB 的匯入上限。"
+    "mnyFileTooLarge": "這個 Money 檔案超過 {{ limit }} MB 的匯入上限。",
+    "xlsxNoFile": "未上傳 Excel 檔案",
+    "xlsxNotAnExcelFile": "該檔案不是 Excel（.xlsx）檔案",
+    "xlsxFileTooLarge": "該 Excel 檔案超過 {{ limit }} MB 的匯入上限。",
+    "xlsxUnreadableFile": "無法將該檔案作為 Excel 活頁簿讀取。",
+    "xlsxSheetNotFound": "在此活頁簿中找不到工作表「{{ sheetName }}」。",
+    "xlsxInvalidHeaderRow": "第 {{ headerRow }} 列不是此工作表的有效標題列。",
+    "xlsxEmptyHeader": "「{{ sheetName }}」的第 {{ headerRow }} 列沒有欄標題。請選擇其他列。",
+    "xlsxNoDataRows": "「{{ sheetName }}」在第 {{ headerRow }} 列之後沒有資料列。"
   },
   "monteCarlo": {
     "scenarioNotFound": "找不到情境 {{ id }}",

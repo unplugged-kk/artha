@@ -364,6 +364,28 @@ describe("MarketIndexService", () => {
       ).toBe(true);
     });
 
+    it("collapses two provider bars on one date instead of failing the upsert", async () => {
+      // KOSPI returned the same day twice on boot (BETA-001). Postgres refuses
+      // a VALUES list that hits one conflict target twice, so the whole batch
+      // would fail unless duplicates are collapsed before it is built.
+      manager.query.mockResolvedValue([]);
+      yahoo.fetchHistoricalWindow.mockResolvedValue([
+        bar("2025-01-02", 5900),
+        bar("2025-01-02", 5915),
+      ]);
+
+      await service.ensureHistory(["SP500"], "2025-01-01");
+
+      const inserts = manager.query.mock.calls.filter((call) =>
+        String(call[0]).includes("INSERT INTO market_index_prices"),
+      );
+      expect(inserts).toHaveLength(1);
+      const params = inserts[0][1] as unknown[];
+      expect(params).toHaveLength(5);
+      // The later observation wins, as it would inserted one at a time.
+      expect(params[2]).toBe(5915);
+    });
+
     it("stores a single-bar top-up, which has no spacing to judge", async () => {
       manager.query.mockImplementation((sql: string) => {
         if (sql.includes("MIN(price_date)")) {

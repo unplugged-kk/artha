@@ -322,7 +322,15 @@
     "mnyStagedFileMissing": "अपलोड की गई Money फ़ाइल अब उपलब्ध नहीं है। कृपया इसे फिर से अपलोड करें।",
     "mnyImportAlreadyRunning": "एक आयात पहले से चल रहा है। दूसरा शुरू करने से पहले उसके पूरा होने की प्रतीक्षा करें।",
     "mnyJobNotFound": "आयात कार्य नहीं मिला",
-    "mnyFileTooLarge": "यह Money फ़ाइल {{ limit }} MB की आयात सीमा से बड़ी है।"
+    "mnyFileTooLarge": "यह Money फ़ाइल {{ limit }} MB की आयात सीमा से बड़ी है।",
+    "xlsxNoFile": "कोई Excel फ़ाइल अपलोड नहीं की गई",
+    "xlsxNotAnExcelFile": "यह फ़ाइल Excel (.xlsx) फ़ाइल नहीं है",
+    "xlsxFileTooLarge": "यह Excel फ़ाइल {{ limit }} MB की आयात सीमा से बड़ी है।",
+    "xlsxUnreadableFile": "इस फ़ाइल को Excel वर्कबुक के रूप में नहीं पढ़ा जा सका।",
+    "xlsxSheetNotFound": "इस वर्कबुक में शीट \"{{ sheetName }}\" नहीं मिली।",
+    "xlsxInvalidHeaderRow": "पंक्ति {{ headerRow }} इस शीट के लिए मान्य हेडर पंक्ति नहीं है।",
+    "xlsxEmptyHeader": "\"{{ sheetName }}\" की पंक्ति {{ headerRow }} में कोई कॉलम हेडर नहीं है। कोई दूसरी पंक्ति चुनें।",
+    "xlsxNoDataRows": "\"{{ sheetName }}\" में पंक्ति {{ headerRow }} के बाद कोई डेटा पंक्ति नहीं है।"
   },
   "monteCarlo": {
     "scenarioNotFound": "परिदृश्य {{ id }} नहीं मिला",

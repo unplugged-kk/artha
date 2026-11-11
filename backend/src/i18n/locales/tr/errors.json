@@ -322,7 +322,15 @@
     "mnyStagedFileMissing": "Yüklenen Money dosyası artık kullanılamıyor. Lütfen yeniden yükleyin.",
     "mnyImportAlreadyRunning": "Zaten bir içe aktarma çalışıyor. Yenisini başlatmadan önce bitmesini bekleyin.",
     "mnyJobNotFound": "İçe aktarma görevi bulunamadı",
-    "mnyFileTooLarge": "Bu Money dosyası {{ limit }} MB içe aktarma sınırından büyük."
+    "mnyFileTooLarge": "Bu Money dosyası {{ limit }} MB içe aktarma sınırından büyük.",
+    "xlsxNoFile": "Hiçbir Excel dosyası yüklenmedi",
+    "xlsxNotAnExcelFile": "Bu dosya bir Excel (.xlsx) dosyası değil",
+    "xlsxFileTooLarge": "Bu Excel dosyası {{ limit }} MB içe aktarma sınırından büyük.",
+    "xlsxUnreadableFile": "Bu dosya bir Excel çalışma kitabı olarak okunamadı.",
+    "xlsxSheetNotFound": "Bu çalışma kitabında \"{{ sheetName }}\" sayfası bulunamadı.",
+    "xlsxInvalidHeaderRow": "{{ headerRow }}. satır bu sayfa için geçerli bir başlık satırı değil.",
+    "xlsxEmptyHeader": "\"{{ sheetName }}\" sayfasının {{ headerRow }}. satırında sütun başlığı yok. Başka bir satır seçin.",
+    "xlsxNoDataRows": "\"{{ sheetName }}\" sayfasında {{ headerRow }}. satırdan sonra veri satırı yok."
   },
   "monteCarlo": {
     "scenarioNotFound": "{{ id }} senaryosu bulunamadı",

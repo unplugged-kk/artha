@@ -569,6 +569,10 @@
     "rateUnresolved": "沒有 {from} 兌 {to} 的匯率。請輸入——沒有它就無法計算現金影響，且兩種貨幣並不等值。"
   },
   "charts": {
+    "fold": {
+      "show": "顯示圖表",
+      "hide": "隱藏圖表"
+    },
     "balanceHistory": {
       "title": "結餘歷史",
       "noData": "無可用的結餘資料",

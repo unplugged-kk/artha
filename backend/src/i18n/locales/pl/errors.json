@@ -322,7 +322,15 @@
     "mnyStagedFileMissing": "Przesłany plik Money nie jest już dostępny. Prześlij go ponownie.",
     "mnyImportAlreadyRunning": "Import już trwa. Poczekaj na jego zakończenie, zanim rozpoczniesz następny.",
     "mnyJobNotFound": "Nie znaleziono zadania importu",
-    "mnyFileTooLarge": "Ten plik Money jest większy niż limit importu wynoszący {{ limit }} MB."
+    "mnyFileTooLarge": "Ten plik Money jest większy niż limit importu wynoszący {{ limit }} MB.",
+    "xlsxNoFile": "Nie przesłano pliku Excel",
+    "xlsxNotAnExcelFile": "Ten plik nie jest plikiem Excel (.xlsx)",
+    "xlsxFileTooLarge": "Ten plik Excel jest większy niż limit importu wynoszący {{ limit }} MB.",
+    "xlsxUnreadableFile": "Nie udało się odczytać tego pliku jako skoroszytu Excel.",
+    "xlsxSheetNotFound": "Arkusz \"{{ sheetName }}\" nie został znaleziony w tym skoroszycie.",
+    "xlsxInvalidHeaderRow": "Wiersz {{ headerRow }} nie jest prawidłowym wierszem nagłówka dla tego arkusza.",
+    "xlsxEmptyHeader": "Wiersz {{ headerRow }} arkusza \"{{ sheetName }}\" nie zawiera nagłówków kolumn. Wybierz inny wiersz.",
+    "xlsxNoDataRows": "Arkusz \"{{ sheetName }}\" nie zawiera wierszy danych po wierszu {{ headerRow }}."
   },
   "monteCarlo": {
     "scenarioNotFound": "Nie znaleziono scenariusza {{ id }}",

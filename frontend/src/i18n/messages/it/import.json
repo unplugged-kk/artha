@@ -30,19 +30,22 @@
     "importFailed": "Importazione non riuscita",
     "importedFromFiles": "Importate correttamente {imported} transazioni da {files} file",
     "imported": "Importate correttamente {imported} transazioni",
-    "mnySingleFileOnly": "Importa un file di Microsoft Money alla volta: un file .mny contiene un profilo intero."
+    "mnySingleFileOnly": "Importa un file di Microsoft Money alla volta: un file .mny contiene un profilo intero.",
+    "xlsxSingleFileOnly": "Importa un file Excel alla volta.",
+    "xlsxNoSheets": "Quella cartella di lavoro non ha fogli da importare.",
+    "xlsxParseFailed": "Impossibile leggere quel file Excel"
   },
   "page": {
     "title": "Importa transazioni",
-    "subtitle": "Importa transazioni da file QIF, OFX/QFX o CSV, oppure trasferisci un intero file di Microsoft Money (.mny)"
+    "subtitle": "Importa transazioni da file QIF, OFX/QFX, CSV o Excel (.xlsx), oppure trasferisci un intero file di Microsoft Money (.mny)"
   },
   "upload": {
     "heading": "Carica file transazioni",
-    "instructions": "Seleziona uno o più file da importare. Formati supportati: QIF, OFX/QFX, CSV e Microsoft Money (.mny).\nPuoi selezionare più file dello stesso tipo per un'importazione multipla. Importa un file di Microsoft Money alla volta: un file .mny contiene un profilo intero.",
+    "instructions": "Seleziona uno o più file da importare. Formati supportati: QIF, OFX/QFX, CSV, Excel (.xlsx) e Microsoft Money (.mny).\nPuoi selezionare più file dello stesso tipo per un'importazione multipla. Importa i file Excel e Microsoft Money uno alla volta: una cartella di lavoro o un file .mny viene letto come un unico file.",
     "importingTo": "Importazione in:",
     "clickToSelect": "Fai clic per selezionare i file",
     "processing": "Elaborazione...",
-    "acceptedFormats": "QIF, OFX, QFX, CSV o Microsoft Money (.mny)",
+    "acceptedFormats": "QIF, OFX, QFX, CSV, Excel (.xlsx) o Microsoft Money (.mny)",
     "mnyFailedHeading": "Non è stato possibile aprire questo file Microsoft Money",
     "wikiNotice": {
       "title": "Prima di importare",
@@ -73,6 +76,18 @@
     "filesCount": "{count} file,",
     "transactionCount": "{count} transazion{plural}",
     "totalTransactionCount": "{count} transazioni"
+  },
+  "xlsxSelectSheet": {
+    "heading": "Seleziona foglio",
+    "description": "Scegli il foglio e la riga in cui si trovano le intestazioni delle colonne. Le righe sopra l'intestazione vengono saltate e la lettura si interrompe alla prima riga vuota dopo i dati.",
+    "sheetLabel": "Foglio",
+    "headerRowLabel": "Riga di intestazione",
+    "rowsCount": "{count} righe",
+    "emptySheet": "(vuoto)",
+    "previewHeading": "Anteprima",
+    "noPreview": "Nessuna riga da visualizzare in anteprima.",
+    "cancel": "Scegli un altro file",
+    "confirm": "Continua"
   },
   "csvMapping": {
     "heading": "Mappatura colonne CSV",

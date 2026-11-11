@@ -322,7 +322,15 @@
     "mnyStagedFileMissing": "Berkas Money yang diunggah sudah tidak tersedia. Silakan unggah kembali.",
     "mnyImportAlreadyRunning": "Impor sedang berjalan. Tunggu hingga selesai sebelum memulai yang lain.",
     "mnyJobNotFound": "Tugas impor tidak ditemukan",
-    "mnyFileTooLarge": "Berkas Money itu lebih besar dari batas impor {{ limit }} MB."
+    "mnyFileTooLarge": "Berkas Money itu lebih besar dari batas impor {{ limit }} MB.",
+    "xlsxNoFile": "Tidak ada berkas Excel yang diunggah",
+    "xlsxNotAnExcelFile": "Berkas itu bukan berkas Excel (.xlsx)",
+    "xlsxFileTooLarge": "Berkas Excel itu lebih besar dari batas impor {{ limit }} MB.",
+    "xlsxUnreadableFile": "Berkas itu tidak dapat dibaca sebagai workbook Excel.",
+    "xlsxSheetNotFound": "Sheet \"{{ sheetName }}\" tidak ditemukan dalam workbook ini.",
+    "xlsxInvalidHeaderRow": "Baris {{ headerRow }} bukan baris header yang valid untuk sheet ini.",
+    "xlsxEmptyHeader": "Baris {{ headerRow }} dari \"{{ sheetName }}\" tidak memiliki header kolom. Pilih baris lain.",
+    "xlsxNoDataRows": "\"{{ sheetName }}\" tidak memiliki baris data setelah baris {{ headerRow }}."
   },
   "monteCarlo": {
     "scenarioNotFound": "Skenario {{ id }} tidak ditemukan",

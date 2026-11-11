@@ -322,7 +322,15 @@
     "mnyStagedFileMissing": "Tệp Money đã tải lên không còn khả dụng. Vui lòng tải lên lại.",
     "mnyImportAlreadyRunning": "Đã có một lần nhập đang chạy. Hãy đợi hoàn tất trước khi bắt đầu lần khác.",
     "mnyJobNotFound": "Không tìm thấy tác vụ nhập",
-    "mnyFileTooLarge": "Tệp Money đó lớn hơn giới hạn nhập {{ limit }} MB."
+    "mnyFileTooLarge": "Tệp Money đó lớn hơn giới hạn nhập {{ limit }} MB.",
+    "xlsxNoFile": "Không có tệp Excel nào được tải lên",
+    "xlsxNotAnExcelFile": "Tệp đó không phải là tệp Excel (.xlsx)",
+    "xlsxFileTooLarge": "Tệp Excel đó lớn hơn giới hạn nhập {{ limit }} MB.",
+    "xlsxUnreadableFile": "Không thể đọc tệp đó như một workbook Excel.",
+    "xlsxSheetNotFound": "Không tìm thấy trang tính \"{{ sheetName }}\" trong workbook này.",
+    "xlsxInvalidHeaderRow": "Dòng {{ headerRow }} không phải là dòng tiêu đề hợp lệ cho trang tính này.",
+    "xlsxEmptyHeader": "Dòng {{ headerRow }} của \"{{ sheetName }}\" không có tiêu đề cột nào. Hãy chọn một dòng khác.",
+    "xlsxNoDataRows": "\"{{ sheetName }}\" không có dòng dữ liệu nào sau dòng {{ headerRow }}."
   },
   "monteCarlo": {
     "scenarioNotFound": "Không tìm thấy kịch bản {{ id }}",

@@ -1,6 +1,8 @@
 import { Module, forwardRef } from "@nestjs/common";
 import { ImportController } from "./import.controller";
 import { MnyImportController } from "./mny/mny-import.controller";
+import { XlsxImportController } from "./xlsx-import.controller";
+import { XlsxImportService } from "./xlsx-import.service";
 import { ImportService } from "./import.service";
 import { ImportEntityCreatorService } from "./import-entity-creator.service";
 import { ImportInvestmentProcessorService } from "./import-investment-processor.service";
@@ -24,9 +26,10 @@ import { SmsIntakeModule } from "./sms/sms-intake.module";
     forwardRef(() => UsersModule),
     forwardRef(() => SmsIntakeModule),
   ],
-  controllers: [ImportController, MnyImportController],
+  controllers: [ImportController, MnyImportController, XlsxImportController],
   providers: [
     ImportService,
+    XlsxImportService,
     ImportPostProcessingService,
     ImportEntityCreatorService,
     ImportInvestmentProcessorService,

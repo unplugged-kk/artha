@@ -64,7 +64,7 @@ export function WhereYouStand({ netWorthData, scheduledTransactions, isLoading }
         <div>
           <dt className={LABEL}>{t('dueSoon')}</dt>
           <dd className={FIGURE}>{dueSoon}</dd>
-          <dd className={LABEL}>{t('dueSoonHint', { count: dueSoon })}</dd>
+          <dd className={LABEL}>{t('dueSoonHint')}</dd>
         </div>
       </dl>
     </section>

@@ -322,7 +322,15 @@
     "mnyStagedFileMissing": "Die hochgeladene Money-Datei ist nicht mehr verfügbar. Bitte laden Sie sie erneut hoch.",
     "mnyImportAlreadyRunning": "Ein Import läuft bereits. Warten Sie, bis er abgeschlossen ist, bevor Sie einen weiteren starten.",
     "mnyJobNotFound": "Import-Auftrag nicht gefunden",
-    "mnyFileTooLarge": "Diese Money-Datei ist größer als das Importlimit von {{ limit }} MB."
+    "mnyFileTooLarge": "Diese Money-Datei ist größer als das Importlimit von {{ limit }} MB.",
+    "xlsxNoFile": "Es wurde keine Excel-Datei hochgeladen",
+    "xlsxNotAnExcelFile": "Diese Datei ist keine Excel-Datei (.xlsx)",
+    "xlsxFileTooLarge": "Diese Excel-Datei ist größer als das Importlimit von {{ limit }} MB.",
+    "xlsxUnreadableFile": "Diese Datei konnte nicht als Excel-Arbeitsmappe gelesen werden.",
+    "xlsxSheetNotFound": "Das Tabellenblatt \"{{ sheetName }}\" wurde in dieser Arbeitsmappe nicht gefunden.",
+    "xlsxInvalidHeaderRow": "Zeile {{ headerRow }} ist keine gültige Kopfzeile für dieses Tabellenblatt.",
+    "xlsxEmptyHeader": "Zeile {{ headerRow }} von \"{{ sheetName }}\" enthält keine Spaltenüberschriften. Wählen Sie eine andere Zeile.",
+    "xlsxNoDataRows": "\"{{ sheetName }}\" enthält nach Zeile {{ headerRow }} keine Datenzeilen."
   },
   "monteCarlo": {
     "scenarioNotFound": "Szenario {{ id }} nicht gefunden",

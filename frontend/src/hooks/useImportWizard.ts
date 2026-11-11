@@ -52,6 +52,7 @@ import {
   findMatchingSecurityBySymbol,
 } from '@/app/import/import-matching';
 import { preferredCurrency } from '@/lib/default-currency';
+import { xlsxImportApi, XlsxSheetSummary } from '@/lib/import-xlsx';
 
 const logger = createLogger('Import');
 
@@ -62,6 +63,8 @@ function detectFileType(fileName: string): ImportFileType {
   // Checked before anything reads the file: a .mny is a Jet database, and the
   // QIF fallback would hand its bytes to File.text().
   if (ext === 'mny') return 'mny';
+  // Also binary -- read as multipart, never with File.text().
+  if (ext === 'xlsx') return 'xlsx';
   return 'qif';
 }
 
@@ -148,6 +151,13 @@ export function useImportWizard() {
   const [csvColumnMapping, setCsvColumnMapping] = useState<CsvColumnMappingConfig>(DEFAULT_CSV_COLUMN_MAPPING);
   const [csvTransferRules, setCsvTransferRules] = useState<CsvTransferRule[]>([]);
   const [savedColumnMappings, setSavedColumnMappings] = useState<SavedColumnMapping[]>([]);
+
+  // xlsx-specific state: exists only between upload and the sheet picker's
+  // confirm, at which point its output becomes ordinary CSV content above.
+  const [xlsxFile, setXlsxFile] = useState<File | null>(null);
+  const [xlsxSheets, setXlsxSheets] = useState<XlsxSheetSummary[]>([]);
+  const [xlsxSheetName, setXlsxSheetName] = useState<string>('');
+  const [xlsxHeaderRow, setXlsxHeaderRow] = useState<number>(1);
   /**
    * True once accounts, categories, securities and currencies are all in.
    *
@@ -403,6 +413,35 @@ export function useImportWizard() {
       const detectedFileType = uniqueTypes[0];
       setFileType(detectedFileType);
 
+      if (detectedFileType === 'xlsx') {
+        // One workbook at a time: the sheet picker is per-file.
+        if (fileArray.length > 1) {
+          toast.error(t('toasts.xlsxSingleFileOnly'));
+          setIsLoading(false);
+          return;
+        }
+        const file = fileArray[0];
+        try {
+          const response = await xlsxImportApi.sheets(file);
+          if (response.sheets.length === 0) {
+            toast.error(t('toasts.xlsxNoSheets'));
+            setIsLoading(false);
+            return;
+          }
+          const defaultSheet =
+            response.sheets.find((s) => s.rowCount > 0) ?? response.sheets[0];
+          setXlsxFile(file);
+          setXlsxSheets(response.sheets);
+          setXlsxSheetName(defaultSheet.name);
+          setXlsxHeaderRow(defaultSheet.guessedHeaderRow);
+          setStep('xlsxSelectSheet');
+        } catch (error) {
+          toast.error(getErrorMessage(error, t('toasts.xlsxParseFailed')));
+        }
+        setIsLoading(false);
+        return;
+      }
+
       if (detectedFileType === 'mny') {
         // One file only: a Money file is a whole profile, not a statement.
         if (fileArray.length > 1) {
@@ -572,6 +611,73 @@ export function useImportWizard() {
     },
     [handleFiles],
   );
+
+  // xlsx sheet-picker handlers
+  const handleXlsxSheetChange = useCallback(
+    (sheetName: string) => {
+      setXlsxSheetName(sheetName);
+      const sheet = xlsxSheets.find((s) => s.name === sheetName);
+      if (sheet) setXlsxHeaderRow(sheet.guessedHeaderRow);
+    },
+    [xlsxSheets],
+  );
+
+  const handleXlsxHeaderRowChange = useCallback((headerRow: number) => {
+    setXlsxHeaderRow(headerRow);
+  }, []);
+
+  const handleXlsxCancel = useCallback(() => {
+    setXlsxFile(null);
+    setXlsxSheets([]);
+    setXlsxSheetName('');
+    setStep('upload');
+  }, []);
+
+  /**
+   * Converts the chosen sheet to CSV and hands it to the EXISTING CSV flow --
+   * this is the one place xlsx state turns into csv state; nothing past this
+   * point in the wizard ever reads an xlsx field again.
+   */
+  const handleXlsxConfirm = useCallback(async () => {
+    if (!xlsxFile) return;
+    setIsLoading(true);
+    try {
+      const { content } = await xlsxImportApi.toCsv(
+        xlsxFile,
+        xlsxSheetName,
+        xlsxHeaderRow,
+      );
+      const headersResponse = await importApi.parseCsvHeaders(content);
+      setFileType('csv');
+      setCsvHeaders(headersResponse.headers);
+      setCsvSampleRows(headersResponse.sampleRows);
+      setImportFiles([
+        {
+          fileName: xlsxFile.name,
+          fileContent: content,
+          fileType: 'csv',
+          parsedData: null as unknown as ImportFileData['parsedData'],
+          selectedAccountId: preselectedAccountId || '',
+          matchConfidence: preselectedAccountId ? 'exact' : 'none',
+        },
+      ]);
+      const autoMatched = autoMatchCsvColumns(headersResponse.headers);
+      const investmentDetected = looksLikeInvestmentCsv(headersResponse.headers);
+      setCsvColumnMapping({
+        ...DEFAULT_CSV_COLUMN_MAPPING,
+        ...autoMatched,
+        ...(investmentDetected
+          ? { investmentMode: true, ...autoMatchInvestmentColumns(headersResponse.headers) }
+          : {}),
+      });
+      setCsvTransferRules([]);
+      setStep('csvColumnMapping');
+    } catch (error) {
+      toast.error(getErrorMessage(error, t('toasts.xlsxParseFailed')));
+    } finally {
+      setIsLoading(false);
+    }
+  }, [xlsxFile, xlsxSheetName, xlsxHeaderRow, preselectedAccountId, t]);
 
   // CSV column mapping handlers
   const handleCsvColumnMappingChange = useCallback((mapping: CsvColumnMappingConfig) => {
@@ -1182,6 +1288,10 @@ export function useImportWizard() {
     setCsvSampleRows([]);
     setCsvColumnMapping(DEFAULT_CSV_COLUMN_MAPPING);
     setCsvTransferRules([]);
+    setXlsxFile(null);
+    setXlsxSheets([]);
+    setXlsxSheetName('');
+    setXlsxHeaderRow(1);
   };
 
   /** Retries the upload with the password the dialog collected. */
@@ -1268,6 +1378,11 @@ export function useImportWizard() {
     handleSaveColumnMapping,
     handleLoadColumnMapping,
     handleDeleteColumnMapping,
+    // xlsx sheet picker
+    xlsxFileName: xlsxFile?.name ?? '',
+    xlsxSheets, xlsxSheetName, xlsxHeaderRow,
+    handleXlsxSheetChange, handleXlsxHeaderRowChange,
+    handleXlsxConfirm, handleXlsxCancel,
     // Microsoft Money (.mny)
     mny, mnyFileName, handleMnyPasswordSubmit, handleMnyStart, handleMnyDone,
     showMnyWipeConfirm, handleMnyImportClick, handleMnyWipeConfirm,

@@ -257,5 +257,24 @@
     "weekdayLabel": "कार्यदिवस",
     "viewOverview": "अवलोकन",
     "viewByDay": "दिन के अनुसार"
+  },
+  "standing": {
+    "title": "आपकी स्थिति",
+    "netWorth": "कुल संपत्ति",
+    "changeUp": "पिछले महीने से {amount} अधिक",
+    "changeDown": "पिछले महीने से {amount} कम",
+    "assetsAndDebts": "परिसंपत्तियाँ",
+    "liabilities": "कर्ज़: {amount}",
+    "dueSoon": "अगले 7 दिनों में देय",
+    "dueSoonHint": "बिल और जमा",
+    "unavailable": "अभी उपलब्ध नहीं"
+  },
+  "attention": {
+    "title": "ध्यान देने योग्य",
+    "none": "फ़िलहाल कुछ असामान्य नहीं है।",
+    "unavailable": "असामान्य गतिविधि की जाँच नहीं हो सकी। बाद में फिर कोशिश करें।",
+    "uncategorized": "श्रेणी रहित",
+    "spike": "{category} इस महीने {current} पर है, जो सामान्य {usual} से अधिक है।",
+    "subscription": "{payee} अब पिछले शुल्क से {percent} अधिक है।"
   }
 }

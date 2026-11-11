@@ -322,7 +322,15 @@
     "mnyStagedFileMissing": "업로드한 Money 파일을 더 이상 사용할 수 없습니다. 다시 업로드하세요.",
     "mnyImportAlreadyRunning": "가져오기가 이미 실행 중입니다. 완료된 후에 다시 시작하세요.",
     "mnyJobNotFound": "가져오기 작업을 찾을 수 없습니다",
-    "mnyFileTooLarge": "이 Money 파일은 가져오기 한도인 {{ limit }} MB를 초과합니다."
+    "mnyFileTooLarge": "이 Money 파일은 가져오기 한도인 {{ limit }} MB를 초과합니다.",
+    "xlsxNoFile": "업로드된 Excel 파일이 없습니다",
+    "xlsxNotAnExcelFile": "해당 파일은 Excel(.xlsx) 파일이 아닙니다",
+    "xlsxFileTooLarge": "이 Excel 파일은 가져오기 한도인 {{ limit }} MB를 초과합니다.",
+    "xlsxUnreadableFile": "해당 파일을 Excel 워크북으로 읽을 수 없습니다.",
+    "xlsxSheetNotFound": "이 워크북에서 \"{{ sheetName }}\" 시트를 찾을 수 없습니다.",
+    "xlsxInvalidHeaderRow": "{{ headerRow }}행은 이 시트의 유효한 헤더 행이 아닙니다.",
+    "xlsxEmptyHeader": "\"{{ sheetName }}\"의 {{ headerRow }}행에 열 헤더가 없습니다. 다른 행을 선택하세요.",
+    "xlsxNoDataRows": "\"{{ sheetName }}\"에는 {{ headerRow }}행 이후 데이터 행이 없습니다."
   },
   "monteCarlo": {
     "scenarioNotFound": "시나리오 {{ id }}을(를) 찾을 수 없습니다",

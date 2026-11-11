@@ -30,19 +30,22 @@
     "importFailed": "インポートに失敗しました",
     "importedFromFiles": "{files} 件のファイルから {imported} 件の取引を正常にインポートしました",
     "imported": "{imported} 件の取引を正常にインポートしました",
-    "mnySingleFileOnly": "Microsoft Money ファイルは 1 つずつインポートしてください。.mny ファイルにはプロファイル全体が含まれます。"
+    "mnySingleFileOnly": "Microsoft Money ファイルは 1 つずつインポートしてください。.mny ファイルにはプロファイル全体が含まれます。",
+    "xlsxSingleFileOnly": "Excel ファイルは 1 つずつインポートしてください。",
+    "xlsxNoSheets": "そのブックにはインポートできるシートがありません。",
+    "xlsxParseFailed": "その Excel ファイルを読み取れませんでした"
   },
   "page": {
     "title": "取引のインポート",
-    "subtitle": "QIF、OFX/QFX、CSV ファイルから取引をインポートするか、Microsoft Money (.mny) ファイルをまるごと取り込みます"
+    "subtitle": "QIF、OFX/QFX、CSV、Excel (.xlsx) ファイルから取引をインポートするか、Microsoft Money (.mny) ファイルをまるごと取り込みます"
   },
   "upload": {
     "heading": "取引ファイルのアップロード",
-    "instructions": "インポートするファイルを 1 つ以上選択してください。対応形式: QIF、OFX/QFX、CSV、Microsoft Money (.mny)。\n一括インポートのために同じ種類の複数ファイルを選択できます。Microsoft Money ファイルは 1 つずつインポートしてください。.mny ファイルにはプロファイル全体が含まれます。",
+    "instructions": "インポートするファイルを 1 つ以上選択してください。対応形式: QIF、OFX/QFX、CSV、Excel (.xlsx)、Microsoft Money (.mny)。\n一括インポートのために同じ種類の複数ファイルを選択できます。Excel ファイルと Microsoft Money ファイルは 1 つずつインポートしてください。ブックまたは .mny ファイルは 1 つのファイルとして読み込まれます。",
     "importingTo": "インポート先:",
     "clickToSelect": "クリックしてファイルを選択",
     "processing": "処理中...",
-    "acceptedFormats": "QIF、OFX、QFX、CSV、または Microsoft Money (.mny)",
+    "acceptedFormats": "QIF、OFX、QFX、CSV、Excel (.xlsx)、または Microsoft Money (.mny)",
     "mnyFailedHeading": "この Microsoft Money ファイルを開けませんでした",
     "wikiNotice": {
       "title": "インポートする前に",
@@ -73,6 +76,18 @@
     "filesCount": "{count} 件のファイル、",
     "transactionCount": "{count} 件の取引{plural}",
     "totalTransactionCount": "{count} 件の取引"
+  },
+  "xlsxSelectSheet": {
+    "heading": "シートを選択",
+    "description": "列見出しがあるシートと行を選んでください。見出しより上の行は無視され、データの後の最初の空行で読み込みが止まります。",
+    "sheetLabel": "シート",
+    "headerRowLabel": "見出し行",
+    "rowsCount": "{count} 行",
+    "emptySheet": "(空)",
+    "previewHeading": "プレビュー",
+    "noPreview": "プレビューする行がありません。",
+    "cancel": "別のファイルを選ぶ",
+    "confirm": "続ける"
   },
   "csvMapping": {
     "heading": "CSV 列マッピング",

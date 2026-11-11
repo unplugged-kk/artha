@@ -4,6 +4,8 @@ Personal finance management app (Microsoft Money replacement). NestJS backend, N
 
 See `backend/CLAUDE.md`, `frontend/CLAUDE.md`, and `database/CLAUDE.md` for layer-specific details (commands, structure, conventions).
 
+For where the work stands, read `docs/agent/HANDOFF.md` (session log, newest last) and `docs/agent/BACKLOG.md` (the ordered queue, with priorities and the gate that closes each item). `docs/agent/AUTONOMOUS_BUILD.md` holds the build protocol those two follow.
+
 ## Tech Stack
 
 | Layer | Tech | Version |

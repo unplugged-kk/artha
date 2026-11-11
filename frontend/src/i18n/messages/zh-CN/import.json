@@ -30,19 +30,22 @@
     "importFailed": "导入失败",
     "importedFromFiles": "成功从 {files} 个文件导入 {imported} 笔交易",
     "imported": "成功导入 {imported} 笔交易",
-    "mnySingleFileOnly": "请一次导入一个 Microsoft Money 文件 -- 一个 .mny 文件包含完整的账套。"
+    "mnySingleFileOnly": "请一次导入一个 Microsoft Money 文件 -- 一个 .mny 文件包含完整的账套。",
+    "xlsxSingleFileOnly": "请一次导入一个 Excel 文件。",
+    "xlsxNoSheets": "该工作簿没有可导入的工作表。",
+    "xlsxParseFailed": "无法读取该 Excel 文件"
   },
   "page": {
     "title": "导入交易",
-    "subtitle": "从 QIF、OFX/QFX 或 CSV 文件导入交易，或整体导入 Microsoft Money (.mny) 文件"
+    "subtitle": "从 QIF、OFX/QFX、CSV 或 Excel (.xlsx) 文件导入交易，或整体导入 Microsoft Money (.mny) 文件"
   },
   "upload": {
     "heading": "上传交易文件",
-    "instructions": "选择一个或多个文件进行导入。支持的格式：QIF、OFX/QFX、CSV 和 Microsoft Money (.mny)。\n您可以选择多个相同类型的文件进行批量导入。请一次导入一个 Microsoft Money 文件——一个 .mny 文件包含完整的账套。",
+    "instructions": "选择一个或多个文件进行导入。支持的格式：QIF、OFX/QFX、CSV、Excel (.xlsx) 和 Microsoft Money (.mny)。\n您可以选择多个相同类型的文件进行批量导入。请一次导入一个 Excel 或 Microsoft Money 文件——工作簿或 .mny 文件会作为单个文件读取。",
     "importingTo": "导入至：",
     "clickToSelect": "点击选择文件",
     "processing": "处理中...",
-    "acceptedFormats": "QIF、OFX、QFX、CSV 或 Microsoft Money (.mny)",
+    "acceptedFormats": "QIF、OFX、QFX、CSV、Excel (.xlsx) 或 Microsoft Money (.mny)",
     "mnyFailedHeading": "无法打开该 Microsoft Money 文件",
     "wikiNotice": {
       "title": "导入之前",
@@ -73,6 +76,18 @@
     "filesCount": "{count} 个文件，",
     "transactionCount": "{count} 笔交易{plural}",
     "totalTransactionCount": "{count} 笔交易"
+  },
+  "xlsxSelectSheet": {
+    "heading": "选择工作表",
+    "description": "选择列标题所在的工作表和行。标题上方的行将被跳过，读取会在数据之后遇到的第一个空行处停止。",
+    "sheetLabel": "工作表",
+    "headerRowLabel": "标题行",
+    "rowsCount": "{count} 行",
+    "emptySheet": "（空）",
+    "previewHeading": "预览",
+    "noPreview": "没有可预览的行。",
+    "cancel": "选择其他文件",
+    "confirm": "继续"
   },
   "csvMapping": {
     "heading": "CSV 列映射",

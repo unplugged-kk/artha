@@ -30,19 +30,22 @@
     "importFailed": "Імпорт не вдався",
     "importedFromFiles": "Успішно імпортовано {imported} транзакцій з {files} файлів",
     "imported": "Успішно імпортовано {imported} транзакцій",
-    "mnySingleFileOnly": "Імпортуйте файли Microsoft Money по одному -- файл .mny містить цілий профіль."
+    "mnySingleFileOnly": "Імпортуйте файли Microsoft Money по одному -- файл .mny містить цілий профіль.",
+    "xlsxSingleFileOnly": "Імпортуйте файли Excel по одному.",
+    "xlsxNoSheets": "У цій книзі немає аркушів для імпорту.",
+    "xlsxParseFailed": "Не вдалося прочитати цей файл Excel"
   },
   "page": {
     "title": "Імпорт транзакцій",
-    "subtitle": "Імпортуйте транзакції з файлів QIF, OFX/QFX або CSV чи перенесіть цілий файл Microsoft Money (.mny)"
+    "subtitle": "Імпортуйте транзакції з файлів QIF, OFX/QFX, CSV або Excel (.xlsx) чи перенесіть цілий файл Microsoft Money (.mny)"
   },
   "upload": {
     "heading": "Завантажити файли транзакцій",
-    "instructions": "Оберіть один або кілька файлів для імпорту. Підтримувані формати: QIF, OFX/QFX, CSV і Microsoft Money (.mny).\nМожна вибрати кілька файлів одного типу для масового імпорту. Файли Microsoft Money імпортуйте по одному — файл .mny містить цілий профіль.",
+    "instructions": "Оберіть один або кілька файлів для імпорту. Підтримувані формати: QIF, OFX/QFX, CSV, Excel (.xlsx) і Microsoft Money (.mny).\nМожна вибрати кілька файлів одного типу для масового імпорту. Файли Excel і Microsoft Money імпортуйте по одному — книга або файл .mny зчитуються як один файл.",
     "importingTo": "Імпорт до:",
     "clickToSelect": "Натисніть, щоб вибрати файл(и)",
     "processing": "Обробка...",
-    "acceptedFormats": "QIF, OFX, QFX, CSV або Microsoft Money (.mny)",
+    "acceptedFormats": "QIF, OFX, QFX, CSV, Excel (.xlsx) або Microsoft Money (.mny)",
     "mnyFailedHeading": "Не вдалося відкрити цей файл Microsoft Money",
     "wikiNotice": {
       "title": "Перед імпортом",
@@ -73,6 +76,18 @@
     "filesCount": "{count} файлів,",
     "transactionCount": "{count} транзакцій{plural}",
     "totalTransactionCount": "{count} транзакцій"
+  },
+  "xlsxSelectSheet": {
+    "heading": "Вибір аркуша",
+    "description": "Виберіть аркуш і рядок, у якому містяться заголовки стовпців. Рядки вище заголовка пропускаються, а зчитування зупиняється на першому порожньому рядку після даних.",
+    "sheetLabel": "Аркуш",
+    "headerRowLabel": "Рядок заголовка",
+    "rowsCount": "{count} рядків",
+    "emptySheet": "(порожньо)",
+    "previewHeading": "Попередній перегляд",
+    "noPreview": "Немає рядків для попереднього перегляду.",
+    "cancel": "Вибрати інший файл",
+    "confirm": "Продовжити"
   },
   "csvMapping": {
     "heading": "Відображення стовпців CSV",

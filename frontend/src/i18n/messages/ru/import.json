@@ -30,19 +30,22 @@
     "importFailed": "Импорт не удался",
     "importedFromFiles": "Успешно импортировано {imported} проводок из {files} файлов",
     "imported": "Успешно импортировано {imported} проводок",
-    "mnySingleFileOnly": "Импортируйте файлы Microsoft Money по одному -- файл .mny содержит целый профиль."
+    "mnySingleFileOnly": "Импортируйте файлы Microsoft Money по одному -- файл .mny содержит целый профиль.",
+    "xlsxSingleFileOnly": "Импортируйте файлы Excel по одному.",
+    "xlsxNoSheets": "В этой книге нет листов для импорта.",
+    "xlsxParseFailed": "Не удалось прочитать этот файл Excel"
   },
   "page": {
     "title": "Импорт проводок",
-    "subtitle": "Импорт проводок из файлов QIF, OFX/QFX или CSV либо перенос целого файла Microsoft Money (.mny)"
+    "subtitle": "Импорт проводок из файлов QIF, OFX/QFX, CSV или Excel (.xlsx) либо перенос целого файла Microsoft Money (.mny)"
   },
   "upload": {
     "heading": "Загрузить файлы с проводками",
-    "instructions": "Выберите один или несколько файлов для импорта. Поддерживаемые форматы: QIF, OFX/QFX, CSV и Microsoft Money (.mny).\nМожно выбрать несколько файлов одного типа для массового импорта. Файлы Microsoft Money импортируйте по одному — файл .mny содержит целый профиль.",
+    "instructions": "Выберите один или несколько файлов для импорта. Поддерживаемые форматы: QIF, OFX/QFX, CSV, Excel (.xlsx) и Microsoft Money (.mny).\nМожно выбрать несколько файлов одного типа для массового импорта. Файлы Excel и Microsoft Money импортируйте по одному — книга или файл .mny считываются как один файл.",
     "importingTo": "Импорт в:",
     "clickToSelect": "Нажмите для выбора файла(ов)",
     "processing": "Обработка...",
-    "acceptedFormats": "QIF, OFX, QFX, CSV или Microsoft Money (.mny)",
+    "acceptedFormats": "QIF, OFX, QFX, CSV, Excel (.xlsx) или Microsoft Money (.mny)",
     "mnyFailedHeading": "Не удалось открыть этот файл Microsoft Money",
     "wikiNotice": {
       "title": "Перед импортом",
@@ -73,6 +76,18 @@
     "filesCount": "{count} файлов,",
     "transactionCount": "{count} проводок",
     "totalTransactionCount": "{count} проводок"
+  },
+  "xlsxSelectSheet": {
+    "heading": "Выбор листа",
+    "description": "Выберите лист и строку, в которой находятся заголовки столбцов. Строки выше заголовка пропускаются, а чтение останавливается на первой пустой строке после данных.",
+    "sheetLabel": "Лист",
+    "headerRowLabel": "Строка заголовка",
+    "rowsCount": "{count} строк",
+    "emptySheet": "(пусто)",
+    "previewHeading": "Предпросмотр",
+    "noPreview": "Нет строк для предпросмотра.",
+    "cancel": "Выбрать другой файл",
+    "confirm": "Продолжить"
   },
   "csvMapping": {
     "heading": "Сопоставление столбцов CSV",

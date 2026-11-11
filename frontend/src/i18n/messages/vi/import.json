@@ -30,19 +30,22 @@
     "importFailed": "Nhập khẩu thất bại",
     "importedFromFiles": "Đã nhập khẩu thành công {imported} giao dịch từ {files} tệp",
     "imported": "Đã nhập khẩu thành công {imported} giao dịch",
-    "mnySingleFileOnly": "Hãy nhập từng tệp Microsoft Money một -- một tệp .mny chứa toàn bộ một hồ sơ."
+    "mnySingleFileOnly": "Hãy nhập từng tệp Microsoft Money một -- một tệp .mny chứa toàn bộ một hồ sơ.",
+    "xlsxSingleFileOnly": "Hãy nhập từng tệp Excel một.",
+    "xlsxNoSheets": "Sổ làm việc đó không có trang tính nào để nhập.",
+    "xlsxParseFailed": "Không thể đọc tệp Excel đó"
   },
   "page": {
     "title": "Nhập Khẩu Giao Dịch",
-    "subtitle": "Nhập khẩu giao dịch từ các tệp QIF, OFX/QFX hoặc CSV, hoặc mang sang toàn bộ một tệp Microsoft Money (.mny)"
+    "subtitle": "Nhập khẩu giao dịch từ các tệp QIF, OFX/QFX, CSV hoặc Excel (.xlsx), hoặc mang sang toàn bộ một tệp Microsoft Money (.mny)"
   },
   "upload": {
     "heading": "Tải Lên Tệp Giao Dịch",
-    "instructions": "Chọn một hoặc nhiều tệp để nhập khẩu. Các định dạng được hỗ trợ: QIF, OFX/QFX, CSV và Microsoft Money (.mny).\nBạn có thể chọn nhiều tệp cùng loại để nhập khẩu hàng loạt. Hãy nhập từng tệp Microsoft Money một — một tệp .mny chứa toàn bộ một hồ sơ.",
+    "instructions": "Chọn một hoặc nhiều tệp để nhập khẩu. Các định dạng được hỗ trợ: QIF, OFX/QFX, CSV, Excel (.xlsx) và Microsoft Money (.mny).\nBạn có thể chọn nhiều tệp cùng loại để nhập khẩu hàng loạt. Hãy nhập từng tệp Excel và Microsoft Money một — một sổ làm việc hoặc tệp .mny được đọc như một tệp duy nhất.",
     "importingTo": "Đang nhập khẩu vào:",
     "clickToSelect": "Nhấp để chọn tệp",
     "processing": "Đang xử lý...",
-    "acceptedFormats": "QIF, OFX, QFX, CSV hoặc Microsoft Money (.mny)",
+    "acceptedFormats": "QIF, OFX, QFX, CSV, Excel (.xlsx) hoặc Microsoft Money (.mny)",
     "mnyFailedHeading": "Không thể mở tệp Microsoft Money đó",
     "wikiNotice": {
       "title": "Trước khi nhập khẩu",
@@ -73,6 +76,18 @@
     "filesCount": "{count} tệp,",
     "transactionCount": "{count} giao dịch{plural}",
     "totalTransactionCount": "{count} giao dịch"
+  },
+  "xlsxSelectSheet": {
+    "heading": "Chọn Trang Tính",
+    "description": "Chọn trang tính và dòng chứa tiêu đề cột. Các dòng phía trên tiêu đề sẽ bị bỏ qua, và việc đọc dừng lại ở dòng trống đầu tiên sau dữ liệu.",
+    "sheetLabel": "Trang tính",
+    "headerRowLabel": "Dòng tiêu đề",
+    "rowsCount": "{count} dòng",
+    "emptySheet": "(trống)",
+    "previewHeading": "Xem trước",
+    "noPreview": "Không có dòng nào để xem trước.",
+    "cancel": "Chọn tệp khác",
+    "confirm": "Tiếp tục"
   },
   "csvMapping": {
     "heading": "Ánh Xạ Cột CSV",

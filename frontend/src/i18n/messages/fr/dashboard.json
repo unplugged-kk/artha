@@ -257,5 +257,24 @@
     "weekdayLabel": "Semaine",
     "viewOverview": "Vue d'ensemble",
     "viewByDay": "Par jour"
+  },
+  "standing": {
+    "title": "Votre situation",
+    "netWorth": "Valeur nette",
+    "changeUp": "{amount} de plus que le mois dernier",
+    "changeDown": "{amount} de moins que le mois dernier",
+    "assetsAndDebts": "Actifs",
+    "liabilities": "Dettes : {amount}",
+    "dueSoon": "À échéance dans les 7 prochains jours",
+    "dueSoonHint": "factures et dépôts",
+    "unavailable": "Pas encore disponible"
+  },
+  "attention": {
+    "title": "À surveiller",
+    "none": "Rien de notable pour le moment.",
+    "unavailable": "Impossible de vérifier les activités inhabituelles. Réessayez plus tard.",
+    "uncategorized": "Sans catégorie",
+    "spike": "{category} est à {current} ce mois-ci, au-dessus de son niveau habituel de {usual}.",
+    "subscription": "{payee} coûte maintenant {percent} de plus que le prélèvement précédent."
   }
 }

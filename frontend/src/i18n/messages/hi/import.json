@@ -30,19 +30,22 @@
     "importFailed": "आयात विफल हुआ",
     "importedFromFiles": "{files} फ़ाइलों से {imported} लेनदेन सफलतापूर्वक आयात किए गए",
     "imported": "{imported} लेनदेन सफलतापूर्वक आयात किए गए",
-    "mnySingleFileOnly": "Microsoft Money फ़ाइलें एक-एक करके आयात करें -- एक .mny फ़ाइल में पूरी प्रोफ़ाइल होती है।"
+    "mnySingleFileOnly": "Microsoft Money फ़ाइलें एक-एक करके आयात करें -- एक .mny फ़ाइल में पूरी प्रोफ़ाइल होती है।",
+    "xlsxSingleFileOnly": "एक बार में एक Excel फ़ाइल आयात करें।",
+    "xlsxNoSheets": "उस वर्कबुक में आयात करने के लिए कोई शीट नहीं है।",
+    "xlsxParseFailed": "उस Excel फ़ाइल को पढ़ा नहीं जा सका"
   },
   "page": {
     "title": "लेनदेन आयात करें",
-    "subtitle": "QIF, OFX/QFX, या CSV फ़ाइलों से लेनदेन आयात करें, या पूरी Microsoft Money (.mny) फ़ाइल ले आएँ"
+    "subtitle": "QIF, OFX/QFX, CSV, या Excel (.xlsx) फ़ाइलों से लेनदेन आयात करें, या पूरी Microsoft Money (.mny) फ़ाइल ले आएँ"
   },
   "upload": {
     "heading": "लेनदेन फ़ाइलें अपलोड करें",
-    "instructions": "आयात करने के लिए एक या अधिक फ़ाइलें चुनें। समर्थित प्रारूप: QIF, OFX/QFX, CSV और Microsoft Money (.mny)।\nबल्क आयात के लिए आप एक ही प्रकार की कई फ़ाइलें चुन सकते हैं। Microsoft Money फ़ाइलें एक-एक करके आयात करें — एक .mny फ़ाइल में पूरी प्रोफ़ाइल होती है।",
+    "instructions": "आयात करने के लिए एक या अधिक फ़ाइलें चुनें। समर्थित प्रारूप: QIF, OFX/QFX, CSV, Excel (.xlsx) और Microsoft Money (.mny)।\nबल्क आयात के लिए आप एक ही प्रकार की कई फ़ाइलें चुन सकते हैं। Excel और Microsoft Money फ़ाइलें एक-एक करके आयात करें — एक वर्कबुक या .mny फ़ाइल को एक ही फ़ाइल के रूप में पढ़ा जाता है।",
     "importingTo": "इसमें आयात हो रहा है:",
     "clickToSelect": "फ़ाइल(ें) चुनने के लिए क्लिक करें",
     "processing": "प्रसंस्करण हो रहा है...",
-    "acceptedFormats": "QIF, OFX, QFX, CSV, या Microsoft Money (.mny)",
+    "acceptedFormats": "QIF, OFX, QFX, CSV, Excel (.xlsx), या Microsoft Money (.mny)",
     "mnyFailedHeading": "यह Microsoft Money फ़ाइल खोली नहीं जा सकी",
     "wikiNotice": {
       "title": "आयात करने से पहले",
@@ -73,6 +76,18 @@
     "filesCount": "{count} फ़ाइलें,",
     "transactionCount": "{count} लेनदेन{plural}",
     "totalTransactionCount": "{count} लेनदेन"
+  },
+  "xlsxSelectSheet": {
+    "heading": "शीट चुनें",
+    "description": "वह शीट और वह पंक्ति चुनें जिसमें कॉलम हेडर हैं। हेडर से ऊपर की पंक्तियाँ छोड़ दी जाती हैं, और डेटा के बाद पहली खाली पंक्ति पर पढ़ना रुक जाता है।",
+    "sheetLabel": "शीट",
+    "headerRowLabel": "हेडर पंक्ति",
+    "rowsCount": "{count} पंक्तियाँ",
+    "emptySheet": "(खाली)",
+    "previewHeading": "पूर्वावलोकन",
+    "noPreview": "पूर्वावलोकन के लिए कोई पंक्ति नहीं।",
+    "cancel": "दूसरी फ़ाइल चुनें",
+    "confirm": "जारी रखें"
   },
   "csvMapping": {
     "heading": "CSV कॉलम मैपिंग",

@@ -569,6 +569,10 @@
     "rateUnresolved": "Kein Kurs für {from} zu {to} verfügbar. Geben Sie einen ein — ohne ihn lässt sich die Zahlungswirkung nicht ermitteln, und die beiden Währungen sind nicht gleichwertig."
   },
   "charts": {
+    "fold": {
+      "show": "Diagramm anzeigen",
+      "hide": "Diagramm ausblenden"
+    },
     "balanceHistory": {
       "title": "Saldoverlauf",
       "noData": "Keine Saldodaten verfügbar",

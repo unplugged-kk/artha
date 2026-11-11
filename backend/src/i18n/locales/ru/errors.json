@@ -322,7 +322,15 @@
     "mnyStagedFileMissing": "Загруженный файл Money больше недоступен. Загрузите его снова.",
     "mnyImportAlreadyRunning": "Импорт уже выполняется. Дождитесь его завершения, прежде чем запускать новый.",
     "mnyJobNotFound": "Задача импорта не найдена",
-    "mnyFileTooLarge": "Этот файл Money превышает лимит импорта в {{ limit }} МБ."
+    "mnyFileTooLarge": "Этот файл Money превышает лимит импорта в {{ limit }} МБ.",
+    "xlsxNoFile": "Файл Excel не был загружен",
+    "xlsxNotAnExcelFile": "Этот файл не является файлом Excel (.xlsx)",
+    "xlsxFileTooLarge": "Этот файл Excel превышает лимит импорта в {{ limit }} МБ.",
+    "xlsxUnreadableFile": "Не удалось прочитать этот файл как книгу Excel.",
+    "xlsxSheetNotFound": "Лист \"{{ sheetName }}\" не найден в этой книге.",
+    "xlsxInvalidHeaderRow": "Строка {{ headerRow }} не является допустимой строкой заголовка для этого листа.",
+    "xlsxEmptyHeader": "В строке {{ headerRow }} листа \"{{ sheetName }}\" нет заголовков столбцов. Выберите другую строку.",
+    "xlsxNoDataRows": "В листе \"{{ sheetName }}\" нет строк данных после строки {{ headerRow }}."
   },
   "monteCarlo": {
     "scenarioNotFound": "Сценарий {{ id }} не найден",
