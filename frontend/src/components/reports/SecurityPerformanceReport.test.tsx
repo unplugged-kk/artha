@@ -82,6 +82,7 @@ const mockGetTransactions = vi.fn();
 const mockGetInvestmentAccounts = vi.fn();
 const mockGetMarketIndexes = vi.fn();
 const mockGetPerformanceComparison = vi.fn();
+const mockGetFundComparison = vi.fn();
 
 vi.mock('@/lib/investments', () => ({
   investmentsApi: {
@@ -93,6 +94,7 @@ vi.mock('@/lib/investments', () => ({
     getMarketIndexes: (...args: any[]) => mockGetMarketIndexes(...args),
     getPerformanceComparison: (...args: any[]) =>
       mockGetPerformanceComparison(...args),
+    getFundComparison: (...args: any[]) => mockGetFundComparison(...args),
   },
 }));
 
@@ -133,6 +135,11 @@ const mockSecurities = [
   { id: 's-3', symbol: 'OLD', name: 'Old Stock', isActive: false, currencyCode: 'USD' },
   // Security without exchange/securityType/currencyCode for null-branch coverage
   { id: 's-4', symbol: 'BARE', name: 'Bare Security', isActive: true },
+];
+
+const mockFunds = [
+  { id: 'f-1', symbol: 'FUND1', name: 'Example Large Cap Fund', isActive: true, currencyCode: 'INR', securityType: 'MUTUAL_FUND', amfiSchemeCode: '100001' },
+  { id: 'f-2', symbol: 'FUND2', name: 'Example Small Cap Fund', isActive: true, currencyCode: 'INR', securityType: 'MUTUAL_FUND', amfiSchemeCode: '100002' },
 ];
 
 const mockHoldings = [
@@ -195,6 +202,12 @@ describe('SecurityPerformanceReport', () => {
       totals: {},
       gaps: [],
       excluded: [],
+      status: 'complete',
+    });
+    mockGetFundComparison.mockResolvedValue({
+      members: [],
+      groups: [],
+      periods: ['1Y', '3Y', '5Y'],
       status: 'complete',
     });
   });
@@ -1095,6 +1108,72 @@ describe('SecurityPerformanceReport', () => {
       status: 'complete' as const,
     };
   }
+
+  it('shows the fund comparison when two AMFI funds are selected', async () => {
+    mockGetSecurities.mockResolvedValue(mockFunds);
+    mockGetPortfolioSummary.mockResolvedValue({ holdings: [] });
+    mockGetPerformanceComparison.mockResolvedValue(comparisonPayload());
+    mockGetFundComparison.mockResolvedValue({
+      members: mockFunds.map((fund, index) => ({
+        securityId: fund.id,
+        symbol: fund.symbol,
+        name: fund.name,
+        currencyCode: 'INR',
+        fundHouse: 'Example Mutual Fund',
+        fundSchemeType: 'Open Ended Schemes',
+        fundCategory: 'Equity Scheme - Large Cap Fund',
+        eligibility: 'ELIGIBLE',
+        history: {
+          firstDate: '2021-06-30',
+          lastDate: '2026-06-30',
+          observationCount: 4,
+          excludedObservationCount: 0,
+          lastIsStale: false,
+        },
+        periods: [
+          { period: '1Y', months: 12, annualized: false, status: 'OK', completeness: 'complete', windowCount: 1, missingWindowCount: 0, min: { returnPct: 20 + index, startDate: '2025-06-30', endDate: '2026-06-30' }, max: { returnPct: 20 + index, startDate: '2025-06-30', endDate: '2026-06-30' }, median: 20 + index, mean: 20 + index, positiveShare: 100, gaps: [] },
+          { period: '3Y', months: 36, annualized: true, status: 'OK', completeness: 'complete', windowCount: 1, missingWindowCount: 0, min: { returnPct: 10, startDate: '2023-06-30', endDate: '2026-06-30' }, max: { returnPct: 10, startDate: '2023-06-30', endDate: '2026-06-30' }, median: 10, mean: 10, positiveShare: 100, gaps: [] },
+          { period: '5Y', months: 60, annualized: true, status: 'OK', completeness: 'complete', windowCount: 1, missingWindowCount: 0, min: { returnPct: 8, startDate: '2021-06-30', endDate: '2026-06-30' }, max: { returnPct: 8, startDate: '2021-06-30', endDate: '2026-06-30' }, median: 8, mean: 8, positiveShare: 100, gaps: [] },
+        ],
+      })),
+      groups: [{ category: 'Equity Scheme - Large Cap Fund', securityIds: ['f-1', 'f-2'] }],
+      periods: ['1Y', '3Y', '5Y'],
+      status: 'complete',
+    });
+
+    render(<SecurityPerformanceReport />);
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: SELECT_PLACEHOLDER })).toBeInTheDocument();
+    });
+
+    await selectSecurity('FUND1 - Example Large Cap Fund');
+    await selectSecurity('FUND2 - Example Small Cap Fund');
+
+    await waitFor(() => {
+      expect(screen.getByTestId('fund-comparison')).toBeInTheDocument();
+    });
+    expect(mockGetFundComparison).toHaveBeenCalledWith(['f-1', 'f-2']);
+  });
+
+  it('does not offer the fund comparison for securities that are not AMFI funds', async () => {
+    mockGetSecurities.mockResolvedValue(mockSecurities);
+    mockGetPortfolioSummary.mockResolvedValue({ holdings: mockHoldings });
+    mockGetPerformanceComparison.mockResolvedValue(comparisonPayload());
+
+    render(<SecurityPerformanceReport />);
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: SELECT_PLACEHOLDER })).toBeInTheDocument();
+    });
+
+    await selectSecurity('AAPL - Apple Inc.');
+    await selectSecurity('VTI - Vanguard Total Stock');
+
+    await waitFor(() => {
+      expect(screen.getByText('Performance Comparison')).toBeInTheDocument();
+    });
+    expect(screen.queryByTestId('fund-comparison')).not.toBeInTheDocument();
+    expect(mockGetFundComparison).not.toHaveBeenCalled();
+  });
 
   it('shows the comparison chart and hides per-security tabs when 2+ are selected', async () => {
     mockGetSecurities.mockResolvedValue(mockSecurities);

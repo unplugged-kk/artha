@@ -1402,6 +1402,47 @@
       "NORTH_AMERICA": "Bắc Mỹ",
       "EUROPE": "Châu Âu",
       "ASIA_PACIFIC": "Châu Á - Thái Bình Dương"
+    },
+    "fundComparison": {
+      "title": "So sánh quỹ",
+      "subject": "Các quỹ của chính bạn, được nhóm theo danh mục AMFI công bố cho từng chương trình.",
+      "noData": "Không có dữ liệu quỹ nào được trả về cho lựa chọn này.",
+      "loadFailed": "Không thể tải so sánh quỹ.",
+      "retry": "Thử lại",
+      "incomplete": "Một số chỉ số không khả dụng hoặc chưa đầy đủ. Mỗi quỹ nêu lý do.",
+      "deduplicated": "Quỹ được chọn nhiều lần chỉ hiển thị một lần.",
+      "excludedMember": "{fund} không phải quỹ tương hỗ AMFI và không có lợi nhuận trượt.",
+      "selectionTruncated": "Chỉ 20 công cụ đầu tiên được chọn được so sánh.",
+      "uncategorised": "Chưa phân loại",
+      "uncategorisedReason": "AMFI chưa công bố danh mục cho các chương trình này. Chúng được hiển thị cùng nhau và không bao giờ được nhóm với một danh mục đã phân loại.",
+      "notAvailable": "k/a",
+      "noPriceHistory": "Chưa có lịch sử NAV dùng được.",
+      "asOf": "Tính đến {date}",
+      "stale": "Dữ liệu NAV đã cũ: quan sát cuối {date}",
+      "excludedObservations": "{count, plural, other {# quan sát bị loại vì không dùng được.}}",
+      "range": "Thấp nhất {worst} · Cao nhất {best}",
+      "windows": "{count, plural, other {# cửa sổ}}",
+      "missingWindows": "{count, plural, other {# cửa sổ không thể định giá}}",
+      "status": {
+        "INSUFFICIENT_HISTORY": "Lịch sử ngắn hơn kỳ này.",
+        "ALL_WINDOWS_MISSING": "Không cửa sổ nào trong kỳ này có thể định giá.",
+        "NO_PRICE_HISTORY": "Chưa có lịch sử NAV dùng được."
+      },
+      "periods": {
+        "1Y": "1 năm",
+        "3Y": "3 năm",
+        "5Y": "5 năm"
+      },
+      "columns": {
+        "fund": "Quỹ"
+      },
+      "reason": {
+        "NOT_AN_AMFI_FUND": "Không phải quỹ tương hỗ AMFI."
+      },
+      "basisNote": "Lợi nhuận trượt dùng NAV đã công bố; khoản phân phối không được cộng lại.",
+      "idcwNote": "Các chương trình Growth và IDCW được hiển thị như công bố; Artha không suy ra lựa chọn kế hoạch từ tên chương trình.",
+      "classificationNote": "Danh mục là phân loại hiện tại của AMFI. Đây là siêu dữ liệu, không phải khuyến nghị, và mô tả quỹ ở hiện tại chứ không phải trong kỳ được đo.",
+      "ownFundsNote": "Chỉ các quỹ của bạn được so sánh. Artha không có danh mục quỹ toàn thị trường, nên không có trung vị, phân vị hay xếp hạng theo danh mục."
     }
   },
   "securityTypeAllocation": {

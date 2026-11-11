@@ -1402,6 +1402,47 @@
       "NORTH_AMERICA": "Amerika Utara",
       "EUROPE": "Eropa",
       "ASIA_PACIFIC": "Asia-Pasifik"
+    },
+    "fundComparison": {
+      "title": "Perbandingan reksa dana",
+      "subject": "Reksa dana Anda sendiri, dikelompokkan menurut kategori yang diterbitkan AMFI untuk setiap skema.",
+      "noData": "Tidak ada data reksa dana yang dikembalikan untuk pilihan ini.",
+      "loadFailed": "Perbandingan reksa dana tidak dapat dimuat.",
+      "retry": "Coba lagi",
+      "incomplete": "Beberapa angka tidak tersedia atau tidak lengkap. Setiap reksa dana menyebutkan alasannya.",
+      "deduplicated": "Reksa dana yang dipilih lebih dari sekali ditampilkan satu kali.",
+      "excludedMember": "{fund} bukan reksa dana AMFI dan tidak memiliki imbal hasil bergulir.",
+      "selectionTruncated": "Hanya 20 instrumen pertama yang dipilih yang dibandingkan.",
+      "uncategorised": "Belum dikategorikan",
+      "uncategorisedReason": "AMFI belum menerbitkan kategori untuk skema ini. Skema ditampilkan bersama dan tidak pernah dikelompokkan dengan kategori yang terklasifikasi.",
+      "notAvailable": "t/a",
+      "noPriceHistory": "Belum ada riwayat NAV yang dapat digunakan.",
+      "asOf": "Per {date}",
+      "stale": "Data NAV sudah usang: observasi terakhir {date}",
+      "excludedObservations": "{count, plural, other {# observasi dikecualikan karena tidak dapat digunakan.}}",
+      "range": "Terburuk {worst} · Terbaik {best}",
+      "windows": "{count, plural, other {# jendela}}",
+      "missingWindows": "{count, plural, other {# jendela tidak dapat dinilai}}",
+      "status": {
+        "INSUFFICIENT_HISTORY": "Riwayat lebih pendek dari periode ini.",
+        "ALL_WINDOWS_MISSING": "Tidak ada jendela pada periode ini yang dapat dinilai.",
+        "NO_PRICE_HISTORY": "Belum ada riwayat NAV yang dapat digunakan."
+      },
+      "periods": {
+        "1Y": "1 tahun",
+        "3Y": "3 tahun",
+        "5Y": "5 tahun"
+      },
+      "columns": {
+        "fund": "Reksa dana"
+      },
+      "reason": {
+        "NOT_AN_AMFI_FUND": "Bukan reksa dana AMFI."
+      },
+      "basisNote": "Imbal hasil bergulir menggunakan NAV yang diterbitkan; distribusi tidak ditambahkan kembali.",
+      "idcwNote": "Skema Growth dan IDCW ditampilkan sebagaimana diterbitkan; Artha tidak menyimpulkan opsi rencana dari nama skema.",
+      "classificationNote": "Kategori adalah klasifikasi AMFI saat ini. Ini metadata, bukan rekomendasi, dan menggambarkan reksa dana hari ini, bukan sepanjang periode yang diukur.",
+      "ownFundsNote": "Hanya reksa dana Anda sendiri yang dibandingkan. Artha tidak memiliki semesta reksa dana, sehingga tidak ada median, persentil, atau peringkat kategori."
     }
   },
   "securityTypeAllocation": {
