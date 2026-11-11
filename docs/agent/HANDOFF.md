@@ -121,6 +121,7 @@ on `main` and are imported; the deletions would have broken the build.
 | Backend unit — `src/import/xlsx` + all `src/i18n` | 11 suites, 313 tests pass |
 | Backend unit — `performance-comparison.service.spec.ts` | 42/42 pass after the fix |
 | Backend unit — `market-index.service.spec.ts` | 49/49 pass after the BETA-001 fix |
+| Backend unit — `src/securities` + `src/import` | 116 suites, 3,753 tests pass |
 | Backend unit — `module-graph.spec.ts` alone | 59/59 pass |
 | Frontend type-check | clean |
 | Frontend lint | clean (1 pre-existing `sw.js` warning) |
