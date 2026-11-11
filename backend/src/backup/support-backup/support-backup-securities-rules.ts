@@ -52,6 +52,15 @@ export const SECURITIES_RULES: Record<string, TableRules> = {
     // reason as the provider id above.
     isin: drop,
     amfi_scheme_code: drop,
+    // The AMFI classification. Public reference data like `sector`/`industry`
+    // above, and deliberately not an identity: an AMC and a scheme category are
+    // shared by many schemes, so they do not undo the masked symbol/name the way
+    // the scheme code beside them would. Kept so a support bundle can still show
+    // which kind of fund a defect involved.
+    fund_house: keep,
+    fund_scheme_type: keep,
+    fund_category: keep,
+    fund_classification_updated_at: keep,
     historical_backfill_attempted_at: keep,
     created_at: keep,
     updated_at: keep,
