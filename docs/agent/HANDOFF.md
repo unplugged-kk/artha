@@ -166,3 +166,100 @@ The beta observation period is still the product context: fix defects through
 a triage mission, do not resume feature development in place. PR #27 is open,
 stale, and now also carries the marketing-likeness experiment; split it or
 close it before merging anything else into that branch.
+
+## Development session (2026-11-11, branch `fm/artha-fund-categories-01`, PR #34)
+
+Started from `main` at `259f7690e` (PR #33 merged). No local changes were
+discarded: the only untracked path was `.commandcode/` (local agent tooling,
+deliberately not committed). This file is the authoritative handover **and** the
+session log; a separate `SESSION_LOG.md` would duplicate it, so entries continue
+here, newest last, as the header says.
+
+**Objective.** Take the highest-priority unfinished product milestone from
+`BACKLOG.md`. N1 (BETA-001) was already fixed; N2 (restore rehearsal) is a
+verification exercise needing a disposable database; N3 (Mission 5B, the
+approved `docs/specs/fund-categories-and-comparison.md`) is the next P2 product
+capability and was fully specified with invariants, a test matrix and acceptance
+criteria. N3 was split the way the spec allows: the category half ships
+independently of the comparison half.
+
+**What was implemented (category half of N3).**
+
+- `backend/src/securities/providers/mfapi-payload.util.ts`:
+  `parseMfapiSchemeClassification` and the `MfapiScheme.classification` field.
+  Blank/non-string become `null`, never `""`; a missing `meta` object is `null`.
+- `backend/src/securities/fund-classification.service.ts`:
+  `ensureFundClassification`. Seven-day staleness gate, provider answer required
+  before any write or stamp, writes keyed on `(id, userId)`, one
+  `withScopedDb` transaction, failures logged and swallowed. Reuses
+  `AmfiNavService.fetchSchemeClassification`, which reuses the existing 4h
+  scheme-payload cache, so no new provider call while the payload is warm.
+- Capture is wired into the securities list, the security detail and the
+  rolling-returns read.
+- Schema: `fund_house`, `fund_scheme_type`, `fund_category`,
+  `fund_classification_updated_at` on `securities`; migration
+  `database/migrations/20261111090000_fund_classification.sql` (additive and
+  idempotent) plus `database/schema.sql` in the same commit.
+- Frontend: the four fields on `Security`; Fund house / Scheme type / Fund
+  category rows in `SecurityKeyInformation`; a Category column on the securities
+  list (`hidden md:table-cell`, same dash as an empty exchange for a non-fund);
+  a client-side category filter offering only the categories present plus
+  `Uncategorised` only when an AMFI fund lacks one.
+- Docs: `INV-FUNDCAT-001`/`INV-FUNDCAT-002` added to the catalog and the
+  verification matrix; the spec's implementation-status line and `BACKLOG.md`
+  N3 record the split.
+
+**Decisions worth inheriting.**
+
+- A write requires a non-null `scheme_category`. The spec's write rule is
+  category-driven, and an answer without one is nothing to store; the row stays
+  due, so the next read retries. `fundHouse`/`fundSchemeType` are written in the
+  same statement as the category, never alone.
+- The mobile wrapped card does **not** carry Category. The tier row hides it
+  below `md` anyway, and the page filter is the phone's way to narrow by it. The
+  card's invariant comment was updated rather than left false.
+- `SecuritiesService.findAll`/`findOne` were left alone: `findOne` is the
+  ownership check on many write paths, and a provider fetch there would put a
+  network call in front of every mutation. Capture sits on the controller's list
+  route and inside `SecurityDetailService.getDetail`.
+
+**Tests and results (all run in this environment).**
+
+| Gate | Result |
+|---|---|
+| Backend typecheck / lint / build | clean |
+| `src/securities` unit (52 suites) | 1,879 tests; the only 2 initial failures were DI wiring in `securities.controller.spec.ts` and `security-detail.service.spec.ts` (fixed, both green) |
+| Guard suites after staging (`fund-classification.guard`, `doc-paths`, `source-comment-paths`, `invariant-catalog-parity`) | green |
+| `test/integration/fund-classification.integration.spec.ts` | 4/4 on real PostgreSQL 17 |
+| `schema-entity-parity`, `migration-path`, `fund-rolling-returns` integration | 16/16 |
+| `migration:lint` and the 196-migration replay | clean |
+| Frontend type-check / lint / `i18n:check` / parity (1,648) | clean |
+| Frontend full unit suite | 882 files / 16,800 tests pass |
+| Frontend production build | clean |
+| Playwright / docker E2E stack | not run (no browser stack here) |
+
+**Commits and PR.** `64f8e1d76` on `fm/artha-fund-categories-01`, pushed; PR
+https://github.com/unplugged-kk/artha/pull/34. CI is the reviewer of record for
+the gates that need the compose stack.
+
+**Environment on this machine (for the next agent).** No system PostgreSQL was
+running; one was created for this session with the Nix binaries:
+`initdb -D /home/ubuntu/pgdata -U artha_user --auth=trust`, then
+`pg_ctl -D /home/ubuntu/pgdata -l /home/ubuntu/pgdata/server.log -o "-k /tmp -p 5432" start`.
+`artha_test` was created, and `ALTER ROLE artha_user CREATEDB` was granted (the
+migration-path spec creates a scratch database). The shell exports
+`NODE_ENV=production`, which makes `npm ci` skip dev dependencies and makes
+Vitest load production React -- prefix installs with
+`NODE_ENV=development npm ci --include=dev` and tests with `NODE_ENV=test`.
+Backend unit tests are slow in this environment (a single suite ~25s cold); run
+suites in the background rather than under the 10-minute command cap.
+
+**Next action.** (1) Push this handover commit and let PR #34's CI run; if green,
+it is ready for the project's merge rule. (2) Next milestone: the **comparison
+half of N3** — `GET /investments/performance/funds/comparison`,
+`FundComparisonTable` grouped by `fund_category` (Uncategorised last), the
+`fundHouse`/`fundSchemeType`/`fundCategory` member fields, INV-FUNDCMP-001..003,
+and the E2E journey in spec §9. Every figure must come from
+`computeRollingReturns`; no category median, percentile or ranking
+(INV-FUNDCMP-002). (3) Then N2 (restore rehearsal) and N4 (expose the duplicate
+and low-balance detectors), both specified in `BACKLOG.md`.
