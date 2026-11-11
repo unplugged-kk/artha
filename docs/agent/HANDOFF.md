@@ -263,3 +263,64 @@ and the E2E journey in spec §9. Every figure must come from
 `computeRollingReturns`; no category median, percentile or ranking
 (INV-FUNDCMP-002). (3) Then N2 (restore rehearsal) and N4 (expose the duplicate
 and low-balance detectors), both specified in `BACKLOG.md`.
+
+## Development session, second milestone (2026-11-11, branch `fm/artha-fund-comparison-01`)
+
+Branched from `fm/artha-fund-categories-01` at `cdd128e6e`, because the
+comparison needs the classification columns from PR #34. The PRs stack: merge
+#34 first, then this one.
+
+**Objective.** The comparison half of N3, backend first. The spec allows the
+category half to ship alone but not the comparison without it.
+
+**What was implemented (fund comparison API).**
+
+- `GET /api/v1/investments/performance/funds/comparison?securityIds=<uuid,...>`
+  on the existing `PerformanceComparisonController`: 2..20 ids, `ParseUUIDPipe`
+  shape not needed (a DTO), owner-only (no `@AllowDelegate`), throttled 60/min
+  because the history fetch may reach the provider.
+- `PerformanceComparisonService.getFundComparison`: ownership first, duplicate
+  ids collapsed (survivor marked `deduplicated`), one classification sweep, the
+  same five-year history ensure the rolling card uses, **one**
+  `loadPriceSeries` call for every eligible fund (`amfi_nav` + `manual`, RAW,
+  daily), then `computeRollingReturns` per fund.
+- Grouping by the stored category string, categories sorted, Unclassified last,
+  request order inside a group. No statistic is computed across funds.
+- `status: "complete"` only when every member is an eligible fund and every
+  period is `OK` and complete; otherwise `incomplete`.
+- Wire types `FundComparisonMember` / `FundComparisonGroup` /
+  `FundComparisonView` reuse `RollingPeriodResult` and
+  `FundRollingReturnsHistory`, so a change to the engine cannot leave the
+  comparison on a parallel formula.
+- `INV-FUNDCMP-001..003` catalogued and added to the verification matrix.
+
+**Decisions worth inheriting.**
+
+- `FundComparisonView.periods` is a literal `["1Y","3Y","5Y"]`. The engine's
+  period list is not exported; deriving it would have meant exporting an
+  internal, and the order is part of the contract.
+- A repeated id is accepted, not rejected: the caller is told their list shrank
+  rather than being refused for a harmless payload.
+- The comparison does not reuse `getComparison`; the two answer different
+  questions (shared-start overlay vs per-fund distributions).
+
+**Tests and results.**
+
+| Gate | Result |
+|---|---|
+| Backend typecheck / lint / build | clean |
+| `performance-comparison.service.spec.ts` | 50/50 (9 new: engine equality, one read, non-AMFI excluded, dedupe + order, grouping, incomplete, complete, 404) |
+| `performance-comparison.controller.spec.ts` | 24/24 (6 new: path, owner-only, throttle, 2..20 validation, non-UUID/oversize, delegation) |
+| `test/integration/fund-comparison.integration.spec.ts` | 4/4 on real PostgreSQL 17 |
+| `array-bound-dto`, `invariant-catalog-parity`, `doc-paths`, `source-comment-paths` | green |
+| Frontend | untouched by this milestone; the previous milestone's suite is green (882 files / 16,800 tests) |
+
+**Commit and PR.** `016ec883c` (plus the handover commit that follows it) on
+`fm/artha-fund-comparison-01`, stacked on PR #34.
+
+**Still open for N3.** The comparison UI: frontend types and
+`getFundComparison` client, `FundComparisonTable` (grouped by category,
+category first, "n/a" + reason for a null, sortable shown columns only, no rank
+badge), wiring it into `SecurityPerformanceReport` when ≥2 selected instruments
+are AMFI funds, i18n keys in every locale, and `e2e/tests/fund-comparison.spec.ts`.
+Then N2 (restore rehearsal) and N4 (expose the built detectors).
