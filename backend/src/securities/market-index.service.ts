@@ -734,9 +734,20 @@ export class MarketIndexService implements OnApplicationBootstrap {
    * the series' basis silently flips from adjusted to raw between two reads.
    */
   private async bulkUpsert(rows: readonly UpsertRow[]): Promise<void> {
+    // A provider payload can name the same conflict target twice -- KOSPI did
+    // on boot (BETA-001) -- and Postgres rejects the whole statement when a
+    // VALUES list hits one target twice ("ON CONFLICT DO UPDATE command
+    // cannot affect row a second time"). Collapse duplicates over the whole
+    // payload rather than per batch, so a pair split across the 500-row
+    // boundary is caught too, and let the later observation win: that is what
+    // the same rows would do inserted one statement at a time.
+    const byKey = new Map<string, UpsertRow>();
+    for (const row of rows) byKey.set(`${row.indexCode}|${row.priceDate}`, row);
+    const uniqueRows = [...byKey.values()];
+
     const BATCH = 500;
-    for (let offset = 0; offset < rows.length; offset += BATCH) {
-      const batch = rows.slice(offset, offset + BATCH);
+    for (let offset = 0; offset < uniqueRows.length; offset += BATCH) {
+      const batch = uniqueRows.slice(offset, offset + BATCH);
       const values: unknown[] = [];
       const tuples = batch.map((row, i) => {
         const base = i * 5;

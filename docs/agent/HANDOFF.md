@@ -84,13 +84,24 @@ none of the touched files had changed on `main` in the intervening 39 commits.
 two other files had been edited to work around the deletions. All still exist
 on `main` and are imported; the deletions would have broken the build.
 
-**One real fix.** `performance-comparison.service.spec.ts` was the known red
-suite: it asserted a "5y" provider range for a fixed 2022-01-01..2025-12-31
-window while the service measures that range back from today, so the assertion
-decayed with the calendar. The test now pins `todayYMD` to the window's end and
-restores it in a `finally`; 42/42 pass. `module-graph.spec.ts` still passes
-alone (59/59) and still OOMs a worker under `--maxWorkers=3`; that is unchanged
-test infrastructure, now tracked as N11 in `BACKLOG.md`.
+**Two real fixes.**
+
+- `performance-comparison.service.spec.ts` was the known red suite: it
+  asserted a "5y" provider range for a fixed 2022-01-01..2025-12-31 window
+  while the service measures that range back from today, so the assertion
+  decayed with the calendar. The test now pins `todayYMD` to the window's end
+  and restores it in a `finally`; 42/42 pass.
+- BETA-001: `market-index.service.ts` inserted a provider payload verbatim, so
+  two bars for one `(index_code, price_date)` made Postgres reject the whole
+  statement and KOSPI logged a refresh failure on every boot. `bulkUpsert` now
+  collapses duplicates over the whole payload before batching, and the later
+  observation wins. A unit case feeds two bars on one date; the spec is 49/49.
+  A real boot was not repeated, so the boot-log half of the evidence is still
+  outstanding.
+
+`module-graph.spec.ts` still passes alone (59/59) and still OOMs a worker under
+`--maxWorkers=3`; that is unchanged test infrastructure, now tracked as N11 in
+`BACKLOG.md`.
 
 **Verified in this session** (Node 24 in CI, local Node 22 here):
 
@@ -101,6 +112,7 @@ test infrastructure, now tracked as N11 in `BACKLOG.md`.
 | Backend build | clean |
 | Backend unit — `src/import/xlsx` + all `src/i18n` | 11 suites, 313 tests pass |
 | Backend unit — `performance-comparison.service.spec.ts` | 42/42 pass after the fix |
+| Backend unit — `market-index.service.spec.ts` | 49/49 pass after the BETA-001 fix |
 | Backend unit — `module-graph.spec.ts` alone | 59/59 pass |
 | Frontend type-check | clean |
 | Frontend lint | clean (1 pre-existing `sw.js` warning) |

@@ -39,12 +39,11 @@ known red tests were fixed or explained on 2026-11-11 (see `HANDOFF.md`).
 
 ### P1 — foundation and integrity
 
-1. **N1. BETA-001: the KOSPI market-index upsert collides with itself.**
+1. [x] **N1. BETA-001: the KOSPI market-index upsert collides with itself.**
    - Objective: stop the `QueryFailedError ... ON CONFLICT DO UPDATE command cannot affect row a second time [21000]` logged on every boot.
    - Context: `backend/src/securities/market-index.service.ts`; evidence and reproduction in `docs/beta/artha-local-beta-01.md`.
-   - Deps: none (needs PostgreSQL to reproduce the batch).
-   - Acceptance: a batch containing two rows for the same conflict key upserts without error, and the surviving row is the later observation.
-   - Gate: a unit or integration spec that feeds a duplicate `(date, exchange)` pair; plus a clean boot log against an empty DB.
+   - **Fixed 2026-11-11:** `bulkUpsert` collapses duplicate `(index_code, price_date)` rows over the whole payload before batching, and the later observation wins, which is what inserting them one at a time would do. A unit case feeds two bars on one date and asserts one row with the later close; `market-index.service.spec.ts` is 49/49.
+   - Still open: a real boot against an empty database was not repeated (no PostgreSQL here). Re-check the boot log as the closing evidence.
 
 2. **N2. Restore rehearsal against a disposable database.**
    - Objective: prove that a backup exported from a running installation restores, which is the half of the contract never exercised.
