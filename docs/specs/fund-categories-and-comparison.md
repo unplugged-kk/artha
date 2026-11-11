@@ -8,8 +8,13 @@ Implementation status (2026-11-11): the **category half** (§3) is implemented -
 `fund_classification_updated_at` are captured from the existing AMFI provider,
 stored verbatim, shown on the security detail page, and filterable in the
 securities list. INV-FUNDCAT-001 and INV-FUNDCAT-002 are catalogued as
-`enforced`. The **comparison half** (§4-§5, INV-FUNDCMP-*) is not implemented
-yet. See `docs/agent/HANDOFF.md` for the exact commits.
+`enforced`. The **comparison API** (§4, §5's backend half) is implemented:
+`GET /api/v1/investments/performance/funds/comparison` returns each fund's
+1Y/3Y/5Y rolling distribution grouped by the AMFI category, computed only by
+`computeRollingReturns`; INV-FUNDCMP-001..003 are catalogued as `enforced`.
+Still open: the comparison **UI** (§7 items 9-11 -- the types, the
+`FundComparisonTable`, the report panel) and the E2E journey in §9. See
+`docs/agent/HANDOFF.md` for the exact commits.
 
 This is the design document required by `docs/financial-calculation-contract.md`
 section 9 ("a financial feature of any substance starts from a short written

@@ -72,8 +72,8 @@ See `HANDOFF.md`.
 
 3. **N3. Mission 5B: implement `docs/specs/fund-categories-and-comparison.md`.** — category half **done**, comparison half **open**.
    - **Category half (done 2026-11-11, `fm/artha-fund-categories-01`):** the four nullable columns, the parser, `FundClassificationService.ensureFundClassification` (write only on an answer, INV-FUNDCAT-002), capture on the securities list/detail and rolling-returns reads, the detail rows, the list column and the client-side category filter, the source scan that bans a guessed/defaulted category, and the real-DB integration spec. Invariants INV-FUNDCAT-001/002 catalogued and in the verification matrix. Remaining from §9 for this half: nothing.
-   - **Comparison half (open):** `GET /investments/performance/funds/comparison`, the grouped `FundComparisonTable`, the `fundCategory` fields on the comparison member, and INV-FUNDCMP-001..003. Deps: the rolling-returns engine, which is on `main`.
-   - Gate (comparison): spec §9 U4/U5, I1/I3, the E2E journey, `tools/list`-equivalent none (no AI/MCP surface), i18n in every locale.
+   - **Comparison API (done 2026-11-11, `fm/artha-fund-comparison-01`):** `GET /investments/performance/funds/comparison` (2..20 ids, owner-only, 60/min), `getFundComparison` grouping by the published category with Unclassified last, non-AMFI members reported without a read, duplicates collapsed and marked, one price read on the rolling card's basis, and INV-FUNDCMP-001..003 catalogued and matrixed. Tests: 9 service cases, 6 controller/validation cases, 4 real-DB integration cases.
+   - **Comparison UI (open):** the frontend types, `getFundComparison` client, `FundComparisonTable` grouped by category, the Security Performance report panel, the detail/list category surfaces already done, i18n in every locale, and the E2E journey (`e2e/tests/fund-comparison.spec.ts`). Gate: spec §9 U4/U5 frontend halves, the E2E spec, `npm run i18n:check` green.
 
 4. **N4. Expose the two detectors that are built but unreachable.**
    - Objective: duplicates and low-balance projection already exist in `backend/src/finance-detectors/` but no endpoint, alert or cron consumes them.

@@ -90,6 +90,9 @@ INV-LOAN-002's entry names the missing source scan while its row said `--`.
 | INV-ROLLING-003 rolling annualization | **required** | -- | -- | -- | -- | -- | -- | required |
 | INV-FUNDCAT-001 category verbatim or NULL | **required** | **required** | supporting | -- | -- | -- | -- | optional |
 | INV-FUNDCAT-002 write only on an answer | **required** | -- | **required** | -- | -- | -- | -- | -- |
+| INV-FUNDCMP-001 one return engine | **required** | -- | **required** | -- | -- | -- | -- | -- |
+| INV-FUNDCMP-002 no peer statistic | **required** | -- | supporting | -- | -- | -- | -- | -- |
+| INV-FUNDCMP-003 no figure from short history | **required** | -- | supporting | -- | -- | -- | -- | -- |
 | INV-LOAN-001 overpayment cadence | **required** | -- | -- | -- | -- | -- | -- | optional |
 | INV-LOAN-002 no truncated total | **required** | **required** (not yet met) | -- | -- | -- | -- | -- | optional |
 | INV-LOAN-003 compounding convention | **required** | **required** | -- | -- | -- | -- | -- | -- |
