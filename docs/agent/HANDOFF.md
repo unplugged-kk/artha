@@ -141,6 +141,14 @@ on `main` and are imported; the deletions would have broken the build.
   works, `--config test/jest.config.js` does not exist.
 - `pg_isready` reports no server; integration and Playwright gates cannot run
   until one is started.
+- **A live Craft Anything process was operating on the canonical checkout
+  during this session** and switched its branch twice mid-command
+  (`git reflog` shows bare `checkout` entries). Mission work was therefore
+  finished in a separate worktree, `/Users/kishore/git/artha-xlsx`, on
+  `fm/artha-xlsx-import-01`. Run `git branch --show-current` before assuming
+  where you are, and do not run a second agent against the same checkout.
+  `frontend/src/app/login/page.tsx` was left modified by that process; it is
+  not part of this branch.
 
 **Next agent: start here, in this order.**
 1. `CLAUDE.md` (repo law), then `backend/CLAUDE.md`, `frontend/CLAUDE.md`,
