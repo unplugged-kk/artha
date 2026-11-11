@@ -122,5 +122,5 @@ See `HANDOFF.md`.
 
 ## Process items, not code
 
-- **PR #27** (`fm/artha-local-beta-01` → `main`) is still open and now badly stale (its base is `5ab3f6188`, 39 commits behind). Refresh or close it before the beta triage mission; do not merge it as-is.
+- **PR #27** (`fm/artha-local-beta-01` → `main`) is still open and now badly stale (its base is `5ab3f6188`, 39 commits behind). It also carries the root-level marketing-likeness experiment, which is unrelated to the beta environment its title describes. Split it or close it before the beta triage mission; do not merge it as-is.
 - The rolling status snapshot lives on `fm/artha-mission-status` (`docs/status/artha-mission-status.md`) and is deliberately never merged. Read it with `git show origin/fm/artha-mission-status:docs/status/artha-mission-status.md`; its "last updated" line names the commit it describes.
