@@ -17,7 +17,7 @@ export default function LoginPage() {
     <div className="bg-canvas-subtle text-ink">
       <SiteHeader tone="light" />
       <main className="bg-canvas-subtle text-ink">
-        <div className="mx-auto max-w-[420px] px-4 py-16">
+        <div className="mx-auto max-w-[420px] px-4 py-9">
           <div className="rounded-md border border-line bg-canvas p-6">
             <h1 className="text-h3 font-semibold tracking-tight">
               Sign in to Artha
@@ -75,22 +75,25 @@ export default function LoginPage() {
               </button>
             </form>
 
-            <p className="mt-4 text-sm text-ink-soft">
-              <a href="/login" className="text-link hover:text-link-deep">
+            <div className="mt-4 grid gap-2 border-t border-line pt-4 text-sm sm:grid-cols-2">
+              <a
+                href="/login"
+                className="rounded-md border border-line px-3 py-2 text-center text-ink hover:bg-canvas-subtle"
+              >
+                Use a sign-in code
+              </a>
+              <a
+                href="/login"
+                className="rounded-md border border-line px-3 py-2 text-center text-ink hover:bg-canvas-subtle"
+              >
                 Forgot your password?
               </a>
-            </p>
+            </div>
 
-            <ul className="mt-4 grid gap-2 border-t border-line pt-4 text-sm text-ink-soft">
-              <li>
-                Your ledger stays on your own machine. Nothing is uploaded, and this
-                account only covers the web interface.
-              </li>
-              <li>
-                Two-factor authentication and passkeys are set up after your first
-                sign-in, from account settings.
-              </li>
-            </ul>
+            <p className="mt-4 text-center text-sm text-ink-soft">
+              Two-factor authentication and passkeys are set up after your first
+              sign-in, from account settings.
+            </p>
           </div>
         </div>
       </main>

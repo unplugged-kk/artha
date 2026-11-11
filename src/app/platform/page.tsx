@@ -191,7 +191,7 @@ export default function PlatformPage() {
       </section>
 
       <section className="border-b border-line bg-canvas-subtle">
-        <div className="mx-auto max-w-[1280px] px-4 py-14 md:px-6 lg:px-8">
+        <div className="mx-auto max-w-[789px] px-4 py-14 md:max-w-[789px] md:px-6 lg:max-w-[1296px] lg:px-8">
           <header className="p-6">
             <h2 className="text-h2 font-semibold tracking-tight">
               Where to go next

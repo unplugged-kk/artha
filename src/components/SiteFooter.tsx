@@ -74,7 +74,7 @@ export default function SiteFooter({
         </h2>
         <div className={columns}>
           {footerColumns.map((column) => (
-            <div key={column.heading}>
+            <nav key={column.heading} aria-label={column.heading} className="pt-8">
               <h3 className={"text-base uppercase tracking-wide " + heading}>
                 {column.heading}
               </h3>
@@ -87,15 +87,15 @@ export default function SiteFooter({
                   </li>
                 ))}
               </ul>
-            </div>
+            </nav>
           ))}
         </div>
-        <div className={"mt-10 border-t pt-6 text-xs " + rule}>
+        <nav aria-label="Legal" className={"mt-10 border-t pt-6 text-xs " + rule}>
           <p>
             Artha is India-first personal finance. Self-hosted, AGPL-3.0-only.
           </p>
           <p className="mt-1">Built in the open. You keep the ledger.</p>
-        </div>
+        </nav>
       </div>
     </footer>
   );
