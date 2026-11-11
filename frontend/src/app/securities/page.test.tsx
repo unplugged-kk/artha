@@ -459,6 +459,51 @@ describe('SecuritiesPage', () => {
     });
   });
 
+  it('offers only the fund categories the book actually holds', async () => {
+    mockGetSecurities.mockResolvedValue([
+      { id: 'f1', symbol: '120503', name: 'Large Cap Fund', securityType: 'MUTUAL_FUND', amfiSchemeCode: '120503', fundCategory: 'Equity Scheme - Large Cap Fund', exchange: null, currencyCode: 'INR', isActive: true, skipPriceUpdates: false, createdAt: '2026-01-01', updatedAt: '2026-01-01' },
+      { id: 'f2', symbol: '120504', name: 'Liquid Fund', securityType: 'MUTUAL_FUND', amfiSchemeCode: '120504', fundCategory: 'Debt Scheme - Liquid Fund', exchange: null, currencyCode: 'INR', isActive: true, skipPriceUpdates: false, createdAt: '2026-01-01', updatedAt: '2026-01-01' },
+      { id: 's1', symbol: 'AAPL', name: 'Apple Inc.', securityType: 'STOCK', exchange: 'NASDAQ', currencyCode: 'USD', isActive: true, skipPriceUpdates: false, createdAt: '2026-01-01', updatedAt: '2026-01-01' },
+    ]);
+    render(<SecuritiesPage />);
+
+    const filter = await screen.findByLabelText('Filter by fund category');
+    const options = Array.from((filter as HTMLSelectElement).options).map((o) => o.value);
+    expect(options).toEqual([
+      '',
+      'Debt Scheme - Liquid Fund',
+      'Equity Scheme - Large Cap Fund',
+    ]);
+    // A stock has no AMFI taxonomy, so it must not create an Uncategorised bucket.
+    expect(options).not.toContain('__uncategorised__');
+  });
+
+  it('narrows the list to one fund category', async () => {
+    mockGetSecurities.mockResolvedValue([
+      { id: 'f1', symbol: '120503', name: 'Large Cap Fund', securityType: 'MUTUAL_FUND', amfiSchemeCode: '120503', fundCategory: 'Equity Scheme - Large Cap Fund', exchange: null, currencyCode: 'INR', isActive: true, skipPriceUpdates: false, createdAt: '2026-01-01', updatedAt: '2026-01-01' },
+      { id: 'f2', symbol: '120504', name: 'Liquid Fund', securityType: 'MUTUAL_FUND', amfiSchemeCode: '120504', fundCategory: 'Debt Scheme - Liquid Fund', exchange: null, currencyCode: 'INR', isActive: true, skipPriceUpdates: false, createdAt: '2026-01-01', updatedAt: '2026-01-01' },
+    ]);
+    render(<SecuritiesPage />);
+
+    const filter = await screen.findByLabelText('Filter by fund category');
+    fireEvent.change(filter, { target: { value: 'Debt Scheme - Liquid Fund' } });
+    await waitFor(() => {
+      expect(screen.getByTestId('security-row-120504')).toBeInTheDocument();
+      expect(screen.queryByTestId('security-row-120503')).not.toBeInTheDocument();
+    });
+  });
+
+  it('offers Uncategorised only for AMFI funds AMFI has not described', async () => {
+    mockGetSecurities.mockResolvedValue([
+      { id: 'f1', symbol: '120503', name: 'Undescribed Fund', securityType: 'MUTUAL_FUND', amfiSchemeCode: '120503', fundCategory: null, exchange: null, currencyCode: 'INR', isActive: true, skipPriceUpdates: false, createdAt: '2026-01-01', updatedAt: '2026-01-01' },
+    ]);
+    render(<SecuritiesPage />);
+
+    const filter = await screen.findByLabelText('Filter by fund category');
+    const options = Array.from((filter as HTMLSelectElement).options).map((o) => o.value);
+    expect(options).toEqual(['', '__uncategorised__']);
+  });
+
   it('handles API error gracefully', async () => {
     mockGetSecurities.mockRejectedValueOnce(new Error('Network error'));
     render(<SecuritiesPage />);

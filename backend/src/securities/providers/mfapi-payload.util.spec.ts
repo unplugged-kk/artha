@@ -1,6 +1,7 @@
 import {
   buildNavQuote,
   parseMfapiDate,
+  parseMfapiSchemeClassification,
   parseMfapiSchemePayload,
   parseMfapiSearch,
   parseNav,
@@ -146,12 +147,66 @@ describe("parseMfapiSchemePayload", () => {
     expect(parseMfapiSchemePayload(future, NOW)).toBeNull();
   });
 
+  it("carries the AMFI classification from the same meta block", () => {
+    const scheme = parseMfapiSchemePayload(SCHEME_PAYLOAD, NOW)!;
+    expect(scheme.classification).toEqual({
+      fundHouse: "Example Mutual Fund",
+      schemeType: "Open Ended Schemes",
+      schemeCategory: "Equity Scheme - Large Cap Fund",
+    });
+  });
+
   it("tolerates a missing name", () => {
     const scheme = parseMfapiSchemePayload(
       { meta: { scheme_code: 1 }, data: [{ date: "28-08-2026", nav: "10" }] },
       NOW,
     )!;
     expect(scheme.schemeName).toBeNull();
+  });
+});
+
+describe("parseMfapiSchemeClassification", () => {
+  it("reads the three published strings, trimmed", () => {
+    expect(parseMfapiSchemeClassification(SCHEME_PAYLOAD)).toEqual({
+      fundHouse: "Example Mutual Fund",
+      schemeType: "Open Ended Schemes",
+      schemeCategory: "Equity Scheme - Large Cap Fund",
+    });
+    expect(
+      parseMfapiSchemeClassification({
+        meta: {
+          fund_house: "  Example Mutual Fund  ",
+          scheme_type: " Open Ended Schemes ",
+          scheme_category: " Equity Scheme - Large Cap Fund  ",
+        },
+      }),
+    ).toEqual({
+      fundHouse: "Example Mutual Fund",
+      schemeType: "Open Ended Schemes",
+      schemeCategory: "Equity Scheme - Large Cap Fund",
+    });
+  });
+
+  it.each([
+    ["missing", {}],
+    ["blank", { fund_house: "  ", scheme_type: "", scheme_category: "" }],
+    ["non-string", { fund_house: 12, scheme_type: null, scheme_category: [] }],
+  ])(
+    "returns null for a %s field, never an empty string or a default",
+    (_label, meta) => {
+      expect(parseMfapiSchemeClassification({ meta })).toEqual({
+        fundHouse: null,
+        schemeType: null,
+        schemeCategory: null,
+      });
+    },
+  );
+
+  it("returns null when there is no meta object to read", () => {
+    expect(parseMfapiSchemeClassification({})).toBeNull();
+    expect(parseMfapiSchemeClassification(null)).toBeNull();
+    expect(parseMfapiSchemeClassification({ meta: null })).toBeNull();
+    expect(parseMfapiSchemeClassification({ meta: [] })).toBeNull();
   });
 });
 

@@ -84,6 +84,61 @@ describe('SecurityList', () => {
     expect(screen.getByText('Inactive')).toBeInTheDocument();
   });
 
+  it('shows the AMFI fund category as published', () => {
+    render(
+      <SecurityList
+        securities={[
+          makeSecurity({
+            symbol: '120503',
+            name: 'Example Large Cap Fund',
+            securityType: 'MUTUAL_FUND',
+            amfiSchemeCode: '120503',
+            fundCategory: 'Equity Scheme - Large Cap Fund',
+          }),
+        ]}
+        onEdit={onEdit}
+        onToggleActive={onToggleActive}
+        onOpen={onOpen}
+      />,
+    );
+    expect(screen.getByText('Equity Scheme - Large Cap Fund')).toBeInTheDocument();
+    expect(screen.queryByText('Uncategorised')).not.toBeInTheDocument();
+  });
+
+  it('says a fund is Uncategorised when AMFI published no category, never a guess', () => {
+    render(
+      <SecurityList
+        securities={[
+          makeSecurity({
+            symbol: '120503',
+            name: 'Example Fund',
+            securityType: 'MUTUAL_FUND',
+            amfiSchemeCode: '120503',
+            fundCategory: null,
+          }),
+        ]}
+        onEdit={onEdit}
+        onToggleActive={onToggleActive}
+        onOpen={onOpen}
+      />,
+    );
+    expect(screen.getByText('Uncategorised')).toBeInTheDocument();
+  });
+
+  it('does not label a non-fund as Uncategorised', () => {
+    // A stock has no AMFI classification at all; calling it Uncategorised would
+    // claim a fund taxonomy applies to it.
+    render(
+      <SecurityList
+        securities={[makeSecurity({ fundCategory: null, amfiSchemeCode: null })]}
+        onEdit={onEdit}
+        onToggleActive={onToggleActive}
+        onOpen={onOpen}
+      />,
+    );
+    expect(screen.queryByText('Uncategorised')).not.toBeInTheDocument();
+  });
+
   it('renders tag chips and the description under the name', () => {
     const securities = [
       makeSecurity({

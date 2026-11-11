@@ -53,6 +53,7 @@ import { SecurityDocument } from "./entities/security-document.entity";
 import { CreateSecurityDocumentDto } from "./dto/create-security-document.dto";
 import { UpdateSecurityDocumentDto } from "./dto/update-security-document.dto";
 import { SectorWeightingService } from "./sector-weighting.service";
+import { FundClassificationService } from "./fund-classification.service";
 import { CreateSecurityDto } from "./dto/create-security.dto";
 import { UpdateSecurityDto } from "./dto/update-security.dto";
 import { RefreshSecurityPricesDto } from "./dto/refresh-security-prices.dto";
@@ -78,6 +79,7 @@ export class SecuritiesController {
     private readonly securityNewsService: SecurityNewsService,
     private readonly netWorthService: NetWorthService,
     private readonly sectorWeightingService: SectorWeightingService,
+    private readonly fundClassificationService: FundClassificationService,
     private readonly msnFinanceService: MsnFinanceService,
   ) {}
 
@@ -119,12 +121,19 @@ export class SecuritiesController {
     description: "List of securities",
     type: [Security],
   })
-  findAll(
+  async findAll(
     @Request() req,
     @Query("includeInactive", new DefaultValuePipe(false), ParseBoolPipe)
     includeInactive: boolean,
   ): Promise<Security[]> {
-    return this.securitiesService.findAll(req.user.id, includeInactive);
+    const securities = await this.securitiesService.findAll(
+      req.user.id,
+      includeInactive,
+    );
+    // Capture the AMFI classification of any fund that has none, or whose copy
+    // is stale. `null` fields are Unclassified, never a placeholder.
+    await this.fundClassificationService.ensureFundClassification(securities);
+    return securities;
   }
 
   @Get("used")

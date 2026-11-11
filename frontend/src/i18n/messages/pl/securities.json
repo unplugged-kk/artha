@@ -10,6 +10,10 @@
     "subtitle": "Zarządzaj swoimi akcjami, ETF-ami, funduszami inwestycyjnymi i innymi papierami wartościowymi",
     "newSecurity": "+ Nowy papier wartościowy",
     "searchPlaceholder": "Szukaj po symbolu lub nazwie...",
+    "categoryFilter": {
+      "label": "Filtruj według kategorii funduszu",
+      "all": "Wszystkie kategorie"
+    },
     "statusAll": "Wszystkie ({count})",
     "statusActive": "Aktywne ({count})",
     "statusInactive": "Nieaktywne ({count})",
@@ -48,6 +52,7 @@
       "symbol": "Symbol",
       "name": "Nazwa",
       "type": "Typ",
+      "category": "Kategoria",
       "shares": "Udziały",
       "value": "Wartość",
       "exchange": "Giełda",
@@ -57,6 +62,10 @@
       "status": "Status",
       "actions": "Akcje",
       "favourite": "Ulubione"
+    },
+    "uncategorised": "Niesklasyfikowany",
+    "categoryTitles": {
+      "uncategorised": "AMFI nie opublikowało jeszcze kategorii dla tego funduszu"
     },
     "statusBadge": {
       "active": "Aktywny",

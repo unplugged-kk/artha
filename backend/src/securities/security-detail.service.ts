@@ -4,6 +4,7 @@ import { Security } from "./entities/security.entity";
 import { InvestmentAction } from "./entities/investment-transaction.entity";
 import { baseInvestmentAction } from "./investment-replay.util";
 import { SecuritiesService } from "./securities.service";
+import { FundClassificationService } from "./fund-classification.service";
 import { PortfolioService } from "./portfolio.service";
 import {
   InvestmentTransactionsService,
@@ -168,11 +169,17 @@ export class SecurityDetailService {
     private readonly securitiesService: SecuritiesService,
     private readonly portfolioService: PortfolioService,
     private readonly investmentTransactionsService: InvestmentTransactionsService,
+    private readonly fundClassificationService: FundClassificationService,
   ) {}
 
   async getDetail(userId: string, securityId: string): Promise<SecurityDetail> {
     // Validates ownership and existence, and works for inactive securities.
     const security = await this.securitiesService.findOne(userId, securityId);
+
+    // Capture the AMFI classification if this fund has none, or a stale one.
+    // Failures are logged and swallowed inside: a provider outage yields a
+    // short key-information list, never a failed page.
+    await this.fundClassificationService.ensureFundClassification([security]);
 
     const history =
       await this.investmentTransactionsService.getSecurityTransactionHistory(

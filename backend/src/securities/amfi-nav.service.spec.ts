@@ -185,6 +185,34 @@ describe("AmfiNavService", () => {
     });
   });
 
+  describe("classification", () => {
+    it("reads the AMFI classification from the same scheme payload", async () => {
+      fetchMock.mockResolvedValue(jsonResponse(SCHEME_PAYLOAD));
+      await expect(
+        service.fetchSchemeClassification("122639"),
+      ).resolves.toEqual({
+        fundHouse: null,
+        schemeType: null,
+        schemeCategory: "Equity Scheme - Large Cap Fund",
+      });
+    });
+
+    it("returns null when the provider does not answer, so nothing is written", async () => {
+      fetchMock.mockResolvedValue(jsonResponse({}, false, 503));
+      await expect(
+        service.fetchSchemeClassification("122639"),
+      ).resolves.toBeNull();
+    });
+
+    it("returns null for a code that cannot address a scheme, without calling out", async () => {
+      await expect(service.fetchSchemeClassification("")).resolves.toBeNull();
+      await expect(
+        service.fetchSchemeClassification("RELIANCE"),
+      ).resolves.toBeNull();
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
+  });
+
   describe("lookup", () => {
     it("returns fund candidates carrying their scheme code", async () => {
       fetchMock.mockResolvedValue(jsonResponse(SEARCH_PAYLOAD));

@@ -85,6 +85,25 @@ export function SecurityKeyInformation({
       value: security.amfiSchemeCode,
     },
     {
+      // The AMFI classification of the scheme, stored exactly as published.
+      // A missing value is dropped rather than rendered as "Unclassified"
+      // here: this list is facts the instrument carries, and the detail page
+      // has one fewer line for a fund AMFI has not described yet.
+      key: 'fundHouse',
+      label: t('keyInfo.fundHouse'),
+      value: security.fundHouse,
+    },
+    {
+      key: 'fundSchemeType',
+      label: t('keyInfo.fundSchemeType'),
+      value: security.fundSchemeType,
+    },
+    {
+      key: 'fundCategory',
+      label: t('keyInfo.fundCategory'),
+      value: security.fundCategory,
+    },
+    {
       key: 'currency',
       label: t('keyInfo.currency'),
       value: security.currencyCode,

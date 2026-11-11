@@ -22,6 +22,7 @@ const SecurityForm = dynamic(() => import('@/components/securities/SecurityForm'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { CARD_CLASS } from '@/components/ui/Card';
 import { SecurityList, type SecurityHoldings, type SecurityTransactions, type SecuritySortField, type SortDirection } from '@/components/securities/SecurityList';
+import { Select } from '@/components/ui/Select';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { usePriceRefresh } from '@/hooks/usePriceRefresh';
 import { RefreshPricesButton } from '@/components/investments/RefreshPricesButton';
@@ -36,6 +37,12 @@ import { useHighlightParam } from '@/hooks/useHighlightTarget';
 import { useSearchParams } from 'next/navigation';
 
 const logger = createLogger('Securities');
+
+/**
+ * The filter value for AMFI funds whose scheme has no published category. A
+ * sentinel rather than the empty string, which already means "every category".
+ */
+const UNCATEGORISED_CATEGORY = '__uncategorised__';
 
 export default function SecuritiesPage() {
   return (
@@ -64,6 +71,9 @@ function SecuritiesContent() {
   const priceParamId = useSearchParams().get('price');
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('active');
+  // The AMFI category to narrow to; '' means every category, and the sentinel
+  // means the AMFI funds whose scheme has no published category.
+  const [categoryFilter, setCategoryFilter] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
   const [sortField, setSortField] = useLocalStorage<SecuritySortField>('artha-securities-sort-field', 'symbol');
   const [sortDirection, setSortDirection] = useLocalStorage<SortDirection>('artha-securities-sort-dir', 'asc');
@@ -152,6 +162,28 @@ function SecuritiesContent() {
     if (statusFilter === 'all') return allSecurities;
     return allSecurities.filter(s => statusFilter === 'active' ? s.isActive : !s.isActive);
   }, [allSecurities, statusFilter]);
+
+  // Categories present in the book, so the filter only offers values that can
+  // narrow anything. A fund AMFI has not described is its own option rather
+  // than being folded into "all".
+  const fundCategories = useMemo(() => {
+    const categories = new Set<string>();
+    for (const security of allSecurities) {
+      const category = security.fundCategory?.trim();
+      if (category) categories.add(category);
+    }
+    return [...categories].sort((a, b) => a.localeCompare(b));
+  }, [allSecurities]);
+
+  const hasUncategorisedFund = useMemo(
+    () =>
+      allSecurities.some(
+        (security) =>
+          (security.amfiSchemeCode ?? '').trim() !== '' &&
+          !security.fundCategory?.trim(),
+      ),
+    [allSecurities],
+  );
 
   useEffect(() => {
     loadData();
@@ -249,15 +281,30 @@ function SecuritiesContent() {
     }
   };
 
+  // Apply the fund-category filter (client-side: the category is a property of
+  // the security, and the page already holds every one of them).
+  const categoryFilteredSecurities = useMemo(() => {
+    if (!categoryFilter) return statusFilteredSecurities;
+    if (categoryFilter === UNCATEGORISED_CATEGORY) {
+      return statusFilteredSecurities.filter(
+        (s) =>
+          (s.amfiSchemeCode ?? '').trim() !== '' && !s.fundCategory?.trim(),
+      );
+    }
+    return statusFilteredSecurities.filter(
+      (s) => s.fundCategory?.trim() === categoryFilter,
+    );
+  }, [statusFilteredSecurities, categoryFilter]);
+
   // Filter securities by search query
   const filteredSecurities = useMemo(() => {
-    if (!searchQuery) return statusFilteredSecurities;
-    return statusFilteredSecurities.filter(
+    if (!searchQuery) return categoryFilteredSecurities;
+    return categoryFilteredSecurities.filter(
       (s) =>
         s.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
         s.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [statusFilteredSecurities, searchQuery]);
+  }, [categoryFilteredSecurities, searchQuery]);
 
   // Sort
   const sortedSecurities = useMemo(() => {
@@ -303,7 +350,7 @@ function SecuritiesContent() {
   // Reset to page 1 when search or filter changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, statusFilter]);
+  }, [searchQuery, statusFilter, categoryFilter]);
 
   const handleSort = useCallback((field: SecuritySortField) => {
     if (sortField === field) {
@@ -403,6 +450,25 @@ function SecuritiesContent() {
               </button>
             ))}
           </div>
+          {(fundCategories.length > 0 || hasUncategorisedFund) && (
+            <div className="w-full sm:w-64">
+              <Select
+                aria-label={t('page.categoryFilter.label')}
+                value={categoryFilter}
+                onChange={(event) => setCategoryFilter(event.target.value)}
+                options={[
+                  { value: '', label: t('page.categoryFilter.all') },
+                  ...fundCategories.map((category) => ({
+                    value: category,
+                    label: category,
+                  })),
+                  ...(hasUncategorisedFund
+                    ? [{ value: UNCATEGORISED_CATEGORY, label: t('list.uncategorised') }]
+                    : []),
+                ]}
+              />
+            </div>
+          )}
           {/* Right-justified on the filter line: the prices it fetches are what
               the Value column is computed from, so the control sits with the
               other things that change what the table shows. */}

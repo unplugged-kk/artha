@@ -11,7 +11,8 @@
     "favouriteButton": {
       "add": "Add to favorites",
       "remove": "Remove from favorites"
-    }
+    },
+    "uncategorised": "Uncategorized"
   },
   "form": {
     "favouriteLabel": "Favorite",

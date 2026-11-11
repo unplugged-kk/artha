@@ -10,6 +10,10 @@
     "subtitle": "Kelola saham, ETF, reksa dana, dan sekuritas lainnya",
     "newSecurity": "+ Sekuritas Baru",
     "searchPlaceholder": "Cari berdasarkan simbol atau nama...",
+    "categoryFilter": {
+      "label": "Filter menurut kategori reksa dana",
+      "all": "Semua kategori"
+    },
     "statusAll": "Semua ({count})",
     "statusActive": "Aktif ({count})",
     "statusInactive": "Tidak Aktif ({count})",
@@ -48,6 +52,7 @@
       "symbol": "Simbol",
       "name": "Nama",
       "type": "Jenis",
+      "category": "Kategori",
       "shares": "Lembar",
       "value": "Nilai",
       "exchange": "Bursa",
@@ -57,6 +62,10 @@
       "status": "Status",
       "actions": "Tindakan",
       "favourite": "Favorit"
+    },
+    "uncategorised": "Belum dikategorikan",
+    "categoryTitles": {
+      "uncategorised": "AMFI belum menerbitkan kategori untuk skema ini"
     },
     "statusBadge": {
       "active": "Aktif",

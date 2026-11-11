@@ -10,6 +10,10 @@
     "subtitle": "管理您的股票、ETF、共同基金及其他证券",
     "newSecurity": "+ 新建证券",
     "searchPlaceholder": "按代码或名称搜索...",
+    "categoryFilter": {
+      "label": "按基金类别筛选",
+      "all": "所有类别"
+    },
     "statusAll": "全部（{count}）",
     "statusActive": "活跃（{count}）",
     "statusInactive": "非活跃（{count}）",
@@ -48,6 +52,7 @@
       "symbol": "代码",
       "name": "名称",
       "type": "类型",
+      "category": "类别",
       "shares": "股数",
       "value": "市值",
       "exchange": "交易所",
@@ -57,6 +62,10 @@
       "status": "状态",
       "actions": "操作",
       "favourite": "收藏"
+    },
+    "uncategorised": "未分类",
+    "categoryTitles": {
+      "uncategorised": "AMFI 尚未发布该基金的类别"
     },
     "statusBadge": {
       "active": "活跃",

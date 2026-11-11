@@ -19,6 +19,7 @@ import {
 } from "../common/time-series/price-series.util";
 import { Security } from "./entities/security.entity";
 import { MarketIndexService } from "./market-index.service";
+import { FundClassificationService } from "./fund-classification.service";
 import { SecurityPriceService } from "./security-price.service";
 import { marketIndexByCode } from "./market-indexes";
 import { computeRollingReturns } from "./rolling-returns.util";
@@ -155,6 +156,7 @@ export class PerformanceComparisonService {
     private dataSource: DataSource,
     private marketIndexService: MarketIndexService,
     private securityPriceService: SecurityPriceService,
+    private fundClassificationService: FundClassificationService,
   ) {}
 
   async getComparison(
@@ -318,6 +320,10 @@ export class PerformanceComparisonService {
         periods: [],
       };
     }
+
+    // A fund's AMFI category rides the same read: an uncategorised fund is
+    // captured here so the comparison never has to guess one.
+    await this.fundClassificationService.ensureFundClassification([security]);
 
     const today = todayYMD();
     await this.ensureSecuritiesHistory(

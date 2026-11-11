@@ -38,6 +38,16 @@ export interface Security {
   isin?: string | null;
   /** AMFI catalogue id, for an Indian mutual-fund scheme. */
   amfiSchemeCode?: string | null;
+  /**
+   * The AMFI-published classification of the scheme, captured verbatim. All
+   * four are optional because a backend that predates the capture sends
+   * nothing, and absent means "no information" -- never a category of
+   * "Equity". `null` (or absent) is shown as unclassified.
+   */
+  fundHouse?: string | null;
+  fundSchemeType?: string | null;
+  fundCategory?: string | null;
+  fundClassificationUpdatedAt?: string | null;
   description?: string | null;
   tags?: Tag[];
   isActive: boolean;
@@ -639,6 +649,16 @@ export interface CreateSecurityData {
   isin?: string | null;
   /** AMFI catalogue id, for an Indian mutual-fund scheme. */
   amfiSchemeCode?: string | null;
+  /**
+   * The AMFI-published classification of the scheme, captured verbatim. All
+   * four are optional because a backend that predates the capture sends
+   * nothing, and absent means "no information" -- never a category of
+   * "Equity". `null` (or absent) is shown as unclassified.
+   */
+  fundHouse?: string | null;
+  fundSchemeType?: string | null;
+  fundCategory?: string | null;
+  fundClassificationUpdatedAt?: string | null;
   description?: string;
   /** Empty string clears the stored address; the backend normalises the rest. */
   website?: string | null;

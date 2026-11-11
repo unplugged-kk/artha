@@ -10,6 +10,10 @@
     "subtitle": "Verwalten Sie Ihre Aktien, ETFs, Investmentfonds und sonstigen Wertpapiere",
     "newSecurity": "+ Neues Wertpapier",
     "searchPlaceholder": "Nach Symbol oder Name suchen...",
+    "categoryFilter": {
+      "label": "Nach Fondskategorie filtern",
+      "all": "Alle Kategorien"
+    },
     "statusAll": "Alle ({count})",
     "statusActive": "Aktiv ({count})",
     "statusInactive": "Inaktiv ({count})",
@@ -48,6 +52,7 @@
       "symbol": "Symbol",
       "name": "Name",
       "type": "Typ",
+      "category": "Kategorie",
       "shares": "Anteile",
       "value": "Wert",
       "exchange": "Börse",
@@ -57,6 +62,10 @@
       "status": "Status",
       "actions": "Aktionen",
       "favourite": "Favorit"
+    },
+    "uncategorised": "Nicht kategorisiert",
+    "categoryTitles": {
+      "uncategorised": "AMFI hat für dieses Schema noch keine Kategorie veröffentlicht"
     },
     "statusBadge": {
       "active": "Aktiv",

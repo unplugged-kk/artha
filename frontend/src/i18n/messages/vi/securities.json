@@ -10,6 +10,10 @@
     "subtitle": "Quản lý cổ phiếu, ETF, quỹ lẫn nhau và các giấy chứng khoán khác của bạn",
     "newSecurity": "+ Giấy chứng khoán mới",
     "searchPlaceholder": "Tìm kiếm theo ký hiệu hoặc tên...",
+    "categoryFilter": {
+      "label": "Lọc theo danh mục quỹ",
+      "all": "Tất cả danh mục"
+    },
     "statusAll": "Tất cả ({count})",
     "statusActive": "Hoạt động ({count})",
     "statusInactive": "Không hoạt động ({count})",
@@ -48,6 +52,7 @@
       "symbol": "Ký hiệu",
       "name": "Tên",
       "type": "Loại",
+      "category": "Danh mục",
       "shares": "Cổ phiếu",
       "value": "Giá trị",
       "exchange": "Sàn giao dịch",
@@ -57,6 +62,10 @@
       "status": "Trạng thái",
       "actions": "Hành động",
       "favourite": "Yêu thích"
+    },
+    "uncategorised": "Chưa phân loại",
+    "categoryTitles": {
+      "uncategorised": "AMFI chưa công bố danh mục cho quỹ này"
     },
     "statusBadge": {
       "active": "Hoạt động",

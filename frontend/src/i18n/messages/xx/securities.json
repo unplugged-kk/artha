@@ -10,6 +10,10 @@
     "subtitle": "[XX-Manage your stocks, ETFs, mutual funds, and other securities-XX]",
     "newSecurity": "[XX-+ New Security-XX]",
     "searchPlaceholder": "[XX-Search by symbol or name...-XX]",
+    "categoryFilter": {
+      "label": "[XX-Filter by fund category-XX]",
+      "all": "[XX-All categories-XX]"
+    },
     "statusAll": "[XX-All ({count})-XX]",
     "statusActive": "[XX-Active ({count})-XX]",
     "statusInactive": "[XX-Inactive ({count})-XX]",
@@ -48,6 +52,7 @@
       "symbol": "[XX-Symbol-XX]",
       "name": "[XX-Name-XX]",
       "type": "[XX-Type-XX]",
+      "category": "[XX-Category-XX]",
       "shares": "[XX-Shares-XX]",
       "value": "[XX-Value-XX]",
       "exchange": "[XX-Exchange-XX]",
@@ -57,6 +62,10 @@
       "status": "[XX-Status-XX]",
       "actions": "[XX-Actions-XX]",
       "favourite": "[XX-Favourite-XX]"
+    },
+    "uncategorised": "[XX-Uncategorised-XX]",
+    "categoryTitles": {
+      "uncategorised": "[XX-AMFI has not published a category for this scheme yet-XX]"
     },
     "statusBadge": {
       "active": "[XX-Active-XX]",

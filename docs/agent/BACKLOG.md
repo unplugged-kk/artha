@@ -26,7 +26,7 @@ what was actually delivered, including the parts deliberately left out.
 - [x] T13 (NOT a new wizard: the app already had a first-run language/currency step, a Getting Started dashboard card and an intro tour. The real gaps were the AI provider and notifications steps, added to the existing card: /settings/ai and /settings#notifications; 18 locales translated, pseudo-locale regenerated) Onboarding wizard (frontend, English catalogs only)
 - [x] T14 Excel (.xlsx) import: `POST /import/xlsx/sheets` lists sheets with a guessed header row and preview; `POST /import/xlsx/to-csv` converts one sheet to CSV and the existing CSV wizard takes over. Reader skips a title banner (distinct-value header scoring, merged-cell safe) and stops at the first blank row; 25 MB multipart limit; `veryHidden` sheets excluded. Verified: 21 backend unit tests, 155 frontend tests, backend+frontend typecheck, lint, i18n parity, both production builds
 
-## Reconciled next work — 2026-11-11 (main `2864d1c76`)
+## Reconciled next work — 2026-11-11 (main `259f7690e`)
 
 The queue above is finished. These are the gaps the implementation and the
 session records actually leave behind, strongest evidence first. Nothing here
@@ -70,12 +70,10 @@ See `HANDOFF.md`.
 
 ### P2 — product
 
-3. **N3. Mission 5B: implement `docs/specs/fund-categories-and-comparison.md`.**
-   - Objective: the approved fund-category model and same-category comparison. The spec records the current state as NOT DONE.
-   - Context: spec section "What is not done"; `backend/src/securities/`, AMFI provider, `frontend/src/app/securities/`.
-   - Deps: none for the category ingestion; RLS and the existing `withScopedDb` door apply.
-   - Acceptance: category is the AMFI-published string, stored per security, with comparison restricted to the same category; invariants INV-FUNDCAT-001 onward hold.
-   - Gate: spec's test matrix, migration plus `database/schema.sql` in the same change, i18n in every locale.
+3. **N3. Mission 5B: implement `docs/specs/fund-categories-and-comparison.md`.** — category half **done**, comparison half **open**.
+   - **Category half (done 2026-11-11, `fm/artha-fund-categories-01`):** the four nullable columns, the parser, `FundClassificationService.ensureFundClassification` (write only on an answer, INV-FUNDCAT-002), capture on the securities list/detail and rolling-returns reads, the detail rows, the list column and the client-side category filter, the source scan that bans a guessed/defaulted category, and the real-DB integration spec. Invariants INV-FUNDCAT-001/002 catalogued and in the verification matrix. Remaining from §9 for this half: nothing.
+   - **Comparison half (open):** `GET /investments/performance/funds/comparison`, the grouped `FundComparisonTable`, the `fundCategory` fields on the comparison member, and INV-FUNDCMP-001..003. Deps: the rolling-returns engine, which is on `main`.
+   - Gate (comparison): spec §9 U4/U5, I1/I3, the E2E journey, `tools/list`-equivalent none (no AI/MCP surface), i18n in every locale.
 
 4. **N4. Expose the two detectors that are built but unreachable.**
    - Objective: duplicates and low-balance projection already exist in `backend/src/finance-detectors/` but no endpoint, alert or cron consumes them.

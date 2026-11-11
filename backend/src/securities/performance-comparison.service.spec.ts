@@ -1,5 +1,6 @@
 import { NotFoundException } from "@nestjs/common";
 import { PerformanceComparisonService } from "./performance-comparison.service";
+import { FundClassificationService } from "./fund-classification.service";
 import { MarketIndexService } from "./market-index.service";
 import { SecurityPriceService } from "./security-price.service";
 import { LoadedPriceSeries } from "../common/time-series/price-series.util";
@@ -138,6 +139,9 @@ describe("PerformanceComparisonService", () => {
   let securityPriceService: jest.Mocked<
     Pick<SecurityPriceService, "backfillSecurityRange">
   >;
+  let fundClassificationService: jest.Mocked<
+    Pick<FundClassificationService, "ensureFundClassification">
+  >;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -157,10 +161,14 @@ describe("PerformanceComparisonService", () => {
     securityPriceService = {
       backfillSecurityRange: jest.fn().mockResolvedValue(0),
     };
+    fundClassificationService = {
+      ensureFundClassification: jest.fn().mockResolvedValue(undefined),
+    };
     service = new PerformanceComparisonService(
       dataSource as never,
       marketIndexService as never,
       securityPriceService as never,
+      fundClassificationService as never,
     );
   });
 

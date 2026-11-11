@@ -10,6 +10,10 @@
     "subtitle": "주식, ETF, 뮤추얼 펀드 및 기타 유가증권을 관리하세요",
     "newSecurity": "+ 새 유가증권",
     "searchPlaceholder": "종목 코드 또는 이름으로 검색...",
+    "categoryFilter": {
+      "label": "펀드 카테고리로 필터링",
+      "all": "모든 카테고리"
+    },
     "statusAll": "전체 ({count})",
     "statusActive": "활성 ({count})",
     "statusInactive": "비활성 ({count})",
@@ -48,6 +52,7 @@
       "symbol": "종목 코드",
       "name": "이름",
       "type": "유형",
+      "category": "카테고리",
       "shares": "주식수",
       "value": "평가액",
       "exchange": "거래소",
@@ -57,6 +62,10 @@
       "status": "상태",
       "actions": "작업",
       "favourite": "즐겨찾기"
+    },
+    "uncategorised": "미분류",
+    "categoryTitles": {
+      "uncategorised": "AMFI가 이 스킴의 카테고리를 아직 공개하지 않았습니다"
     },
     "statusBadge": {
       "active": "활성",

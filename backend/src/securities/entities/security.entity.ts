@@ -109,6 +109,66 @@ export class Security {
   })
   amfiSchemeCode: string | null;
 
+  /**
+   * The AMFI classification published for this scheme, captured verbatim.
+   *
+   * It is a property of the scheme, not of the user, the holding or the
+   * portfolio, and Artha does not own this taxonomy: the strings are stored as
+   * AMFI publishes them and `NULL` means Unclassified, never a placeholder.
+   * `docs/specs/fund-categories-and-comparison.md` is the specification
+   * (INV-FUNDCAT-001).
+   */
+  @ApiProperty({
+    example: "Example Mutual Fund",
+    description: "AMFI fund house (AMC), as published",
+    required: false,
+    nullable: true,
+  })
+  @Column({ type: "varchar", length: 120, nullable: true, name: "fund_house" })
+  fundHouse: string | null;
+
+  @ApiProperty({
+    example: "Open Ended Schemes",
+    description: "AMFI scheme structure, as published",
+    required: false,
+    nullable: true,
+  })
+  @Column({
+    type: "varchar",
+    length: 80,
+    nullable: true,
+    name: "fund_scheme_type",
+  })
+  fundSchemeType: string | null;
+
+  @ApiProperty({
+    example: "Equity Scheme - Large Cap Fund",
+    description: "AMFI scheme category, as published; null means Unclassified",
+    required: false,
+    nullable: true,
+  })
+  @Column({
+    type: "varchar",
+    length: 120,
+    nullable: true,
+    name: "fund_category",
+  })
+  fundCategory: string | null;
+
+  @ApiProperty({
+    description:
+      "When the AMFI classification was last read from the provider. Only " +
+      "stamped when the provider answered, so a failure stays eligible for a retry.",
+    required: false,
+    nullable: true,
+  })
+  @Column({
+    type: "timestamp",
+    nullable: true,
+    name: "fund_classification_updated_at",
+  })
+  fundClassificationUpdatedAt: Date | null;
+
   @ApiProperty({
     example: "Global aggregate bond ETF. ~99% bonds, ~1% cash. TER 0.10%.",
     description:

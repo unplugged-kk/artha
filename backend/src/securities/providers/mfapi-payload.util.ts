@@ -25,6 +25,20 @@ export interface NavPoint {
   nav: number;
 }
 
+/**
+ * The AMFI classification published for a scheme.
+ *
+ * Each field is the provider's string, trimmed, or null when the answer did not
+ * carry one. Nothing here normalises, maps or defaults: the taxonomy belongs to
+ * AMFI, and a guessed category would make every "same category" claim wrong
+ * (INV-FUNDCAT-001).
+ */
+export interface MfapiSchemeClassification {
+  fundHouse: string | null;
+  schemeType: string | null;
+  schemeCategory: string | null;
+}
+
 export interface MfapiScheme {
   schemeCode: string;
   schemeName: string | null;
@@ -33,6 +47,45 @@ export interface MfapiScheme {
   navDate: string;
   /** Usable observations, oldest first. */
   history: NavPoint[];
+  /** AMFI classification from the same `meta` block; null fields when absent. */
+  classification: MfapiSchemeClassification;
+}
+
+/**
+ * A provider string as a value, or null.
+ *
+ * A non-string and a blank string are both "the answer did not carry this".
+ * `""` is never stored: an empty category is indistinguishable from a missing
+ * one and would group every blank-named fund together as if classified.
+ */
+function optionalTrimmedString(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  return trimmed === "" ? null : trimmed;
+}
+
+/**
+ * The AMFI `meta` block as a classification, or null when the payload is not an
+ * object at all.
+ *
+ * `null` here means "no answer to read" (a failed or malformed response); a
+ * non-null result whose fields are all null means the provider answered without
+ * classification, which is a different fact and must not overwrite a known one
+ * (INV-FUNDCAT-002).
+ */
+export function parseMfapiSchemeClassification(
+  json: unknown,
+): MfapiSchemeClassification | null {
+  const meta = (json as { meta?: unknown })?.meta;
+  if (meta === null || typeof meta !== "object" || Array.isArray(meta)) {
+    return null;
+  }
+  const fields = meta as Record<string, unknown>;
+  return {
+    fundHouse: optionalTrimmedString(fields.fund_house),
+    schemeType: optionalTrimmedString(fields.scheme_type),
+    schemeCategory: optionalTrimmedString(fields.scheme_category),
+  };
 }
 
 /**
@@ -133,10 +186,12 @@ export function parseMfapiSchemePayload(
   if (usable.length === 0) return null;
 
   const latest = usable[usable.length - 1];
-  const schemeName =
-    typeof meta?.scheme_name === "string" && meta.scheme_name.trim() !== ""
-      ? meta.scheme_name.trim()
-      : null;
+  const schemeName = optionalTrimmedString(meta?.scheme_name);
+  const classification = parseMfapiSchemeClassification(json) ?? {
+    fundHouse: null,
+    schemeType: null,
+    schemeCategory: null,
+  };
 
   return {
     schemeCode: schemeCode ?? "",
@@ -144,6 +199,7 @@ export function parseMfapiSchemePayload(
     nav: latest.nav,
     navDate: latest.date,
     history: usable,
+    classification,
   };
 }
 
