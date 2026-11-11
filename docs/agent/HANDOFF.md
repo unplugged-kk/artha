@@ -69,8 +69,8 @@ none of the touched files had changed on `main` in the intervening 39 commits.
   rebuilds another product's layout at the root of a workspace whose root is
   not an app, and it also changes the root `package.json` into a Next.js app.
   It is preserved on the local-only branch `fm/artha-local-beta-01`
-  (`0a19e6311`, amended into `af16c8b26`) and in the backup ref
-  `backup/pre-recovery-2026-11-11`; it is not pushed.
+  (`0a19e6311`, with its later layout tweaks in `d793c8e7c`) and in the backup
+  ref `backup/pre-recovery-2026-11-11`; it is not pushed.
 - Local agent tooling: `.claude/settings.json` hook/statusline config,
   `.claude/helpers/`, `.agents/`, `.cursor/`, `.gemini/`, `.codex/`,
   `.commandcode/`, `.context/`, `.mcp.json`, `opencode.json`.
