@@ -84,8 +84,16 @@ none of the touched files had changed on `main` in the intervening 39 commits.
 two other files had been edited to work around the deletions. All still exist
 on `main` and are imported; the deletions would have broken the build.
 
-**Two real fixes.**
+**What was fixed or recovered.**
 
+- Locale parity was red on `main`, not green: PR #30 merged before the last
+  two commits on its branch. `7c599b717` carries the attention / chart-fold /
+  where-you-stand strings for every full-translation locale (and drops the
+  plural from the due-soon hint); `29eda0f89` carries the README sections for
+  the dashboard, currencies, deployment and testing. Both were still on
+  `origin/claude/dreamy-clarke-6543cx`, unreachable from `main`, and both are
+  recovered here. `messages.parity.test.ts` went from 36 failing to 1,646
+  passing.
 - `performance-comparison.service.spec.ts` was the known red suite: it
   asserted a "5y" provider range for a fixed 2022-01-01..2025-12-31 window
   while the service measures that range back from today, so the assertion
@@ -118,6 +126,8 @@ on `main` and are imported; the deletions would have broken the build.
 | Frontend lint | clean (1 pre-existing `sw.js` warning) |
 | Frontend i18n parity | clean |
 | Frontend tests — import client, picker, upload, wizard, page | 155 pass |
+| Frontend full unit suite | 882 files, 16,792 tests pass |
+| Frontend i18n parity | 1,646 pass after recovering the stranded translations |
 | Frontend guards — balance-cache, test-hygiene, api-page-limits, e2e-conventions, intl | 22 pass |
 | Frontend production build | clean, 56 routes |
 | Backend integration / E2E / Playwright | **not run: no PostgreSQL and no browser stack in this environment** |

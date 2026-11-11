@@ -37,6 +37,20 @@ is a new plan: each item comes from a document already in the repo.
 No known correctness, security or data-integrity defect is open. The last two
 known red tests were fixed or explained on 2026-11-11 (see `HANDOFF.md`).
 
+### Recovered and fixed on 2026-11-11
+
+- **Locale parity was red on `main`.** PR #30 merged before the last two commits
+  on its branch: `7c599b717` (attention / chart-fold / where-you-stand strings
+  for every full-translation locale, and the due-soon plural dropped) and
+  `29eda0f89` (README sections for the dashboard, currencies, deployment and
+  testing) were left on `origin/claude/dreamy-clarke-6543cx`, unreachable from
+  `main`. Both are recovered on this branch. Evidence:
+  `messages.parity.test.ts` went from 36 failing to 1,646 passing, and the full
+  frontend unit suite is 882 files / 16,792 tests.
+- **`performance-comparison.service.spec.ts`** asserted a range tier that
+  drifted with the calendar; the clock is now pinned per case.
+- **BETA-001** (N1 below) is fixed in the index batch upsert.
+
 ### P1 — foundation and integrity
 
 1. [x] **N1. BETA-001: the KOSPI market-index upsert collides with itself.**
