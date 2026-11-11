@@ -69,6 +69,7 @@ Artha is running in my [Kubernetes cluster](https://github.com/kenlasko/k8s).
 - Payees with auto-categorization rules, aliases with wildcard patterns, and merge capability
 - Multi-currency transactions with automatic exchange rate tracking
 - Import from CSV, OFX/QFX, and QIF (Quicken and Microsoft Money) with smart column auto-matching
+- Excel import: pick a sheet and its header row in a `.xlsx` workbook, and the sheet is converted to CSV and handed to the same CSV importer -- title banners and summary blocks below the data are skipped
 - Microsoft Money full-file import: read a `.mny` file directly -- accounts, transfers, splits, investments, price history, exchange rates and scheduled bills -- and reconcile every balance against the file afterwards ([guide](docs/import-ms-money.md))
 - Quicken full-file import: import all accounts, categories, and tags from a single QIF export
 - Data reset: wipe financial data and re-import without losing your user account or settings
@@ -203,7 +204,7 @@ artha/
 │   │   ├── ai/                # AI assistant (providers, query engine, usage tracking)
 │   │   ├── mcp/               # Model Context Protocol server
 │   │   ├── tags/               # Transaction tags
-│   │   ├── import/            # QIF, CSV, OFX/QFX and Microsoft Money (.mny) file import
+│   │   ├── import/            # QIF, CSV, OFX/QFX, Microsoft Money (.mny) and Excel (.xlsx) file import
 │   │   ├── health/            # Health check endpoints
 │   │   └── main.ts            # Application entry point
 │   └── Dockerfile

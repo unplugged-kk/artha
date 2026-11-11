@@ -44,3 +44,90 @@ Newest entries last.
 - Command: start the stack with `scripts/install-native.sh --start` against a database with NO users (the first registered user is the admin the suite logs in as; a database that already holds the demo user makes 3 admin and backup tests fail for setup reasons), then `BASE_URL=http://localhost:3000 CHROMIUM_PATH=<chrome> npx playwright test --config playwright.local.config.ts` from `e2e/`.
 - Result: 198 of 199 passed in one run with `--grep-invert "enforces a second factor"`; that test passes on its own. 
 - Open defect: after the "enforces a second factor at login" test the backend process exits with `ERR_INTERNAL_ASSERTION` in `ServerResponse.detachSocket`, every time (reproduced twice). It is a Node internal assertion, the sandbox runs Node 22.23.4 and the production images use Node 24, and Node 24 could not be tried here. Unproven whether it also happens on Node 24; check before blaming the app, and check with `docker-compose.e2e.yml` (Node 24) first.
+
+## Repository recovery session (2026-11-11, branch `fm/artha-xlsx-import-01`)
+
+Started from `main` at `2864d1c76` (PR #30 merged). The canonical checkout was
+on `fm/artha-local-beta-01`, one unpushed commit ahead of its remote and 39
+commits behind `main`, with 64 modified files and a large untracked tree. Two
+different efforts were mixed in that working tree; they were separated rather
+than committed together.
+
+**What was recovered as product work.** An Excel (.xlsx) import feature:
+backend sheet listing and sheet-to-CSV conversion, the frontend sheet picker,
+wizard wiring, and translations in all 20 translated catalogs (`en-GB` and
+`en-US` take the `en` base, which the parity check confirms). It was
+uncommitted but complete and tested, and `README.md` already advertised it on
+the beta branch.
+It is now one commit on a mission branch off `main`, with no conflicts because
+none of the touched files had changed on `main` in the intervening 39 commits.
+
+**What was deliberately not committed.**
+- The marketing-site likeness experiment at the repo root (`src/`,
+  `next.config.mjs`, `postcss.config.mjs`, `tsconfig.json`, `handover.md`,
+  `capture/`, `checks/`, `investigation.cany/`, `inbox/`, `craft.json`). It
+  rebuilds another product's layout at the root of a workspace whose root is
+  not an app, and it also changes the root `package.json` into a Next.js app.
+  It is preserved on the local-only branch `fm/artha-local-beta-01`
+  (`0a19e6311`, amended into `af16c8b26`) and in the backup ref
+  `backup/pre-recovery-2026-11-11`; it is not pushed.
+- Local agent tooling: `.claude/settings.json` hook/statusline config,
+  `.claude/helpers/`, `.agents/`, `.cursor/`, `.gemini/`, `.codex/`,
+  `.commandcode/`, `.context/`, `.mcp.json`, `opencode.json`.
+- Probe files (`src/__probe.txt`, `src/app/platform/probe.txt`,
+  `src/app/platform/tiny.tsx`) and run artifacts (`feed.json`,
+  `transcript.json`, `usage.json`).
+
+**Accidental damage reversed, not committed.** Three barrel `index.ts` files
+(`backend/src/reports/dto/`, `frontend/src/components/reports/`,
+`frontend/src/components/ui/row-actions/`) were deleted in the working tree and
+two other files had been edited to work around the deletions. All still exist
+on `main` and are imported; the deletions would have broken the build.
+
+**One real fix.** `performance-comparison.service.spec.ts` was the known red
+suite: it asserted a "5y" provider range for a fixed 2022-01-01..2025-12-31
+window while the service measures that range back from today, so the assertion
+decayed with the calendar. The test now pins `todayYMD` to the window's end and
+restores it in a `finally`; 42/42 pass. `module-graph.spec.ts` still passes
+alone (59/59) and still OOMs a worker under `--maxWorkers=3`; that is unchanged
+test infrastructure, now tracked as N11 in `BACKLOG.md`.
+
+**Verified in this session** (Node 24 in CI, local Node 22 here):
+
+| Gate | Result |
+|---|---|
+| Backend typecheck | clean |
+| Backend lint | clean |
+| Backend build | clean |
+| Backend unit — `src/import/xlsx` + all `src/i18n` | 11 suites, 313 tests pass |
+| Backend unit — `performance-comparison.service.spec.ts` | 42/42 pass after the fix |
+| Backend unit — `module-graph.spec.ts` alone | 59/59 pass |
+| Frontend type-check | clean |
+| Frontend lint | clean (1 pre-existing `sw.js` warning) |
+| Frontend i18n parity | clean |
+| Frontend tests — import client, picker, upload, wizard, page | 155 pass |
+| Frontend guards — balance-cache, test-hygiene, api-page-limits, e2e-conventions, intl | 22 pass |
+| Frontend production build | clean, 56 routes |
+| Backend integration / E2E / Playwright | **not run: no PostgreSQL and no browser stack in this environment** |
+
+**Environment gotchas worth inheriting.**
+- `NODE_ENV=production` leaks into this shell. React Testing Library then
+  loads the production `react-dom` and every component test fails with
+  `React.act is not a function`. Run frontend tests as
+  `NODE_ENV=test npx vitest run ...`.
+- Backend Jest config is inline in `backend/package.json`; `npx jest <path>`
+  works, `--config test/jest.config.js` does not exist.
+- `pg_isready` reports no server; integration and Playwright gates cannot run
+  until one is started.
+
+**Next agent: start here, in this order.**
+1. `CLAUDE.md` (repo law), then `backend/CLAUDE.md`, `frontend/CLAUDE.md`,
+   `database/CLAUDE.md`, `backend/src/mcp/CLAUDE.md` for the area you touch.
+2. `docs/agent/BACKLOG.md` — "Reconciled next work". Take N1, then N2.
+3. `docs/system-invariants.md` and `docs/financial-calculation-contract.md`
+   before any money or schema change.
+4. `docs/beta/artha-local-beta-01.md` for the beta baseline and BETA-001.
+
+The beta observation period is still the product context: fix defects through
+a triage mission, do not resume feature development in place. PR #27 is open
+and stale; refresh or close it before merging anything else into that branch.
