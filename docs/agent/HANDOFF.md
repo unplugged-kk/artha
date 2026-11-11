@@ -324,3 +324,30 @@ category first, "n/a" + reason for a null, sortable shown columns only, no rank
 badge), wiring it into `SecurityPerformanceReport` when ≥2 selected instruments
 are AMFI funds, i18n keys in every locale, and `e2e/tests/fund-comparison.spec.ts`.
 Then N2 (restore rehearsal) and N4 (expose the built detectors).
+
+### Full integration sweep (same session)
+
+`NODE_OPTIONS=--max-old-space-size=9000 npm run test:integration` on the
+comparison branch against local PostgreSQL 17: **47 of 50 suites, 542 of 545
+tests pass**. The three failures, each diagnosed:
+
+1. **`support-backup` golden allowlist — real, caused by this work, now fixed.**
+   The four new `securities` columns had no rule in
+   `backend/src/backup/support-backup/support-backup-securities-rules.ts`. They
+   are now `keep` (public classification shared by many schemes, like
+   `sector`/`industry`; the scheme *code* beside them stays `drop`). Fixed in
+   `9cb1e046b` on the category branch, re-run green (5/5).
+2. **`backup-restore` scanned-attachment ordering — pre-existing.**
+   Reproduced identically after `git switch main`, so it is not this work: the
+   assertion expects the enhanced scan before the original, and the storage
+   query returns them in the other order in this environment.
+3. **`runtime-role` — environment.** PostgreSQL 17 ships `pg_maintain`, which
+   the role classification predates; CI runs PostgreSQL 16 and this suite passes
+   there. Classifying it is a separate housekeeping task, not this branch.
+
+CI on `main` at `259f7690e` already fails four jobs (NPM Audit, License
+Compliance (backend), Bearer Security Scan, Documentation vs Manifests); those
+are pre-existing and not caused by either PR.
+
+Branch state after the sweep: `fm/artha-fund-categories-01` at `9cb1e046b`,
+`fm/artha-fund-comparison-01` merged with it at `9ef900f65`.
