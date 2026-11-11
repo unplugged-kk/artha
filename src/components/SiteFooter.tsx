@@ -22,9 +22,17 @@ type Tone = "light" | "dark";
 export default function SiteFooter({
   tone = "light",
   wide,
+  compact,
 }: {
   tone?: Tone;
   wide?: boolean;
+  /**
+   * For screens that are a task rather than a landing page (/login). The
+   * reference sign-in screen is a short centred form with a legal line under
+   * it, not a full site nav, and carrying the four link columns there made the
+   * page about 80% taller than it had any reason to be.
+   */
+  compact?: boolean;
 }) {
   const dark = tone === "dark";
   const isWide = wide ?? dark;
@@ -44,6 +52,19 @@ export default function SiteFooter({
   const columns = isWide
     ? "mt-6 grid grid-cols-2 gap-8 lg:grid-cols-4"
     : "mt-6 grid gap-8";
+
+  if (compact) {
+    return (
+      <footer className={frame}>
+        <div className={inner}>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs">
+            <p>Artha is India-first personal finance. Self-hosted, AGPL-3.0-only.</p>
+            <p>Built in the open. You keep the ledger.</p>
+          </div>
+        </div>
+      </footer>
+    );
+  }
 
   return (
     <footer className={frame}>

@@ -66,6 +66,26 @@ export default function ActionsPage() {
                 See the platform
               </Link>
             </div>
+            <dl className="mt-10 grid gap-4 sm:grid-cols-2">
+              <div className="rounded-md border border-night-raise p-5">
+                <dt className="text-2xs uppercase tracking-wide text-night-sky">
+                  Where it runs
+                </dt>
+                <dd className="mt-2 text-base text-night-soft">
+                  On the server you installed. No queue to wait in, no outside
+                  service holding your statements.
+                </dd>
+              </div>
+              <div className="rounded-md border border-night-raise p-5">
+                <dt className="text-2xs uppercase tracking-wide text-night-sky">
+                  What it leaves behind
+                </dt>
+                <dd className="mt-2 text-base text-night-soft">
+                  A record of every run, and proposals for anything that would move
+                  a balance, waiting for your yes.
+                </dd>
+              </div>
+            </dl>
           </div>
         </section>
 
@@ -74,7 +94,7 @@ export default function ActionsPage() {
             <h2 className="text-h2 font-semibold text-night-ink">
               How a job is set up
             </h2>
-            <ol className="mt-8 grid gap-4 md:grid-cols-3">
+            <ol className="mt-8 grid gap-4 sm:grid-cols-2">
               {automationSteps.map((step, index) => (
                 <li
                   key={step.title}
@@ -98,11 +118,11 @@ export default function ActionsPage() {
             <h2 className="text-h2 font-semibold text-night-ink">
               What runs on a schedule
             </h2>
-            <ul className="mt-8 divide-y divide-night-raise border-y border-night-raise">
+            <ul className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
               {resources.map((resource) => (
                 <li
                   key={resource.title}
-                  className="grid gap-2 py-5 md:grid-cols-[280px_minmax(0,1fr)] md:gap-8"
+                  className="rounded-md border border-night-raise bg-night p-6"
                 >
                   <h3 className="text-h2 font-semibold text-night-ink">
                     {resource.title}
@@ -118,7 +138,7 @@ export default function ActionsPage() {
           <div className="mx-auto max-w-[1280px] px-4 pb-12">
             <h2 className="text-h2 font-semibold text-night-ink">What every run records</h2>
             <p className="mt-3 max-w-[720px] text-base text-night-soft">Each run records what it started, what changed and what it left for you.</p>
-            <div className="mt-8 grid gap-4 md:grid-cols-3">
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
               <div className="rounded-md border border-night-raise bg-night-deep p-6">
                 <h3 className="text-h3 font-semibold text-night-ink">Started and finished</h3>
                 <p className="mt-2 text-base text-night-soft">When it began, when it ended and how many lines it read.</p>
@@ -180,7 +200,7 @@ export default function ActionsPage() {
         </section>
 
         <section className="border-t border-night-raise">
-          <div className="mx-auto max-w-[1280px] px-4 pb-12">
+          <div className="mx-auto max-w-[1280px] px-4 pb-12 md:max-w-[618px] md:px-5 md:py-10">
             <h2 className="text-h2 font-semibold text-night-ink">
               What a run will not do
             </h2>
@@ -230,11 +250,11 @@ export default function ActionsPage() {
         </section>
 
         <section className="border-t border-night-raise bg-night-deep">
-          <div className="mx-auto max-w-[1280px] px-4 pb-12">
+          <div className="mx-auto max-w-[1280px] px-4 pb-12 md:max-w-[618px] md:px-5 md:py-10">
             <h2 className="text-h2 font-semibold text-night-ink">
               How to get one running
             </h2>
-            <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
               <div className="rounded-md border border-night-raise bg-night p-6">
                 <p className="text-2xs uppercase tracking-wide text-night-sky">
                   Step one

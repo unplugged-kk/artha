@@ -10,6 +10,8 @@ export default function PlatformPage() {
       <main>
       <section className="border-b border-line bg-canvas-subtle">
         <div className="mx-auto max-w-[1280px] px-4 pt-16 pb-14 md:px-6 lg:px-8">
+        <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
+        <div>
         <h1 className="text-h1-sm font-semibold tracking-tight md:text-h1-md lg:text-h1-lg">
           The platform
         </h1>
@@ -23,6 +25,42 @@ export default function PlatformPage() {
         >
           Start a ledger
         </Link>
+        </div>
+        <dl className="grid gap-4 sm:grid-cols-2">
+          <div className="rounded-md border border-line bg-canvas p-5">
+            <dt className="text-2xs uppercase tracking-wide text-ink-faint">
+              Where it runs
+            </dt>
+            <dd className="mt-2 text-sm text-ink-soft">
+              On a machine you control, with the database beside it.
+            </dd>
+          </div>
+          <div className="rounded-md border border-line bg-canvas p-5">
+            <dt className="text-2xs uppercase tracking-wide text-ink-faint">
+              What it keeps
+            </dt>
+            <dd className="mt-2 text-sm text-ink-soft">
+              Every entry, with the statement it came from still attached.
+            </dd>
+          </div>
+          <div className="rounded-md border border-line bg-canvas p-5">
+            <dt className="text-2xs uppercase tracking-wide text-ink-faint">
+              Who can read it
+            </dt>
+            <dd className="mt-2 text-sm text-ink-soft">
+              Only the accounts you create. Nothing leaves the server.
+            </dd>
+          </div>
+          <div className="rounded-md border border-line bg-canvas p-5">
+            <dt className="text-2xs uppercase tracking-wide text-ink-faint">
+              What it costs
+            </dt>
+            <dd className="mt-2 text-sm text-ink-soft">
+              Nothing to run. The source is open under AGPL-3.0-only.
+            </dd>
+          </div>
+        </dl>
+        </div>
         </div>
       </section>
 
