@@ -22,5 +22,10 @@
   },
   "detailHeader": {
     "favourites": "Favorites"
+  },
+  "securityPerformance": {
+    "fundComparison": {
+      "uncategorised": "Uncategorized"
+    }
   }
 }

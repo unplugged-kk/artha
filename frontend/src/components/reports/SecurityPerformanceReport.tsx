@@ -35,6 +35,7 @@ import { aggregateHoldingsBySecurity } from '@/lib/aggregate-holdings';
 import { renderChartFlagDot, ChartFlagShadowFilter } from '@/components/investments/portfolio-chart-utils';
 import { buildTimeAxisTicks } from '@/lib/chart-time-axis';
 import { SecurityComparisonChart, SecurityComparisonChartHandle } from '@/components/reports/SecurityComparisonChart';
+import { FundComparisonTable } from '@/components/securities/FundComparisonTable';
 import { MultiSelect, MultiSelectOption } from '@/components/ui/MultiSelect';
 import { DateRangeSelector } from '@/components/ui/DateRangeSelector';
 import { useDateRange } from '@/hooks/useDateRange';
@@ -155,6 +156,25 @@ export function SecurityPerformanceReport() {
   );
 
   const selectedSecurity = securities.find((s) => s.id === selectedSecurityId);
+
+  /**
+   * The selected instruments that are AMFI mutual funds. The comparison panel
+   * is offered when at least two are, because a one-fund distribution is the
+   * rolling-returns card on the detail page, not a comparison.
+   */
+  const amfiSelectedIds = useMemo(
+    () =>
+      selectedSecurityIds.filter(
+        (id) =>
+          (securities.find((s) => s.id === id)?.amfiSchemeCode ?? '').trim() !== '',
+      ),
+    [selectedSecurityIds, securities],
+  );
+  const showFundComparison = amfiSelectedIds.length >= 2;
+  // The API's own bound. A selection past it is truncated rather than sent and
+  // rejected; the panel says so.
+  const comparisonSecurityIds = selectedSecurityIds.slice(0, 20);
+  const comparisonTruncated = selectedSecurityIds.length > comparisonSecurityIds.length;
 
   // Searchable multi-select options, one per active security (symbol first so it
   // sorts and reads like the rest of the report).
@@ -614,14 +634,29 @@ export function SecurityPerformanceReport() {
           </p>
         </div>
       ) : isComparison ? (
-        <SecurityComparisonChart
-          securityIds={selectedSecurityIds}
-          indexCodes={activeIndexCodes}
-          startDate={resolvedRange.start}
-          endDate={resolvedRange.end}
-          reloadKey={allRefreshKey}
-          exportRef={comparisonExportRef}
-        />
+        <>
+          <SecurityComparisonChart
+            securityIds={selectedSecurityIds}
+            indexCodes={activeIndexCodes}
+            startDate={resolvedRange.start}
+            endDate={resolvedRange.end}
+            reloadKey={allRefreshKey}
+            exportRef={comparisonExportRef}
+          />
+          {showFundComparison && (
+            <>
+              {comparisonTruncated && (
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {t('securityPerformance.fundComparison.selectionTruncated')}
+                </p>
+              )}
+              <FundComparisonTable
+                securityIds={comparisonSecurityIds}
+                reloadKey={allRefreshKey}
+              />
+            </>
+          )}
+        </>
       ) : isLoadingDetail ? (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/50 p-6">
           <div className="space-y-4">

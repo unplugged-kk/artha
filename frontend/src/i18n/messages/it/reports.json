@@ -1402,6 +1402,47 @@
       "NORTH_AMERICA": "Nord America",
       "EUROPE": "Europa",
       "ASIA_PACIFIC": "Asia-Pacifico"
+    },
+    "fundComparison": {
+      "title": "Confronto fondi",
+      "subject": "I tuoi fondi comuni, raggruppati per la categoria pubblicata da AMFI per ciascun comparto.",
+      "noData": "Nessun dato sui fondi restituito per questa selezione.",
+      "loadFailed": "Impossibile caricare il confronto fondi.",
+      "retry": "Riprova",
+      "incomplete": "Alcuni valori non sono disponibili o sono incompleti. Ogni fondo ne indica il motivo.",
+      "deduplicated": "Un fondo selezionato più volte viene mostrato una sola volta.",
+      "excludedMember": "{fund} non è un fondo comune AMFI e non ha rendimenti rolling.",
+      "selectionTruncated": "Vengono confrontati solo i primi 20 strumenti selezionati.",
+      "uncategorised": "Non classificato",
+      "uncategorisedReason": "AMFI non ha pubblicato una categoria per questi comparti. Sono mostrati insieme e mai raggruppati con una categoria classificata.",
+      "notAvailable": "n/d",
+      "noPriceHistory": "Nessuno storico NAV utilizzabile.",
+      "asOf": "Al {date}",
+      "stale": "I dati NAV sono obsoleti: ultima osservazione {date}",
+      "excludedObservations": "{count, plural, one {# osservazione è stata esclusa perché inutilizzabile.} other {# osservazioni sono state escluse perché inutilizzabili.}}",
+      "range": "Peggiore {worst} · Migliore {best}",
+      "windows": "{count, plural, one {# finestra} other {# finestre}}",
+      "missingWindows": "{count, plural, one {# finestra non è stata valorizzata} other {# finestre non sono state valorizzate}}",
+      "status": {
+        "INSUFFICIENT_HISTORY": "Lo storico è più breve di questo periodo.",
+        "ALL_WINDOWS_MISSING": "Nessuna finestra di questo periodo è stata valorizzata.",
+        "NO_PRICE_HISTORY": "Nessuno storico NAV utilizzabile."
+      },
+      "periods": {
+        "1Y": "1 anno",
+        "3Y": "3 anni",
+        "5Y": "5 anni"
+      },
+      "columns": {
+        "fund": "Fondo"
+      },
+      "reason": {
+        "NOT_AN_AMFI_FUND": "Non è un fondo comune AMFI."
+      },
+      "basisNote": "I rendimenti rolling usano il NAV pubblicato; le distribuzioni non vengono riaggiunte.",
+      "idcwNote": "I comparti Growth e IDCW sono mostrati come pubblicati; Artha non deduce un'opzione di piano dal nome del comparto.",
+      "classificationNote": "La categoria è la classificazione attuale di AMFI. È metadato, non un consiglio, e descrive il fondo oggi, non nel periodo misurato.",
+      "ownFundsNote": "Vengono confrontati solo i tuoi fondi. Artha non dispone di un universo di fondi, quindi non esiste mediana, percentile o classifica di categoria."
     }
   },
   "securityTypeAllocation": {

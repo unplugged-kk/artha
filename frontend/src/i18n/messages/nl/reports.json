@@ -1402,6 +1402,47 @@
       "NORTH_AMERICA": "Noord-Amerika",
       "EUROPE": "Europa",
       "ASIA_PACIFIC": "Azië-Pacific"
+    },
+    "fundComparison": {
+      "title": "Fondsenvergelijking",
+      "subject": "Uw eigen beleggingsfondsen, gegroepeerd op de AMFI-categorie die voor elk schema is gepubliceerd.",
+      "noData": "Voor deze selectie zijn geen fondsgegevens teruggegeven.",
+      "loadFailed": "De fondsenvergelijking kon niet worden geladen.",
+      "retry": "Opnieuw proberen",
+      "incomplete": "Sommige cijfers zijn niet beschikbaar of onvolledig. Elk fonds vermeldt waarom.",
+      "deduplicated": "Een fonds dat meer dan eens is geselecteerd, wordt één keer getoond.",
+      "excludedMember": "{fund} is geen AMFI-beleggingsfonds en heeft geen rollende rendementen.",
+      "selectionTruncated": "Alleen de eerste 20 geselecteerde instrumenten worden vergeleken.",
+      "uncategorised": "Niet geclassificeerd",
+      "uncategorisedReason": "AMFI heeft voor deze schema’s geen categorie gepubliceerd. Ze worden samen getoond en nooit met een geclassificeerde categorie gegroepeerd.",
+      "notAvailable": "n.v.t.",
+      "noPriceHistory": "Nog geen bruikbare NAV-historie.",
+      "asOf": "Per {date}",
+      "stale": "NAV-gegevens zijn verouderd: laatste waarneming {date}",
+      "excludedObservations": "{count, plural, one {# waarneming is uitgesloten als onbruikbaar.} other {# waarnemingen zijn uitgesloten als onbruikbaar.}}",
+      "range": "Slechtste {worst} · Beste {best}",
+      "windows": "{count, plural, one {# venster} other {# vensters}}",
+      "missingWindows": "{count, plural, one {# venster kon niet worden gewaardeerd} other {# vensters konden niet worden gewaardeerd}}",
+      "status": {
+        "INSUFFICIENT_HISTORY": "De historie is korter dan deze periode.",
+        "ALL_WINDOWS_MISSING": "Geen enkel venster in deze periode kon worden gewaardeerd.",
+        "NO_PRICE_HISTORY": "Nog geen bruikbare NAV-historie."
+      },
+      "periods": {
+        "1Y": "1 jaar",
+        "3Y": "3 jaar",
+        "5Y": "5 jaar"
+      },
+      "columns": {
+        "fund": "Fonds"
+      },
+      "reason": {
+        "NOT_AN_AMFI_FUND": "Geen AMFI-beleggingsfonds."
+      },
+      "basisNote": "Rollende rendementen gebruiken de gepubliceerde NAV; uitkeringen worden niet toegevoegd.",
+      "idcwNote": "Growth- en IDCW-schema’s worden getoond zoals gepubliceerd; Artha leidt geen planoptie af uit de schemanaam.",
+      "classificationNote": "De categorie is de huidige classificatie van AMFI. Het is metadata, geen aanbeveling, en beschrijft het fonds van vandaag, niet over de gemeten periode.",
+      "ownFundsNote": "Alleen uw eigen fondsen worden vergeleken. Artha heeft geen fondsuniversum, dus er is geen categoriemediaan, percentiel of ranglijst."
     }
   },
   "securityTypeAllocation": {

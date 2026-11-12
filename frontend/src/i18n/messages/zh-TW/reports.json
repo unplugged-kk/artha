@@ -1402,6 +1402,47 @@
       "NORTH_AMERICA": "北美",
       "EUROPE": "歐洲",
       "ASIA_PACIFIC": "亞太"
+    },
+    "fundComparison": {
+      "title": "基金比較",
+      "subject": "您自己的基金，按 AMFI 為每個計畫公布的類別分組。",
+      "noData": "此選擇沒有傳回基金資料。",
+      "loadFailed": "無法載入基金比較。",
+      "retry": "重試",
+      "incomplete": "部分數值無法使用或不完整。每個基金都會說明原因。",
+      "deduplicated": "多次選擇的基金會只顯示一次。",
+      "excludedMember": "{fund} 不是 AMFI 基金，沒有滾動報酬。",
+      "selectionTruncated": "僅比較所選的前 20 個工具。",
+      "uncategorised": "未分類",
+      "uncategorisedReason": "AMFI 尚未公布這些計畫的類別。它們會一起顯示，絕不會與已分類的類別歸為一組。",
+      "notAvailable": "無",
+      "noPriceHistory": "尚無可用的 NAV 歷史。",
+      "asOf": "截至 {date}",
+      "stale": "NAV 資料已過時：最後一次觀測為 {date}",
+      "excludedObservations": "{count, plural, other {已排除 # 個不可用的觀測。}}",
+      "range": "最差 {worst} · 最好 {best}",
+      "windows": "{count, plural, other {# 個視窗}}",
+      "missingWindows": "{count, plural, other {# 個視窗無法定價}}",
+      "status": {
+        "INSUFFICIENT_HISTORY": "歷史紀錄短於該期間。",
+        "ALL_WINDOWS_MISSING": "該期間沒有可定價的視窗。",
+        "NO_PRICE_HISTORY": "尚無可用的 NAV 歷史。"
+      },
+      "periods": {
+        "1Y": "1年",
+        "3Y": "3年",
+        "5Y": "5年"
+      },
+      "columns": {
+        "fund": "基金"
+      },
+      "reason": {
+        "NOT_AN_AMFI_FUND": "不是 AMFI 基金。"
+      },
+      "basisNote": "滾動報酬使用公布的 NAV；分紅不會加回。",
+      "idcwNote": "Growth 和 IDCW 計畫按公布內容顯示；Artha 不會從計畫名稱推斷計畫選項。",
+      "classificationNote": "類別是 AMFI 的目前分類。它是中繼資料，不是推薦，描述的是今天的基金，而不是所測期間內的分類。",
+      "ownFundsNote": "僅比較您自己的基金。Artha 沒有基金全庫，因此沒有類別中位數、百分位或排名。"
     }
   },
   "securityTypeAllocation": {
