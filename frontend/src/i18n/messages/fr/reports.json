@@ -1402,6 +1402,47 @@
       "NORTH_AMERICA": "Amérique du Nord",
       "EUROPE": "Europe",
       "ASIA_PACIFIC": "Asie-Pacifique"
+    },
+    "fundComparison": {
+      "title": "Comparaison de fonds",
+      "subject": "Vos propres fonds communs, regroupés par la catégorie publiée par AMFI pour chaque schéma.",
+      "noData": "Aucune donnée de fonds n'a été renvoyée pour cette sélection.",
+      "loadFailed": "Impossible de charger la comparaison de fonds.",
+      "retry": "Réessayer",
+      "incomplete": "Certains chiffres sont indisponibles ou incomplets. Chaque fonds en indique la raison.",
+      "deduplicated": "Un fonds sélectionné plusieurs fois n'est affiché qu'une fois.",
+      "excludedMember": "{fund} n'est pas un fonds commun AMFI et n'a pas de rendements glissants.",
+      "selectionTruncated": "Seuls les 20 premiers instruments sélectionnés sont comparés.",
+      "uncategorised": "Non classé",
+      "uncategorisedReason": "AMFI n'a pas publié de catégorie pour ces schémas. Ils sont affichés ensemble et jamais regroupés avec une catégorie classée.",
+      "notAvailable": "n/d",
+      "noPriceHistory": "Aucun historique de VNI exploitable pour l'instant.",
+      "asOf": "Au {date}",
+      "stale": "Les données de VNI sont obsolètes : dernière observation {date}",
+      "excludedObservations": "{count, plural, one {# observation a été exclue comme inutilisable.} other {# observations ont été exclues comme inutilisables.}}",
+      "range": "Pire {worst} · Meilleur {best}",
+      "windows": "{count, plural, one {# fenêtre} other {# fenêtres}}",
+      "missingWindows": "{count, plural, one {# fenêtre n'a pas pu être valorisée} other {# fenêtres n'ont pas pu être valorisées}}",
+      "status": {
+        "INSUFFICIENT_HISTORY": "L'historique est plus court que cette période.",
+        "ALL_WINDOWS_MISSING": "Aucune fenêtre de cette période n'a pu être valorisée.",
+        "NO_PRICE_HISTORY": "Aucun historique de VNI exploitable pour l'instant."
+      },
+      "periods": {
+        "1Y": "1 an",
+        "3Y": "3 ans",
+        "5Y": "5 ans"
+      },
+      "columns": {
+        "fund": "Fonds"
+      },
+      "reason": {
+        "NOT_AN_AMFI_FUND": "Pas un fonds commun AMFI."
+      },
+      "basisNote": "Les rendements glissants utilisent la VNI publiée ; les distributions ne sont pas réintégrées.",
+      "idcwNote": "Les schémas Growth et IDCW sont affichés tels que publiés ; Artha ne déduit pas d'option de plan du nom du schéma.",
+      "classificationNote": "La catégorie est la classification actuelle d'AMFI. C'est une métadonnée, pas une recommandation, et elle décrit le fonds aujourd'hui, non sur la période mesurée.",
+      "ownFundsNote": "Seuls vos propres fonds sont comparés. Artha ne dispose pas d'un univers de fonds : il n'y a donc ni médiane, ni percentile, ni classement par catégorie."
     }
   },
   "securityTypeAllocation": {

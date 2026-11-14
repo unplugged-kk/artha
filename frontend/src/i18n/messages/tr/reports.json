@@ -1402,6 +1402,47 @@
       "NORTH_AMERICA": "Kuzey Amerika",
       "EUROPE": "Avrupa",
       "ASIA_PACIFIC": "Asya-Pasifik"
+    },
+    "fundComparison": {
+      "title": "Fon karşılaştırması",
+      "subject": "Kendi yatırım fonlarınız, her şema için AMFI'nin yayımladığı kategoriye göre gruplanmış.",
+      "noData": "Bu seçim için fon verisi döndürülmedi.",
+      "loadFailed": "Fon karşılaştırması yüklenemedi.",
+      "retry": "Yeniden dene",
+      "incomplete": "Bazı değerler kullanılamıyor veya eksik. Her fon nedenini belirtir.",
+      "deduplicated": "Birden fazla seçilen bir fon bir kez gösterilir.",
+      "excludedMember": "{fund} bir AMFI yatırım fonu değildir ve kayan getirisi yoktur.",
+      "selectionTruncated": "Yalnızca seçilen ilk 20 enstrüman karşılaştırılır.",
+      "uncategorised": "Sınıflandırılmamış",
+      "uncategorisedReason": "AMFI bu şemalar için bir kategori yayımlamadı. Birlikte gösterilirler ve sınıflandırılmış bir kategoriyle asla gruplanmazlar.",
+      "notAvailable": "yok",
+      "noPriceHistory": "Henüz kullanılabilir NAV geçmişi yok.",
+      "asOf": "{date} itibarıyla",
+      "stale": "NAV verileri eski: son gözlem {date}",
+      "excludedObservations": "{count, plural, one {# gözlem kullanılamaz olduğu için hariç tutuldu.} other {# gözlem kullanılamaz olduğu için hariç tutuldu.}}",
+      "range": "En kötü {worst} · En iyi {best}",
+      "windows": "{count, plural, one {# pencere} other {# pencere}}",
+      "missingWindows": "{count, plural, one {# pencerenin fiyatı hesaplanamadı} other {# pencerenin fiyatı hesaplanamadı}}",
+      "status": {
+        "INSUFFICIENT_HISTORY": "Geçmiş bu dönemden daha kısa.",
+        "ALL_WINDOWS_MISSING": "Bu dönemdeki hiçbir pencerenin fiyatı hesaplanamadı.",
+        "NO_PRICE_HISTORY": "Henüz kullanılabilir NAV geçmişi yok."
+      },
+      "periods": {
+        "1Y": "1 yıl",
+        "3Y": "3 yıl",
+        "5Y": "5 yıl"
+      },
+      "columns": {
+        "fund": "Fon"
+      },
+      "reason": {
+        "NOT_AN_AMFI_FUND": "AMFI yatırım fonu değil."
+      },
+      "basisNote": "Kayan getiriler yayımlanan NAV'ı kullanır; dağıtımlar geri eklenmez.",
+      "idcwNote": "Growth ve IDCW şemaları yayımlandığı gibi gösterilir; Artha şema adından plan seçeneği çıkarmaz.",
+      "classificationNote": "Kategori AMFI'nin güncel sınıflandırmasıdır. Bir öneri değil üst veridir ve fonu ölçülen dönemde değil bugün tanımlar.",
+      "ownFundsNote": "Yalnızca kendi fonlarınız karşılaştırılır. Artha'nın bir fon evreni yoktur; bu nedenle kategori medyanı, yüzdelik dilimi veya sıralaması yoktur."
     }
   },
   "securityTypeAllocation": {

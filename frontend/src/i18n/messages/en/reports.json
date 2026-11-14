@@ -1402,6 +1402,47 @@
       "NORTH_AMERICA": "North America",
       "EUROPE": "Europe",
       "ASIA_PACIFIC": "Asia-Pacific"
+    },
+    "fundComparison": {
+      "title": "Fund comparison",
+      "subject": "Your own mutual funds, grouped by the AMFI category published for each scheme.",
+      "noData": "No fund data was returned for this selection.",
+      "loadFailed": "Could not load the fund comparison.",
+      "retry": "Try again",
+      "incomplete": "Some figures are unavailable or incomplete. Each fund says why.",
+      "deduplicated": "A fund selected more than once is shown once.",
+      "excludedMember": "{fund} is not an AMFI mutual fund and has no rolling returns.",
+      "selectionTruncated": "Only the first 20 selected instruments are compared.",
+      "uncategorised": "Uncategorised",
+      "uncategorisedReason": "AMFI has not published a category for these schemes. They are shown together and never grouped with a classified category.",
+      "notAvailable": "n/a",
+      "noPriceHistory": "No usable NAV history yet.",
+      "asOf": "As of {date}",
+      "stale": "NAV data is stale: last observation {date}",
+      "excludedObservations": "{count, plural, one {# observation was excluded as unusable.} other {# observations were excluded as unusable.}}",
+      "range": "Worst {worst} · Best {best}",
+      "windows": "{count, plural, one {# window} other {# windows}}",
+      "missingWindows": "{count, plural, one {# window could not be priced} other {# windows could not be priced}}",
+      "status": {
+        "INSUFFICIENT_HISTORY": "History is shorter than this period.",
+        "ALL_WINDOWS_MISSING": "No window in this period could be priced.",
+        "NO_PRICE_HISTORY": "No usable NAV history yet."
+      },
+      "periods": {
+        "1Y": "1Y",
+        "3Y": "3Y",
+        "5Y": "5Y"
+      },
+      "columns": {
+        "fund": "Fund"
+      },
+      "reason": {
+        "NOT_AN_AMFI_FUND": "Not an AMFI mutual fund."
+      },
+      "basisNote": "Rolling returns use the published NAV; distributions are not added back.",
+      "idcwNote": "Growth and IDCW schemes are shown as published; Artha does not infer a plan option from the scheme name.",
+      "classificationNote": "The category is AMFI's current classification. It is metadata, not a recommendation, and it describes the fund today rather than over the measured window.",
+      "ownFundsNote": "Only your own funds are compared. Artha holds no fund universe, so there is no category median, percentile or ranking."
     }
   },
   "securityTypeAllocation": {

@@ -24,7 +24,9 @@ import {
 import { MarketIndexService, MarketIndexView } from "./market-index.service";
 import { PerformanceComparisonService } from "./performance-comparison.service";
 import { PerformanceComparisonQueryDto } from "./dto/performance-comparison-query.dto";
+import { FundComparisonQueryDto } from "./dto/fund-comparison-query.dto";
 import {
+  FundComparisonView,
   FundRollingReturnsView,
   PerformanceComparisonView,
 } from "./performance-comparison.types";
@@ -114,5 +116,35 @@ export class PerformanceComparisonController {
     @Param("id", ParseUUIDPipe) id: string,
   ): Promise<FundRollingReturnsView> {
     return this.performanceComparisonService.getRollingReturns(req.user.id, id);
+  }
+
+  /**
+   * Owner-only, like the rolling-returns read beside it, and throttled for the
+   * same reason: the history fetch may reach the NAV provider.
+   *
+   * The comparison computes no return of its own -- every figure is the
+   * rolling-return engine's -- and it presents no category median, percentile
+   * or ranking, because Artha holds no fund universe to rank against.
+   */
+  @Get("funds/comparison")
+  @Throttle({ default: { ttl: 60000, limit: 60 } })
+  @ApiOperation({
+    summary: "Rolling-return distributions of AMFI funds, grouped by category",
+    description:
+      "Each member's 1Y/3Y/5Y distribution, grouped by the AMFI-published " +
+      "category (Uncategorised last). Figures are the rolling-return engine's " +
+      "own; nothing is ranked or benchmarked. A fund without a scheme code is " +
+      "returned with `NOT_AN_AMFI_FUND` and no periods.",
+  })
+  @ApiResponse({ status: 200, description: "Fund comparison" })
+  @ApiResponse({ status: 404, description: "Security not found" })
+  getFundComparison(
+    @Request() req,
+    @Query() query: FundComparisonQueryDto,
+  ): Promise<FundComparisonView> {
+    return this.performanceComparisonService.getFundComparison(
+      req.user.id,
+      query.securityIds,
+    );
   }
 }

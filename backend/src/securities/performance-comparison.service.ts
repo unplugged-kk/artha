@@ -25,6 +25,11 @@ import { marketIndexByCode } from "./market-indexes";
 import { computeRollingReturns } from "./rolling-returns.util";
 import { addMonthsUtc, parseYmd } from "../strategies/gem-momentum.util";
 import {
+  RollingReturnPeriod,
+  FundComparisonGroup,
+  FundComparisonMember,
+  FundComparisonView,
+  FundRollingReturnsHistory,
   FundRollingReturnsView,
   PerformanceComparisonView,
   PerformanceExclusion,
@@ -116,6 +121,63 @@ const ROLLING_NAV_SOURCES = ["amfi_nav", "manual"] as const;
 
 /** The longest rolling period, which is how far back the history must reach. */
 const ROLLING_HISTORY_MONTHS = 60;
+
+/**
+ * The empty history a non-AMFI member carries, so the wire shape is the same
+ * for every member and a consumer never has to branch on its presence.
+ */
+const EMPTY_FUND_HISTORY: FundRollingReturnsHistory = Object.freeze({
+  firstDate: null,
+  lastDate: null,
+  observationCount: 0,
+  excludedObservationCount: 0,
+  lastIsStale: false,
+});
+
+/** The fixed rolling periods, in the order every response lists them. */
+const FUND_COMPARISON_PERIODS: RollingReturnPeriod[] = ["1Y", "3Y", "5Y"];
+
+/**
+ * Members grouped by their AMFI category, categories sorted, Unclassified last.
+ *
+ * The key is the stored string itself -- no case-folding, no aliasing, no
+ * synonym table, because Artha does not own AMFI's taxonomy (INV-FUNDCAT-001).
+ * The order within a group is the request order: there is no ranking, and the
+ * data does not support one (INV-FUNDCMP-002).
+ */
+function groupByFundCategory(
+  members: FundComparisonMember[],
+): FundComparisonGroup[] {
+  const grouped = new Map<string | null, string[]>();
+  for (const member of members) {
+    const category = member.fundCategory ?? null;
+    const ids = grouped.get(category) ?? [];
+    ids.push(member.securityId);
+    grouped.set(category, ids);
+  }
+  return [...grouped.entries()]
+    .map(([category, securityIds]) => ({ category, securityIds }))
+    .sort((a, b) => {
+      if (a.category === null) return 1;
+      if (b.category === null) return -1;
+      return a.category.localeCompare(b.category);
+    });
+}
+
+/**
+ * Whether one member's distribution is fully known. A missing period, a period
+ * with no window, or a gap in a period all make the comparison `incomplete`
+ * rather than leaving a short figure to be read as settled.
+ */
+function isFullyComplete(member: FundComparisonMember): boolean {
+  if (member.eligibility !== "ELIGIBLE") return false;
+  return (
+    member.periods.length === FUND_COMPARISON_PERIODS.length &&
+    member.periods.every(
+      (period) => period.status === "OK" && period.completeness === "complete",
+    )
+  );
+}
 
 /** A candidate line, before we know whether it can be drawn. */
 interface Candidate {
@@ -356,6 +418,97 @@ export class PerformanceComparisonService {
       currencyCode: security.currencyCode,
       history,
       periods,
+    };
+  }
+
+  /**
+   * Side-by-side rolling-return distributions for the caller's own AMFI funds,
+   * grouped by the AMFI category (`docs/specs/fund-categories-and-comparison.md`).
+   *
+   * Every figure is `computeRollingReturns` output -- there is no second return
+   * formula here (INV-FUNDCMP-001), no category median, percentile or ranking
+   * (INV-FUNDCMP-002), and a fund whose history does not span a period reports
+   * INSUFFICIENT_HISTORY rather than a figure from a shorter one
+   * (INV-FUNDCMP-003).
+   *
+   * Ownership is checked before anything else, so another user's id is a 404
+   * that never reaches a price query. A fund with no scheme code is reported
+   * with `NOT_AN_AMFI_FUND` and no periods, and is never passed to the loader
+   * or the provider. Duplicate ids collapse, and the survivor says so.
+   */
+  async getFundComparison(
+    userId: string,
+    securityIds: string[],
+  ): Promise<FundComparisonView> {
+    const requested = securityIds.filter((id) => typeof id === "string");
+    const repeated = new Set(
+      requested.filter((id, index) => requested.indexOf(id) !== index),
+    );
+    const uniqueIds = [...new Set(requested)];
+
+    const securities = await this.loadOwnedSecurities(userId, uniqueIds);
+    const byId = new Map(securities.map((security) => [security.id, security]));
+    // Request order, so the caller's own ordering is the deterministic default.
+    const ordered = uniqueIds
+      .map((id) => byId.get(id))
+      .filter((security): security is Security => security !== undefined);
+
+    await this.fundClassificationService.ensureFundClassification(ordered);
+
+    const eligible = ordered.filter(
+      (security) => (security.amfiSchemeCode ?? "").trim() !== "",
+    );
+
+    const today = todayYMD();
+    if (eligible.length > 0) {
+      await this.ensureSecuritiesHistory(
+        eligible,
+        addMonthsUtc(parseYmd(today), -ROLLING_HISTORY_MONTHS)
+          .toISOString()
+          .slice(0, 10),
+      );
+    }
+
+    // One read for every eligible fund, on the same raw NAV basis the rolling
+    // card uses, so the two surfaces cannot disagree about a figure.
+    let loaded: Map<string, LoadedPriceSeries> = new Map();
+    if (eligible.length > 0) {
+      loaded = await withScopedDb(this.dataSource, (m) =>
+        loadPriceSeries(m, {
+          table: "security_prices",
+          ids: eligible.map((security) => security.id),
+          sampling: "day",
+          sources: ROLLING_NAV_SOURCES,
+          basis: "RAW",
+        }),
+      );
+    }
+
+    const members: FundComparisonMember[] = ordered.map((security) => {
+      const isAmfi = (security.amfiSchemeCode ?? "").trim() !== "";
+      const computed = isAmfi
+        ? computeRollingReturns(loaded.get(security.id)?.points ?? [], today)
+        : null;
+      return {
+        securityId: security.id,
+        symbol: security.symbol,
+        name: security.name,
+        currencyCode: security.currencyCode,
+        fundHouse: security.fundHouse ?? null,
+        fundSchemeType: security.fundSchemeType ?? null,
+        fundCategory: security.fundCategory ?? null,
+        eligibility: isAmfi ? "ELIGIBLE" : "NOT_AN_AMFI_FUND",
+        history: computed?.history ?? EMPTY_FUND_HISTORY,
+        periods: computed?.periods ?? [],
+        ...(repeated.has(security.id) ? { deduplicated: true } : {}),
+      };
+    });
+
+    return {
+      members,
+      groups: groupByFundCategory(members),
+      periods: [...FUND_COMPARISON_PERIODS],
+      status: members.every(isFullyComplete) ? "complete" : "incomplete",
     };
   }
 

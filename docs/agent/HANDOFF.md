@@ -263,3 +263,220 @@ and the E2E journey in spec §9. Every figure must come from
 `computeRollingReturns`; no category median, percentile or ranking
 (INV-FUNDCMP-002). (3) Then N2 (restore rehearsal) and N4 (expose the duplicate
 and low-balance detectors), both specified in `BACKLOG.md`.
+
+## Development session, second milestone (2026-11-11, branch `fm/artha-fund-comparison-01`)
+
+Branched from `fm/artha-fund-categories-01` at `cdd128e6e`, because the
+comparison needs the classification columns from PR #34. The PRs stack: merge
+#34 first, then this one.
+
+**Objective.** The comparison half of N3, backend first. The spec allows the
+category half to ship alone but not the comparison without it.
+
+**What was implemented (fund comparison API).**
+
+- `GET /api/v1/investments/performance/funds/comparison?securityIds=<uuid,...>`
+  on the existing `PerformanceComparisonController`: 2..20 ids, `ParseUUIDPipe`
+  shape not needed (a DTO), owner-only (no `@AllowDelegate`), throttled 60/min
+  because the history fetch may reach the provider.
+- `PerformanceComparisonService.getFundComparison`: ownership first, duplicate
+  ids collapsed (survivor marked `deduplicated`), one classification sweep, the
+  same five-year history ensure the rolling card uses, **one**
+  `loadPriceSeries` call for every eligible fund (`amfi_nav` + `manual`, RAW,
+  daily), then `computeRollingReturns` per fund.
+- Grouping by the stored category string, categories sorted, Unclassified last,
+  request order inside a group. No statistic is computed across funds.
+- `status: "complete"` only when every member is an eligible fund and every
+  period is `OK` and complete; otherwise `incomplete`.
+- Wire types `FundComparisonMember` / `FundComparisonGroup` /
+  `FundComparisonView` reuse `RollingPeriodResult` and
+  `FundRollingReturnsHistory`, so a change to the engine cannot leave the
+  comparison on a parallel formula.
+- `INV-FUNDCMP-001..003` catalogued and added to the verification matrix.
+
+**Decisions worth inheriting.**
+
+- `FundComparisonView.periods` is a literal `["1Y","3Y","5Y"]`. The engine's
+  period list is not exported; deriving it would have meant exporting an
+  internal, and the order is part of the contract.
+- A repeated id is accepted, not rejected: the caller is told their list shrank
+  rather than being refused for a harmless payload.
+- The comparison does not reuse `getComparison`; the two answer different
+  questions (shared-start overlay vs per-fund distributions).
+
+**Tests and results.**
+
+| Gate | Result |
+|---|---|
+| Backend typecheck / lint / build | clean |
+| `performance-comparison.service.spec.ts` | 50/50 (9 new: engine equality, one read, non-AMFI excluded, dedupe + order, grouping, incomplete, complete, 404) |
+| `performance-comparison.controller.spec.ts` | 24/24 (6 new: path, owner-only, throttle, 2..20 validation, non-UUID/oversize, delegation) |
+| `test/integration/fund-comparison.integration.spec.ts` | 4/4 on real PostgreSQL 17 |
+| `array-bound-dto`, `invariant-catalog-parity`, `doc-paths`, `source-comment-paths` | green |
+| Frontend | untouched by this milestone; the previous milestone's suite is green (882 files / 16,800 tests) |
+
+**Commit and PR.** `016ec883c` (plus the handover commit that follows it) on
+`fm/artha-fund-comparison-01`, stacked on PR #34.
+
+**Still open for N3.** The comparison UI: frontend types and
+`getFundComparison` client, `FundComparisonTable` (grouped by category,
+category first, "n/a" + reason for a null, sortable shown columns only, no rank
+badge), wiring it into `SecurityPerformanceReport` when ≥2 selected instruments
+are AMFI funds, i18n keys in every locale, and `e2e/tests/fund-comparison.spec.ts`.
+Then N2 (restore rehearsal) and N4 (expose the built detectors).
+
+### Full integration sweep (same session)
+
+`NODE_OPTIONS=--max-old-space-size=9000 npm run test:integration` on the
+comparison branch against local PostgreSQL 17: **47 of 50 suites, 542 of 545
+tests pass**. The three failures, each diagnosed:
+
+1. **`support-backup` golden allowlist — real, caused by this work, now fixed.**
+   The four new `securities` columns had no rule in
+   `backend/src/backup/support-backup/support-backup-securities-rules.ts`. They
+   are now `keep` (public classification shared by many schemes, like
+   `sector`/`industry`; the scheme *code* beside them stays `drop`). Fixed in
+   `9cb1e046b` on the category branch, re-run green (5/5).
+2. **`backup-restore` scanned-attachment ordering — pre-existing.**
+   Reproduced identically after `git switch main`, so it is not this work: the
+   assertion expects the enhanced scan before the original, and the storage
+   query returns them in the other order in this environment.
+3. **`runtime-role` — environment.** PostgreSQL 17 ships `pg_maintain`, which
+   the role classification predates; CI runs PostgreSQL 16 and this suite passes
+   there. Classifying it is a separate housekeeping task, not this branch.
+
+CI on `main` at `259f7690e` already fails four jobs (NPM Audit, License
+Compliance (backend), Bearer Security Scan, Documentation vs Manifests); those
+are pre-existing and not caused by either PR.
+
+Branch state after the sweep: `fm/artha-fund-categories-01` at `9cb1e046b`,
+`fm/artha-fund-comparison-01` merged with it at `9ef900f65`.
+
+## Development session, third milestone (2026-11-11, branch `fm/artha-fund-comparison-ui-01`)
+
+Continues the N3 stack: PR #34 (`9cb1e046b`) -> PR #35 (`ac50eb2fe`) -> this
+branch. The two earlier commits are preserved untouched; this one adds the
+comparison UI and its E2E journey.
+
+**Recovery note.** `AGENTS.md` does not exist in this repository; the binding
+instructions are `CLAUDE.md` plus the per-layer `CLAUDE.md` files, and they were
+followed. The working tree was clean apart from `.commandcode/` (local agent
+tooling, deliberately never committed).
+
+**PR #34 CI, verified before continuing.** Backend Unit Tests passed (1h33m),
+Backend Integration passed (7m15s) after the support-backup allowlist fix, and
+Backend/Frontend lint, frontend unit, schema drift, bundle size, hadolint,
+Helm, zizmor and license(frontend) all passed. Four jobs fail exactly as they do
+on `main` at `259f7690e`: NPM Audit, License Compliance (backend), Bearer
+Security Scan, Documentation vs Manifests. The four E2E shards failed *before
+running any test* -- `Install Playwright system dependencies` timed out on an
+apt fetch (`Unable to fetch some archives`, exit 100). That is infrastructure,
+not a code failure: no spec executed.
+
+**PR #35 has no CI runs, by configuration, not by omission.** `ci.yml` triggers
+`pull_request` only for `branches: [main, develop]`, and #35's base is
+`fm/artha-fund-categories-01`. It will get a full run when #34 merges and its
+base retargets to `main`.
+
+**What was implemented (comparison UI).**
+
+- `frontend/src/types/investment.ts`: `FundComparisonMember`,
+  `FundComparisonGroup`, `FundComparisonView`, mirroring the wire shape.
+- `frontend/src/lib/investments.ts`: `getFundComparison(securityIds)`,
+  deliberately uncached for the same reason as the other two performance reads.
+- `frontend/src/components/securities/FundComparisonTable.tsx`:
+  - renders the server's `groups` and `members` verbatim -- no client-side
+    regrouping, no second taxonomy, no ranking;
+  - one section per category, heading is the published string, Unclassified
+    last with the reason it is unclassified;
+  - per fund and period, the engine's `median` plus its own worst/best range and
+    window count; a refused period prints "n/a" with its status reason and any
+    missing-window count, never 0%;
+  - stale NAV, excluded-observation count, as-of date, duplicate-collapsed note,
+    non-AMFI members named and not drawn, selection truncation note at the API's
+    20-id bound;
+  - `useReportData` with a request key of the selection, so a slow answer for a
+    previous selection cannot be shown under the next one;
+  - table from `sm` up, stacked cards below it (Mechanism A), no sideways scroll.
+- `SecurityPerformanceReport.tsx`: the panel renders in comparison mode when at
+  least two selected instruments carry an AMFI scheme code. It is not offered
+  for a single fund or for stocks/ETFs.
+- i18n: 28 new keys under `reports.securityPerformance.fundComparison` in
+  `en`, the pseudo-locale, all 18 full translations, plus the one spelling
+  override in `en-US` ("Uncategorized"). `i18n:check` and parity (1,646) are
+  green.
+- `e2e/tests/fund-comparison.spec.ts`: 9 Chromium cases (see below).
+
+**Decisions worth inheriting.**
+
+- The panel receives the whole selection (2..20), not only the AMFI funds, so a
+  selected stock is *visible* as "Not an AMFI mutual fund" rather than silently
+  missing. The panel is only offered when at least two AMFI funds are selected.
+- No sort control. Spec section 4.5 makes sorting optional and fixes the default
+  as request order; a sort by a shown figure would add a UI surface without
+  changing what is computed.
+- The full AMFI category string is the group heading. The spec's optional
+  "group / category" split is presentation-only and would be a second way to
+  read one provider string; it is not implemented.
+
+**Tests and results.**
+
+| Gate | Result |
+|---|---|
+| Frontend type-check / lint | clean |
+| `FundComparisonTable.test.tsx` | 8/8 (server median printed even when it disagrees with worst/best, grouping, n/a + reasons, stale/missing windows, non-fund, dedupe, loading/error/retry, stale-response guard) |
+| `SecurityPerformanceReport.test.tsx` | 43/43 (2 new: panel with two AMFI funds + the id array passed; absent, with no request, for two non-funds) |
+| i18n parity + duplicate keys + `i18n:check` | green (1,648) |
+| Guard suites (`ui-conventions`, `api-page-limits`, `number-locale`, `test-hygiene`, `e2e-conventions`) | green |
+| Frontend full unit suite | 882 files / 16,809 tests pass; **one pre-existing failure**, `src/store/authStore.test.ts > keeps authenticated state on network error` -- reproduced identically on a clean `main` worktree, no file in that path is touched by this branch |
+| Frontend production build | clean |
+| E2E `fund-comparison.spec.ts` (Chromium) | **9/9 pass** against `docker-compose.e2e.yml` on port 3001 |
+| E2E adjacent regression (Chromium): `fund-rolling-returns`, `reports`, `securities` | 15/17 first pass; the 2 failures were `Unable to connect` from the dev-server proxy during compilation, and both passed on re-run. `reports` (3 cold-start failures earlier) passed in the combined warm run. |
+| E2E Firefox | not run: `npx playwright install firefox` refuses on this host (`Playwright does not support firefox on ubuntu26.04-arm64`). CI runs both projects. |
+
+The E2E cases, in order: real two-fund comparison checked against the awaited
+API JSON; no panel (and no request) for fewer than two AMFI funds, with the
+empty-state prompt; grouping/`n/a` from a route-intercepted response (server
+grouping is covered by the PostgreSQL integration suite); a fund without a
+scheme code shown as not drawn; 500 then retry recovery; 429 then retry
+recovery; cross-owner 404 at the API and the user's funds absent from the
+other user's selector; unauthenticated redirect to `/login`; and a 390px Hindi
+run asserting the localized heading and no horizontal overflow.
+
+**Merge sequence (do not merge without the owner's authorization).**
+
+1. PR #34 (`fm/artha-fund-categories-01`, `9cb1e046b`) -> `main`. Its four red
+   jobs match `main`'s own baseline; the E2E reds are the apt timeout.
+2. PR #35 (`fm/artha-fund-comparison-01`, `ac50eb2fe`) retargets to `main` when
+   #34's branch is deleted; its CI then runs for the first time.
+3. This PR (`fm/artha-fund-comparison-ui-01`) retargets to `main`; its CI also
+   runs for the first time then.
+
+**Exact commands used (this machine, PostgreSQL 17 from the previous session).**
+
+```bash
+# backend unit/integration (PostgreSQL already running on 127.0.0.1:5432)
+cd backend && NODE_ENV=test npm run typecheck
+NODE_ENV=test NODE_OPTIONS=--max-old-space-size=9000 npm run test:integration
+# frontend
+cd frontend && NODE_ENV=test npm run type-check && NODE_ENV=test npm run lint
+NODE_ENV=test npx vitest run            # full suite
+npm run i18n:check
+NODE_ENV=production npm run build
+# E2E (dev-mode compose stack; first visit to a route compiles, so a cold
+# failure that says "Unable to connect" is the proxy, not the code)
+docker compose -f docker-compose.e2e.yml up -d --build --wait --wait-timeout 900
+cd e2e && BASE_URL=http://localhost:3001 npx playwright test \
+  tests/fund-comparison.spec.ts --project=chromium --workers=1 --retries=0
+```
+
+**Commit and PR.** `36002cbb9` on `fm/artha-fund-comparison-ui-01`, pushed;
+PR https://github.com/unplugged-kk/artha/pull/36 (base
+`fm/artha-fund-comparison-01`).
+
+**Next action.** (1) Hand #34's four baseline failures and the E2E apt timeout
+to the owner as environment/baseline, then merge in the order above once
+authorized. (2) N3 is functionally complete; the next unfinished backlog item is
+**N2 -- restore rehearsal against a disposable database** (P1), then **N4 --
+expose the duplicate and low-balance detectors**. Both are specified in
+`BACKLOG.md`.

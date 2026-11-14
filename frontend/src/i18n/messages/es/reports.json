@@ -1402,6 +1402,47 @@
       "NORTH_AMERICA": "América del Norte",
       "EUROPE": "Europa",
       "ASIA_PACIFIC": "Asia-Pacífico"
+    },
+    "fundComparison": {
+      "title": "Comparación de fondos",
+      "subject": "Tus propios fondos de inversión, agrupados por la categoría que AMFI publica para cada esquema.",
+      "noData": "No se devolvieron datos de fondos para esta selección.",
+      "loadFailed": "No se pudo cargar la comparación de fondos.",
+      "retry": "Reintentar",
+      "incomplete": "Algunas cifras no están disponibles o están incompletas. Cada fondo indica el motivo.",
+      "deduplicated": "Un fondo seleccionado más de una vez se muestra una sola vez.",
+      "excludedMember": "{fund} no es un fondo de inversión AMFI y no tiene rentabilidades móviles.",
+      "selectionTruncated": "Solo se comparan los primeros 20 instrumentos seleccionados.",
+      "uncategorised": "Sin categoría",
+      "uncategorisedReason": "AMFI no ha publicado una categoría para estos esquemas. Se muestran juntos y nunca se agrupan con una categoría clasificada.",
+      "notAvailable": "n/d",
+      "noPriceHistory": "Aún no hay historial de NAV utilizable.",
+      "asOf": "A {date}",
+      "stale": "Los datos de NAV están desactualizados: última observación {date}",
+      "excludedObservations": "{count, plural, one {Se excluyó # observación por no ser utilizable.} other {Se excluyeron # observaciones por no ser utilizables.}}",
+      "range": "Peor {worst} · Mejor {best}",
+      "windows": "{count, plural, one {# ventana} other {# ventanas}}",
+      "missingWindows": "{count, plural, one {# ventana no se pudo valorar} other {# ventanas no se pudieron valorar}}",
+      "status": {
+        "INSUFFICIENT_HISTORY": "El historial es más corto que este periodo.",
+        "ALL_WINDOWS_MISSING": "Ninguna ventana de este periodo pudo valorarse.",
+        "NO_PRICE_HISTORY": "Aún no hay historial de NAV utilizable."
+      },
+      "periods": {
+        "1Y": "1 año",
+        "3Y": "3 años",
+        "5Y": "5 años"
+      },
+      "columns": {
+        "fund": "Fondo"
+      },
+      "reason": {
+        "NOT_AN_AMFI_FUND": "No es un fondo de inversión AMFI."
+      },
+      "basisNote": "Las rentabilidades móviles usan el NAV publicado; las distribuciones no se vuelven a sumar.",
+      "idcwNote": "Los esquemas Growth e IDCW se muestran tal como se publican; Artha no deduce una opción de plan del nombre del esquema.",
+      "classificationNote": "La categoría es la clasificación actual de AMFI. Son metadatos, no una recomendación, y describen el fondo hoy, no durante el periodo medido.",
+      "ownFundsNote": "Solo se comparan tus propios fondos. Artha no dispone de un universo de fondos, por lo que no hay mediana, percentil ni clasificación por categoría."
     }
   },
   "securityTypeAllocation": {

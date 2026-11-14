@@ -27,6 +27,7 @@ import {
   SecurityPrice,
   MarketIndex,
   PerformanceComparison,
+  FundComparisonView,
   FundRollingReturnsView,
   SecurityDocument,
   CreateSecurityDocumentData,
@@ -837,6 +838,23 @@ export const investmentsApi = {
   getFundRollingReturns: async (securityId: string): Promise<FundRollingReturnsView> => {
     const response = await apiClient.get<FundRollingReturnsView>(
       `/investments/performance/securities/${securityId}/rolling-returns`,
+    );
+    return response.data;
+  },
+
+  /**
+   * Rolling-return distributions of the caller's own AMFI funds, grouped by
+   * AMFI category.
+   *
+   * Uncached for the same reason as the two reads above: the call may backfill
+   * NAV history, and the category may be captured for the first time, so a
+   * cached "uncategorised" would outlive the fetch that answers it. The API
+   * accepts 2..20 ids and answers 404 for an id the caller does not own.
+   */
+  getFundComparison: async (securityIds: string[]): Promise<FundComparisonView> => {
+    const response = await apiClient.get<FundComparisonView>(
+      '/investments/performance/funds/comparison',
+      { params: { securityIds: securityIds.join(',') } },
     );
     return response.data;
   },
