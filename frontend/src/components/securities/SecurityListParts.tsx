@@ -199,6 +199,41 @@ export function SecurityTypeText({
 }
 
 /**
+ * The AMFI category of a fund, as published and stored.
+ *
+ * Three states, not two: a classified fund prints the string, an AMFI fund AMFI
+ * has not described prints "Uncategorised", and a non-fund prints the same dash
+ * every empty column uses. Collapsing the middle state into the last would hide
+ * the fact that the fund simply has not been described yet
+ * (`docs/specs/fund-categories-and-comparison.md`, INV-FUNDCAT-001).
+ */
+export function SecurityFundCategory({ security }: { security: Security }) {
+  const t = useTranslations('securities');
+  const category = security.fundCategory?.trim();
+  if (category) {
+    return (
+      <span
+        className="block truncate text-sm text-gray-500 dark:text-gray-400"
+        title={category}
+      >
+        {category}
+      </span>
+    );
+  }
+  if ((security.amfiSchemeCode ?? '').trim()) {
+    return (
+      <span
+        className="block truncate text-sm text-gray-400 dark:text-gray-500"
+        title={t('list.categoryTitles.uncategorised')}
+      >
+        {t('list.uncategorised')}
+      </span>
+    );
+  }
+  return <span className="text-sm text-gray-500 dark:text-gray-400">-</span>;
+}
+
+/**
  * What the position is worth: shares times the latest close, in the security's
  * own currency (never converted, so the code is appended whenever that is not
  * the reader's).

@@ -1,8 +1,24 @@
 # Mutual-Fund Categories & Comparison — Specification
 
 Status: **Approved** 2026-09-26 (owner-delegated). Produced by a read-only
-evidence + specification mission and committed as documentation only: no
-production source was changed and no implementation has been started.
+evidence + specification mission and committed as documentation only.
+
+Implementation status (2026-11-11): the **category half** (§3) is implemented --
+`fund_house`, `fund_scheme_type`, `fund_category` and
+`fund_classification_updated_at` are captured from the existing AMFI provider,
+stored verbatim, shown on the security detail page, and filterable in the
+securities list. INV-FUNDCAT-001 and INV-FUNDCAT-002 are catalogued as
+`enforced`. The **comparison API** (§4, §5's backend half) is implemented:
+`GET /api/v1/investments/performance/funds/comparison` returns each fund's
+1Y/3Y/5Y rolling distribution grouped by the AMFI category, computed only by
+`computeRollingReturns`; INV-FUNDCMP-001..003 are catalogued as `enforced`.
+The comparison **UI** (§7 items 9-11) is implemented too: the frontend types,
+`investmentsApi.getFundComparison`, `FundComparisonTable` (grouped by the
+server's categories, stacked cards below `sm`, every null rendered "n/a" with
+its reason) and the Security Performance report panel shown when at least two
+selected instruments are AMFI funds. All 21 locales carry the new strings. The
+E2E journey in §9 is `e2e/tests/fund-comparison.spec.ts`. See
+`docs/agent/HANDOFF.md` for the exact commits and the recorded run.
 
 This is the design document required by `docs/financial-calculation-contract.md`
 section 9 ("a financial feature of any substance starts from a short written

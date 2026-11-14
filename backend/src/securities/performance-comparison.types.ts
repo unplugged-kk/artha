@@ -182,3 +182,54 @@ export interface FundRollingReturnsView {
   /** Exactly ["1Y","3Y","5Y"] in order when ELIGIBLE; [] when NOT_AN_AMFI_FUND. */
   periods: RollingPeriodResult[];
 }
+
+/*
+ * The wire shape of the fund comparison (`docs/specs/fund-categories-and-comparison.md`
+ * section 5). It computes nothing of its own: `history` and `periods` are the
+ * existing rolling-return types, produced by the one approved engine.
+ */
+
+/** One fund in the comparison. */
+export interface FundComparisonMember {
+  securityId: string;
+  symbol: string;
+  name: string;
+  /** Labelling only (INR for AMFI); no figure here is converted. */
+  currencyCode: string;
+  fundHouse: string | null;
+  fundSchemeType: string | null;
+  /** The AMFI-published string, or null for Unclassified. */
+  fundCategory: string | null;
+  eligibility: RollingReturnEligibility;
+  history: FundRollingReturnsHistory;
+  /** Exactly ["1Y","3Y","5Y"] when ELIGIBLE; [] when NOT_AN_AMFI_FUND. */
+  periods: RollingPeriodResult[];
+  /**
+   * True when this member survived a duplicate id in the request, so the caller
+   * can explain why their list is shorter than what they sent.
+   */
+  deduplicated?: boolean;
+}
+
+/**
+ * The members sharing one AMFI category. `category: null` is the single
+ * Unclassified group, and it is always last.
+ */
+export interface FundComparisonGroup {
+  category: string | null;
+  securityIds: string[];
+}
+
+export interface FundComparisonView {
+  /** Request order, de-duplicated. */
+  members: FundComparisonMember[];
+  /** Categories in sorted order, Unclassified last. */
+  groups: FundComparisonGroup[];
+  periods: RollingReturnPeriod[];
+  /**
+   * `complete` only when every member is an eligible AMFI fund and every one of
+   * its periods is `OK` and complete. Anything else is `incomplete`, so a short
+   * history is never read as a settled comparison.
+   */
+  status: "complete" | "incomplete";
+}

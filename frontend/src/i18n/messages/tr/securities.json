@@ -10,6 +10,10 @@
     "subtitle": "Hisselerinizi, ETF'lerinizi, yatırım fonlarınızı ve diğer menkul kıymetlerinizi yönetin",
     "newSecurity": "+ Yeni Menkul Kıymet",
     "searchPlaceholder": "Sembol veya ada göre ara...",
+    "categoryFilter": {
+      "label": "Fon kategorisine göre filtrele",
+      "all": "Tüm kategoriler"
+    },
     "statusAll": "Tümü ({count})",
     "statusActive": "Aktif ({count})",
     "statusInactive": "Pasif ({count})",
@@ -48,6 +52,7 @@
       "symbol": "Sembol",
       "name": "Ad",
       "type": "Tür",
+      "category": "Kategori",
       "shares": "Hisse",
       "value": "Değer",
       "exchange": "Borsa",
@@ -57,6 +62,10 @@
       "status": "Durum",
       "actions": "İşlemler",
       "favourite": "Favori"
+    },
+    "uncategorised": "Sınıflandırılmamış",
+    "categoryTitles": {
+      "uncategorised": "AMFI bu şema için henüz bir kategori yayımlamadı"
     },
     "statusBadge": {
       "active": "Aktif",

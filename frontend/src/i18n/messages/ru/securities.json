@@ -10,6 +10,10 @@
     "subtitle": "Управляйте акциями, ETF, паевыми фондами и другими ценными бумагами",
     "newSecurity": "+ Новая ценная бумага",
     "searchPlaceholder": "Поиск по символу или имени...",
+    "categoryFilter": {
+      "label": "Фильтр по категории фонда",
+      "all": "Все категории"
+    },
     "statusAll": "Все ({count})",
     "statusActive": "Активные ({count})",
     "statusInactive": "Неактивные ({count})",
@@ -48,6 +52,7 @@
       "symbol": "Символ",
       "name": "Имя",
       "type": "Тип",
+      "category": "Категория",
       "shares": "Акции",
       "value": "Стоимость",
       "exchange": "Биржа",
@@ -57,6 +62,10 @@
       "status": "Статус",
       "actions": "Действия",
       "favourite": "Избранное"
+    },
+    "uncategorised": "Без категории",
+    "categoryTitles": {
+      "uncategorised": "AMFI пока не опубликовала категорию для этой схемы"
     },
     "statusBadge": {
       "active": "Активная",

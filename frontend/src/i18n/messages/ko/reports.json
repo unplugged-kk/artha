@@ -1402,6 +1402,47 @@
       "NORTH_AMERICA": "북미",
       "EUROPE": "유럽",
       "ASIA_PACIFIC": "아시아 태평양"
+    },
+    "fundComparison": {
+      "title": "펀드 비교",
+      "subject": "각 스킴에 대해 AMFI가 공표한 카테고리별로 묶은 내 펀드입니다.",
+      "noData": "이 선택에 대해 반환된 펀드 데이터가 없습니다.",
+      "loadFailed": "펀드 비교를 불러오지 못했습니다.",
+      "retry": "다시 시도",
+      "incomplete": "일부 수치를 사용할 수 없거나 불완전합니다. 각 펀드에 이유가 표시됩니다.",
+      "deduplicated": "두 번 이상 선택한 펀드는 한 번만 표시됩니다.",
+      "excludedMember": "{fund}은(는) AMFI 뮤추얼 펀드가 아니므로 롤링 수익률이 없습니다.",
+      "selectionTruncated": "선택한 처음 20개 종목만 비교합니다.",
+      "uncategorised": "미분류",
+      "uncategorisedReason": "AMFI가 이 스킴의 카테고리를 공개하지 않았습니다. 이들은 함께 표시되며 분류된 카테고리와 묶이지 않습니다.",
+      "notAvailable": "해당 없음",
+      "noPriceHistory": "사용 가능한 NAV 이력이 아직 없습니다.",
+      "asOf": "{date} 기준",
+      "stale": "NAV 데이터가 오래되었습니다: 마지막 관측 {date}",
+      "excludedObservations": "{count, plural, other {#개 관측치를 사용할 수 없어 제외했습니다.}}",
+      "range": "최저 {worst} · 최고 {best}",
+      "windows": "{count, plural, other {#개 구간}}",
+      "missingWindows": "{count, plural, other {#개 구간의 가격을 산출할 수 없습니다}}",
+      "status": {
+        "INSUFFICIENT_HISTORY": "이력이 이 기간보다 짧습니다.",
+        "ALL_WINDOWS_MISSING": "이 기간의 어떤 구간도 가격을 산출할 수 없습니다.",
+        "NO_PRICE_HISTORY": "사용 가능한 NAV 이력이 아직 없습니다."
+      },
+      "periods": {
+        "1Y": "1년",
+        "3Y": "3년",
+        "5Y": "5년"
+      },
+      "columns": {
+        "fund": "펀드"
+      },
+      "reason": {
+        "NOT_AN_AMFI_FUND": "AMFI 뮤추얼 펀드가 아닙니다."
+      },
+      "basisNote": "롤링 수익률은 공표 NAV를 사용하며 분배금은 다시 더하지 않습니다.",
+      "idcwNote": "Growth 및 IDCW 스킴은 공표된 대로 표시됩니다. Artha는 스킴 이름에서 플랜 옵션을 추론하지 않습니다.",
+      "classificationNote": "카테고리는 AMFI의 현재 분류입니다. 권유가 아닌 메타데이터이며 측정 기간이 아니라 현재의 펀드를 설명합니다.",
+      "ownFundsNote": "내 펀드만 비교합니다. Artha는 펀드 유니버스가 없으므로 카테고리 중앙값, 백분위수 또는 순위가 없습니다."
     }
   },
   "securityTypeAllocation": {

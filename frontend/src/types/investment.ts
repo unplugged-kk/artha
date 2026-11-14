@@ -38,6 +38,16 @@ export interface Security {
   isin?: string | null;
   /** AMFI catalogue id, for an Indian mutual-fund scheme. */
   amfiSchemeCode?: string | null;
+  /**
+   * The AMFI-published classification of the scheme, captured verbatim. All
+   * four are optional because a backend that predates the capture sends
+   * nothing, and absent means "no information" -- never a category of
+   * "Equity". `null` (or absent) is shown as unclassified.
+   */
+  fundHouse?: string | null;
+  fundSchemeType?: string | null;
+  fundCategory?: string | null;
+  fundClassificationUpdatedAt?: string | null;
   description?: string | null;
   tags?: Tag[];
   isActive: boolean;
@@ -639,6 +649,16 @@ export interface CreateSecurityData {
   isin?: string | null;
   /** AMFI catalogue id, for an Indian mutual-fund scheme. */
   amfiSchemeCode?: string | null;
+  /**
+   * The AMFI-published classification of the scheme, captured verbatim. All
+   * four are optional because a backend that predates the capture sends
+   * nothing, and absent means "no information" -- never a category of
+   * "Equity". `null` (or absent) is shown as unclassified.
+   */
+  fundHouse?: string | null;
+  fundSchemeType?: string | null;
+  fundCategory?: string | null;
+  fundClassificationUpdatedAt?: string | null;
   description?: string;
   /** Empty string clears the stored address; the backend normalises the rest. */
   website?: string | null;
@@ -924,4 +944,43 @@ export interface FundRollingReturnsView {
   history: FundRollingReturnsHistory;
   /** Exactly ["1Y","3Y","5Y"] in order when ELIGIBLE; [] when NOT_AN_AMFI_FUND. */
   periods: RollingPeriodResult[];
+}
+
+/*
+ * The fund comparison (`docs/specs/fund-categories-and-comparison.md`).
+ * Mirrors `backend/src/securities/performance-comparison.types.ts`; the
+ * figures are the rolling-return engine's own, never recomputed here.
+ */
+
+/** One fund in the comparison. */
+export interface FundComparisonMember {
+  securityId: string;
+  symbol: string;
+  name: string;
+  /** The fund's currency, for labelling only. */
+  currencyCode: string;
+  fundHouse: string | null;
+  fundSchemeType: string | null;
+  /** The AMFI-published category, or null for Unclassified. */
+  fundCategory: string | null;
+  eligibility: RollingReturnEligibility;
+  history: FundRollingReturnsHistory;
+  /** Empty for a security that is not an AMFI fund. */
+  periods: RollingPeriodResult[];
+  /** True when the caller sent this id more than once; it was collapsed. */
+  deduplicated?: boolean;
+}
+
+/** Members sharing one AMFI category; `null` is Unclassified and always last. */
+export interface FundComparisonGroup {
+  category: string | null;
+  securityIds: string[];
+}
+
+export interface FundComparisonView {
+  members: FundComparisonMember[];
+  groups: FundComparisonGroup[];
+  periods: RollingReturnPeriod[];
+  /** `complete` only when every member is an eligible fund with full periods. */
+  status: 'complete' | 'incomplete';
 }

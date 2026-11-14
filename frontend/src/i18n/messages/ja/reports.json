@@ -1402,6 +1402,47 @@
       "NORTH_AMERICA": "北米",
       "EUROPE": "欧州",
       "ASIA_PACIFIC": "アジア太平洋"
+    },
+    "fundComparison": {
+      "title": "ファンド比較",
+      "subject": "ご自身の投資信託を、各スキームについて AMFI が公表するカテゴリ別にまとめたものです。",
+      "noData": "この選択に対するファンドデータはありません。",
+      "loadFailed": "ファンド比較を読み込めませんでした。",
+      "retry": "再試行",
+      "incomplete": "一部の数値は利用できないか不完全です。各ファンドに理由が表示されます。",
+      "deduplicated": "複数回選択されたファンドは 1 回だけ表示されます。",
+      "excludedMember": "{fund} は AMFI の投資信託ではないため、ローリングリターンはありません。",
+      "selectionTruncated": "選択された最初の 20 銘柄のみを比較します。",
+      "uncategorised": "未分類",
+      "uncategorisedReason": "AMFI はこれらのスキームのカテゴリを公表していません。これらはまとめて表示され、分類済みのカテゴリとグループ化されることはありません。",
+      "notAvailable": "該当なし",
+      "noPriceHistory": "利用可能な NAV 履歴がまだありません。",
+      "asOf": "{date} 時点",
+      "stale": "NAV データが古いです: 最後の観測 {date}",
+      "excludedObservations": "{count, plural, other {# 件の観測を利用不可として除外しました。}}",
+      "range": "最悪 {worst} · 最良 {best}",
+      "windows": "{count, plural, other {# ウィンドウ}}",
+      "missingWindows": "{count, plural, other {# ウィンドウの価格を算出できませんでした}}",
+      "status": {
+        "INSUFFICIENT_HISTORY": "履歴がこの期間より短いです。",
+        "ALL_WINDOWS_MISSING": "この期間のウィンドウの価格を算出できませんでした。",
+        "NO_PRICE_HISTORY": "利用可能な NAV 履歴がまだありません。"
+      },
+      "periods": {
+        "1Y": "1年",
+        "3Y": "3年",
+        "5Y": "5年"
+      },
+      "columns": {
+        "fund": "ファンド"
+      },
+      "reason": {
+        "NOT_AN_AMFI_FUND": "AMFI の投資信託ではありません。"
+      },
+      "basisNote": "ローリングリターンは公表 NAV を使用しており、分配金は加算していません。",
+      "idcwNote": "Growth と IDCW のスキームは公表どおりに表示されます。Artha はスキーム名からプラン区分を推測しません。",
+      "classificationNote": "カテゴリは AMFI の現在の分類です。メタデータであり推奨ではなく、測定期間ではなく現在のファンドを表します。",
+      "ownFundsNote": "ご自身のファンドのみを比較します。Artha はファンドユニバースを持たないため、カテゴリ中央値・パーセンタイル・ランキングはありません。"
     }
   },
   "securityTypeAllocation": {

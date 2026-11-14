@@ -10,6 +10,10 @@
     "subtitle": "Управляйте акціями, ETF, пайовими фондами та іншими цінними паперами",
     "newSecurity": "+ Новий цінний папір",
     "searchPlaceholder": "Пошук за символом або назвою...",
+    "categoryFilter": {
+      "label": "Фільтр за категорією фонду",
+      "all": "Усі категорії"
+    },
     "statusAll": "Всі ({count})",
     "statusActive": "Активні ({count})",
     "statusInactive": "Неактивні ({count})",
@@ -48,6 +52,7 @@
       "symbol": "Символ",
       "name": "Назва",
       "type": "Тип",
+      "category": "Категорія",
       "shares": "Акції",
       "value": "Вартість",
       "exchange": "Біржа",
@@ -57,6 +62,10 @@
       "status": "Статус",
       "actions": "Дії",
       "favourite": "Вибране"
+    },
+    "uncategorised": "Без категорії",
+    "categoryTitles": {
+      "uncategorised": "AMFI ще не опублікувала категорію для цієї схеми"
     },
     "statusBadge": {
       "active": "Активний",

@@ -10,6 +10,10 @@
     "subtitle": "Beheer je aandelen, ETF's, beleggingsfondsen en andere waardepapieren",
     "newSecurity": "+ Nieuw waardepapier",
     "searchPlaceholder": "Zoek op symbool of naam...",
+    "categoryFilter": {
+      "label": "Filteren op fondscategorie",
+      "all": "Alle categorieën"
+    },
     "statusAll": "Alle ({count})",
     "statusActive": "Actief ({count})",
     "statusInactive": "Inactief ({count})",
@@ -48,6 +52,7 @@
       "symbol": "Symbool",
       "name": "Naam",
       "type": "Type",
+      "category": "Categorie",
       "shares": "Aandelen",
       "value": "Waarde",
       "exchange": "Beurs",
@@ -57,6 +62,10 @@
       "status": "Status",
       "actions": "Acties",
       "favourite": "Favoriet"
+    },
+    "uncategorised": "Niet geclassificeerd",
+    "categoryTitles": {
+      "uncategorised": "AMFI heeft nog geen categorie voor dit fonds gepubliceerd"
     },
     "statusBadge": {
       "active": "Actief",

@@ -101,6 +101,11 @@ implied.
 | INV-ROLLING-001 | A fund rolling window is two usable NAVs, its start at most 14 days before its calendar target; an unresolved start is a counted, located missing window, never 0 | enforced |
 | INV-ROLLING-002 | A fund's rolling-return NAV series is `amfi_nav` and `manual` rows on the raw basis only | enforced |
 | INV-ROLLING-003 | Rolling periods over 12 months are annualized on actual days / 365.25; 12 months is absolute; no period is reported from a shorter history | enforced |
+| INV-FUNDCAT-001 | A fund's classification is the AMFI-published string stored verbatim, or NULL; it is never guessed from a name, a sector or a default | enforced |
+| INV-FUNDCAT-002 | A classification write happens only when the provider answered with a category; a failed or empty answer neither overwrites a known one nor stamps freshness | enforced |
+| INV-FUNDCMP-001 | The fund comparison computes no return of its own; every figure is `computeRollingReturns` output, from one price read on the rolling card's basis | enforced |
+| INV-FUNDCMP-002 | No category-relative statistic (median, percentile, ranking, "best fund") is presented; a group names its members and nothing else | enforced |
+| INV-FUNDCMP-003 | A fund whose history does not span a period reports INSUFFICIENT_HISTORY in the comparison, never a figure from a shorter history | enforced |
 | INV-LOAN-001 | A recurring overpayment's cadence is a calendar, not a payment interval | enforced |
 | INV-LOAN-002 | A schedule truncated by the projection horizon yields no lifetime total | enforced |
 | INV-LOAN-003 | One named compounding convention, from preview to projection to displayed EAR | enforced |
@@ -840,6 +845,130 @@ a property recomputed from a group's members (`group.every(...)`) is a property
 that was not part of what made the group, and the answer is only as good as the
 grouping. Make it part of the key, and a mixed bucket becomes unrepresentable
 rather than mislabelled.
+
+### INV-FUNDCMP-001 -- one return engine
+
+```text
+Statement           Every figure in the fund comparison is computeRollingReturns
+                    output for that fund's own stored NAVs. The comparison adds
+                    no formula, no trailing return and no CAGR of its own, and
+                    it reads those NAVs through the same loadPriceSeries call
+                    (amfi_nav + manual, basis RAW, daily sampling) the rolling
+                    card uses.
+Source of truth     security_prices rows for the fund, via the rolling engine
+Enforcement         getFundComparison calls computeRollingReturns and copies
+                    `history`/`periods` verbatim; the wire types ARE the
+                    rolling types (FundComparisonMember.periods is
+                    RollingPeriodResult[]), so a divergence would be a type
+                    change, not a silent second path.
+Concurrency scope   --
+Failure response    A fund with no usable NAV reports NO_PRICE_HISTORY inside
+                    its own periods; the request still answers.
+Required tests      Present: performance-comparison.service.spec.ts
+                    "uses the one rolling-return engine, and nothing of its
+                    own" (deep equality with a direct engine call);
+                    fund-comparison.integration.spec.ts I1 (real rows, a `buy`
+                    row and a stray adjusted_close excluded).
+Status              enforced
+```
+
+### INV-FUNDCMP-002 -- no peer statistic
+
+```text
+Statement           A comparison group is `{ category, securityIds }` and a
+                    member carries its own distribution only. No category
+                    median, percentile, rank, score, "best fund" badge or
+                    recommendation exists anywhere in the response, because
+                    Artha holds NAVs only for funds the user owns and therefore
+                    has no peer universe.
+Source of truth     the fund comparison wire type
+Enforcement         Type-level: FundComparisonGroup has only the two fields and
+                    there is no ranking field on a member; ordering inside a
+                    group is request order and groups are sorted by category
+                    string, never by a figure.
+Concurrency scope   --
+Failure response    --
+Required tests      Present: performance-comparison.service.spec.ts
+                    "groups by the published category, Unclassified last"
+                    (groups are exactly category + ids, request order kept);
+                    fund-comparison.integration.spec.ts.
+Status              enforced
+```
+
+### INV-FUNDCMP-003 -- no figure from a shorter history
+
+```text
+Statement           Each fund is measured independently over its own usable
+                    history; a period the history does not span is
+                    INSUFFICIENT_HISTORY with null statistics, and the whole
+                    comparison is then `incomplete`. Funds are never pooled and
+                    no common window or shared start is implied.
+Source of truth     the fund's own NAV observations
+Enforcement         computeRollingReturns' period gate (INV-ROLLING-003); the
+                    comparison's `status` is `complete` only when every member
+                    is eligible and every period is OK and complete.
+Concurrency scope   --
+Failure response    status: "incomplete", with the per-period status carrying
+                    the reason.
+Required tests      Present: performance-comparison.service.spec.ts (two years
+                    of history: 1Y OK, 3Y and 5Y INSUFFICIENT_HISTORY, status
+                    incomplete; and the complete case);
+                    fund-comparison.integration.spec.ts.
+Status              enforced
+```
+
+### INV-FUNDCAT-001 -- the category is the published string, or nothing
+
+```text
+Statement           fund_house / fund_scheme_type / fund_category on a security
+                    hold the strings AMFI published for its scheme code,
+                    trimmed and byte-for-byte otherwise, or NULL. NULL means
+                    unclassified and is rendered as such. No placeholder
+                    ("Equity", "Mutual Fund"), no case-folding, no synonym table
+                    and no name/regex heuristic ever produces one.
+Source of truth     the mfapi `/mf/{code}` `meta` block, via
+                    parseMfapiSchemeClassification
+Enforcement         parseMfapiSchemeClassification is the only producer
+                    (null for a non-string or a blank, never ""), and
+                    fund-classification.guard.spec.ts fails any assignment of
+                    these fields from a literal, a `||`/`??` default, or the
+                    scheme/security name.
+Concurrency scope   --
+Failure response    Unclassified. The column stays NULL and the UI says so;
+                    nothing is invented to fill it.
+Required tests      Present: mfapi-payload.util.spec.ts U1 (trim, blank,
+                    non-string, no meta), fund-classification.guard.spec.ts
+                    (source scan), SecurityList/SecurityKeyInformation component
+                    tests, fund-classification.integration.spec.ts.
+Status              enforced
+```
+
+### INV-FUNDCAT-002 -- only an answer is written
+
+```text
+Statement           A classification fetch writes and stamps
+                    fund_classification_updated_at only when the provider
+                    answered with a non-null scheme category. A transport
+                    failure, an HTTP error, a breaker refusal or an answer
+                    without a category writes nothing and stamps nothing, so
+                    the row stays due and the next read retries.
+Source of truth     securities.fund_* and fund_classification_updated_at
+Enforcement         FundClassificationService.ensureFundClassification returns
+                    early on a null answer and on a null category; the update
+                    names id AND user_id, inside the caller's withScopedDb
+                    transaction. The provider double distinguishes "did not
+                    answer" (null) from "answered without a category".
+Concurrency scope   one transaction per sweep; last writer wins by design (the
+                    category is provider metadata, not a user edit)
+Failure response    logged and swallowed: a provider outage yields the stored
+                    classification (or Unclassified), never a failed read.
+Required tests      Present: fund-classification.service.spec.ts (negative
+                    control: a failed fetch leaves the known category and the
+                    stamp untouched), amfi-nav.service.spec.ts (null on HTTP
+                    error and on an unaddressable code),
+                    fund-classification.integration.spec.ts I2 on PostgreSQL.
+Status              enforced
+```
 
 ### INV-LOAN-001 -- a recurring overpayment's cadence is a calendar
 

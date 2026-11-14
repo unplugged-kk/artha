@@ -91,6 +91,43 @@ describe('SecurityKeyInformation', () => {
     expect(screen.getByText('122639')).toBeInTheDocument();
   });
 
+  it('shows the AMFI classification a fund carries, verbatim', () => {
+    render(
+      <SecurityKeyInformation
+        security={security({
+          securityType: 'MUTUAL_FUND',
+          amfiSchemeCode: '122639',
+          fundHouse: 'Example Mutual Fund',
+          fundSchemeType: 'Open Ended Schemes',
+          fundCategory: 'Equity Scheme - Large Cap Fund',
+        })}
+        latestPrice={null}
+        prices={[]}
+      />,
+    );
+
+    expect(screen.getByText('Fund house')).toBeInTheDocument();
+    expect(screen.getByText('Example Mutual Fund')).toBeInTheDocument();
+    expect(screen.getByText('Scheme type')).toBeInTheDocument();
+    expect(screen.getByText('Open Ended Schemes')).toBeInTheDocument();
+    expect(screen.getByText('Fund category')).toBeInTheDocument();
+    expect(screen.getByText('Equity Scheme - Large Cap Fund')).toBeInTheDocument();
+  });
+
+  it('omits the classification rows a fund has not had captured yet', () => {
+    render(
+      <SecurityKeyInformation
+        security={security({ securityType: 'MUTUAL_FUND', amfiSchemeCode: '122639' })}
+        latestPrice={null}
+        prices={[]}
+      />,
+    );
+
+    expect(screen.queryByText('Fund house')).not.toBeInTheDocument();
+    expect(screen.queryByText('Scheme type')).not.toBeInTheDocument();
+    expect(screen.queryByText('Fund category')).not.toBeInTheDocument();
+  });
+
   it('omits the identity rows for an instrument that has none', () => {
     render(
       <SecurityKeyInformation security={security()} latestPrice={null} prices={[]} />,

@@ -10,6 +10,10 @@
     "subtitle": "Gérez vos actions, ETF, fonds communs de placement et autres titres",
     "newSecurity": "+ Nouveau titre",
     "searchPlaceholder": "Rechercher par symbole ou nom...",
+    "categoryFilter": {
+      "label": "Filtrer par catégorie de fonds",
+      "all": "Toutes les catégories"
+    },
     "statusAll": "Tous ({count})",
     "statusActive": "Actifs ({count})",
     "statusInactive": "Inactifs ({count})",
@@ -48,6 +52,7 @@
       "symbol": "Symbole",
       "name": "Nom",
       "type": "Type",
+      "category": "Catégorie",
       "shares": "Actions",
       "value": "Valeur",
       "exchange": "Marché",
@@ -57,6 +62,10 @@
       "status": "Statut",
       "actions": "Actions",
       "favourite": "Favori"
+    },
+    "uncategorised": "Non classé",
+    "categoryTitles": {
+      "uncategorised": "AMFI n'a pas encore publié de catégorie pour ce fonds"
     },
     "statusBadge": {
       "active": "Actif",

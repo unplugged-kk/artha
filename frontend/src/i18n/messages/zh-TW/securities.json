@@ -10,6 +10,10 @@
     "subtitle": "管理您的股票、ETF、共同基金及其他證券",
     "newSecurity": "+ 新增證券",
     "searchPlaceholder": "依代號或名稱搜尋...",
+    "categoryFilter": {
+      "label": "依基金類別篩選",
+      "all": "所有類別"
+    },
     "statusAll": "全部（{count}）",
     "statusActive": "活躍（{count}）",
     "statusInactive": "非活躍（{count}）",
@@ -48,6 +52,7 @@
       "symbol": "代號",
       "name": "名稱",
       "type": "類型",
+      "category": "類別",
       "shares": "股數",
       "value": "市值",
       "exchange": "交易所",
@@ -57,6 +62,10 @@
       "status": "狀態",
       "actions": "動作",
       "favourite": "最愛"
+    },
+    "uncategorised": "未分類",
+    "categoryTitles": {
+      "uncategorised": "AMFI 尚未發布該基金的類別"
     },
     "statusBadge": {
       "active": "活躍",

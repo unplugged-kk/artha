@@ -14,10 +14,12 @@ import { PerformanceComparisonController } from "./performance-comparison.contro
 import { PerformanceComparisonService } from "./performance-comparison.service";
 import { MarketIndexService } from "./market-index.service";
 import { PerformanceComparisonQueryDto } from "./dto/performance-comparison-query.dto";
+import { FundComparisonQueryDto } from "./dto/fund-comparison-query.dto";
 import { ALLOW_DELEGATE_KEY } from "../delegation/decorators/delegate-access.decorator";
 
 const USER = "11111111-1111-4111-8111-111111111111";
 const SEC_A = "22222222-2222-4222-8222-222222222222";
+const SEC_B = "33333333-3333-4333-8333-333333333333";
 
 /**
  * The query is validated by the global pipe, so the rejections are tested
@@ -45,7 +47,10 @@ async function validate(query: Record<string, unknown>) {
 describe("PerformanceComparisonController", () => {
   let controller: PerformanceComparisonController;
   let comparison: jest.Mocked<
-    Pick<PerformanceComparisonService, "getComparison" | "getRollingReturns">
+    Pick<
+      PerformanceComparisonService,
+      "getComparison" | "getRollingReturns" | "getFundComparison"
+    >
   >;
   let indexes: jest.Mocked<Pick<MarketIndexService, "listCatalog">>;
 
@@ -53,6 +58,7 @@ describe("PerformanceComparisonController", () => {
     comparison = {
       getComparison: jest.fn().mockResolvedValue({}),
       getRollingReturns: jest.fn().mockResolvedValue({}),
+      getFundComparison: jest.fn().mockResolvedValue({}),
     };
     indexes = { listCatalog: jest.fn().mockResolvedValue([]) };
     const moduleRef = await Test.createTestingModule({
@@ -224,6 +230,64 @@ describe("PerformanceComparisonController", () => {
     it("derives the user from the token and passes the id through", async () => {
       await controller.getRollingReturns({ user: { id: USER } }, SEC_A);
       expect(comparison.getRollingReturns).toHaveBeenCalledWith(USER, SEC_A);
+    });
+  });
+  describe("getFundComparison", () => {
+    const handler = PerformanceComparisonController.prototype.getFundComparison;
+    const fundMeta = {
+      type: "query" as const,
+      metatype: FundComparisonQueryDto,
+      data: "",
+    };
+    const validateFunds = (query: Record<string, unknown>) =>
+      pipe.transform(query, fundMeta) as Promise<FundComparisonQueryDto>;
+
+    it("is GET funds/comparison under the controller prefix", () => {
+      expect(Reflect.getMetadata(PATH_METADATA, handler)).toBe(
+        "funds/comparison",
+      );
+      expect(Reflect.getMetadata(METHOD_METADATA, handler)).toBe(
+        RequestMethod.GET,
+      );
+    });
+
+    it("is owner-only: no @AllowDelegate()", () => {
+      expect(Reflect.getMetadata(ALLOW_DELEGATE_KEY, handler)).toBeUndefined();
+    });
+
+    it("is throttled to 60 requests a minute, because it may reach the provider", () => {
+      expect(Reflect.getMetadata("THROTTLER:LIMITdefault", handler)).toBe(60);
+      expect(Reflect.getMetadata("THROTTLER:TTLdefault", handler)).toBe(60000);
+    });
+
+    it("accepts 2..20 comma-separated ids and rejects one fund", async () => {
+      const dto = await validateFunds({ securityIds: `${SEC_A},${SEC_B}` });
+      expect(dto.securityIds).toEqual([SEC_A, SEC_B]);
+      await expect(
+        validateFunds({ securityIds: SEC_A }),
+      ).rejects.toBeInstanceOf(BadRequestException);
+    });
+
+    it("rejects a non-UUID id and an unbounded list", async () => {
+      await expect(
+        validateFunds({ securityIds: `${SEC_A},not-a-uuid` }),
+      ).rejects.toBeInstanceOf(BadRequestException);
+      await expect(
+        validateFunds({
+          securityIds: Array.from({ length: 21 }, () => SEC_A).join(","),
+        }),
+      ).rejects.toBeInstanceOf(BadRequestException);
+    });
+
+    it("derives the user from the token and passes the ids through", async () => {
+      await controller.getFundComparison(
+        { user: { id: USER } },
+        { securityIds: [SEC_A, SEC_B] },
+      );
+      expect(comparison.getFundComparison).toHaveBeenCalledWith(USER, [
+        SEC_A,
+        SEC_B,
+      ]);
     });
   });
 });

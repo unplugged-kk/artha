@@ -11,7 +11,9 @@ import {
 } from "./providers/quote-provider.interface";
 import { getTradingDateFromQuote } from "./providers/trading-date.util";
 import {
+  MfapiSchemeClassification,
   buildNavQuote,
+  parseMfapiSchemeClassification,
   parseMfapiSchemePayload,
   parseMfapiSearch,
 } from "./providers/mfapi-payload.util";
@@ -142,6 +144,28 @@ export class AmfiNavService implements QuoteProvider {
       `search for "${trimmed}"`,
     );
     return payload === null ? [] : parseMfapiSearch(payload);
+  }
+
+  /**
+   * The AMFI classification published for a scheme code.
+   *
+   * `null` means the provider did not answer (a refusal by the breaker, a
+   * transport failure, an HTTP error) -- it is NOT "no category". A non-null
+   * result carries the published strings, some or all of which may be null when
+   * the answer omitted them. The caller writes only on a real answer, so the
+   * two must stay distinguishable (INV-FUNDCAT-002).
+   *
+   * Reuses the same scheme payload (and its 4h cache) the NAV path fetches, so
+   * classification costs no extra provider call while the payload is warm.
+   */
+  async fetchSchemeClassification(
+    schemeCode: string,
+  ): Promise<MfapiSchemeClassification | null> {
+    const code = (schemeCode ?? "").trim();
+    if (!/^\d{1,10}$/.test(code)) return null;
+    const payload = await this.loadScheme(code);
+    if (payload === null) return null;
+    return parseMfapiSchemeClassification(payload);
   }
 
   /** A NAV has no sector breakdown and no holdings; not applicable. */

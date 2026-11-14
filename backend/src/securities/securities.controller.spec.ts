@@ -9,6 +9,7 @@ import { SecurityDetailService } from "./security-detail.service";
 import { SecurityDocumentsService } from "./security-documents.service";
 import { SecurityNewsService } from "./security-news.service";
 import { SectorWeightingService } from "./sector-weighting.service";
+import { FundClassificationService } from "./fund-classification.service";
 
 describe("SecuritiesController", () => {
   let controller: SecuritiesController;
@@ -20,6 +21,7 @@ describe("SecuritiesController", () => {
   let msnFinanceService: Record<string, jest.Mock>;
   let netWorthService: Record<string, jest.Mock>;
   let sectorWeightingService: Record<string, jest.Mock>;
+  let fundClassificationService: Record<string, jest.Mock>;
 
   const req = { user: { id: "user-1" } };
 
@@ -92,6 +94,10 @@ describe("SecuritiesController", () => {
       ensureSectorDataByIds: jest.fn().mockResolvedValue(undefined),
     };
 
+    fundClassificationService = {
+      ensureFundClassification: jest.fn().mockResolvedValue(undefined),
+    };
+
     msnFinanceService = {
       isApiKeyConfigured: jest.fn().mockReturnValue(true),
     };
@@ -109,6 +115,10 @@ describe("SecuritiesController", () => {
         { provide: SecurityNewsService, useValue: securityNewsService },
         { provide: NetWorthService, useValue: netWorthService },
         { provide: SectorWeightingService, useValue: sectorWeightingService },
+        {
+          provide: FundClassificationService,
+          useValue: fundClassificationService,
+        },
         { provide: MsnFinanceService, useValue: msnFinanceService },
       ],
     }).compile();
@@ -167,6 +177,16 @@ describe("SecuritiesController", () => {
 
       expect(securitiesService.findAll).toHaveBeenCalledWith("user-1", false);
       expect(result).toEqual([mockSecurity]);
+    });
+
+    it("captures the AMFI classification of the funds it returns", async () => {
+      securitiesService.findAll.mockResolvedValue([mockSecurity]);
+
+      await controller.findAll(req, false);
+
+      expect(
+        fundClassificationService.ensureFundClassification,
+      ).toHaveBeenCalledWith([mockSecurity]);
     });
 
     it("includes inactive securities when requested", async () => {

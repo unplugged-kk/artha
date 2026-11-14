@@ -27,6 +27,7 @@ import { SecurityDetailService } from "./security-detail.service";
 import { SecurityDocumentsService } from "./security-documents.service";
 import { SecurityNewsService } from "./security-news.service";
 import { SectorWeightingService } from "./sector-weighting.service";
+import { FundClassificationService } from "./fund-classification.service";
 import { MarketIndexService } from "./market-index.service";
 import { PerformanceComparisonService } from "./performance-comparison.service";
 import { SecuritiesController } from "./securities.controller";
@@ -84,6 +85,7 @@ import { ProviderHealthModule } from "../provider-health/provider-health.module"
     SecurityDocumentsService,
     SecurityNewsService,
     SectorWeightingService,
+    FundClassificationService,
     MarketIndexService,
     PerformanceComparisonService,
   ],
@@ -113,6 +115,7 @@ import { ProviderHealthModule } from "../provider-health/provider-health.module"
     SecurityDocumentsService,
     SecurityNewsService,
     SectorWeightingService,
+    FundClassificationService,
     MarketIndexService,
     PerformanceComparisonService,
   ],

@@ -10,6 +10,10 @@
     "subtitle": "Manage your stocks, ETFs, mutual funds, and other securities",
     "newSecurity": "+ New Security",
     "searchPlaceholder": "Search by symbol or name...",
+    "categoryFilter": {
+      "label": "Filter by fund category",
+      "all": "All categories"
+    },
     "statusAll": "All ({count})",
     "statusActive": "Active ({count})",
     "statusInactive": "Inactive ({count})",
@@ -48,6 +52,7 @@
       "symbol": "Symbol",
       "name": "Name",
       "type": "Type",
+      "category": "Category",
       "shares": "Shares",
       "value": "Value",
       "exchange": "Exchange",
@@ -57,6 +62,10 @@
       "status": "Status",
       "actions": "Actions",
       "favourite": "Favourite"
+    },
+    "uncategorised": "Uncategorised",
+    "categoryTitles": {
+      "uncategorised": "AMFI has not published a category for this scheme yet"
     },
     "statusBadge": {
       "active": "Active",

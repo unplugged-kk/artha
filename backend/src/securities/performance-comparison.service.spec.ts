@@ -1,5 +1,7 @@
 import { NotFoundException } from "@nestjs/common";
 import { PerformanceComparisonService } from "./performance-comparison.service";
+import { computeRollingReturns } from "./rolling-returns.util";
+import { FundClassificationService } from "./fund-classification.service";
 import { MarketIndexService } from "./market-index.service";
 import { SecurityPriceService } from "./security-price.service";
 import { LoadedPriceSeries } from "../common/time-series/price-series.util";
@@ -138,6 +140,9 @@ describe("PerformanceComparisonService", () => {
   let securityPriceService: jest.Mocked<
     Pick<SecurityPriceService, "backfillSecurityRange">
   >;
+  let fundClassificationService: jest.Mocked<
+    Pick<FundClassificationService, "ensureFundClassification">
+  >;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -157,10 +162,14 @@ describe("PerformanceComparisonService", () => {
     securityPriceService = {
       backfillSecurityRange: jest.fn().mockResolvedValue(0),
     };
+    fundClassificationService = {
+      ensureFundClassification: jest.fn().mockResolvedValue(undefined),
+    };
     service = new PerformanceComparisonService(
       dataSource as never,
       marketIndexService as never,
       securityPriceService as never,
+      fundClassificationService as never,
     );
   });
 
@@ -1111,6 +1120,195 @@ describe("PerformanceComparisonService", () => {
       );
       expect(view.periods[0]).toMatchObject({ period: "1Y", mean: 25 });
       expect(securityRepo.update).toHaveBeenCalled();
+    });
+  });
+  // --- fund comparison (docs/specs/fund-categories-and-comparison.md) -------
+
+  describe("getFundComparison", () => {
+    const TODAY = "2026-07-01";
+    const SEC_C = "44444444-4444-4444-8444-444444444444";
+
+    function fund(
+      id: string,
+      symbol: string,
+      overrides: Partial<Security> = {},
+    ): Security {
+      return {
+        ...security(id, symbol, "INR"),
+        amfiSchemeCode: symbol.replace(/\D/g, "") || "120503",
+        fundHouse: "Example Mutual Fund",
+        fundSchemeType: "Open Ended Schemes",
+        fundCategory: "Equity Scheme - Large Cap Fund",
+        ...overrides,
+      } as Security;
+    }
+
+    beforeEach(() => {
+      (todayYMD as jest.Mock).mockImplementation(() => TODAY);
+    });
+
+    afterEach(() => {
+      (todayYMD as jest.Mock).mockImplementation(actualTodayYMD);
+    });
+
+    it("404s an id the caller does not own before any price read", async () => {
+      securityRepo.find.mockResolvedValue([]);
+      await expect(
+        service.getFundComparison(USER, [SEC_A, SEC_B]),
+      ).rejects.toThrow(NotFoundException);
+      expect(loadPriceSeries).not.toHaveBeenCalled();
+      expect(manager.query).not.toHaveBeenCalled();
+    });
+
+    it("reads every eligible fund once, on the raw NAV basis", async () => {
+      securityRepo.find.mockResolvedValue([
+        fund(SEC_A, "120503"),
+        fund(SEC_B, "120504"),
+      ]);
+      (loadPriceSeries as jest.Mock).mockResolvedValue(new Map());
+
+      await service.getFundComparison(USER, [SEC_A, SEC_B]);
+
+      expect(loadPriceSeries).toHaveBeenCalledTimes(1);
+      const call = (loadPriceSeries as jest.Mock).mock.calls[0][1];
+      expect(call.ids.sort()).toEqual([SEC_A, SEC_B].sort());
+      expect(call.sources).toEqual(["amfi_nav", "manual"]);
+      expect(call.basis).toBe("RAW");
+      expect(call.sampling).toBe("day");
+    });
+
+    it("does not load or fetch a fund with no scheme code", async () => {
+      securityRepo.find.mockResolvedValue([
+        fund(SEC_A, "120503"),
+        fund(SEC_B, "AAPL", {
+          amfiSchemeCode: null,
+          fundHouse: null,
+          fundSchemeType: null,
+          fundCategory: null,
+          securityType: "STOCK",
+          currencyCode: "USD",
+        }),
+      ]);
+      const ensure = jest.spyOn(
+        service as unknown as {
+          ensureSecuritiesHistory: (s: Security[], start: string) => unknown;
+        },
+        "ensureSecuritiesHistory",
+      );
+      (loadPriceSeries as jest.Mock).mockResolvedValue(new Map());
+
+      const view = await service.getFundComparison(USER, [SEC_A, SEC_B]);
+
+      const call = (loadPriceSeries as jest.Mock).mock.calls[0][1];
+      expect(call.ids).toEqual([SEC_A]);
+      expect(ensure.mock.calls[0][0]).toEqual([
+        expect.objectContaining({ id: SEC_A }),
+      ]);
+      const stock = view.members.find((m) => m.securityId === SEC_B)!;
+      expect(stock).toMatchObject({
+        eligibility: "NOT_AN_AMFI_FUND",
+        periods: [],
+        history: { observationCount: 0, firstDate: null, lastDate: null },
+        fundCategory: null,
+      });
+    });
+
+    it("uses the one rolling-return engine, and nothing of its own", async () => {
+      securityRepo.find.mockResolvedValue([fund(SEC_A, "120503")]);
+      const loadedSeries = dense(
+        "2020-01-01",
+        "2026-06-30",
+        100,
+        200,
+        7,
+        "RAW",
+      );
+      (loadPriceSeries as jest.Mock).mockResolvedValue(
+        new Map([[SEC_A, loadedSeries]]),
+      );
+
+      const view = await service.getFundComparison(USER, [SEC_A, SEC_A]);
+      const expected = computeRollingReturns(loadedSeries.points, TODAY);
+
+      expect(view.members[0].periods).toEqual(expected.periods);
+      expect(view.members[0].history).toEqual(expected.history);
+    });
+
+    it("collapses a repeated id, marks the survivor and keeps request order", async () => {
+      securityRepo.find.mockResolvedValue([
+        fund(SEC_A, "120503"),
+        fund(SEC_B, "120504"),
+      ]);
+      (loadPriceSeries as jest.Mock).mockResolvedValue(new Map());
+
+      const view = await service.getFundComparison(USER, [SEC_B, SEC_A, SEC_B]);
+
+      expect(view.members.map((m) => m.securityId)).toEqual([SEC_B, SEC_A]);
+      expect(view.members[0].deduplicated).toBe(true);
+      expect(view.members[1].deduplicated).toBeUndefined();
+    });
+
+    it("groups by the published category, Unclassified last", async () => {
+      securityRepo.find.mockResolvedValue([
+        fund(SEC_A, "120503", {
+          fundCategory: "Equity Scheme - Small Cap Fund",
+        }),
+        fund(SEC_B, "120504", { fundCategory: null }),
+        fund(SEC_C, "120505", {
+          fundCategory: "Equity Scheme - Large Cap Fund",
+        }),
+      ]);
+      (loadPriceSeries as jest.Mock).mockResolvedValue(new Map());
+
+      const view = await service.getFundComparison(USER, [SEC_A, SEC_B, SEC_C]);
+
+      expect(view.groups.map((g) => g.category)).toEqual([
+        "Equity Scheme - Large Cap Fund",
+        "Equity Scheme - Small Cap Fund",
+        null,
+      ]);
+      expect(view.groups[2].securityIds).toEqual([SEC_B]);
+    });
+
+    it("marks the comparison incomplete when a period is not OK", async () => {
+      securityRepo.find.mockResolvedValue([fund(SEC_A, "120503")]);
+      // Two years of history: 1Y resolves, 3Y and 5Y do not.
+      (loadPriceSeries as jest.Mock).mockResolvedValue(
+        new Map([
+          [SEC_A, dense("2024-07-01", "2026-06-30", 100, 120, 7, "RAW")],
+        ]),
+      );
+
+      const view = await service.getFundComparison(USER, [SEC_A]);
+
+      expect(view.periods).toEqual(["1Y", "3Y", "5Y"]);
+      expect(view.members[0].periods.map((p) => p.status)).toEqual([
+        "OK",
+        "INSUFFICIENT_HISTORY",
+        "INSUFFICIENT_HISTORY",
+      ]);
+      expect(view.status).toBe("incomplete");
+    });
+
+    it("is complete only when every member is a fully known AMFI fund", async () => {
+      securityRepo.find.mockResolvedValue([
+        fund(SEC_A, "120503"),
+        fund(SEC_B, "120504"),
+      ]);
+      const full = dense("2020-01-01", "2026-06-30", 100, 200, 7, "RAW");
+      (loadPriceSeries as jest.Mock).mockResolvedValue(
+        new Map([
+          [SEC_A, full],
+          [SEC_B, full],
+        ]),
+      );
+
+      const view = await service.getFundComparison(USER, [SEC_A, SEC_B]);
+
+      expect(
+        view.members.every((m) => m.periods.every((p) => p.status === "OK")),
+      ).toBe(true);
+      expect(view.status).toBe("complete");
     });
   });
 });

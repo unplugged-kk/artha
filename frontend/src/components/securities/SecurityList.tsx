@@ -21,6 +21,7 @@ import {
   SORT_FIELDS,
   buildSecurityActions,
   SecurityDescription,
+  SecurityFundCategory,
   SecurityPriceSourceBadge,
   SecurityProviderBadge,
   SecurityTagChips,
@@ -158,9 +159,12 @@ interface SecurityRowProps {
    * renders the tier row below, unchanged.
    *
    * The card carries EVERY column the tier row shows at Normal density except
-   * Actions -- favourite, symbol, name (with its tags and description), value,
-   * type, shares, currency, exchange, provider, source and status. Nothing is
-   * omitted for width. Eleven columns still fit three lines because the width
+   * Actions and Category -- favourite, symbol, name (with its tags and
+   * description), value, type, shares, currency, exchange, provider, source and
+   * status. Category is left out for the same reason the tier row hides it
+   * below `md`: it is the one value that can run to a full AMFI sentence, and
+   * the page's category filter narrows by it on a phone instead. Nothing else
+   * is omitted for width. Eleven columns still fit three lines because the width
    * pressure on a card is the UNSHRINKABLE items on line 1, not the column
    * count: there are three of them (the star, the symbol and the value), the
    * other eight are a word, a digit run, a three-letter code and three small
@@ -405,6 +409,12 @@ const SecurityRow = memo(function SecurityRow({
       <td className={`${cellPadding} whitespace-nowrap`}>
         <SecurityTypeText security={security} density={density} />
       </td>
+      {/* The AMFI category, for the funds AMFI has classified. A stock has no
+          fund category and shows the same dash as its empty exchange; a fund
+          AMFI has not described says so rather than showing a guessed word. */}
+      <td className={`${cellPadding} hidden max-w-[12rem] truncate md:table-cell`}>
+        <SecurityFundCategory security={security} />
+      </td>
       <td className={`${cellPadding} whitespace-nowrap text-right`}>
         <span
           className="text-sm text-gray-900 dark:text-gray-100"
@@ -639,6 +649,9 @@ export function SecurityList({
                 onClick={() => handleSort('type')}
               >
                 {sortFieldLabels.type}<SortIcon field="type" sortField={sortField} sortDirection={sortDirection} />
+              </th>
+              <th className={`${headerPadding} text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden md:table-cell`}>
+                {t('list.columns.category')}
               </th>
               <th
                 className={`${headerPadding} text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:text-gray-700 dark:hover:text-gray-200`}

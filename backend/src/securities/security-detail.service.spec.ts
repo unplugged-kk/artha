@@ -1,6 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { SecurityDetailService } from "./security-detail.service";
 import { SecuritiesService } from "./securities.service";
+import { FundClassificationService } from "./fund-classification.service";
 import { PortfolioService } from "./portfolio.service";
 import { InvestmentTransactionsService } from "./investment-transactions.service";
 import { InvestmentAction } from "./entities/investment-transaction.entity";
@@ -64,6 +65,7 @@ describe("SecurityDetailService", () => {
   let securitiesService: Record<string, jest.Mock>;
   let portfolioService: Record<string, jest.Mock>;
   let investmentTransactionsService: Record<string, jest.Mock>;
+  let fundClassificationService: { ensureFundClassification: jest.Mock };
 
   const security = {
     id: SECURITY_ID,
@@ -127,6 +129,10 @@ describe("SecurityDetailService", () => {
       getRealizedGains: jest.fn().mockResolvedValue([]),
     };
 
+    fundClassificationService = {
+      ensureFundClassification: jest.fn().mockResolvedValue(undefined),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SecurityDetailService,
@@ -135,6 +141,10 @@ describe("SecurityDetailService", () => {
         {
           provide: InvestmentTransactionsService,
           useValue: investmentTransactionsService,
+        },
+        {
+          provide: FundClassificationService,
+          useValue: fundClassificationService,
         },
       ],
     }).compile();
@@ -149,6 +159,13 @@ describe("SecurityDetailService", () => {
       USER_ID,
       SECURITY_ID,
     );
+  });
+
+  it("captures the AMFI classification before building the detail", async () => {
+    await getDetail();
+    expect(
+      fundClassificationService.ensureFundClassification,
+    ).toHaveBeenCalledWith([security]);
   });
 
   it("propagates a not-found security instead of returning an empty detail", async () => {

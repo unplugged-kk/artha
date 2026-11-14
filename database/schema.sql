@@ -677,6 +677,10 @@ CREATE TABLE securities (
     currency_code VARCHAR(3) NOT NULL REFERENCES currencies(code),
     isin VARCHAR(12),                -- ISO 6166 identity, when the instrument has one (migration 20260912023003)
     amfi_scheme_code VARCHAR(10),    -- AMFI catalogue id for an Indian mutual-fund scheme (migration 20260912023003)
+    fund_house VARCHAR(120),         -- AMFI fund house (AMC), as published (migration 20261111090000)
+    fund_scheme_type VARCHAR(80),    -- AMFI scheme structure, as published (migration 20261111090000)
+    fund_category VARCHAR(120),      -- AMFI scheme category, as published; NULL = unclassified (migration 20261111090000)
+    fund_classification_updated_at TIMESTAMP, -- when AMFI classification was last read; stamped only on an answer (migration 20261111090000)
     description TEXT, -- free-text notes, optionally pre-filled from the quote provider
     is_active BOOLEAN DEFAULT true,
     is_favourite BOOLEAN NOT NULL DEFAULT false, -- pinned to the dashboard Favourite Securities widget

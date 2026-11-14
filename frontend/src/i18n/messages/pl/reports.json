@@ -1402,6 +1402,47 @@
       "NORTH_AMERICA": "Ameryka Północna",
       "EUROPE": "Europa",
       "ASIA_PACIFIC": "Azja i Pacyfik"
+    },
+    "fundComparison": {
+      "title": "Porównanie funduszy",
+      "subject": "Twoje własne fundusze, pogrupowane według kategorii publikowanej przez AMFI dla każdego schematu.",
+      "noData": "Nie zwrócono danych funduszy dla tego wyboru.",
+      "loadFailed": "Nie udało się wczytać porównania funduszy.",
+      "retry": "Spróbuj ponownie",
+      "incomplete": "Niektóre wartości są niedostępne lub niekompletne. Każdy fundusz podaje powód.",
+      "deduplicated": "Fundusz wybrany więcej niż raz jest pokazywany raz.",
+      "excludedMember": "{fund} nie jest funduszem AMFI i nie ma stóp zwrotu kroczących.",
+      "selectionTruncated": "Porównywane jest tylko pierwszych 20 wybranych instrumentów.",
+      "uncategorised": "Niesklasyfikowany",
+      "uncategorisedReason": "AMFI nie opublikowało kategorii dla tych schematów. Są pokazywane razem i nigdy nie są grupowane z kategorią sklasyfikowaną.",
+      "notAvailable": "b/d",
+      "noPriceHistory": "Brak użytecznej historii NAV.",
+      "asOf": "Na {date}",
+      "stale": "Dane NAV są nieaktualne: ostatnia obserwacja {date}",
+      "excludedObservations": "{count, plural, one {Wykluczono # obserwację jako nieużyteczną.} few {Wykluczono # obserwacje jako nieużyteczne.} many {Wykluczono # obserwacji jako nieużyteczne.} other {Wykluczono # obserwacji jako nieużyteczne.}}",
+      "range": "Najgorszy {worst} · Najlepszy {best}",
+      "windows": "{count, plural, one {# okno} few {# okna} many {# okien} other {# okna}}",
+      "missingWindows": "{count, plural, one {Nie udało się wycenić # okna} few {Nie udało się wycenić # okien} many {Nie udało się wycenić # okien} other {Nie udało się wycenić # okien}}",
+      "status": {
+        "INSUFFICIENT_HISTORY": "Historia jest krótsza niż ten okres.",
+        "ALL_WINDOWS_MISSING": "Nie udało się wycenić żadnego okna w tym okresie.",
+        "NO_PRICE_HISTORY": "Brak użytecznej historii NAV."
+      },
+      "periods": {
+        "1Y": "1 rok",
+        "3Y": "3 lata",
+        "5Y": "5 lat"
+      },
+      "columns": {
+        "fund": "Fundusz"
+      },
+      "reason": {
+        "NOT_AN_AMFI_FUND": "To nie jest fundusz AMFI."
+      },
+      "basisNote": "Stopy zwrotu kroczące używają publikowanego NAV; wypłaty nie są doliczane.",
+      "idcwNote": "Schematy Growth i IDCW są pokazywane tak, jak zostały opublikowane; Artha nie wnioskuje opcji planu z nazwy schematu.",
+      "classificationNote": "Kategoria to bieżąca klasyfikacja AMFI. To metadane, nie rekomendacja, i opisuje fundusz dzisiaj, a nie w mierzonym okresie.",
+      "ownFundsNote": "Porównywane są tylko Twoje fundusze. Artha nie ma uniwersum funduszy, więc nie ma mediany, percentyla ani rankingu kategorii."
     }
   },
   "securityTypeAllocation": {
