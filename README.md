@@ -240,6 +240,13 @@ artha/
 └── README.md
 ```
 
+### Where things live
+
+- **Feature specs:** `docs/specs/` — one file per feature, written before implementation.
+- **Architecture decisions:** `docs/adr/`.
+- **Financial contracts:** `docs/financial-calculation-contract.md`, `docs/time-series-contract.md`.
+- **Repo context graph:** `graft/` indexes the codebase for fast lookup — run `graft build` once, then `graft ask "<question>" --source`.
+
 ## Getting Started
 
 ### Prerequisites
