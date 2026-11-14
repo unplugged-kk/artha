@@ -187,6 +187,7 @@
     "invalidBackupFormat": "無効なバックアップ形式：データはオブジェクトでなければなりません",
     "unsupportedBackupVersion": "サポートされていないバックアップバージョン：{{ version }}。期待値：{{ expected }}",
     "missingExportedAt": "無効なバックアップ形式：exportedAt がありません",
+    "missingTableData": "無効なバックアップ形式：{{ table }} のデータがありません。何も変更されていません。",
     "tableNotAllowed": "テーブル {{ table }} はバックアップの復元では許可されていません",
     "encryptionNotConfigured": "サーバーは暗号化用に構成されていません（JWT_SECRET が未設定または短すぎます）",
     "backupPasswordOidcOnly": "バックアップパスワードはOIDCユーザーのみ設定可能です。ローカルユーザーはログインパスワードを使用します",

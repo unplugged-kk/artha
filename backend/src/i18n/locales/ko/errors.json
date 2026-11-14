@@ -187,6 +187,7 @@
     "invalidBackupFormat": "유효하지 않은 백업 형식입니다: 데이터는 객체여야 합니다",
     "unsupportedBackupVersion": "지원되지 않는 백업 버전입니다: {{ version }}. 예상 버전: {{ expected }}",
     "missingExportedAt": "유효하지 않은 백업 형식입니다: exportedAt이 없습니다",
+    "missingTableData": "잘못된 백업 형식: {{ table }} 데이터가 없습니다. 아무것도 변경되지 않았습니다.",
     "tableNotAllowed": "테이블 {{ table }}은(는) 백업 복원에서 허용되지 않습니다",
     "encryptionNotConfigured": "서버가 암호화용으로 구성되어 있지 않습니다(JWT_SECRET이 없거나 너무 짧습니다)",
     "backupPasswordOidcOnly": "백업 비밀번호는 OIDC 사용자에게만 구성할 수 있습니다. 로컬 사용자는 로그인 비밀번호를 사용합니다",

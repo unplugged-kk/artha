@@ -187,6 +187,7 @@
     "invalidBackupFormat": "Format de sauvegarde invalide : les données doivent être un objet",
     "unsupportedBackupVersion": "Version de sauvegarde non prise en charge : {{ version }}. Attendu : {{ expected }}",
     "missingExportedAt": "Format de sauvegarde invalide : exportedAt manquant",
+    "missingTableData": "Format de sauvegarde invalide : données {{ table }} manquantes. Rien n'a été modifié.",
     "tableNotAllowed": "La table {{ table }} n'est pas autorisée dans la restauration de sauvegarde",
     "encryptionNotConfigured": "Le serveur n'est pas configuré pour le chiffrement (JWT_SECRET manquant ou trop court)",
     "backupPasswordOidcOnly": "Le mot de passe de sauvegarde n'est configurable que pour les utilisateurs OIDC ; les utilisateurs locaux utilisent leur mot de passe de connexion",

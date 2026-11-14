@@ -187,6 +187,7 @@
     "invalidBackupFormat": "无效的备份格式：数据必须是对象",
     "unsupportedBackupVersion": "不支持的备份版本：{{ version }}。预期版本：{{ expected }}",
     "missingExportedAt": "无效的备份格式：缺少 exportedAt",
+    "missingTableData": "备份格式无效：缺少 {{ table }} 数据。未做任何更改。",
     "tableNotAllowed": "表 {{ table }} 不允许在备份恢复中使用",
     "encryptionNotConfigured": "服务器未配置加密（缺少 JWT_SECRET 或长度不足）",
     "backupPasswordOidcOnly": "备份密码仅适用于 OIDC 用户；本地用户使用登录密码",
