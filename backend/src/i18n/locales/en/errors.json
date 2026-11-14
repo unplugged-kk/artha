@@ -197,6 +197,7 @@
     "invalidBackupFormat": "Invalid backup format: data must be an object",
     "unsupportedBackupVersion": "Unsupported backup version: {{ version }}. Expected {{ expected }}",
     "missingExportedAt": "Invalid backup format: missing exportedAt",
+    "missingTableData": "Invalid backup format: missing {{ table }} data. Nothing was changed.",
     "tableNotAllowed": "Table {{ table }} is not allowed in backup restore",
     "encryptionNotConfigured": "Server is not configured for encryption (ENCRYPTION_KEY missing or too short)",
     "backupPasswordOidcOnly": "Backup password is only configurable for OIDC users; local users use their login password",

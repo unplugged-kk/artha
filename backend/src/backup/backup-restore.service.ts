@@ -48,6 +48,9 @@ import { BackupRestoreDatabaseService } from "./backup-restore-database.service"
 
 const gunzipAsync = promisify(gunzip);
 
+/** Tables every export emits, even empty; see validateBackupFormat. */
+const REQUIRED_TABLE_KEYS = ["accounts", "transactions"] as const;
+
 /**
  * Restore orchestration: the processing gate, decryption, decompression, format
  * validation, re-authentication ordering, id remapping, and the single
@@ -618,6 +621,22 @@ export class BackupRestoreService {
           "Invalid backup format: missing exportedAt",
         ),
       );
+    }
+    // The restore deletes the account's rows before it inserts anything, so an
+    // envelope with no table payload (truncated by hand, or from another tool)
+    // would wipe the account and report success with every count 0. Every export
+    // writes these two keys even for an empty account, so their absence means
+    // "not a complete archive", never "nothing to restore".
+    for (const key of REQUIRED_TABLE_KEYS) {
+      if (!Array.isArray((data as unknown as Record<string, unknown>)[key])) {
+        throw new BadRequestException(
+          tr(
+            "errors.backup.missingTableData",
+            `Invalid backup format: missing ${key} data. Nothing was changed.`,
+            { table: key },
+          ),
+        );
+      }
     }
   }
 

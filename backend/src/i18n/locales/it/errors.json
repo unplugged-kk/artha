@@ -187,6 +187,7 @@
     "invalidBackupFormat": "Formato backup non valido: i dati devono essere un oggetto",
     "unsupportedBackupVersion": "Versione backup non supportata: {{ version }}. Attesa {{ expected }}",
     "missingExportedAt": "Formato backup non valido: exportedAt mancante",
+    "missingTableData": "Formato di backup non valido: dati {{ table }} mancanti. Non è stato modificato nulla.",
     "tableNotAllowed": "La tabella {{ table }} non è consentita nel ripristino del backup",
     "encryptionNotConfigured": "Il server non è configurato per la cifratura (JWT_SECRET mancante o troppo corto)",
     "backupPasswordOidcOnly": "La password di backup è configurabile solo per gli utenti OIDC; gli utenti locali usano la password di accesso",

@@ -187,6 +187,7 @@
     "invalidBackupFormat": "Ongeldig back-upformaat: gegevens moeten een object zijn",
     "unsupportedBackupVersion": "Niet-ondersteunde back-upversie: {{ version }}. Verwacht {{ expected }}",
     "missingExportedAt": "Ongeldig back-upformaat: exportedAt ontbreekt",
+    "missingTableData": "Ongeldig back-upformaat: gegevens voor {{ table }} ontbreken. Er is niets gewijzigd.",
     "tableNotAllowed": "Tabel {{ table }} is niet toegestaan bij het herstellen van back-ups",
     "encryptionNotConfigured": "De server is niet geconfigureerd voor versleuteling (JWT_SECRET ontbreekt of is te kort)",
     "backupPasswordOidcOnly": "Back-upwachtwoord is alleen instelbaar voor OIDC-gebruikers; lokale gebruikers gebruiken hun inlogwachtwoord",

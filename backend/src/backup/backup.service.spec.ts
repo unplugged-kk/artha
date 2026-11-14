@@ -3845,6 +3845,21 @@ describe("BackupService", () => {
       ).rejects.toThrow(BadRequestException);
     });
 
+    it("rejects an envelope with no table data before deleting anything", async () => {
+      mockUserRepo.findOne.mockResolvedValue(mockUser);
+      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+
+      await expect(
+        service.restoreData(
+          userId,
+          makeInput({
+            password: "test",
+            data: { version: 1, exportedAt: "2026-01-01T00:00:00.000Z" } as any,
+          }),
+        ),
+      ).rejects.toThrow(/missing accounts data/);
+    });
+
     it("should throw BadRequestException for invalid gzip data", async () => {
       mockUserRepo.findOne.mockResolvedValue(mockUser);
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);

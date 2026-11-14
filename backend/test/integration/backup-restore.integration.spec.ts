@@ -3,7 +3,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule } from "@nestjs/config";
 import { DataSource } from "typeorm";
 import { createHash, randomUUID } from "crypto";
-import { gunzipSync } from "zlib";
+import { gunzipSync, gzipSync } from "zlib";
 import {
   BackupService,
   BackupPasswordRequiredError,
@@ -844,6 +844,155 @@ describe("Backup export/restore round-trip (integration)", () => {
       ["receipt-scan.jpg", enhancedBytes.toString("utf-8")],
       ["receipt.jpg", originalBytes.toString("utf-8")],
     ]);
+  });
+
+  /**
+   * Columns the export names explicitly (payees) or reads with `SELECT *`
+   * (securities) must come back exactly, including NULL. A restore deletes the
+   * account's rows and re-inserts from the archive, so an omitted column is a
+   * silent overwrite with NULL.
+   */
+  it("round-trips payee contact fields and fund classification, NULL included", async () => {
+    const userA = await createTestUserDirect(dataSource, {
+      email: "cols-a@example.com",
+    });
+    const userB = await createTestUserDirect(dataSource, {
+      email: "cols-b@example.com",
+    });
+    await seedUserData(userA.id);
+    await dataSource.query(
+      `INSERT INTO payees (user_id, name, address, email, phone)
+       VALUES ($1, 'Full Payee', '1 Main St, Pune', 'a@pay.example', '+912012345678'),
+              ($1, 'Null Payee', NULL, NULL, NULL)`,
+      [userA.id],
+    );
+    await dataSource.query(
+      `INSERT INTO securities (user_id, symbol, name, currency_code, fund_house,
+                               fund_scheme_type, fund_category, fund_classification_updated_at)
+       VALUES ($1, 'FUNDA', 'Classified Fund', 'USD', 'Test AMC', 'Open Ended Schemes',
+               'Equity Scheme - Flexi Cap Fund', '2026-11-01 10:00:00'),
+              ($1, 'FUNDB', 'Unclassified Fund', 'USD', NULL, NULL, NULL, NULL)`,
+      [userA.id],
+    );
+
+    const { buffer: backup } = await withUserContext(userA.id, () =>
+      service.exportToBuffer(userA.id),
+    );
+    await withUserContext(userB.id, () =>
+      service.restoreData(userB.id, {
+        compressedData: backup,
+        password: PASSWORD,
+      }),
+    );
+
+    const payees = await dataSource.query(
+      `SELECT name, address, email, phone FROM payees
+        WHERE user_id = $1 AND name IN ('Full Payee','Null Payee') ORDER BY name`,
+      [userB.id],
+    );
+    expect(payees).toEqual([
+      {
+        name: "Full Payee",
+        address: "1 Main St, Pune",
+        email: "a@pay.example",
+        phone: "+912012345678",
+      },
+      { name: "Null Payee", address: null, email: null, phone: null },
+    ]);
+    const funds = await dataSource.query(
+      `SELECT symbol, fund_house, fund_scheme_type, fund_category,
+              to_char(fund_classification_updated_at, 'YYYY-MM-DD HH24:MI:SS') AS stamped
+         FROM securities WHERE user_id = $1 AND symbol IN ('FUNDA','FUNDB') ORDER BY symbol`,
+      [userB.id],
+    );
+    expect(funds).toEqual([
+      {
+        symbol: "FUNDA",
+        fund_house: "Test AMC",
+        fund_scheme_type: "Open Ended Schemes",
+        fund_category: "Equity Scheme - Flexi Cap Fund",
+        stamped: "2026-11-01 10:00:00",
+      },
+      {
+        symbol: "FUNDB",
+        fund_house: null,
+        fund_scheme_type: null,
+        fund_category: null,
+        stamped: null,
+      },
+    ]);
+  });
+
+  /**
+   * D1: the visible half of a scan pair has bytes that do not match its
+   * metadata. Staging drops it; the hidden original must go with it, or the
+   * deferred `original_of_attachment_id` UPDATE hits a foreign key and one bad
+   * blob rolls back an otherwise valid restore.
+   */
+  it("restores everything else when a scan pair's visible bytes are corrupt", async () => {
+    const userA = await createTestUserDirect(dataSource, {
+      email: "scan-corrupt-a@example.com",
+    });
+    const userB = await createTestUserDirect(dataSource, {
+      email: "scan-corrupt-b@example.com",
+    });
+    const seeded = await seedUserData(userA.id);
+    const enhancedId = randomUUID();
+    const originalId = randomUUID();
+    for (const [id, name, bytes, originalOf] of [
+      [enhancedId, "scan.jpg", Buffer.from("enhanced"), null],
+      [originalId, "orig.jpg", Buffer.from("original"), enhancedId],
+    ] as Array<[string, string, Buffer, string | null]>) {
+      await dataSource.query(
+        `INSERT INTO transaction_attachments
+           (id, user_id, transaction_id, filename, content_type, byte_size,
+            sha256, storage_provider, storage_key, original_of_attachment_id)
+         VALUES ($1, $2, $3, $4, 'image/jpeg', $5, $6, 'database', $8, $7)`,
+        [
+          id,
+          userA.id,
+          seeded.expenseTxId,
+          name,
+          bytes.length,
+          createHash("sha256").update(bytes).digest("hex"),
+          originalOf,
+          id,
+        ],
+      );
+      await dataSource.query(
+        `INSERT INTO attachment_blobs (attachment_id, data) VALUES ($1, $2)`,
+        [id, bytes],
+      );
+    }
+
+    const { buffer: backup } = await withUserContext(userA.id, () =>
+      service.exportToBuffer(userA.id),
+    );
+    const archive = JSON.parse(gunzipSync(backup).toString("utf-8"));
+    const blob = archive.attachment_blobs.find(
+      (b: { attachment_id: string }) => b.attachment_id === enhancedId,
+    );
+    blob.data = Buffer.from("tampered!").toString("base64");
+    const tampered = gzipSync(Buffer.from(JSON.stringify(archive), "utf-8"));
+
+    const result = await withUserContext(userB.id, () =>
+      service.restoreData(userB.id, {
+        compressedData: tampered,
+        password: PASSWORD,
+      }),
+    );
+
+    expect(result.restored.transactionAttachments).toBe(0);
+    const left = await dataSource.query(
+      `SELECT count(*)::int AS n FROM transaction_attachments WHERE user_id = $1`,
+      [userB.id],
+    );
+    expect(left[0].n).toBe(0);
+    const accounts = await dataSource.query(
+      `SELECT count(*)::int AS n FROM accounts WHERE user_id = $1`,
+      [userB.id],
+    );
+    expect(accounts[0].n).toBeGreaterThan(0);
   });
 
   /**

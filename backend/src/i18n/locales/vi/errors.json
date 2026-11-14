@@ -187,6 +187,7 @@
     "invalidBackupFormat": "Định dạng sao lưu không hợp lệ: dữ liệu phải là một đối tượng",
     "unsupportedBackupVersion": "Phiên bản sao lưu không được hỗ trợ: {{ version }}. Dự kiến {{ expected }}",
     "missingExportedAt": "Định dạng sao lưu không hợp lệ: thiếu exportedAt",
+    "missingTableData": "Định dạng bản sao lưu không hợp lệ: thiếu dữ liệu {{ table }}. Không có gì bị thay đổi.",
     "tableNotAllowed": "Bảng {{ table }} không được phép trong khôi phục sao lưu",
     "encryptionNotConfigured": "Máy chủ chưa được cấu hình để mã hóa (thiếu JWT_SECRET hoặc quá ngắn)",
     "backupPasswordOidcOnly": "Mật khẩu sao lưu chỉ có thể cấu hình cho người dùng OIDC; người dùng cục bộ sử dụng mật khẩu đăng nhập của họ",

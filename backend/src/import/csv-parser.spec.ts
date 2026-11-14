@@ -141,6 +141,69 @@ describe("CSV Parser", () => {
       };
     }
 
+    describe("rows the file contains are never silently changed or dropped", () => {
+      const rejectedOf = (
+        csv: string,
+        over?: Partial<CsvColumnMappingConfig>,
+      ) => parseCsv(csv, baseConfig(over));
+
+      it("rejects an unreadable amount instead of importing it as 0", () => {
+        const r = rejectedOf(
+          "Date,Amount,Payee\n01/15/2026,N/A,Shop\n01/16/2026,-10.00,Shop\n",
+        );
+        expect(r.transactions).toHaveLength(1);
+        expect(r.rejectedFileRows).toEqual([
+          { rowNumber: 2, reason: 'unreadable amount "N/A"' },
+        ]);
+      });
+
+      it("rejects a blank amount", () => {
+        const r = rejectedOf("Date,Amount,Payee\n01/15/2026,,Shop\n");
+        expect(r.transactions).toHaveLength(0);
+        expect(r.rejectedFileRows?.[0].reason).toBe("missing amount");
+      });
+
+      it("never reads a decimal comma as a thousands separator", () => {
+        const r = rejectedOf(
+          '"Date","Amount","Payee"\n01/15/2026,"12,50",A\n01/16/2026,"1.234,56",B\n01/17/2026,"1,234.50",C\n01/18/2026,"12,34,567",D\n',
+        );
+        expect(r.transactions.map((t) => t.amount)).toEqual([1234.5, 1234567]);
+        expect(r.rejectedFileRows?.map((x) => x.rowNumber)).toEqual([2, 3]);
+      });
+
+      it("rejects trailing junk rather than truncating it", () => {
+        const r = rejectedOf("Date,Amount,Payee\n01/15/2026,12abc,Shop\n");
+        expect(r.transactions).toHaveLength(0);
+        expect(r.rejectedFileRows).toHaveLength(1);
+      });
+
+      it("counts a row with a missing or unparseable date", () => {
+        const r = rejectedOf(
+          "Date,Amount,Payee\n,5.00,Shop\nnot a date,5.00,Shop\n01/15/2026,5.00,Shop\n",
+        );
+        expect(r.transactions).toHaveLength(1);
+        expect(r.rejectedFileRows?.map((x) => x.rowNumber)).toEqual([2, 3]);
+      });
+
+      it("ignores a wholly blank line without calling it a loss", () => {
+        const r = rejectedOf("Date,Amount,Payee\n,,\n01/15/2026,5.00,Shop\n");
+        expect(r.transactions).toHaveLength(1);
+        expect(r.rejectedFileRows).toBeUndefined();
+      });
+
+      it("rejects a row where both debit and credit are filled", () => {
+        const r = parseCsv(
+          "Date,Debit,Credit,Payee\n01/15/2026,10.00,5.00,Shop\n01/16/2026,10.00,,Shop\n",
+          baseConfig({ amount: undefined, debit: 1, credit: 2, payee: 3 }),
+        );
+        expect(r.transactions).toHaveLength(1);
+        expect(r.transactions[0].amount).toBe(-10);
+        expect(r.rejectedFileRows?.[0].reason).toBe(
+          "both debit and credit are filled",
+        );
+      });
+    });
+
     describe("basic parsing", () => {
       it("parses a basic CSV with comma delimiter", () => {
         const csv =
@@ -773,11 +836,14 @@ describe("CSV Parser", () => {
         expect(result.transactions[0].amount).toBe(-50);
       });
 
-      it("treats empty amount as zero", () => {
+      it("rejects an empty amount rather than importing it as zero", () => {
         const csv = "Date,Amount,Payee\n01/15/2026,,Store\n";
         const result = parseCsv(csv, baseConfig());
 
-        expect(result.transactions[0].amount).toBe(0);
+        expect(result.transactions).toHaveLength(0);
+        expect(result.rejectedFileRows).toEqual([
+          { rowNumber: 2, reason: "missing amount" },
+        ]);
       });
     });
 

@@ -48,6 +48,7 @@ const fs = require('fs');
     }
     await ctx.close();
   }
+  // bearer:disable javascript_lang_non_literal_fs_filename -- developer-run script; the output directory is the operator's own argv, not request input
   fs.writeFileSync(`${out}/axe-summary.json`, JSON.stringify(summary, null, 2));
   const agg = {};
   for (const [k, v] of Object.entries(summary)) for (const x of v.violations) { agg[x.id] = agg[x.id] || { impact: x.impact, pages: 0, nodes: 0 }; agg[x.id].pages++; agg[x.id].nodes += x.nodes; }

@@ -187,6 +187,7 @@
     "invalidBackupFormat": "無效的備份格式：資料必須是物件",
     "unsupportedBackupVersion": "不支援的備份版本：{{ version }}。預期版本：{{ expected }}",
     "missingExportedAt": "無效的備份格式：缺少 exportedAt",
+    "missingTableData": "備份格式無效：缺少 {{ table }} 資料。未做任何變更。",
     "tableNotAllowed": "備份還原不允許資料表 {{ table }}",
     "encryptionNotConfigured": "伺服器未設定加密（缺少 JWT_SECRET 或長度不足）",
     "backupPasswordOidcOnly": "備份密碼僅適用於 OIDC 使用者；本機使用者使用其登入密碼",

@@ -2793,9 +2793,50 @@ describe("NetWorthService", () => {
         value: 1000,
         fxComplete: true,
         missingRatePairs: [],
+        pricesComplete: true,
+        unpricedSecurityIds: [],
       });
       expect(result[1]).toMatchObject({ date: "2025-03-02", value: 1020 });
       expect(result[2]).toMatchObject({ date: "2025-03-03", value: 1010 });
+    });
+
+    it("flags a held security with no price instead of drawing it as sold", async () => {
+      prefRepository.findOne.mockResolvedValue({ defaultCurrency: "USD" });
+      reportQuery.mockResolvedValueOnce([
+        {
+          id: "brok-1",
+          account_type: "INVESTMENT",
+          account_sub_type: "INVESTMENT_BROKERAGE",
+          currency_code: "USD",
+          opening_balance: 0,
+        },
+      ]);
+      reportQuery.mockResolvedValueOnce([
+        {
+          account_id: "brok-1",
+          security_id: "sec-1",
+          action: "BUY",
+          quantity: "10",
+          transaction_date: "2025-02-01",
+        },
+      ]);
+      securityRepository.findByIds.mockResolvedValue([
+        { id: "sec-1", skipPriceUpdates: false },
+      ]);
+      // No stored price at all for the held security.
+      reportQuery.mockResolvedValueOnce([]);
+
+      const result = await service.getDailyInvestments(
+        "user-1",
+        "2025-03-01",
+        "2025-03-01",
+      );
+
+      expect(result[0]).toMatchObject({
+        date: "2025-03-01",
+        pricesComplete: false,
+        unpricedSecurityIds: ["sec-1"],
+      });
     });
 
     it("includes cash balances from INVESTMENT_CASH accounts", async () => {
@@ -3659,6 +3700,8 @@ describe("NetWorthService", () => {
         // Nothing to convert is complete, not unknown.
         fxComplete: true,
         missingRatePairs: [],
+        pricesComplete: true,
+        unpricedSecurityIds: [],
         series: [],
         points: [],
       });
