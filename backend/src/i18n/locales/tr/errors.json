@@ -187,6 +187,7 @@
     "invalidBackupFormat": "Geçersiz yedek biçimi: veriler bir nesne olmalıdır",
     "unsupportedBackupVersion": "Desteklenmeyen yedek sürümü: {{ version }}. Beklenen: {{ expected }}",
     "missingExportedAt": "Geçersiz yedek biçimi: exportedAt eksik",
+    "missingTableData": "Geçersiz yedek biçimi: {{ table }} verileri eksik. Hiçbir şey değiştirilmedi.",
     "tableNotAllowed": "{{ table }} tablosuna yedek geri yüklemede izin verilmiyor",
     "encryptionNotConfigured": "Sunucu şifreleme için yapılandırılmamış (JWT_SECRET eksik veya çok kısa)",
     "backupPasswordOidcOnly": "Yedek şifresi yalnızca OIDC kullanıcıları için yapılandırılabilir; yerel kullanıcılar giriş şifrelerini kullanır",

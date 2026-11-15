@@ -187,6 +187,7 @@
     "invalidBackupFormat": "Formato de copia de seguridad no válido: los datos deben ser un objeto",
     "unsupportedBackupVersion": "Versión de copia de seguridad no admitida: {{ version }}. Se esperaba {{ expected }}",
     "missingExportedAt": "Formato de copia de seguridad no válido: falta exportedAt",
+    "missingTableData": "Formato de copia de seguridad no válido: faltan los datos de {{ table }}. No se cambió nada.",
     "tableNotAllowed": "La tabla {{ table }} no está permitida en la restauración de copia de seguridad",
     "encryptionNotConfigured": "El servidor no está configurado para el cifrado (falta JWT_SECRET o es demasiado corto)",
     "backupPasswordOidcOnly": "La contraseña de copia de seguridad solo es configurable para usuarios OIDC; los usuarios locales usan su contraseña de inicio de sesión",

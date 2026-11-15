@@ -187,6 +187,7 @@
     "invalidBackupFormat": "Format cadangan tidak valid: data harus berupa objek",
     "unsupportedBackupVersion": "Versi cadangan tidak didukung: {{ version }}. Diharapkan {{ expected }}",
     "missingExportedAt": "Format cadangan tidak valid: exportedAt tidak ada",
+    "missingTableData": "Format cadangan tidak valid: data {{ table }} tidak ada. Tidak ada yang diubah.",
     "tableNotAllowed": "Tabel {{ table }} tidak diizinkan dalam pemulihan cadangan",
     "encryptionNotConfigured": "Server tidak dikonfigurasi untuk enkripsi (JWT_SECRET tidak ada atau terlalu pendek)",
     "backupPasswordOidcOnly": "Kata sandi cadangan hanya dapat dikonfigurasi untuk pengguna OIDC; pengguna lokal menggunakan kata sandi masuk mereka",

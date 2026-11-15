@@ -400,6 +400,33 @@ export class BackupAttachmentTransferService {
       stagedKeys.push(attachmentId);
     }
 
+    // A scanned original is hidden: it exists only as the other half of a visible
+    // attachment, and its `original_of_attachment_id` is restored by a deferred
+    // UPDATE that needs the visible row to exist. Losing the visible half would
+    // either fail that UPDATE on the foreign key (rolling back the whole restore
+    // for one bad blob) or, if the link were nulled, turn the original into a
+    // second visible attachment. So the original goes with it.
+    let orphanedOriginals = 0;
+    if (unrestorable.size > 0) {
+      for (const row of rows) {
+        const id = String(row.id ?? "");
+        const parent = row.original_of_attachment_id;
+        if (
+          parent != null &&
+          unrestorable.has(String(parent)) &&
+          !unrestorable.has(id)
+        ) {
+          unrestorable.add(id);
+          orphanedOriginals++;
+          const at = stagedKeys.indexOf(id);
+          if (at >= 0) {
+            await this.discardStagedAttachmentObjects([id]);
+            stagedKeys.splice(at, 1);
+          }
+        }
+      }
+    }
+
     if (unrestorable.size > 0) {
       // Immutability: the caller's arrays are replaced, not spliced.
       data.transaction_attachments = rows.filter(
@@ -407,7 +434,10 @@ export class BackupAttachmentTransferService {
       );
       this.logger.warn(
         `Restore is dropping ${unrestorable.size} attachment(s) whose bytes could not be staged ` +
-          `(provider ${runtimeProvider}); their metadata would point at nothing.`,
+          `(provider ${runtimeProvider}); their metadata would point at nothing.` +
+          (orphanedOriginals > 0
+            ? ` ${orphanedOriginals} of them are scan originals dropped with their visible attachment.`
+            : ""),
       );
     }
 

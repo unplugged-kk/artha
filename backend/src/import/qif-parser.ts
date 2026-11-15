@@ -99,6 +99,8 @@ export interface QifParseResult {
    * QIF and OFX parses never set it.
    */
   investmentSummary?: import("./csv-parser").CsvInvestmentSummary;
+  /** CSV/XLSX rows that could not be read, each with a reason. Never silently dropped. */
+  rejectedFileRows?: import("./csv-parser").CsvRejectedRow[];
 }
 
 export type DateFormat =

@@ -187,6 +187,7 @@
     "invalidBackupFormat": "Nieprawidłowy format kopii zapasowej: dane muszą być obiektem",
     "unsupportedBackupVersion": "Nieobsługiwana wersja kopii zapasowej: {{ version }}. Oczekiwano {{ expected }}",
     "missingExportedAt": "Nieprawidłowy format kopii zapasowej: brak exportedAt",
+    "missingTableData": "Nieprawidłowy format kopii zapasowej: brak danych {{ table }}. Nic nie zostało zmienione.",
     "tableNotAllowed": "Tabela {{ table }} nie jest dozwolona podczas przywracania kopii zapasowej",
     "encryptionNotConfigured": "Serwer nie jest skonfigurowany do szyfrowania (brak JWT_SECRET lub jest za krótki)",
     "backupPasswordOidcOnly": "Hasło kopii zapasowej można skonfigurować tylko dla użytkowników OIDC; użytkownicy lokalni używają swojego hasła logowania",

@@ -959,7 +959,7 @@ export class ImportService {
 
     const result = parseCsv(dto.content, csvConfig, transferRules);
 
-    return this.importParsedTransactions(
+    const imported = await this.importParsedTransactions(
       userId,
       result,
       dto.accountId,
@@ -968,6 +968,26 @@ export class ImportService {
       dto.securityMappings || [],
       dto.dateFormat as DateFormat,
     );
+
+    // Rows the parser could not read are errors in the result, so that
+    // source rows = imported + skipped + errors always reconciles and nothing
+    // the file contained disappears without a line saying why.
+    const rejected = result.rejectedFileRows ?? [];
+    if (rejected.length === 0) return imported;
+    const MAX_LISTED = 20;
+    return {
+      ...imported,
+      errors: imported.errors + rejected.length,
+      errorMessages: [
+        ...imported.errorMessages,
+        ...rejected
+          .slice(0, MAX_LISTED)
+          .map((r) => `Row ${r.rowNumber} not imported: ${r.reason}`),
+        ...(rejected.length > MAX_LISTED
+          ? [`${rejected.length - MAX_LISTED} more rows were not imported`]
+          : []),
+      ],
+    };
   }
 
   // --- Column Mapping CRUD ---

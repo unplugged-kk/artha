@@ -85,6 +85,13 @@ export interface CsvTransferRule {
 }
 
 /** Per-canonical-action row counts and skip reporting for the preview step. */
+/** A file row the parser could not turn into a transaction, and why. */
+export interface CsvRejectedRow {
+  /** 1-based line number within the data rows' source file, header included. */
+  rowNumber: number;
+  reason: string;
+}
+
 export interface CsvInvestmentSummary {
   actionCounts: Partial<Record<CanonicalInvestmentAction, number>>;
   /** Distinct unmatched action values imported as cash transactions */
@@ -816,11 +823,22 @@ function parseCsvAmount(value: string): number | null {
 
   // Strip currency symbols and whitespace
   cleaned = cleaned.replace(/[$£€¥₹\s]/g, "");
-  // Strip commas used as thousands separators
-  cleaned = cleaned.replace(/,/g, "");
 
-  const amount = parseFloat(cleaned);
-  return isNaN(amount) ? null : amount;
+  // A comma is a thousands separator only where it groups in threes (1,234,567)
+  // or in the Indian lakh style (12,34,567). Anything else (12,50 or 1.234,56)
+  // is a decimal comma or a typo, and stripping it would turn 12,50 into 1250:
+  // that is not a parse, it is a different amount, so it is refused.
+  if (cleaned.includes(",")) {
+    const grouped =
+      /^[+-]?\d{1,3}(,\d{3})*(\.\d+)?$/.test(cleaned) ||
+      /^[+-]?\d{1,2}(,\d{2})*,\d{3}(\.\d+)?$/.test(cleaned);
+    if (!grouped) return null;
+    cleaned = cleaned.replace(/,/g, "");
+  }
+
+  // parseFloat("12abc") is 12; a value with trailing junk is not a number.
+  if (!/^[+-]?(\d+(\.\d*)?|\.\d+)$/.test(cleaned)) return null;
+  return Number(cleaned);
 }
 
 /**
@@ -1184,40 +1202,83 @@ export function parseCsv(
       ? detectTagSeparator(dataRows.map((row) => getField(row, config.tags!)))
       : null;
 
-  for (const row of dataRows) {
+  const rejectedFileRows: CsvRejectedRow[] = [];
+  const firstDataLine = config.hasHeader ? 2 : 1;
+
+  for (const [rowIndex, row] of dataRows.entries()) {
+    const rowNumber = rowIndex + firstDataLine;
+    // A wholly blank line is not a transaction and not a loss.
+    if (row.every((cell) => cell.trim() === "")) {
+      continue;
+    }
+    const reject = (reason: string) => {
+      rejectedFileRows.push({ rowNumber, reason });
+    };
+
     // Extract and parse the date
     const rawDate = getField(row, config.date);
     if (!rawDate) {
+      reject("missing date");
       continue;
     }
 
     const parsedDate = parseCsvDate(rawDate, config.dateFormat);
     if (!parsedDate) {
-      // Skip rows with unparseable dates
+      reject(`unparseable date "${truncate(rawDate, 40)}"`);
       continue;
     }
 
     rawDates.push(rawDate);
 
-    // Extract and parse the amount
+    // Extract and parse the amount. A blank or unreadable amount is a rejected
+    // row, never a zero-amount transaction: the file said something we could
+    // not read, and 0 is a claim about the money.
     let amount = 0;
     let rawAmount = 0; // Original parsed amount before reverseSign
     if (config.amount !== undefined) {
-      amount = parseCsvAmount(getField(row, config.amount)) ?? 0;
+      const rawAmountText = getField(row, config.amount);
+      const parsedAmount = parseCsvAmount(rawAmountText);
+      if (parsedAmount === null && investmentMode) {
+        // Investment rows price themselves from quantity and price columns; a
+        // blank cash amount is legitimate there and handled by their own rules.
+      } else if (parsedAmount === null) {
+        reject(
+          rawAmountText.trim() === ""
+            ? "missing amount"
+            : `unreadable amount "${truncate(rawAmountText, 40)}"`,
+        );
+        continue;
+      }
+      amount = parsedAmount ?? 0;
       rawAmount = amount;
       if (config.reverseSign) {
         amount = -amount;
       }
     } else if (config.debit !== undefined || config.credit !== undefined) {
-      const creditVal =
-        config.credit !== undefined
-          ? (parseCsvAmount(getField(row, config.credit)) ?? 0)
-          : 0;
-
-      let debitVal =
-        config.debit !== undefined
-          ? (parseCsvAmount(getField(row, config.debit)) ?? 0)
-          : 0;
+      const rawCredit =
+        config.credit !== undefined ? getField(row, config.credit) : "";
+      const rawDebit =
+        config.debit !== undefined ? getField(row, config.debit) : "";
+      const creditParsed = parseCsvAmount(rawCredit);
+      const debitParsed = parseCsvAmount(rawDebit);
+      if (
+        !investmentMode &&
+        ((rawCredit.trim() !== "" && creditParsed === null) ||
+          (rawDebit.trim() !== "" && debitParsed === null))
+      ) {
+        reject("unreadable debit/credit amount");
+        continue;
+      }
+      if (!investmentMode && creditParsed === null && debitParsed === null) {
+        reject("missing amount");
+        continue;
+      }
+      const creditVal = creditParsed ?? 0;
+      let debitVal = debitParsed ?? 0;
+      if (!investmentMode && creditVal !== 0 && debitVal !== 0) {
+        reject("both debit and credit are filled");
+        continue;
+      }
 
       // Strip sign from debit and negate -- debit is always an outflow
       debitVal = -Math.abs(debitVal);
@@ -1444,6 +1505,7 @@ export function parseCsv(
     sampleDates,
     openingBalance: null,
     openingBalanceDate: null,
+    ...(rejectedFileRows.length > 0 ? { rejectedFileRows } : {}),
     ...(investmentMode
       ? {
           investmentSummary: {

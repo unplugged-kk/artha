@@ -106,6 +106,14 @@ export interface InvestmentBreakdown {
   fxComplete: boolean;
   /** `"USD->EUR"` for each pair with no available rate; empty when complete. */
   missingRatePairs: string[];
+  /**
+   * False when a held security had no price on some sample date and was left
+   * out of that point. A different cause from `fxComplete`, with a different
+   * repair (fetch prices, not rates); both must be true for a total.
+   */
+  pricesComplete: boolean;
+  /** Securities left out for want of a price; empty when complete. */
+  unpricedSecurityIds: string[];
 }
 
 @Injectable()
@@ -1314,6 +1322,14 @@ export class NetWorthService {
       fxComplete: boolean;
       /** "USD->EUR" for each pair with no available rate. */
       missingRatePairs: string[];
+      /**
+       * False when a held security had no price on or before this day, so
+       * `value` leaves it out. Unknown is not zero: the chart must not draw
+       * the dip as if the position had been sold.
+       */
+      pricesComplete: boolean;
+      /** Ids of held securities with no price as of this day; empty when complete. */
+      unpricedSecurityIds: string[];
     }[] = [];
 
     for (const dateStr of dates) {
@@ -1345,6 +1361,7 @@ export class NetWorthService {
       // native currency, so we must convert each holding individually rather
       // than treating the total as being in the account's currency.
       const dayValue = new FxAggregate();
+      const unpriced = new Set<string>();
 
       for (const [, acctHoldings] of holdingsByAccount) {
         for (const [secId, qty] of acctHoldings) {
@@ -1365,7 +1382,9 @@ export class NetWorthService {
             dateStr,
           );
 
-          if (price != null) {
+          if (price == null) {
+            unpriced.add(secId);
+          } else {
             const valueInSecCurrency = qty * price;
             const secCurrency = security?.currencyCode || defaultCurrency;
             dayValue.add(
@@ -1405,6 +1424,8 @@ export class NetWorthService {
         value: Math.round(dayValue.knownSubtotal),
         fxComplete: dayValue.isComplete,
         missingRatePairs: dayValue.missingPairs,
+        pricesComplete: unpriced.size === 0,
+        unpricedSecurityIds: [...unpriced].sort(),
       });
     }
 
@@ -1453,6 +1474,9 @@ export class NetWorthService {
       // Nothing to convert is complete, not unknown.
       fxComplete: true,
       missingRatePairs: [],
+      // No holdings means nothing is unpriced.
+      pricesComplete: true,
+      unpricedSecurityIds: [],
     };
 
     const investAccounts = await this.resolveScopedInvestmentAccounts(
@@ -1585,6 +1609,9 @@ export class NetWorthService {
     // every sample so the response can name them rather than presenting a
     // subtotal as a total (P5-009).
     const missingPairs = new Set<string>();
+    // Held securities with no price on some sample date: left out of that
+    // point's breakdown, so the series is a subtotal and must say so.
+    const unpricedSecurityIds = new Set<string>();
 
     for (const sampleDate of sampleDates) {
       const valuationDate =
@@ -1622,7 +1649,10 @@ export class NetWorthService {
           txSeries.get(secId),
           valuationDate,
         );
-        if (price == null) continue;
+        if (price == null) {
+          unpricedSecurityIds.add(secId);
+          continue;
+        }
         const secCurrency = security?.currencyCode || defaultCurrency;
         const value = this.convertCurrency(
           qty * price,
@@ -1680,6 +1710,8 @@ export class NetWorthService {
       points,
       fxComplete: missingPairs.size === 0,
       missingRatePairs: [...missingPairs].sort(),
+      pricesComplete: unpricedSecurityIds.size === 0,
+      unpricedSecurityIds: [...unpricedSecurityIds].sort(),
     };
   }
 
@@ -2249,7 +2281,11 @@ export class NetWorthService {
           monthEndStr,
         );
 
-        if (price != null) {
+        if (price == null) {
+          this.logger.warn(
+            `Snapshot for account ${account.id} month ${monthStr} omits security ${secId}: no price on or before ${monthEndStr}; the stored market value is a subtotal`,
+          );
+        } else {
           const valueInSecCurrency = qty * price;
           const secCurrency = security?.currencyCode || account.currencyCode;
           monthValue.add(

@@ -187,6 +187,7 @@
     "invalidBackupFormat": "Ungültiges Sicherungsformat: Daten müssen ein Objekt sein",
     "unsupportedBackupVersion": "Nicht unterstützte Sicherungsversion: {{ version }}. Erwartet: {{ expected }}",
     "missingExportedAt": "Ungültiges Sicherungsformat: exportedAt fehlt",
+    "missingTableData": "Ungültiges Sicherungsformat: Daten für {{ table }} fehlen. Es wurde nichts geändert.",
     "tableNotAllowed": "Tabelle {{ table }} ist bei der Sicherungswiederherstellung nicht zulässig",
     "encryptionNotConfigured": "Der Server ist nicht für Verschlüsselung konfiguriert (JWT_SECRET fehlt oder ist zu kurz)",
     "backupPasswordOidcOnly": "Sicherungspasswort ist nur für OIDC-Benutzer konfigurierbar; lokale Benutzer verwenden ihr Anmeldepasswort",

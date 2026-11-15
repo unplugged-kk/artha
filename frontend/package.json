@@ -46,7 +46,7 @@
   "overrides": {
     "undici": "^7.29.0",
     "dompurify": "^3.4.13",
-    "brace-expansion@>=3": "5.0.9",
+    "brace-expansion@>=3": "5.0.13",
     "picomatch": "4.0.4",
     "postcss": "^8.5.23",
     "@babel/core": "^7.29.6",
