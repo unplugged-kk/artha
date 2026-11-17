@@ -7,6 +7,7 @@ import { TABLE_BODY_CLASS, TABLE_CLASS, Td, Th } from '@/components/ui/Table';
 import { Select } from '@/components/ui/Select';
 import { useNumberFormat } from '@/hooks/useNumberFormat';
 import { useDateFormat } from '@/hooks/useDateFormat';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import {
   AccountMapping,
   ParsedSourceRow,
@@ -98,6 +99,7 @@ export function SourceReviewStep({
   const t = useTranslations('import');
   const { formatCurrency } = useNumberFormat();
   const { formatDate } = useDateFormat();
+  const isMobile = useIsMobile();
   const accountById = new Map(accounts.map((a) => [a.id, a]));
   const options = [
     { value: '', label: t('mapSourceAccounts.choose') },
@@ -111,6 +113,9 @@ export function SourceReviewStep({
   const overlapByRow = new Map<number, SourceRowOverlap>(
     (overlaps?.rows ?? []).map((o) => [o.rowNumber, o]),
   );
+  const needsAttention = (rowNumber: number, choice: { accountId?: string; skip?: boolean }) =>
+    (!choice.accountId && !choice.skip) ||
+    (overlapByRow.has(rowNumber) && !choice.skip && !acknowledged.includes(rowNumber));
   const unreviewedOverlaps = resolved.filter(
     ({ row, choice }) => overlapByRow.has(row.rowNumber) && !choice.skip && !acknowledged.includes(row.rowNumber),
   ).length;
@@ -210,47 +215,34 @@ export function SourceReviewStep({
           </div>
         )}
 
-        <div className="overflow-x-auto">
-          <table className={TABLE_CLASS}>
-            <thead>
-              <tr>
-                <Th>{t('sourceReview.colRow')}</Th>
-                <Th>{t('sourceReview.colDate')}</Th>
-                <Th>{t('sourceReview.colPayee')}</Th>
-                <Th align="right">{t('sourceReview.colAmount')}</Th>
-                <Th>{t('sourceReview.colSource')}</Th>
-                <Th>{t('sourceReview.colPostTo')}</Th>
-              </tr>
-            </thead>
-            <tbody className={TABLE_BODY_CLASS}>
-              {resolved.map(({ row, choice }) => {
-                const account = choice.accountId ? accountById.get(choice.accountId) : undefined;
-                return (
-                  <tr
-                    key={row.rowNumber}
-                    className={
-                      (choice.accountId || choice.skip) && !(overlapByRow.has(row.rowNumber) && !acknowledged.includes(row.rowNumber) && !choice.skip)
-                        ? ''
-                        : 'bg-amber-50 dark:bg-amber-900/20'
-                    }
-                  >
-                    <Td className="tabular-nums text-gray-500 dark:text-gray-400">{row.rowNumber}</Td>
-                    <Td className="whitespace-nowrap text-gray-900 dark:text-gray-100">{formatDate(row.date)}</Td>
-                    <Td className="text-gray-900 dark:text-gray-100 break-words">
-                      {row.payee}
+        {isMobile ? (
+          // A phone gets one card per row: the six columns would otherwise sit
+          // behind a sideways scroll, hiding the amount and the account.
+          <ul className={TABLE_BODY_CLASS}>
+            {resolved.map(({ row, choice }) => {
+              const account = choice.accountId ? accountById.get(choice.accountId) : undefined;
+              return (
+                <li key={row.rowNumber} className={`py-3 px-2 ${needsAttention(row.rowNumber, choice) ? 'bg-amber-50 dark:bg-amber-900/20' : ''}`}>
+                  <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-1 items-start">
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100 break-words">{row.payee}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        {t('sourceReview.mobileRowMeta', {
+                          row: row.rowNumber,
+                          date: formatDate(row.date),
+                          source: row.sourceAccount || t('mapSourceAccounts.blankSource'),
+                        })}
+                      </p>
                       {row.isTransfer && (
-                        <span className="block text-xs text-gray-500 dark:text-gray-400">
+                        <p className="text-xs text-gray-500 dark:text-gray-400 break-words">
                           {t('sourceReview.transferTo', { account: row.transferAccount })}
-                        </span>
+                        </p>
                       )}
-                    </Td>
-                    <Td align="right" className="tabular-nums whitespace-nowrap text-gray-900 dark:text-gray-100">
+                    </div>
+                    <p className="text-sm tabular-nums whitespace-nowrap text-gray-900 dark:text-gray-100">
                       {formatCurrency(row.amount, account?.currencyCode)}
-                    </Td>
-                    <Td className="text-gray-700 dark:text-gray-300 break-words">
-                      {row.sourceAccount || t('mapSourceAccounts.blankSource')}
-                    </Td>
-                    <Td className="min-w-[10rem]">
+                    </p>
+                    <div className="col-span-2">
                       <Select
                         id={`source-row-${row.rowNumber}`}
                         aria-label={t('sourceReview.postToRow', { row: row.rowNumber })}
@@ -258,13 +250,65 @@ export function SourceReviewStep({
                         value={sourceChoiceValue(choice)}
                         onChange={(e) => onOverride(row, e.target.value)}
                       />
-                    </Td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+        <div className="overflow-x-auto">
+            <table className={TABLE_CLASS}>
+              <thead>
+                <tr>
+                  <Th>{t('sourceReview.colRow')}</Th>
+                  <Th>{t('sourceReview.colDate')}</Th>
+                  <Th>{t('sourceReview.colPayee')}</Th>
+                  <Th align="right">{t('sourceReview.colAmount')}</Th>
+                  <Th>{t('sourceReview.colSource')}</Th>
+                  <Th>{t('sourceReview.colPostTo')}</Th>
+                </tr>
+              </thead>
+              <tbody className={TABLE_BODY_CLASS}>
+                {resolved.map(({ row, choice }) => {
+                  const account = choice.accountId ? accountById.get(choice.accountId) : undefined;
+                  return (
+                    <tr
+                      key={row.rowNumber}
+                      className={needsAttention(row.rowNumber, choice) ? 'bg-amber-50 dark:bg-amber-900/20' : ''}
+                    >
+                      <Td className="tabular-nums text-gray-500 dark:text-gray-400">{row.rowNumber}</Td>
+                      <Td className="whitespace-nowrap text-gray-900 dark:text-gray-100">{formatDate(row.date)}</Td>
+                      <Td className="text-gray-900 dark:text-gray-100 break-words">
+                        {row.payee}
+                        {row.isTransfer && (
+                          <span className="block text-xs text-gray-500 dark:text-gray-400">
+                            {t('sourceReview.transferTo', { account: row.transferAccount })}
+                          </span>
+                        )}
+                      </Td>
+                      <Td align="right" className="tabular-nums whitespace-nowrap text-gray-900 dark:text-gray-100">
+                        {formatCurrency(row.amount, account?.currencyCode)}
+                      </Td>
+                      <Td className="text-gray-700 dark:text-gray-300 break-words">
+                        {row.sourceAccount || t('mapSourceAccounts.blankSource')}
+                      </Td>
+                      <Td className="min-w-[10rem]">
+                        <Select
+                          id={`source-row-${row.rowNumber}`}
+                          aria-label={t('sourceReview.postToRow', { row: row.rowNumber })}
+                          options={options}
+                          value={sourceChoiceValue(choice)}
+                          onChange={(e) => onOverride(row, e.target.value)}
+                        />
+                      </Td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         {unresolved > 0 && (
           <p role="status" className="mt-4 text-sm text-amber-700 dark:text-amber-400">

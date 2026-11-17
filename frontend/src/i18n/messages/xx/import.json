@@ -629,6 +629,7 @@
     "overlapsHelp": "[XX-An unchanged re-import is recognised automatically. These rows differ from what is there, so they could be posted twice. Skip a row with its Post to menu, or keep it.-XX]",
     "overlapOtherAccount": "[XX-Row {row}: {account} already has {amount} on {date} ({payee}). The row may have moved to another account since the last import.-XX]",
     "overlapChangedAmount": "[XX-Row {row}: {account} already has {payee} for {amount} on {date}. The amount may have changed since the last import.-XX]",
-    "overlapKeep": "[XX-Import row {row} anyway-XX]"
+    "overlapKeep": "[XX-Import row {row} anyway-XX]",
+    "mobileRowMeta": "[XX-Row {row} · {date} · {source}-XX]"
   }
 }
