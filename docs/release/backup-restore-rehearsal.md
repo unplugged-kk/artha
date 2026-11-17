@@ -113,5 +113,6 @@ upgrade into a fresh database and starting the image it was taken with.
 | `RLS_MODE=enforce` on B: runtime role verified as non-superuser, no BYPASSRLS, manifest identical, isolation holds | VERIFIED |
 | Export and restore again under enforce | VERIFIED, identical |
 | Rollback target: snapshot restored into an empty database, same pinned images started, migrations a no-op | VERIFIED, 50 s, manifest identical |
-| Wrong backup password and truncated archive against the production stack | Covered by the integration suite (prior data unchanged). The production-stack rerun was cut short by the login rate limit (429) and is pending |
+| Wrong backup password and truncated archive against the production stack | VERIFIED safe: both refused (400) and the manifest afterwards is identical. Both say "The password you entered cannot decrypt this backup" -- a truncated file is still misreported as a wrong password (BR-5, open) |
+| Login rate limit during the rehearsal | Five scripted logins in a few minutes drew 429; a backend restart cleared it (the limiter is in memory). Pace operator scripts accordingly |
 
