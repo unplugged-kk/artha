@@ -60,6 +60,26 @@ async function buildMergedBannerWorkbook(): Promise<Buffer> {
 }
 
 describe("xlsx-sheet-reader.util", () => {
+  it("keeps later entries after numbered placeholders and excludes the tracker total", async () => {
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet("Transactions");
+    sheet.addRows([
+      ["#", "Date", "Amount (₹)"],
+      [1, "2026-11-01", 100],
+      [2],
+      [3, "2026-11-02", 25],
+      [4],
+      ["TOTAL EXPENSES", "", 125],
+    ]);
+    const bytes = Buffer.from(await workbook.xlsx.writeBuffer());
+    const csv = await readXlsxSheetAsCsv(bytes, "Transactions", 1);
+    expect(csv.split("\r\n")).toEqual([
+      "#,Date,Amount (₹)",
+      "1,2026-11-01,100",
+      "3,2026-11-02,25",
+    ]);
+  });
+
   describe("listXlsxSheets", () => {
     it("picks the real header row over a merged banner that echoes across every column", async () => {
       const buffer = await buildMergedBannerWorkbook();
