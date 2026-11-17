@@ -2534,9 +2534,7 @@ describe("AutoBackupService", () => {
       await service.runManualBackup(userId);
 
       const remaining = await listBackups(folderFor());
-      expect(remaining).not.toContain(
-        "artha-backup-weekly-2026-03-07.json.gz",
-      );
+      expect(remaining).not.toContain("artha-backup-weekly-2026-03-07.json.gz");
       expect(remaining).toContain("artha-backup-weekly-2026-03-21.json.gz");
     });
 
