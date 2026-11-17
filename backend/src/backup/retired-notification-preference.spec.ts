@@ -24,7 +24,7 @@ describe("restoring preferences from before migration 188", () => {
             column_default: null,
           })),
         )
-        .mockResolvedValue([]);
+        .mockResolvedValue([{ written: 1 }]);
       const row = {
         user_id: "old-user",
         notification_email: false,

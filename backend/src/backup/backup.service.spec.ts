@@ -597,6 +597,10 @@ describe("BackupService", () => {
         })),
       );
     }
+    if (typeof sql === "string" && sql.includes("RETURNING 1 AS written")) {
+      // The restore insert reports whether the row was written (BR-3).
+      return Promise.resolve([{ written: 1 }]);
+    }
     return Promise.resolve([]);
   }
 
@@ -4872,7 +4876,7 @@ describe("BackupService", () => {
           ) {
             return Promise.resolve([]);
           }
-          return Promise.resolve([]);
+          return mockQueryHandler(sql, _params);
         },
       );
 
@@ -4924,15 +4928,17 @@ describe("BackupService", () => {
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
       // USD is missing from the target instance (no bulk seed) and is not part
       // of a user backup, so it lands in the auto-create path.
-      mockQueryRunner.query.mockImplementation((sql: string) => {
-        if (
-          typeof sql === "string" &&
-          sql.includes("SELECT code FROM currencies")
-        ) {
-          return Promise.resolve([]);
-        }
-        return Promise.resolve([]);
-      });
+      mockQueryRunner.query.mockImplementation(
+        (sql: string, params?: unknown[]) => {
+          if (
+            typeof sql === "string" &&
+            sql.includes("SELECT code FROM currencies")
+          ) {
+            return Promise.resolve([]);
+          }
+          return mockQueryHandler(sql, params);
+        },
+      );
 
       const backupWithSystemCurrency = {
         ...validBackupData,
@@ -5421,7 +5427,9 @@ describe("BackupService", () => {
               })),
             );
           }
-          return Promise.resolve([]);
+          return Promise.resolve(
+            sql.includes("RETURNING 1 AS written") ? [{ written: 1 }] : [],
+          );
         },
       );
 
@@ -5477,7 +5485,9 @@ describe("BackupService", () => {
             }
             return Promise.resolve([]);
           }
-          return Promise.resolve([]);
+          return Promise.resolve(
+            sql.includes("RETURNING 1 AS written") ? [{ written: 1 }] : [],
+          );
         },
       );
 

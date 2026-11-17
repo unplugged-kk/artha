@@ -1076,6 +1076,141 @@ describe("Backup export/restore round-trip (integration)", () => {
     });
   });
 
+  /**
+   * BR-3: the insert is ON CONFLICT DO NOTHING, so a row the database refused
+   * used to be counted as restored. After the id remap and the wipe nothing
+   * should conflict; an omission no rule explains must fail the restore -- and
+   * a failed restore must leave the account exactly as it was.
+   */
+  describe("restored counts are rows actually written", () => {
+    /** The destination's own data, distinct from the archive's. */
+    async function seedPrior(userId: string) {
+      await dataSource.query(
+        `INSERT INTO accounts (id, user_id, account_type, name, currency_code,
+                               current_balance, opening_balance)
+         VALUES ($1, $2, 'CHEQUING', 'Prior Checking', 'USD', 1234.5600, 1000)`,
+        [randomUUID(), userId],
+      );
+      await dataSource.query(
+        `INSERT INTO transactions (id, user_id, account_id, transaction_date, amount, currency_code)
+         SELECT $1, $2, id, '2026-01-02', 234.56, 'USD' FROM accounts WHERE user_id = $2`,
+        [randomUUID(), userId],
+      );
+    }
+
+    function rewrite(
+      buffer: Buffer,
+      edit: (doc: Record<string, unknown[]>) => void,
+    ) {
+      const doc = JSON.parse(gunzipSync(buffer).toString("utf-8"));
+      edit(doc);
+      return gzipSync(Buffer.from(JSON.stringify(doc)));
+    }
+
+    it("reports counts equal to the rows in the database", async () => {
+      const userA = await createTestUserDirect(dataSource, {
+        email: "n-a@example.com",
+      });
+      const userB = await createTestUserDirect(dataSource, {
+        email: "n-b@example.com",
+      });
+      await seedUserData(userA.id);
+      const { buffer } = await withUserContext(userA.id, () =>
+        service.exportToBuffer(userA.id),
+      );
+
+      const result = await withUserContext(userB.id, () =>
+        service.restoreData(userB.id, {
+          compressedData: buffer,
+          password: PASSWORD,
+        }),
+      );
+
+      expect(result.restored.transactions).toBe(
+        await countRows("transactions", userB.id),
+      );
+      expect(result.restored.accounts).toBe(
+        await countRows("accounts", userB.id),
+      );
+      expect(result.restored.payees).toBe(await countRows("payees", userB.id));
+    });
+
+    it("refuses an archive whose rows the database silently drops, leaving prior data intact", async () => {
+      const userA = await createTestUserDirect(dataSource, {
+        email: "d-a@example.com",
+      });
+      const userB = await createTestUserDirect(dataSource, {
+        email: "d-b@example.com",
+      });
+      await seedUserData(userA.id);
+      await seedPrior(userB.id);
+      const before = {
+        accounts: await countRows("accounts", userB.id),
+        transactions: await countRows("transactions", userB.id),
+        balances: await dataSource.query(
+          `SELECT name, current_balance FROM accounts WHERE user_id = $1 ORDER BY name`,
+          [userB.id],
+        ),
+      };
+      const { buffer } = await withUserContext(userA.id, () =>
+        service.exportToBuffer(userA.id),
+      );
+      // A duplicated payee: same id twice. The remap keeps them one id, so the
+      // second insert conflicts and would vanish while being counted.
+      const corrupt = rewrite(buffer, (doc) => {
+        doc.payees = [
+          ...doc.payees,
+          { ...(doc.payees[0] as object), name: "Shadow" },
+        ];
+      });
+
+      await expect(
+        withUserContext(userB.id, () =>
+          service.restoreData(userB.id, {
+            compressedData: corrupt,
+            password: PASSWORD,
+          }),
+        ),
+      ).rejects.toThrow(/payees/);
+
+      expect(await countRows("accounts", userB.id)).toBe(before.accounts);
+      expect(await countRows("transactions", userB.id)).toBe(
+        before.transactions,
+      );
+      expect(
+        await dataSource.query(
+          `SELECT name, current_balance FROM accounts WHERE user_id = $1 ORDER BY name`,
+          [userB.id],
+        ),
+      ).toEqual(before.balances);
+    });
+
+    it("refuses a truncated archive before touching the account", async () => {
+      const userA = await createTestUserDirect(dataSource, {
+        email: "t-a@example.com",
+      });
+      const userB = await createTestUserDirect(dataSource, {
+        email: "t-b@example.com",
+      });
+      await seedUserData(userA.id);
+      await seedPrior(userB.id);
+      const accounts = await countRows("accounts", userB.id);
+      const { buffer } = await withUserContext(userA.id, () =>
+        service.exportToBuffer(userA.id),
+      );
+
+      await expect(
+        withUserContext(userB.id, () =>
+          service.restoreData(userB.id, {
+            compressedData: buffer.subarray(0, Math.floor(buffer.length / 2)),
+            password: PASSWORD,
+          }),
+        ),
+      ).rejects.toThrow();
+      expect(await countRows("accounts", userB.id)).toBe(accounts);
+    });
+  });
+
   it("rejects a restore when the confirmation password is invalid", async () => {
     const userA = await createTestUserDirect(dataSource, {
       email: "auth-a@example.com",

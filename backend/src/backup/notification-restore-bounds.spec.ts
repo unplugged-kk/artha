@@ -35,7 +35,7 @@ describe("notification restore bounds (INV-NOTIFY-001)", () => {
           column_default: null,
         })),
       )
-      .mockResolvedValue([]);
+      .mockResolvedValue([{ written: 1 }]);
     const service = new BackupRestoreDatabaseService();
     await service.insertRows(
       { query } as unknown as EntityManager,
