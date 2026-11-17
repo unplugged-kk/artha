@@ -1691,6 +1691,54 @@ describe("CSV Parser", () => {
     });
   });
 
+  describe("parseCsv with a source-account column", () => {
+    const config: CsvColumnMappingConfig = {
+      date: 0,
+      amount: 1,
+      sourceAccountColumn: 2,
+      payee: 3,
+      dateFormat: "YYYY-MM-DD",
+      reverseSign: true,
+      hasHeader: true,
+      delimiter: ",",
+    };
+
+    it("labels every row with its source and file row, blank included", () => {
+      const result = parseCsv(
+        [
+          "Date,Amount,Source,Payee",
+          "2026-10-31,100,Test Bank,Shop",
+          "2026-11-01,40, Test Card ,Fuel",
+          "2026-11-02,5,,Tea",
+        ].join("\n"),
+        config,
+      );
+
+      expect(result.sourceAccounts).toEqual(["", "Test Bank", "Test Card"]);
+      expect(
+        result.transactions.map((t) => [
+          t.sourceRowNumber,
+          t.sourceAccount,
+          t.amount,
+        ]),
+      ).toEqual([
+        [2, "Test Bank", -100],
+        [3, "Test Card", -40],
+        [4, "", -5],
+      ]);
+    });
+
+    it("leaves single-account parses unlabelled", () => {
+      const { sourceAccountColumn: _unused, ...single } = config;
+      const result = parseCsv("Date,Amount\n2026-10-31,100", {
+        ...single,
+        payee: undefined,
+      });
+      expect(result.sourceAccounts).toBeUndefined();
+      expect(result.transactions[0].sourceAccount).toBeUndefined();
+    });
+  });
+
   describe("detectTagSeparator (exported helper)", () => {
     it("returns null for an empty list", () => {
       expect(detectTagSeparator([])).toBeNull();

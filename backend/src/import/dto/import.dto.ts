@@ -15,10 +15,11 @@ import {
   Min,
   Max,
   ArrayMaxSize,
+  ValidateIf,
 } from "class-validator";
 import { Type } from "class-transformer";
 import { SanitizeHtml } from "../../common/decorators/sanitize-html.decorator";
-import type { CsvInvestmentSummary } from "../csv-parser";
+import type { CsvInvestmentSummary, CsvRejectedRow } from "../csv-parser";
 
 export class ParseQifDto {
   @ApiProperty({ description: "QIF file content as string" })
@@ -314,6 +315,79 @@ export class ParsedQifResponseDto {
       "Investment-mode CSV parse summary: per-action counts, cash fallbacks, and rejected rows",
   })
   investmentSummary?: CsvInvestmentSummary;
+
+  @ApiPropertyOptional({
+    description: "CSV/XLSX rows that could not be read, each with a reason",
+  })
+  rejectedRows?: CsvRejectedRow[];
+
+  @ApiPropertyOptional({
+    type: [String],
+    description:
+      'Distinct source-account labels ("" for a blank cell); only when a source-account column is mapped',
+  })
+  sourceAccounts?: string[];
+
+  @ApiPropertyOptional({
+    description:
+      "Every row with its source label, for per-row review; only when a source-account column is mapped",
+  })
+  sourceRows?: ParsedSourceRowDto[];
+}
+
+export class ParsedSourceRowDto {
+  rowNumber: number;
+  date: string;
+  /** Signed amount after the sign rule: negative leaves the source account. */
+  amount: number;
+  payee: string;
+  sourceAccount: string;
+  isTransfer: boolean;
+  transferAccount: string;
+  category: string;
+}
+
+/**
+ * Where the rows carrying one source label go. `accountId` posts them there;
+ * `skip: true` keeps them out of the register deliberately. A label with
+ * neither is unresolved and blocks the import.
+ */
+export class SourceAccountMappingDto {
+  // A lookup key matched against the parsed label, never stored or rendered,
+  // so it is compared verbatim rather than sanitized.
+  @ApiProperty({ description: "Source label exactly as parsed (may be empty)" })
+  @IsString()
+  @MaxLength(255)
+  originalName: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUUID()
+  accountId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  skip?: boolean;
+}
+
+/** A per-row correction that wins over the row's label mapping. */
+export class SourceRowOverrideDto {
+  @ApiProperty()
+  @IsInt()
+  @Min(1)
+  @Max(1_000_000)
+  rowNumber: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUUID()
+  accountId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  skip?: boolean;
 }
 
 export class ImportResultDto {
@@ -802,6 +876,16 @@ export class CsvColumnMappingConfigDto {
   @Max(100)
   transferAccountColumn?: number;
 
+  @ApiPropertyOptional({
+    description:
+      "Column index naming each row's account; routes rows per label instead of to one account",
+  })
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(100)
+  sourceAccountColumn?: number;
+
   @ApiProperty({ description: "Whether the CSV has a header row" })
   @IsBoolean()
   hasHeader: boolean;
@@ -939,9 +1023,15 @@ export class ImportCsvDto {
   @MaxLength(10_000_000)
   content: string;
 
-  @ApiProperty({ description: "Account ID to import transactions into" })
+  @ApiPropertyOptional({
+    description:
+      "Account ID to import transactions into; omitted when a source-account column routes the rows",
+  })
+  @ValidateIf(
+    (o: ImportCsvDto) => o.columnMapping?.sourceAccountColumn === undefined,
+  )
   @IsUUID()
-  accountId: string;
+  accountId?: string;
 
   @ApiProperty({
     description: "Column mapping configuration",
@@ -950,6 +1040,30 @@ export class ImportCsvDto {
   @ValidateNested()
   @Type(() => CsvColumnMappingConfigDto)
   columnMapping: CsvColumnMappingConfigDto;
+
+  @ApiPropertyOptional({ type: [SourceAccountMappingDto] })
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(200)
+  @ValidateNested({ each: true })
+  @Type(() => SourceAccountMappingDto)
+  sourceAccountMappings?: SourceAccountMappingDto[];
+
+  @ApiPropertyOptional({ type: [SourceRowOverrideDto] })
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(10_000)
+  @ValidateNested({ each: true })
+  @Type(() => SourceRowOverrideDto)
+  sourceRowOverrides?: SourceRowOverrideDto[];
+
+  @ApiPropertyOptional({
+    description:
+      "Source-account mode: the user chose to leave unreadable rows out instead of fixing them",
+  })
+  @IsOptional()
+  @IsBoolean()
+  skipRejectedRows?: boolean;
 
   @ApiPropertyOptional({
     description: "Transfer detection rules",

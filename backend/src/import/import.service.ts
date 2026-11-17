@@ -64,6 +64,21 @@ import { deletionBalanceEffect } from "../common/deletion-balance.util";
 import { TransactionSplit } from "../transactions/entities/transaction-split.entity";
 import { tr } from "../i18n/translate";
 
+/** What one account's write produced, before post-commit processing. */
+interface WrittenImport {
+  importResult: ImportResultDto;
+  affectedAccountIds: Set<string>;
+  isInvestment: boolean;
+}
+
+const MAX_LISTED_ROWS = 20;
+
+function listRows(messages: string[], total: number): string[] {
+  return total > MAX_LISTED_ROWS
+    ? [...messages, `${total - MAX_LISTED_ROWS} more rows`]
+    : messages;
+}
+
 @Injectable()
 export class ImportService {
   private readonly logger = new Logger(ImportService.name);
@@ -940,6 +955,7 @@ export class ImportService {
       transferOutValues: dto.columnMapping.transferOutValues,
       transferInValues: dto.columnMapping.transferInValues,
       transferAccountColumn: dto.columnMapping.transferAccountColumn,
+      sourceAccountColumn: dto.columnMapping.sourceAccountColumn,
       investmentMode: dto.columnMapping.investmentMode,
       actionColumn: dto.columnMapping.actionColumn,
       securityColumn: dto.columnMapping.securityColumn,
@@ -958,6 +974,15 @@ export class ImportService {
     );
 
     const result = parseCsv(dto.content, csvConfig, transferRules);
+
+    if (result.sourceAccounts !== undefined) {
+      return this.importCsvBySourceAccount(userId, dto, result);
+    }
+    if (!dto.accountId) {
+      throw new BadRequestException(
+        tr("errors.import.accountNotFound", "Account not found"),
+      );
+    }
 
     const imported = await this.importParsedTransactions(
       userId,
@@ -988,6 +1013,201 @@ export class ImportService {
           : []),
       ],
     };
+  }
+
+  /**
+   * A workbook whose rows name their own account (a household tracker). Every
+   * row is routed by its label, or by a per-row override, to an account the
+   * user owns, or deliberately skipped. Nothing is written while any row is
+   * unresolved or unreadable, and the accounts are written in ONE transaction:
+   * a failure in any row leaves every balance as it was. Retries converge
+   * through the per-account import_hash unique index, exactly as single-account
+   * imports do.
+   */
+  private async importCsvBySourceAccount(
+    userId: string,
+    dto: ImportCsvDto,
+    result: QifParseResult,
+  ): Promise<ImportResultDto> {
+    const rejected = result.rejectedFileRows ?? [];
+    if (rejected.length > 0 && !dto.skipRejectedRows) {
+      const rows = listRows(
+        rejected
+          .slice(0, MAX_LISTED_ROWS)
+          .map((r) => `row ${r.rowNumber} (${r.reason})`),
+        rejected.length,
+      ).join("; ");
+      throw new BadRequestException(
+        tr(
+          "errors.import.unreadableRowsUnresolved",
+          `${rejected.length} rows could not be read. Fix them in the file or choose to skip them: ${rows}`,
+          { count: rejected.length, rows },
+        ),
+      );
+    }
+
+    const byLabel = new Map(
+      (dto.sourceAccountMappings ?? []).map((m) => [m.originalName, m]),
+    );
+    const byRow = new Map(
+      (dto.sourceRowOverrides ?? []).map((o) => [o.rowNumber, o]),
+    );
+    const groups = new Map<string, QifParseResult["transactions"]>();
+    const unresolved: string[] = [];
+    let skippedByUser = 0;
+    for (const tx of result.transactions) {
+      const choice =
+        byRow.get(tx.sourceRowNumber!) ?? byLabel.get(tx.sourceAccount ?? "");
+      if (choice?.skip) {
+        skippedByUser++;
+      } else if (choice?.accountId) {
+        groups.set(choice.accountId, [
+          ...(groups.get(choice.accountId) ?? []),
+          tx,
+        ]);
+      } else {
+        unresolved.push(
+          `row ${tx.sourceRowNumber} ("${tx.sourceAccount || "(blank)"}")`,
+        );
+      }
+    }
+    if (unresolved.length > 0) {
+      const rows = listRows(
+        unresolved.slice(0, MAX_LISTED_ROWS),
+        unresolved.length,
+      ).join("; ");
+      throw new BadRequestException(
+        tr(
+          "errors.import.sourceAccountsUnresolved",
+          `${unresolved.length} rows have no account. Map their source or skip them: ${rows}`,
+          { count: unresolved.length, rows },
+        ),
+      );
+    }
+
+    let categoryMappings = dto.categoryMappings;
+    let accountMappings = dto.accountMappings;
+    let securityMappings = dto.securityMappings || [];
+    const total: ImportResultDto = {
+      imported: 0,
+      skipped: skippedByUser,
+      errors: 0,
+      errorMessages: [],
+      categoriesCreated: 0,
+      accountsCreated: 0,
+      payeesCreated: 0,
+      securitiesCreated: 0,
+      createdMappings: {
+        categories: {},
+        accounts: {},
+        loans: {},
+        securities: {},
+      },
+    };
+    const affectedAccountIds = new Set<string>();
+
+    await withScopedDb(this.dataSource, async () => {
+      for (const [accountId, transactions] of groups) {
+        const { importResult, affectedAccountIds: touched } =
+          await this.writeParsedTransactions(
+            userId,
+            { ...result, transactions, openingBalance: null },
+            accountId,
+            categoryMappings,
+            accountMappings,
+            securityMappings,
+          );
+        touched.forEach((id) => affectedAccountIds.add(id));
+        for (const key of [
+          "imported",
+          "skipped",
+          "errors",
+          "categoriesCreated",
+          "accountsCreated",
+          "payeesCreated",
+          "securitiesCreated",
+        ] as const) {
+          total[key] += importResult[key];
+        }
+        total.errorMessages.push(...importResult.errorMessages);
+        const created = importResult.createdMappings!;
+        for (const kind of [
+          "categories",
+          "accounts",
+          "loans",
+          "securities",
+        ] as const) {
+          Object.assign(total.createdMappings![kind], created[kind]);
+        }
+        // An entity a mapping asked to create exists now: later accounts in
+        // this batch must reuse it, not create a second one.
+        categoryMappings = categoryMappings.map((m) =>
+          created.categories[m.originalName]
+            ? {
+                ...m,
+                createNew: undefined,
+                categoryId: created.categories[m.originalName],
+              }
+            : created.loans[m.originalName]
+              ? {
+                  ...m,
+                  createNewLoan: undefined,
+                  loanAccountId: created.loans[m.originalName],
+                }
+              : m,
+        );
+        accountMappings = accountMappings.map((m) =>
+          created.accounts[m.originalName]
+            ? {
+                ...m,
+                createNew: undefined,
+                accountId: created.accounts[m.originalName],
+              }
+            : m,
+        );
+        securityMappings = securityMappings.map((m) =>
+          created.securities[m.originalName]
+            ? {
+                ...m,
+                createNew: undefined,
+                securityId: created.securities[m.originalName],
+              }
+            : m,
+        );
+      }
+      if (total.errors > 0) {
+        // A row that failed was rolled back to its savepoint; committing the
+        // rest would post a batch the user never reviewed as a whole.
+        const rows = total.errorMessages.slice(0, MAX_LISTED_ROWS).join("; ");
+        throw new BadRequestException(
+          tr(
+            "errors.import.batchRejected",
+            `Nothing was imported: ${total.errors} rows failed. ${rows}`,
+            { count: total.errors, rows },
+          ),
+        );
+      }
+    });
+
+    return this.finishImport(userId, {
+      importResult: {
+        ...total,
+        skipped: total.skipped + rejected.length,
+        errorMessages: [
+          ...total.errorMessages,
+          ...listRows(
+            rejected
+              .slice(0, MAX_LISTED_ROWS)
+              .map(
+                (r) => `Row ${r.rowNumber} skipped as unreadable: ${r.reason}`,
+              ),
+            rejected.length,
+          ),
+        ],
+      },
+      affectedAccountIds,
+      isInvestment: false,
+    });
   }
 
   // --- Column Mapping CRUD ---
@@ -1159,6 +1379,24 @@ export class ImportService {
       openingBalance: result.openingBalance,
       openingBalanceDate: result.openingBalanceDate,
       investmentSummary: result.investmentSummary,
+      ...(result.rejectedFileRows
+        ? { rejectedRows: result.rejectedFileRows }
+        : {}),
+      ...(result.sourceAccounts
+        ? {
+            sourceAccounts: result.sourceAccounts,
+            sourceRows: result.transactions.map((t) => ({
+              rowNumber: t.sourceRowNumber!,
+              date: t.date,
+              amount: t.amount,
+              payee: t.payee,
+              sourceAccount: t.sourceAccount ?? "",
+              isTransfer: t.isTransfer,
+              transferAccount: t.transferAccount,
+              category: t.category,
+            })),
+          }
+        : {}),
     };
   }
 
@@ -1171,6 +1409,42 @@ export class ImportService {
     securityMappings?: SecurityMappingDto[],
     _dateFormat?: DateFormat,
   ): Promise<ImportResultDto> {
+    const written = await this.writeParsedTransactions(
+      userId,
+      result,
+      accountId,
+      categoryMappings,
+      accountMappings,
+      securityMappings,
+    );
+    return this.finishImport(userId, written);
+  }
+
+  /** Post-commit work: never run inside the import transaction. */
+  private async finishImport(
+    userId: string,
+    written: WrittenImport,
+  ): Promise<ImportResultDto> {
+    const { importResult, affectedAccountIds, isInvestment } = written;
+    await this.postImportProcessing(userId, isInvestment, affectedAccountIds);
+    importResult.loanAccountsNeedingSetup =
+      await this.findLoanAccountsNeedingSetup(userId, affectedAccountIds);
+    return importResult;
+  }
+
+  /**
+   * Writes one account's parsed rows. Runs in its own transaction, or joins
+   * the caller's when one is active (a source-routed batch writes several
+   * accounts atomically that way). Post-processing is the caller's job.
+   */
+  private async writeParsedTransactions(
+    userId: string,
+    result: QifParseResult,
+    accountId: string,
+    categoryMappings: CategoryMappingDto[],
+    accountMappings: AccountMappingDto[],
+    securityMappings?: SecurityMappingDto[],
+  ): Promise<WrittenImport> {
     const account = await withScopedDb(this.dataSource, (manager) =>
       manager.getRepository(Account).findOne({
         where: { id: accountId, userId },
@@ -1375,14 +1649,7 @@ export class ImportService {
       );
     }
 
-    // Post-import processing
-    await this.postImportProcessing(userId, isInvestment, affectedAccountIds);
-
-    // Detect loan/mortgage accounts needing payment setup
-    importResult.loanAccountsNeedingSetup =
-      await this.findLoanAccountsNeedingSetup(userId, affectedAccountIds);
-
-    return importResult;
+    return { importResult, affectedAccountIds, isInvestment };
   }
 
   private buildCategoryMappings(mappings: CategoryMappingDto[]): {

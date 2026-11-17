@@ -182,6 +182,13 @@ describe('detectCsvDateFormat', () => {
 });
 
 describe('autoMatchCsvColumns', () => {
+  it('maps a household tracker: Payee over Description, and the Source column', () => {
+    const result = autoMatchCsvColumns(['#', 'Date', 'Amount (₹)', 'Source', 'Description', 'Payee']);
+    expect(result.payee).toBe(5);
+    expect(result.memo).toBe(4);
+    expect(result.sourceAccountColumn).toBe(3);
+  });
+
   it('matches common header names to fields', () => {
     const result = autoMatchCsvColumns(['Date', 'Amount', 'Payee', 'Category', 'Memo']);
     expect(result.date).toBe(0);

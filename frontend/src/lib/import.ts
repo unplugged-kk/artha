@@ -190,6 +190,36 @@ export interface ParsedQifResponse {
   detectedDateFormat: DateFormat;
   sampleDates: string[];
   investmentSummary?: CsvInvestmentSummary;
+  /** CSV/XLSX rows that could not be read, each with a reason. */
+  rejectedRows?: Array<{ rowNumber: number; reason: string }>;
+  /** Present only when a source-account column is mapped. */
+  sourceAccounts?: string[];
+  sourceRows?: ParsedSourceRow[];
+}
+
+export interface ParsedSourceRow {
+  rowNumber: number;
+  date: string;
+  /** Signed: negative leaves the source account. */
+  amount: number;
+  payee: string;
+  sourceAccount: string;
+  isTransfer: boolean;
+  transferAccount: string;
+  category: string;
+}
+
+/** Where one source label's rows go: an account, or deliberately nowhere. */
+export interface SourceAccountMapping {
+  originalName: string;
+  accountId?: string;
+  skip?: boolean;
+}
+
+export interface SourceRowOverride {
+  rowNumber: number;
+  accountId?: string;
+  skip?: boolean;
 }
 
 export interface CategoryMapping {
@@ -263,6 +293,8 @@ export interface CsvColumnMappingConfig {
   priceColumn?: number;
   commissionColumn?: number;
   actionKeywords?: CsvActionKeywords;
+  /** Column naming each row's account; rows are then routed per label. */
+  sourceAccountColumn?: number;
 }
 
 /**
@@ -281,17 +313,23 @@ export function autoMatchCsvColumns(headers: string[]): Partial<CsvColumnMapping
     payee: ['payee', 'description', 'merchant', 'name', 'vendor', 'beneficiary', 'transaction description'],
     category: ['category', 'type', 'class', 'transaction type'],
     subcategory: ['subcategory', 'sub-category', 'sub category'],
-    memo: ['memo', 'note', 'notes', 'comment', 'comments', 'remarks', 'details', 'additional info'],
+    memo: ['memo', 'note', 'notes', 'comment', 'comments', 'remarks', 'details', 'additional info', 'description'],
     referenceNumber: ['reference', 'ref', 'check', 'check number', 'check no', 'reference number', 'ref no', 'transaction id', 'confirmation', 'receipt'],
     tags: ['tag', 'tags', 'label', 'labels', 'keyword', 'keywords'],
     reconciliationStatus: ['status', 'reconciliation status', 'reconciliation', 'reconciled', 'cleared', 'state'],
+    sourceAccountColumn: ['source', 'source account', 'paid from'],
   };
 
   const used = new Set<number>();
 
   for (const [field, keywords] of Object.entries(patterns)) {
-    // Try exact match first, then substring match
-    let matchIndex = normalized.findIndex((h, i) => !used.has(i) && keywords.includes(h));
+    // Exact match in keyword priority order (a "Payee" column beats a
+    // "Description" column wherever they sit), then substring match.
+    let matchIndex = -1;
+    for (const keyword of keywords) {
+      matchIndex = normalized.findIndex((h, i) => !used.has(i) && h === keyword);
+      if (matchIndex !== -1) break;
+    }
     if (matchIndex === -1) {
       matchIndex = normalized.findIndex((h, i) => !used.has(i) && keywords.some((k) => h.includes(k)));
     }
@@ -390,7 +428,11 @@ export interface ImportOfxRequest {
 
 export interface ImportCsvRequest {
   content: string;
-  accountId: string;
+  /** Omitted when a source-account column routes the rows. */
+  accountId?: string;
+  sourceAccountMappings?: SourceAccountMapping[];
+  sourceRowOverrides?: SourceRowOverride[];
+  skipRejectedRows?: boolean;
   columnMapping: CsvColumnMappingConfig;
   transferRules?: CsvTransferRule[];
   categoryMappings: CategoryMapping[];

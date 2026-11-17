@@ -15,6 +15,8 @@ import { MapCategoriesStep } from '@/components/import/MapCategoriesStep';
 import { MapSecuritiesStep } from '@/components/import/MapSecuritiesStep';
 import { MapAccountsStep } from '@/components/import/MapAccountsStep';
 import { ReviewStep } from '@/components/import/ReviewStep';
+import { MapSourceAccountsStep } from '@/components/import/MapSourceAccountsStep';
+import { SourceReviewStep } from '@/components/import/SourceReviewStep';
 import { CompleteStep } from '@/components/import/CompleteStep';
 import { MultiAccountReviewStep } from '@/components/import/MultiAccountReviewStep';
 import { MnyReviewStep } from '@/components/import/MnyReviewStep';
@@ -241,7 +243,46 @@ function ImportContent() {
           />
         );
 
+      case 'mapSourceAccounts':
+        return (
+          <MapSourceAccountsStep
+            mappings={wizard.sourceRouting.mappings}
+            rows={wizard.parsedData?.sourceRows ?? []}
+            accounts={wizard.accounts}
+            onChange={wizard.sourceRouting.setLabelChoice}
+            onBack={() => wizard.setStep('csvColumnMapping')}
+            onNext={wizard.handleSourceMappingsComplete}
+          />
+        );
+
       case 'review':
+        if (wizard.isSourceRouted) {
+          return (
+            <SourceReviewStep
+              fileName={wizard.fileName}
+              rows={wizard.parsedData?.sourceRows ?? []}
+              rejectedRows={wizard.parsedData?.rejectedRows ?? []}
+              accounts={wizard.accounts}
+              mappings={wizard.sourceRouting.mappings}
+              overrides={wizard.sourceRouting.overrides}
+              accountMappings={wizard.accountMappings}
+              skipRejectedRows={wizard.sourceRouting.skipRejectedRows}
+              onOverride={wizard.sourceRouting.setRowChoice}
+              onSkipRejectedRowsChange={wizard.sourceRouting.setSkipRejectedRows}
+              isLoading={wizard.isLoading}
+              onBack={() =>
+                wizard.setStep(
+                  wizard.shouldShowMapAccounts
+                    ? 'mapAccounts'
+                    : wizard.categoryMappings.length > 0
+                      ? 'mapCategories'
+                      : 'mapSourceAccounts',
+                )
+              }
+              onImport={wizard.handleImport}
+            />
+          );
+        }
         return (
           <ReviewStep
             importFiles={wizard.importFiles}
@@ -398,12 +439,14 @@ function ImportContent() {
             <div className="mb-8">
               <div className="flex items-center justify-center space-x-4">
                 {(() => {
-                  const stepOrder = ['upload', 'csvColumnMapping', 'selectAccount', 'mapCategories', 'mapSecurities', 'mapAccounts', 'review', 'multiAccountReview', 'complete'];
+                  const stepOrder = ['upload', 'csvColumnMapping', 'selectAccount', 'mapSourceAccounts', 'mapCategories', 'mapSecurities', 'mapAccounts', 'review', 'multiAccountReview', 'complete'];
                   const currentIndex = stepOrder.indexOf(wizard.step);
 
                   // Filter to only visible steps
                   const visibleSteps = stepOrder.filter((s) => {
                     if (s === 'csvColumnMapping' && wizard.fileType !== 'csv') return false;
+                    if (s === 'selectAccount' && wizard.isSourceRouted) return false;
+                    if (s === 'mapSourceAccounts' && !wizard.isSourceRouted) return false;
                     if (s === 'mapCategories' && wizard.categoryMappings.length === 0) return false;
                     if (s === 'mapSecurities' && wizard.securityMappings.length === 0) return false;
                     if (s === 'mapAccounts' && !wizard.shouldShowMapAccounts) return false;

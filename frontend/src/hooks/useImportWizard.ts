@@ -44,6 +44,7 @@ import {
   getCurrencyFromExchange,
 } from '@/app/import/import-utils';
 import { useMnyImport } from '@/hooks/useMnyImport';
+import { useImportSourceRouting } from '@/hooks/useImportSourceRouting';
 import {
   matchFilenameToAccount,
   buildCategoryMappings,
@@ -176,6 +177,16 @@ export function useImportWizard() {
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isBulkImport = importFiles.length > 1;
+  const sourceRouting = useImportSourceRouting();
+  const startSourceRouting = sourceRouting.start;
+  // A file whose rows name their own account has no single target account.
+  const isSourceRouted = fileType === 'csv' && !!parsedData?.sourceRows;
+  // Every "back to account selection" in the shared steps lands on the
+  // source-mapping step instead when the rows route themselves.
+  const goToStep = useCallback(
+    (next: ImportStep) => setStep(next === 'selectAccount' && isSourceRouted ? 'mapSourceAccounts' : next),
+    [isSourceRouted],
+  );
 
   // Determine the next step after account selection, based on what mappings exist
   const getStepAfterAccountSelection = (
@@ -700,6 +711,7 @@ export function useImportWizard() {
           transferInValues: undefined,
           transferAccountColumn: undefined,
           reverseSign: undefined,
+          sourceAccountColumn: undefined,
         };
       }
       return {
@@ -825,6 +837,17 @@ export function useImportWizard() {
       // preselected account of a compatible type: an investment file needs a
       // brokerage account and a regular file must not target one, or the
       // backend rejects the import after every mapping step is done.
+      const routed = fileDataArray[0]?.parsedData;
+      if (routed?.sourceAccounts) {
+        if (fileDataArray.length > 1) {
+          toast.error(t('toasts.sourceColumnSingleFileOnly'));
+          return;
+        }
+        startSourceRouting(routed, accounts);
+        setStep('mapSourceAccounts');
+        return;
+      }
+
       const preselected = accounts.find((a) => a.id === preselectedAccountId);
       const preselectionMatchesMode =
         !!preselected && isInvestmentBrokerageAccount(preselected) === isInvestment;
@@ -839,7 +862,7 @@ export function useImportWizard() {
     } finally {
       setIsLoading(false);
     }
-  }, [importFiles, csvColumnMapping, csvTransferRules, csvHeaders, accounts, categories, securities, defaultCurrency, preselectedAccountId, setFileAccountId, t]);
+  }, [importFiles, csvColumnMapping, csvTransferRules, csvHeaders, accounts, categories, securities, defaultCurrency, preselectedAccountId, setFileAccountId, startSourceRouting, t]);
 
   const handleSaveColumnMapping = useCallback(async (name: string) => {
     try {
@@ -1038,7 +1061,7 @@ export function useImportWizard() {
   const handleImport = async () => {
     if (importFiles.length === 0) return;
 
-    const allFilesValid = importFiles.every((f) => f.selectedAccountId);
+    const allFilesValid = isSourceRouted || importFiles.every((f) => f.selectedAccountId);
     if (!allFilesValid) {
       toast.error(t('toasts.selectAccountForAllFiles'));
       return;
@@ -1050,7 +1073,9 @@ export function useImportWizard() {
         if (fileType === 'csv') {
           return importApi.importCsv({
             content: fileData.fileContent,
-            accountId: fileData.selectedAccountId,
+            ...(isSourceRouted
+              ? sourceRouting.request()
+              : { accountId: fileData.selectedAccountId }),
             columnMapping: csvColumnMapping,
             transferRules: csvTransferRules,
             categoryMappings: catMappings,
@@ -1347,8 +1372,12 @@ export function useImportWizard() {
     setStep('upload');
   }, [resetMny]);
 
+  const handleSourceMappingsComplete = () =>
+    setStep(getStepAfterAccountSelection(categoryMappings, securityMappings, accountMappings, false));
+
   return {
-    step, setStep,
+    step, setStep: goToStep,
+    isSourceRouted, sourceRouting, handleSourceMappingsComplete,
     importFiles, isBulkImport, fileName, parsedData, selectedAccountId, setSelectedAccountId, setFileAccountId, fileContent,
     accounts, categories, securities,
     categoryMappings, setCategoryMappings, accountMappings, securityMappings,

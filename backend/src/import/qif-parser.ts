@@ -56,6 +56,13 @@ export interface QifTransaction {
   splits: QifSplit[];
   /** Upstream Financial Institution Transaction ID (from OFX STMTTRN FITID) */
   fitid?: string;
+  /**
+   * CSV/XLSX with a mapped source-account column only: the raw account label
+   * this row names ("" when the cell is blank) and the file row it came from.
+   * The importer routes the row by this label; it is never a transfer target.
+   */
+  sourceAccount?: string;
+  sourceRowNumber?: number;
   /** Payment rail / method (e.g. UPI, IMPS, NEFT, RTGS, CARD, CASH, CHEQUE, OTHER) */
   paymentMethod?: string;
   /** UPI Virtual Payment Address (VPA) / handle (when available) */
@@ -101,6 +108,8 @@ export interface QifParseResult {
   investmentSummary?: import("./csv-parser").CsvInvestmentSummary;
   /** CSV/XLSX rows that could not be read, each with a reason. Never silently dropped. */
   rejectedFileRows?: import("./csv-parser").CsvRejectedRow[];
+  /** Distinct source-account labels, present only when that column is mapped. */
+  sourceAccounts?: string[];
 }
 
 export type DateFormat =
