@@ -76,6 +76,24 @@ Single next action: B1/B2. Bring up stacks A and B from the production images wi
 
 Unrelated findings fixed along the way: a prettier error in `backend/src/backup/auto-backup.service.spec.ts` (lint red) and an unused catch binding in `frontend/public/sw.js`. Found but not fixed: on macOS, `auto-backup.service.spec.ts` fails 5 cases when `TMPDIR` sits under the `/var -> /private/var` symlink, and passes 130/130 with `TMPDIR=/private/tmp/`. `validateFolder` resolves the folder but not the configured root, so a symlinked `BACKUP_ALLOWED_ROOTS` would wrongly reject a folder inside it. CI (Linux) is unaffected.
 
+## 2026-11-17 A3 overlap review
+
+Step and status: A3 passed (synthetic). The remaining A3 item, changed/remapped-row detection, is closed.
+Command or user action: integration suite `import-source-accounts` 11/11; frontend `SourceRouting.test.tsx` 6/6; browser suite `import.spec.ts`, `import-xlsx-mixed-accounts.spec.ts`, `reconciliation.spec.ts`, `backup.spec.ts` on the rebuilt E2E stack: 13 passed, 0 failed (after fixing a stale `accept` assertion that predates this work).
+Expected / observed: an unchanged re-import reports no overlaps. A row remapped to another account (first import posted card fuel to the bank) and a row whose amount changed (100 -> 110) are both listed with the existing entry, and the import is blocked until each is kept or skipped. The commit re-checks inside its transaction and answers 409 with the balances unchanged. A pending or failed check blocks the import, so it is never read as "no overlaps".
+Phone-width (390px viewport emulation, not a device): no page-level horizontal overflow. The row table sat behind a sideways scroll that hid Amount and Post to, so the review now renders one card per row on phones (`useIsMobile`). Re-verified after the rebuild: overflow 0, and each card shows payee, row, date, source, amount and its Post to picker. The A1 desktop spec still passes. Evidence: `/private/tmp/artha-beta-synthetic-evidence/a-mobile-review-390-cards.png` (synthetic).
+
+## 2026-11-17 B1/B2/B4 host-loss rehearsal
+
+Step and status: B1 passed with owner-blocked items. B2 passed (synthetic). B4 passed (synthetic, same Mac). B3 passed.
+Checkout / SHA: images from a clean `git archive` of `c376afeb3`; recovery-relevant code is unchanged since.
+Disposable environment ID or candidate image digest: backend `sha256:51111cefd1c7644587a47eb54408a44f5ac107b2c6ea043723877e176cb1dba4`, frontend `sha256:0e73028a7af22a0356d3ac7cfe7fc2db7ed36eab40b0c8f49cf9e6fa07319939`, `postgres@sha256:81e77a4833487b8132fe4b00bedd39dc3f74b8641e387f19312a48f7de218c2e`. Compose projects `artha-beta-a` (127.0.0.1:3101), `artha-beta-b` (3201) and `artha-beta-r` (3301, rollback target), each with its own volume, network and fresh secrets. Private config is in `/private/tmp/artha-beta-b/`; mounts are in `~/.local/share/artha-beta-rehearsal/`.
+Command or user action: `scripts/beta-recovery-rehearsal.mjs` seed, manifest, isolation, export, restore and compare; full commands in `docs/release/backup-restore-rehearsal.md`.
+Expected / observed: all rows VERIFIED except BR-5 messaging. Summary: from stopping A to a restored owner on B took 55 s. After a restart and fresh login, the manifest was identical: balances in minor units, postings by business key, statuses, transfer links, monthly category sums, budget and receipt SHA-256. The same held under `RLS_MODE=enforce`, where the runtime role was verified and tenant isolation held. Registration closed (403). The service user writes both mounts on a `/Users` path. The rollback target started from snapshot plus pinned images in 50 s with an identical manifest.
+Evidence path: `docs/release/backup-restore-rehearsal.md` (results table). Manifests and artifacts are kept privately under `/private/tmp/artha-beta-b/` (synthetic).
+Blocker and owner: (1) a real off-host location and who holds the backup password: owner. (2) Linux host bind-mount ownership (RT-2) is unverified; on Docker Desktop a `/private/tmp` mount silently lands VM-local and is not writable. (3) Private HTTPS/TLS termination is not configured: owner/host decision. (4) BR-5: a truncated encrypted file is reported as a wrong password.
+Single next action: C. Run the full repository gates on the candidate SHA, rebuild the candidate images and repeat the A1 browser case against the production-image stack.
+
 ## Safety boundaries
 
 - Keep personal workbook bytes, private screenshots, secrets and backups outside Git and build contexts.
