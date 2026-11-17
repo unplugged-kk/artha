@@ -1059,6 +1059,18 @@ export class ImportCsvDto {
 
   @ApiPropertyOptional({
     description:
+      "Source-account mode: file rows the user reviewed against similar register entries and chose to import anyway",
+    type: [Number],
+  })
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(10_000)
+  @IsInt({ each: true })
+  @Min(1, { each: true })
+  acknowledgedOverlapRows?: number[];
+
+  @ApiPropertyOptional({
+    description:
       "Source-account mode: the user chose to leave unreadable rows out instead of fixing them",
   })
   @IsOptional()

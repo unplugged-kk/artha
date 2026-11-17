@@ -1372,6 +1372,26 @@ export function useImportWizard() {
     setStep('upload');
   }, [resetMny]);
 
+  // The review shows which rows resemble entries already in the register; the
+  // server refuses any of them the user has not looked at.
+  const { checkOverlaps, routingKey } = sourceRouting;
+  const sourceRequest = sourceRouting.request;
+  useEffect(() => {
+    if (step !== 'review' || !isSourceRouted || !importFiles[0]) return;
+    void checkOverlaps(() =>
+      importApi.csvOverlaps({
+        content: importFiles[0].fileContent,
+        columnMapping: csvColumnMapping,
+        transferRules: csvTransferRules,
+        categoryMappings,
+        accountMappings,
+        ...sourceRequest(),
+      }),
+    );
+    // routingKey stands for the mappings and overrides the request carries.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, isSourceRouted, routingKey]);
+
   const handleSourceMappingsComplete = () =>
     setStep(getStepAfterAccountSelection(categoryMappings, securityMappings, accountMappings, false));
 

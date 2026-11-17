@@ -205,6 +205,54 @@ describe("CSV/XLSX import routed by a source-account column (integration)", () =
     expect(await postings()).toBe(2);
   });
 
+  describe("rows that resemble register entries without repeating them", () => {
+    const preview = (body: ImportCsvDto) =>
+      withUserContext(userId, () =>
+        service.previewCsvSourceOverlaps(userId, body),
+      );
+
+    it("reports nothing for an unchanged re-import", async () => {
+      await run(dto(A1_ROWS));
+      expect(await preview(dto(A1_ROWS))).toEqual([]);
+    });
+
+    it("refuses a remapped row until it is reviewed", async () => {
+      // First import posted the card's fuel to the bank by mistake.
+      await run(
+        dto(A1_ROWS, {
+          sourceRowOverrides: [{ rowNumber: 3, accountId: bank.id }],
+        }),
+      );
+      const before = await balances();
+
+      expect(await preview(dto(A1_ROWS))).toEqual([
+        expect.objectContaining({ rowNumber: 3, reason: "otherAccount" }),
+      ]);
+      await expect(run(dto(A1_ROWS))).rejects.toThrow(/row 3/);
+      expect(await balances()).toEqual(before);
+
+      await run(dto(A1_ROWS, { acknowledgedOverlapRows: [3] }));
+      expect((await balances()).card).toBe(before.card - 40);
+    });
+
+    it("refuses a row whose amount changed since the last import", async () => {
+      await run(dto(A1_ROWS));
+      const edited = A1_ROWS.map((r) =>
+        r.startsWith("5,") ? r.replace(",100,", ",110,") : r,
+      );
+
+      expect(await preview(dto(edited))).toEqual([
+        expect.objectContaining({
+          rowNumber: 5,
+          reason: "changedAmount",
+          existing: expect.objectContaining({ amount: -100 }),
+        }),
+      ]);
+      await expect(run(dto(edited))).rejects.toThrow(/look like entries/);
+      expect(await balances()).toEqual({ bank: 760, card: 0 });
+    });
+  });
+
   it("honours a skipped label and a per-row override", async () => {
     const result = await run(
       dto(A1_ROWS, {

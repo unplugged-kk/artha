@@ -8,6 +8,8 @@ import {
   Param,
   UseGuards,
   Request,
+  HttpCode,
+  HttpStatus,
 } from "@nestjs/common";
 import {
   ApiTags,
@@ -185,6 +187,16 @@ export class ImportController {
       dto.columnMapping as any,
       dto.transferRules as any,
     );
+  }
+
+  @Post("csv/overlaps")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary:
+      "Rows of a source-routed CSV that resemble existing register entries without repeating them",
+  })
+  async previewCsvOverlaps(@Request() req, @Body() dto: ImportCsvDto) {
+    return this.importService.previewCsvSourceOverlaps(req.user.id, dto);
   }
 
   @Post("csv")

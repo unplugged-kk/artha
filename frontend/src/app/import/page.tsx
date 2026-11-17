@@ -267,6 +267,9 @@ function ImportContent() {
               overrides={wizard.sourceRouting.overrides}
               accountMappings={wizard.accountMappings}
               skipRejectedRows={wizard.sourceRouting.skipRejectedRows}
+              overlaps={wizard.sourceRouting.overlaps}
+              acknowledged={wizard.sourceRouting.acknowledged}
+              onAcknowledge={wizard.sourceRouting.acknowledge}
               onOverride={wizard.sourceRouting.setRowChoice}
               onSkipRejectedRowsChange={wizard.sourceRouting.setSkipRejectedRows}
               isLoading={wizard.isLoading}

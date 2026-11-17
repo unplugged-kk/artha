@@ -222,6 +222,13 @@ export interface SourceRowOverride {
   skip?: boolean;
 }
 
+/** A row resembling an existing register entry without repeating it. */
+export interface SourceRowOverlap {
+  rowNumber: number;
+  reason: 'otherAccount' | 'changedAmount';
+  existing: { accountName: string; date: string; amount: number; payee: string };
+}
+
 export interface CategoryMapping {
   originalName: string;
   categoryId?: string;
@@ -433,6 +440,8 @@ export interface ImportCsvRequest {
   sourceAccountMappings?: SourceAccountMapping[];
   sourceRowOverrides?: SourceRowOverride[];
   skipRejectedRows?: boolean;
+  /** Rows the user reviewed against similar register entries and kept. */
+  acknowledgedOverlapRows?: number[];
   columnMapping: CsvColumnMappingConfig;
   transferRules?: CsvTransferRule[];
   categoryMappings: CategoryMapping[];
@@ -540,6 +549,11 @@ export const importApi = {
 
   parseCsv: async (content: string, columnMapping: CsvColumnMappingConfig, transferRules?: CsvTransferRule[]): Promise<ParsedQifResponse> => {
     const response = await apiClient.post('/import/csv/parse', { content, columnMapping, transferRules }, { timeout: 60000 });
+    return response.data;
+  },
+
+  csvOverlaps: async (data: ImportCsvRequest): Promise<SourceRowOverlap[]> => {
+    const response = await apiClient.post('/import/csv/overlaps', data, { timeout: 120000 });
     return response.data;
   },
 

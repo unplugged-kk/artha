@@ -622,6 +622,13 @@
     "colSource": "Source",
     "colPostTo": "Post to",
     "postToRow": "Account for row {row}",
-    "transferTo": "Transfer with {account}"
+    "transferTo": "Transfer with {account}",
+    "overlapsChecking": "Checking your accounts for entries these rows may repeat...",
+    "overlapsFailed": "Could not check your accounts for entries these rows may repeat. Go back and try again before importing.",
+    "overlapsHeading": "{count, plural, one {# row looks} other {# rows look}} like an entry already in your accounts",
+    "overlapsHelp": "An unchanged re-import is recognised automatically. These rows differ from what is there, so they could be posted twice. Skip a row with its Post to menu, or keep it.",
+    "overlapOtherAccount": "Row {row}: {account} already has {amount} on {date} ({payee}). The row may have moved to another account since the last import.",
+    "overlapChangedAmount": "Row {row}: {account} already has {payee} for {amount} on {date}. The amount may have changed since the last import.",
+    "overlapKeep": "Import row {row} anyway"
   }
 }

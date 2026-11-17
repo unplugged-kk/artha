@@ -10,10 +10,12 @@ import { useDateFormat } from '@/hooks/useDateFormat';
 import {
   AccountMapping,
   ParsedSourceRow,
+  SourceRowOverlap,
   SourceAccountMapping,
   SourceRowOverride,
 } from '@/lib/import';
 import { Account } from '@/types/account';
+import type { OverlapState } from '@/hooks/useImportSourceRouting';
 import {
   SKIP_SOURCE,
   sourceAccountOptions,
@@ -65,6 +67,9 @@ interface SourceReviewStepProps {
   overrides: Record<number, SourceRowOverride>;
   accountMappings: AccountMapping[];
   skipRejectedRows: boolean;
+  overlaps: OverlapState | null;
+  acknowledged: number[];
+  onAcknowledge: (rowNumber: number, keep: boolean) => void;
   onOverride: (row: ParsedSourceRow, value: string) => void;
   onSkipRejectedRowsChange: (skip: boolean) => void;
   isLoading: boolean;
@@ -81,6 +86,9 @@ export function SourceReviewStep({
   overrides,
   accountMappings,
   skipRejectedRows,
+  overlaps,
+  acknowledged,
+  onAcknowledge,
   onOverride,
   onSkipRejectedRowsChange,
   isLoading,
@@ -100,7 +108,18 @@ export function SourceReviewStep({
   const unresolved = resolved.filter(({ choice }) => !choice.accountId && !choice.skip).length;
   const skipped = resolved.filter(({ choice }) => choice.skip).length;
   const changes = plannedAccountChanges(rows, mappings, overrides, accountMappings);
-  const blocked = unresolved > 0 || (rejectedRows.length > 0 && !skipRejectedRows);
+  const overlapByRow = new Map<number, SourceRowOverlap>(
+    (overlaps?.rows ?? []).map((o) => [o.rowNumber, o]),
+  );
+  const unreviewedOverlaps = resolved.filter(
+    ({ row, choice }) => overlapByRow.has(row.rowNumber) && !choice.skip && !acknowledged.includes(row.rowNumber),
+  ).length;
+  // A check still running, or one that failed, is not "nothing overlaps".
+  const blocked =
+    unresolved > 0 ||
+    (rejectedRows.length > 0 && !skipRejectedRows) ||
+    overlaps?.status !== 'ready' ||
+    unreviewedOverlaps > 0;
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -150,6 +169,47 @@ export function SourceReviewStep({
           </div>
         )}
 
+        {overlaps?.status === 'loading' && (
+          <p role="status" className="mb-4 text-sm text-gray-600 dark:text-gray-400">{t('sourceReview.overlapsChecking')}</p>
+        )}
+        {overlaps?.status === 'failed' && (
+          <p role="alert" className="mb-4 text-sm text-red-600 dark:text-red-400">{t('sourceReview.overlapsFailed')}</p>
+        )}
+        {overlapByRow.size > 0 && (
+          <div className="mb-6 rounded-lg border-2 border-amber-300 dark:border-amber-600 bg-amber-50 dark:bg-amber-900/20 p-4 text-sm">
+            <p className="font-medium text-gray-900 dark:text-gray-100">
+              {t('sourceReview.overlapsHeading', { count: overlapByRow.size })}
+            </p>
+            <p className="text-gray-700 dark:text-gray-300 mb-2">{t('sourceReview.overlapsHelp')}</p>
+            <ul className="space-y-2">
+              {[...overlapByRow.values()].map((o) => {
+                const existingAccount = accounts.find((a) => a.name === o.existing.accountName);
+                return (
+                  <li key={o.rowNumber}>
+                    <p className="text-gray-900 dark:text-gray-100">
+                      {t(o.reason === 'otherAccount' ? 'sourceReview.overlapOtherAccount' : 'sourceReview.overlapChangedAmount', {
+                        row: o.rowNumber,
+                        account: o.existing.accountName,
+                        date: formatDate(o.existing.date),
+                        amount: formatCurrency(o.existing.amount, existingAccount?.currencyCode),
+                        payee: o.existing.payee,
+                      })}
+                    </p>
+                    <label className="flex items-center gap-2 text-gray-900 dark:text-gray-100">
+                      <input
+                        type="checkbox"
+                        checked={acknowledged.includes(o.rowNumber)}
+                        onChange={(e) => onAcknowledge(o.rowNumber, e.target.checked)}
+                      />
+                      {t('sourceReview.overlapKeep', { row: o.rowNumber })}
+                    </label>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
+
         <div className="overflow-x-auto">
           <table className={TABLE_CLASS}>
             <thead>
@@ -166,7 +226,14 @@ export function SourceReviewStep({
               {resolved.map(({ row, choice }) => {
                 const account = choice.accountId ? accountById.get(choice.accountId) : undefined;
                 return (
-                  <tr key={row.rowNumber} className={choice.accountId || choice.skip ? '' : 'bg-amber-50 dark:bg-amber-900/20'}>
+                  <tr
+                    key={row.rowNumber}
+                    className={
+                      (choice.accountId || choice.skip) && !(overlapByRow.has(row.rowNumber) && !acknowledged.includes(row.rowNumber) && !choice.skip)
+                        ? ''
+                        : 'bg-amber-50 dark:bg-amber-900/20'
+                    }
+                  >
                     <Td className="tabular-nums text-gray-500 dark:text-gray-400">{row.rowNumber}</Td>
                     <Td className="whitespace-nowrap text-gray-900 dark:text-gray-100">{formatDate(row.date)}</Td>
                     <Td className="text-gray-900 dark:text-gray-100 break-words">

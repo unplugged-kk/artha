@@ -326,6 +326,7 @@
     "accountNotFound": "[XX-Account not found-XX]",
     "unreadableRowsUnresolved": "[XX-{{ count }} rows could not be read. Fix them in the file or choose to skip them: {{ rows }}-XX]",
     "sourceAccountsUnresolved": "[XX-{{ count }} rows have no account. Map their source or skip them: {{ rows }}-XX]",
+    "overlapsUnreviewed": "[XX-{{ count }} rows look like entries already in your accounts. Review them before importing: {{ rows }}-XX]",
     "batchRejected": "[XX-Nothing was imported: {{ count }} rows failed. {{ rows }}-XX]",
     "mnyNoFile": "[XX-No Money file was uploaded-XX]",
     "mnyFileTruncated": "[XX-That Money file looks incomplete. The upload may have been interrupted -- try again.-XX]",

@@ -54,6 +54,7 @@ describe('source-account routing', () => {
     const props = {
       fileName: 'tracker.xlsx', rows: A1, rejectedRows: [{ rowNumber: 9, reason: 'missing amount' }],
       accounts, mappings: mapped, overrides: {}, accountMappings: [], skipRejectedRows: false,
+      overlaps: { key: 'k', status: 'ready' as const, rows: [] }, acknowledged: [] as number[], onAcknowledge: vi.fn(),
       onOverride: vi.fn(), onSkipRejectedRowsChange: vi.fn(), isLoading: false, onBack: vi.fn(), onImport: vi.fn(),
     };
     const { rerender } = render(<SourceReviewStep {...props} />);
@@ -63,5 +64,30 @@ describe('source-account routing', () => {
     expect(props.onSkipRejectedRowsChange).toHaveBeenCalledWith(true);
     rerender(<SourceReviewStep {...props} skipRejectedRows />);
     expect(screen.getByRole('button', { name: 'Import Transactions' })).toBeEnabled();
+  });
+
+  it('blocks the import until a look-alike row is kept or skipped, and while the check has failed', () => {
+    const overlap = {
+      rowNumber: 3, reason: 'otherAccount' as const,
+      existing: { accountName: 'Test Bank', date: '2026-11-01', amount: -40, payee: 'p3' },
+    };
+    const props = {
+      fileName: 'tracker.xlsx', rows: A1, rejectedRows: [], accounts, mappings: mapped, overrides: {},
+      accountMappings: [], skipRejectedRows: false,
+      overlaps: { key: 'k', status: 'ready' as const, rows: [overlap] }, acknowledged: [] as number[],
+      onAcknowledge: vi.fn(), onOverride: vi.fn(), onSkipRejectedRowsChange: vi.fn(),
+      isLoading: false, onBack: vi.fn(), onImport: vi.fn(),
+    };
+    const { rerender } = render(<SourceReviewStep {...props} />);
+    const importButton = () => screen.getByRole('button', { name: 'Import Transactions' });
+    expect(screen.getByText(/may have moved to another account/)).toBeInTheDocument();
+    expect(importButton()).toBeDisabled();
+    fireEvent.click(screen.getByLabelText('Import row 3 anyway'));
+    expect(props.onAcknowledge).toHaveBeenCalledWith(3, true);
+    rerender(<SourceReviewStep {...props} acknowledged={[3]} />);
+    expect(importButton()).toBeEnabled();
+    rerender(<SourceReviewStep {...props} overlaps={{ key: 'k', status: 'failed', rows: [] }} />);
+    expect(importButton()).toBeDisabled();
+    expect(screen.getByRole('alert')).toHaveTextContent(/could not check/i);
   });
 });

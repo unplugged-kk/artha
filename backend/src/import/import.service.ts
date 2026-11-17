@@ -49,6 +49,11 @@ import {
   ColumnMappingResponseDto,
 } from "./dto/import.dto";
 import { ImportContext, updateAccountBalance } from "./import-context";
+import {
+  findSourceRowOverlaps,
+  routeSourceRows,
+  SourceRowOverlap,
+} from "./import-source-routing";
 import { isDuplicateImportError } from "./import-identity.util";
 import { ImportEntityCreatorService } from "./import-entity-creator.service";
 import { ImportPostProcessingService } from "./import-post-processing.service";
@@ -924,16 +929,9 @@ export class ImportService {
     return this.buildParsedResponse(result);
   }
 
-  async importCsvFile(
-    userId: string,
-    dto: ImportCsvDto,
-  ): Promise<ImportResultDto> {
-    const validation = validateCsvContent(dto.content);
-    if (!validation.valid) {
-      throw new BadRequestException(validation.error);
-    }
-
-    const csvConfig: CsvColumnMappingConfig = {
+  /** The parse settings an import request carries; one copy for preview and commit. */
+  private csvConfigFrom(dto: ImportCsvDto): CsvColumnMappingConfig {
+    return {
       date: dto.columnMapping.date,
       amount: dto.columnMapping.amount,
       debit: dto.columnMapping.debit,
@@ -964,6 +962,18 @@ export class ImportService {
       commissionColumn: dto.columnMapping.commissionColumn,
       actionKeywords: dto.columnMapping.actionKeywords,
     };
+  }
+
+  async importCsvFile(
+    userId: string,
+    dto: ImportCsvDto,
+  ): Promise<ImportResultDto> {
+    const validation = validateCsvContent(dto.content);
+    if (!validation.valid) {
+      throw new BadRequestException(validation.error);
+    }
+
+    const csvConfig = this.csvConfigFrom(dto);
 
     const transferRules: CsvTransferRule[] | undefined = dto.transferRules?.map(
       (r) => ({
@@ -1016,6 +1026,30 @@ export class ImportService {
   }
 
   /**
+   * Which rows of a source-routed file resemble entries already in the
+   * register without being exact repeats. The commit runs the same check in
+   * its own transaction and refuses rows that were not acknowledged.
+   */
+  async previewCsvSourceOverlaps(
+    userId: string,
+    dto: ImportCsvDto,
+  ): Promise<SourceRowOverlap[]> {
+    const validation = validateCsvContent(dto.content);
+    if (!validation.valid) {
+      throw new BadRequestException(validation.error);
+    }
+    const result = parseCsv(
+      dto.content,
+      this.csvConfigFrom(dto),
+      dto.transferRules,
+    );
+    const { groups } = routeSourceRows(dto, result.transactions);
+    return withScopedDb(this.dataSource, (manager) =>
+      findSourceRowOverlaps(manager, userId, groups),
+    );
+  }
+
+  /**
    * A workbook whose rows name their own account (a household tracker). Every
    * row is routed by its label, or by a per-row override, to an account the
    * user owns, or deliberately skipped. Nothing is written while any row is
@@ -1046,31 +1080,10 @@ export class ImportService {
       );
     }
 
-    const byLabel = new Map(
-      (dto.sourceAccountMappings ?? []).map((m) => [m.originalName, m]),
+    const { groups, unresolved, skippedByUser } = routeSourceRows(
+      dto,
+      result.transactions,
     );
-    const byRow = new Map(
-      (dto.sourceRowOverrides ?? []).map((o) => [o.rowNumber, o]),
-    );
-    const groups = new Map<string, QifParseResult["transactions"]>();
-    const unresolved: string[] = [];
-    let skippedByUser = 0;
-    for (const tx of result.transactions) {
-      const choice =
-        byRow.get(tx.sourceRowNumber!) ?? byLabel.get(tx.sourceAccount ?? "");
-      if (choice?.skip) {
-        skippedByUser++;
-      } else if (choice?.accountId) {
-        groups.set(choice.accountId, [
-          ...(groups.get(choice.accountId) ?? []),
-          tx,
-        ]);
-      } else {
-        unresolved.push(
-          `row ${tx.sourceRowNumber} ("${tx.sourceAccount || "(blank)"}")`,
-        );
-      }
-    }
     if (unresolved.length > 0) {
       const rows = listRows(
         unresolved.slice(0, MAX_LISTED_ROWS),
@@ -1106,7 +1119,26 @@ export class ImportService {
     };
     const affectedAccountIds = new Set<string>();
 
-    await withScopedDb(this.dataSource, async () => {
+    await withScopedDb(this.dataSource, async (manager) => {
+      // Inside the transaction that writes, so the register cannot change
+      // between the check and the posting.
+      const acknowledged = new Set(dto.acknowledgedOverlapRows ?? []);
+      const overlaps = (
+        await findSourceRowOverlaps(manager, userId, groups)
+      ).filter((o) => !acknowledged.has(o.rowNumber));
+      if (overlaps.length > 0) {
+        const rows = overlaps
+          .slice(0, MAX_LISTED_ROWS)
+          .map((o) => `row ${o.rowNumber}`)
+          .join(", ");
+        throw new ConflictException(
+          tr(
+            "errors.import.overlapsUnreviewed",
+            `${overlaps.length} rows look like entries already in your accounts. Review them before importing: ${rows}`,
+            { count: overlaps.length, rows },
+          ),
+        );
+      }
       for (const [accountId, transactions] of groups) {
         const { importResult, affectedAccountIds: touched } =
           await this.writeParsedTransactions(
