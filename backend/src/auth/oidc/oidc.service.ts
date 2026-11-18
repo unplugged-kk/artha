@@ -28,11 +28,40 @@ export class OidcService implements OnModuleInit {
   private readonly logger = new Logger(OidcService.name);
   private _enabled = false;
   private callbackUrl: string;
+  private readonly isAuth0: boolean;
+  private readonly logoutRedirect: boolean;
+  /** Auth0 connections offered as login buttons; empty for other providers. */
+  readonly connections: string[];
 
   constructor(private configService: ConfigService) {
     this.callbackUrl =
       this.configService.get<string>("OIDC_CALLBACK_URL") ||
       "http://localhost:3001/api/v1/auth/oidc/callback";
+    const provider = (
+      this.configService.get<string>("OIDC_PROVIDER") || "generic"
+    ).toLowerCase();
+    if (provider !== "generic" && provider !== "auth0") {
+      throw new Error('OIDC_PROVIDER must be "generic" or "auth0"');
+    }
+    this.isAuth0 = provider === "auth0";
+    this.logoutRedirect =
+      (
+        this.configService.get<string>("OIDC_LOGOUT_REDIRECT") || "false"
+      ).toLowerCase() === "true";
+    const connections = (
+      this.configService.get<string>("OIDC_CONNECTIONS") || ""
+    )
+      .split(",")
+      .map((name) => name.trim())
+      .filter(Boolean);
+    // `connection` is an Auth0 parameter; a generic provider would ignore it and
+    // every button would open the same page.
+    if (connections.length > 0 && !this.isAuth0) {
+      this.logger.warn(
+        "OIDC_CONNECTIONS is ignored unless OIDC_PROVIDER=auth0",
+      );
+    }
+    this.connections = this.isAuth0 ? [...new Set(connections)] : [];
   }
 
   async onModuleInit() {
@@ -121,8 +150,14 @@ export class OidcService implements OnModuleInit {
     state: string,
     nonce: string,
     codeVerifier: string,
-    { forceReauthentication = false }: { forceReauthentication?: boolean } = {},
+    {
+      forceReauthentication = false,
+      connection,
+    }: { forceReauthentication?: boolean; connection?: string } = {},
   ): string {
+    if (connection !== undefined && !this.connections.includes(connection)) {
+      throw new Error("Unknown OIDC connection");
+    }
     if (!this.config) {
       throw new Error("OIDC client not initialized");
     }
@@ -137,9 +172,37 @@ export class OidcService implements OnModuleInit {
         .digest("base64url"),
       code_challenge_method: "S256",
       ...(forceReauthentication ? { prompt: "login", max_age: "0" } : {}),
+      ...(connection ? { connection } : {}),
     });
 
     return url.href;
+  }
+
+  /**
+   * Where to send the browser after an Artha logout to also end the provider
+   * session, or undefined when OIDC_LOGOUT_REDIRECT is off. Uses the discovered
+   * RP-initiated logout endpoint, falling back to Auth0's `/v2/logout`. Returns
+   * to `<callback origin>/login`, which must be an allowed logout URL at the
+   * provider.
+   */
+  getLogoutUrl(): string | undefined {
+    if (!this.config || !this.logoutRedirect) return undefined;
+    const returnTo = new URL("/login", this.callbackUrl).href;
+    if (this.config.serverMetadata().end_session_endpoint) {
+      return client.buildEndSessionUrl(this.config, {
+        post_logout_redirect_uri: returnTo,
+      }).href;
+    }
+    if (this.isAuth0) {
+      const url = new URL("v2/logout", this.config.serverMetadata().issuer);
+      url.searchParams.set("client_id", this.config.clientMetadata().client_id);
+      url.searchParams.set("returnTo", returnTo);
+      return url.href;
+    }
+    this.logger.warn(
+      "OIDC_LOGOUT_REDIRECT is on but the provider has no end_session_endpoint",
+    );
+    return undefined;
   }
 
   /**

@@ -135,6 +135,7 @@
     "localAuthDisabled": "स्थानीय प्रमाणीकरण अक्षम है। कृपया OIDC का उपयोग करके साइन इन करें।",
     "localAuthDisabledShort": "स्थानीय प्रमाणीकरण अक्षम है।",
     "oidcNotConfigured": "OIDC प्रमाणीकरण कॉन्फ़िगर नहीं है",
+    "oidcUnknownConnection": "अज्ञात साइन-इन तरीका",
     "userNotFoundOrInactive": "उपयोगकर्ता नहीं मिला या निष्क्रिय है",
     "noRefreshTokenProvided": "कोई रिफ्रेश टोकन प्रदान नहीं किया गया",
     "maxTokensExceeded": "प्रति उपयोगकर्ता अधिकतम {{ MAX_TOKENS_PER_USER }} सक्रिय टोकन",

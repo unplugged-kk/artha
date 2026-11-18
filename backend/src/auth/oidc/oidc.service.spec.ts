@@ -8,7 +8,15 @@ const mockServerMetadata = jest
 
 const mockDiscovery = jest.fn().mockResolvedValue({
   serverMetadata: mockServerMetadata,
+  clientMetadata: () => ({ client_id: "my-client-id" }),
 });
+
+const mockBuildEndSessionUrl = jest.fn(
+  (_config: unknown, params: Record<string, string>) =>
+    new URL(
+      `https://issuer.example.com/oidc/logout?client_id=my-client-id&post_logout_redirect_uri=${encodeURIComponent(params.post_logout_redirect_uri)}`,
+    ),
+);
 
 const mockBuildAuthorizationUrl = jest.fn().mockReturnValue({
   href: "https://issuer.example.com/auth?scope=openid",
@@ -28,6 +36,8 @@ const mockRandomNonce = jest.fn().mockReturnValue("random-nonce-value");
 
 jest.mock("openid-client", () => ({
   discovery: (...args: unknown[]) => mockDiscovery(...args),
+  buildEndSessionUrl: (...args: [unknown, Record<string, string>]) =>
+    mockBuildEndSessionUrl(...args),
   buildAuthorizationUrl: (...args: unknown[]) =>
     mockBuildAuthorizationUrl(...args),
   authorizationCodeGrant: (...args: unknown[]) =>
@@ -440,6 +450,97 @@ describe("OidcService", () => {
     it("invokes initialize() on module bootstrap", async () => {
       await service.onModuleInit();
       expect(mockDiscovery).toHaveBeenCalled();
+    });
+  });
+
+  describe("Auth0 extras", () => {
+    async function make(extra: Record<string, string>) {
+      const cfg = { ...fullConfig, ...extra };
+      const svc = new OidcService({
+        get: (key: string) => cfg[key],
+      } as unknown as ConfigService);
+      await svc.initialize();
+      return svc;
+    }
+
+    it("rejects an unknown OIDC_PROVIDER", () => {
+      expect(
+        () =>
+          new OidcService({
+            get: (k: string) => ({ ...fullConfig, OIDC_PROVIDER: "okta" })[k],
+          } as unknown as ConfigService),
+      ).toThrow("OIDC_PROVIDER");
+    });
+
+    it("parses OIDC_CONNECTIONS for Auth0 and ignores it otherwise", async () => {
+      const auth0 = await make({
+        OIDC_PROVIDER: "auth0",
+        OIDC_CONNECTIONS: " google-oauth2, ,github,google-oauth2 ",
+      });
+      expect(auth0.connections).toEqual(["google-oauth2", "github"]);
+
+      const generic = await make({ OIDC_CONNECTIONS: "google-oauth2" });
+      expect(generic.connections).toEqual([]);
+    });
+
+    it("adds a configured connection to the authorization URL and refuses others", async () => {
+      const svc = await make({
+        OIDC_PROVIDER: "auth0",
+        OIDC_CONNECTIONS: "google-oauth2",
+      });
+
+      svc.getAuthorizationUrl("s", "n", "v", { connection: "google-oauth2" });
+      expect(mockBuildAuthorizationUrl).toHaveBeenLastCalledWith(
+        expect.anything(),
+        expect.objectContaining({ connection: "google-oauth2" }),
+      );
+      expect(() =>
+        svc.getAuthorizationUrl("s", "n", "v", { connection: "github" }),
+      ).toThrow("Unknown OIDC connection");
+    });
+
+    it("returns no logout URL unless OIDC_LOGOUT_REDIRECT is true", async () => {
+      expect((await make({})).getLogoutUrl()).toBeUndefined();
+    });
+
+    it("uses the discovered end_session_endpoint, returning to /login", async () => {
+      mockServerMetadata.mockReturnValue({
+        issuer: "https://issuer.example.com/",
+        end_session_endpoint: "https://issuer.example.com/oidc/logout",
+      });
+      const svc = await make({ OIDC_LOGOUT_REDIRECT: "true" });
+
+      expect(svc.getLogoutUrl()).toContain("/oidc/logout");
+      expect(mockBuildEndSessionUrl).toHaveBeenCalledWith(expect.anything(), {
+        post_logout_redirect_uri: "http://localhost:3001/login",
+      });
+    });
+
+    it("falls back to Auth0 /v2/logout without an end_session_endpoint", async () => {
+      mockServerMetadata.mockReturnValue({
+        issuer: "https://tenant.auth0.com/",
+      });
+      const auth0 = await make({
+        OIDC_PROVIDER: "auth0",
+        OIDC_LOGOUT_REDIRECT: "true",
+      });
+      const url = new URL(auth0.getLogoutUrl()!);
+      expect(url.origin + url.pathname).toBe(
+        "https://tenant.auth0.com/v2/logout",
+      );
+      expect(url.searchParams.get("client_id")).toBe("my-client-id");
+      expect(url.searchParams.get("returnTo")).toBe(
+        "http://localhost:3001/login",
+      );
+
+      const generic = await make({ OIDC_LOGOUT_REDIRECT: "true" });
+      expect(generic.getLogoutUrl()).toBeUndefined();
+    });
+
+    afterEach(() => {
+      mockServerMetadata.mockReturnValue({
+        issuer: "https://issuer.example.com",
+      });
     });
   });
 });

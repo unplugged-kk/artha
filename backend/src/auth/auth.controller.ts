@@ -397,13 +397,26 @@ export class AuthController {
   @ApiOperation({ summary: "Initiate OIDC authentication" })
   @ApiResponse({ status: 302, description: "Redirects to OIDC provider" })
   @ApiResponse({ status: 400, description: "OIDC not configured" })
-  async oidcLogin(@Res() res: Response) {
+  async oidcLogin(
+    @Query("connection") connection: string | undefined,
+    @Res() res: Response,
+  ) {
     if (!this.oidcService.enabled) {
       throw new BadRequestException(
         tr(
           "errors.auth.oidcNotConfigured",
           "OIDC authentication is not configured",
         ),
+      );
+    }
+    // Only the configured connections; anything else would let a crafted link
+    // open a provider login the operator never enabled.
+    if (
+      connection !== undefined &&
+      !this.oidcService.connections.includes(connection)
+    ) {
+      throw new BadRequestException(
+        tr("errors.auth.oidcUnknownConnection", "Unknown sign-in method"),
       );
     }
 
@@ -440,6 +453,7 @@ export class AuthController {
       state,
       nonce,
       codeVerifier,
+      { connection },
     );
     res.redirect(authUrl);
   }
@@ -776,6 +790,9 @@ export class AuthController {
     return {
       local: this.localAuthEnabled,
       oidc: this.oidcService.enabled,
+      oidcConnections: this.oidcService.enabled
+        ? this.oidcService.connections
+        : [],
       registration: this.demoModeService.isDemo
         ? false
         : this.registrationEnabled,
@@ -1295,6 +1312,12 @@ export class AuthController {
     }
 
     this.clearAuthCookies(res);
-    res.json({ message: "Logged out successfully" });
+    // Revocation above runs first: the provider redirect is extra, and a failed
+    // revoke throws before the client is told it may leave.
+    const logoutUrl = this.oidcService.getLogoutUrl();
+    res.json({
+      message: "Logged out successfully",
+      ...(logoutUrl ? { logoutUrl } : {}),
+    });
   }
 }

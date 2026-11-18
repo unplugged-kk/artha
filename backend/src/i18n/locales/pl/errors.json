@@ -135,6 +135,7 @@
     "localAuthDisabled": "Uwierzytelnianie lokalne jest wyłączone. Zaloguj się przez OIDC.",
     "localAuthDisabledShort": "Uwierzytelnianie lokalne jest wyłączone.",
     "oidcNotConfigured": "Uwierzytelnianie OIDC nie jest skonfigurowane",
+    "oidcUnknownConnection": "Nieznana metoda logowania",
     "userNotFoundOrInactive": "Nie znaleziono użytkownika lub jest nieaktywny",
     "noRefreshTokenProvided": "Nie podano tokena odświeżania",
     "maxTokensExceeded": "Maksymalnie {{ MAX_TOKENS_PER_USER }} aktywnych tokenów na użytkownika",

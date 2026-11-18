@@ -44,13 +44,22 @@ Migration `20261118085649_user_identities.sql` (+ `schema.sql`, entity `UserIden
 | Link/unlink in action history (D4) | NOT DONE (deviation) | `action_history` is the undo log: undo takes the newest entry and throws for unknown entity types, so a link entry would block undo of everything before it. Link/unlink are logged server-side instead. A security-event log is the right home if one is added. |
 | Frontend for linking, `account_exists`, `twoFactor=required` | NOT TESTED | Phase 5 |
 
-## Phases 4-6
+## Phase 4: logout, connections
+
+| Check | Status | Evidence |
+|-------|--------|----------|
+| Logout revokes the Artha refresh-token family first; a failed revoke still fails the logout | PASS | `auth.controller.spec.ts` (order asserted) |
+| `OIDC_LOGOUT_REDIRECT=true` returns `logoutUrl`: discovered `end_session_endpoint`, else Auth0 `/v2/logout`, returning to `<callback origin>/login` | PASS | `oidc.service.spec.ts` |
+| `OIDC_PROVIDER` validated (`generic`/`auth0`); `OIDC_CONNECTIONS` parsed, de-duplicated, ignored unless `auth0` | PASS | `oidc.service.spec.ts` |
+| `/auth/methods` returns `oidcConnections`; `/auth/oidc?connection=` accepts only configured names (400 otherwise) and forwards `connection` | PASS | controller + service specs |
+| Logout URL is returned to local-password users too when enabled | KNOWN | Harmless extra hop through the provider; the logout endpoint has no user identity beyond the cookie. |
+
+## Phases 5-6
 
 | Phase | Status |
 |-------|--------|
-| 4: logout revokes Artha refresh token, optional Auth0 logout | NOT TESTED |
 | 5: per-connection login buttons, Settings linking, callback states | NOT TESTED |
-| 6: `.env.example`, compose, Helm | NOT TESTED |
+| 6: `.env.example`, compose, Helm | PASS (`check-env-docs`, `helm lint`, `helm template`, `docker compose config`) |
 
 ## Live verification
 

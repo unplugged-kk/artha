@@ -135,6 +135,7 @@
     "localAuthDisabled": "L'autenticazione locale è disabilitata. Usa OIDC per accedere.",
     "localAuthDisabledShort": "L'autenticazione locale è disabilitata.",
     "oidcNotConfigured": "L'autenticazione OIDC non è configurata",
+    "oidcUnknownConnection": "Metodo di accesso sconosciuto",
     "userNotFoundOrInactive": "Utente non trovato o inattivo",
     "noRefreshTokenProvided": "Nessun token di aggiornamento fornito",
     "maxTokensExceeded": "Massimo {{ MAX_TOKENS_PER_USER }} token attivi per utente",

@@ -47,7 +47,7 @@ jest.mock("openid-client", () => ({}));
 describe("AuthController", () => {
   let controller: AuthController;
   let authService: Record<string, jest.Mock>;
-  let oidcService: Record<string, jest.Mock | boolean>;
+  let oidcService: Record<string, jest.Mock | boolean | string[]>;
   let configService: Record<string, jest.Mock>;
   let emailService: Record<string, jest.Mock>;
   let demoModeService: { isDemo: boolean };
@@ -115,6 +115,8 @@ describe("AuthController", () => {
 
     oidcService = {
       enabled: false,
+      connections: [],
+      getLogoutUrl: jest.fn().mockReturnValue(undefined),
     };
 
     identitiesService = {
@@ -565,6 +567,7 @@ describe("AuthController", () => {
       expect(result).toEqual({
         local: true,
         oidc: false,
+        oidcConnections: [],
         registration: true,
         smtp: true,
         force2fa: false,
@@ -578,6 +581,16 @@ describe("AuthController", () => {
       const result = await controller.getAuthMethods();
 
       expect(result.oidc).toBe(true);
+    });
+
+    it("lists the configured connections only while OIDC is enabled", async () => {
+      (oidcService as any).connections = ["google-oauth2"];
+
+      expect((await controller.getAuthMethods()).oidcConnections).toEqual([]);
+      oidcService.enabled = true;
+      expect((await controller.getAuthMethods()).oidcConnections).toEqual([
+        "google-oauth2",
+      ]);
     });
 
     it("reflects smtp not configured", async () => {
@@ -1041,6 +1054,29 @@ describe("AuthController", () => {
       });
     });
 
+    it("returns the provider logout URL after revoking the session", async () => {
+      const order: string[] = [];
+      authService.revokeRefreshToken.mockImplementation(async () => {
+        order.push("revoke");
+      });
+      (oidcService as any).getLogoutUrl = jest.fn(() => {
+        order.push("logoutUrl");
+        return "https://tenant.example/oidc/logout?client_id=c";
+      });
+      const res = mockRes();
+
+      await controller.logout(
+        { cookies: { refresh_token: "rt-1" } } as any,
+        res as any,
+      );
+
+      expect(order).toEqual(["revoke", "logoutUrl"]);
+      expect(res.json).toHaveBeenCalledWith({
+        message: "Logged out successfully",
+        logoutUrl: "https://tenant.example/oidc/logout?client_id=c",
+      });
+    });
+
     it("clears cookies even when no refresh token exists", async () => {
       const res = mockRes();
       const expressReq = { cookies: {} } as any;
@@ -1101,11 +1137,50 @@ describe("AuthController", () => {
   });
 
   describe("oidcLogin", () => {
+    it("passes a configured connection to the provider", async () => {
+      oidcService.enabled = true;
+      (oidcService as any).connections = ["google-oauth2"];
+      (oidcService as any).generateState = jest.fn().mockReturnValue("s");
+      (oidcService as any).generateNonce = jest.fn().mockReturnValue("n");
+      (oidcService as any).generateCodeVerifier = jest
+        .fn()
+        .mockReturnValue("v");
+      (oidcService as any).getAuthorizationUrl = jest
+        .fn()
+        .mockReturnValue("https://tenant.example/authorize");
+      const res = mockRes();
+
+      await controller.oidcLogin("google-oauth2", res as any);
+
+      expect(oidcService.getAuthorizationUrl).toHaveBeenCalledWith(
+        "s",
+        "n",
+        "v",
+        { connection: "google-oauth2" },
+      );
+      expect(res.redirect).toHaveBeenCalledWith(
+        "https://tenant.example/authorize",
+      );
+    });
+
+    it("refuses a connection that is not configured", async () => {
+      oidcService.enabled = true;
+      (oidcService as any).connections = ["google-oauth2"];
+      (oidcService as any).getAuthorizationUrl = jest.fn();
+      const res = mockRes();
+
+      await expect(controller.oidcLogin("github", res as any)).rejects.toThrow(
+        BadRequestException,
+      );
+      expect(oidcService.getAuthorizationUrl).not.toHaveBeenCalled();
+      expect(res.cookie).not.toHaveBeenCalled();
+    });
+
     it("throws BadRequestException when OIDC is not configured", async () => {
       oidcService.enabled = false;
       const res = mockRes();
 
-      await expect(controller.oidcLogin(res as any)).rejects.toThrow(
+      await expect(controller.oidcLogin(undefined, res as any)).rejects.toThrow(
         BadRequestException,
       );
     });
@@ -1126,7 +1201,7 @@ describe("AuthController", () => {
         .mockReturnValue("https://provider.example.com/auth?state=mock-state");
       const res = mockRes();
 
-      await controller.oidcLogin(res as any);
+      await controller.oidcLogin(undefined, res as any);
 
       expect(oidcService.generateState).toHaveBeenCalled();
       expect(oidcService.generateNonce).toHaveBeenCalled();
@@ -1159,6 +1234,7 @@ describe("AuthController", () => {
         "mock-state",
         "mock-nonce",
         "verifier",
+        { connection: undefined },
       );
       expect(res.redirect).toHaveBeenCalledWith(
         "https://provider.example.com/auth?state=mock-state",
@@ -3000,7 +3076,7 @@ describe("AuthController", () => {
       const { controller } = await build();
       const res = mockRes();
 
-      await controller.oidcLogin(res as never);
+      await controller.oidcLogin(undefined, res as never);
 
       expect(res.clearCookie).toHaveBeenCalledWith(
         "oidc_reauth",

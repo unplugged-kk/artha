@@ -145,6 +145,7 @@
     "localAuthDisabled": "[XX-Local authentication is disabled. Please use OIDC to sign in.-XX]",
     "localAuthDisabledShort": "[XX-Local authentication is disabled.-XX]",
     "oidcNotConfigured": "[XX-OIDC authentication is not configured-XX]",
+    "oidcUnknownConnection": "[XX-Unknown sign-in method-XX]",
     "userNotFoundOrInactive": "[XX-User not found or inactive-XX]",
     "noRefreshTokenProvided": "[XX-No refresh token provided-XX]",
     "maxTokensExceeded": "[XX-Maximum of {{ MAX_TOKENS_PER_USER }} active tokens per user-XX]",

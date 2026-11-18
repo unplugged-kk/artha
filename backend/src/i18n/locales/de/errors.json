@@ -135,6 +135,7 @@
     "localAuthDisabled": "Lokale Authentifizierung ist deaktiviert. Bitte melden Sie sich mit OIDC an.",
     "localAuthDisabledShort": "Lokale Authentifizierung ist deaktiviert.",
     "oidcNotConfigured": "OIDC-Authentifizierung ist nicht konfiguriert",
+    "oidcUnknownConnection": "Unbekannte Anmeldemethode",
     "userNotFoundOrInactive": "Benutzer nicht gefunden oder inaktiv",
     "noRefreshTokenProvided": "Kein Refresh-Token angegeben",
     "maxTokensExceeded": "Maximal {{ MAX_TOKENS_PER_USER }} aktive Token pro Benutzer",

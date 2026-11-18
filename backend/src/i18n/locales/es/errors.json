@@ -135,6 +135,7 @@
     "localAuthDisabled": "La autenticación local está deshabilitada. Usa OIDC para iniciar sesión.",
     "localAuthDisabledShort": "La autenticación local está deshabilitada.",
     "oidcNotConfigured": "La autenticación OIDC no está configurada",
+    "oidcUnknownConnection": "Método de inicio de sesión desconocido",
     "userNotFoundOrInactive": "Usuario no encontrado o inactivo",
     "noRefreshTokenProvided": "No se proporcionó token de actualización",
     "maxTokensExceeded": "Máximo de {{ MAX_TOKENS_PER_USER }} tokens activos por usuario",

@@ -135,6 +135,7 @@
     "localAuthDisabled": "本地认证已禁用。请使用 OIDC 登录。",
     "localAuthDisabledShort": "本地认证已禁用。",
     "oidcNotConfigured": "OIDC 认证未配置",
+    "oidcUnknownConnection": "未知的登录方式",
     "userNotFoundOrInactive": "未找到用户或用户已停用",
     "noRefreshTokenProvided": "未提供刷新令牌",
     "maxTokensExceeded": "每位用户最多可有 {{ MAX_TOKENS_PER_USER }} 个活跃令牌",

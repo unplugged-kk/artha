@@ -135,6 +135,7 @@
     "localAuthDisabled": "L'authentification locale est désactivée. Veuillez utiliser OIDC pour vous connecter.",
     "localAuthDisabledShort": "L'authentification locale est désactivée.",
     "oidcNotConfigured": "L'authentification OIDC n'est pas configurée",
+    "oidcUnknownConnection": "Méthode de connexion inconnue",
     "userNotFoundOrInactive": "Utilisateur introuvable ou inactif",
     "noRefreshTokenProvided": "Aucun jeton de rafraîchissement fourni",
     "maxTokensExceeded": "Maximum de {{ MAX_TOKENS_PER_USER }} jetons actifs par utilisateur",

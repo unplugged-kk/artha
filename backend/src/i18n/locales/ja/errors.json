@@ -135,6 +135,7 @@
     "localAuthDisabled": "ローカル認証が無効になっています。OIDCを使用してサインインしてください。",
     "localAuthDisabledShort": "ローカル認証が無効になっています。",
     "oidcNotConfigured": "OIDC認証が設定されていません",
+    "oidcUnknownConnection": "不明なサインイン方法です",
     "userNotFoundOrInactive": "ユーザーが見つからないか、非アクティブです",
     "noRefreshTokenProvided": "リフレッシュトークンが提供されていません",
     "maxTokensExceeded": "ユーザーあたり最大 {{ MAX_TOKENS_PER_USER }} 件のアクティブトークン",

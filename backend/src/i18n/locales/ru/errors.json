@@ -135,6 +135,7 @@
     "localAuthDisabled": "Локальная аутентификация отключена. Пожалуйста, используйте OIDC для входа.",
     "localAuthDisabledShort": "Локальная аутентификация отключена.",
     "oidcNotConfigured": "OIDC аутентификация не настроена",
+    "oidcUnknownConnection": "Неизвестный способ входа",
     "userNotFoundOrInactive": "Пользователь не найден или неактивен",
     "noRefreshTokenProvided": "Токен обновления не предоставлен",
     "maxTokensExceeded": "Максимальное количество активных токенов на пользователя: {{ MAX_TOKENS_PER_USER }}",
