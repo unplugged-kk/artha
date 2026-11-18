@@ -1,4 +1,5 @@
 import { EntityManager } from "typeorm";
+import { LEDGER_MOVEMENT_PREDICATE } from "../common/ledger-balance.sql";
 import { ImportCsvDto } from "./dto/import.dto";
 import { QifParseResult } from "./qif-parser";
 
@@ -105,8 +106,7 @@ export async function findSourceRowOverlaps(
        FROM transactions t
        JOIN accounts a ON a.id = t.account_id
       WHERE t.user_id = $1
-        AND t.parent_transaction_id IS NULL
-        AND t.status <> 'VOID'
+        AND ${LEDGER_MOVEMENT_PREDICATE}
         AND t.transaction_date = ANY($2::date[])`,
     [userId, dates],
   );
