@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { INestApplication, ValidationPipe } from "@nestjs/common";
-import * as request from "supertest";
+import request from "supertest";
 import cookieParser from "cookie-parser";
 import { AuthController } from "@/auth/auth.controller";
 import { AuthService } from "@/auth/auth.service";
@@ -12,6 +12,13 @@ import { ThrottlerGuard } from "@nestjs/throttler";
 import { AuthGuard } from "@nestjs/passport";
 import { CsrfGuard } from "@/common/guards/csrf.guard";
 import { DemoModeService } from "@/common/demo-mode.service";
+import { OidcReauthService } from "@/auth/oidc/oidc-reauth.service";
+import { TokenService } from "@/auth/token.service";
+import { DelegationService } from "@/delegation/delegation.service";
+import { UserPreference } from "@/users/entities/user-preference.entity";
+import { createScopedDbMocks } from "@/test-helpers/scoped-db-testing";
+import { I18nService } from "nestjs-i18n";
+import { DataSource } from "typeorm";
 
 // -- Mock user data -----------------------------------------------------------
 
@@ -50,12 +57,14 @@ const mockAuthService = {
   getUserById: jest.fn(),
   sanitizeUser: jest.fn(),
   checkForgotPasswordEmailLimit: jest.fn(),
+  getCsrfKey: jest.fn(() => "test-csrf-key"),
 };
 
 const mockOidcService = {
   enabled: false,
   generateState: jest.fn(),
   generateNonce: jest.fn(),
+  generateCodeVerifier: jest.fn(),
   getAuthorizationUrl: jest.fn(),
   handleCallback: jest.fn(),
   getUserInfo: jest.fn(),
@@ -97,6 +106,28 @@ describe("AuthController (e2e)", () => {
         { provide: EmailService, useValue: mockEmailService },
         { provide: ConfigService, useValue: mockConfigService },
         { provide: DemoModeService, useValue: { isDemo: false } },
+        OidcReauthService,
+        {
+          provide: TokenService,
+          useValue: { getRefreshExpiryMs: () => 7 * 24 * 60 * 60 * 1000 },
+        },
+        {
+          provide: DelegationService,
+          useValue: { getAvailableContexts: jest.fn().mockResolvedValue([]) },
+        },
+        {
+          provide: I18nService,
+          useValue: {
+            translate: (key: string, opts?: { defaultValue?: string }) =>
+              opts?.defaultValue ?? key,
+          },
+        },
+        {
+          provide: DataSource,
+          useValue: createScopedDbMocks([
+            [UserPreference, { findOne: jest.fn().mockResolvedValue(null) }],
+          ]).dataSource,
+        },
         Reflector,
       ],
     })
@@ -136,7 +167,7 @@ describe("AuthController (e2e)", () => {
   });
 
   afterAll(async () => {
-    await app.close();
+    await app?.close();
   });
 
   beforeEach(() => {
@@ -242,7 +273,11 @@ describe("AuthController (e2e)", () => {
       expect(res.body.user.email).toBe(mockUser.email);
       expect(res.body.user.firstName).toBe(mockUser.firstName);
       expect(res.body.user.authProvider).toBe(mockUser.authProvider);
-      expect(mockAuthService.login).toHaveBeenCalledWith(validLogin, undefined);
+      expect(mockAuthService.login).toHaveBeenCalledWith(
+        validLogin,
+        undefined,
+        undefined,
+      );
 
       const cookies = res.headers["set-cookie"];
       expect(cookies).toBeDefined();
@@ -294,6 +329,14 @@ describe("AuthController (e2e)", () => {
 
   describe("GET /auth/profile", () => {
     it("should return the authenticated user profile without sensitive fields", async () => {
+      mockAuthService.getUserById.mockResolvedValue({
+        ...mockUser,
+        passwordHash: "hashed-password",
+        resetToken: "reset-token",
+        resetTokenExpiry: new Date("2026-01-02"),
+        twoFactorSecret: "totp-secret",
+      });
+
       const res = await request(app.getHttpServer())
         .get("/auth/profile")
         .expect(200);
