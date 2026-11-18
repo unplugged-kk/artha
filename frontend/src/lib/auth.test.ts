@@ -121,6 +121,31 @@ describe('authApi', () => {
     (window as any).location = originalLocation;
   });
 
+  it('initiateOidc preselects an encoded connection', () => {
+    const originalLocation = window.location;
+    delete (window as any).location;
+    (window as any).location = { href: '' };
+    authApi.initiateOidc('google-oauth2');
+    expect(window.location.href).toBe('/api/v1/auth/oidc?connection=google-oauth2');
+    authApi.initiateOidc('a b&c');
+    expect(window.location.href).toBe('/api/v1/auth/oidc?connection=a%20b%26c');
+    (window as any).location = originalLocation;
+  });
+
+  it('logout returns the provider logoutUrl', async () => {
+    vi.mocked(apiClient.post).mockResolvedValue({
+      data: { message: 'ok', logoutUrl: 'https://idp.example/v2/logout?returnTo=x' },
+    });
+    expect((await authApi.logout()).logoutUrl).toBe('https://idp.example/v2/logout?returnTo=x');
+  });
+
+  it('logout drops a logoutUrl that is not http(s)', async () => {
+    vi.mocked(apiClient.post).mockResolvedValue({
+      data: { message: 'ok', logoutUrl: 'javascript:alert(1)' },
+    });
+    expect((await authApi.logout()).logoutUrl).toBeUndefined();
+  });
+
   it('verify2FA defaults rememberDevice to false', async () => {
     vi.mocked(apiClient.post).mockResolvedValue({ data: { token: 'abc' } });
     await authApi.verify2FA('temp', '123456');

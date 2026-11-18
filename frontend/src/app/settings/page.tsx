@@ -10,6 +10,7 @@ import { ProfileSection } from '@/components/settings/ProfileSection';
 import { PreferencesSection } from '@/components/settings/PreferencesSection';
 import { NotificationsSection } from '@/components/settings/NotificationsSection';
 import { SecuritySection } from '@/components/settings/SecuritySection';
+import { SignInMethodsSection } from '@/components/settings/SignInMethodsSection';
 import { DangerZoneSection } from '@/components/settings/DangerZoneSection';
 import { BackupRestoreSection } from '@/components/settings/BackupRestoreSection';
 import { AutoBackupSection } from '@/components/settings/AutoBackupSection';
@@ -168,6 +169,7 @@ function OwnerSettingsView() {
   const [preferences, setPreferences] = useState<UserPreferences | null>(null);
   const [smtpConfigured, setSmtpConfigured] = useState(false);
   const [force2fa, setForce2fa] = useState(false);
+  const [oidcEnabled, setOidcEnabled] = useState(false);
   const isDemoMode = useDemoStore((s) => s.isDemoMode);
   const isAdmin = useAuthStore((s) => s.user?.role === 'admin');
 
@@ -214,6 +216,7 @@ function OwnerSettingsView() {
       setPreferences(prefsData);
       setSmtpConfigured(smtpStatus.configured);
       setForce2fa(authMethods.force2fa);
+      setOidcEnabled(authMethods.oidc);
       useDemoStore.getState().setDemoMode(authMethods.demo ?? false);
     } catch (error) {
       toast.error(getErrorMessage(error, t('toasts.loadFailed')));
@@ -325,6 +328,7 @@ function OwnerSettingsView() {
                   force2fa={force2fa}
                   onPreferencesUpdated={setPreferences}
                 />
+                <SignInMethodsSection user={user} oidcEnabled={oidcEnabled} />
               </div>
             )}
 

@@ -582,4 +582,47 @@ describe('LoginPage', () => {
       expect(mockPush).not.toHaveBeenCalledWith('/dashboard');
     });
   });
+  describe('provider connection buttons', () => {
+    const methods = (local: boolean, oidcConnections: string[]) => ({
+      local, oidc: true, registration: false, smtp: false, force2fa: false, demo: false,
+      oidcConnections,
+    });
+
+    it('renders one labelled button per connection and preselects it', async () => {
+      (authApi.getAuthMethods as ReturnType<typeof vi.fn>).mockResolvedValue(
+        methods(true, [
+          'google-oauth2', 'linkedin', 'twitter', 'apple', 'github', 'windowslive',
+          'Username-Password-Authentication', 'acme-saml',
+        ]),
+      );
+      render(<LoginPage />);
+      for (const label of [
+        'Continue with Google', 'Continue with LinkedIn', 'Continue with X',
+        'Continue with Apple', 'Continue with GitHub', 'Continue with Microsoft',
+        'Continue with email', 'Continue with acme-saml',
+      ]) {
+        expect(await screen.findByRole('button', { name: label })).toBeInTheDocument();
+      }
+      expect(screen.queryByRole('button', { name: /sign in with sso/i })).not.toBeInTheDocument();
+
+      fireEvent.click(screen.getByRole('button', { name: 'Continue with Google' }));
+      expect(authApi.initiateOidc).toHaveBeenCalledWith('google-oauth2');
+    });
+
+    it('offers the connections in SSO-only mode too', async () => {
+      (authApi.getAuthMethods as ReturnType<typeof vi.fn>).mockResolvedValue(
+        methods(false, ['github']),
+      );
+      render(<LoginPage />);
+      fireEvent.click(await screen.findByRole('button', { name: 'Continue with GitHub' }));
+      expect(authApi.initiateOidc).toHaveBeenCalledWith('github');
+    });
+
+    it('keeps the single SSO button when the list is empty', async () => {
+      (authApi.getAuthMethods as ReturnType<typeof vi.fn>).mockResolvedValue(methods(true, []));
+      render(<LoginPage />);
+      fireEvent.click(await screen.findByRole('button', { name: /sign in with sso/i }));
+      expect(authApi.initiateOidc).toHaveBeenCalledWith(undefined);
+    });
+  });
 });

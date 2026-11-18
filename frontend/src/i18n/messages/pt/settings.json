@@ -1236,5 +1236,27 @@
       "moveUp": "Mover para cima",
       "moveDown": "Mover para baixo"
     }
+  },
+  "signInMethods": {
+    "heading": "Métodos de início de sessão",
+    "description": "Outras contas que pode utilizar para iniciar sessão no Artha.",
+    "linkButton": "Associar outro método de início de sessão",
+    "removeButton": "Remover",
+    "empty": "Não há métodos de início de sessão associados.",
+    "linkedOn": "Associado em {date}",
+    "lastUsed": "Última utilização: {date}",
+    "neverUsed": "Nunca utilizado",
+    "emailPassword": "E-mail e palavra-passe",
+    "unknownProvider": "Fornecedor desconhecido",
+    "confirmTitle": "Remover método de início de sessão?",
+    "confirmMessage": "Deixará de poder iniciar sessão com {provider}.",
+    "stepUpReason": "Volte a verificar a sua identidade para alterar a forma como inicia sessão.",
+    "toasts": {
+      "loadFailed": "Não foi possível carregar os métodos de início de sessão",
+      "removed": "Método de início de sessão removido",
+      "removeFailed": "Não foi possível remover o método de início de sessão",
+      "linkFailed": "Não foi possível iniciar a associação do método de início de sessão",
+      "reauthFailed": "Não foi possível confirmar a reautenticação"
+    }
   }
 }

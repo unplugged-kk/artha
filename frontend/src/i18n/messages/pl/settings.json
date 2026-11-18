@@ -1236,5 +1236,27 @@
       "moveUp": "W górę",
       "moveDown": "W dół"
     }
+  },
+  "signInMethods": {
+    "heading": "Metody logowania",
+    "description": "Inne konta, za pomocą których możesz logować się do Artha.",
+    "linkButton": "Połącz kolejną metodę logowania",
+    "removeButton": "Usuń",
+    "empty": "Brak połączonych metod logowania.",
+    "linkedOn": "Połączono {date}",
+    "lastUsed": "Ostatnio użyto {date}",
+    "neverUsed": "Nigdy nie użyto",
+    "emailPassword": "E-mail i hasło",
+    "unknownProvider": "Nieznany dostawca",
+    "confirmTitle": "Usunąć metodę logowania?",
+    "confirmMessage": "Nie będzie już można logować się przez {provider}.",
+    "stepUpReason": "Potwierdź ponownie swoją tożsamość, aby zmienić sposób logowania.",
+    "toasts": {
+      "loadFailed": "Nie udało się wczytać metod logowania",
+      "removed": "Metoda logowania została usunięta",
+      "removeFailed": "Nie udało się usunąć metody logowania",
+      "linkFailed": "Nie udało się rozpocząć łączenia metody logowania",
+      "reauthFailed": "Nie udało się potwierdzić ponownego uwierzytelnienia"
+    }
   }
 }

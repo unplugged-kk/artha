@@ -79,6 +79,31 @@ describe('authStore', () => {
       expect(state.isLoading).toBe(false);
     });
 
+    it('navigates to a provider logoutUrl after clearing state', () => {
+      const assign = vi.fn();
+      const originalLocation = window.location;
+      Object.defineProperty(window, 'location', {
+        value: { ...originalLocation, assign },
+        writable: true,
+        configurable: true,
+      });
+      try {
+        useAuthStore.getState().login(mockUser, 'httpOnly');
+        expect(useAuthStore.getState().logout('https://idp.example/v2/logout')).toBe(true);
+        expect(useAuthStore.getState().isAuthenticated).toBe(false);
+        expect(assign).toHaveBeenCalledWith('https://idp.example/v2/logout');
+
+        expect(useAuthStore.getState().logout()).toBe(false);
+        expect(assign).toHaveBeenCalledTimes(1);
+      } finally {
+        Object.defineProperty(window, 'location', {
+          value: originalLocation,
+          writable: true,
+          configurable: true,
+        });
+      }
+    });
+
     it('clears persisted AI chat history so it does not leak across accounts', () => {
       window.localStorage.setItem(
         'artha:ai-chat-messages',

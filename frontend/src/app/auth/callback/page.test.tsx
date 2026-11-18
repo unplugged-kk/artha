@@ -91,6 +91,22 @@ vi.mock('@/lib/auth', () => ({
   },
 }));
 
+vi.mock('@/components/auth/TwoFactorVerify', () => ({
+  TwoFactorVerify: ({ tempToken, onVerified, onCancel }: any) => (
+    <div data-testid="two-factor-verify">
+      {tempToken}
+      <button
+        onClick={() =>
+          onVerified({ id: 'u1', email: 'a@b.c', mustChangePassword: false })
+        }
+      >
+        Verify
+      </button>
+      <button onClick={onCancel}>Cancel</button>
+    </div>
+  ),
+}));
+
 vi.mock('@/lib/errors', () => ({
   getErrorMessage: (_error: any, fallback: string) => fallback,
 }));
@@ -361,6 +377,81 @@ describe('CallbackPage', () => {
       );
       // Not the generic sign-in failure, and no redirect to /login.
       expect(mockRouterPush).not.toHaveBeenCalledWith('/login');
+    });
+  });
+  describe('new sign-in states', () => {
+    function stubLocation(hash: string) {
+      Object.defineProperty(window, 'location', {
+        value: { hash, pathname: '/auth/callback', href: '' },
+        writable: true,
+        configurable: true,
+      });
+      vi.spyOn(window.history, 'replaceState').mockImplementation(() => {});
+    }
+
+    it.each([
+      ['account_exists', /An account with this email already exists/],
+      ['registration_disabled', /New account registration is closed/],
+      ['mfa_required', /requires two-factor authentication/],
+    ])('names error=%s and returns to /login', async (code, text) => {
+      const toast = await import('react-hot-toast');
+      mockSearchParams = new URLSearchParams(`error=${code}`);
+      render(<CallbackPage />);
+      await waitFor(() => expect(mockRouterPush).toHaveBeenCalledWith('/login'));
+      expect(toast.default.error).toHaveBeenCalledWith(
+        expect.stringMatching(text),
+        expect.anything(),
+      );
+    });
+
+    it('clears the two-factor token from the URL and finishes sign-in after 2FA', async () => {
+      const toast = await import('react-hot-toast');
+      mockSearchParams = new URLSearchParams('twoFactor=required');
+      // Real jsdom location: the 2FA screen renders next/image, which needs one.
+      window.history.pushState(null, '', '/auth/callback#two_factor_token=jwt-1');
+      // Call through (earlier tests stubbed it) so the clear is observable.
+      vi.spyOn(window.history, 'replaceState').mockImplementation((...args) =>
+        History.prototype.replaceState.apply(window.history, args),
+      );
+      render(<CallbackPage />);
+      const verify = await screen.findByTestId('two-factor-verify');
+      expect(verify).toHaveTextContent('jwt-1');
+      expect(window.history.replaceState).toHaveBeenCalledWith(null, '', '/auth/callback');
+      expect(window.location.hash).toBe('');
+      expect(mockGetProfile).not.toHaveBeenCalled();
+
+      fireEvent.click(screen.getByRole('button', { name: 'Verify' }));
+      expect(mockLogin).toHaveBeenCalledWith(
+        expect.objectContaining({ id: 'u1' }),
+        'httpOnly',
+      );
+      expect(toast.default.success).toHaveBeenCalled();
+      expect(mockRouterPush).toHaveBeenCalledWith('/dashboard');
+    });
+
+    it('fails to /login when twoFactor=required arrives without a token', async () => {
+      mockSearchParams = new URLSearchParams('twoFactor=required');
+      stubLocation('');
+      render(<CallbackPage />);
+      await waitFor(() => expect(mockRouterPush).toHaveBeenCalledWith('/login'));
+      expect(screen.queryByTestId('two-factor-verify')).not.toBeInTheDocument();
+    });
+
+    it.each([
+      ['linked', 'success', 'Sign-in method linked.'],
+      ['already_linked', 'info', 'That sign-in method is already linked to your account.'],
+      ['identity_in_use', 'error', 'This sign-in method is already used by another Artha account.'],
+    ])('toasts link=%s and returns to Settings security', async (state, kind, text) => {
+      const toast = await import('react-hot-toast');
+      mockSearchParams = new URLSearchParams(`link=${state}`);
+      render(<CallbackPage />);
+      await waitFor(() =>
+        expect(mockRouterPush).toHaveBeenCalledWith('/settings#security'),
+      );
+      const fn = kind === 'info' ? toast.default : (toast.default as any)[kind];
+      expect(fn).toHaveBeenCalledWith(text);
+      expect(mockGetProfile).not.toHaveBeenCalled();
+      expect(mockLogin).not.toHaveBeenCalled();
     });
   });
 });

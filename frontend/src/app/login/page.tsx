@@ -17,6 +17,7 @@ import { authApi, AuthMethods } from '@/lib/auth';
 import { TwoFactorVerify } from '@/components/auth/TwoFactorVerify';
 import { AuthShell } from '@/components/auth/AuthShell';
 import { IncompleteLogoutNotice } from '@/components/auth/IncompleteLogoutNotice';
+import { OidcSignInButtons } from '@/components/auth/OidcSignInButtons';
 import { clearLogoutIncomplete } from '@/lib/logout-state';
 import { DEMO_USER_EMAIL, DEMO_USER_PASSWORD } from '@/lib/demo-credentials';
 import { User } from '@/types/auth';
@@ -170,7 +171,7 @@ export default function LoginPage() {
     }
   };
 
-  const handleOidcLogin = () => {
+  const handleOidcLogin = (connection?: string) => {
     // Stash returnTo so the OIDC callback page can resume the OAuth
     // consent flow (or wherever the user was originally going). The
     // password and 2FA paths can pass it inline; the OIDC redirect
@@ -183,8 +184,10 @@ export default function LoginPage() {
         // private mode etc — ignore, fall back to /dashboard
       }
     }
-    authApi.initiateOidc();
+    authApi.initiateOidc(connection);
   };
+
+  const oidcConnections = authMethods.oidcConnections ?? [];
 
   if (isLoadingMethods) {
     return (
@@ -207,27 +210,11 @@ export default function LoginPage() {
           <p className="text-gray-600 dark:text-gray-400">
             {t('signIn.ssoIntro')}
           </p>
-          <Button
-            type="button"
-            variant="primary"
-            size="lg"
-            onClick={handleOidcLogin}
-            className="w-full"
-          >
-            <svg
-              className="w-5 h-5 mr-2"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
-            {t('signIn.ssoButton')}
-          </Button>
+          <OidcSignInButtons
+            connections={oidcConnections}
+            variant={oidcConnections.length > 0 ? 'outline' : 'primary'}
+            onSelect={handleOidcLogin}
+          />
         </div>
       </AuthShell>
     );
@@ -384,27 +371,11 @@ export default function LoginPage() {
                     </div>
                   </div>
 
-                  <Button
-                    type="button"
+                  <OidcSignInButtons
+                    connections={oidcConnections}
                     variant="outline"
-                    size="lg"
-                    onClick={handleOidcLogin}
-                    className="w-full"
-                  >
-                    <svg
-                      className="w-5 h-5 mr-2"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                    </svg>
-                    {t('signIn.ssoButton')}
-                  </Button>
+                    onSelect={handleOidcLogin}
+                  />
                 </>
               )}
             </div>

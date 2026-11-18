@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/Button';
 import { authApi } from '@/lib/auth';
+import { useAuthStore } from '@/store/authStore';
 import {
   isLogoutIncomplete,
   clearLogoutIncomplete,
@@ -31,10 +32,12 @@ export function IncompleteLogoutNotice() {
   const retry = async () => {
     setIsRetrying(true);
     try {
-      await authApi.logout();
+      const { logoutUrl } = await authApi.logout();
       clearLogoutIncomplete();
       setVisible(false);
       toast.success(t('signIn.logoutRetrySucceeded'));
+      // The provider session outlived the failed sign-out too; end it now.
+      useAuthStore.getState().logout(logoutUrl);
     } catch {
       // Still unreachable. Keep the warning up -- the session is still live.
       toast.error(t('signIn.logoutRetryFailed'));

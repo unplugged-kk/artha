@@ -1236,5 +1236,27 @@
       "moveUp": "위로 이동",
       "moveDown": "아래로 이동"
     }
+  },
+  "signInMethods": {
+    "heading": "로그인 방법",
+    "description": "Artha에 로그인할 때 사용할 수 있는 다른 계정입니다.",
+    "linkButton": "다른 로그인 방법 연결",
+    "removeButton": "제거",
+    "empty": "연결된 로그인 방법이 없습니다.",
+    "linkedOn": "{date}에 연결됨",
+    "lastUsed": "마지막 사용 {date}",
+    "neverUsed": "사용한 적 없음",
+    "emailPassword": "이메일 및 비밀번호",
+    "unknownProvider": "알 수 없는 공급자",
+    "confirmTitle": "로그인 방법을 제거할까요?",
+    "confirmMessage": "더 이상 {provider}(으)로 로그인할 수 없습니다.",
+    "stepUpReason": "로그인 방법을 변경하려면 본인 확인을 다시 하세요.",
+    "toasts": {
+      "loadFailed": "로그인 방법을 불러오지 못했습니다",
+      "removed": "로그인 방법이 제거되었습니다",
+      "removeFailed": "로그인 방법을 제거하지 못했습니다",
+      "linkFailed": "로그인 방법 연결을 시작하지 못했습니다",
+      "reauthFailed": "재인증을 확인하지 못했습니다"
+    }
   }
 }

@@ -2,17 +2,22 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@/test/render';
 import { IncompleteLogoutNotice } from './IncompleteLogoutNotice';
 
-const mockApiLogout = vi.fn().mockResolvedValue(undefined);
+const mockApiLogout = vi.fn().mockResolvedValue({ message: 'Logged out' });
 vi.mock('@/lib/auth', () => ({
   authApi: {
     logout: (...args: any[]) => mockApiLogout(...args),
   },
 }));
 
+const mockStoreLogout = vi.fn();
+vi.mock('@/store/authStore', () => ({
+  useAuthStore: { getState: () => ({ logout: mockStoreLogout }) },
+}));
+
 describe('IncompleteLogoutNotice', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockApiLogout.mockResolvedValue(undefined);
+    mockApiLogout.mockResolvedValue({ message: 'Logged out' });
     window.sessionStorage.clear();
   });
 
@@ -43,6 +48,21 @@ describe('IncompleteLogoutNotice', () => {
       expect(screen.queryByRole('alert')).not.toBeInTheDocument();
     });
     expect(window.sessionStorage.getItem('artha:logout-incomplete')).toBeNull();
+  });
+
+  it('ends the provider session when the retry returns a logoutUrl', async () => {
+    window.sessionStorage.setItem('artha:logout-incomplete', '1');
+    mockApiLogout.mockResolvedValue({
+      message: 'Logged out',
+      logoutUrl: 'https://idp.example/v2/logout',
+    });
+    render(<IncompleteLogoutNotice />);
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /retry sign-out/i }));
+    });
+
+    expect(mockStoreLogout).toHaveBeenCalledWith('https://idp.example/v2/logout');
   });
 
   // The session is still live, so the warning has to survive a failed retry
