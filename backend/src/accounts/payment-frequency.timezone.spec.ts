@@ -2,7 +2,7 @@ import { spawn } from "child_process";
 import { readFileSync, readdirSync } from "fs";
 import { join } from "path";
 import { mortgageTermEndDate } from "./payment-frequency.util";
-import { formatDateYMD } from "../common/date-utils";
+import { formatDateYMDLocal } from "../common/date-utils";
 
 /**
  * A payoff date is the same calendar day in every deployment.
@@ -249,31 +249,31 @@ describe("mortgageTermEndDate", () => {
   it("clamps a month-end anchor instead of overflowing it", () => {
     // The plain wrong answer this replaced: `new Date(Date.UTC(2026, 0, 31))`
     // with `setMonth(+1)` gives 3 March.
-    expect(formatDateYMD(mortgageTermEndDate(new Date("2026-01-31"), 1))).toBe(
-      "2026-02-28",
-    );
-    expect(formatDateYMD(mortgageTermEndDate(new Date("2028-01-31"), 1))).toBe(
-      "2028-02-29",
-    );
-    expect(formatDateYMD(mortgageTermEndDate(new Date("2026-01-31"), 3))).toBe(
-      "2026-04-30",
-    );
+    expect(
+      formatDateYMDLocal(mortgageTermEndDate(new Date("2026-01-31"), 1)),
+    ).toBe("2026-02-28");
+    expect(
+      formatDateYMDLocal(mortgageTermEndDate(new Date("2028-01-31"), 1)),
+    ).toBe("2028-02-29");
+    expect(
+      formatDateYMDLocal(mortgageTermEndDate(new Date("2026-01-31"), 3)),
+    ).toBe("2026-04-30");
   });
 
   it("offsets from the anchor rather than accumulating clamped steps", () => {
     // Sixty accumulating monthly steps from 31 January clamp to the 28th at the
     // first February and stay there; a five-year TERM ends on the 31st.
-    expect(formatDateYMD(mortgageTermEndDate(new Date("2026-01-31"), 60))).toBe(
-      "2031-01-31",
-    );
+    expect(
+      formatDateYMDLocal(mortgageTermEndDate(new Date("2026-01-31"), 60)),
+    ).toBe("2031-01-31");
   });
 
   it("leaves an ordinary anchor alone", () => {
-    expect(formatDateYMD(mortgageTermEndDate(new Date("2026-03-15"), 60))).toBe(
-      "2031-03-15",
-    );
-    expect(formatDateYMD(mortgageTermEndDate(new Date("2026-03-15"), 0))).toBe(
-      "2026-03-15",
-    );
+    expect(
+      formatDateYMDLocal(mortgageTermEndDate(new Date("2026-03-15"), 60)),
+    ).toBe("2031-03-15");
+    expect(
+      formatDateYMDLocal(mortgageTermEndDate(new Date("2026-03-15"), 0)),
+    ).toBe("2026-03-15");
   });
 });

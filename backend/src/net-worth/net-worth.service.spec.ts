@@ -1,3 +1,4 @@
+import { execFileSync } from "child_process";
 import * as fs from "fs";
 import * as path from "path";
 import { NetWorthService } from "./net-worth.service";
@@ -4252,4 +4253,43 @@ describe("NetWorthService", () => {
       expect(offenders).toEqual([]);
     });
   });
+});
+
+/**
+ * Day and month boundaries are the same strings on a server in any timezone.
+ *
+ * Setting TZ inside a Jest worker does not move `Date` (see
+ * payment-frequency.timezone.spec.ts), and CI runs UTC, so the offsets are
+ * walked in child processes. East of UTC the daily series used to start a day
+ * early and the LLM history a month early.
+ */
+describe("NetWorthService date boundaries across server timezones", () => {
+  const script = `
+const { NetWorthService } = require("./src/net-worth/net-worth.service");
+const p = NetWorthService.prototype;
+p.getLlmHistory.call({ getMonthlyNetWorth: async (_u, s) => s }, "u").then(
+  (llmStart) => process.stdout.write(JSON.stringify({
+    days: p.enumerateDays("2025-03-01", "2025-03-03"),
+    llmStart,
+  })),
+);
+`;
+
+  it.each(["UTC", "Asia/Kolkata", "America/Los_Angeles"])(
+    "under TZ=%s",
+    (timezone) => {
+      const out = execFileSync(
+        process.execPath,
+        ["-r", "ts-node/register/transpile-only", "-e", script],
+        {
+          cwd: path.join(__dirname, "..", ".."),
+          env: { ...process.env, TZ: timezone, TS_NODE_TRANSPILE_ONLY: "true" },
+          encoding: "utf8",
+        },
+      );
+      const { days, llmStart } = JSON.parse(out);
+      expect(days).toEqual(["2025-03-01", "2025-03-02", "2025-03-03"]);
+      expect(llmStart).toMatch(/^\d{4}-\d{2}-01$/);
+    },
+  );
 });

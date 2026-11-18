@@ -770,7 +770,7 @@ describe("YahooFinanceService", () => {
       expect(result![0].open).toBe(180);
     });
 
-    it("should set hours to midnight on returned dates", async () => {
+    it("should set returned dates to UTC midnight", async () => {
       mockFetchResponse({
         chart: {
           result: [
@@ -794,9 +794,9 @@ describe("YahooFinanceService", () => {
 
       const result = await service.fetchHistorical("AAPL");
 
-      expect(result![0].date.getHours()).toBe(0);
-      expect(result![0].date.getMinutes()).toBe(0);
-      expect(result![0].date.getSeconds()).toBe(0);
+      expect(result![0].date.getUTCHours()).toBe(0);
+      expect(result![0].date.getUTCMinutes()).toBe(0);
+      expect(result![0].date.getUTCSeconds()).toBe(0);
     });
   });
 
