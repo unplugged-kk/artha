@@ -63,4 +63,22 @@ Migration `20261118085649_user_identities.sql` (+ `schema.sql`, entity `UserIden
 
 ## Live verification
 
-NOT TESTED.
+Run against tenant `https://syler.eu.auth0.com/` from this worktree's `.env`
+(`OIDC_PROVIDER=auth0`, `OIDC_LOGOUT_REDIRECT=true`, `OIDC_CONNECTIONS=google-oauth2`),
+dev stack in `docker-compose.dev.yml`.
+
+| Step | Status | Evidence |
+|------|--------|----------|
+| Discovery against the tenant at startup | PASS | `[OidcService] Discovered OIDC issuer: https://syler.eu.auth0.com/` |
+| `GET /auth/methods` | PASS | `{local: true, oidc: true, oidcConnections: ["google-oauth2"], ...}` |
+| `GET /auth/oidc` redirect | PASS | 302 to `/authorize` with `response_type=code`, PKCE `S256`, `code_challenge`, `nonce`, `state`, and the configured `redirect_uri` |
+| `GET /auth/oidc?connection=google-oauth2` | PASS | Lands on Google's real sign-in page (`accounts.google.com`), skipping the universal login chooser |
+| `GET /auth/oidc?connection=github` | PASS | 400 `Unknown sign-in method`, no cookies set |
+| `POST /auth/logout` | PASS | `{message, logoutUrl: https://syler.eu.auth0.com/oidc/logout?post_logout_redirect_uri=...%2Flogin&client_id=...}` |
+| Complete a login through Google | NOT TESTED | Needs the owner's Google account in a browser. |
+| Logout ends the Auth0 session, then returns to `/login` | NOT TESTED | Same. |
+| Refusal of a duplicate email (`account_exists`), link and unlink from Settings | NOT TESTED | Requires a completed login. |
+| Login page renders one button for `google-oauth2` | BLOCKED (environment) | The dev frontend container fails to start under Next 16 dev (`ENOENT .next/dev/server/pages/_app/build-manifest.json`) on every route, with a fresh `.next` volume and `NODE_ENV=development`; no frontend build file differs from `main`. The same page renders on the host from a checkout with a real `node_modules`. Frontend behaviour is covered by 5875 passing vitest tests instead. |
+
+Manual steps left for the owner: complete a Google login and a logout in a browser,
+then try a duplicate email, link a second method and remove the last one.
