@@ -1,6 +1,6 @@
 # Personal beta -- status
 
-Updated 2026-11-17 21:15 IST. Target: private household installation by Sunday 22 November 2026.
+Updated 2026-11-18 13:45 IST. Target: private household installation by Sunday 22 November 2026.
 The per-step evidence lives in `personal-beta-execution.md` (log) and `backup-restore-rehearsal.md`
 (recovery). This page is the summary: where things stand, what is stuck, what is next.
 
@@ -23,19 +23,26 @@ Branches:
 | B2 Manifest + encrypted export + DB snapshot | PASS (synthetic) | |
 | B3 Restore counts (BR-3) | PASS | Unexplained omissions now fail the restore and leave prior data intact. |
 | B4 Host-loss rehearsal | PASS (synthetic, same Mac) | 55 s to restored, manifest identical after restart and under `RLS_MODE=enforce`; rollback via snapshot 50 s. |
-| C Release gates on candidate | RUNNING | See "Gates" below. |
+| C Release gates on candidate | PASS except translations and one failure inherited from `main` | See "Gates" below. |
 | C Physical Android / iPhone | NOT TESTED | Needs devices and private HTTPS. |
 | D Cutover | NOT STARTED | Needs owner approval after C. |
 
-### Gates (last complete run at `5849c304e`)
+### Gates (complete run at `474b1410e`, logs in `/private/tmp/artha-beta-synthetic-evidence/c2/`)
+
+Run with `TZ=UTC TMPDIR=/private/tmp/` and integration DB `localhost:55433/artha_test`.
 
 | Gate | Result |
 |---|---|
-| Backend lint, typecheck | PASS |
-| Backend unit | FAIL 43 of 16,663, in 4 suites. Two were caused by this branch and are now fixed (`474b1410e`): the overlap query wrote its own ledger predicate, and a pre-existing restore read was missing from the attachment-guard record. 5 are macOS-only (`TMPDIR` symlink, CI unaffected). The rest is backend i18n parity -- see "Stuck". |
-| Backend integration, builds, frontend lint/test/build | Re-running at `474b1410e` (`/private/tmp/artha-beta-synthetic-evidence/c2/`) |
-| Browser: import, XLSX mixed-account, reconciliation, backup | PASS 13/13 on the development-image stack |
+| Backend lint, typecheck, build | PASS |
+| Backend unit | FAIL 36 of 16,663, all in `i18n/locales.parity.spec.ts`: untranslated new keys (expected on a WIP branch; see "Stuck" 1) |
+| Backend integration | PASS 561/561 (51 suites, including `import-source-accounts` and `backup-restore`) |
+| Frontend lint, typecheck, build | PASS |
+| Frontend tests | FAIL 19 of 16,817: 17 i18n parity (expected) and 2 in `store/authStore.test.ts` "rehydration 502 handling". The 2 also fail on unmodified `origin/main` (checked 2026-11-18), so they are not this branch's regression, but a release blocker for "no failing tests" until fixed |
+| Browser: import, XLSX mixed-account, reconciliation, backup | PASS 13/13 on the development-image stack at `5849c304e` |
 | Repository CI on the pushed branch | Not yet observed |
+
+Earlier run at `5849c304e`: 2 real regressions found and fixed in `474b1410e` (overlap query wrote its own
+ledger predicate; a pre-existing restore read was missing from the attachment-guard record).
 
 ## Where we are stuck
 
@@ -57,7 +64,9 @@ Branches:
 
 ## Next actions, in order
 
-1. Read the `c2` gate results. Fix any failures that are not parity.
+1. Fix `frontend/src/store/authStore.test.ts` "rehydration 502 handling" (fails on `main` too: after a
+   502 or a network error, the store no longer keeps `isAuthenticated`). Decide whether the test or the
+   store is wrong, and keep the behaviour the test describes unless there is a reason not to.
 2. Rebuild the candidate images from a clean `git archive` of the gated SHA. Run the A1 browser spec and
    the recovery script against the production-image stack. Record the digests.
 3. Owner: choose the off-host location, the HTTPS route, the devices, and the translation timing (stuck
@@ -82,3 +91,36 @@ Key audit findings:
 - Inactive users are issued tokens.
 - Every OIDC login deletes Artha TOTP.
 - No PKCE.
+
+## Handoff for the next agent
+
+Read in this order:
+1. This page.
+2. `artha-agent-runbook.md` (the assignment).
+3. `artha-weekend-release.md` (the release test matrix).
+4. The last entry in `personal-beta-execution.md`.
+
+Facts that are easy to miss:
+- **Two checkouts.** Release work happens in `/Users/kishore/git/artha` on
+  `release/personal-beta-2026-11-22`. Auth0 work happens in `/Users/kishore/git/artha-auth0` on
+  `feat/auth0-integration`, and that worktree has no `node_modules` of its own.
+- **Owner files.** Leave `.claude/settings.json` (modified) and `AGENTS.md` (untracked) alone. They
+  are not part of this work.
+- **Personal data.** Never copy the real workbook (`/private/tmp/finance-nov17/input`) into the repo,
+  a build context, CI or a screenshot.
+- **Disposable environments** that may still be running:
+  - E2E stack: Compose project `artha-weekend-e2e`, app on `http://localhost:3001` (use `localhost`;
+    `127.0.0.1` hangs on "Loading Artha"), loopback override at
+    `/private/tmp/artha-beta-synthetic-evidence/compose.loopback.yml`.
+  - Integration DB: container `artha-beta-itest-pg` on `localhost:55433`, database `artha_test`, user
+    `artha_test`, password `itest_disposable` (throwaway).
+  - Recovery stacks `artha-beta-b` (3201, `RLS_MODE=enforce`) and `artha-beta-r` (3301). Project
+    `artha-beta-a` is stopped. Their env files and credentials are in `/private/tmp/artha-beta-b/`
+    (mode 600; never print them); mounts are in `~/.local/share/artha-beta-rehearsal/`.
+  - `/private/tmp` does not survive a reboot. If those files are gone, rebuild from the procedure in
+    `backup-restore-rehearsal.md` with fresh secrets.
+- **Backend lint fixes files.** `npm run lint` in `backend` runs `eslint --fix`, so check `git status`
+  after it.
+- **Commits go through lint-staged.** Do not `git add -N` and then commit.
+- **Do not deploy or post real data.** Live deployment and the first real posting need explicit owner
+  approval (runbook section D).
