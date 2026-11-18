@@ -76,6 +76,12 @@ export interface CsvColumnMappingConfig {
   paymentMethodColumn?: number;
   upiVpaColumn?: number;
   upiReferenceColumn?: number;
+  /**
+   * Column naming the account each row belongs to (a household tracker with
+   * one sheet for every bank and card). When set, rows are routed per label
+   * instead of into a single selected account. Banking mode only.
+   */
+  sourceAccountColumn?: number;
 }
 
 export interface CsvTransferRule {
@@ -1203,6 +1209,8 @@ export function parseCsv(
       : null;
 
   const rejectedFileRows: CsvRejectedRow[] = [];
+  const sourceAccountsSet = new Set<string>();
+  const bySource = !investmentMode && config.sourceAccountColumn !== undefined;
   const firstDataLine = config.hasHeader ? 2 : 1;
 
   for (const [rowIndex, row] of dataRows.entries()) {
@@ -1487,6 +1495,15 @@ export function parseCsv(
       commission: 0,
       tagNames,
     };
+    if (bySource) {
+      const sourceAccount = truncate(
+        getField(row, config.sourceAccountColumn!),
+        FIELD_LIMITS.CATEGORY,
+      );
+      sourceAccountsSet.add(sourceAccount);
+      transaction.sourceAccount = sourceAccount;
+      transaction.sourceRowNumber = rowNumber;
+    }
 
     transactions.push(transaction);
   }
@@ -1506,6 +1523,9 @@ export function parseCsv(
     openingBalance: null,
     openingBalanceDate: null,
     ...(rejectedFileRows.length > 0 ? { rejectedFileRows } : {}),
+    ...(bySource
+      ? { sourceAccounts: Array.from(sourceAccountsSet).sort() }
+      : {}),
     ...(investmentMode
       ? {
           investmentSummary: {

@@ -8,6 +8,7 @@ import {
   DEFERRED_FK_COLUMNS,
   DEFERRED_FK_REPAIRS,
   RESTORABLE_TABLES,
+  PRESERVED_ON_RESTORE,
 } from "./restore-plan";
 
 /**
@@ -612,12 +613,28 @@ export class BackupRestoreDatabaseService {
         )
         .join(", ");
 
-      await manager.query(
+      const written: unknown[] = await manager.query(
         `INSERT INTO "${table}" (${columnList}) VALUES (${placeholders})
-         ON CONFLICT DO NOTHING`,
+         ON CONFLICT DO NOTHING RETURNING 1 AS written`,
         values,
       );
-      count++;
+      if (written.length > 0) count++;
+    }
+
+    // After the wipe and the id remap nothing should conflict, so a row the
+    // database declined is an omission, not a restore. Only a table recorded
+    // in PRESERVED_ON_RESTORE keeps the destination's row by design; anything
+    // else fails the restore, whose transaction then leaves the account as it
+    // was (BR-3).
+    const declined = rows.length - count;
+    if (declined > 0 && !PRESERVED_ON_RESTORE.has(table)) {
+      throw new BadRequestException(
+        tr(
+          "errors.backup.rowsNotRestored",
+          `The backup could not be restored: ${declined} of ${rows.length} ${table} rows conflict with each other or with existing data. Nothing was changed.`,
+          { table, declined, total: rows.length },
+        ),
+      );
     }
 
     return count;

@@ -100,7 +100,9 @@ describe("doc path grammar", () => {
     expect(
       kinds("poc/import-from-dotmny:migration/ms-money-data-model.md"),
     ).toBe("cross-tree");
-    expect(kinds("ghcr.io/unplugged-kk/artha-backend:latest")).toBe("cross-tree");
+    expect(kinds("ghcr.io/unplugged-kk/artha-backend:latest")).toBe(
+      "cross-tree",
+    );
   });
 
   it("does not read prose, globs, templates or placeholders as paths", () => {

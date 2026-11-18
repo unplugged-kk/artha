@@ -40,7 +40,10 @@ const BANNED = /(?<![A-Za-z])monize(?![A-Za-z])/i;
 
 /** Exact paths that may name the upstream project, each with its reason. */
 const EXEMPT_FILES: ReadonlyArray<[path: string, reason: string]> = [
-  ["LICENSE", "AGPL-3.0-only text; upstream copyright notices retained verbatim"],
+  [
+    "LICENSE",
+    "AGPL-3.0-only text; upstream copyright notices retained verbatim",
+  ],
   ["README.md", "the provenance line records the upstream fork (attribution)"],
   [
     "backend/src/common/no-monize.guard.spec.ts",
@@ -67,7 +70,9 @@ function offenders(path: string, text: string): string[] {
   // README keeps one allowed sentence: the provenance line carrying the fork's
   // attribution. Every other line is still held to the rule.
   const scannable =
-    path === "README.md" ? lines.filter((line) => !line.includes("fork of")) : lines;
+    path === "README.md"
+      ? lines.filter((line) => !line.includes("fork of"))
+      : lines;
   const found: string[] = [];
   scannable.forEach((line) => {
     if (BANNED.test(line)) found.push(`${path}: ${line.trim().slice(0, 140)}`);

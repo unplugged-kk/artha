@@ -24,6 +24,10 @@ const REVIEWED: Record<string, string> = {
     "sets the link when writing a pair, and names it in the delete so the " +
     "original's storage key is RETURNED for a prompt sweep; both of its " +
     "visibility reads go through the shared predicate",
+  "backup/backup-attachment-transfer.service.ts":
+    "drops a scan original whose visible half could not be restored, so the " +
+    "deferred self-link never points at a missing row (BR-1) -- a restore " +
+    "integrity rule over archive rows, not a read that decides visibility",
   "backup/restore-plan.ts":
     "defers the self-referential foreign key and repairs it in Phase 3 -- a " +
     "restore ordering concern, and it must name the column to defer it",

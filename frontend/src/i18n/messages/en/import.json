@@ -33,7 +33,8 @@
     "importFailed": "Import failed",
     "importedFromFiles": "Successfully imported {imported} transactions from {files} files",
     "imported": "Successfully imported {imported} transactions",
-    "mnySingleFileOnly": "Import one Microsoft Money file at a time -- a .mny file holds a whole profile."
+    "mnySingleFileOnly": "Import one Microsoft Money file at a time -- a .mny file holds a whole profile.",
+    "sourceColumnSingleFileOnly": "A sheet with an account column can only be imported one file at a time."
   },
   "page": {
     "title": "Import Transactions",
@@ -125,6 +126,8 @@
     "transferAccountColumnDesc": "Column containing the transfer destination account name. Defaults to the Category column if not set.",
     "useCategoryColumn": "Use category column",
     "payeeField": "Payee",
+    "sourceAccountField": "Account / source",
+    "sourceAccountHint": "For a tracker that lists several accounts in one sheet. Each row is posted to the account its source names; you match sources to accounts next.",
     "categoryField": "Category",
     "subcategoryField": "Subcategory",
     "memoField": "Memo",
@@ -251,7 +254,7 @@
   },
   "mapAccounts": {
     "heading": "Map Transfer Accounts",
-    "description": "The following transfer accounts were found in your QIF file. Map them to existing accounts or create new ones.",
+    "description": "The following transfer accounts were found in your file. Map them to existing accounts or create new ones.",
     "mapToExisting": "Map to existing",
     "orCreateNew": "Or create new",
     "newAccountNamePlaceholder": "New account name",
@@ -595,5 +598,38 @@
     "nonTransactional": "This message appears to be non-transactional (OTP, alert, or marketing)",
     "ambiguous": "Message contains ambiguous transaction data and could not be confidently parsed",
     "spam": "Message classified as promotional or spam"
+  },
+  "mapSourceAccounts": {
+    "heading": "Match sources to accounts",
+    "description": "Each row in this sheet names the account it belongs to. Choose the account for each source once. You can still move single rows on the review screen.",
+    "choose": "Choose an account...",
+    "skip": "Skip these rows",
+    "blankSource": "(no source)",
+    "rowCount": "{count, plural, one {# row} other {# rows}}",
+    "postTo": "Post {source} rows to",
+    "unresolved": "{count, plural, one {# source still needs} other {# sources still need}} an account or an explicit skip."
+  },
+  "sourceReview": {
+    "summary": "{fileName}: {rows, plural, one {# row} other {# rows}}{skipped, plural, =0 {} other {, # left out}}.",
+    "changesHeading": "Balance change per account",
+    "rejectedHeading": "{count, plural, one {# row} other {# rows}} could not be read",
+    "rejectedRow": "Row {row}: {reason}",
+    "skipRejected": "Leave {count, plural, one {this row} other {these rows}} out of the import",
+    "colRow": "Row",
+    "colDate": "Date",
+    "colPayee": "Payee",
+    "colAmount": "Amount",
+    "colSource": "Source",
+    "colPostTo": "Post to",
+    "postToRow": "Account for row {row}",
+    "transferTo": "Transfer with {account}",
+    "overlapsChecking": "Checking your accounts for entries these rows may repeat...",
+    "overlapsFailed": "Could not check your accounts for entries these rows may repeat. Go back and try again before importing.",
+    "overlapsHeading": "{count, plural, one {# row looks} other {# rows look}} like an entry already in your accounts",
+    "overlapsHelp": "An unchanged re-import is recognised automatically. These rows differ from what is there, so they could be posted twice. Skip a row with its Post to menu, or keep it.",
+    "overlapOtherAccount": "Row {row}: {account} already has {amount} on {date} ({payee}). The row may have moved to another account since the last import.",
+    "overlapChangedAmount": "Row {row}: {account} already has {payee} for {amount} on {date}. The amount may have changed since the last import.",
+    "overlapKeep": "Import row {row} anyway",
+    "mobileRowMeta": "Row {row} · {date} · {source}"
   }
 }

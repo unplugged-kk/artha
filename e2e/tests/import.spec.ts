@@ -26,7 +26,9 @@ test.describe("Import Transactions", () => {
       page.getByText(/upload transaction files/i).first(),
     ).toBeVisible({ timeout: 10000 });
     await expect(
-      page.locator('input[type="file"][accept=".qif,.ofx,.qfx,.csv,.mny"]'),
+      page.locator(
+        'input[type="file"][accept=".qif,.ofx,.qfx,.csv,.mny,.xlsx"]',
+      ),
     ).toBeAttached();
   });
 

@@ -645,6 +645,25 @@ export function CsvColumnMappingStep({
           </div>
 
           {!investmentMode && (
+            <div>
+              <label htmlFor="csv-source-account-column" className="block text-xs text-gray-600 dark:text-gray-400 mb-1">
+                {t('csvMapping.sourceAccountField')}
+              </label>
+              <select
+                id="csv-source-account-column"
+                value={columnMapping.sourceAccountColumn !== undefined ? String(columnMapping.sourceAccountColumn) : ''}
+                onChange={(e) => updateMapping('sourceAccountColumn', e.target.value)}
+                className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              >
+                {columnOptions.map((o) => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </select>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{t('csvMapping.sourceAccountHint')}</p>
+            </div>
+          )}
+
+          {!investmentMode && (
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1">{t('csvMapping.categoryField')}</label>

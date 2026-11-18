@@ -242,10 +242,19 @@ export async function readXlsxSheetAsCsv(
     throw new XlsxEmptyHeaderError(sheetName, headerRow);
   }
 
+  const numberedTracker =
+    sheetName === "Transactions" &&
+    header[0] === "#" &&
+    header[1] === "Date" &&
+    /^Amount(?: |$)/.test(header[2] ?? "");
   const rows: string[][] = [header];
   for (let r = headerRow + 1; r <= rowCount; r++) {
     const values = rowToStrings(worksheet.getRow(r), columnCount);
     if (isBlankRow(values)) break;
+    if (numberedTracker) {
+      if (/^TOTAL(?: EXPENSES)?$/i.test(values[0].trim())) break;
+      if (/^\d+$/.test(values[0]) && isBlankRow(values.slice(1))) continue;
+    }
     rows.push(values);
   }
 

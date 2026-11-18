@@ -33,7 +33,8 @@
     "importFailed": "[XX-Import failed-XX]",
     "importedFromFiles": "[XX-Successfully imported {imported} transactions from {files} files-XX]",
     "imported": "[XX-Successfully imported {imported} transactions-XX]",
-    "mnySingleFileOnly": "[XX-Import one Microsoft Money file at a time -- a .mny file holds a whole profile.-XX]"
+    "mnySingleFileOnly": "[XX-Import one Microsoft Money file at a time -- a .mny file holds a whole profile.-XX]",
+    "sourceColumnSingleFileOnly": "[XX-A sheet with an account column can only be imported one file at a time.-XX]"
   },
   "page": {
     "title": "[XX-Import Transactions-XX]",
@@ -125,6 +126,8 @@
     "transferAccountColumnDesc": "[XX-Column containing the transfer destination account name. Defaults to the Category column if not set.-XX]",
     "useCategoryColumn": "[XX-Use category column-XX]",
     "payeeField": "[XX-Payee-XX]",
+    "sourceAccountField": "[XX-Account / source-XX]",
+    "sourceAccountHint": "[XX-For a tracker that lists several accounts in one sheet. Each row is posted to the account its source names; you match sources to accounts next.-XX]",
     "categoryField": "[XX-Category-XX]",
     "subcategoryField": "[XX-Subcategory-XX]",
     "memoField": "[XX-Memo-XX]",
@@ -251,7 +254,7 @@
   },
   "mapAccounts": {
     "heading": "[XX-Map Transfer Accounts-XX]",
-    "description": "[XX-The following transfer accounts were found in your QIF file. Map them to existing accounts or create new ones.-XX]",
+    "description": "[XX-The following transfer accounts were found in your file. Map them to existing accounts or create new ones.-XX]",
     "mapToExisting": "[XX-Map to existing-XX]",
     "orCreateNew": "[XX-Or create new-XX]",
     "newAccountNamePlaceholder": "[XX-New account name-XX]",
@@ -595,5 +598,38 @@
     "nonTransactional": "[XX-This message appears to be non-transactional (OTP, alert, or marketing)-XX]",
     "ambiguous": "[XX-Message contains ambiguous transaction data and could not be confidently parsed-XX]",
     "spam": "[XX-Message classified as promotional or spam-XX]"
+  },
+  "mapSourceAccounts": {
+    "heading": "[XX-Match sources to accounts-XX]",
+    "description": "[XX-Each row in this sheet names the account it belongs to. Choose the account for each source once. You can still move single rows on the review screen.-XX]",
+    "choose": "[XX-Choose an account...-XX]",
+    "skip": "[XX-Skip these rows-XX]",
+    "blankSource": "[XX-(no source)-XX]",
+    "rowCount": "[XX-{count, plural, one {# row} other {# rows}}-XX]",
+    "postTo": "[XX-Post {source} rows to-XX]",
+    "unresolved": "[XX-{count, plural, one {# source still needs} other {# sources still need}} an account or an explicit skip.-XX]"
+  },
+  "sourceReview": {
+    "summary": "[XX-{fileName}: {rows, plural, one {# row} other {# rows}}{skipped, plural, =0 {} other {, # left out}}.-XX]",
+    "changesHeading": "[XX-Balance change per account-XX]",
+    "rejectedHeading": "[XX-{count, plural, one {# row} other {# rows}} could not be read-XX]",
+    "rejectedRow": "[XX-Row {row}: {reason}-XX]",
+    "skipRejected": "[XX-Leave {count, plural, one {this row} other {these rows}} out of the import-XX]",
+    "colRow": "[XX-Row-XX]",
+    "colDate": "[XX-Date-XX]",
+    "colPayee": "[XX-Payee-XX]",
+    "colAmount": "[XX-Amount-XX]",
+    "colSource": "[XX-Source-XX]",
+    "colPostTo": "[XX-Post to-XX]",
+    "postToRow": "[XX-Account for row {row}-XX]",
+    "transferTo": "[XX-Transfer with {account}-XX]",
+    "overlapsChecking": "[XX-Checking your accounts for entries these rows may repeat...-XX]",
+    "overlapsFailed": "[XX-Could not check your accounts for entries these rows may repeat. Go back and try again before importing.-XX]",
+    "overlapsHeading": "[XX-{count, plural, one {# row looks} other {# rows look}} like an entry already in your accounts-XX]",
+    "overlapsHelp": "[XX-An unchanged re-import is recognised automatically. These rows differ from what is there, so they could be posted twice. Skip a row with its Post to menu, or keep it.-XX]",
+    "overlapOtherAccount": "[XX-Row {row}: {account} already has {amount} on {date} ({payee}). The row may have moved to another account since the last import.-XX]",
+    "overlapChangedAmount": "[XX-Row {row}: {account} already has {payee} for {amount} on {date}. The amount may have changed since the last import.-XX]",
+    "overlapKeep": "[XX-Import row {row} anyway-XX]",
+    "mobileRowMeta": "[XX-Row {row} · {date} · {source}-XX]"
   }
 }
