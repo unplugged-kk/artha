@@ -1236,5 +1236,27 @@
       "moveUp": "Di chuyển lên",
       "moveDown": "Di chuyển xuống"
     }
+  },
+  "signInMethods": {
+    "heading": "Phương thức đăng nhập",
+    "description": "Các tài khoản khác bạn có thể dùng để đăng nhập vào Artha.",
+    "linkButton": "Liên kết phương thức đăng nhập khác",
+    "removeButton": "Xóa",
+    "empty": "Chưa liên kết phương thức đăng nhập nào.",
+    "linkedOn": "Liên kết ngày {date}",
+    "lastUsed": "Dùng lần cuối {date}",
+    "neverUsed": "Chưa từng dùng",
+    "emailPassword": "Email và mật khẩu",
+    "unknownProvider": "Nhà cung cấp không xác định",
+    "confirmTitle": "Xóa phương thức đăng nhập?",
+    "confirmMessage": "Bạn sẽ không thể đăng nhập bằng {provider} nữa.",
+    "stepUpReason": "Xác minh lại danh tính để thay đổi cách bạn đăng nhập.",
+    "toasts": {
+      "loadFailed": "Không thể tải phương thức đăng nhập",
+      "removed": "Đã xóa phương thức đăng nhập",
+      "removeFailed": "Không thể xóa phương thức đăng nhập",
+      "linkFailed": "Không thể bắt đầu liên kết phương thức đăng nhập",
+      "reauthFailed": "Không thể xác nhận xác thực lại"
+    }
   }
 }

@@ -9,6 +9,20 @@ import toast from 'react-hot-toast';
 import { useTranslations } from 'next-intl';
 import { OnboardingPreferencesScreen } from '@/components/auth/OnboardingPreferencesScreen';
 import { stashOidcReauthArtifact } from '@/lib/stepUpToken';
+import { TwoFactorVerify } from '@/components/auth/TwoFactorVerify';
+import { AuthShell } from '@/components/auth/AuthShell';
+import { clearLogoutIncomplete } from '@/lib/logout-state';
+import type { User } from '@/types/auth';
+
+// Sign-in failures the callback can name; anything else reads as a generic failure.
+const ERROR_TOASTS: Record<string, string> = {
+  account_exists: 'callback.toasts.accountExists',
+  registration_disabled: 'callback.toasts.registrationDisabled',
+  mfa_required: 'callback.toasts.mfaRequired',
+};
+
+// Outcome of linking a sign-in method from Settings; the user stays signed in.
+const LINK_RESULTS = new Set(['linked', 'already_linked', 'identity_in_use']);
 
 /**
  * Same-origin path stashed before an OIDC redirect, consumed once.
@@ -43,6 +57,9 @@ function CallbackContent() {
   // account: holds the path to continue to once the first-run language and
   // currency step is done (or skipped).
   const [onboardingTarget, setOnboardingTarget] = useState<string | null>(null);
+  // Set when the account has Artha TOTP: the provider proved the identity, the
+  // second factor is still owed, exactly as after a password on /login.
+  const [twoFactorToken, setTwoFactorToken] = useState<string | null>(null);
   // The sign-in exchange must run exactly once. Its effect depends on values
   // that are not referentially stable across renders (the translator), so
   // without this guard any re-render would re-run the whole handler --
@@ -88,9 +105,36 @@ function CallbackContent() {
           return;
         }
 
+        const link = searchParams.get('link');
+        if (link && LINK_RESULTS.has(link)) {
+          if (link === 'linked') toast.success(t('callback.toasts.linkLinked'));
+          else if (link === 'already_linked') toast(t('callback.toasts.linkAlreadyLinked'));
+          else toast.error(t('callback.toasts.linkIdentityInUse'));
+          router.push('/settings#security');
+          return;
+        }
+
+        if (searchParams.get('twoFactor') === 'required') {
+          // A sign-in credential in the address bar: take it out before anything
+          // else can read or record it.
+          const token = new URLSearchParams(
+            window.location.hash.replace(/^#/, ''),
+          ).get('two_factor_token');
+          window.history.replaceState(null, '', window.location.pathname);
+          if (token) {
+            setTwoFactorToken(token);
+          } else {
+            toast.error(t('callback.toasts.oidcFailed'));
+            router.push('/login');
+          }
+          return;
+        }
+
         // Handle error from OIDC provider
         if (error) {
-          toast.error(t('callback.toasts.oidcFailed'));
+          const key = ERROR_TOASTS[error];
+          if (key) toast.error(t(key), { duration: 10_000 });
+          else toast.error(t('callback.toasts.oidcFailed'));
           router.push('/login');
           return;
         }
@@ -145,6 +189,33 @@ function CallbackContent() {
 
     handleCallback();
   }, [searchParams, router, login, setLoading, setError, t]);
+
+  // Mirrors the login page's post-2FA path.
+  const handle2FAVerified = (user: User) => {
+    clearLogoutIncomplete();
+    login(user, 'httpOnly');
+    toast.success(t('toasts.welcomeBack'));
+    const returnTo = readReturnTo();
+    if (user.mustChangePassword) {
+      router.push('/change-password');
+    } else if (returnTo) {
+      window.location.href = returnTo;
+    } else {
+      router.push('/dashboard');
+    }
+  };
+
+  if (twoFactorToken) {
+    return (
+      <AuthShell languagePicker>
+        <TwoFactorVerify
+          tempToken={twoFactorToken}
+          onVerified={handle2FAVerified}
+          onCancel={() => router.push('/login')}
+        />
+      </AuthShell>
+    );
+  }
 
   if (onboardingTarget) {
     return (

@@ -1236,5 +1236,27 @@
       "moveUp": "Yukarı taşı",
       "moveDown": "Aşağı taşı"
     }
+  },
+  "signInMethods": {
+    "heading": "Oturum açma yöntemleri",
+    "description": "Artha'da oturum açmak için kullanabileceğiniz diğer hesaplar.",
+    "linkButton": "Başka bir oturum açma yöntemi bağla",
+    "removeButton": "Kaldır",
+    "empty": "Bağlı oturum açma yöntemi yok.",
+    "linkedOn": "{date} tarihinde bağlandı",
+    "lastUsed": "Son kullanım: {date}",
+    "neverUsed": "Hiç kullanılmadı",
+    "emailPassword": "E-posta ve parola",
+    "unknownProvider": "Bilinmeyen sağlayıcı",
+    "confirmTitle": "Oturum açma yöntemi kaldırılsın mı?",
+    "confirmMessage": "Artık {provider} ile oturum açamayacaksınız.",
+    "stepUpReason": "Oturum açma şeklinizi değiştirmek için kimliğinizi yeniden doğrulayın.",
+    "toasts": {
+      "loadFailed": "Oturum açma yöntemleri yüklenemedi",
+      "removed": "Oturum açma yöntemi kaldırıldı",
+      "removeFailed": "Oturum açma yöntemi kaldırılamadı",
+      "linkFailed": "Oturum açma yöntemi bağlama başlatılamadı",
+      "reauthFailed": "Yeniden kimlik doğrulama onaylanamadı"
+    }
   }
 }

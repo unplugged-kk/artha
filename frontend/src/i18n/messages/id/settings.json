@@ -1236,5 +1236,27 @@
       "moveUp": "Naik",
       "moveDown": "Turun"
     }
+  },
+  "signInMethods": {
+    "heading": "Metode masuk",
+    "description": "Akun lain yang dapat Anda gunakan untuk masuk ke Artha.",
+    "linkButton": "Tautkan metode masuk lain",
+    "removeButton": "Hapus",
+    "empty": "Tidak ada metode masuk yang ditautkan.",
+    "linkedOn": "Ditautkan {date}",
+    "lastUsed": "Terakhir digunakan {date}",
+    "neverUsed": "Belum pernah digunakan",
+    "emailPassword": "Email dan kata sandi",
+    "unknownProvider": "Penyedia tidak dikenal",
+    "confirmTitle": "Hapus metode masuk?",
+    "confirmMessage": "Anda tidak akan bisa lagi masuk dengan {provider}.",
+    "stepUpReason": "Verifikasi ulang identitas Anda untuk mengubah cara Anda masuk.",
+    "toasts": {
+      "loadFailed": "Gagal memuat metode masuk",
+      "removed": "Metode masuk dihapus",
+      "removeFailed": "Gagal menghapus metode masuk",
+      "linkFailed": "Gagal memulai penautan metode masuk",
+      "reauthFailed": "Gagal mengonfirmasi autentikasi ulang"
+    }
   }
 }

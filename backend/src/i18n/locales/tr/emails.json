@@ -86,14 +86,6 @@
     "topCategories": "En Yüksek Kategoriler",
     "button": "Bütçe Panosunu Görüntüle"
   },
-  "oidcLink": {
-    "subject": "Artha: SSO Hesap Bağlantısını Onayla",
-    "heading": "SSO Hesabınızı Bağlayın",
-    "greeting": "Merhaba {{ name }},",
-    "intro": "Birisi, mevcut Artha hesabınızla eşleşen bir e-posta adresiyle SSO aracılığıyla oturum açmaya çalıştı. SSO kimliğinizi bu hesaba bağlamak için aşağıdaki düğmeye tıklayın:",
-    "button": "Hesap Bağlantısını Onayla",
-    "disclaimer": "Bu isteği siz başlatmadıysanız, bu e-postayı güvenle yoksayabilirsiniz. Bağlantının geçerlilik süresi 1 saattir."
-  },
   "accountLocked": {
     "subject": "Hesap Geçici Olarak Kilitlendi",
     "heading": "Hesap Geçici Olarak Kilitlendi",

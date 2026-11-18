@@ -86,14 +86,6 @@
     "topCategories": "Danh mục hàng đầu",
     "button": "Xem bảng điều khiển ngân sách"
   },
-  "oidcLink": {
-    "subject": "Artha: Xác nhận liên kết tài khoản SSO",
-    "heading": "Liên kết tài khoản SSO của bạn",
-    "greeting": "Xin chào {{ name }},",
-    "intro": "Ai đó đã cố gắng đăng nhập qua SSO bằng email trùng với tài khoản Artha hiện có của bạn. Để liên kết danh tính SSO với tài khoản này, hãy nhấp vào nút bên dưới:",
-    "button": "Xác nhận liên kết tài khoản",
-    "disclaimer": "Nếu bạn không khởi tạo yêu cầu này, bạn có thể bỏ qua email này một cách an toàn. Liên kết sẽ hết hạn sau 1 giờ."
-  },
   "accountLocked": {
     "subject": "Tài khoản tạm thời bị khóa",
     "heading": "Tài khoản tạm thời bị khóa",

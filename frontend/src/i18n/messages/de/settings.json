@@ -1236,5 +1236,27 @@
       "moveUp": "Nach oben",
       "moveDown": "Nach unten"
     }
+  },
+  "signInMethods": {
+    "heading": "Anmeldemethoden",
+    "description": "Andere Konten, mit denen Sie sich bei Artha anmelden können.",
+    "linkButton": "Weitere Anmeldemethode verknüpfen",
+    "removeButton": "Entfernen",
+    "empty": "Es sind keine Anmeldemethoden verknüpft.",
+    "linkedOn": "Verknüpft am {date}",
+    "lastUsed": "Zuletzt verwendet am {date}",
+    "neverUsed": "Nie verwendet",
+    "emailPassword": "E-Mail und Passwort",
+    "unknownProvider": "Unbekannter Anbieter",
+    "confirmTitle": "Anmeldemethode entfernen?",
+    "confirmMessage": "Sie können sich dann nicht mehr mit {provider} anmelden.",
+    "stepUpReason": "Bestätigen Sie Ihre Identität erneut, um Ihre Anmeldemethoden zu ändern.",
+    "toasts": {
+      "loadFailed": "Anmeldemethoden konnten nicht geladen werden",
+      "removed": "Anmeldemethode entfernt",
+      "removeFailed": "Anmeldemethode konnte nicht entfernt werden",
+      "linkFailed": "Verknüpfen der Anmeldemethode konnte nicht gestartet werden",
+      "reauthFailed": "Erneute Authentifizierung konnte nicht bestätigt werden"
+    }
   }
 }

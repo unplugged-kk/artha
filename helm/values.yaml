@@ -269,9 +269,23 @@ backend:
   # -- OIDC settings (only included in ConfigMap when explicitly set)
   # NOTE: OIDC_CLIENT_ID and OIDC_CLIENT_SECRET must be provided via a Secret.
   # Use extraEnvFrom with a secretRef, or extraEnv with valueFrom.secretKeyRef.
+  # OIDC_ISSUER_URL must be https (Auth0: https://<tenant>.<region>.auth0.com/,
+  # trailing slash) and must be set together with the client id and secret, or
+  # startup fails. OIDC_CALLBACK_URL is <origin>/api/v1/auth/oidc/callback; set it
+  # explicitly (http is accepted only on localhost/127.0.0.1/[::1]).
   oidc:
     OIDC_ISSUER_URL: ""
     OIDC_CALLBACK_URL: ""
+    # "generic" (backend default when blank) or "auth0" (connection hint and
+    # Auth0 logout URL). Auth0 app: Regular Web Application, allowed logout URL
+    # <origin>/login.
+    OIDC_PROVIDER: ""
+    # Comma-separated Auth0 connection names shown as login buttons, e.g.
+    # "google-oauth2". Blank = one generic SSO button. List only connections
+    # whose live login has been tested.
+    OIDC_CONNECTIONS: ""
+    # "true" also ends the provider session on Artha logout. Blank = false.
+    OIDC_LOGOUT_REDIRECT: ""
 
   # -- SMTP / email settings
   # NOTE: SMTP_USER and SMTP_PASSWORD must be provided via a Secret.

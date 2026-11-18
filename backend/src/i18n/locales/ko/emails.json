@@ -86,14 +86,6 @@
     "topCategories": "주요 카테고리",
     "button": "예산 대시보드 보기"
   },
-  "oidcLink": {
-    "subject": "Artha: SSO 계정 연결 확인",
-    "heading": "SSO 계정 연결",
-    "greeting": "안녕하세요 {{ name }}님,",
-    "intro": "누군가 기존 Artha 계정의 이메일과 일치하는 주소로 SSO를 통해 로그인을 시도했습니다. SSO 인증을 이 계정에 연결하려면 아래 버튼을 클릭하세요:",
-    "button": "계정 연결 확인",
-    "disclaimer": "이 요청을 직접 시작하지 않으셨다면 이 이메일을 무시하셔도 됩니다. 링크는 1시간 후 만료됩니다."
-  },
   "accountLocked": {
     "subject": "계정이 일시적으로 잠겼습니다",
     "heading": "계정이 일시적으로 잠겼습니다",

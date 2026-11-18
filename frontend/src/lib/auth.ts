@@ -8,6 +8,23 @@ export interface AuthMethods {
   smtp: boolean;
   force2fa: boolean;
   demo: boolean;
+  /** Provider connection names the login page offers one button each; may be empty. */
+  oidcConnections?: string[];
+}
+
+/**
+ * The provider's end-session URL the backend hands back on logout, or undefined.
+ * Only an absolute http(s) URL is followed: anything else (a `javascript:` URL
+ * included) is dropped rather than navigated to.
+ */
+function safeLogoutUrl(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' || url.protocol === 'http:' ? url.href : undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 export const authApi = {
@@ -21,8 +38,11 @@ export const authApi = {
     return response.data;
   },
 
-  logout: async (): Promise<void> => {
-    await apiClient.post('/auth/logout');
+  // When `logoutUrl` is set the provider session must end too: pass it to the
+  // store's `logout`, which navigates there after clearing local state.
+  logout: async (): Promise<{ message?: string; logoutUrl?: string }> => {
+    const response = await apiClient.post<{ message?: string; logoutUrl?: string }>('/auth/logout');
+    return { message: response.data?.message, logoutUrl: safeLogoutUrl(response.data?.logoutUrl) };
   },
 
   // Acting-context profile: identifies whose finances are on screen. While a
@@ -46,9 +66,13 @@ export const authApi = {
     return response.data;
   },
 
-  initiateOidc: () => {
+  // `connection` preselects one provider connection; without it the provider's
+  // own login page lets the user choose.
+  initiateOidc: (connection?: string) => {
     // Use relative URL - Next.js rewrites handle routing to backend
-    window.location.href = '/api/v1/auth/oidc';
+    window.location.href = connection
+      ? `/api/v1/auth/oidc?connection=${encodeURIComponent(connection)}`
+      : '/api/v1/auth/oidc';
   },
 
   /**

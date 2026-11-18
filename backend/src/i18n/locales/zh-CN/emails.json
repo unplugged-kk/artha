@@ -86,14 +86,6 @@
     "topCategories": "主要分类",
     "button": "查看预算仪表盘"
   },
-  "oidcLink": {
-    "subject": "Artha：确认 SSO 账户关联",
-    "heading": "关联您的 SSO 账户",
-    "greeting": "您好，{{ name }}，",
-    "intro": "有人尝试通过 SSO 使用与您现有 Artha 账户匹配的电子邮件登录。要将您的 SSO 身份关联到此账户，请点击下方按钮：",
-    "button": "确认账户关联",
-    "disclaimer": "如果您未发起此请求，可以安全忽略此邮件。链接将在 1 小时后过期。"
-  },
   "accountLocked": {
     "subject": "账户已暂时锁定",
     "heading": "账户已暂时锁定",

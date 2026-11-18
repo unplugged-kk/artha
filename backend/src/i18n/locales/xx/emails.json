@@ -86,14 +86,6 @@
     "topCategories": "[XX-Top Categories-XX]",
     "button": "[XX-View Budget Dashboard-XX]"
   },
-  "oidcLink": {
-    "subject": "[XX-Artha: Confirm SSO Account Link-XX]",
-    "heading": "[XX-Link Your SSO Account-XX]",
-    "greeting": "[XX-Hi {{ name }},-XX]",
-    "intro": "[XX-Someone attempted to sign in via SSO with an email that matches your existing Artha account. To link your SSO identity to this account, click the button below:-XX]",
-    "button": "[XX-Confirm Account Link-XX]",
-    "disclaimer": "[XX-If you did not initiate this request, you can safely ignore this email. The link expires in 1 hour.-XX]"
-  },
   "accountLocked": {
     "subject": "[XX-Account Temporarily Locked-XX]",
     "heading": "[XX-Account Temporarily Locked-XX]",

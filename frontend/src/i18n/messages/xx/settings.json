@@ -1236,5 +1236,27 @@
       "moveUp": "[XX-Move up-XX]",
       "moveDown": "[XX-Move down-XX]"
     }
+  },
+  "signInMethods": {
+    "heading": "[XX-Sign-in methods-XX]",
+    "description": "[XX-Other accounts you can use to sign in to Artha.-XX]",
+    "linkButton": "[XX-Link another sign-in method-XX]",
+    "removeButton": "[XX-Remove-XX]",
+    "empty": "[XX-No sign-in methods are linked.-XX]",
+    "linkedOn": "[XX-Linked {date}-XX]",
+    "lastUsed": "[XX-Last used {date}-XX]",
+    "neverUsed": "[XX-Never used-XX]",
+    "emailPassword": "[XX-Email and password-XX]",
+    "unknownProvider": "[XX-Unknown provider-XX]",
+    "confirmTitle": "[XX-Remove sign-in method?-XX]",
+    "confirmMessage": "[XX-You will no longer be able to sign in with {provider}.-XX]",
+    "stepUpReason": "[XX-Re-verify your identity to change how you sign in.-XX]",
+    "toasts": {
+      "loadFailed": "[XX-Failed to load sign-in methods-XX]",
+      "removed": "[XX-Sign-in method removed-XX]",
+      "removeFailed": "[XX-Failed to remove sign-in method-XX]",
+      "linkFailed": "[XX-Failed to start linking a sign-in method-XX]",
+      "reauthFailed": "[XX-Failed to confirm re-authentication-XX]"
+    }
   }
 }

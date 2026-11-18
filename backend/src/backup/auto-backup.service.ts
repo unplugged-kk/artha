@@ -28,6 +28,7 @@ import {
 } from "./atomic-file";
 import {
   assertWithinAllowedRoots,
+  canonicalPath,
   BackupPathNotAllowedError,
   BackupPathUnusableError,
   resolveAllowedRoots,
@@ -1737,7 +1738,12 @@ export class AutoBackupService {
           ),
         );
       }
-      if (!createIfMissing && safePath !== this.defaultFolderPath) {
+      // `safePath` is canonical (symlinks resolved), so compare it with the
+      // canonical default, not the configured spelling.
+      if (
+        !createIfMissing &&
+        safePath !== (await canonicalPath(this.defaultFolderPath))
+      ) {
         throw new BadRequestException(
           tr(
             "errors.backup.folderNotExistVolume",

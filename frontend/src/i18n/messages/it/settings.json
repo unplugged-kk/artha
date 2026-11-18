@@ -1236,5 +1236,27 @@
       "moveUp": "Sposta su",
       "moveDown": "Sposta giù"
     }
+  },
+  "signInMethods": {
+    "heading": "Metodi di accesso",
+    "description": "Altri account che puoi usare per accedere ad Artha.",
+    "linkButton": "Collega un altro metodo di accesso",
+    "removeButton": "Rimuovi",
+    "empty": "Nessun metodo di accesso collegato.",
+    "linkedOn": "Collegato il {date}",
+    "lastUsed": "Ultimo utilizzo: {date}",
+    "neverUsed": "Mai utilizzato",
+    "emailPassword": "Email e password",
+    "unknownProvider": "Provider sconosciuto",
+    "confirmTitle": "Rimuovere il metodo di accesso?",
+    "confirmMessage": "Non potrai più accedere con {provider}.",
+    "stepUpReason": "Verifica di nuovo la tua identità per cambiare il modo in cui accedi.",
+    "toasts": {
+      "loadFailed": "Impossibile caricare i metodi di accesso",
+      "removed": "Metodo di accesso rimosso",
+      "removeFailed": "Impossibile rimuovere il metodo di accesso",
+      "linkFailed": "Impossibile avviare il collegamento del metodo di accesso",
+      "reauthFailed": "Impossibile confermare la riautenticazione"
+    }
   }
 }

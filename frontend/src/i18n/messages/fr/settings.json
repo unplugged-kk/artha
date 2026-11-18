@@ -1236,5 +1236,27 @@
       "moveUp": "Monter",
       "moveDown": "Descendre"
     }
+  },
+  "signInMethods": {
+    "heading": "Méthodes de connexion",
+    "description": "Autres comptes que vous pouvez utiliser pour vous connecter à Artha.",
+    "linkButton": "Associer une autre méthode de connexion",
+    "removeButton": "Supprimer",
+    "empty": "Aucune méthode de connexion n'est associée.",
+    "linkedOn": "Associée le {date}",
+    "lastUsed": "Dernière utilisation le {date}",
+    "neverUsed": "Jamais utilisée",
+    "emailPassword": "E-mail et mot de passe",
+    "unknownProvider": "Fournisseur inconnu",
+    "confirmTitle": "Supprimer la méthode de connexion ?",
+    "confirmMessage": "Vous ne pourrez plus vous connecter avec {provider}.",
+    "stepUpReason": "Vérifiez à nouveau votre identité pour modifier votre façon de vous connecter.",
+    "toasts": {
+      "loadFailed": "Impossible de charger les méthodes de connexion",
+      "removed": "Méthode de connexion supprimée",
+      "removeFailed": "Impossible de supprimer la méthode de connexion",
+      "linkFailed": "Impossible de lancer l'association de la méthode de connexion",
+      "reauthFailed": "Impossible de confirmer la réauthentification"
+    }
   }
 }

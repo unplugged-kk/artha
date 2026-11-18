@@ -18,13 +18,22 @@ data:
   # Auth
   LOCAL_AUTH_ENABLED: {{ .Values.backend.auth.LOCAL_AUTH_ENABLED | quote }}
   REGISTRATION_ENABLED: {{ .Values.backend.auth.REGISTRATION_ENABLED | quote }}
-  {{- if or .Values.backend.oidc.OIDC_ISSUER_URL .Values.backend.oidc.OIDC_CALLBACK_URL }}
+  {{- if or .Values.backend.oidc.OIDC_ISSUER_URL .Values.backend.oidc.OIDC_CALLBACK_URL .Values.backend.oidc.OIDC_PROVIDER .Values.backend.oidc.OIDC_CONNECTIONS .Values.backend.oidc.OIDC_LOGOUT_REDIRECT }}
   # OIDC
   {{- if .Values.backend.oidc.OIDC_ISSUER_URL }}
   OIDC_ISSUER_URL: {{ .Values.backend.oidc.OIDC_ISSUER_URL | quote }}
   {{- end }}
   {{- if .Values.backend.oidc.OIDC_CALLBACK_URL }}
   OIDC_CALLBACK_URL: {{ .Values.backend.oidc.OIDC_CALLBACK_URL | quote }}
+  {{- end }}
+  {{- if .Values.backend.oidc.OIDC_PROVIDER }}
+  OIDC_PROVIDER: {{ .Values.backend.oidc.OIDC_PROVIDER | quote }}
+  {{- end }}
+  {{- if .Values.backend.oidc.OIDC_CONNECTIONS }}
+  OIDC_CONNECTIONS: {{ .Values.backend.oidc.OIDC_CONNECTIONS | quote }}
+  {{- end }}
+  {{- if .Values.backend.oidc.OIDC_LOGOUT_REDIRECT }}
+  OIDC_LOGOUT_REDIRECT: {{ .Values.backend.oidc.OIDC_LOGOUT_REDIRECT | quote }}
   {{- end }}
   {{- end }}
   # Microsoft Money (.mny) import

@@ -1236,5 +1236,27 @@
       "moveUp": "上へ移動",
       "moveDown": "下へ移動"
     }
+  },
+  "signInMethods": {
+    "heading": "サインイン方法",
+    "description": "Artha へのサインインに使用できる他のアカウントです。",
+    "linkButton": "別のサインイン方法をリンク",
+    "removeButton": "削除",
+    "empty": "リンクされているサインイン方法はありません。",
+    "linkedOn": "{date} にリンク",
+    "lastUsed": "最終使用 {date}",
+    "neverUsed": "未使用",
+    "emailPassword": "メールアドレスとパスワード",
+    "unknownProvider": "不明なプロバイダー",
+    "confirmTitle": "サインイン方法を削除しますか?",
+    "confirmMessage": "{provider} でサインインできなくなります。",
+    "stepUpReason": "サインイン方法を変更するには、本人確認をもう一度行ってください。",
+    "toasts": {
+      "loadFailed": "サインイン方法を読み込めませんでした",
+      "removed": "サインイン方法を削除しました",
+      "removeFailed": "サインイン方法を削除できませんでした",
+      "linkFailed": "サインイン方法のリンクを開始できませんでした",
+      "reauthFailed": "再認証を確認できませんでした"
+    }
   }
 }

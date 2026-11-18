@@ -33,7 +33,12 @@ interface AuthState {
     sections: DelegateSectionGrants | null,
   ) => void;
   login: (user: User, token: string) => void;
-  logout: () => void;
+  /**
+   * Clear local auth state. With `logoutUrl` (from `authApi.logout()`), then
+   * send the browser to the provider's end-session URL; returns true when it
+   * did, so the caller skips its own route to /login.
+   */
+  logout: (logoutUrl?: string) => boolean;
   clearError: () => void;
   setHasHydrated: (state: boolean) => void;
 }
@@ -90,7 +95,7 @@ export const useAuthStore = create<AuthState>()(
         });
       },
 
-      logout: () => {
+      logout: (logoutUrl) => {
         // Backend clears httpOnly cookies via /auth/logout; we only clear Zustand state
         clearAllCache();
         // SECURITY: A share is one account's document. Drop the stash so the
@@ -122,6 +127,11 @@ export const useAuthStore = create<AuthState>()(
           delegateCapabilities: null,
           delegateSections: null,
         });
+        if (logoutUrl && typeof window !== 'undefined') {
+          window.location.assign(logoutUrl);
+          return true;
+        }
+        return false;
       },
 
       clearError: () => set({ error: null }),

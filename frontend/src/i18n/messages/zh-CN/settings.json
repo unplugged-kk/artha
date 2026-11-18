@@ -1236,5 +1236,27 @@
       "moveUp": "上移",
       "moveDown": "下移"
     }
+  },
+  "signInMethods": {
+    "heading": "登录方式",
+    "description": "可用于登录 Artha 的其他账户。",
+    "linkButton": "关联其他登录方式",
+    "removeButton": "移除",
+    "empty": "尚未关联任何登录方式。",
+    "linkedOn": "关联于 {date}",
+    "lastUsed": "上次使用 {date}",
+    "neverUsed": "从未使用",
+    "emailPassword": "电子邮件和密码",
+    "unknownProvider": "未知提供商",
+    "confirmTitle": "移除登录方式？",
+    "confirmMessage": "您将无法再使用 {provider} 登录。",
+    "stepUpReason": "请重新验证身份以更改登录方式。",
+    "toasts": {
+      "loadFailed": "无法加载登录方式",
+      "removed": "已移除登录方式",
+      "removeFailed": "无法移除登录方式",
+      "linkFailed": "无法开始关联登录方式",
+      "reauthFailed": "无法确认重新验证"
+    }
   }
 }

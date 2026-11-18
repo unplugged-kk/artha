@@ -86,14 +86,6 @@
     "topCategories": "Principales catégories",
     "button": "Voir le tableau de bord budgétaire"
   },
-  "oidcLink": {
-    "subject": "Artha : Confirmer la liaison du compte SSO",
-    "heading": "Lier votre compte SSO",
-    "greeting": "Bonjour {{ name }},",
-    "intro": "Une tentative de connexion via SSO a été effectuée avec une adresse e-mail correspondant à votre compte Artha existant. Pour lier votre identité SSO à ce compte, cliquez sur le bouton ci-dessous :",
-    "button": "Confirmer la liaison du compte",
-    "disclaimer": "Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet e-mail en toute sécurité. Le lien expire dans 1 heure."
-  },
   "accountLocked": {
     "subject": "Compte temporairement verrouillé",
     "heading": "Compte temporairement verrouillé",

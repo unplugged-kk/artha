@@ -120,6 +120,7 @@ export const INTENTIONALLY_EXCLUDED_TABLES: ReadonlySet<string> = new Set([
   "emergency_access_settings", // cross-user emergency-access config
   "oauth_payloads", // transient OIDC state
   "oidc_step_up_claims", // spent step-up proofs; 5-minute lifetime, auth bookkeeping
+  "user_identities", // sign-in identities bound to this installation's identity provider
   // Import working state, not user content: the staged bytes are a decrypted
   // upload with a 24 h TTL, and a job row describes one in-flight import. Both
   // are meaningless after the fact, and the staged file would multiply a

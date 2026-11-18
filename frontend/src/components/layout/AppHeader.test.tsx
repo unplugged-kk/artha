@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@/test/render';
+import { render, screen, fireEvent, waitFor, act } from '@/test/render';
 import { AppHeader } from './AppHeader';
 import toast from 'react-hot-toast';
 
@@ -25,7 +25,7 @@ vi.mock('next/navigation', () => ({
 }));
 
 // Mock auth API
-const mockApiLogout = vi.fn().mockResolvedValue(undefined);
+const mockApiLogout = vi.fn().mockResolvedValue({ message: 'Logged out' });
 vi.mock('@/lib/auth', () => ({
   authApi: {
     logout: (...args: any[]) => mockApiLogout(...args),
@@ -134,6 +134,27 @@ describe('AppHeader', () => {
       expect(mockLogout).toHaveBeenCalled();
       expect(mockPush).toHaveBeenCalledWith('/login');
     });
+  });
+
+  // A provider-backed session ends at the provider too: the store navigates
+  // there, so the header must not also route to /login.
+  it('hands the provider logoutUrl to the store and skips /login', async () => {
+    mockApiLogout.mockResolvedValueOnce({
+      message: 'Logged out',
+      logoutUrl: 'https://idp.example/v2/logout?client_id=x',
+    });
+    mockLogout.mockReturnValueOnce(true);
+    render(<AppHeader />);
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /logout/i }));
+    });
+
+    await waitFor(() => {
+      expect(mockLogout).toHaveBeenCalledWith(
+        'https://idp.example/v2/logout?client_id=x',
+      );
+    });
+    expect(mockPush).not.toHaveBeenCalledWith('/login');
   });
 
   it('clears the incomplete-logout flag on a confirmed logout', async () => {

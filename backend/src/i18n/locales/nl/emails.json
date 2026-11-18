@@ -86,14 +86,6 @@
     "topCategories": "Topcategorieën",
     "button": "Budget-dashboard bekijken"
   },
-  "oidcLink": {
-    "subject": "Artha: Bevestig SSO-accountkoppeling",
-    "heading": "Koppel je SSO-account",
-    "greeting": "Hoi {{ name }},",
-    "intro": "Iemand heeft geprobeerd in te loggen via SSO met een e-mailadres dat overeenkomt met je bestaande Artha-account. Klik op de onderstaande knop om je SSO-identiteit aan dit account te koppelen:",
-    "button": "Accountkoppeling bevestigen",
-    "disclaimer": "Als je dit verzoek niet hebt geïnitieerd, kun je deze e-mail veilig negeren. De koppeling verloopt over 1 uur."
-  },
   "accountLocked": {
     "subject": "Account tijdelijk vergrendeld",
     "heading": "Account tijdelijk vergrendeld",

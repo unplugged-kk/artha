@@ -1236,5 +1236,27 @@
       "moveUp": "Mover para cima",
       "moveDown": "Mover para baixo"
     }
+  },
+  "signInMethods": {
+    "heading": "Métodos de login",
+    "description": "Outras contas que você pode usar para entrar no Artha.",
+    "linkButton": "Vincular outro método de login",
+    "removeButton": "Remover",
+    "empty": "Nenhum método de login vinculado.",
+    "linkedOn": "Vinculado em {date}",
+    "lastUsed": "Último uso: {date}",
+    "neverUsed": "Nunca usado",
+    "emailPassword": "E-mail e senha",
+    "unknownProvider": "Provedor desconhecido",
+    "confirmTitle": "Remover método de login?",
+    "confirmMessage": "Você não poderá mais entrar com {provider}.",
+    "stepUpReason": "Verifique sua identidade novamente para alterar como você entra.",
+    "toasts": {
+      "loadFailed": "Não foi possível carregar os métodos de login",
+      "removed": "Método de login removido",
+      "removeFailed": "Não foi possível remover o método de login",
+      "linkFailed": "Não foi possível iniciar a vinculação do método de login",
+      "reauthFailed": "Não foi possível confirmar a reautenticação"
+    }
   }
 }

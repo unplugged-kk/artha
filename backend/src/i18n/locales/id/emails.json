@@ -86,14 +86,6 @@
     "topCategories": "Kategori Teratas",
     "button": "Lihat Dasbor Anggaran"
   },
-  "oidcLink": {
-    "subject": "Artha: Konfirmasi Tautan Akun SSO",
-    "heading": "Tautkan Akun SSO Anda",
-    "greeting": "Hai {{ name }},",
-    "intro": "Seseorang mencoba masuk melalui SSO dengan surel yang cocok dengan akun Artha Anda yang sudah ada. Untuk menautkan identitas SSO Anda ke akun ini, klik tombol di bawah ini:",
-    "button": "Konfirmasi Tautan Akun",
-    "disclaimer": "Jika Anda tidak memulai permintaan ini, Anda dapat mengabaikan surel ini dengan aman. Tautan ini kedaluwarsa dalam 1 jam."
-  },
   "accountLocked": {
     "subject": "Akun Terkunci Sementara",
     "heading": "Akun Terkunci Sementara",

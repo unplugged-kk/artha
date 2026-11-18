@@ -69,6 +69,8 @@ import { encrypt, decrypt, derivePurposeKey } from "./crypto.util";
 import { withSystemContext } from "../common/db/with-context";
 import { tr } from "../i18n/translate";
 import { toDelegatedUserProfile, toUserProfile } from "../users/user-profile";
+import { IdentitiesService } from "./identities/identities.service";
+import { OidcAccountExistsError } from "./oidc/oidc-errors";
 
 @ApiTags("Authentication")
 @Controller("auth")
@@ -92,6 +94,7 @@ export class AuthController {
     private delegationService: DelegationService,
     private readonly i18n: I18nService,
     private readonly dataSource: DataSource,
+    private readonly identitiesService: IdentitiesService,
   ) {
     // Default to true if not explicitly set to 'false'
     const localAuthSetting = this.configService.get<string>(
@@ -394,7 +397,10 @@ export class AuthController {
   @ApiOperation({ summary: "Initiate OIDC authentication" })
   @ApiResponse({ status: 302, description: "Redirects to OIDC provider" })
   @ApiResponse({ status: 400, description: "OIDC not configured" })
-  async oidcLogin(@Res() res: Response) {
+  async oidcLogin(
+    @Query("connection") connection: string | undefined,
+    @Res() res: Response,
+  ) {
     if (!this.oidcService.enabled) {
       throw new BadRequestException(
         tr(
@@ -403,9 +409,20 @@ export class AuthController {
         ),
       );
     }
+    // Only the configured connections; anything else would let a crafted link
+    // open a provider login the operator never enabled.
+    if (
+      connection !== undefined &&
+      !this.oidcService.connections.includes(connection)
+    ) {
+      throw new BadRequestException(
+        tr("errors.auth.oidcUnknownConnection", "Unknown sign-in method"),
+      );
+    }
 
     const state = this.oidcService.generateState();
     const nonce = this.oidcService.generateNonce();
+    const codeVerifier = this.oidcService.generateCodeVerifier();
 
     // Store state/nonce in secure cookies for validation
     const cookieOptions = {
@@ -417,18 +434,27 @@ export class AuthController {
 
     res.cookie("oidc_state", state, cookieOptions);
     res.cookie("oidc_nonce", nonce, cookieOptions);
+    res.cookie("oidc_code_verifier", codeVerifier, cookieOptions);
     // An ordinary login is not a re-authentication, and it must not inherit one.
     // This request overwrites `oidc_state`, so a surviving marker would be
     // rejected at the callback anyway (it is bound to the state it was minted
     // with) -- clearing it here means the user gets a plain login rather than a
     // login that silently discards a re-auth they had started.
-    res.clearCookie("oidc_reauth", {
-      httpOnly: true,
-      secure: this.useSecureCookies,
-      sameSite: "lax" as const,
-    });
+    // Same for a link started earlier and abandoned: this is a plain login.
+    for (const name of ["oidc_reauth", "oidc_link"]) {
+      res.clearCookie(name, {
+        httpOnly: true,
+        secure: this.useSecureCookies,
+        sameSite: "lax" as const,
+      });
+    }
 
-    const authUrl = this.oidcService.getAuthorizationUrl(state, nonce);
+    const authUrl = this.oidcService.getAuthorizationUrl(
+      state,
+      nonce,
+      codeVerifier,
+      { connection },
+    );
     res.redirect(authUrl);
   }
 
@@ -493,6 +519,7 @@ export class AuthController {
 
     const state = this.oidcService.generateState();
     const nonce = this.oidcService.generateNonce();
+    const codeVerifier = this.oidcService.generateCodeVerifier();
     const cookieOptions = {
       httpOnly: true,
       secure: this.useSecureCookies,
@@ -502,6 +529,12 @@ export class AuthController {
 
     res.cookie("oidc_state", state, cookieOptions);
     res.cookie("oidc_nonce", nonce, cookieOptions);
+    res.cookie("oidc_code_verifier", codeVerifier, cookieOptions);
+    res.clearCookie("oidc_link", {
+      httpOnly: true,
+      secure: this.useSecureCookies,
+      sameSite: "lax" as const,
+    });
     // Signed, not a plain value: the callback trusts this to decide which action
     // the artifact it mints unlocks.
     res.cookie(
@@ -514,7 +547,7 @@ export class AuthController {
     );
 
     res.redirect(
-      this.oidcService.getAuthorizationUrl(state, nonce, {
+      this.oidcService.getAuthorizationUrl(state, nonce, codeVerifier, {
         forceReauthentication: true,
       }),
     );
@@ -538,6 +571,9 @@ export class AuthController {
       secure: this.useSecureCookies,
       sameSite: "lax" as const,
     };
+    // Set once the provider's MFA assertion is known: FORCE_2FA then has to be
+    // met by Artha TOTP, and a refused registration means exactly that.
+    let mfaPending = false;
 
     try {
       // Check for OIDC provider error response before processing
@@ -550,16 +586,20 @@ export class AuthController {
 
       const state = req.cookies?.["oidc_state"];
       const nonce = req.cookies?.["oidc_nonce"];
+      const codeVerifier = req.cookies?.["oidc_code_verifier"];
       const pendingReauth = req.cookies?.["oidc_reauth"];
+      const pendingLink = req.cookies?.["oidc_link"];
 
       // Clear OIDC cookies with matching options
       res.clearCookie("oidc_state", clearOidcCookieOptions);
       res.clearCookie("oidc_nonce", clearOidcCookieOptions);
+      res.clearCookie("oidc_code_verifier", clearOidcCookieOptions);
       res.clearCookie("oidc_reauth", clearOidcCookieOptions);
+      res.clearCookie("oidc_link", clearOidcCookieOptions);
 
-      if (!state || !nonce) {
+      if (!state || !nonce || !codeVerifier) {
         throw new Error(
-          "Missing OIDC state or nonce - session may have expired",
+          "Missing OIDC state, nonce or PKCE verifier - session may have expired",
         );
       }
 
@@ -568,19 +608,35 @@ export class AuthController {
         query,
         state,
         nonce,
+        codeVerifier,
       );
 
-      // SECURITY: When FORCE_2FA is enabled, app-level 2FA is unavailable for
-      // OIDC users (2FA is delegated to the identity provider). To still
-      // honor the admin's "require MFA for everyone" intent, require the IdP
-      // to assert MFA via RFC 8176 "amr" or a multi-factor "acr" value.
-      if (this.force2fa && !this.oidcProvedMfa(tokenSet.amr, tokenSet.acr)) {
-        this.logger.warn(
-          `OIDC login rejected: FORCE_2FA is enabled but IdP did not assert MFA (amr=${JSON.stringify(tokenSet.amr)}, acr=${tokenSet.acr})`,
+      // Linking a sign-in method from Settings (POST /auth/identities/link).
+      // The marker is signed and bound to the state this callback validated,
+      // so only the round trip that stepped-up session started reaches here;
+      // it attaches the identity and issues no new session.
+      const linkingUserId = this.oidcReauthService.readLinkMarker(
+        pendingLink,
+        state,
+      );
+      if (linkingUserId) {
+        // RLS: pre-session callback, as for generateTokenPair below.
+        const outcome = await withSystemContext(() =>
+          this.identitiesService.attach(
+            linkingUserId,
+            tokenSet.iss,
+            tokenSet.sub,
+          ),
         );
-        res.redirect(`${frontendUrl}/auth/callback?error=mfa_required`);
+        res.redirect(`${frontendUrl}/auth/callback?link=${outcome}`);
         return;
       }
+
+      // FORCE_2FA is met by the provider asserting MFA (RFC 8176 "amr" or a
+      // multi-factor "acr") or, failing that, by the account's own Artha TOTP
+      // below (D6). Without either, no account is created and no session issued.
+      const providerProvedMfa = this.oidcProvedMfa(tokenSet.amr, tokenSet.acr);
+      mfaPending = this.force2fa && !providerProvedMfa;
 
       // Get user info from OIDC provider
       const userInfo = await this.oidcService.getUserInfo(
@@ -588,17 +644,40 @@ export class AuthController {
         tokenSet.sub,
       );
 
-      // Find or create user
       const result = await this.authService.findOrCreateOidcUser(
         userInfo,
-        this.registrationEnabled,
+        this.registrationEnabled && !mfaPending,
+        tokenSet.iss,
       );
 
-      // SECURITY: If an existing local account needs confirmation before linking,
-      // do NOT issue tokens. Redirect with a message instead.
-      if (result.linkPending) {
-        res.redirect(`${frontendUrl}/auth/callback?link=pending`);
-        return;
+      if (!result.user.isActive) {
+        throw new Error("Inactive account cannot sign in");
+      }
+
+      if (!providerProvedMfa) {
+        const twoFactorToken = await this.authService.oidcTwoFactorChallenge(
+          result.user,
+          this.decryptTrustedDeviceCookie(req.cookies?.["trusted_device"]),
+          req.headers?.["user-agent"],
+        );
+        if (twoFactorToken) {
+          // In the fragment, as with the re-auth artifact: kept out of server
+          // and proxy logs. The 2FA page spends it on POST /auth/2fa/verify,
+          // which issues the session exactly as for a password login.
+          res.redirect(
+            `${frontendUrl}/auth/callback?twoFactor=required#two_factor_token=${encodeURIComponent(
+              twoFactorToken,
+            )}`,
+          );
+          return;
+        }
+        if (mfaPending) {
+          this.logger.warn(
+            `OIDC login rejected: FORCE_2FA is enabled, the IdP did not assert MFA (amr=${JSON.stringify(tokenSet.amr)}, acr=${tokenSet.acr}) and the account has no Artha TOTP`,
+          );
+          res.redirect(`${frontendUrl}/auth/callback?error=mfa_required`);
+          return;
+        }
       }
 
       // Generate token pair. RLS: this is still the pre-session OIDC callback
@@ -672,14 +751,23 @@ export class AuthController {
       // Clear OIDC cookies on error path as well
       res.clearCookie("oidc_state", clearOidcCookieOptions);
       res.clearCookie("oidc_nonce", clearOidcCookieOptions);
+      res.clearCookie("oidc_code_verifier", clearOidcCookieOptions);
       res.clearCookie("oidc_reauth", clearOidcCookieOptions);
       // SECURITY: Log detailed error server-side only, don't expose to client
       this.logger.error(
         "OIDC callback error",
         error instanceof Error ? error.stack : undefined,
       );
-      // Return generic error message to prevent information disclosure
-      res.redirect(`${frontendUrl}/auth/callback?error=authentication_failed`);
+      // Generic unless the user can act on the reason: an existing account to
+      // link from Settings, or a closed registration. Neither reveals more than
+      // the login page already does.
+      let code = "authentication_failed";
+      if (error instanceof OidcAccountExistsError) {
+        code = "account_exists";
+      } else if (error instanceof ForbiddenException) {
+        code = mfaPending ? "mfa_required" : "registration_disabled";
+      }
+      res.redirect(`${frontendUrl}/auth/callback?error=${code}`);
     }
   }
 
@@ -702,6 +790,9 @@ export class AuthController {
     return {
       local: this.localAuthEnabled,
       oidc: this.oidcService.enabled,
+      oidcConnections: this.oidcService.enabled
+        ? this.oidcService.connections
+        : [],
       registration: this.demoModeService.isDemo
         ? false
         : this.registrationEnabled,
@@ -1203,33 +1294,6 @@ export class AuthController {
     return { codes };
   }
 
-  @Get("oidc/confirm-link")
-  @AllowDelegate()
-  @SkipCsrf()
-  @ApiOperation({ summary: "Confirm OIDC account linking via email token" })
-  async confirmOidcLink(@Query("token") token: string, @Res() res: Response) {
-    const frontendUrl = this.configService.get<string>(
-      "PUBLIC_APP_URL",
-      "http://localhost:3000",
-    );
-
-    try {
-      if (!token) {
-        throw new BadRequestException(
-          tr("errors.auth.missingLinkToken", "Missing link token"),
-        );
-      }
-      await this.authService.confirmOidcLink(token);
-      res.redirect(`${frontendUrl}/auth/callback?link=success`);
-    } catch (error) {
-      this.logger.error(
-        "OIDC link confirmation error",
-        error instanceof Error ? error.stack : undefined,
-      );
-      res.redirect(`${frontendUrl}/auth/callback?link=failed`);
-    }
-  }
-
   @Post("logout")
   @SkipCsrf()
   @AllowDelegate()
@@ -1248,6 +1312,12 @@ export class AuthController {
     }
 
     this.clearAuthCookies(res);
-    res.json({ message: "Logged out successfully" });
+    // Revocation above runs first: the provider redirect is extra, and a failed
+    // revoke throws before the client is told it may leave.
+    const logoutUrl = this.oidcService.getLogoutUrl();
+    res.json({
+      message: "Logged out successfully",
+      ...(logoutUrl ? { logoutUrl } : {}),
+    });
   }
 }

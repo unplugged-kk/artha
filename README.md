@@ -338,10 +338,13 @@ npm run dev
 | `LOCAL_AUTH_ENABLED` | Enable local auth | `true` |
 | `REGISTRATION_ENABLED` | Allow new user registration | `true` |
 | `FORCE_2FA` | Require 2FA for all local users | `false` |
-| `OIDC_ISSUER_URL` | OIDC provider URL | - |
+| `OIDC_ISSUER_URL` | OIDC provider URL (https; set with client id and secret or startup fails) | - |
 | `OIDC_CLIENT_ID` | OIDC client ID | - |
 | `OIDC_CLIENT_SECRET` | OIDC client secret | - |
-| `OIDC_CALLBACK_URL` | OIDC callback URL | - |
+| `OIDC_CALLBACK_URL` | OIDC callback URL, `<origin>/api/v1/auth/oidc/callback` (http only on loopback); set explicitly in deployments | `http://localhost:3001/api/v1/auth/oidc/callback` |
+| `OIDC_PROVIDER` | `generic` or `auth0` (Auth0 connection hint and logout URL) | `generic` |
+| `OIDC_CONNECTIONS` | Comma-separated Auth0 connections shown as login buttons; empty = one SSO button | - |
+| `OIDC_LOGOUT_REDIRECT` | Also end the provider session on Artha logout | `false` |
 | `SMTP_HOST` | SMTP server host | - |
 | `SMTP_PORT` | SMTP server port | `587` |
 | `SMTP_USER` | SMTP username | - |

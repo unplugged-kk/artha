@@ -1236,5 +1236,27 @@
       "moveUp": "Omhoog",
       "moveDown": "Omlaag"
     }
+  },
+  "signInMethods": {
+    "heading": "Aanmeldmethoden",
+    "description": "Andere accounts waarmee u zich bij Artha kunt aanmelden.",
+    "linkButton": "Nog een aanmeldmethode koppelen",
+    "removeButton": "Verwijderen",
+    "empty": "Er zijn geen aanmeldmethoden gekoppeld.",
+    "linkedOn": "Gekoppeld op {date}",
+    "lastUsed": "Laatst gebruikt op {date}",
+    "neverUsed": "Nooit gebruikt",
+    "emailPassword": "E-mail en wachtwoord",
+    "unknownProvider": "Onbekende provider",
+    "confirmTitle": "Aanmeldmethode verwijderen?",
+    "confirmMessage": "U kunt zich dan niet meer aanmelden met {provider}.",
+    "stepUpReason": "Bevestig uw identiteit opnieuw om uw aanmeldmethoden te wijzigen.",
+    "toasts": {
+      "loadFailed": "Aanmeldmethoden laden mislukt",
+      "removed": "Aanmeldmethode verwijderd",
+      "removeFailed": "Aanmeldmethode verwijderen mislukt",
+      "linkFailed": "Koppelen van aanmeldmethode starten mislukt",
+      "reauthFailed": "Herauthenticatie bevestigen mislukt"
+    }
   }
 }

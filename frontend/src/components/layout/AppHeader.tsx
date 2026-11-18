@@ -229,11 +229,10 @@ export function AppHeader() {
     // cleanup is best effort and revoking the session is not.
     await releasePushForSignOut();
     try {
-      await authApi.logout();
+      const { logoutUrl } = await authApi.logout();
       clearLogoutIncomplete();
-      logout();
       toast.success(t('loggedOut'));
-      router.push('/login');
+      if (!logout(logoutUrl)) router.push('/login');
     } catch {
       // Only the server can clear the HttpOnly refresh cookie, so a failed
       // request leaves a session this client cannot end. Local state still has

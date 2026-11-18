@@ -86,14 +86,6 @@
     "topCategories": "主要類別",
     "button": "查看預算儀表板"
   },
-  "oidcLink": {
-    "subject": "Artha：確認 SSO 帳戶連結",
-    "heading": "連結您的 SSO 帳戶",
-    "greeting": "您好，{{ name }}，",
-    "intro": "有人嘗試透過 SSO 使用與您現有 Artha 帳戶相符的電子郵件登入。若要將您的 SSO 身份連結至此帳戶，請點擊下方按鈕：",
-    "button": "確認帳戶連結",
-    "disclaimer": "如果您未發起此請求，可以安全地忽略此電子郵件。此連結將在 1 小時後過期。"
-  },
   "accountLocked": {
     "subject": "帳戶暫時鎖定",
     "heading": "帳戶暫時鎖定",

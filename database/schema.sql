@@ -1267,6 +1267,23 @@ CREATE TABLE oidc_step_up_claims (
 
 CREATE INDEX idx_oidc_step_up_claims_expires ON oidc_step_up_claims(expires_at);
 
+-- External sign-in identities (Auth0 connections or another OIDC provider),
+-- keyed by (issuer, subject). Migration 20261118085649. issuer 'legacy' marks a
+-- row backfilled from users.oidc_subject; the first login rewrites it.
+CREATE TABLE user_identities (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    issuer VARCHAR(512) NOT NULL,
+    subject VARCHAR(255) NOT NULL,
+    provider VARCHAR(100),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    last_login_at TIMESTAMPTZ,
+    CONSTRAINT uq_user_identities_issuer_subject UNIQUE (issuer, subject)
+);
+
+CREATE INDEX idx_user_identities_user ON user_identities(user_id);
+CREATE INDEX idx_user_identities_subject ON user_identities(subject);
+
 -- Delegate account access (Phase 1). A user (owner) can grant another user
 -- (delegate) scoped access to their data. Delegates are normal `users` rows;
 -- this defines the relationship and per-account permissions. Only can_read is
@@ -2962,6 +2979,14 @@ CREATE POLICY refresh_tokens_isolation ON refresh_tokens
 -- that spends the proof, so the ordinary per-user policy applies.
 DROP POLICY IF EXISTS oidc_step_up_claims_isolation ON oidc_step_up_claims;
 CREATE POLICY oidc_step_up_claims_isolation ON oidc_step_up_claims
+  USING (user_id = (SELECT app_current_user_id()) OR (SELECT app_bypass_rls()))
+  WITH CHECK (user_id = (SELECT app_current_user_id()) OR (SELECT app_bypass_rls()));
+
+-- user_identities (migration 20261118085649): Settings reads and writes it for
+-- the signed-in user; the OIDC callback runs under system context. Delegated
+-- sessions are refused by the routes, so the ordinary per-user policy applies.
+DROP POLICY IF EXISTS user_identities_isolation ON user_identities;
+CREATE POLICY user_identities_isolation ON user_identities
   USING (user_id = (SELECT app_current_user_id()) OR (SELECT app_bypass_rls()))
   WITH CHECK (user_id = (SELECT app_current_user_id()) OR (SELECT app_bypass_rls()));
 
