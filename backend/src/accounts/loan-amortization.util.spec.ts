@@ -114,7 +114,7 @@ describe("Loan Amortization Utility", () => {
   });
 
   describe("calculateEndDate", () => {
-    const startDate = new Date(2026, 0, 1); // Jan 1, 2026
+    const startDate = new Date(Date.UTC(2026, 0, 1)); // Jan 1, 2026
 
     // startDate is payment number 1, so N payments advance N - 1 intervals.
     // These assertions are the calendar, counted out by hand: a 12-payment
@@ -123,9 +123,9 @@ describe("Loan Amortization Utility", () => {
     // intervals named 2027-01-01, a payment date the schedule never reaches.
     it("dates the last of 12 monthly payments in the twelfth month", () => {
       const endDate = calculateEndDate(startDate, "MONTHLY", 12);
-      expect(endDate.getFullYear()).toBe(2026);
-      expect(endDate.getMonth()).toBe(11); // December
-      expect(endDate.getDate()).toBe(1);
+      expect(endDate.getUTCFullYear()).toBe(2026);
+      expect(endDate.getUTCMonth()).toBe(11); // December
+      expect(endDate.getUTCDate()).toBe(1);
     });
 
     it("dates a single payment on the first payment date itself", () => {
@@ -136,26 +136,26 @@ describe("Loan Amortization Utility", () => {
     it("adds weeks for WEEKLY frequency", () => {
       const endDate = calculateEndDate(startDate, "WEEKLY", 4);
       // Payments on Jan 1, 8, 15, 22 -- three 7-day advances
-      expect(endDate.getDate()).toBe(22);
+      expect(endDate.getUTCDate()).toBe(22);
     });
 
     it("adds biweekly periods", () => {
       const endDate = calculateEndDate(startDate, "BIWEEKLY", 2);
       // Payments on Jan 1 and Jan 15 -- one 14-day advance
-      expect(endDate.getDate()).toBe(15);
+      expect(endDate.getUTCDate()).toBe(15);
     });
 
     it("adds quarters for QUARTERLY frequency", () => {
       const endDate = calculateEndDate(startDate, "QUARTERLY", 4);
       // Payments on Jan 1, Apr 1, Jul 1, Oct 1 of the same year
-      expect(endDate.getFullYear()).toBe(2026);
-      expect(endDate.getMonth()).toBe(9); // October
+      expect(endDate.getUTCFullYear()).toBe(2026);
+      expect(endDate.getUTCMonth()).toBe(9); // October
     });
 
     it("adds years for YEARLY frequency", () => {
       const endDate = calculateEndDate(startDate, "YEARLY", 5);
       // Payments in 2026..2030
-      expect(endDate.getFullYear()).toBe(2030);
+      expect(endDate.getUTCFullYear()).toBe(2030);
     });
 
     it("returns the start date when there are no payments", () => {
@@ -165,12 +165,12 @@ describe("Loan Amortization Utility", () => {
 
     it("returns far future for infinite payments", () => {
       const endDate = calculateEndDate(startDate, "MONTHLY", Infinity);
-      expect(endDate.getFullYear()).toBeGreaterThanOrEqual(2126);
+      expect(endDate.getUTCFullYear()).toBeGreaterThanOrEqual(2126);
     });
 
     it("returns far future for the unknown-schedule sentinel", () => {
       const endDate = calculateEndDate(startDate, "MONTHLY", -1);
-      expect(endDate.getFullYear()).toBeGreaterThanOrEqual(2126);
+      expect(endDate.getUTCFullYear()).toBeGreaterThanOrEqual(2126);
     });
 
     it("returns far future above the dateable ceiling", () => {
@@ -179,7 +179,7 @@ describe("Loan Amortization Utility", () => {
       // ordinary 2600-payment weekly loan to the year-2126 sentinel while the
       // same result reported 2600 payments.
       const endDate = calculateEndDate(startDate, "MONTHLY", 20000);
-      expect(endDate.getFullYear()).toBeGreaterThanOrEqual(2126);
+      expect(endDate.getUTCFullYear()).toBeGreaterThanOrEqual(2126);
     });
 
     it("dates a long weekly schedule instead of giving up on it", () => {
@@ -190,13 +190,13 @@ describe("Loan Amortization Utility", () => {
         (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
       );
       expect(days).toBe(2599 * 7);
-      expect(endDate.getFullYear()).toBeLessThan(2126);
+      expect(endDate.getUTCFullYear()).toBeLessThan(2126);
     });
   });
 
   describe("calculateAmortization", () => {
     it("returns complete amortization details", () => {
-      const startDate = new Date(2026, 0, 1);
+      const startDate = new Date(Date.UTC(2026, 0, 1));
       const result = calculateAmortization(
         100000,
         5,
@@ -213,7 +213,7 @@ describe("Loan Amortization Utility", () => {
     });
 
     it("remaining balance decreases after first payment", () => {
-      const startDate = new Date(2026, 0, 1);
+      const startDate = new Date(Date.UTC(2026, 0, 1));
       const result = calculateAmortization(
         100000,
         5,
@@ -227,7 +227,7 @@ describe("Loan Amortization Utility", () => {
     });
 
     it("principal + interest equals payment amount for standard case", () => {
-      const startDate = new Date(2026, 0, 1);
+      const startDate = new Date(Date.UTC(2026, 0, 1));
       const result = calculateAmortization(
         100000,
         5,
@@ -241,7 +241,7 @@ describe("Loan Amortization Utility", () => {
     });
 
     it("returns -1 for totalPayments when loan can never be paid off", () => {
-      const startDate = new Date(2026, 0, 1);
+      const startDate = new Date(Date.UTC(2026, 0, 1));
       const result = calculateAmortization(
         100000,
         12,
@@ -254,7 +254,7 @@ describe("Loan Amortization Utility", () => {
     });
 
     it("remaining balance is non-negative", () => {
-      const startDate = new Date(2026, 0, 1);
+      const startDate = new Date(Date.UTC(2026, 0, 1));
       const result = calculateAmortization(100, 0, 500, "MONTHLY", startDate);
 
       expect(result.remainingBalance).toBeGreaterThanOrEqual(0);

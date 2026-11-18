@@ -31,7 +31,7 @@ import { UserPreference } from "../users/entities/user-preference.entity";
 import { convertWithRateLookup } from "../common/currency-conversion.util";
 import { FxAggregate } from "../common/fx-aggregate";
 import { applyActionToQuantity } from "../securities/investment-replay.util";
-import { formatDateYMDLocal } from "../common/date-utils";
+import { addDaysYMD, formatDateYMDLocal } from "../common/date-utils";
 import { positionCloseAsOf, PricePoint } from "./position-price.util";
 import { preferredCurrency } from "../common/default-currency.util";
 import {
@@ -544,9 +544,11 @@ export class NetWorthService {
     }[]
   > {
     const today = new Date();
-    const defaultStart = new Date(today.getFullYear() - 1, today.getMonth(), 1)
-      .toISOString()
-      .substring(0, 10);
+    // Local components in, local components out: toISOString named the last day
+    // of the previous month east of UTC.
+    const defaultStart = formatDateYMDLocal(
+      new Date(today.getFullYear() - 1, today.getMonth(), 1),
+    );
     const resolvedStart = startDate || defaultStart;
     const resolvedEnd = endDate || today.toISOString().substring(0, 10);
     return this.getMonthlyNetWorth(userId, resolvedStart, resolvedEnd);
@@ -1273,13 +1275,7 @@ export class NetWorthService {
     }
 
     // Generate daily dates
-    const dates: string[] = [];
-    const d = new Date(start + "T00:00:00");
-    const endD = new Date(end + "T00:00:00");
-    while (d <= endD) {
-      dates.push(d.toISOString().substring(0, 10));
-      d.setDate(d.getDate() + 1);
-    }
+    const dates = this.enumerateDays(start, end);
 
     // Currency conversion setup: include both account currencies (for cash
     // balances) and security currencies (for holdings market value). Prices in
@@ -1825,13 +1821,10 @@ export class NetWorthService {
 
   /** All calendar days in [start, end] inclusive, as YYYY-MM-DD strings. */
   private enumerateDays(start: string, end: string): string[] {
+    // Pure YYYY-MM-DD arithmetic: parsing local midnight and reading it back
+    // with toISOString shifted every day back by one east of UTC.
     const dates: string[] = [];
-    const d = new Date(start + "T00:00:00");
-    const endD = new Date(end + "T00:00:00");
-    while (d <= endD) {
-      dates.push(d.toISOString().substring(0, 10));
-      d.setDate(d.getDate() + 1);
-    }
+    for (let d = start; d <= end; d = addDaysYMD(d, 1)) dates.push(d);
     return dates;
   }
 

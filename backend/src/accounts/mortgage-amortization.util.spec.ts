@@ -132,7 +132,7 @@ describe("Mortgage Amortization Utility", () => {
       paymentFrequency: "MONTHLY",
       isCanadian: false,
       isVariableRate: false,
-      startDate: new Date(2026, 0, 1),
+      startDate: new Date(Date.UTC(2026, 0, 1)),
     };
 
     it("calculates standard MONTHLY payment", () => {
@@ -311,7 +311,7 @@ describe("Mortgage Amortization Utility", () => {
         paymentFrequency: "MONTHLY",
         isCanadian: false,
         isVariableRate: false,
-        startDate: new Date(2026, 0, 1),
+        startDate: new Date(Date.UTC(2026, 0, 1)),
       };
 
       const result = calculateMortgageAmortization(input);
@@ -333,7 +333,7 @@ describe("Mortgage Amortization Utility", () => {
         paymentFrequency: "MONTHLY",
         isCanadian: false,
         isVariableRate: false,
-        startDate: new Date(2026, 0, 1),
+        startDate: new Date(Date.UTC(2026, 0, 1)),
       };
 
       const result = calculateMortgageAmortization(input);
@@ -351,7 +351,7 @@ describe("Mortgage Amortization Utility", () => {
         paymentFrequency: "MONTHLY",
         isCanadian: false,
         isVariableRate: false,
-        startDate: new Date(2026, 0, 1),
+        startDate: new Date(Date.UTC(2026, 0, 1)),
       };
 
       const result = calculateMortgageAmortization(input);
@@ -366,7 +366,7 @@ describe("Mortgage Amortization Utility", () => {
         paymentFrequency: "MONTHLY",
         isCanadian: false,
         isVariableRate: false,
-        startDate: new Date(2026, 0, 1),
+        startDate: new Date(Date.UTC(2026, 0, 1)),
       };
 
       const result = calculateMortgageAmortization(input);
@@ -381,7 +381,7 @@ describe("Mortgage Amortization Utility", () => {
         paymentFrequency: "MONTHLY",
         isCanadian: false,
         isVariableRate: false,
-        startDate: new Date(2026, 0, 1),
+        startDate: new Date(Date.UTC(2026, 0, 1)),
       };
 
       const standardResult = calculateMortgageAmortization(baseInput);
@@ -404,7 +404,7 @@ describe("Mortgage Amortization Utility", () => {
         paymentFrequency: "MONTHLY",
         isCanadian: false,
         isVariableRate: false,
-        startDate: new Date(2026, 0, 1),
+        startDate: new Date(Date.UTC(2026, 0, 1)),
       };
 
       const result = calculateMortgageAmortization(input);
@@ -414,7 +414,7 @@ describe("Mortgage Amortization Utility", () => {
     });
 
     it("end date is after start date", () => {
-      const startDate = new Date(2026, 0, 1);
+      const startDate = new Date(Date.UTC(2026, 0, 1));
       const input: MortgageAmortizationInput = {
         principal: 300000,
         annualRate: 5,
@@ -437,7 +437,7 @@ describe("Mortgage Amortization Utility", () => {
         paymentFrequency: "MONTHLY",
         isCanadian: true,
         isVariableRate: false,
-        startDate: new Date(2026, 0, 1),
+        startDate: new Date(Date.UTC(2026, 0, 1)),
       };
 
       const result = calculateMortgageAmortization(input);
@@ -487,7 +487,7 @@ describe("Mortgage Amortization Utility", () => {
         paymentFrequency: "ACCELERATED_BIWEEKLY",
         isCanadian: false,
         isVariableRate: false,
-        startDate: new Date(2026, 0, 1),
+        startDate: new Date(Date.UTC(2026, 0, 1)),
       };
       const result = calculateMortgageAmortization(input);
       const expected = simulate(300000, 5 / 100 / 26, result.paymentAmount);
@@ -522,7 +522,7 @@ describe("Mortgage Amortization Utility", () => {
         paymentFrequency: "MONTHLY",
         isCanadian: false,
         isVariableRate: false,
-        startDate: new Date(2026, 0, 1),
+        startDate: new Date(Date.UTC(2026, 0, 1)),
       };
       const result = calculateMortgageAmortization(input);
       const expected = simulate(300000, 5 / 100 / 12, result.paymentAmount);
@@ -540,7 +540,7 @@ describe("Mortgage Amortization Utility", () => {
         paymentFrequency: "MONTHLY",
         isCanadian: false,
         isVariableRate: false,
-        startDate: new Date(2026, 0, 1),
+        startDate: new Date(Date.UTC(2026, 0, 1)),
       };
       const result = calculateMortgageAmortization(input);
       expect(result.totalInterest).toBe(0);
@@ -609,7 +609,7 @@ describe("Mortgage Amortization Utility", () => {
         paymentFrequency: "MONTHLY",
         isCanadian: false,
         isVariableRate: false,
-        startDate: new Date(2026, 0, 1),
+        startDate: new Date(Date.UTC(2026, 0, 1)),
       });
       expect(result.totalPayments).toBe(300);
       expect(result.residualPayoffAmount).toBeGreaterThanOrEqual(
@@ -625,7 +625,7 @@ describe("Mortgage Amortization Utility", () => {
       // totalPayments and endDate come from one number, so the date and the
       // totals describe one schedule. startDate is payment 1 (INV-LOAN-005), so
       // N payments advance N-1 months.
-      const startDate = new Date(2026, 0, 1);
+      const startDate = new Date(Date.UTC(2026, 0, 1));
       const result = calculateMortgageAmortization({
         principal: 300000,
         annualRate: 5,
@@ -635,22 +635,24 @@ describe("Mortgage Amortization Utility", () => {
         isVariableRate: false,
         startDate,
       });
-      const expectedEnd = new Date(2026, 0, 1);
-      expectedEnd.setMonth(expectedEnd.getMonth() + result.totalPayments - 1);
+      const expectedEnd = new Date(Date.UTC(2026, 0, 1));
+      expectedEnd.setUTCMonth(
+        expectedEnd.getUTCMonth() + result.totalPayments - 1,
+      );
       expect(result.endDate.getTime()).toBe(expectedEnd.getTime());
     });
   });
 
   describe("calculateMortgageEndDate", () => {
-    const startDate = new Date(2026, 0, 1); // Jan 1, 2026
+    const startDate = new Date(Date.UTC(2026, 0, 1)); // Jan 1, 2026
 
     // startDate is the FIRST payment (the mortgage form labels it "First
     // Payment Date"), so N payments advance N - 1 intervals.
     it("dates the last of 12 monthly payments in the twelfth month", () => {
       const endDate = calculateMortgageEndDate(startDate, "MONTHLY", 12);
-      expect(endDate.getFullYear()).toBe(2026);
-      expect(endDate.getMonth()).toBe(11); // December
-      expect(endDate.getDate()).toBe(1);
+      expect(endDate.getUTCFullYear()).toBe(2026);
+      expect(endDate.getUTCMonth()).toBe(11); // December
+      expect(endDate.getUTCDate()).toBe(1);
     });
 
     it("dates a single payment on the first payment date itself", () => {
@@ -705,14 +707,14 @@ describe("Mortgage Amortization Utility", () => {
       // the last day of the month, so from 2026-01-01 payment 24 is 2026-12-31.
       // The old 1st/15th calendar answered 2026-12-15, which is BEFORE the final
       // installment -- and that date bounds the linked scheduled transaction.
-      expect(endDate.getFullYear()).toBe(2026);
-      expect(endDate.getMonth()).toBe(11);
-      expect(endDate.getDate()).toBe(31);
+      expect(endDate.getUTCFullYear()).toBe(2026);
+      expect(endDate.getUTCMonth()).toBe(11);
+      expect(endDate.getUTCDate()).toBe(31);
     });
 
     it("returns far future for Infinity payments", () => {
       const endDate = calculateMortgageEndDate(startDate, "MONTHLY", Infinity);
-      expect(endDate.getFullYear()).toBeGreaterThanOrEqual(2126);
+      expect(endDate.getUTCFullYear()).toBeGreaterThanOrEqual(2126);
     });
 
     it("returns far future for the unknown-schedule sentinel", () => {
@@ -721,12 +723,12 @@ describe("Mortgage Amortization Utility", () => {
       // giving a precise payoff date to a response whose every other figure says
       // unknown.
       const endDate = calculateMortgageEndDate(startDate, "MONTHLY", -1);
-      expect(endDate.getFullYear()).toBeGreaterThanOrEqual(2126);
+      expect(endDate.getUTCFullYear()).toBeGreaterThanOrEqual(2126);
     });
 
     it("returns far future for very large payment count (>10000)", () => {
       const endDate = calculateMortgageEndDate(startDate, "MONTHLY", 20000);
-      expect(endDate.getFullYear()).toBeGreaterThanOrEqual(2126);
+      expect(endDate.getUTCFullYear()).toBeGreaterThanOrEqual(2126);
     });
   });
 });

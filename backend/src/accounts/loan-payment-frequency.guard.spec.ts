@@ -94,13 +94,13 @@ describe("loan payment frequency contract", () => {
         expected = calculateNextDueDate(expected, recurrence);
       }
       const endDate = calculateEndDate(
-        new Date(2026, 0, 1),
+        new Date(Date.UTC(2026, 0, 1)),
         frequency as PaymentFrequency,
         24,
       );
-      const actual = `${endDate.getFullYear()}-${String(
-        endDate.getMonth() + 1,
-      ).padStart(2, "0")}-${String(endDate.getDate()).padStart(2, "0")}`;
+      const actual = `${endDate.getUTCFullYear()}-${String(
+        endDate.getUTCMonth() + 1,
+      ).padStart(2, "0")}-${String(endDate.getUTCDate()).padStart(2, "0")}`;
       expect(actual).toBe(expected);
     }
   });
@@ -171,7 +171,7 @@ describe("loan payment frequency contract", () => {
     // its first payment date, and createLoanAccount wrote that onto the linked
     // scheduled transaction's endDate -- which stops the schedule after payment
     // one. Every accepted frequency must move the date.
-    const start = new Date(2026, 0, 1);
+    const start = new Date(Date.UTC(2026, 0, 1));
     for (const frequency of acceptedFrequencies()) {
       const end = calculateEndDate(start, frequency as PaymentFrequency, 24);
       expect(end.getTime()).toBeGreaterThan(start.getTime());
@@ -184,10 +184,14 @@ describe("loan payment frequency contract", () => {
     // 01-31, 02-15, 02-28, 03-15, ... so payment 24 falls on 2026-12-31. The
     // amortization helper used to step 1st/15th and answer 2026-12-15 -- before
     // the final installment, so the schedule it bounds posted 23 of 24.
-    const end = calculateEndDate(new Date(2026, 0, 1), "SEMIMONTHLY", 24);
-    expect(end.getFullYear()).toBe(2026);
-    expect(end.getMonth()).toBe(11);
-    expect(end.getDate()).toBe(31);
+    const end = calculateEndDate(
+      new Date(Date.UTC(2026, 0, 1)),
+      "SEMIMONTHLY",
+      24,
+    );
+    expect(end.getUTCFullYear()).toBe(2026);
+    expect(end.getUTCMonth()).toBe(11);
+    expect(end.getUTCDate()).toBe(31);
   });
 
   it("splits a semi-monthly payment at half a month's interest, not a month's", () => {
