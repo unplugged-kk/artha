@@ -33,7 +33,8 @@
     "mnySingleFileOnly": "Importieren Sie Microsoft-Money-Dateien einzeln -- eine .mny-Datei enthält ein komplettes Profil.",
     "xlsxSingleFileOnly": "Importieren Sie jeweils eine Excel-Datei.",
     "xlsxNoSheets": "Diese Arbeitsmappe enthält keine Tabellenblätter zum Importieren.",
-    "xlsxParseFailed": "Diese Excel-Datei konnte nicht gelesen werden"
+    "xlsxParseFailed": "Diese Excel-Datei konnte nicht gelesen werden",
+    "sourceColumnSingleFileOnly": "Ein Tabellenblatt mit einer Kontospalte kann nur einzeln importiert werden."
   },
   "page": {
     "title": "Buchungen importieren",
@@ -181,7 +182,9 @@
       "comma": "Komma (,)",
       "semicolon": "Semikolon (;)",
       "tab": "Tabulator"
-    }
+    },
+    "sourceAccountField": "Konto / Quelle",
+    "sourceAccountHint": "Für Tabellen mit mehreren Konten auf einem Blatt. Jede Zeile wird auf das durch ihre Quelle bezeichnete Konto gebucht. Als Nächstes ordnen Sie die Quellen den Konten zu."
   },
   "transferRules": {
     "title": "Überweisungserkennungsregeln",
@@ -595,5 +598,38 @@
     "nonTransactional": "This message appears to be non-transactional (OTP, alert, or marketing)",
     "ambiguous": "Message contains ambiguous transaction data and could not be confidently parsed",
     "spam": "Message classified as promotional or spam"
+  },
+  "mapSourceAccounts": {
+    "heading": "Quellen Konten zuordnen",
+    "description": "Jede Zeile dieses Blatts nennt das zugehörige Konto. Wählen Sie einmalig ein Konto für jede Quelle. Einzelne Zeilen können Sie bei der Prüfung noch verschieben.",
+    "choose": "Konto auswählen...",
+    "skip": "Diese Zeilen überspringen",
+    "blankSource": "(keine Quelle)",
+    "rowCount": "{count, plural, one {# Zeile} other {# Zeilen}}",
+    "postTo": "Zeilen aus {source} buchen auf",
+    "unresolved": "{count, plural, one {# Quelle benötigt} other {# Quellen benötigen}} noch ein Konto oder muss ausdrücklich übersprungen werden."
+  },
+  "sourceReview": {
+    "summary": "{fileName}: {rows, plural, one {# Zeile} other {# Zeilen}}{skipped, plural, =0 {} other {, # ausgelassen}}.",
+    "changesHeading": "Saldoänderung je Konto",
+    "rejectedHeading": "{count, plural, one {# Zeile konnte} other {# Zeilen konnten}} nicht gelesen werden",
+    "rejectedRow": "Zeile {row}: {reason}",
+    "skipRejected": "{count, plural, one {Diese Zeile} other {Diese Zeilen}} vom Import ausschließen",
+    "colRow": "Zeile",
+    "colDate": "Datum",
+    "colPayee": "Zahlungsempfänger",
+    "colAmount": "Betrag",
+    "colSource": "Quelle",
+    "colPostTo": "Buchen auf",
+    "postToRow": "Konto für Zeile {row}",
+    "transferTo": "Umbuchung mit {account}",
+    "overlapsChecking": "Ihre Konten werden auf möglicherweise doppelte Buchungen geprüft...",
+    "overlapsFailed": "Ihre Konten konnten nicht auf mögliche doppelte Buchungen geprüft werden. Gehen Sie zurück und versuchen Sie es vor dem Import erneut.",
+    "overlapsHeading": "{count, plural, one {# Zeile ähnelt} other {# Zeilen ähneln}} einer bereits vorhandenen Buchung in Ihren Konten",
+    "overlapsHelp": "Ein unveränderter erneuter Import wird automatisch erkannt. Diese Zeilen weichen von den vorhandenen ab und könnten doppelt gebucht werden. Überspringen Sie eine Zeile über ihr Menü „Buchen auf“ oder behalten Sie sie bei.",
+    "overlapOtherAccount": "Zeile {row}: {account} enthält bereits {amount} am {date} ({payee}). Die Zeile wurde seit dem letzten Import möglicherweise einem anderen Konto zugeordnet.",
+    "overlapChangedAmount": "Zeile {row}: {account} enthält bereits {payee} mit {amount} am {date}. Der Betrag hat sich seit dem letzten Import möglicherweise geändert.",
+    "overlapKeep": "Zeile {row} trotzdem importieren",
+    "mobileRowMeta": "Zeile {row} · {date} · {source}"
   }
 }

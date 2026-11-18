@@ -33,7 +33,8 @@
     "mnySingleFileOnly": "Microsoft Money ファイルは 1 つずつインポートしてください。.mny ファイルにはプロファイル全体が含まれます。",
     "xlsxSingleFileOnly": "Excel ファイルは 1 つずつインポートしてください。",
     "xlsxNoSheets": "そのブックにはインポートできるシートがありません。",
-    "xlsxParseFailed": "その Excel ファイルを読み取れませんでした"
+    "xlsxParseFailed": "その Excel ファイルを読み取れませんでした",
+    "sourceColumnSingleFileOnly": "口座列を含むシートは、1 ファイルずつインポートしてください。"
   },
   "page": {
     "title": "取引のインポート",
@@ -181,7 +182,9 @@
       "comma": "カンマ（,）",
       "semicolon": "セミコロン（;）",
       "tab": "タブ"
-    }
+    },
+    "sourceAccountField": "口座 / ソース",
+    "sourceAccountHint": "1 枚のシートで複数の口座を管理する場合に使用します。各行はソースが示す口座に記帳されます。次にソースと口座を対応付けます。"
   },
   "transferRules": {
     "title": "振替検出ルール",
@@ -595,5 +598,38 @@
     "nonTransactional": "This message appears to be non-transactional (OTP, alert, or marketing)",
     "ambiguous": "Message contains ambiguous transaction data and could not be confidently parsed",
     "spam": "Message classified as promotional or spam"
+  },
+  "mapSourceAccounts": {
+    "heading": "ソースと口座を対応付ける",
+    "description": "このシートの各行には所属する口座が記されています。ソースごとに一度、口座を選んでください。確認画面で個別の行の口座を変更することもできます。",
+    "choose": "口座を選択...",
+    "skip": "これらの行をスキップ",
+    "blankSource": "（ソースなし）",
+    "rowCount": "{count, plural, other {# 行}}",
+    "postTo": "{source} の行の記帳先",
+    "unresolved": "{count, plural, other {# 個のソースについて、口座の選択または明示的なスキップが必要です}}。"
+  },
+  "sourceReview": {
+    "summary": "{fileName}: {rows, plural, other {# 行}}{skipped, plural, =0 {} other {、# 行を除外}}。",
+    "changesHeading": "口座ごとの残高の変化",
+    "rejectedHeading": "{count, plural, other {# 行を読み取れませんでした}}",
+    "rejectedRow": "行 {row}: {reason}",
+    "skipRejected": "{count, plural, other {これらの行}}をインポートから除外",
+    "colRow": "行",
+    "colDate": "日付",
+    "colPayee": "支払先",
+    "colAmount": "金額",
+    "colSource": "ソース",
+    "colPostTo": "記帳先",
+    "postToRow": "行 {row} の口座",
+    "transferTo": "{account} との振替",
+    "overlapsChecking": "これらの行と重複する可能性のある明細を口座内で確認しています...",
+    "overlapsFailed": "これらの行と重複する可能性のある明細を口座内で確認できませんでした。インポートする前に戻って再試行してください。",
+    "overlapsHeading": "{count, plural, other {# 行が口座内の既存の明細と似ています}}",
+    "overlapsHelp": "変更のない再インポートは自動的に認識されます。これらの行は既存の明細と異なるため、二重に記帳される可能性があります。行の記帳先メニューからスキップするか、そのまま残してください。",
+    "overlapOtherAccount": "行 {row}: {account} には {date} の {amount}（{payee}）が既にあります。前回のインポート後に別の口座に移された可能性があります。",
+    "overlapChangedAmount": "行 {row}: {account} には {date} の {payee}、{amount} が既にあります。前回のインポート後に金額が変更された可能性があります。",
+    "overlapKeep": "行 {row} をそのままインポート",
+    "mobileRowMeta": "行 {row} · {date} · {source}"
   }
 }

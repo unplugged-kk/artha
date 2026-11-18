@@ -33,7 +33,8 @@
     "mnySingleFileOnly": "Importez les fichiers Microsoft Money un par un -- un fichier .mny contient un profil complet.",
     "xlsxSingleFileOnly": "Importez un fichier Excel à la fois.",
     "xlsxNoSheets": "Ce classeur ne contient aucune feuille à importer.",
-    "xlsxParseFailed": "Impossible de lire ce fichier Excel"
+    "xlsxParseFailed": "Impossible de lire ce fichier Excel",
+    "sourceColumnSingleFileOnly": "Une feuille comportant une colonne de compte ne peut être importée qu’un fichier à la fois."
   },
   "page": {
     "title": "Importer des transactions",
@@ -181,7 +182,9 @@
       "comma": "Virgule (,)",
       "semicolon": "Point-virgule (;)",
       "tab": "Tabulation"
-    }
+    },
+    "sourceAccountField": "Compte / source",
+    "sourceAccountHint": "Pour un suivi regroupant plusieurs comptes sur une feuille. Chaque ligne est comptabilisée dans le compte indiqué par sa source ; vous associerez ensuite les sources aux comptes."
   },
   "transferRules": {
     "title": "Règles de détection des virements",
@@ -595,5 +598,38 @@
     "nonTransactional": "This message appears to be non-transactional (OTP, alert, or marketing)",
     "ambiguous": "Message contains ambiguous transaction data and could not be confidently parsed",
     "spam": "Message classified as promotional or spam"
+  },
+  "mapSourceAccounts": {
+    "heading": "Associer les sources aux comptes",
+    "description": "Chaque ligne de cette feuille indique son compte. Choisissez une fois le compte de chaque source. Vous pourrez encore déplacer des lignes individuelles à l’étape de vérification.",
+    "choose": "Choisir un compte...",
+    "skip": "Ignorer ces lignes",
+    "blankSource": "(aucune source)",
+    "rowCount": "{count, plural, one {# ligne} other {# lignes}}",
+    "postTo": "Comptabiliser les lignes de {source} dans",
+    "unresolved": "{count, plural, one {# source nécessite encore} other {# sources nécessitent encore}} un compte ou une exclusion explicite."
+  },
+  "sourceReview": {
+    "summary": "{fileName} : {rows, plural, one {# ligne} other {# lignes}}{skipped, plural, =0 {} one {, # exclue} other {, # exclues}}.",
+    "changesHeading": "Variation du solde par compte",
+    "rejectedHeading": "{count, plural, one {# ligne n’a pas pu être lue} other {# lignes n’ont pas pu être lues}}",
+    "rejectedRow": "Ligne {row} : {reason}",
+    "skipRejected": "Exclure {count, plural, one {cette ligne} other {ces lignes}} de l’importation",
+    "colRow": "Ligne",
+    "colDate": "Date",
+    "colPayee": "Bénéficiaire",
+    "colAmount": "Montant",
+    "colSource": "Source",
+    "colPostTo": "Comptabiliser dans",
+    "postToRow": "Compte de la ligne {row}",
+    "transferTo": "Virement avec {account}",
+    "overlapsChecking": "Recherche dans vos comptes d’écritures pouvant faire doublon avec ces lignes...",
+    "overlapsFailed": "Impossible de rechercher dans vos comptes les écritures pouvant faire doublon avec ces lignes. Revenez en arrière et réessayez avant l’importation.",
+    "overlapsHeading": "{count, plural, one {# ligne ressemble} other {# lignes ressemblent}} à une écriture déjà présente dans vos comptes",
+    "overlapsHelp": "Une réimportation sans modification est reconnue automatiquement. Ces lignes diffèrent des écritures existantes et pourraient donc être comptabilisées deux fois. Ignorez une ligne via son menu Comptabiliser dans, ou conservez-la.",
+    "overlapOtherAccount": "Ligne {row} : {account} contient déjà {amount} le {date} ({payee}). La ligne a peut-être été déplacée vers un autre compte depuis la dernière importation.",
+    "overlapChangedAmount": "Ligne {row} : {account} contient déjà {payee} pour {amount} le {date}. Le montant a peut-être changé depuis la dernière importation.",
+    "overlapKeep": "Importer quand même la ligne {row}",
+    "mobileRowMeta": "Ligne {row} · {date} · {source}"
   }
 }

@@ -209,7 +209,8 @@
     "restoreQueueFull": "Quá nhiều lượt khôi phục đang chờ dung lượng khôi phục của bản triển khai này. Hãy thử lại sau một lát.",
     "restoreQueueWaitTimeout": "Hết thời gian chờ dung lượng khôi phục: một lượt khôi phục khác vẫn đang chạy. Hãy thử lại sau một lát.",
     "restoreTicketUnavailable": "Bản triển khai này không thể cấp quyền cho việc tải lên khôi phục.",
-    "invalidNotificationFields": "Thông báo trong bản sao lưu không hợp lệ: tiêu đề phải là văn bản; đích và khóa khử trùng lặp phải là văn bản hoặc null"
+    "invalidNotificationFields": "Thông báo trong bản sao lưu không hợp lệ: tiêu đề phải là văn bản; đích và khóa khử trùng lặp phải là văn bản hoặc null",
+    "rowsNotRestored": "Không thể khôi phục bản sao lưu: {{ declined }} trong {{ total }} dòng của {{ table }} xung đột với nhau hoặc với dữ liệu hiện có. Không có gì thay đổi."
   },
   "budgets": {
     "notFound": "Không tìm thấy ngân sách với ID {{ id }}",
@@ -331,7 +332,11 @@
     "xlsxSheetNotFound": "Không tìm thấy trang tính \"{{ sheetName }}\" trong workbook này.",
     "xlsxInvalidHeaderRow": "Dòng {{ headerRow }} không phải là dòng tiêu đề hợp lệ cho trang tính này.",
     "xlsxEmptyHeader": "Dòng {{ headerRow }} của \"{{ sheetName }}\" không có tiêu đề cột nào. Hãy chọn một dòng khác.",
-    "xlsxNoDataRows": "\"{{ sheetName }}\" không có dòng dữ liệu nào sau dòng {{ headerRow }}."
+    "xlsxNoDataRows": "\"{{ sheetName }}\" không có dòng dữ liệu nào sau dòng {{ headerRow }}.",
+    "unreadableRowsUnresolved": "Không thể đọc {{ count }} dòng. Hãy sửa trong tệp hoặc chọn bỏ qua: {{ rows }}",
+    "sourceAccountsUnresolved": "{{ count }} dòng chưa có tài khoản. Hãy ánh xạ nguồn của chúng hoặc bỏ qua: {{ rows }}",
+    "overlapsUnreviewed": "{{ count }} dòng có vẻ giống các mục đã có trong tài khoản của bạn. Hãy kiểm tra trước khi nhập: {{ rows }}",
+    "batchRejected": "Không có gì được nhập: {{ count }} dòng bị lỗi. {{ rows }}"
   },
   "monteCarlo": {
     "scenarioNotFound": "Không tìm thấy kịch bản {{ id }}",

@@ -33,7 +33,8 @@
     "mnySingleFileOnly": "Импортируйте файлы Microsoft Money по одному -- файл .mny содержит целый профиль.",
     "xlsxSingleFileOnly": "Импортируйте файлы Excel по одному.",
     "xlsxNoSheets": "В этой книге нет листов для импорта.",
-    "xlsxParseFailed": "Не удалось прочитать этот файл Excel"
+    "xlsxParseFailed": "Не удалось прочитать этот файл Excel",
+    "sourceColumnSingleFileOnly": "Лист со столбцом счёта можно импортировать только из одного файла за раз."
   },
   "page": {
     "title": "Импорт проводок",
@@ -181,7 +182,9 @@
       "comma": "Запятая (,)",
       "semicolon": "Точка с запятой (;)",
       "tab": "Табуляция"
-    }
+    },
+    "sourceAccountField": "Счёт / источник",
+    "sourceAccountHint": "Для таблицы с несколькими счетами на одном листе. Каждая строка записывается на счёт, указанный её источником; далее вы сопоставите источники со счетами."
   },
   "transferRules": {
     "title": "Правила определения переводов",
@@ -595,5 +598,38 @@
     "nonTransactional": "This message appears to be non-transactional (OTP, alert, or marketing)",
     "ambiguous": "Message contains ambiguous transaction data and could not be confidently parsed",
     "spam": "Message classified as promotional or spam"
+  },
+  "mapSourceAccounts": {
+    "heading": "Сопоставьте источники со счетами",
+    "description": "Каждая строка этого листа указывает свой счёт. Выберите счёт один раз для каждого источника. На экране проверки можно будет перенести отдельные строки.",
+    "choose": "Выберите счёт...",
+    "skip": "Пропустить эти строки",
+    "blankSource": "(нет источника)",
+    "rowCount": "{count, plural, one {# строка} few {# строки} many {# строк} other {# строки}}",
+    "postTo": "Записать строки из {source} на",
+    "unresolved": "{count, plural, one {Для # источника} few {Для # источников} many {Для # источников} other {Для # источника}} ещё нужно выбрать счёт или явно указать пропуск."
+  },
+  "sourceReview": {
+    "summary": "{fileName}: {rows, plural, one {# строка} few {# строки} many {# строк} other {# строки}}{skipped, plural, =0 {} other {, исключено #}}.",
+    "changesHeading": "Изменение баланса по счетам",
+    "rejectedHeading": "Не удалось прочитать {count, plural, one {# строку} few {# строки} many {# строк} other {# строки}}",
+    "rejectedRow": "Строка {row}: {reason}",
+    "skipRejected": "Исключить {count, plural, one {эту строку} other {эти строки}} из импорта",
+    "colRow": "Строка",
+    "colDate": "Дата",
+    "colPayee": "Получатель",
+    "colAmount": "Сумма",
+    "colSource": "Источник",
+    "colPostTo": "Записать на",
+    "postToRow": "Счёт для строки {row}",
+    "transferTo": "Перевод со счётом {account}",
+    "overlapsChecking": "Проверка ваших счетов на записи, которые могут повторяться в этих строках...",
+    "overlapsFailed": "Не удалось проверить ваши счета на записи, которые могут повторяться в этих строках. Вернитесь и повторите попытку перед импортом.",
+    "overlapsHeading": "{count, plural, one {# строка похожа} few {# строки похожи} many {# строк похожи} other {# строки похожи}} на запись, уже существующую на ваших счетах",
+    "overlapsHelp": "Повторный импорт без изменений распознаётся автоматически. Эти строки отличаются от существующих записей и могут быть проведены дважды. Пропустите строку через меню «Записать на» или оставьте её.",
+    "overlapOtherAccount": "Строка {row}: на счёте {account} уже есть {amount} за {date} ({payee}). После последнего импорта строку могли перенести на другой счёт.",
+    "overlapChangedAmount": "Строка {row}: на счёте {account} уже есть {payee} на сумму {amount} за {date}. После последнего импорта сумма могла измениться.",
+    "overlapKeep": "Всё равно импортировать строку {row}",
+    "mobileRowMeta": "Строка {row} · {date} · {source}"
   }
 }

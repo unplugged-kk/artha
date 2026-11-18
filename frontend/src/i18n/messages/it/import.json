@@ -33,7 +33,8 @@
     "mnySingleFileOnly": "Importa un file di Microsoft Money alla volta: un file .mny contiene un profilo intero.",
     "xlsxSingleFileOnly": "Importa un file Excel alla volta.",
     "xlsxNoSheets": "Quella cartella di lavoro non ha fogli da importare.",
-    "xlsxParseFailed": "Impossibile leggere quel file Excel"
+    "xlsxParseFailed": "Impossibile leggere quel file Excel",
+    "sourceColumnSingleFileOnly": "Un foglio con una colonna conto può essere importato solo un file alla volta."
   },
   "page": {
     "title": "Importa transazioni",
@@ -181,7 +182,9 @@
       "comma": "Virgola (,)",
       "semicolon": "Punto e virgola (;)",
       "tab": "Tab"
-    }
+    },
+    "sourceAccountField": "Conto / origine",
+    "sourceAccountHint": "Per un registro con più conti nello stesso foglio. Ogni riga viene registrata nel conto indicato dalla sua origine; nel prossimo passaggio assocerai le origini ai conti."
   },
   "transferRules": {
     "title": "Regole di rilevamento trasferimenti",
@@ -595,5 +598,38 @@
     "nonTransactional": "This message appears to be non-transactional (OTP, alert, or marketing)",
     "ambiguous": "Message contains ambiguous transaction data and could not be confidently parsed",
     "spam": "Message classified as promotional or spam"
+  },
+  "mapSourceAccounts": {
+    "heading": "Associa le origini ai conti",
+    "description": "Ogni riga di questo foglio indica il conto a cui appartiene. Scegli una volta il conto per ciascuna origine. Potrai ancora spostare singole righe nella schermata di verifica.",
+    "choose": "Scegli un conto...",
+    "skip": "Salta queste righe",
+    "blankSource": "(nessuna origine)",
+    "rowCount": "{count, plural, one {# riga} other {# righe}}",
+    "postTo": "Registra le righe di {source} in",
+    "unresolved": "{count, plural, one {# origine richiede ancora} other {# origini richiedono ancora}} un conto o una scelta esplicita di esclusione."
+  },
+  "sourceReview": {
+    "summary": "{fileName}: {rows, plural, one {# riga} other {# righe}}{skipped, plural, =0 {} one {, # esclusa} other {, # escluse}}.",
+    "changesHeading": "Variazione del saldo per conto",
+    "rejectedHeading": "Impossibile leggere {count, plural, one {# riga} other {# righe}}",
+    "rejectedRow": "Riga {row}: {reason}",
+    "skipRejected": "Escludi {count, plural, one {questa riga} other {queste righe}} dall’importazione",
+    "colRow": "Riga",
+    "colDate": "Data",
+    "colPayee": "Beneficiario",
+    "colAmount": "Importo",
+    "colSource": "Origine",
+    "colPostTo": "Registra in",
+    "postToRow": "Conto per la riga {row}",
+    "transferTo": "Trasferimento con {account}",
+    "overlapsChecking": "Ricerca nei tuoi conti di movimenti che queste righe potrebbero duplicare...",
+    "overlapsFailed": "Impossibile cercare nei tuoi conti movimenti che queste righe potrebbero duplicare. Torna indietro e riprova prima di importare.",
+    "overlapsHeading": "{count, plural, one {# riga sembra corrispondere} other {# righe sembrano corrispondere}} a un movimento già presente nei tuoi conti",
+    "overlapsHelp": "Una reimportazione senza modifiche viene riconosciuta automaticamente. Queste righe differiscono da quelle esistenti e potrebbero essere registrate due volte. Salta una riga dal menu Registra in, oppure mantienila.",
+    "overlapOtherAccount": "Riga {row}: {account} contiene già {amount} in data {date} ({payee}). La riga potrebbe essere stata spostata in un altro conto dall’ultima importazione.",
+    "overlapChangedAmount": "Riga {row}: {account} contiene già {payee} per {amount} in data {date}. L’importo potrebbe essere cambiato dall’ultima importazione.",
+    "overlapKeep": "Importa comunque la riga {row}",
+    "mobileRowMeta": "Riga {row} · {date} · {source}"
   }
 }

@@ -209,7 +209,8 @@
     "restoreQueueFull": "Terlalu banyak pemulihan yang sudah menunggu kapasitas pemulihan pada instalasi ini. Coba lagi sebentar.",
     "restoreQueueWaitTimeout": "Waktu tunggu kapasitas pemulihan habis: pemulihan lain masih berjalan. Coba lagi sebentar.",
     "restoreTicketUnavailable": "Instalasi ini tidak dapat mengizinkan unggahan pemulihan.",
-    "invalidNotificationFields": "Notifikasi cadangan tidak valid: judul harus berupa teks; tujuan dan kunci deduplikasi harus berupa teks atau null"
+    "invalidNotificationFields": "Notifikasi cadangan tidak valid: judul harus berupa teks; tujuan dan kunci deduplikasi harus berupa teks atau null",
+    "rowsNotRestored": "Cadangan tidak dapat dipulihkan: {{ declined }} dari {{ total }} baris {{ table }} bertentangan satu sama lain atau dengan data yang ada. Tidak ada yang diubah."
   },
   "budgets": {
     "notFound": "Anggaran dengan ID {{ id }} tidak ditemukan",
@@ -331,7 +332,11 @@
     "xlsxSheetNotFound": "Sheet \"{{ sheetName }}\" tidak ditemukan dalam workbook ini.",
     "xlsxInvalidHeaderRow": "Baris {{ headerRow }} bukan baris header yang valid untuk sheet ini.",
     "xlsxEmptyHeader": "Baris {{ headerRow }} dari \"{{ sheetName }}\" tidak memiliki header kolom. Pilih baris lain.",
-    "xlsxNoDataRows": "\"{{ sheetName }}\" tidak memiliki baris data setelah baris {{ headerRow }}."
+    "xlsxNoDataRows": "\"{{ sheetName }}\" tidak memiliki baris data setelah baris {{ headerRow }}.",
+    "unreadableRowsUnresolved": "{{ count }} baris tidak dapat dibaca. Perbaiki di berkas atau pilih untuk melewatinya: {{ rows }}",
+    "sourceAccountsUnresolved": "{{ count }} baris tidak memiliki rekening. Petakan sumbernya atau lewati: {{ rows }}",
+    "overlapsUnreviewed": "{{ count }} baris tampak seperti entri yang sudah ada di rekening Anda. Tinjau sebelum mengimpor: {{ rows }}",
+    "batchRejected": "Tidak ada yang diimpor: {{ count }} baris gagal. {{ rows }}"
   },
   "monteCarlo": {
     "scenarioNotFound": "Skenario {{ id }} tidak ditemukan",

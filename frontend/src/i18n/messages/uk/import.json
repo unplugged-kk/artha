@@ -33,7 +33,8 @@
     "mnySingleFileOnly": "Імпортуйте файли Microsoft Money по одному -- файл .mny містить цілий профіль.",
     "xlsxSingleFileOnly": "Імпортуйте файли Excel по одному.",
     "xlsxNoSheets": "У цій книзі немає аркушів для імпорту.",
-    "xlsxParseFailed": "Не вдалося прочитати цей файл Excel"
+    "xlsxParseFailed": "Не вдалося прочитати цей файл Excel",
+    "sourceColumnSingleFileOnly": "Аркуш зі стовпцем рахунку можна імпортувати лише з одного файлу за раз."
   },
   "page": {
     "title": "Імпорт транзакцій",
@@ -181,7 +182,9 @@
       "comma": "Кома (,)",
       "semicolon": "Крапка з комою (;)",
       "tab": "Табуляція"
-    }
+    },
+    "sourceAccountField": "Рахунок / джерело",
+    "sourceAccountHint": "Для таблиці з кількома рахунками на одному аркуші. Кожен рядок записується на рахунок, указаний його джерелом; далі ви зіставите джерела з рахунками."
   },
   "transferRules": {
     "title": "Правила виявлення переказів",
@@ -595,5 +598,38 @@
     "nonTransactional": "This message appears to be non-transactional (OTP, alert, or marketing)",
     "ambiguous": "Message contains ambiguous transaction data and could not be confidently parsed",
     "spam": "Message classified as promotional or spam"
+  },
+  "mapSourceAccounts": {
+    "heading": "Зіставте джерела з рахунками",
+    "description": "Кожен рядок цього аркуша вказує свій рахунок. Виберіть рахунок один раз для кожного джерела. На екрані перевірки можна буде перенести окремі рядки.",
+    "choose": "Виберіть рахунок...",
+    "skip": "Пропустити ці рядки",
+    "blankSource": "(немає джерела)",
+    "rowCount": "{count, plural, one {# рядок} few {# рядки} many {# рядків} other {# рядка}}",
+    "postTo": "Записати рядки з {source} на",
+    "unresolved": "{count, plural, one {Для # джерела} few {Для # джерел} many {Для # джерел} other {Для # джерела}} ще потрібно вибрати рахунок або явно вказати пропуск."
+  },
+  "sourceReview": {
+    "summary": "{fileName}: {rows, plural, one {# рядок} few {# рядки} many {# рядків} other {# рядка}}{skipped, plural, =0 {} other {, виключено #}}.",
+    "changesHeading": "Зміна балансу за рахунками",
+    "rejectedHeading": "Не вдалося прочитати {count, plural, one {# рядок} few {# рядки} many {# рядків} other {# рядка}}",
+    "rejectedRow": "Рядок {row}: {reason}",
+    "skipRejected": "Виключити {count, plural, one {цей рядок} other {ці рядки}} з імпорту",
+    "colRow": "Рядок",
+    "colDate": "Дата",
+    "colPayee": "Отримувач",
+    "colAmount": "Сума",
+    "colSource": "Джерело",
+    "colPostTo": "Записати на",
+    "postToRow": "Рахунок для рядка {row}",
+    "transferTo": "Переказ із рахунком {account}",
+    "overlapsChecking": "Перевірка ваших рахунків на записи, які можуть повторюватися в цих рядках...",
+    "overlapsFailed": "Не вдалося перевірити ваші рахунки на записи, які можуть повторюватися в цих рядках. Поверніться та повторіть спробу перед імпортом.",
+    "overlapsHeading": "{count, plural, one {# рядок схожий} few {# рядки схожі} many {# рядків схожі} other {# рядка схожі}} на запис, який уже є на ваших рахунках",
+    "overlapsHelp": "Повторний імпорт без змін розпізнається автоматично. Ці рядки відрізняються від наявних записів і можуть бути проведені двічі. Пропустіть рядок через меню «Записати на» або залиште його.",
+    "overlapOtherAccount": "Рядок {row}: на рахунку {account} уже є {amount} за {date} ({payee}). Після останнього імпорту рядок могли перенести на інший рахунок.",
+    "overlapChangedAmount": "Рядок {row}: на рахунку {account} уже є {payee} на суму {amount} за {date}. Після останнього імпорту сума могла змінитися.",
+    "overlapKeep": "Усе одно імпортувати рядок {row}",
+    "mobileRowMeta": "Рядок {row} · {date} · {source}"
   }
 }

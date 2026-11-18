@@ -33,7 +33,8 @@
     "mnySingleFileOnly": "请一次导入一个 Microsoft Money 文件 -- 一个 .mny 文件包含完整的账套。",
     "xlsxSingleFileOnly": "请一次导入一个 Excel 文件。",
     "xlsxNoSheets": "该工作簿没有可导入的工作表。",
-    "xlsxParseFailed": "无法读取该 Excel 文件"
+    "xlsxParseFailed": "无法读取该 Excel 文件",
+    "sourceColumnSingleFileOnly": "包含账户列的工作表每次只能导入一个文件。"
   },
   "page": {
     "title": "导入交易",
@@ -181,7 +182,9 @@
       "comma": "逗号（,）",
       "semicolon": "分号（;）",
       "tab": "制表符"
-    }
+    },
+    "sourceAccountField": "账户 / 来源",
+    "sourceAccountHint": "适用于在同一工作表中记录多个账户的表格。每行将记入其来源指定的账户；接下来请将来源与账户匹配。"
   },
   "transferRules": {
     "title": "转账检测规则",
@@ -595,5 +598,38 @@
     "nonTransactional": "This message appears to be non-transactional (OTP, alert, or marketing)",
     "ambiguous": "Message contains ambiguous transaction data and could not be confidently parsed",
     "spam": "Message classified as promotional or spam"
+  },
+  "mapSourceAccounts": {
+    "heading": "将来源与账户匹配",
+    "description": "此工作表的每行都标明了所属账户。请为每个来源选择一次账户。在检查页面中，您仍可调整单独行的账户。",
+    "choose": "选择账户...",
+    "skip": "跳过这些行",
+    "blankSource": "（无来源）",
+    "rowCount": "{count, plural, other {# 行}}",
+    "postTo": "将 {source} 的行记入",
+    "unresolved": "{count, plural, other {仍有 # 个来源需要选择账户或明确选择跳过}}。"
+  },
+  "sourceReview": {
+    "summary": "{fileName}：{rows, plural, other {# 行}}{skipped, plural, =0 {} other {，已排除 # 行}}。",
+    "changesHeading": "各账户余额变化",
+    "rejectedHeading": "{count, plural, other {无法读取 # 行}}",
+    "rejectedRow": "第 {row} 行：{reason}",
+    "skipRejected": "从导入中排除{count, plural, other {这些行}}",
+    "colRow": "行",
+    "colDate": "日期",
+    "colPayee": "收款方",
+    "colAmount": "金额",
+    "colSource": "来源",
+    "colPostTo": "记入",
+    "postToRow": "第 {row} 行的账户",
+    "transferTo": "与 {account} 转账",
+    "overlapsChecking": "正在检查账户中是否存在这些行可能重复的记录...",
+    "overlapsFailed": "无法检查账户中是否存在这些行可能重复的记录。请返回并重试后再导入。",
+    "overlapsHeading": "{count, plural, other {# 行与账户中已有的记录相似}}",
+    "overlapsHelp": "未修改的重复导入会自动识别。这些行与已有记录不同，因此可能被重复记账。请通过该行的“记入”菜单跳过，或保留该行。",
+    "overlapOtherAccount": "第 {row} 行：{account} 已有 {date} 的 {amount}（{payee}）记录。此行可能在上次导入后被移到了其他账户。",
+    "overlapChangedAmount": "第 {row} 行：{account} 已有 {date} {payee}、{amount} 的记录。金额可能在上次导入后发生了变化。",
+    "overlapKeep": "仍然导入第 {row} 行",
+    "mobileRowMeta": "第 {row} 行 · {date} · {source}"
   }
 }

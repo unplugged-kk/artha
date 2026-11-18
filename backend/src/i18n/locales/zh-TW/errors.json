@@ -209,7 +209,8 @@
     "restoreQueueFull": "已有太多還原作業在等待此部署的還原處理能力。請稍後再試。",
     "restoreQueueWaitTimeout": "等待還原處理能力逾時：另一個還原作業仍在進行。請稍後再試。",
     "restoreTicketUnavailable": "此部署無法授權還原上傳。",
-    "invalidNotificationFields": "備份中的通知無效：標題必須是文字；目標和去重鍵必須是文字或 null"
+    "invalidNotificationFields": "備份中的通知無效：標題必須是文字；目標和去重鍵必須是文字或 null",
+    "rowsNotRestored": "無法還原備份：{{ table }} 的 {{ total }} 列中有 {{ declined }} 列互相衝突或與現有資料衝突。未作任何變更。"
   },
   "budgets": {
     "notFound": "找不到 ID 為 {{ id }} 的預算",
@@ -331,7 +332,11 @@
     "xlsxSheetNotFound": "在此活頁簿中找不到工作表「{{ sheetName }}」。",
     "xlsxInvalidHeaderRow": "第 {{ headerRow }} 列不是此工作表的有效標題列。",
     "xlsxEmptyHeader": "「{{ sheetName }}」的第 {{ headerRow }} 列沒有欄標題。請選擇其他列。",
-    "xlsxNoDataRows": "「{{ sheetName }}」在第 {{ headerRow }} 列之後沒有資料列。"
+    "xlsxNoDataRows": "「{{ sheetName }}」在第 {{ headerRow }} 列之後沒有資料列。",
+    "unreadableRowsUnresolved": "無法讀取 {{ count }} 列。請在檔案中修正或選擇略過：{{ rows }}",
+    "sourceAccountsUnresolved": "{{ count }} 列尚未指定帳戶。請為其來源對應帳戶或略過：{{ rows }}",
+    "overlapsUnreviewed": "{{ count }} 列與帳戶中已有的紀錄相似。請在匯入前檢查：{{ rows }}",
+    "batchRejected": "未匯入任何內容：{{ count }} 列失敗。{{ rows }}"
   },
   "monteCarlo": {
     "scenarioNotFound": "找不到情境 {{ id }}",

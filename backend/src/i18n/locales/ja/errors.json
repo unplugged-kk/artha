@@ -209,7 +209,8 @@
     "restoreQueueFull": "このデプロイの復元処理の空きを待っている復元が多すぎます。しばらくしてからもう一度お試しください。",
     "restoreQueueWaitTimeout": "復元処理の空き待ちがタイムアウトしました。別の復元がまだ実行中です。しばらくしてからもう一度お試しください。",
     "restoreTicketUnavailable": "このデプロイでは復元のアップロードを承認できません。",
-    "invalidNotificationFields": "バックアップの通知が無効です。タイトルは文字列、リンク先と重複排除キーは文字列または null である必要があります"
+    "invalidNotificationFields": "バックアップの通知が無効です。タイトルは文字列、リンク先と重複排除キーは文字列または null である必要があります",
+    "rowsNotRestored": "バックアップを復元できませんでした。{{ table }} の {{ total }} 行中 {{ declined }} 行が互いに、または既存のデータと競合しています。変更は行われていません。"
   },
   "budgets": {
     "notFound": "ID {{ id }} の予算が見つかりません",
@@ -331,7 +332,11 @@
     "xlsxSheetNotFound": "このブックにシート \"{{ sheetName }}\" が見つかりません。",
     "xlsxInvalidHeaderRow": "{{ headerRow }} 行目はこのシートの有効なヘッダー行ではありません。",
     "xlsxEmptyHeader": "\"{{ sheetName }}\" の {{ headerRow }} 行目には列見出しがありません。別の行を選んでください。",
-    "xlsxNoDataRows": "\"{{ sheetName }}\" には {{ headerRow }} 行目以降にデータ行がありません。"
+    "xlsxNoDataRows": "\"{{ sheetName }}\" には {{ headerRow }} 行目以降にデータ行がありません。",
+    "unreadableRowsUnresolved": "{{ count }} 行を読み取れませんでした。ファイルで修正するか、スキップしてください: {{ rows }}",
+    "sourceAccountsUnresolved": "{{ count }} 行に口座がありません。ソースを口座に割り当てるか、スキップしてください: {{ rows }}",
+    "overlapsUnreviewed": "{{ count }} 行が口座内の既存の明細と似ています。インポート前に確認してください: {{ rows }}",
+    "batchRejected": "何もインポートされませんでした。{{ count }} 行が失敗しました。{{ rows }}"
   },
   "monteCarlo": {
     "scenarioNotFound": "シナリオ {{ id }} が見つかりません",

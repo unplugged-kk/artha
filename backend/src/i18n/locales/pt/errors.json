@@ -209,7 +209,8 @@
     "restoreQueueFull": "Demasiados restauros estão já à espera da capacidade de restauro desta instalação. Tente novamente dentro de um momento.",
     "restoreQueueWaitTimeout": "Tempo esgotado à espera da capacidade de restauro: outro restauro ainda está em curso. Tente novamente dentro de um momento.",
     "restoreTicketUnavailable": "Esta instalação não pode autorizar carregamentos de restauro.",
-    "invalidNotificationFields": "Notificação inválida na cópia de segurança: o título deve ser texto; o destino e a chave de deduplicação devem ser texto ou null"
+    "invalidNotificationFields": "Notificação inválida na cópia de segurança: o título deve ser texto; o destino e a chave de deduplicação devem ser texto ou null",
+    "rowsNotRestored": "Não foi possível restaurar a cópia de segurança: {{ declined }} de {{ total }} linhas de {{ table }} entram em conflito entre si ou com os dados existentes. Nada foi alterado."
   },
   "budgets": {
     "notFound": "Orçamento com ID {{ id }} não encontrado",
@@ -331,7 +332,11 @@
     "xlsxSheetNotFound": "A folha \"{{ sheetName }}\" não foi encontrada nesta pasta de trabalho.",
     "xlsxInvalidHeaderRow": "A linha {{ headerRow }} não é uma linha de cabeçalho válida para esta folha.",
     "xlsxEmptyHeader": "A linha {{ headerRow }} de \"{{ sheetName }}\" não tem cabeçalhos de coluna. Escolha outra linha.",
-    "xlsxNoDataRows": "\"{{ sheetName }}\" não tem linhas de dados após a linha {{ headerRow }}."
+    "xlsxNoDataRows": "\"{{ sheetName }}\" não tem linhas de dados após a linha {{ headerRow }}.",
+    "unreadableRowsUnresolved": "Não foi possível ler {{ count }} linhas. Corrija-as no ficheiro ou escolha ignorá-las: {{ rows }}",
+    "sourceAccountsUnresolved": "{{ count }} linhas não têm conta. Associe a sua origem ou ignore-as: {{ rows }}",
+    "overlapsUnreviewed": "{{ count }} linhas parecem corresponder a movimentos já existentes nas suas contas. Reveja-as antes de importar: {{ rows }}",
+    "batchRejected": "Nada foi importado: {{ count }} linhas falharam. {{ rows }}"
   },
   "monteCarlo": {
     "scenarioNotFound": "Cenário {{ id }} não encontrado",

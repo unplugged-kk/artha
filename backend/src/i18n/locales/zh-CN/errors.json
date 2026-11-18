@@ -209,7 +209,8 @@
     "restoreQueueFull": "已有太多恢复操作在等待此部署的恢复处理能力。请稍后重试。",
     "restoreQueueWaitTimeout": "等待恢复处理能力超时：另一个恢复操作仍在进行。请稍后重试。",
     "restoreTicketUnavailable": "此部署无法授权恢复上传。",
-    "invalidNotificationFields": "备份中的通知无效：标题必须是文本；目标和去重键必须是文本或 null"
+    "invalidNotificationFields": "备份中的通知无效：标题必须是文本；目标和去重键必须是文本或 null",
+    "rowsNotRestored": "无法恢复备份：{{ table }} 的 {{ total }} 行中有 {{ declined }} 行相互冲突或与现有数据冲突。未作任何更改。"
   },
   "budgets": {
     "notFound": "未找到 ID 为 {{ id }} 的预算",
@@ -331,7 +332,11 @@
     "xlsxSheetNotFound": "在此工作簿中未找到工作表 \"{{ sheetName }}\"。",
     "xlsxInvalidHeaderRow": "第 {{ headerRow }} 行不是此工作表的有效标题行。",
     "xlsxEmptyHeader": "\"{{ sheetName }}\" 的第 {{ headerRow }} 行没有列标题。请选择其他行。",
-    "xlsxNoDataRows": "\"{{ sheetName }}\" 在第 {{ headerRow }} 行之后没有数据行。"
+    "xlsxNoDataRows": "\"{{ sheetName }}\" 在第 {{ headerRow }} 行之后没有数据行。",
+    "unreadableRowsUnresolved": "无法读取 {{ count }} 行。请在文件中修正或选择跳过：{{ rows }}",
+    "sourceAccountsUnresolved": "{{ count }} 行未分配账户。请为其来源匹配账户或跳过：{{ rows }}",
+    "overlapsUnreviewed": "{{ count }} 行与账户中已有的记录相似。请在导入前检查：{{ rows }}",
+    "batchRejected": "未导入任何内容：{{ count }} 行失败。{{ rows }}"
   },
   "monteCarlo": {
     "scenarioNotFound": "未找到情景 {{ id }}",

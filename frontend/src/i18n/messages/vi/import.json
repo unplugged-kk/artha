@@ -33,7 +33,8 @@
     "mnySingleFileOnly": "Hãy nhập từng tệp Microsoft Money một -- một tệp .mny chứa toàn bộ một hồ sơ.",
     "xlsxSingleFileOnly": "Hãy nhập từng tệp Excel một.",
     "xlsxNoSheets": "Sổ làm việc đó không có trang tính nào để nhập.",
-    "xlsxParseFailed": "Không thể đọc tệp Excel đó"
+    "xlsxParseFailed": "Không thể đọc tệp Excel đó",
+    "sourceColumnSingleFileOnly": "Trang tính có cột tài khoản chỉ có thể được nhập từ một tệp mỗi lần."
   },
   "page": {
     "title": "Nhập Khẩu Giao Dịch",
@@ -181,7 +182,9 @@
       "comma": "Dấu phẩy (,)",
       "semicolon": "Dấu chấm phẩy (;)",
       "tab": "Tab"
-    }
+    },
+    "sourceAccountField": "Tài khoản / nguồn",
+    "sourceAccountHint": "Dành cho bảng theo dõi nhiều tài khoản trên một trang tính. Mỗi dòng được ghi vào tài khoản mà nguồn của nó chỉ định; bạn sẽ ghép nguồn với tài khoản ở bước tiếp theo."
   },
   "transferRules": {
     "title": "Quy tắc phát hiện chuyển khoản",
@@ -595,5 +598,38 @@
     "nonTransactional": "This message appears to be non-transactional (OTP, alert, or marketing)",
     "ambiguous": "Message contains ambiguous transaction data and could not be confidently parsed",
     "spam": "Message classified as promotional or spam"
+  },
+  "mapSourceAccounts": {
+    "heading": "Ghép nguồn với tài khoản",
+    "description": "Mỗi dòng trong trang tính này chỉ định tài khoản của nó. Chọn tài khoản một lần cho mỗi nguồn. Bạn vẫn có thể chuyển từng dòng trên màn hình kiểm tra.",
+    "choose": "Chọn tài khoản...",
+    "skip": "Bỏ qua các dòng này",
+    "blankSource": "(không có nguồn)",
+    "rowCount": "{count, plural, other {# dòng}}",
+    "postTo": "Ghi các dòng từ {source} vào",
+    "unresolved": "{count, plural, other {# nguồn vẫn cần được gán tài khoản hoặc chọn bỏ qua rõ ràng}}."
+  },
+  "sourceReview": {
+    "summary": "{fileName}: {rows, plural, other {# dòng}}{skipped, plural, =0 {} other {, bỏ qua #}}.",
+    "changesHeading": "Thay đổi số dư theo tài khoản",
+    "rejectedHeading": "{count, plural, other {Không thể đọc # dòng}}",
+    "rejectedRow": "Dòng {row}: {reason}",
+    "skipRejected": "Không nhập {count, plural, other {các dòng này}}",
+    "colRow": "Dòng",
+    "colDate": "Ngày",
+    "colPayee": "Người nhận",
+    "colAmount": "Số tiền",
+    "colSource": "Nguồn",
+    "colPostTo": "Ghi vào",
+    "postToRow": "Tài khoản cho dòng {row}",
+    "transferTo": "Chuyển khoản với {account}",
+    "overlapsChecking": "Đang kiểm tra tài khoản của bạn để tìm các mục mà những dòng này có thể lặp lại...",
+    "overlapsFailed": "Không thể kiểm tra tài khoản của bạn để tìm các mục mà những dòng này có thể lặp lại. Hãy quay lại và thử lại trước khi nhập.",
+    "overlapsHeading": "{count, plural, other {# dòng có vẻ giống một mục đã có trong tài khoản của bạn}}",
+    "overlapsHelp": "Việc nhập lại không có thay đổi được tự động nhận diện. Các dòng này khác với các mục hiện có nên có thể được ghi hai lần. Bỏ qua một dòng bằng menu Ghi vào hoặc giữ lại dòng đó.",
+    "overlapOtherAccount": "Dòng {row}: {account} đã có {amount} vào {date} ({payee}). Dòng này có thể đã được chuyển sang tài khoản khác kể từ lần nhập trước.",
+    "overlapChangedAmount": "Dòng {row}: {account} đã có {payee} với số tiền {amount} vào {date}. Số tiền có thể đã thay đổi kể từ lần nhập trước.",
+    "overlapKeep": "Vẫn nhập dòng {row}",
+    "mobileRowMeta": "Dòng {row} · {date} · {source}"
   }
 }

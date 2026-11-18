@@ -33,7 +33,8 @@
     "mnySingleFileOnly": "Importe um ficheiro do Microsoft Money de cada vez -- um ficheiro .mny contém um perfil completo.",
     "xlsxSingleFileOnly": "Importe um ficheiro Excel de cada vez.",
     "xlsxNoSheets": "Essa pasta de trabalho não tem folhas para importar.",
-    "xlsxParseFailed": "Não foi possível ler esse ficheiro Excel"
+    "xlsxParseFailed": "Não foi possível ler esse ficheiro Excel",
+    "sourceColumnSingleFileOnly": "Uma folha com uma coluna de conta só pode ser importada a partir de um ficheiro de cada vez."
   },
   "page": {
     "title": "Importar Transações",
@@ -181,7 +182,9 @@
       "comma": "Vírgula (,)",
       "semicolon": "Ponto e vírgula (;)",
       "tab": "Tabulação"
-    }
+    },
+    "sourceAccountField": "Conta / origem",
+    "sourceAccountHint": "Para um registo com várias contas numa folha. Cada linha é lançada na conta indicada pela sua origem; no próximo passo associará as origens às contas."
   },
   "transferRules": {
     "title": "Regras de Deteção de Transferências",
@@ -595,5 +598,38 @@
     "nonTransactional": "This message appears to be non-transactional (OTP, alert, or marketing)",
     "ambiguous": "Message contains ambiguous transaction data and could not be confidently parsed",
     "spam": "Message classified as promotional or spam"
+  },
+  "mapSourceAccounts": {
+    "heading": "Associar origens a contas",
+    "description": "Cada linha desta folha indica a conta a que pertence. Escolha uma vez a conta de cada origem. Pode ainda mover linhas individuais no ecrã de revisão.",
+    "choose": "Escolha uma conta...",
+    "skip": "Ignorar estas linhas",
+    "blankSource": "(sem origem)",
+    "rowCount": "{count, plural, one {# linha} other {# linhas}}",
+    "postTo": "Lançar as linhas de {source} em",
+    "unresolved": "{count, plural, one {# origem ainda precisa} other {# origens ainda precisam}} de uma conta ou de uma escolha explícita para ignorar."
+  },
+  "sourceReview": {
+    "summary": "{fileName}: {rows, plural, one {# linha} other {# linhas}}{skipped, plural, =0 {} one {, # excluída} other {, # excluídas}}.",
+    "changesHeading": "Variação do saldo por conta",
+    "rejectedHeading": "Não foi possível ler {count, plural, one {# linha} other {# linhas}}",
+    "rejectedRow": "Linha {row}: {reason}",
+    "skipRejected": "Excluir {count, plural, one {esta linha} other {estas linhas}} da importação",
+    "colRow": "Linha",
+    "colDate": "Data",
+    "colPayee": "Beneficiário",
+    "colAmount": "Montante",
+    "colSource": "Origem",
+    "colPostTo": "Lançar em",
+    "postToRow": "Conta da linha {row}",
+    "transferTo": "Transferência com {account}",
+    "overlapsChecking": "A verificar nas suas contas movimentos que estas linhas possam repetir...",
+    "overlapsFailed": "Não foi possível verificar nas suas contas movimentos que estas linhas possam repetir. Volte atrás e tente novamente antes de importar.",
+    "overlapsHeading": "{count, plural, one {# linha parece corresponder} other {# linhas parecem corresponder}} a um movimento já existente nas suas contas",
+    "overlapsHelp": "Uma reimportação sem alterações é reconhecida automaticamente. Estas linhas diferem das existentes, pelo que podem ser lançadas duas vezes. Ignore uma linha no menu Lançar em ou mantenha-a.",
+    "overlapOtherAccount": "Linha {row}: {account} já contém {amount} em {date} ({payee}). A linha pode ter sido movida para outra conta desde a última importação.",
+    "overlapChangedAmount": "Linha {row}: {account} já contém {payee} com {amount} em {date}. O montante pode ter mudado desde a última importação.",
+    "overlapKeep": "Importar a linha {row} mesmo assim",
+    "mobileRowMeta": "Linha {row} · {date} · {source}"
   }
 }

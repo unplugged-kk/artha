@@ -33,7 +33,8 @@
     "mnySingleFileOnly": "Importuj pliki Microsoft Money pojedynczo -- plik .mny zawiera cały profil.",
     "xlsxSingleFileOnly": "Importuj jeden plik Excel naraz.",
     "xlsxNoSheets": "Ten skoroszyt nie ma arkuszy do zaimportowania.",
-    "xlsxParseFailed": "Nie udało się odczytać tego pliku Excel"
+    "xlsxParseFailed": "Nie udało się odczytać tego pliku Excel",
+    "sourceColumnSingleFileOnly": "Arkusz z kolumną konta można importować tylko z jednego pliku naraz."
   },
   "page": {
     "title": "Import transakcji",
@@ -181,7 +182,9 @@
       "comma": "Przecinek (,)",
       "semicolon": "Średnik (;)",
       "tab": "Tabulacja"
-    }
+    },
+    "sourceAccountField": "Konto / źródło",
+    "sourceAccountHint": "Dla zestawienia kilku kont w jednym arkuszu. Każdy wiersz jest księgowany na koncie wskazanym przez jego źródło; w następnym kroku przypiszesz źródła do kont."
   },
   "transferRules": {
     "title": "Reguły wykrywania przelewów",
@@ -595,5 +598,38 @@
     "nonTransactional": "This message appears to be non-transactional (OTP, alert, or marketing)",
     "ambiguous": "Message contains ambiguous transaction data and could not be confidently parsed",
     "spam": "Message classified as promotional or spam"
+  },
+  "mapSourceAccounts": {
+    "heading": "Przypisz źródła do kont",
+    "description": "Każdy wiersz tego arkusza wskazuje swoje konto. Wybierz konto raz dla każdego źródła. Na ekranie przeglądu nadal możesz przenosić pojedyncze wiersze.",
+    "choose": "Wybierz konto...",
+    "skip": "Pomiń te wiersze",
+    "blankSource": "(brak źródła)",
+    "rowCount": "{count, plural, one {# wiersz} few {# wiersze} many {# wierszy} other {# wiersza}}",
+    "postTo": "Zaksięguj wiersze z {source} na",
+    "unresolved": "{count, plural, one {# źródło nadal wymaga} few {# źródła nadal wymagają} many {# źródeł nadal wymaga} other {# źródła nadal wymaga}} konta lub jawnego pominięcia."
+  },
+  "sourceReview": {
+    "summary": "{fileName}: {rows, plural, one {# wiersz} few {# wiersze} many {# wierszy} other {# wiersza}}{skipped, plural, =0 {} other {, pominięto #}}.",
+    "changesHeading": "Zmiana salda na koncie",
+    "rejectedHeading": "Nie można odczytać {count, plural, one {# wiersza} other {# wierszy}}",
+    "rejectedRow": "Wiersz {row}: {reason}",
+    "skipRejected": "Wyklucz {count, plural, one {ten wiersz} other {te wiersze}} z importu",
+    "colRow": "Wiersz",
+    "colDate": "Data",
+    "colPayee": "Odbiorca",
+    "colAmount": "Kwota",
+    "colSource": "Źródło",
+    "colPostTo": "Zaksięguj na",
+    "postToRow": "Konto dla wiersza {row}",
+    "transferTo": "Przelew z kontem {account}",
+    "overlapsChecking": "Sprawdzanie kont pod kątem wpisów, które te wiersze mogą powielać...",
+    "overlapsFailed": "Nie można sprawdzić kont pod kątem wpisów, które te wiersze mogą powielać. Wróć i spróbuj ponownie przed importem.",
+    "overlapsHeading": "{count, plural, one {# wiersz przypomina} few {# wiersze przypominają} many {# wierszy przypomina} other {# wiersza przypomina}} wpis już istniejący na Twoich kontach",
+    "overlapsHelp": "Ponowny import bez zmian jest rozpoznawany automatycznie. Te wiersze różnią się od istniejących wpisów, więc mogą zostać zaksięgowane dwa razy. Pomiń wiersz w menu Zaksięguj na lub go zachowaj.",
+    "overlapOtherAccount": "Wiersz {row}: {account} zawiera już {amount} z dnia {date} ({payee}). Od ostatniego importu wiersz mógł zostać przeniesiony na inne konto.",
+    "overlapChangedAmount": "Wiersz {row}: {account} zawiera już {payee} na kwotę {amount} z dnia {date}. Kwota mogła się zmienić od ostatniego importu.",
+    "overlapKeep": "Mimo to importuj wiersz {row}",
+    "mobileRowMeta": "Wiersz {row} · {date} · {source}"
   }
 }

@@ -209,7 +209,8 @@
     "restoreQueueFull": "Zbyt wiele przywracań już czeka na moc przywracania tego wdrożenia. Spróbuj ponownie za chwilę.",
     "restoreQueueWaitTimeout": "Upłynął limit czasu oczekiwania na moc przywracania: inne przywracanie nadal trwa. Spróbuj ponownie za chwilę.",
     "restoreTicketUnavailable": "To wdrożenie nie może autoryzować przesyłania kopii do przywrócenia.",
-    "invalidNotificationFields": "Nieprawidłowe powiadomienie w kopii zapasowej: tytuł musi być tekstem, a cel i klucz deduplikacji tekstem lub wartością null"
+    "invalidNotificationFields": "Nieprawidłowe powiadomienie w kopii zapasowej: tytuł musi być tekstem, a cel i klucz deduplikacji tekstem lub wartością null",
+    "rowsNotRestored": "Nie można przywrócić kopii zapasowej: {{ declined }} z {{ total }} wierszy tabeli {{ table }} jest w konflikcie ze sobą lub z istniejącymi danymi. Niczego nie zmieniono."
   },
   "budgets": {
     "notFound": "Nie znaleziono budżetu o ID {{ id }}",
@@ -331,7 +332,11 @@
     "xlsxSheetNotFound": "Arkusz \"{{ sheetName }}\" nie został znaleziony w tym skoroszycie.",
     "xlsxInvalidHeaderRow": "Wiersz {{ headerRow }} nie jest prawidłowym wierszem nagłówka dla tego arkusza.",
     "xlsxEmptyHeader": "Wiersz {{ headerRow }} arkusza \"{{ sheetName }}\" nie zawiera nagłówków kolumn. Wybierz inny wiersz.",
-    "xlsxNoDataRows": "Arkusz \"{{ sheetName }}\" nie zawiera wierszy danych po wierszu {{ headerRow }}."
+    "xlsxNoDataRows": "Arkusz \"{{ sheetName }}\" nie zawiera wierszy danych po wierszu {{ headerRow }}.",
+    "unreadableRowsUnresolved": "Nie można odczytać {{ count }} wierszy. Popraw je w pliku lub wybierz pominięcie: {{ rows }}",
+    "sourceAccountsUnresolved": "{{ count }} wierszy nie ma konta. Przypisz ich źródło lub je pomiń: {{ rows }}",
+    "overlapsUnreviewed": "{{ count }} wierszy przypomina istniejące wpisy na Twoich kontach. Sprawdź je przed importem: {{ rows }}",
+    "batchRejected": "Niczego nie zaimportowano: {{ count }} wierszy zakończyło się błędem. {{ rows }}"
   },
   "monteCarlo": {
     "scenarioNotFound": "Nie znaleziono scenariusza {{ id }}",

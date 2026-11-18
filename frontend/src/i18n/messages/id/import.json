@@ -33,7 +33,8 @@
     "mnySingleFileOnly": "Impor berkas Microsoft Money satu per satu -- berkas .mny memuat satu profil utuh.",
     "xlsxSingleFileOnly": "Impor satu berkas Excel dalam satu waktu.",
     "xlsxNoSheets": "Buku kerja itu tidak memiliki sheet untuk diimpor.",
-    "xlsxParseFailed": "Gagal membaca berkas Excel itu"
+    "xlsxParseFailed": "Gagal membaca berkas Excel itu",
+    "sourceColumnSingleFileOnly": "Lembar dengan kolom rekening hanya dapat diimpor satu berkas setiap kali."
   },
   "page": {
     "title": "Impor Transaksi",
@@ -181,7 +182,9 @@
       "comma": "Koma (,)",
       "semicolon": "Titik koma (;)",
       "tab": "Tab"
-    }
+    },
+    "sourceAccountField": "Rekening / sumber",
+    "sourceAccountHint": "Untuk pencatatan beberapa rekening dalam satu lembar. Setiap baris dibukukan ke rekening yang disebutkan sumbernya; selanjutnya Anda mencocokkan sumber dengan rekening."
   },
   "transferRules": {
     "title": "Aturan Deteksi Transfer",
@@ -595,5 +598,38 @@
     "nonTransactional": "This message appears to be non-transactional (OTP, alert, or marketing)",
     "ambiguous": "Message contains ambiguous transaction data and could not be confidently parsed",
     "spam": "Message classified as promotional or spam"
+  },
+  "mapSourceAccounts": {
+    "heading": "Cocokkan sumber dengan rekening",
+    "description": "Setiap baris di lembar ini menyebutkan rekeningnya. Pilih rekening untuk setiap sumber sekali saja. Anda masih dapat memindahkan baris tertentu di layar peninjauan.",
+    "choose": "Pilih rekening...",
+    "skip": "Lewati baris ini",
+    "blankSource": "(tanpa sumber)",
+    "rowCount": "{count, plural, other {# baris}}",
+    "postTo": "Bukukan baris {source} ke",
+    "unresolved": "{count, plural, other {# sumber masih memerlukan rekening atau pilihan lewati secara eksplisit}}."
+  },
+  "sourceReview": {
+    "summary": "{fileName}: {rows, plural, other {# baris}}{skipped, plural, =0 {} other {, # tidak disertakan}}.",
+    "changesHeading": "Perubahan saldo per rekening",
+    "rejectedHeading": "{count, plural, other {# baris tidak dapat dibaca}}",
+    "rejectedRow": "Baris {row}: {reason}",
+    "skipRejected": "Jangan sertakan {count, plural, other {baris ini}} dalam impor",
+    "colRow": "Baris",
+    "colDate": "Tanggal",
+    "colPayee": "Penerima",
+    "colAmount": "Jumlah",
+    "colSource": "Sumber",
+    "colPostTo": "Bukukan ke",
+    "postToRow": "Rekening untuk baris {row}",
+    "transferTo": "Transfer dengan {account}",
+    "overlapsChecking": "Memeriksa rekening Anda untuk entri yang mungkin diulang oleh baris ini...",
+    "overlapsFailed": "Tidak dapat memeriksa rekening Anda untuk entri yang mungkin diulang oleh baris ini. Kembali dan coba lagi sebelum mengimpor.",
+    "overlapsHeading": "{count, plural, other {# baris tampak seperti entri yang sudah ada di rekening Anda}}",
+    "overlapsHelp": "Impor ulang tanpa perubahan dikenali secara otomatis. Baris ini berbeda dari yang sudah ada, sehingga dapat dibukukan dua kali. Lewati baris melalui menu Bukukan ke, atau pertahankan.",
+    "overlapOtherAccount": "Baris {row}: {account} sudah memiliki {amount} pada {date} ({payee}). Baris mungkin telah dipindahkan ke rekening lain sejak impor terakhir.",
+    "overlapChangedAmount": "Baris {row}: {account} sudah memiliki {payee} sebesar {amount} pada {date}. Jumlahnya mungkin berubah sejak impor terakhir.",
+    "overlapKeep": "Tetap impor baris {row}",
+    "mobileRowMeta": "Baris {row} · {date} · {source}"
   }
 }

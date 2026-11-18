@@ -33,7 +33,8 @@
     "mnySingleFileOnly": "Microsoft Money 파일은 한 번에 하나씩 가져오세요. .mny 파일에는 프로필 전체가 들어 있습니다.",
     "xlsxSingleFileOnly": "Excel 파일은 한 번에 하나씩 가져오세요.",
     "xlsxNoSheets": "이 통합 문서에는 가져올 시트가 없습니다.",
-    "xlsxParseFailed": "해당 Excel 파일을 읽지 못했습니다"
+    "xlsxParseFailed": "해당 Excel 파일을 읽지 못했습니다",
+    "sourceColumnSingleFileOnly": "계좌 열이 있는 시트는 한 번에 파일 하나만 가져올 수 있습니다."
   },
   "page": {
     "title": "거래 가져오기",
@@ -181,7 +182,9 @@
       "comma": "쉼표 (,)",
       "semicolon": "세미콜론 (;)",
       "tab": "탭"
-    }
+    },
+    "sourceAccountField": "계좌 / 출처",
+    "sourceAccountHint": "한 시트에 여러 계좌를 기록한 경우 사용합니다. 각 행은 출처에 표시된 계좌에 기록됩니다. 다음 단계에서 출처와 계좌를 연결합니다."
   },
   "transferRules": {
     "title": "이체 감지 규칙",
@@ -595,5 +598,38 @@
     "nonTransactional": "This message appears to be non-transactional (OTP, alert, or marketing)",
     "ambiguous": "Message contains ambiguous transaction data and could not be confidently parsed",
     "spam": "Message classified as promotional or spam"
+  },
+  "mapSourceAccounts": {
+    "heading": "출처와 계좌 연결",
+    "description": "이 시트의 각 행에는 해당 계좌가 표시되어 있습니다. 출처마다 계좌를 한 번 선택하세요. 검토 화면에서 개별 행을 다른 계좌로 옮길 수도 있습니다.",
+    "choose": "계좌 선택...",
+    "skip": "이 행들 건너뛰기",
+    "blankSource": "(출처 없음)",
+    "rowCount": "{count, plural, other {#개 행}}",
+    "postTo": "{source} 행을 기록할 계좌",
+    "unresolved": "{count, plural, other {#개 출처에 대해 계좌를 선택하거나 명시적으로 건너뛰어야 합니다}}."
+  },
+  "sourceReview": {
+    "summary": "{fileName}: {rows, plural, other {#개 행}}{skipped, plural, =0 {} other {, #개 제외}}.",
+    "changesHeading": "계좌별 잔액 변동",
+    "rejectedHeading": "{count, plural, other {#개 행을 읽을 수 없습니다}}",
+    "rejectedRow": "행 {row}: {reason}",
+    "skipRejected": "{count, plural, other {이 행들을}} 가져오기에서 제외",
+    "colRow": "행",
+    "colDate": "날짜",
+    "colPayee": "수취인",
+    "colAmount": "금액",
+    "colSource": "출처",
+    "colPostTo": "기록할 계좌",
+    "postToRow": "행 {row}의 계좌",
+    "transferTo": "{account} 계좌와 이체",
+    "overlapsChecking": "이 행들과 중복될 수 있는 거래를 계좌에서 확인하는 중...",
+    "overlapsFailed": "이 행들과 중복될 수 있는 거래를 계좌에서 확인할 수 없습니다. 가져오기 전에 돌아가서 다시 시도하세요.",
+    "overlapsHeading": "{count, plural, other {#개 행이 계좌의 기존 거래와 유사합니다}}",
+    "overlapsHelp": "변경 없이 다시 가져오는 경우 자동으로 인식됩니다. 이 행들은 기존 거래와 달라 두 번 기록될 수 있습니다. 행의 기록할 계좌 메뉴에서 건너뛰거나 그대로 유지하세요.",
+    "overlapOtherAccount": "행 {row}: {account}에 {date}의 {amount} ({payee}) 거래가 이미 있습니다. 마지막 가져오기 이후 다른 계좌로 옮겨진 행일 수 있습니다.",
+    "overlapChangedAmount": "행 {row}: {account}에 {date}의 {payee}, {amount} 거래가 이미 있습니다. 마지막 가져오기 이후 금액이 변경되었을 수 있습니다.",
+    "overlapKeep": "행 {row} 그래도 가져오기",
+    "mobileRowMeta": "행 {row} · {date} · {source}"
   }
 }
