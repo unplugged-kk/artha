@@ -1,12 +1,21 @@
 # Personal beta -- status
 
-Updated 2026-11-18 13:45 IST. Target: private household installation by Sunday 22 November 2026.
+Updated 2026-11-18 14:10 IST. Target: private household installation by Sunday 22 November 2026.
 The per-step evidence lives in `personal-beta-execution.md` (log) and `backup-restore-rehearsal.md`
 (recovery). This page is the summary: where things stand, what is stuck, what is next.
 
 Branches:
-- `release/personal-beta-2026-11-22`: the beta. Pushed, not merged. Head is in `git log`.
-- `feat/auth0-integration` (worktree `../artha-auth0`): Auth0, deliberately kept out of the beta.
+- `release/personal-beta-2026-11-22`: the beta. The owner merged it into `main` as PR #38 (head
+  `c91c3f573`). The commits after that -- this page's gate results and handoff, and the two runbook files
+  -- are on the branch and need a follow-up PR.
+- `feat/auth0-integration` (worktree `../artha-auth0`): the Auth0 audit and proposal. Merged as PR #39
+  (docs only, no code).
+
+`main` now carries English-only strings, so the i18n parity tests fail on `main`. The project rule is
+"main requires full parity", so translating the new keys is now the first job, ahead of anything else.
+CI at merge time: License Compliance, NPM Audit and Bearer failed on the PR run. The same three failed
+on `main` before this work (see `personal-beta-baseline.md`); re-check them on the current `main` run
+rather than assuming.
 
 ## Where we are
 
