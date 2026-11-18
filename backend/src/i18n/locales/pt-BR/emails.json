@@ -86,14 +86,6 @@
     "topCategories": "Principais categorias",
     "button": "Ver painel de orçamento"
   },
-  "oidcLink": {
-    "subject": "Artha: Confirmar associação de conta SSO",
-    "heading": "Associar a sua conta SSO",
-    "greeting": "Olá {{ name }},",
-    "intro": "Alguém tentou fazer login via SSO com um e-mail que corresponde à sua conta Artha existente. Para associar a sua identidade SSO a esta conta, clique no botão abaixo:",
-    "button": "Confirmar associação de conta",
-    "disclaimer": "Se você não iniciou este pedido, pode ignorar este e-mail com segurança. O link expira em 1 hora."
-  },
   "accountLocked": {
     "subject": "Conta temporariamente bloqueada",
     "heading": "Conta temporariamente bloqueada",

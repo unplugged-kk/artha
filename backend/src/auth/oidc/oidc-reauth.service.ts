@@ -55,6 +55,7 @@ export const OIDC_REAUTH_PURPOSES = [
   "restore-backup",
   "import-wipe",
   "emergency-access",
+  "manage-identities",
 ] as const;
 
 export type OidcReauthPurpose = (typeof OIDC_REAUTH_PURPOSES)[number];
@@ -139,6 +140,7 @@ interface PendingReauthPayload {
 }
 
 const PENDING_TYPE = "oidc_reauth_pending";
+const LINK_PENDING_TYPE = "oidc_link_pending";
 
 const ALGORITHM = "HS256" as const;
 
@@ -346,6 +348,52 @@ export class OidcReauthService {
       return null;
     }
     return { purpose: payload.purpose, flowStartedAt: payload.iat };
+  }
+
+  /**
+   * Signed marker that this user, from an authenticated and stepped-up session,
+   * started linking a new sign-in identity in *this* authorization round trip.
+   *
+   * The callback attaches whatever identity the provider returns to `sub`, so
+   * the marker is what stands between "an identity came back" and "attach it to
+   * this account": signed so it cannot be rewritten to another user, and bound to
+   * `state` so an ordinary login completing later cannot be turned into a link.
+   */
+  createLinkMarker(userId: string, state: string): string {
+    return jwt.sign(
+      { sub: userId, type: LINK_PENDING_TYPE, sth: flowHash(state) },
+      secret(),
+      { algorithm: ALGORITHM, expiresIn: OIDC_REAUTH_PENDING_TTL_SECONDS },
+    );
+  }
+
+  /**
+   * The user a link marker was minted for, or null when it is absent, expired,
+   * tampered with, of another type, or minted for a different round trip.
+   */
+  readLinkMarker(
+    marker: string | undefined,
+    state: string | undefined,
+  ): string | null {
+    if (!marker || !state) return null;
+    let payload: PendingReauthPayload;
+    try {
+      payload = jwt.verify(marker, secret(), {
+        algorithms: [ALGORITHM],
+      }) as PendingReauthPayload;
+    } catch {
+      return null;
+    }
+    if (payload.type !== LINK_PENDING_TYPE || !isNonEmptyString(payload.sub)) {
+      return null;
+    }
+    if (!payload.sth || !flowHashMatches(payload.sth, flowHash(state))) {
+      this.logger.warn(
+        `OIDC link marker rejected for user ${payload.sub}: minted for a different authorization request`,
+      );
+      return null;
+    }
+    return payload.sub;
   }
 
   /**

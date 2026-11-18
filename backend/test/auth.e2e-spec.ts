@@ -13,6 +13,7 @@ import { AuthGuard } from "@nestjs/passport";
 import { CsrfGuard } from "@/common/guards/csrf.guard";
 import { DemoModeService } from "@/common/demo-mode.service";
 import { OidcReauthService } from "@/auth/oidc/oidc-reauth.service";
+import { IdentitiesService } from "@/auth/identities/identities.service";
 import { TokenService } from "@/auth/token.service";
 import { DelegationService } from "@/delegation/delegation.service";
 import { UserPreference } from "@/users/entities/user-preference.entity";
@@ -107,6 +108,7 @@ describe("AuthController (e2e)", () => {
         { provide: ConfigService, useValue: mockConfigService },
         { provide: DemoModeService, useValue: { isDemo: false } },
         OidcReauthService,
+        { provide: IdentitiesService, useValue: {} },
         {
           provide: TokenService,
           useValue: { getRefreshExpiryMs: () => 7 * 24 * 60 * 60 * 1000 },

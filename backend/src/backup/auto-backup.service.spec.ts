@@ -7,6 +7,7 @@ import {
   mkdtempSync,
   readFileSync,
   readdirSync,
+  realpathSync,
   rmSync,
 } from "fs";
 import { join } from "path";
@@ -782,7 +783,8 @@ describe("AutoBackupService", () => {
     it("reports the capability as available on a writable root", async () => {
       await expect(service.describeCapability(userId)).resolves.toEqual({
         available: true,
-        folderPath: root,
+        // The canonical path: tmpdir() is a symlink on macOS (/var -> /private/var).
+        folderPath: realpathSync(root),
       });
     });
 
@@ -803,7 +805,7 @@ describe("AutoBackupService", () => {
 
         await expect(svc.describeCapability(userId)).resolves.toEqual({
           available: true,
-          folderPath: other,
+          folderPath: realpathSync(other),
         });
       } finally {
         rmSync(other, { recursive: true, force: true });

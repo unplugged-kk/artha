@@ -19,6 +19,8 @@ import { encrypt, derivePurposeKey } from "./crypto.util";
 import { I18nService } from "nestjs-i18n";
 import { createScopedDbMocks } from "../test-helpers/scoped-db-testing";
 import { OidcReauthService } from "./oidc/oidc-reauth.service";
+import { IdentitiesService } from "./identities/identities.service";
+import { OidcAccountExistsError } from "./oidc/oidc-errors";
 import { SELF_ONLY_PROFILE_FIELDS } from "../users/user-profile";
 import { fullyPopulatedUser } from "../users/user-profile.test-util";
 import { UsersController } from "../users/users.controller";
@@ -49,6 +51,7 @@ describe("AuthController", () => {
   let configService: Record<string, jest.Mock>;
   let emailService: Record<string, jest.Mock>;
   let demoModeService: { isDemo: boolean };
+  let identitiesService: Record<string, jest.Mock>;
 
   const mockUser = {
     id: "user-1",
@@ -103,7 +106,7 @@ describe("AuthController", () => {
       revokeAllTrustedDevices: jest.fn(),
       checkForgotPasswordEmailLimit: jest.fn().mockReturnValue(true),
       generateBackupCodes: jest.fn(),
-      confirmOidcLink: jest.fn(),
+      oidcTwoFactorChallenge: jest.fn().mockResolvedValue(null),
       getCsrfKey: jest.fn().mockReturnValue("test-csrf-key"),
       // No sanitizeUser mock: the profile endpoints call the real
       // toUserProfile/toDelegatedUserProfile allowlist directly, so these
@@ -112,6 +115,12 @@ describe("AuthController", () => {
 
     oidcService = {
       enabled: false,
+    };
+
+    identitiesService = {
+      list: jest.fn(),
+      attach: jest.fn(),
+      unlink: jest.fn(),
     };
 
     emailService = {
@@ -145,6 +154,7 @@ describe("AuthController", () => {
         // vacuous -- which is how the sentinel survived (P2-005).
         OidcReauthService,
         { provide: AuthService, useValue: authService },
+        { provide: IdentitiesService, useValue: identitiesService },
         { provide: OidcService, useValue: oidcService },
         { provide: ConfigService, useValue: configService },
         { provide: EmailService, useValue: emailService },
@@ -209,6 +219,7 @@ describe("AuthController", () => {
         providers: [
           OidcReauthService,
           { provide: AuthService, useValue: authService },
+          { provide: IdentitiesService, useValue: identitiesService },
           { provide: OidcService, useValue: oidcService },
           { provide: ConfigService, useValue: configService },
           { provide: EmailService, useValue: emailService },
@@ -277,6 +288,7 @@ describe("AuthController", () => {
         providers: [
           OidcReauthService,
           { provide: AuthService, useValue: authService },
+          { provide: IdentitiesService, useValue: identitiesService },
           { provide: OidcService, useValue: oidcService },
           { provide: ConfigService, useValue: configService },
           { provide: EmailService, useValue: emailService },
@@ -401,6 +413,7 @@ describe("AuthController", () => {
         providers: [
           OidcReauthService,
           { provide: AuthService, useValue: authService },
+          { provide: IdentitiesService, useValue: identitiesService },
           { provide: OidcService, useValue: oidcService },
           { provide: ConfigService, useValue: configService },
           { provide: EmailService, useValue: emailService },
@@ -784,6 +797,7 @@ describe("AuthController", () => {
         providers: [
           OidcReauthService,
           { provide: AuthService, useValue: authService },
+          { provide: IdentitiesService, useValue: identitiesService },
           { provide: OidcService, useValue: oidcService },
           { provide: ConfigService, useValue: configService },
           { provide: EmailService, useValue: emailService },
@@ -954,6 +968,7 @@ describe("AuthController", () => {
         providers: [
           OidcReauthService,
           { provide: AuthService, useValue: authService },
+          { provide: IdentitiesService, useValue: identitiesService },
           { provide: OidcService, useValue: oidcService },
           { provide: ConfigService, useValue: configService },
           { provide: EmailService, useValue: emailService },
@@ -1156,6 +1171,7 @@ describe("AuthController", () => {
       (oidcService as any).handleCallback = jest.fn().mockResolvedValue({
         access_token: "oidc-access-token",
         sub: "oidc-sub-123",
+        iss: "https://issuer.example.com/",
       });
       (oidcService as any).getUserInfo = jest.fn().mockResolvedValue({
         sub: "oidc-sub-123",
@@ -1205,6 +1221,7 @@ describe("AuthController", () => {
       expect(authService.findOrCreateOidcUser).toHaveBeenCalledWith(
         { sub: "oidc-sub-123", email: "oidc@example.com", name: "OIDC User" },
         true,
+        "https://issuer.example.com/",
       );
       expect(authService.generateTokenPair).toHaveBeenCalledWith({
         isActive: true,
@@ -1955,6 +1972,7 @@ describe("AuthController", () => {
         providers: [
           OidcReauthService,
           { provide: AuthService, useValue: authService },
+          { provide: IdentitiesService, useValue: identitiesService },
           { provide: OidcService, useValue: oidcService },
           { provide: ConfigService, useValue: configService },
           { provide: EmailService, useValue: emailService },
@@ -2033,6 +2051,7 @@ describe("AuthController", () => {
         providers: [
           OidcReauthService,
           { provide: AuthService, useValue: authService },
+          { provide: IdentitiesService, useValue: identitiesService },
           { provide: OidcService, useValue: oidcService },
           { provide: ConfigService, useValue: configService },
           { provide: EmailService, useValue: emailService },
@@ -2119,6 +2138,7 @@ describe("AuthController", () => {
         providers: [
           OidcReauthService,
           { provide: AuthService, useValue: authService },
+          { provide: IdentitiesService, useValue: identitiesService },
           {
             provide: OidcService,
             useValue: {
@@ -2171,7 +2191,6 @@ describe("AuthController", () => {
         ],
       }).compile();
       const c = force2faModule.get<AuthController>(AuthController);
-      const res = mockRes();
       const req = {
         cookies: {
           oidc_state: "s",
@@ -2179,10 +2198,46 @@ describe("AuthController", () => {
           oidc_code_verifier: "verifier",
         },
       };
+
+      // An existing account with no Artha TOTP: refused, no session.
+      authService.findOrCreateOidcUser.mockResolvedValue({
+        user: { id: "u-1", isActive: true },
+      });
+      authService.oidcTwoFactorChallenge.mockResolvedValue(null);
+      let res = mockRes();
       await c.oidcCallback({}, req as never, res as never);
       expect(res.redirect).toHaveBeenCalledWith(
         "http://localhost:3000/auth/callback?error=mfa_required",
       );
+      expect(authService.generateTokenPair).not.toHaveBeenCalled();
+      // ...and no account may be created on the way to refusing it.
+      expect(authService.findOrCreateOidcUser).toHaveBeenCalledWith(
+        undefined,
+        false,
+        undefined,
+      );
+
+      // The registration that refusal turns away is reported as mfa_required.
+      authService.findOrCreateOidcUser.mockRejectedValue(
+        new ForbiddenException("New account registration is disabled."),
+      );
+      res = mockRes();
+      await c.oidcCallback({}, req as never, res as never);
+      expect(res.redirect).toHaveBeenCalledWith(
+        "http://localhost:3000/auth/callback?error=mfa_required",
+      );
+
+      // An account with Artha TOTP meets FORCE_2FA through the 2FA page (D6).
+      authService.findOrCreateOidcUser.mockResolvedValue({
+        user: { id: "u-1", isActive: true },
+      });
+      authService.oidcTwoFactorChallenge.mockResolvedValue("pending-2fa");
+      res = mockRes();
+      await c.oidcCallback({}, req as never, res as never);
+      expect(res.redirect).toHaveBeenCalledWith(
+        "http://localhost:3000/auth/callback?twoFactor=required#two_factor_token=pending-2fa",
+      );
+      expect(authService.generateTokenPair).not.toHaveBeenCalled();
     });
 
     it("accepts when FORCE_2FA and amr includes MFA value (otp)", async () => {
@@ -2212,6 +2267,7 @@ describe("AuthController", () => {
         providers: [
           OidcReauthService,
           { provide: AuthService, useValue: authService },
+          { provide: IdentitiesService, useValue: identitiesService },
           {
             provide: OidcService,
             useValue: {
@@ -2310,6 +2366,7 @@ describe("AuthController", () => {
           providers: [
             OidcReauthService,
             { provide: AuthService, useValue: authService },
+            { provide: IdentitiesService, useValue: identitiesService },
             {
               provide: OidcService,
               useValue: {
@@ -2418,6 +2475,7 @@ describe("AuthController", () => {
         providers: [
           OidcReauthService,
           { provide: AuthService, useValue: authService },
+          { provide: IdentitiesService, useValue: identitiesService },
           { provide: OidcService, useValue: oidc },
           { provide: ConfigService, useValue: configService },
           { provide: EmailService, useValue: emailService },
@@ -2569,6 +2627,176 @@ describe("AuthController", () => {
       expect(
         reauth.readPendingMarker(cookie[1] as string, delegate, "state-1"),
       ).toMatchObject({ purpose: "delete-data" });
+    });
+
+    describe("linking a sign-in method", () => {
+      const cookies = (extra: Record<string, string>) => ({
+        oidc_state: "s",
+        oidc_nonce: "n",
+        oidc_code_verifier: "verifier",
+        ...extra,
+      });
+
+      it("attaches the identity to the user the marker names and issues no session", async () => {
+        const { controller, reauth, oidc } = await build();
+        oidc.handleCallback.mockResolvedValue({
+          access_token: "at",
+          sub: "google-oauth2|new",
+          iss: "https://issuer.example.com/",
+        });
+        identitiesService.attach.mockResolvedValue("linked");
+        const res = mockRes();
+
+        await controller.oidcCallback(
+          { code: "c" },
+          {
+            cookies: cookies({
+              oidc_link: reauth.createLinkMarker(REAUTH_USER, "s"),
+            }),
+          } as never,
+          res as never,
+        );
+
+        expect(identitiesService.attach).toHaveBeenCalledWith(
+          REAUTH_USER,
+          "https://issuer.example.com/",
+          "google-oauth2|new",
+        );
+        expect(res.redirect).toHaveBeenCalledWith(
+          "http://localhost:3000/auth/callback?link=linked",
+        );
+        expect(authService.findOrCreateOidcUser).not.toHaveBeenCalled();
+        expect(authService.generateTokenPair).not.toHaveBeenCalled();
+        expect(res.clearCookie).toHaveBeenCalledWith(
+          "oidc_link",
+          expect.anything(),
+        );
+      });
+
+      it("reports an identity another account holds without attaching it", async () => {
+        const { controller, reauth, oidc } = await build();
+        oidc.handleCallback.mockResolvedValue({
+          access_token: "at",
+          sub: "google-oauth2|taken",
+          iss: "https://issuer.example.com/",
+        });
+        identitiesService.attach.mockResolvedValue("identity_in_use");
+        const res = mockRes();
+        await controller.oidcCallback(
+          { code: "c" },
+          {
+            cookies: cookies({
+              oidc_link: reauth.createLinkMarker(REAUTH_USER, "s"),
+            }),
+          } as never,
+          res as never,
+        );
+        expect(res.redirect).toHaveBeenCalledWith(
+          "http://localhost:3000/auth/callback?link=identity_in_use",
+        );
+      });
+
+      it("treats a marker from another round trip as an ordinary login (state-bound)", async () => {
+        const { controller, reauth, oidc } = await build();
+        oidc.handleCallback.mockResolvedValue({
+          access_token: "at",
+          sub: "sub-1",
+          iss: "https://issuer.example.com/",
+        });
+        authService.findOrCreateOidcUser.mockResolvedValue({
+          user: { isActive: true, id: REAUTH_USER },
+        });
+        authService.generateTokenPair.mockResolvedValue({
+          accessToken: "a",
+          refreshToken: "r",
+        });
+        const res = mockRes();
+        await controller.oidcCallback(
+          { code: "c" },
+          {
+            cookies: cookies({
+              oidc_link: reauth.createLinkMarker(REAUTH_USER, "older-state"),
+            }),
+          } as never,
+          res as never,
+        );
+        expect(identitiesService.attach).not.toHaveBeenCalled();
+        expect(res.redirect).toHaveBeenCalledWith(
+          "http://localhost:3000/auth/callback?success=true",
+        );
+      });
+
+      it("sends an account with Artha TOTP to the 2FA page instead of signing it in (D6)", async () => {
+        const { controller, oidc } = await build();
+        oidc.handleCallback.mockResolvedValue({
+          access_token: "at",
+          sub: "sub-1",
+          iss: "https://issuer.example.com/",
+        });
+        authService.findOrCreateOidcUser.mockResolvedValue({
+          user: { isActive: true, id: REAUTH_USER },
+        });
+        authService.oidcTwoFactorChallenge.mockResolvedValue("pending");
+        const res = mockRes();
+        await controller.oidcCallback(
+          { code: "c" },
+          { cookies: cookies({}) } as never,
+          res as never,
+        );
+        expect(res.redirect).toHaveBeenCalledWith(
+          "http://localhost:3000/auth/callback?twoFactor=required#two_factor_token=pending",
+        );
+        expect(authService.generateTokenPair).not.toHaveBeenCalled();
+      });
+
+      it("skips Artha TOTP when the provider asserted MFA", async () => {
+        const { controller, oidc } = await build();
+        oidc.handleCallback.mockResolvedValue({
+          access_token: "at",
+          sub: "sub-1",
+          iss: "https://issuer.example.com/",
+          amr: ["mfa"],
+        });
+        authService.findOrCreateOidcUser.mockResolvedValue({
+          user: { isActive: true, id: REAUTH_USER },
+        });
+        authService.oidcTwoFactorChallenge.mockResolvedValue("pending");
+        authService.generateTokenPair.mockResolvedValue({
+          accessToken: "a",
+          refreshToken: "r",
+        });
+        const res = mockRes();
+        await controller.oidcCallback(
+          { code: "c" },
+          { cookies: cookies({}) } as never,
+          res as never,
+        );
+        expect(authService.oidcTwoFactorChallenge).not.toHaveBeenCalled();
+        expect(res.redirect).toHaveBeenCalledWith(
+          "http://localhost:3000/auth/callback?success=true",
+        );
+      });
+
+      it("reports a closed registration as registration_disabled", async () => {
+        const { controller, oidc } = await build();
+        oidc.handleCallback.mockResolvedValue({
+          access_token: "at",
+          sub: "sub-new",
+          iss: "https://issuer.example.com/",
+        });
+        authService.findOrCreateOidcUser.mockRejectedValue(
+          new ForbiddenException("New account registration is disabled."),
+        );
+        const res = mockRes();
+        await controller.oidcCallback(
+          { code: "c" },
+          { cookies: cookies({}) } as never,
+          res as never,
+        );
+        expect(res.redirect).toHaveBeenCalledWith(
+          "http://localhost:3000/auth/callback?error=registration_disabled",
+        );
+      });
     });
 
     it("mints the artifact in the callback and returns it in the fragment", async () => {
@@ -2866,6 +3094,7 @@ describe("AuthController", () => {
         providers: [
           OidcReauthService,
           { provide: AuthService, useValue: authService },
+          { provide: IdentitiesService, useValue: identitiesService },
           {
             provide: OidcService,
             useValue: {
@@ -2937,6 +3166,7 @@ describe("AuthController", () => {
         providers: [
           OidcReauthService,
           { provide: AuthService, useValue: authService },
+          { provide: IdentitiesService, useValue: identitiesService },
           {
             provide: OidcService,
             useValue: {
@@ -3000,16 +3230,16 @@ describe("AuthController", () => {
       expect(res.redirect).toHaveBeenCalled();
     });
 
-    it("redirects when linkPending is true", async () => {
-      authService.findOrCreateOidcUser.mockResolvedValue({
-        user: { isActive: true, id: "user-2" },
-        linkPending: true,
-      });
+    it("refuses an unknown identity carrying an existing account's email with account_exists", async () => {
+      authService.findOrCreateOidcUser.mockRejectedValue(
+        new OidcAccountExistsError(),
+      );
       const m: TestingModule = await Test.createTestingModule({
         controllers: [AuthController],
         providers: [
           OidcReauthService,
           { provide: AuthService, useValue: authService },
+          { provide: IdentitiesService, useValue: identitiesService },
           {
             provide: OidcService,
             useValue: {
@@ -3075,8 +3305,9 @@ describe("AuthController", () => {
       };
       await c.oidcCallback({}, req as never, res as never);
       expect(res.redirect).toHaveBeenCalledWith(
-        "http://localhost:3000/auth/callback?link=pending",
+        "http://localhost:3000/auth/callback?error=account_exists",
       );
+      expect(authService.generateTokenPair).not.toHaveBeenCalled();
     });
 
     it("logs error when error is non-Error", async () => {
@@ -3085,6 +3316,7 @@ describe("AuthController", () => {
         providers: [
           OidcReauthService,
           { provide: AuthService, useValue: authService },
+          { provide: IdentitiesService, useValue: identitiesService },
           {
             provide: OidcService,
             useValue: {
@@ -3276,34 +3508,6 @@ describe("AuthController", () => {
     });
   });
 
-  describe("confirmOidcLink", () => {
-    it("redirects with success when token valid", async () => {
-      authService.confirmOidcLink.mockResolvedValue(undefined);
-      const res = mockRes();
-      await controller.confirmOidcLink("valid-token", res as never);
-      expect(res.redirect).toHaveBeenCalledWith(
-        "http://localhost:3000/auth/callback?link=success",
-      );
-    });
-
-    it("redirects with failed when token missing", async () => {
-      const res = mockRes();
-      await controller.confirmOidcLink("", res as never);
-      expect(res.redirect).toHaveBeenCalledWith(
-        "http://localhost:3000/auth/callback?link=failed",
-      );
-    });
-
-    it("redirects with failed when service throws (non-Error)", async () => {
-      authService.confirmOidcLink.mockRejectedValue("boom");
-      const res = mockRes();
-      await controller.confirmOidcLink("tok", res as never);
-      expect(res.redirect).toHaveBeenCalledWith(
-        "http://localhost:3000/auth/callback?link=failed",
-      );
-    });
-  });
-
   describe("getContexts", () => {
     async function buildController(delegation: Record<string, jest.Mock>) {
       const module: TestingModule = await Test.createTestingModule({
@@ -3311,6 +3515,7 @@ describe("AuthController", () => {
         providers: [
           OidcReauthService,
           { provide: AuthService, useValue: authService },
+          { provide: IdentitiesService, useValue: identitiesService },
           { provide: OidcService, useValue: oidcService },
           { provide: ConfigService, useValue: configService },
           { provide: EmailService, useValue: emailService },

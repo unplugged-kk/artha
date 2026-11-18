@@ -131,6 +131,15 @@ export class BackupPathNotAllowedError extends Error {
 }
 
 /**
+ * Resolve symlinks in the longest existing prefix of `path` and re-append the
+ * not-yet-existing tail, so a path compares equal before and after creation.
+ */
+export async function canonicalPath(path: string): Promise<string> {
+  const { real, missing } = await realpathOfExistingAncestor(resolve(path));
+  return missing.length > 0 ? resolve(real, ...missing) : real;
+}
+
+/**
  * Canonicalise `path` and confirm it resolves inside one of `allowedRoots`.
  *
  * Returns the canonical form, which is what callers must use for every
@@ -141,15 +150,17 @@ export async function assertWithinAllowedRoots(
   path: string,
   allowedRoots: string[],
 ): Promise<string> {
-  const { real, missing } = await realpathOfExistingAncestor(resolve(path));
-  const canonical = missing.length > 0 ? resolve(real, ...missing) : real;
+  const canonical = await canonicalPath(path);
 
+  // Roots get the same canonicalisation as the candidate: a not-yet-created
+  // root under a symlinked parent (macOS `/var` -> `/private/var`) otherwise
+  // stays lexical and never matches its own folder.
   const realRoots = await Promise.all(
     allowedRoots.map(async (root) => {
       try {
-        return await fs.realpath(root);
+        return await canonicalPath(root);
       } catch {
-        // A root that does not exist yet still constrains: compare lexically.
+        // An unusable root still constrains: compare lexically.
         return root;
       }
     }),

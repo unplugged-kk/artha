@@ -86,14 +86,6 @@
     "topCategories": "Top Categories",
     "button": "View Budget Dashboard"
   },
-  "oidcLink": {
-    "subject": "Artha: Confirm SSO Account Link",
-    "heading": "Link Your SSO Account",
-    "greeting": "Hi {{ name }},",
-    "intro": "Someone attempted to sign in via SSO with an email that matches your existing Artha account. To link your SSO identity to this account, click the button below:",
-    "button": "Confirm Account Link",
-    "disclaimer": "If you did not initiate this request, you can safely ignore this email. The link expires in 1 hour."
-  },
   "accountLocked": {
     "subject": "Account Temporarily Locked",
     "heading": "Account Temporarily Locked",

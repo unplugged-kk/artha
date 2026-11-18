@@ -9,6 +9,7 @@ import { AuthController } from "@/auth/auth.controller";
 import { AuthService } from "@/auth/auth.service";
 import { OidcService } from "@/auth/oidc/oidc.service";
 import { OidcReauthService } from "@/auth/oidc/oidc-reauth.service";
+import { IdentitiesService } from "@/auth/identities/identities.service";
 import { TokenService } from "@/auth/token.service";
 import { EmailService } from "@/notifications/email.service";
 import { DemoModeService } from "@/common/demo-mode.service";
@@ -30,9 +31,11 @@ describe("OIDC callback admission (HTTP + PostgreSQL)", () => {
   const issueTokens = jest
     .fn()
     .mockResolvedValue({ accessToken: "access", refreshToken: "refresh" });
-  const exchange = jest
-    .fn()
-    .mockResolvedValue({ access_token: "provider-token", sub: "subject" });
+  const exchange = jest.fn().mockResolvedValue({
+    access_token: "provider-token",
+    sub: "subject",
+    iss: "https://issuer.example.com/",
+  });
 
   beforeAll(async () => {
     databaseModule = await createIntegrationModule([]);
@@ -56,6 +59,7 @@ describe("OIDC callback admission (HTTP + PostgreSQL)", () => {
                 .findOneByOrFail({ id: user.id }),
             }),
             generateTokenPair: issueTokens,
+            oidcTwoFactorChallenge: async () => null,
             getCsrfKey: () => "disposable-csrf-key",
           },
         },
@@ -68,8 +72,12 @@ describe("OIDC callback admission (HTTP + PostgreSQL)", () => {
         },
         {
           provide: OidcReauthService,
-          useValue: { readPendingMarker: () => null },
+          useValue: {
+            readPendingMarker: () => null,
+            readLinkMarker: () => null,
+          },
         },
+        { provide: IdentitiesService, useValue: {} },
         { provide: EmailService, useValue: {} },
         { provide: DemoModeService, useValue: { isDemo: false } },
         {

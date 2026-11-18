@@ -86,14 +86,6 @@
     "topCategories": "Top-Kategorien",
     "button": "Budget-Dashboard anzeigen"
   },
-  "oidcLink": {
-    "subject": "Artha: SSO-Kontoverknüpfung bestätigen",
-    "heading": "Ihr SSO-Konto verknüpfen",
-    "greeting": "Hallo {{ name }},",
-    "intro": "Jemand hat versucht, sich über SSO mit einer E-Mail-Adresse anzumelden, die mit Ihrem bestehenden Artha-Konto übereinstimmt. Um Ihre SSO-Identität mit diesem Konto zu verknüpfen, klicken Sie auf die Schaltfläche unten:",
-    "button": "Kontoverknüpfung bestätigen",
-    "disclaimer": "Wenn Sie diese Anfrage nicht initiiert haben, können Sie diese E-Mail ignorieren. Der Link läuft in 1 Stunde ab."
-  },
   "accountLocked": {
     "subject": "Konto vorübergehend gesperrt",
     "heading": "Konto vorübergehend gesperrt",

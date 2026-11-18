@@ -23,16 +23,18 @@ import { User } from "../users/entities/user.entity";
 import { toUserProfile } from "../users/user-profile";
 import { UserPreference } from "../users/entities/user-preference.entity";
 import { buildDefaultPreferences } from "../users/user-preference.factory";
-import { TrustedDevice } from "../users/entities/trusted-device.entity";
+import {
+  LEGACY_IDENTITY_ISSUER,
+  providerFromSubject,
+  UserIdentity,
+} from "./entities/user-identity.entity";
+import { OidcAccountExistsError } from "./oidc/oidc-errors";
 import { RegisterDto } from "./dto/register.dto";
 import { LoginDto } from "./dto/login.dto";
 import { derivePurposeKey, hashToken } from "./crypto.util";
 import { PasswordBreachService } from "./password-breach.service";
 import { EmailService } from "../notifications/email.service";
-import {
-  accountLockedTemplate,
-  oidcLinkTemplate,
-} from "../notifications/email-templates";
+import { accountLockedTemplate } from "../notifications/email-templates";
 import { TokenService } from "./token.service";
 import { TwoFactorService } from "./two-factor.service";
 import { AuthEmailService } from "./auth-email.service";
@@ -608,42 +610,53 @@ export class AuthService {
     };
   }
 
+  /**
+   * Resolve the account an OIDC login belongs to, creating one when the
+   * identity is new and registration allows it.
+   *
+   * Identities are matched by `(issuer, subject)` in `user_identities`, never
+   * by email (D3): an unknown identity whose email belongs to an existing
+   * account is refused with `OidcAccountExistsError`, and the owner links it
+   * from an authenticated session instead (`IdentitiesService.link`).
+   */
   async findOrCreateOidcUser(
     userInfo: Record<string, unknown>,
-    registrationEnabled = true,
-  ): Promise<{ user: User; linkPending?: boolean; isNewUser?: boolean }> {
+    registrationEnabled: boolean,
+    issuer: string,
+  ): Promise<{ user: User; isNewUser?: boolean }> {
     // RLS: pre-identity path (OIDC callback, before a session exists) that
     // looks users up by subject/email across the whole table -- see the note on
     // register(). System context.
     return withSystemContext(() =>
-      this.findOrCreateOidcUserWithinContext(userInfo, registrationEnabled),
+      this.findOrCreateOidcUserWithinContext(
+        userInfo,
+        registrationEnabled,
+        issuer,
+      ),
     );
   }
 
   private async findOrCreateOidcUserWithinContext(
     userInfo: Record<string, unknown>,
-    registrationEnabled = true,
-  ): Promise<{ user: User; linkPending?: boolean; isNewUser?: boolean }> {
+    registrationEnabled: boolean,
+    issuer: string,
+  ): Promise<{ user: User; isNewUser?: boolean }> {
     // Standard OIDC claims
     const sub = userInfo.sub as string;
     const rawEmail = userInfo.email as string | undefined;
     // H7: Normalize email before lookups
-    const email = rawEmail?.toLowerCase().trim();
-    // SECURITY: Only trust the IdP email if it is verified.
-    // OIDC_REQUIRE_VERIFIED_EMAIL (default true) gates this. Set it to "false"
-    // to drop the requirement: Artha then trusts the IdP-provided email even
-    // without an `email_verified` claim and merges directly into an existing
-    // account matching that email -- including a local password account,
-    // skipping the email-confirmation step (so it works without SMTP). This
-    // lowers security; only disable it when you trust your IdP to verify email
-    // ownership.
+    const email = rawEmail?.toLowerCase().trim() || undefined;
     const emailVerified = userInfo.email_verified === true;
+    // OIDC_REQUIRE_VERIFIED_EMAIL (default true) has one meaning: whether an
+    // email the provider did not verify may be stored on a NEW account. It no
+    // longer merges anything -- no email, verified or not, attaches an identity
+    // to an existing account.
     const requireVerifiedEmail =
       this.configService
         .get<string>("OIDC_REQUIRE_VERIFIED_EMAIL")
         ?.toLowerCase() !== "false";
-    const trustedEmail =
-      emailVerified || !requireVerifiedEmail ? email : undefined;
+    const storableEmail =
+      email && (emailVerified || !requireVerifiedEmail) ? email : undefined;
 
     // Handle name claims - try specific claims first, fall back to 'name'
     const fullName = userInfo.name as string | undefined;
@@ -665,191 +678,226 @@ export class AuthService {
         ),
       );
     }
+    if (!issuer) {
+      throw new UnauthorizedException("OIDC login did not carry an issuer");
+    }
 
-    let user = await this.scoped(User, (repo) =>
-      repo.findOne({
-        where: { oidcSubject: sub },
-      }),
-    );
+    let user = await this.resolveIdentityUser(issuer, sub);
     // True only when this call provisions the account, so the callback can
     // send an SSO user through the same first-run preferences step local
-    // registration ends on. Linking an OIDC identity to an account that
-    // already exists is not a first run.
+    // registration ends on.
     let isNewUser = false;
 
     if (!user) {
-      // SECURITY: Only link to existing account if email is verified by OIDC provider
-      // M6: If the existing account has a password (local account), require confirmation
-      if (trustedEmail) {
-        const existingUser = await this.scoped(User, (repo) =>
-          repo.findOne({
-            where: { email: trustedEmail },
-          }),
+      if (
+        storableEmail &&
+        (await this.emailBelongsToAnotherUser(storableEmail))
+      ) {
+        this.logger.warn(
+          "OIDC login refused: an unknown identity carries the email of an existing account",
         );
-
-        if (existingUser) {
-          if (existingUser.passwordHash && requireVerifiedEmail) {
-            // SECURITY: Local account requires user confirmation before merging.
-            const linkToken = await this.initiateOidcLink(existingUser, sub);
-            this.logger.warn(
-              `OIDC link pending confirmation for user ${existingUser.id}`,
-            );
-            await this.sendOidcLinkEmail(existingUser, linkToken);
-            return { user: existingUser, linkPending: true };
-          } else {
-            // OIDC-only account, or OIDC_REQUIRE_VERIFIED_EMAIL=false bypasses
-            // the confirmation step -- merge the OIDC identity in directly.
-            existingUser.oidcSubject = sub;
-            existingUser.authProvider = "oidc";
-            await this.scoped(User, (repo) => repo.save(existingUser));
-            user = existingUser;
-          }
-        }
+        throw new OidcAccountExistsError();
       }
+      if (!registrationEnabled) {
+        throw new ForbiddenException(
+          tr(
+            "errors.auth.registrationDisabled",
+            "New account registration is disabled.",
+          ),
+        );
+      }
+      // Persist the browser-detected UI language at account creation (same
+      // rationale as local registration) so SSO users also keep their
+      // language across logins.
+      const language = currentRequestLocale();
 
-      if (!user) {
-        if (!registrationEnabled) {
-          throw new ForbiddenException(
-            tr(
-              "errors.auth.registrationDisabled",
-              "New account registration is disabled.",
-            ),
-          );
-        }
-        // Persist the browser-detected UI language at account creation (same
-        // rationale as local registration) so SSO users also keep their
-        // language across logins.
-        const language = currentRequestLocale();
-
-        // C9: Use serializable transaction for first-user admin race prevention
-        try {
-          user = await withScopedDb(
-            this.dataSource,
-            async (manager) => {
-              const userCount = await manager.count(User);
-              const userData: DeepPartial<User> = {
-                email: trustedEmail ?? email ?? null,
-                firstName: firstName ?? null,
-                lastName: lastName ?? null,
-                oidcSubject: sub,
-                authProvider: "oidc",
-                role: userCount === 0 ? "admin" : "user",
-                // OIDC identities are verified by the provider and never use
-                // the local-login gate; create them already verified.
-                emailVerified: true,
-              };
-              const newUser = manager.create(User, userData);
-              const savedUser = await manager.save(newUser);
-              await manager.save(
-                buildDefaultPreferences(savedUser.id, language),
-              );
-              return savedUser;
-            },
-            "SERIALIZABLE",
-          );
-          isNewUser = true;
-        } catch (err: any) {
-          // Handle duplicate email: link OIDC to the existing account
-          if (err.code === "23505" && trustedEmail) {
-            const existingUser = await this.scoped(User, (repo) =>
-              repo.findOne({
-                where: { email: trustedEmail },
+      // C9: Use serializable transaction for first-user admin race prevention
+      try {
+        user = await withScopedDb(
+          this.dataSource,
+          async (manager) => {
+            const userCount = await manager.count(User);
+            // UNIQUE, and identity is now (issuer, subject): another issuer's
+            // account may already hold the same subject here.
+            const subjectColumnTaken = await manager
+              .getRepository(User)
+              .exist({ where: { oidcSubject: sub } });
+            const userData: DeepPartial<User> = {
+              email: storableEmail ?? null,
+              firstName: firstName ?? null,
+              lastName: lastName ?? null,
+              // Still written for one release so a rollback to the code that
+              // reads only this column keeps these users signing in.
+              oidcSubject: subjectColumnTaken ? null : sub,
+              authProvider: "oidc",
+              role: userCount === 0 ? "admin" : "user",
+              // OIDC identities are verified by the provider and never use
+              // the local-login gate; create them already verified.
+              emailVerified: true,
+              lastLogin: new Date(),
+            };
+            const savedUser = await manager.save(
+              manager.create(User, userData),
+            );
+            await manager.save(buildDefaultPreferences(savedUser.id, language));
+            await manager.save(
+              manager.create(UserIdentity, {
+                userId: savedUser.id,
+                issuer,
+                subject: sub,
+                provider: providerFromSubject(sub),
+                lastLoginAt: new Date(),
               }),
             );
-            if (existingUser) {
-              if (existingUser.passwordHash && requireVerifiedEmail) {
-                // SECURITY: Local account requires confirmation
-                const linkToken = await this.initiateOidcLink(
-                  existingUser,
-                  sub,
-                );
-                this.logger.warn(
-                  `OIDC link pending confirmation (catch path) for user ${existingUser.id}`,
-                );
-                await this.sendOidcLinkEmail(existingUser, linkToken);
-                return { user: existingUser, linkPending: true };
-              } else {
-                // OIDC-only account, or OIDC_REQUIRE_VERIFIED_EMAIL=false --
-                // merge directly
-                existingUser.oidcSubject = sub;
-                existingUser.authProvider = "oidc";
-                await this.scoped(User, (repo) => repo.save(existingUser));
-                user = existingUser;
-              }
-            } else {
-              throw err;
-            }
-          } else {
-            throw err;
-          }
+            return savedUser;
+          },
+          "SERIALIZABLE",
+        );
+        isNewUser = true;
+      } catch (err: any) {
+        if (err?.code !== "23505") throw err;
+        // A concurrent first login for the same identity won the insert.
+        const raced = await this.resolveIdentityUser(issuer, sub);
+        if (raced) {
+          user = raced;
+        } else if (storableEmail) {
+          // The email was taken between the check above and the insert.
+          throw new OidcAccountExistsError();
+        } else {
+          throw err;
         }
       }
-    } else {
-      // Update user info if it has changed (but don't overwrite with null)
-      let needsUpdate = false;
-
-      // Ensure authProvider reflects OIDC usage
-      if (user.authProvider !== "oidc") {
-        user.authProvider = "oidc";
-        needsUpdate = true;
-      }
-
-      // SECURITY: Only update email if verified by OIDC provider
-      if (trustedEmail && user.email !== trustedEmail) {
-        user.email = trustedEmail;
-        needsUpdate = true;
-      }
-      if (firstName && user.firstName !== firstName) {
-        user.firstName = firstName;
-        needsUpdate = true;
-      }
-      if (lastName && user.lastName !== lastName) {
-        user.lastName = lastName;
-        needsUpdate = true;
-      }
-
-      if (needsUpdate) {
-        const toSave = user;
-        await this.scoped(User, (repo) => repo.save(toSave));
-      }
+      if (isNewUser) return { user, isNewUser };
     }
 
-    // Strip any 2FA config from SSO users -- 2FA is managed by the identity provider
-    if (
-      user.twoFactorSecret ||
-      user.pendingTwoFactorSecret ||
-      user.backupCodes
-    ) {
-      user.twoFactorSecret = null;
-      user.pendingTwoFactorSecret = null;
-      user.backupCodes = null;
-      this.logger.log(`Cleared 2FA config for SSO user ${user.id}`);
-
-      const preferences = await this.scoped(UserPreference, (repo) =>
-        repo.findOne({
-          where: { userId: user.id },
-        }),
-      );
-      if (preferences && preferences.twoFactorEnabled) {
-        preferences.twoFactorEnabled = false;
-        await this.scoped(UserPreference, (repo) => repo.save(preferences));
-      }
-
-      await this.scoped(TrustedDevice, (repo) =>
-        repo.delete({ userId: user.id }),
-      );
-    }
-
-    // Update last login
-    user.lastLogin = new Date();
-    await this.scoped(User, (repo) => repo.save(user));
-
+    await this.syncOidcProfile(user, {
+      email: emailVerified ? email : undefined,
+      firstName,
+      lastName,
+    });
     return { user, isNewUser };
   }
 
-  async validateOidcUser(profile: any): Promise<any> {
-    const result = await this.findOrCreateOidcUser(profile);
-    return this.sanitizeUser(result.user);
+  /**
+   * The account an identity belongs to, recording the login on the identity.
+   *
+   * Falls back in two steps, both for accounts that predate `user_identities`:
+   * a backfilled row with issuer 'legacy' (matched by subject, then stamped with
+   * the real issuer), then `users.oidc_subject` on an account with no identity
+   * rows, which an older replica may still create during a rolling deploy. An
+   * unlink clears that column, so the fallback cannot bring back an identity the
+   * owner removed.
+   */
+  private async resolveIdentityUser(
+    issuer: string,
+    subject: string,
+  ): Promise<User | null> {
+    return withScopedDb(this.dataSource, async (manager) => {
+      const identities = manager.getRepository(UserIdentity);
+      let identity =
+        (await identities.findOne({ where: { issuer, subject } })) ??
+        (await identities.findOne({
+          where: { issuer: LEGACY_IDENTITY_ISSUER, subject },
+        }));
+      if (!identity) {
+        const owner = await manager
+          .getRepository(User)
+          .findOne({ where: { oidcSubject: subject }, select: ["id"] });
+        // Only an account with no identity rows at all predates the table. Any
+        // other account wrote its own (issuer, subject) row, so a column match
+        // here would be the same subject from a different issuer.
+        if (
+          !owner ||
+          (await identities.exist({ where: { userId: owner.id } }))
+        ) {
+          return null;
+        }
+        identity = identities.create({
+          userId: owner.id,
+          issuer,
+          subject,
+          provider: providerFromSubject(subject),
+        });
+      }
+      identity.issuer = issuer;
+      identity.lastLoginAt = new Date();
+      await identities.save(identity);
+      return manager
+        .getRepository(User)
+        .findOne({ where: { id: identity.userId } });
+    });
+  }
+
+  /**
+   * An OIDC login for an account with Artha TOTP enabled goes through the same
+   * challenge a password login does (D6), unless this browser is a trusted
+   * device. Returns the pending-2FA token to hand to the 2FA page, or null when
+   * no challenge is due. Without this, linking Google to a TOTP-protected
+   * password account would add a way in that skips the second factor.
+   */
+  async oidcTwoFactorChallenge(
+    user: User,
+    trustedDeviceRef?: string,
+    userAgent?: string,
+  ): Promise<string | null> {
+    // RLS: pre-session OIDC callback. System context, as in findOrCreateOidcUser.
+    return withSystemContext(async () => {
+      const preferences = await this.scoped(UserPreference, (repo) =>
+        repo.findOne({ where: { userId: user.id } }),
+      );
+      if (!preferences?.twoFactorEnabled || !user.twoFactorSecret) return null;
+      if (
+        trustedDeviceRef &&
+        (await this.twoFactorService.validateTrustedDevice(
+          user.id,
+          trustedDeviceRef,
+          userAgent,
+        ))
+      ) {
+        return null;
+      }
+      return this.jwtService.sign(
+        { sub: user.id, type: "2fa_pending", rememberMe: false },
+        { expiresIn: "5m" },
+      );
+    });
+  }
+
+  private async emailBelongsToAnotherUser(
+    email: string,
+    exceptUserId?: string,
+  ): Promise<boolean> {
+    const owner = await this.scoped(User, (repo) =>
+      repo.findOne({ where: { email }, select: ["id"] }),
+    );
+    return !!owner && owner.id !== exceptUserId;
+  }
+
+  /**
+   * Refresh names from the provider and record the login. The email follows a
+   * verified provider email only while the account has a single identity: with
+   * several, each provider would overwrite the others' on every switch, and it
+   * is never moved onto an email another account owns.
+   */
+  private async syncOidcProfile(
+    user: User,
+    claims: { email?: string; firstName?: string; lastName?: string },
+  ): Promise<void> {
+    if (claims.firstName) user.firstName = claims.firstName;
+    if (claims.lastName) user.lastName = claims.lastName;
+    if (claims.email && user.email !== claims.email) {
+      const identityCount = await this.scoped(UserIdentity, (repo) =>
+        repo.count({ where: { userId: user.id } }),
+      );
+      if (
+        identityCount === 1 &&
+        !(await this.emailBelongsToAnotherUser(claims.email, user.id))
+      ) {
+        user.email = claims.email;
+      }
+    }
+    user.lastLogin = new Date();
+    await this.scoped(User, (repo) => repo.save(user));
   }
 
   async getUserById(id: string): Promise<User | null> {
@@ -882,96 +930,6 @@ export class AuthService {
         select: ["id", "isActive", "mustChangePassword", "role"],
       }),
     );
-  }
-
-  // M6: OIDC account linking with confirmation
-
-  async initiateOidcLink(
-    existingUser: User,
-    oidcSubject: string,
-  ): Promise<string> {
-    const linkToken = crypto.randomBytes(32).toString("hex");
-    existingUser.oidcLinkToken = hashToken(linkToken);
-    existingUser.oidcLinkExpiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
-    existingUser.oidcLinkPending = true;
-    existingUser.pendingOidcSubject = oidcSubject;
-    await this.scoped(User, (repo) => repo.save(existingUser));
-    return linkToken;
-  }
-
-  private async sendOidcLinkEmail(
-    user: User,
-    linkToken: string,
-  ): Promise<void> {
-    if (!user.email) return;
-    try {
-      const frontendUrl =
-        this.configService.get<string>("PUBLIC_APP_URL") ||
-        "http://localhost:3000";
-      const confirmUrl = `${frontendUrl}/api/v1/auth/oidc/confirm-link?token=${linkToken}`;
-      const lang = await withScopedDb(this.dataSource, (manager) =>
-        resolveUserEmailLocale(manager.getRepository(UserPreference), user.id),
-      );
-      const t = emailTranslator(this.i18n, lang);
-      const html = oidcLinkTemplate(user.firstName || "", confirmUrl, t);
-      await this.emailService.sendMail(
-        user.email,
-        t("emails.oidcLink.subject", "Artha: Confirm SSO Account Link"),
-        html,
-      );
-    } catch (err) {
-      this.logger.warn(
-        `Failed to send OIDC link confirmation email: ${err instanceof Error ? err.message : err}`,
-      );
-    }
-  }
-
-  async confirmOidcLink(token: string): Promise<User> {
-    // RLS: public link-confirmation route (email token, no req.user). Looks up
-    // the pending user by hashed link token across the table. System context.
-    return withSystemContext(() => this.confirmOidcLinkWithinContext(token));
-  }
-
-  private async confirmOidcLinkWithinContext(token: string): Promise<User> {
-    const hashedToken = hashToken(token);
-
-    const user = await this.scoped(User, (repo) =>
-      repo.findOne({
-        where: { oidcLinkToken: hashedToken, oidcLinkPending: true },
-      }),
-    );
-
-    if (!user) {
-      throw new BadRequestException(
-        tr(
-          "errors.auth.invalidOrExpiredLinkToken",
-          "Invalid or expired link token",
-        ),
-      );
-    }
-
-    if (user.oidcLinkExpiresAt && user.oidcLinkExpiresAt < new Date()) {
-      // Clear expired linking data
-      user.oidcLinkPending = false;
-      user.oidcLinkToken = null;
-      user.oidcLinkExpiresAt = null;
-      user.pendingOidcSubject = null;
-      await this.scoped(User, (repo) => repo.save(user));
-      throw new BadRequestException(
-        tr("errors.auth.linkTokenExpired", "Link token has expired"),
-      );
-    }
-
-    // Complete the link
-    user.oidcSubject = user.pendingOidcSubject;
-    user.authProvider = "oidc";
-    user.oidcLinkPending = false;
-    user.oidcLinkToken = null;
-    user.oidcLinkExpiresAt = null;
-    user.pendingOidcSubject = null;
-    await this.scoped(User, (repo) => repo.save(user));
-
-    return user;
   }
 
   /**

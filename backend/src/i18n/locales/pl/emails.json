@@ -86,14 +86,6 @@
     "topCategories": "Najważniejsze kategorie",
     "button": "Zobacz panel budżetu"
   },
-  "oidcLink": {
-    "subject": "Artha: Potwierdź połączenie konta SSO",
-    "heading": "Połącz konto SSO",
-    "greeting": "Cześć {{ name }},",
-    "intro": "Ktoś próbował zalogować się przez SSO przy użyciu adresu e-mail powiązanego z Twoim istniejącym kontem Artha. Aby połączyć swoją tożsamość SSO z tym kontem, kliknij przycisk poniżej:",
-    "button": "Potwierdź połączenie konta",
-    "disclaimer": "Jeśli to nie Ty zainicjowałeś to żądanie, możesz bezpiecznie zignorować ten e-mail. Link wygasa za 1 godzinę."
-  },
   "accountLocked": {
     "subject": "Konto tymczasowo zablokowane",
     "heading": "Konto tymczasowo zablokowane",

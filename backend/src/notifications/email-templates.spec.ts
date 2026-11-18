@@ -8,7 +8,6 @@ import {
   mortgageReminderTemplate,
   budgetAlertImmediateTemplate,
   budgetWeeklyDigestTemplate,
-  oidcLinkTemplate,
   accountLockedTemplate,
   emergencyAccessReminderTemplate,
   emergencyAccessGrantTemplate,
@@ -1063,18 +1062,6 @@ describe("Email Templates", () => {
 
     it("falls back to 'there' when firstName empty", () => {
       const html = budgetWeeklyDigestTemplate("", [], ["B"], "https://app");
-      expect(html).toContain("Hi there");
-    });
-  });
-
-  describe("oidcLinkTemplate()", () => {
-    it("renders confirmation URL safely", () => {
-      const html = oidcLinkTemplate("Sam", "https://link/confirm?t=abc");
-      expect(html).toContain("https://link/confirm?t=abc");
-      expect(html).toContain("Hi Sam");
-    });
-    it("falls back to 'there' when name is empty", () => {
-      const html = oidcLinkTemplate("", "https://x");
       expect(html).toContain("Hi there");
     });
   });

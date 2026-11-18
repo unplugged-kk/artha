@@ -24,13 +24,32 @@ Status values: PASS, FAIL, BLOCKED, NOT TESTED.
 | Auth unit suite (626), backend lint, typecheck | PASS | |
 | Live Auth0 login | NOT TESTED | Provider is stubbed in tests; see live verification below. |
 
-## Phases 3-6
+## Phase 3: identities, refuse-and-link, link/unlink
+
+Migration `20261118085649_user_identities.sql` (+ `schema.sql`, entity `UserIdentity`).
+
+| Check | Status | Evidence |
+|-------|--------|----------|
+| `user_identities` with `UNIQUE (issuer, subject)`, RLS policy, backfill from `users.oidc_subject` as issuer `legacy` | PASS | `scripts/verify-schema.sh` (migrations replay as no-ops on `schema.sql`), `migration:lint` |
+| Login resolves by (issuer, subject); same subject from another issuer is another identity | PASS | `test/integration/oidc-identities.integration.spec.ts` |
+| `legacy` rows upgraded to the real issuer on first login; `users.oidc_subject`-only accounts still found (rolling deploy) | PASS | integration spec |
+| Unknown identity with an existing account's email refused (`error=account_exists`), for password and SSO-only accounts, with no change to the account (D3) | PASS | integration + controller specs |
+| `OIDC_REQUIRE_VERIFIED_EMAIL=false` only lets an unverified email be stored on a new account; never merges | PASS | integration spec |
+| Emailed link confirmation (`/auth/oidc/confirm-link`, template, strings) removed | PASS | |
+| `POST /auth/identities/link` (step-up `manage-identities`), state-bound signed `oidc_link` marker, callback attaches without issuing a session | PASS | controller + reauth specs |
+| Identity owned by another account refused (`link=identity_in_use`) | PASS | integration spec |
+| `DELETE /auth/identities/:id` (step-up); last sign-in method refused; clears `users.oidc_subject` so it cannot sign back in; cannot touch another user's rows | PASS | integration spec |
+| Delegated sessions cannot list/link/unlink | PASS | routes are not `@AllowDelegate` (global `AccountDelegateGuard`) |
+| Artha TOTP no longer wiped on OIDC login; accounts with TOTP get the 2FA page unless the IdP asserted MFA or the device is trusted (D6); `FORCE_2FA` met by either | PASS | integration + controller specs |
+| Link/unlink in action history (D4) | NOT DONE (deviation) | `action_history` is the undo log: undo takes the newest entry and throws for unknown entity types, so a link entry would block undo of everything before it. Link/unlink are logged server-side instead. A security-event log is the right home if one is added. |
+| Frontend for linking, `account_exists`, `twoFactor=required` | NOT TESTED | Phase 5 |
+
+## Phases 4-6
 
 | Phase | Status |
 |-------|--------|
-| 3: `user_identities`, (issuer, subject) resolution, refuse-and-link, link/unlink | NOT TESTED |
 | 4: logout revokes Artha refresh token, optional Auth0 logout | NOT TESTED |
-| 5: per-connection login buttons, localized errors | NOT TESTED |
+| 5: per-connection login buttons, Settings linking, callback states | NOT TESTED |
 | 6: `.env.example`, compose, Helm | NOT TESTED |
 
 ## Live verification

@@ -86,14 +86,6 @@
     "topCategories": "Categorie principali",
     "button": "Visualizza pannello budget"
   },
-  "oidcLink": {
-    "subject": "Artha: Conferma collegamento account SSO",
-    "heading": "Collega il tuo account SSO",
-    "greeting": "Ciao {{ name }},",
-    "intro": "Qualcuno ha tentato di accedere tramite SSO con un'email che corrisponde al tuo account Artha esistente. Per collegare la tua identità SSO a questo account, clicca il pulsante qui sotto:",
-    "button": "Conferma collegamento account",
-    "disclaimer": "Se non hai avviato questa richiesta, puoi ignorare tranquillamente questa email. Il link scade in 1 ora."
-  },
   "accountLocked": {
     "subject": "Account temporaneamente bloccato",
     "heading": "Account temporaneamente bloccato",

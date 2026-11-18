@@ -86,14 +86,6 @@
     "topCategories": "Categorías principales",
     "button": "Ver panel del presupuesto"
   },
-  "oidcLink": {
-    "subject": "Artha: Confirmar vinculación de cuenta SSO",
-    "heading": "Vincula tu cuenta SSO",
-    "greeting": "Hola, {{ name }}:",
-    "intro": "Alguien intentó iniciar sesión mediante SSO con un correo electrónico que coincide con tu cuenta de Artha existente. Para vincular tu identidad SSO a esta cuenta, haz clic en el botón de abajo:",
-    "button": "Confirmar vinculación de cuenta",
-    "disclaimer": "Si no iniciaste esta solicitud, puedes ignorar este correo con seguridad. El enlace expira en 1 hora."
-  },
   "accountLocked": {
     "subject": "Cuenta bloqueada temporalmente",
     "heading": "Cuenta bloqueada temporalmente",

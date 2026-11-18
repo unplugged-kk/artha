@@ -6,6 +6,8 @@ import * as client from "openid-client";
 export interface OidcTokenResult {
   access_token: string;
   sub: string;
+  /** "iss" claim, already checked against the discovered issuer. */
+  iss: string;
   /** "amr" (Authentication Methods References) claim from the ID token. */
   amr?: string[];
   /** "acr" (Authentication Context Class Reference) claim from the ID token. */
@@ -193,6 +195,7 @@ export class OidcService implements OnModuleInit {
     return {
       access_token: tokens.access_token,
       sub: claims.sub,
+      iss: claims.iss,
       amr,
       acr,
       auth_time,

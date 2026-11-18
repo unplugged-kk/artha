@@ -529,6 +529,59 @@ describe("OidcReauthService", () => {
     });
   });
 
+  describe("link marker", () => {
+    const STATE = "state-of-the-link-round-trip";
+
+    it("returns the user who started the link, for the round trip it was minted with", () => {
+      const marker = service.createLinkMarker(USER, STATE);
+      expect(service.readLinkMarker(marker, STATE)).toBe(USER);
+    });
+
+    it("refuses a marker minted for a different authorization request", () => {
+      // An ordinary login started later overwrites oidc_state; it must not
+      // complete as a link.
+      const marker = service.createLinkMarker(USER, STATE);
+      expect(service.readLinkMarker(marker, "a-later-login")).toBeNull();
+      expect(service.readLinkMarker(marker, undefined)).toBeNull();
+    });
+
+    it("refuses a forged, absent or expired marker", () => {
+      expect(service.readLinkMarker(undefined, STATE)).toBeNull();
+      const forged = jwt.sign(
+        { sub: OTHER, type: "oidc_link_pending", sth: "x" },
+        "some-other-secret-of-thirty-two-characters",
+      );
+      expect(service.readLinkMarker(forged, STATE)).toBeNull();
+      const marker = service.createLinkMarker(USER, STATE);
+      const { iat } = jwt.decode(marker) as { iat: number };
+      jest.useFakeTimers({ now: (iat + 60 * 60) * 1000 });
+      try {
+        expect(service.readLinkMarker(marker, STATE)).toBeNull();
+      } finally {
+        jest.useRealTimers();
+      }
+    });
+
+    it("does not accept a re-authentication marker or artifact as a link marker, nor the reverse", () => {
+      const reauthMarker = service.createPendingMarker(
+        USER,
+        "manage-identities",
+        STATE,
+      );
+      expect(service.readLinkMarker(reauthMarker, STATE)).toBeNull();
+      expect(
+        service.readLinkMarker(service.issue(USER, "delete-data"), STATE),
+      ).toBeNull();
+      expect(
+        service.readPendingMarker(
+          service.createLinkMarker(USER, STATE),
+          USER,
+          STATE,
+        ),
+      ).toBeNull();
+    });
+  });
+
   describe("issued artifacts", () => {
     it("expire within five minutes", () => {
       const decoded = jwt.decode(service.issue(USER, "delete-data")) as {
