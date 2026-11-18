@@ -406,6 +406,7 @@ export class AuthController {
 
     const state = this.oidcService.generateState();
     const nonce = this.oidcService.generateNonce();
+    const codeVerifier = this.oidcService.generateCodeVerifier();
 
     // Store state/nonce in secure cookies for validation
     const cookieOptions = {
@@ -417,6 +418,7 @@ export class AuthController {
 
     res.cookie("oidc_state", state, cookieOptions);
     res.cookie("oidc_nonce", nonce, cookieOptions);
+    res.cookie("oidc_code_verifier", codeVerifier, cookieOptions);
     // An ordinary login is not a re-authentication, and it must not inherit one.
     // This request overwrites `oidc_state`, so a surviving marker would be
     // rejected at the callback anyway (it is bound to the state it was minted
@@ -428,7 +430,11 @@ export class AuthController {
       sameSite: "lax" as const,
     });
 
-    const authUrl = this.oidcService.getAuthorizationUrl(state, nonce);
+    const authUrl = this.oidcService.getAuthorizationUrl(
+      state,
+      nonce,
+      codeVerifier,
+    );
     res.redirect(authUrl);
   }
 
@@ -493,6 +499,7 @@ export class AuthController {
 
     const state = this.oidcService.generateState();
     const nonce = this.oidcService.generateNonce();
+    const codeVerifier = this.oidcService.generateCodeVerifier();
     const cookieOptions = {
       httpOnly: true,
       secure: this.useSecureCookies,
@@ -502,6 +509,7 @@ export class AuthController {
 
     res.cookie("oidc_state", state, cookieOptions);
     res.cookie("oidc_nonce", nonce, cookieOptions);
+    res.cookie("oidc_code_verifier", codeVerifier, cookieOptions);
     // Signed, not a plain value: the callback trusts this to decide which action
     // the artifact it mints unlocks.
     res.cookie(
@@ -514,7 +522,7 @@ export class AuthController {
     );
 
     res.redirect(
-      this.oidcService.getAuthorizationUrl(state, nonce, {
+      this.oidcService.getAuthorizationUrl(state, nonce, codeVerifier, {
         forceReauthentication: true,
       }),
     );
@@ -550,16 +558,18 @@ export class AuthController {
 
       const state = req.cookies?.["oidc_state"];
       const nonce = req.cookies?.["oidc_nonce"];
+      const codeVerifier = req.cookies?.["oidc_code_verifier"];
       const pendingReauth = req.cookies?.["oidc_reauth"];
 
       // Clear OIDC cookies with matching options
       res.clearCookie("oidc_state", clearOidcCookieOptions);
       res.clearCookie("oidc_nonce", clearOidcCookieOptions);
+      res.clearCookie("oidc_code_verifier", clearOidcCookieOptions);
       res.clearCookie("oidc_reauth", clearOidcCookieOptions);
 
-      if (!state || !nonce) {
+      if (!state || !nonce || !codeVerifier) {
         throw new Error(
-          "Missing OIDC state or nonce - session may have expired",
+          "Missing OIDC state, nonce or PKCE verifier - session may have expired",
         );
       }
 
@@ -568,6 +578,7 @@ export class AuthController {
         query,
         state,
         nonce,
+        codeVerifier,
       );
 
       // SECURITY: When FORCE_2FA is enabled, app-level 2FA is unavailable for
@@ -599,6 +610,10 @@ export class AuthController {
       if (result.linkPending) {
         res.redirect(`${frontendUrl}/auth/callback?link=pending`);
         return;
+      }
+
+      if (!result.user.isActive) {
+        throw new Error("Inactive account cannot sign in");
       }
 
       // Generate token pair. RLS: this is still the pre-session OIDC callback
@@ -672,6 +687,7 @@ export class AuthController {
       // Clear OIDC cookies on error path as well
       res.clearCookie("oidc_state", clearOidcCookieOptions);
       res.clearCookie("oidc_nonce", clearOidcCookieOptions);
+      res.clearCookie("oidc_code_verifier", clearOidcCookieOptions);
       res.clearCookie("oidc_reauth", clearOidcCookieOptions);
       // SECURITY: Log detailed error server-side only, don't expose to client
       this.logger.error(

@@ -140,7 +140,6 @@ describe("AuthController", () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
       providers: [
-        OidcReauthService,
         // Real instance: the class exists to verify signatures, and a mock
         // that always accepts would make the re-authentication assertions
         // vacuous -- which is how the sentinel survived (P2-005).
@@ -1104,6 +1103,9 @@ describe("AuthController", () => {
       (oidcService as any).generateNonce = jest
         .fn()
         .mockReturnValue("mock-nonce");
+      (oidcService as any).generateCodeVerifier = jest
+        .fn()
+        .mockReturnValue("verifier");
       (oidcService as any).getAuthorizationUrl = jest
         .fn()
         .mockReturnValue("https://provider.example.com/auth?state=mock-state");
@@ -1129,9 +1131,19 @@ describe("AuthController", () => {
           maxAge: 600000,
         }),
       );
+      expect(res.cookie).toHaveBeenCalledWith(
+        "oidc_code_verifier",
+        "verifier",
+        expect.objectContaining({
+          httpOnly: true,
+          sameSite: "lax",
+          maxAge: 600000,
+        }),
+      );
       expect(oidcService.getAuthorizationUrl).toHaveBeenCalledWith(
         "mock-state",
         "mock-nonce",
+        "verifier",
       );
       expect(res.redirect).toHaveBeenCalledWith(
         "https://provider.example.com/auth?state=mock-state",
@@ -1151,10 +1163,7 @@ describe("AuthController", () => {
         name: "OIDC User",
       });
       authService.findOrCreateOidcUser.mockResolvedValue({
-        user: {
-          id: "user-oidc",
-          email: "oidc@example.com",
-        },
+        user: { isActive: true, id: "user-oidc", email: "oidc@example.com" },
       });
       authService.generateTokenPair.mockResolvedValue({
         accessToken: "oidc-jwt",
@@ -1163,7 +1172,11 @@ describe("AuthController", () => {
 
       const res = mockRes();
       const expressReq = {
-        cookies: { oidc_state: "valid-state", oidc_nonce: "valid-nonce" },
+        cookies: {
+          oidc_state: "valid-state",
+          oidc_nonce: "valid-nonce",
+          oidc_code_verifier: "verifier",
+        },
       } as any;
       const query = { code: "auth-code" };
 
@@ -1183,6 +1196,7 @@ describe("AuthController", () => {
         query,
         "valid-state",
         "valid-nonce",
+        "verifier",
       );
       expect(oidcService.getUserInfo).toHaveBeenCalledWith(
         "oidc-access-token",
@@ -1193,6 +1207,7 @@ describe("AuthController", () => {
         true,
       );
       expect(authService.generateTokenPair).toHaveBeenCalledWith({
+        isActive: true,
         id: "user-oidc",
         email: "oidc@example.com",
       });
@@ -1226,7 +1241,7 @@ describe("AuthController", () => {
         email: "new@example.com",
       });
       authService.findOrCreateOidcUser.mockResolvedValue({
-        user: { id: "user-new", email: "new@example.com" },
+        user: { isActive: true, id: "user-new", email: "new@example.com" },
         isNewUser: true,
       });
       authService.generateTokenPair.mockResolvedValue({
@@ -1236,7 +1251,11 @@ describe("AuthController", () => {
 
       const res = mockRes();
       const expressReq = {
-        cookies: { oidc_state: "valid-state", oidc_nonce: "valid-nonce" },
+        cookies: {
+          oidc_state: "valid-state",
+          oidc_nonce: "valid-nonce",
+          oidc_code_verifier: "verifier",
+        },
       } as any;
 
       await controller.oidcCallback(
@@ -1269,7 +1288,11 @@ describe("AuthController", () => {
 
       const res = mockRes();
       const expressReq = {
-        cookies: { oidc_state: "state", oidc_nonce: "nonce" },
+        cookies: {
+          oidc_state: "state",
+          oidc_nonce: "nonce",
+          oidc_code_verifier: "verifier",
+        },
       } as any;
       const query = { code: "bad-code" };
 
@@ -1289,7 +1312,11 @@ describe("AuthController", () => {
 
       const res = mockRes();
       const expressReq = {
-        cookies: { oidc_state: "state", oidc_nonce: "nonce" },
+        cookies: {
+          oidc_state: "state",
+          oidc_nonce: "nonce",
+          oidc_code_verifier: "verifier",
+        },
       } as any;
       const query = { code: "auth-code" };
 
@@ -2104,6 +2131,7 @@ describe("AuthController", () => {
               }),
               getUserInfo: jest.fn(),
               generateState: jest.fn(),
+              generateCodeVerifier: jest.fn().mockReturnValue("verifier"),
               generateNonce: jest.fn(),
               getAuthorizationUrl: jest.fn(),
             },
@@ -2144,7 +2172,13 @@ describe("AuthController", () => {
       }).compile();
       const c = force2faModule.get<AuthController>(AuthController);
       const res = mockRes();
-      const req = { cookies: { oidc_state: "s", oidc_nonce: "n" } };
+      const req = {
+        cookies: {
+          oidc_state: "s",
+          oidc_nonce: "n",
+          oidc_code_verifier: "verifier",
+        },
+      };
       await c.oidcCallback({}, req as never, res as never);
       expect(res.redirect).toHaveBeenCalledWith(
         "http://localhost:3000/auth/callback?error=mfa_required",
@@ -2166,7 +2200,7 @@ describe("AuthController", () => {
         },
       );
       authService.findOrCreateOidcUser.mockResolvedValue({
-        user: { id: "user-2", email: "x@y.z" },
+        user: { isActive: true, id: "user-2", email: "x@y.z" },
         linkPending: false,
       });
       authService.generateTokenPair.mockResolvedValue({
@@ -2193,6 +2227,7 @@ describe("AuthController", () => {
                 sub: "sub-1",
               }),
               generateState: jest.fn(),
+              generateCodeVerifier: jest.fn().mockReturnValue("verifier"),
               generateNonce: jest.fn(),
               getAuthorizationUrl: jest.fn(),
             },
@@ -2233,7 +2268,13 @@ describe("AuthController", () => {
       }).compile();
       const c = force2faModule.get<AuthController>(AuthController);
       const res = mockRes();
-      const req = { cookies: { oidc_state: "s", oidc_nonce: "n" } };
+      const req = {
+        cookies: {
+          oidc_state: "s",
+          oidc_nonce: "n",
+          oidc_code_verifier: "verifier",
+        },
+      };
       await c.oidcCallback({}, req as never, res as never);
       expect(res.redirect).toHaveBeenCalledWith(
         "http://localhost:3000/auth/callback?success=true",
@@ -2255,7 +2296,7 @@ describe("AuthController", () => {
         },
       );
       authService.findOrCreateOidcUser.mockResolvedValue({
-        user: { id: "user-2", email: "x@y.z" },
+        user: { isActive: true, id: "user-2", email: "x@y.z" },
         linkPending: false,
       });
       authService.generateTokenPair.mockResolvedValue({
@@ -2284,6 +2325,7 @@ describe("AuthController", () => {
                   sub: "sub-1",
                 }),
                 generateState: jest.fn(),
+                generateCodeVerifier: jest.fn().mockReturnValue("verifier"),
                 generateNonce: jest.fn(),
                 getAuthorizationUrl: jest.fn(),
               },
@@ -2327,7 +2369,13 @@ describe("AuthController", () => {
         }).compile();
         const c = m.get<AuthController>(AuthController);
         const res = mockRes();
-        const req = { cookies: { oidc_state: "s", oidc_nonce: "n" } };
+        const req = {
+          cookies: {
+            oidc_state: "s",
+            oidc_nonce: "n",
+            oidc_code_verifier: "verifier",
+          },
+        };
         await c.oidcCallback({}, req as never, res as never);
         expect(res.redirect).toHaveBeenCalledWith(
           "http://localhost:3000/auth/callback?success=true",
@@ -2360,6 +2408,7 @@ describe("AuthController", () => {
         handleCallback: jest.fn(),
         getUserInfo: jest.fn().mockResolvedValue({ sub: "sub-1" }),
         generateState: jest.fn().mockReturnValue("state-1"),
+        generateCodeVerifier: jest.fn().mockReturnValue("verifier"),
         generateNonce: jest.fn().mockReturnValue("nonce-1"),
         getAuthorizationUrl: jest.fn().mockReturnValue("https://idp/authorize"),
         ...oidcOverrides,
@@ -2443,6 +2492,7 @@ describe("AuthController", () => {
       expect(oidc.getAuthorizationUrl).toHaveBeenCalledWith(
         "state-1",
         "nonce-1",
+        "verifier",
         { forceReauthentication: true },
       );
       expect(res.redirect).toHaveBeenCalledWith("https://idp/authorize");
@@ -2531,7 +2581,7 @@ describe("AuthController", () => {
         auth_time: Math.floor(Date.now() / 1000),
       });
       authService.findOrCreateOidcUser.mockResolvedValue({
-        user: { id: REAUTH_USER },
+        user: { isActive: true, id: REAUTH_USER },
         isNewUser: false,
       });
       authService.generateTokenPair.mockResolvedValue({
@@ -2546,6 +2596,7 @@ describe("AuthController", () => {
           cookies: {
             oidc_state: "s",
             oidc_nonce: "n",
+            oidc_code_verifier: "verifier",
             oidc_reauth: reauth.createPendingMarker(
               REAUTH_USER,
               "delete-account",
@@ -2594,7 +2645,7 @@ describe("AuthController", () => {
           ...(authTime === undefined ? {} : { auth_time: authTime }),
         });
         authService.findOrCreateOidcUser.mockResolvedValue({
-          user: { id: REAUTH_USER },
+          user: { isActive: true, id: REAUTH_USER },
           isNewUser: false,
         });
         authService.generateTokenPair.mockResolvedValue({
@@ -2609,6 +2660,7 @@ describe("AuthController", () => {
             cookies: {
               oidc_state: "s",
               oidc_nonce: "n",
+              oidc_code_verifier: "verifier",
               oidc_reauth: reauth.createPendingMarker(
                 REAUTH_USER,
                 "delete-account",
@@ -2636,7 +2688,7 @@ describe("AuthController", () => {
         sub: "sub-2",
       });
       authService.findOrCreateOidcUser.mockResolvedValue({
-        user: { id: "99999999-9999-4999-8999-999999999999" },
+        user: { isActive: true, id: "99999999-9999-4999-8999-999999999999" },
         isNewUser: false,
       });
       authService.generateTokenPair.mockResolvedValue({
@@ -2651,6 +2703,7 @@ describe("AuthController", () => {
           cookies: {
             oidc_state: "s",
             oidc_nonce: "n",
+            oidc_code_verifier: "verifier",
             oidc_reauth: reauth.createPendingMarker(
               REAUTH_USER,
               "delete-account",
@@ -2683,7 +2736,7 @@ describe("AuthController", () => {
         sub: "sub-1",
       });
       authService.findOrCreateOidcUser.mockResolvedValue({
-        user: { id: REAUTH_USER },
+        user: { isActive: true, id: REAUTH_USER },
         isNewUser: false,
       });
       authService.generateTokenPair.mockResolvedValue({
@@ -2699,6 +2752,7 @@ describe("AuthController", () => {
             // The ordinary login's state and nonce, not the forced flow's.
             oidc_state: "state-of-the-ordinary-login",
             oidc_nonce: "n",
+            oidc_code_verifier: "verifier",
             oidc_reauth: forcedFlowMarker,
           },
         } as never,
@@ -2733,7 +2787,7 @@ describe("AuthController", () => {
         sub: "sub-1",
       });
       authService.findOrCreateOidcUser.mockResolvedValue({
-        user: { id: REAUTH_USER },
+        user: { isActive: true, id: REAUTH_USER },
         isNewUser: false,
       });
       authService.generateTokenPair.mockResolvedValue({
@@ -2744,7 +2798,13 @@ describe("AuthController", () => {
 
       await controller.oidcCallback(
         { code: "c" },
-        { cookies: { oidc_state: "s", oidc_nonce: "n" } } as never,
+        {
+          cookies: {
+            oidc_state: "s",
+            oidc_nonce: "n",
+            oidc_code_verifier: "verifier",
+          },
+        } as never,
         res as never,
       );
 
@@ -2764,7 +2824,7 @@ describe("AuthController", () => {
             sub: "sub-1",
           });
           authService.findOrCreateOidcUser.mockResolvedValue({
-            user: { id: REAUTH_USER },
+            user: { isActive: true, id: REAUTH_USER },
             isNewUser: false,
           });
           authService.generateTokenPair.mockResolvedValue({
@@ -2780,6 +2840,7 @@ describe("AuthController", () => {
             cookies: {
               oidc_state: "s",
               oidc_nonce: "n",
+              oidc_code_verifier: "verifier",
               oidc_reauth: reauth.createPendingMarker(
                 REAUTH_USER,
                 "delete-data",
@@ -2812,6 +2873,7 @@ describe("AuthController", () => {
               handleCallback: jest.fn(),
               getUserInfo: jest.fn(),
               generateState: jest.fn(),
+              generateCodeVerifier: jest.fn().mockReturnValue("verifier"),
               generateNonce: jest.fn(),
               getAuthorizationUrl: jest.fn(),
             },
@@ -2852,7 +2914,13 @@ describe("AuthController", () => {
       }).compile();
       const c = m.get<AuthController>(AuthController);
       const res = mockRes();
-      const req = { cookies: { oidc_state: "s", oidc_nonce: "n" } };
+      const req = {
+        cookies: {
+          oidc_state: "s",
+          oidc_nonce: "n",
+          oidc_code_verifier: "verifier",
+        },
+      };
       await c.oidcCallback(
         { error: "access_denied" },
         req as never,
@@ -2876,6 +2944,7 @@ describe("AuthController", () => {
               handleCallback: jest.fn(),
               getUserInfo: jest.fn(),
               generateState: jest.fn(),
+              generateCodeVerifier: jest.fn().mockReturnValue("verifier"),
               generateNonce: jest.fn(),
               getAuthorizationUrl: jest.fn(),
             },
@@ -2916,7 +2985,13 @@ describe("AuthController", () => {
       }).compile();
       const c = m.get<AuthController>(AuthController);
       const res = mockRes();
-      const req = { cookies: { oidc_state: "s", oidc_nonce: "n" } };
+      const req = {
+        cookies: {
+          oidc_state: "s",
+          oidc_nonce: "n",
+          oidc_code_verifier: "verifier",
+        },
+      };
       await c.oidcCallback(
         { error: "x", error_description: "details" },
         req as never,
@@ -2927,7 +3002,7 @@ describe("AuthController", () => {
 
     it("redirects when linkPending is true", async () => {
       authService.findOrCreateOidcUser.mockResolvedValue({
-        user: { id: "user-2" },
+        user: { isActive: true, id: "user-2" },
         linkPending: true,
       });
       const m: TestingModule = await Test.createTestingModule({
@@ -2950,6 +3025,7 @@ describe("AuthController", () => {
                 sub: "sub-1",
               }),
               generateState: jest.fn(),
+              generateCodeVerifier: jest.fn().mockReturnValue("verifier"),
               generateNonce: jest.fn(),
               getAuthorizationUrl: jest.fn(),
             },
@@ -2990,7 +3066,13 @@ describe("AuthController", () => {
       }).compile();
       const c = m.get<AuthController>(AuthController);
       const res = mockRes();
-      const req = { cookies: { oidc_state: "s", oidc_nonce: "n" } };
+      const req = {
+        cookies: {
+          oidc_state: "s",
+          oidc_nonce: "n",
+          oidc_code_verifier: "verifier",
+        },
+      };
       await c.oidcCallback({}, req as never, res as never);
       expect(res.redirect).toHaveBeenCalledWith(
         "http://localhost:3000/auth/callback?link=pending",
@@ -3010,6 +3092,7 @@ describe("AuthController", () => {
               handleCallback: jest.fn().mockRejectedValue("string-error"),
               getUserInfo: jest.fn(),
               generateState: jest.fn(),
+              generateCodeVerifier: jest.fn().mockReturnValue("verifier"),
               generateNonce: jest.fn(),
               getAuthorizationUrl: jest.fn(),
             },
@@ -3050,7 +3133,13 @@ describe("AuthController", () => {
       }).compile();
       const c = m.get<AuthController>(AuthController);
       const res = mockRes();
-      const req = { cookies: { oidc_state: "s", oidc_nonce: "n" } };
+      const req = {
+        cookies: {
+          oidc_state: "s",
+          oidc_nonce: "n",
+          oidc_code_verifier: "verifier",
+        },
+      };
       await c.oidcCallback({}, req as never, res as never);
       expect(res.redirect).toHaveBeenCalledWith(
         "http://localhost:3000/auth/callback?error=authentication_failed",

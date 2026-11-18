@@ -1,3 +1,4 @@
+import { createHash, randomBytes } from "node:crypto";
 import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import * as client from "openid-client";
@@ -45,9 +46,43 @@ export class OidcService implements OnModuleInit {
     const clientId = this.configService.get<string>("OIDC_CLIENT_ID");
     const clientSecret = this.configService.get<string>("OIDC_CLIENT_SECRET");
 
-    if (!issuerUrl || !clientId || !clientSecret) {
+    this._enabled = false;
+    this.config = null;
+    if (!issuerUrl && !clientId && !clientSecret) {
       this.logger.log("OIDC not configured - OIDC login disabled");
       return false;
+    }
+
+    if (!issuerUrl || !clientId || !clientSecret) {
+      throw new Error(
+        "OIDC requires issuer URL, client ID and client secret together",
+      );
+    }
+    for (const [name, value] of [
+      ["OIDC_ISSUER_URL", issuerUrl],
+      ["OIDC_CALLBACK_URL", this.callbackUrl],
+    ]) {
+      let url: URL;
+      try {
+        url = new URL(value);
+      } catch {
+        throw new Error(`${name} must be an absolute URL`);
+      }
+      const localCallback =
+        name === "OIDC_CALLBACK_URL" &&
+        url.protocol === "http:" &&
+        ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname);
+      if (
+        (!localCallback && url.protocol !== "https:") ||
+        url.username ||
+        url.password ||
+        url.hash ||
+        url.search
+      ) {
+        throw new Error(
+          `${name} requires HTTPS (HTTP is allowed only for a loopback callback) without credentials, query or fragment`,
+        );
+      }
     }
 
     try {
@@ -83,6 +118,7 @@ export class OidcService implements OnModuleInit {
   getAuthorizationUrl(
     state: string,
     nonce: string,
+    codeVerifier: string,
     { forceReauthentication = false }: { forceReauthentication?: boolean } = {},
   ): string {
     if (!this.config) {
@@ -94,6 +130,10 @@ export class OidcService implements OnModuleInit {
       scope: "openid profile email",
       state,
       nonce,
+      code_challenge: createHash("sha256")
+        .update(codeVerifier)
+        .digest("base64url"),
+      code_challenge_method: "S256",
       ...(forceReauthentication ? { prompt: "login", max_age: "0" } : {}),
     });
 
@@ -107,6 +147,7 @@ export class OidcService implements OnModuleInit {
     params: Record<string, string>,
     state: string,
     nonce: string,
+    codeVerifier: string,
   ): Promise<OidcTokenResult> {
     if (!this.config) {
       throw new Error("OIDC client not initialized");
@@ -124,6 +165,7 @@ export class OidcService implements OnModuleInit {
       {
         expectedState: state,
         expectedNonce: nonce,
+        pkceCodeVerifier: codeVerifier,
       },
     );
 
@@ -175,6 +217,13 @@ export class OidcService implements OnModuleInit {
     );
 
     return userInfo as unknown as Record<string, unknown>;
+  }
+
+  /**
+   * Generate an RFC 7636 PKCE code verifier (43 base64url characters)
+   */
+  generateCodeVerifier(): string {
+    return randomBytes(32).toString("base64url");
   }
 
   /**
