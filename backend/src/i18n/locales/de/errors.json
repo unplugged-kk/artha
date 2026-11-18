@@ -209,7 +209,8 @@
     "restoreQueueFull": "Zu viele Wiederherstellungen warten bereits auf die Wiederherstellungskapazität dieser Instanz. Versuchen Sie es in einem Moment erneut.",
     "restoreQueueWaitTimeout": "Zeitüberschreitung beim Warten auf Wiederherstellungskapazität: Eine andere Wiederherstellung läuft noch. Versuchen Sie es in einem Moment erneut.",
     "restoreTicketUnavailable": "Diese Instanz kann Wiederherstellungs-Uploads nicht autorisieren.",
-    "invalidNotificationFields": "Ungültige Benachrichtigung in der Sicherung: Der Titel muss Text sein; Ziel und Deduplizierungsschlüssel müssen Text oder null sein"
+    "invalidNotificationFields": "Ungültige Benachrichtigung in der Sicherung: Der Titel muss Text sein; Ziel und Deduplizierungsschlüssel müssen Text oder null sein",
+    "rowsNotRestored": "Die Sicherung konnte nicht wiederhergestellt werden: {{ declined }} von {{ total }} Zeilen in {{ table }} stehen miteinander oder mit vorhandenen Daten in Konflikt. Es wurde nichts geändert."
   },
   "budgets": {
     "notFound": "Budget mit ID {{ id }} nicht gefunden",
@@ -331,7 +332,11 @@
     "xlsxSheetNotFound": "Das Tabellenblatt \"{{ sheetName }}\" wurde in dieser Arbeitsmappe nicht gefunden.",
     "xlsxInvalidHeaderRow": "Zeile {{ headerRow }} ist keine gültige Kopfzeile für dieses Tabellenblatt.",
     "xlsxEmptyHeader": "Zeile {{ headerRow }} von \"{{ sheetName }}\" enthält keine Spaltenüberschriften. Wählen Sie eine andere Zeile.",
-    "xlsxNoDataRows": "\"{{ sheetName }}\" enthält nach Zeile {{ headerRow }} keine Datenzeilen."
+    "xlsxNoDataRows": "\"{{ sheetName }}\" enthält nach Zeile {{ headerRow }} keine Datenzeilen.",
+    "unreadableRowsUnresolved": "{{ count }} Zeilen konnten nicht gelesen werden. Korrigieren Sie sie in der Datei oder überspringen Sie sie: {{ rows }}",
+    "sourceAccountsUnresolved": "{{ count }} Zeilen haben kein Konto. Ordnen Sie ihre Quelle zu oder überspringen Sie sie: {{ rows }}",
+    "overlapsUnreviewed": "{{ count }} Zeilen ähneln bereits vorhandenen Buchungen in Ihren Konten. Prüfen Sie sie vor dem Import: {{ rows }}",
+    "batchRejected": "Es wurde nichts importiert: {{ count }} Zeilen sind fehlgeschlagen. {{ rows }}"
   },
   "monteCarlo": {
     "scenarioNotFound": "Szenario {{ id }} nicht gefunden",

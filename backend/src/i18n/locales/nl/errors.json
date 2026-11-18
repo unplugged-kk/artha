@@ -209,7 +209,8 @@
     "restoreQueueFull": "Er wachten al te veel herstelbewerkingen op de herstelcapaciteit van deze installatie. Probeer het over een moment opnieuw.",
     "restoreQueueWaitTimeout": "Time-out bij het wachten op herstelcapaciteit: een andere herstelbewerking is nog bezig. Probeer het over een moment opnieuw.",
     "restoreTicketUnavailable": "Deze installatie kan herstel-uploads niet autoriseren.",
-    "invalidNotificationFields": "Ongeldige melding in de back-up: de titel moet tekst zijn; het doel en de deduplicatiesleutel moeten tekst of null zijn"
+    "invalidNotificationFields": "Ongeldige melding in de back-up: de titel moet tekst zijn; het doel en de deduplicatiesleutel moeten tekst of null zijn",
+    "rowsNotRestored": "De back-up kon niet worden hersteld: {{ declined }} van {{ total }} rijen in {{ table }} conflicteren met elkaar of met bestaande gegevens. Er is niets gewijzigd."
   },
   "budgets": {
     "notFound": "Budget met ID {{ id }} niet gevonden",
@@ -331,7 +332,11 @@
     "xlsxSheetNotFound": "Blad \"{{ sheetName }}\" is niet gevonden in deze werkmap.",
     "xlsxInvalidHeaderRow": "Rij {{ headerRow }} is geen geldige kopregel voor dit blad.",
     "xlsxEmptyHeader": "Rij {{ headerRow }} van \"{{ sheetName }}\" heeft geen kolomkoppen. Kies een andere rij.",
-    "xlsxNoDataRows": "\"{{ sheetName }}\" heeft geen gegevensrijen na rij {{ headerRow }}."
+    "xlsxNoDataRows": "\"{{ sheetName }}\" heeft geen gegevensrijen na rij {{ headerRow }}.",
+    "unreadableRowsUnresolved": "{{ count }} rijen konden niet worden gelezen. Corrigeer ze in het bestand of kies om ze over te slaan: {{ rows }}",
+    "sourceAccountsUnresolved": "{{ count }} rijen hebben geen rekening. Koppel hun bron of sla ze over: {{ rows }}",
+    "overlapsUnreviewed": "{{ count }} rijen lijken op bestaande boekingen in uw rekeningen. Controleer ze vóór het importeren: {{ rows }}",
+    "batchRejected": "Er is niets geïmporteerd: {{ count }} rijen zijn mislukt. {{ rows }}"
   },
   "monteCarlo": {
     "scenarioNotFound": "Scenario {{ id }} niet gevonden",

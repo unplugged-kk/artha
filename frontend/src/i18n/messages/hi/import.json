@@ -33,7 +33,8 @@
     "mnySingleFileOnly": "Microsoft Money फ़ाइलें एक-एक करके आयात करें -- एक .mny फ़ाइल में पूरी प्रोफ़ाइल होती है।",
     "xlsxSingleFileOnly": "एक बार में एक Excel फ़ाइल आयात करें।",
     "xlsxNoSheets": "उस वर्कबुक में आयात करने के लिए कोई शीट नहीं है।",
-    "xlsxParseFailed": "उस Excel फ़ाइल को पढ़ा नहीं जा सका"
+    "xlsxParseFailed": "उस Excel फ़ाइल को पढ़ा नहीं जा सका",
+    "sourceColumnSingleFileOnly": "खाते वाला कॉलम रखने वाली शीट को एक बार में केवल एक फ़ाइल से आयात किया जा सकता है।"
   },
   "page": {
     "title": "लेनदेन आयात करें",
@@ -181,7 +182,9 @@
       "comma": "अल्पविराम (,)",
       "semicolon": "अर्धविराम (;)",
       "tab": "टैब"
-    }
+    },
+    "sourceAccountField": "खाता / स्रोत",
+    "sourceAccountHint": "एक शीट में कई खाते रखने वाले ट्रैकर के लिए। हर पंक्ति उसके स्रोत में बताए खाते में दर्ज होगी; अगले चरण में आप स्रोतों को खातों से जोड़ेंगे।"
   },
   "transferRules": {
     "title": "स्थानांतरण पहचान नियम",
@@ -595,5 +598,38 @@
     "nonTransactional": "This message appears to be non-transactional (OTP, alert, or marketing)",
     "ambiguous": "Message contains ambiguous transaction data and could not be confidently parsed",
     "spam": "Message classified as promotional or spam"
+  },
+  "mapSourceAccounts": {
+    "heading": "स्रोतों को खातों से जोड़ें",
+    "description": "इस शीट की हर पंक्ति अपना खाता बताती है। प्रत्येक स्रोत के लिए एक बार खाता चुनें। समीक्षा स्क्रीन पर आप अलग-अलग पंक्तियों का खाता फिर भी बदल सकते हैं।",
+    "choose": "खाता चुनें...",
+    "skip": "ये पंक्तियाँ छोड़ें",
+    "blankSource": "(कोई स्रोत नहीं)",
+    "rowCount": "{count, plural, one {# पंक्ति} other {# पंक्तियाँ}}",
+    "postTo": "{source} की पंक्तियाँ इस खाते में दर्ज करें",
+    "unresolved": "{count, plural, one {# स्रोत के लिए} other {# स्रोतों के लिए}} अभी खाता चुनना या स्पष्ट रूप से छोड़ना आवश्यक है।"
+  },
+  "sourceReview": {
+    "summary": "{fileName}: {rows, plural, one {# पंक्ति} other {# पंक्तियाँ}}{skipped, plural, =0 {} other {, # छोड़ी गईं}}।",
+    "changesHeading": "प्रत्येक खाते की शेष राशि में बदलाव",
+    "rejectedHeading": "{count, plural, one {# पंक्ति पढ़ी नहीं जा सकी} other {# पंक्तियाँ पढ़ी नहीं जा सकीं}}",
+    "rejectedRow": "पंक्ति {row}: {reason}",
+    "skipRejected": "{count, plural, one {इस पंक्ति को} other {इन पंक्तियों को}} आयात से बाहर रखें",
+    "colRow": "पंक्ति",
+    "colDate": "तारीख",
+    "colPayee": "प्राप्तकर्ता",
+    "colAmount": "राशि",
+    "colSource": "स्रोत",
+    "colPostTo": "इस खाते में दर्ज करें",
+    "postToRow": "पंक्ति {row} का खाता",
+    "transferTo": "{account} के साथ अंतरण",
+    "overlapsChecking": "इन पंक्तियों से दोहराई जा सकने वाली प्रविष्टियों के लिए आपके खातों की जाँच हो रही है...",
+    "overlapsFailed": "इन पंक्तियों से दोहराई जा सकने वाली प्रविष्टियों के लिए आपके खातों की जाँच नहीं हो सकी। आयात से पहले वापस जाकर फिर कोशिश करें।",
+    "overlapsHeading": "{count, plural, one {# पंक्ति} other {# पंक्तियाँ}} आपके खातों में पहले से मौजूद प्रविष्टि जैसी लगती हैं",
+    "overlapsHelp": "बिना बदलाव के दोबारा आयात अपने आप पहचाना जाता है। ये पंक्तियाँ मौजूदा प्रविष्टियों से अलग हैं, इसलिए दो बार दर्ज हो सकती हैं। किसी पंक्ति के 'इस खाते में दर्ज करें' मेनू से उसे छोड़ें या बनाए रखें।",
+    "overlapOtherAccount": "पंक्ति {row}: {account} में {date} को {amount} ({payee}) पहले से मौजूद है। पिछले आयात के बाद यह पंक्ति दूसरे खाते में गई हो सकती है।",
+    "overlapChangedAmount": "पंक्ति {row}: {account} में {date} को {payee} के लिए {amount} पहले से मौजूद है। पिछले आयात के बाद राशि बदली हो सकती है।",
+    "overlapKeep": "पंक्ति {row} फिर भी आयात करें",
+    "mobileRowMeta": "पंक्ति {row} · {date} · {source}"
   }
 }

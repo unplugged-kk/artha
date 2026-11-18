@@ -209,7 +209,8 @@
     "restoreQueueFull": "Bu kurulumun geri yükleme kapasitesi için zaten çok fazla geri yükleme bekliyor. Birazdan yeniden deneyin.",
     "restoreQueueWaitTimeout": "Geri yükleme kapasitesi beklenirken zaman aşımı: başka bir geri yükleme hâlâ sürüyor. Birazdan yeniden deneyin.",
     "restoreTicketUnavailable": "Bu kurulum geri yükleme yüklemelerini yetkilendiremiyor.",
-    "invalidNotificationFields": "Yedekte geçersiz bildirim: başlık metin olmalıdır; hedef ve tekilleştirme anahtarı metin veya null olmalıdır"
+    "invalidNotificationFields": "Yedekte geçersiz bildirim: başlık metin olmalıdır; hedef ve tekilleştirme anahtarı metin veya null olmalıdır",
+    "rowsNotRestored": "Yedek geri yüklenemedi: {{ table }} tablosundaki {{ total }} satırın {{ declined }} tanesi birbiriyle veya mevcut verilerle çakışıyor. Hiçbir şey değiştirilmedi."
   },
   "budgets": {
     "notFound": "{{ id }} kimliğine sahip bütçe bulunamadı",
@@ -331,7 +332,11 @@
     "xlsxSheetNotFound": "Bu çalışma kitabında \"{{ sheetName }}\" sayfası bulunamadı.",
     "xlsxInvalidHeaderRow": "{{ headerRow }}. satır bu sayfa için geçerli bir başlık satırı değil.",
     "xlsxEmptyHeader": "\"{{ sheetName }}\" sayfasının {{ headerRow }}. satırında sütun başlığı yok. Başka bir satır seçin.",
-    "xlsxNoDataRows": "\"{{ sheetName }}\" sayfasında {{ headerRow }}. satırdan sonra veri satırı yok."
+    "xlsxNoDataRows": "\"{{ sheetName }}\" sayfasında {{ headerRow }}. satırdan sonra veri satırı yok.",
+    "unreadableRowsUnresolved": "{{ count }} satır okunamadı. Dosyada düzeltin veya atlamayı seçin: {{ rows }}",
+    "sourceAccountsUnresolved": "{{ count }} satırın hesabı yok. Kaynaklarını eşleştirin veya atlayın: {{ rows }}",
+    "overlapsUnreviewed": "{{ count }} satır, hesaplarınızdaki mevcut kayıtlara benziyor. İçe aktarmadan önce inceleyin: {{ rows }}",
+    "batchRejected": "Hiçbir şey içe aktarılmadı: {{ count }} satır başarısız oldu. {{ rows }}"
   },
   "monteCarlo": {
     "scenarioNotFound": "{{ id }} senaryosu bulunamadı",

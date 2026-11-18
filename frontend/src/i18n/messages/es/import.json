@@ -33,7 +33,8 @@
     "mnySingleFileOnly": "Importe los archivos de Microsoft Money de uno en uno: un archivo .mny contiene un perfil completo.",
     "xlsxSingleFileOnly": "Importa un archivo de Excel a la vez.",
     "xlsxNoSheets": "Ese libro no tiene hojas para importar.",
-    "xlsxParseFailed": "No se pudo leer ese archivo de Excel"
+    "xlsxParseFailed": "No se pudo leer ese archivo de Excel",
+    "sourceColumnSingleFileOnly": "Las hojas con una columna de cuenta solo se pueden importar de un archivo a la vez."
   },
   "page": {
     "title": "Importar Transacciones",
@@ -181,7 +182,9 @@
       "comma": "Coma (,)",
       "semicolon": "Punto y coma (;)",
       "tab": "Tabulación"
-    }
+    },
+    "sourceAccountField": "Cuenta / origen",
+    "sourceAccountHint": "Para un registro con varias cuentas en una hoja. Cada fila se registra en la cuenta indicada por su origen; a continuación asignará los orígenes a las cuentas."
   },
   "transferRules": {
     "title": "Reglas de Detección de Transferencias",
@@ -595,5 +598,38 @@
     "nonTransactional": "This message appears to be non-transactional (OTP, alert, or marketing)",
     "ambiguous": "Message contains ambiguous transaction data and could not be confidently parsed",
     "spam": "Message classified as promotional or spam"
+  },
+  "mapSourceAccounts": {
+    "heading": "Asignar orígenes a cuentas",
+    "description": "Cada fila de esta hoja indica la cuenta a la que pertenece. Elija una cuenta para cada origen una sola vez. Aún podrá mover filas individuales en la pantalla de revisión.",
+    "choose": "Elija una cuenta...",
+    "skip": "Omitir estas filas",
+    "blankSource": "(sin origen)",
+    "rowCount": "{count, plural, one {# fila} other {# filas}}",
+    "postTo": "Registrar las filas de {source} en",
+    "unresolved": "{count, plural, one {# origen aún necesita} other {# orígenes aún necesitan}} una cuenta o una omisión explícita."
+  },
+  "sourceReview": {
+    "summary": "{fileName}: {rows, plural, one {# fila} other {# filas}}{skipped, plural, =0 {} one {, # omitida} other {, # omitidas}}.",
+    "changesHeading": "Cambio de saldo por cuenta",
+    "rejectedHeading": "No se {count, plural, one {pudo leer # fila} other {pudieron leer # filas}}",
+    "rejectedRow": "Fila {row}: {reason}",
+    "skipRejected": "Excluir {count, plural, one {esta fila} other {estas filas}} de la importación",
+    "colRow": "Fila",
+    "colDate": "Fecha",
+    "colPayee": "Beneficiario",
+    "colAmount": "Importe",
+    "colSource": "Origen",
+    "colPostTo": "Registrar en",
+    "postToRow": "Cuenta para la fila {row}",
+    "transferTo": "Transferencia con {account}",
+    "overlapsChecking": "Buscando en sus cuentas movimientos que estas filas podrían repetir...",
+    "overlapsFailed": "No se pudieron buscar en sus cuentas movimientos que estas filas podrían repetir. Vuelva atrás e inténtelo de nuevo antes de importar.",
+    "overlapsHeading": "{count, plural, one {# fila parece coincidir} other {# filas parecen coincidir}} con un movimiento existente en sus cuentas",
+    "overlapsHelp": "Una reimportación sin cambios se reconoce automáticamente. Estas filas difieren de las existentes y podrían registrarse dos veces. Omita una fila con su menú Registrar en o consérvela.",
+    "overlapOtherAccount": "Fila {row}: {account} ya tiene {amount} el {date} ({payee}). Es posible que la fila se haya movido a otra cuenta desde la última importación.",
+    "overlapChangedAmount": "Fila {row}: {account} ya tiene {payee} por {amount} el {date}. El importe puede haber cambiado desde la última importación.",
+    "overlapKeep": "Importar la fila {row} de todos modos",
+    "mobileRowMeta": "Fila {row} · {date} · {source}"
   }
 }

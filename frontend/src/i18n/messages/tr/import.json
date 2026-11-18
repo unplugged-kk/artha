@@ -33,7 +33,8 @@
     "mnySingleFileOnly": "Microsoft Money dosyalarını tek tek içe aktarın -- bir .mny dosyası bütün bir profili içerir.",
     "xlsxSingleFileOnly": "Excel dosyalarını tek tek içe aktarın.",
     "xlsxNoSheets": "Bu çalışma kitabında içe aktarılacak sayfa yok.",
-    "xlsxParseFailed": "Bu Excel dosyası okunamadı"
+    "xlsxParseFailed": "Bu Excel dosyası okunamadı",
+    "sourceColumnSingleFileOnly": "Hesap sütunu olan bir sayfa, tek seferde yalnızca bir dosyadan içe aktarılabilir."
   },
   "page": {
     "title": "İşlem İçe Aktar",
@@ -181,7 +182,9 @@
       "comma": "Virgül (,)",
       "semicolon": "Noktalı virgül (;)",
       "tab": "Sekme"
-    }
+    },
+    "sourceAccountField": "Hesap / kaynak",
+    "sourceAccountHint": "Bir sayfada birden fazla hesabı listeleyen takip dosyaları içindir. Her satır, kaynağının belirttiği hesaba kaydedilir; sonraki adımda kaynakları hesaplarla eşleştirirsiniz."
   },
   "transferRules": {
     "title": "Transfer Algılama Kuralları",
@@ -595,5 +598,38 @@
     "nonTransactional": "This message appears to be non-transactional (OTP, alert, or marketing)",
     "ambiguous": "Message contains ambiguous transaction data and could not be confidently parsed",
     "spam": "Message classified as promotional or spam"
+  },
+  "mapSourceAccounts": {
+    "heading": "Kaynakları hesaplarla eşleştirin",
+    "description": "Bu sayfadaki her satır ait olduğu hesabı belirtir. Her kaynak için bir kez hesap seçin. İnceleme ekranında tek tek satırları yine taşıyabilirsiniz.",
+    "choose": "Bir hesap seçin...",
+    "skip": "Bu satırları atla",
+    "blankSource": "(kaynak yok)",
+    "rowCount": "{count, plural, other {# satır}}",
+    "postTo": "{source} satırlarının kaydedileceği hesap",
+    "unresolved": "{count, plural, other {# kaynak için hâlâ bir hesap seçilmeli veya açıkça atlama belirtilmelidir}}."
+  },
+  "sourceReview": {
+    "summary": "{fileName}: {rows, plural, other {# satır}}{skipped, plural, =0 {} other {, # satır dışarıda bırakıldı}}.",
+    "changesHeading": "Hesap başına bakiye değişimi",
+    "rejectedHeading": "{count, plural, other {# satır okunamadı}}",
+    "rejectedRow": "Satır {row}: {reason}",
+    "skipRejected": "{count, plural, other {Bu satırları}} içe aktarmaya dahil etme",
+    "colRow": "Satır",
+    "colDate": "Tarih",
+    "colPayee": "Alacaklı",
+    "colAmount": "Tutar",
+    "colSource": "Kaynak",
+    "colPostTo": "Kaydedilecek hesap",
+    "postToRow": "Satır {row} için hesap",
+    "transferTo": "{account} ile transfer",
+    "overlapsChecking": "Hesaplarınızda bu satırların tekrarlayabileceği kayıtlar kontrol ediliyor...",
+    "overlapsFailed": "Hesaplarınızda bu satırların tekrarlayabileceği kayıtlar kontrol edilemedi. İçe aktarmadan önce geri dönüp tekrar deneyin.",
+    "overlapsHeading": "{count, plural, other {# satır hesaplarınızdaki mevcut bir kayda benziyor}}",
+    "overlapsHelp": "Değişiklik yapılmadan yeniden içe aktarma otomatik olarak tanınır. Bu satırlar mevcut kayıtlardan farklıdır, bu nedenle iki kez kaydedilebilir. Bir satırı Kaydedilecek hesap menüsünden atlayın veya koruyun.",
+    "overlapOtherAccount": "Satır {row}: {account} hesabında {date} tarihinde {amount} ({payee}) zaten var. Satır, son içe aktarmadan sonra başka bir hesaba taşınmış olabilir.",
+    "overlapChangedAmount": "Satır {row}: {account} hesabında {date} tarihinde {payee} için {amount} zaten var. Tutar, son içe aktarmadan sonra değişmiş olabilir.",
+    "overlapKeep": "Satır {row} yine de içe aktarılsın",
+    "mobileRowMeta": "Satır {row} · {date} · {source}"
   }
 }

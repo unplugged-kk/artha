@@ -33,7 +33,8 @@
     "mnySingleFileOnly": "請一次匯入一個 Microsoft Money 檔案 -- 一個 .mny 檔案包含完整的帳務資料。",
     "xlsxSingleFileOnly": "請一次匯入一個 Excel 檔案。",
     "xlsxNoSheets": "該活頁簿沒有可匯入的工作表。",
-    "xlsxParseFailed": "無法讀取該 Excel 檔案"
+    "xlsxParseFailed": "無法讀取該 Excel 檔案",
+    "sourceColumnSingleFileOnly": "包含帳戶欄的工作表每次只能匯入一個檔案。"
   },
   "page": {
     "title": "匯入交易",
@@ -181,7 +182,9 @@
       "comma": "逗號（,）",
       "semicolon": "分號（;）",
       "tab": "Tab 鍵"
-    }
+    },
+    "sourceAccountField": "帳戶 / 來源",
+    "sourceAccountHint": "適用於在同一工作表中記錄多個帳戶的表格。每列將記入其來源指定的帳戶；接下來請將來源與帳戶對應。"
   },
   "transferRules": {
     "title": "轉帳偵測規則",
@@ -595,5 +598,38 @@
     "nonTransactional": "This message appears to be non-transactional (OTP, alert, or marketing)",
     "ambiguous": "Message contains ambiguous transaction data and could not be confidently parsed",
     "spam": "Message classified as promotional or spam"
+  },
+  "mapSourceAccounts": {
+    "heading": "將來源與帳戶對應",
+    "description": "此工作表的每列都標明了所屬帳戶。請為每個來源選擇一次帳戶。在檢查畫面中，您仍可調整個別列的帳戶。",
+    "choose": "選擇帳戶...",
+    "skip": "略過這些列",
+    "blankSource": "（無來源）",
+    "rowCount": "{count, plural, other {# 列}}",
+    "postTo": "將 {source} 的列記入",
+    "unresolved": "{count, plural, other {仍有 # 個來源需要選擇帳戶或明確選擇略過}}。"
+  },
+  "sourceReview": {
+    "summary": "{fileName}：{rows, plural, other {# 列}}{skipped, plural, =0 {} other {，已排除 # 列}}。",
+    "changesHeading": "各帳戶餘額變化",
+    "rejectedHeading": "{count, plural, other {無法讀取 # 列}}",
+    "rejectedRow": "第 {row} 列：{reason}",
+    "skipRejected": "從匯入中排除{count, plural, other {這些列}}",
+    "colRow": "列",
+    "colDate": "日期",
+    "colPayee": "收款對象",
+    "colAmount": "金額",
+    "colSource": "來源",
+    "colPostTo": "記入",
+    "postToRow": "第 {row} 列的帳戶",
+    "transferTo": "與 {account} 轉帳",
+    "overlapsChecking": "正在檢查帳戶中是否有這些列可能重複的紀錄...",
+    "overlapsFailed": "無法檢查帳戶中是否有這些列可能重複的紀錄。請返回並重試後再匯入。",
+    "overlapsHeading": "{count, plural, other {# 列與帳戶中已有的紀錄相似}}",
+    "overlapsHelp": "未修改的重複匯入會自動辨識。這些列與已有紀錄不同，因此可能被重複記帳。請透過該列的「記入」選單略過，或保留該列。",
+    "overlapOtherAccount": "第 {row} 列：{account} 已有 {date} 的 {amount}（{payee}）紀錄。此列可能在上次匯入後被移到其他帳戶。",
+    "overlapChangedAmount": "第 {row} 列：{account} 已有 {date} {payee}、{amount} 的紀錄。金額可能在上次匯入後有所變更。",
+    "overlapKeep": "仍然匯入第 {row} 列",
+    "mobileRowMeta": "第 {row} 列 · {date} · {source}"
   }
 }

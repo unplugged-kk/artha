@@ -33,7 +33,8 @@
     "mnySingleFileOnly": "Importeer Microsoft Money-bestanden één voor één -- een .mny-bestand bevat een volledig profiel.",
     "xlsxSingleFileOnly": "Importeer één Excel-bestand tegelijk.",
     "xlsxNoSheets": "Die werkmap bevat geen bladen om te importeren.",
-    "xlsxParseFailed": "Dat Excel-bestand kon niet worden gelezen"
+    "xlsxParseFailed": "Dat Excel-bestand kon niet worden gelezen",
+    "sourceColumnSingleFileOnly": "Een werkblad met een rekeningkolom kan slechts één bestand tegelijk worden geïmporteerd."
   },
   "page": {
     "title": "Transacties importeren",
@@ -181,7 +182,9 @@
       "comma": "Komma (,)",
       "semicolon": "Puntkomma (;)",
       "tab": "Tab"
-    }
+    },
+    "sourceAccountField": "Rekening / bron",
+    "sourceAccountHint": "Voor een overzicht met meerdere rekeningen op één werkblad. Elke rij wordt geboekt op de rekening die de bron aangeeft; hierna koppelt u bronnen aan rekeningen."
   },
   "transferRules": {
     "title": "Regels voor overboekingsdetectie",
@@ -595,5 +598,38 @@
     "nonTransactional": "This message appears to be non-transactional (OTP, alert, or marketing)",
     "ambiguous": "Message contains ambiguous transaction data and could not be confidently parsed",
     "spam": "Message classified as promotional or spam"
+  },
+  "mapSourceAccounts": {
+    "heading": "Bronnen aan rekeningen koppelen",
+    "description": "Elke rij in dit werkblad vermeldt de bijbehorende rekening. Kies eenmaal een rekening voor elke bron. Op het controlescherm kunt u afzonderlijke rijen nog verplaatsen.",
+    "choose": "Kies een rekening...",
+    "skip": "Deze rijen overslaan",
+    "blankSource": "(geen bron)",
+    "rowCount": "{count, plural, one {# rij} other {# rijen}}",
+    "postTo": "Rijen van {source} boeken op",
+    "unresolved": "{count, plural, one {# bron heeft} other {# bronnen hebben}} nog een rekening of een expliciete keuze om over te slaan nodig."
+  },
+  "sourceReview": {
+    "summary": "{fileName}: {rows, plural, one {# rij} other {# rijen}}{skipped, plural, =0 {} other {, # weggelaten}}.",
+    "changesHeading": "Saldowijziging per rekening",
+    "rejectedHeading": "{count, plural, one {# rij kon} other {# rijen konden}} niet worden gelezen",
+    "rejectedRow": "Rij {row}: {reason}",
+    "skipRejected": "{count, plural, one {Deze rij} other {Deze rijen}} niet importeren",
+    "colRow": "Rij",
+    "colDate": "Datum",
+    "colPayee": "Begunstigde",
+    "colAmount": "Bedrag",
+    "colSource": "Bron",
+    "colPostTo": "Boeken op",
+    "postToRow": "Rekening voor rij {row}",
+    "transferTo": "Overboeking met {account}",
+    "overlapsChecking": "Uw rekeningen worden gecontroleerd op boekingen die deze rijen mogelijk herhalen...",
+    "overlapsFailed": "Uw rekeningen konden niet worden gecontroleerd op boekingen die deze rijen mogelijk herhalen. Ga terug en probeer het opnieuw vóór het importeren.",
+    "overlapsHeading": "{count, plural, one {# rij lijkt} other {# rijen lijken}} op een bestaande boeking in uw rekeningen",
+    "overlapsHelp": "Een ongewijzigde herimport wordt automatisch herkend. Deze rijen verschillen van de bestaande boekingen en kunnen dus dubbel worden geboekt. Sla een rij over via het menu Boeken op of behoud de rij.",
+    "overlapOtherAccount": "Rij {row}: {account} bevat al {amount} op {date} ({payee}). De rij is mogelijk sinds de vorige import naar een andere rekening verplaatst.",
+    "overlapChangedAmount": "Rij {row}: {account} bevat al {payee} voor {amount} op {date}. Het bedrag is mogelijk sinds de vorige import gewijzigd.",
+    "overlapKeep": "Rij {row} toch importeren",
+    "mobileRowMeta": "Rij {row} · {date} · {source}"
   }
 }

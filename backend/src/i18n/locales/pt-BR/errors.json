@@ -209,7 +209,8 @@
     "restoreQueueFull": "Restaurações demais já estão aguardando a capacidade de restauração desta instalação. Tente novamente em um momento.",
     "restoreQueueWaitTimeout": "Tempo esgotado aguardando a capacidade de restauração: outra restauração ainda está em andamento. Tente novamente em um momento.",
     "restoreTicketUnavailable": "Esta instalação não pode autorizar envios de restauração.",
-    "invalidNotificationFields": "Notificação inválida no backup: o título deve ser texto; o destino e a chave de deduplicação devem ser texto ou null"
+    "invalidNotificationFields": "Notificação inválida no backup: o título deve ser texto; o destino e a chave de deduplicação devem ser texto ou null",
+    "rowsNotRestored": "Não foi possível restaurar o backup: {{ declined }} de {{ total }} linhas de {{ table }} entram em conflito entre si ou com os dados existentes. Nada foi alterado."
   },
   "budgets": {
     "notFound": "Orçamento com ID {{ id }} não encontrado",
@@ -331,7 +332,11 @@
     "xlsxSheetNotFound": "A planilha \"{{ sheetName }}\" não foi encontrada nesta pasta de trabalho.",
     "xlsxInvalidHeaderRow": "A linha {{ headerRow }} não é uma linha de cabeçalho válida para esta planilha.",
     "xlsxEmptyHeader": "A linha {{ headerRow }} de \"{{ sheetName }}\" não tem cabeçalhos de coluna. Escolha outra linha.",
-    "xlsxNoDataRows": "\"{{ sheetName }}\" não tem linhas de dados após a linha {{ headerRow }}."
+    "xlsxNoDataRows": "\"{{ sheetName }}\" não tem linhas de dados após a linha {{ headerRow }}.",
+    "unreadableRowsUnresolved": "Não foi possível ler {{ count }} linhas. Corrija-as no arquivo ou escolha ignorá-las: {{ rows }}",
+    "sourceAccountsUnresolved": "{{ count }} linhas não têm conta. Associe sua origem ou ignore-as: {{ rows }}",
+    "overlapsUnreviewed": "{{ count }} linhas parecem corresponder a lançamentos já existentes nas suas contas. Revise-as antes de importar: {{ rows }}",
+    "batchRejected": "Nada foi importado: {{ count }} linhas falharam. {{ rows }}"
   },
   "monteCarlo": {
     "scenarioNotFound": "Cenário {{ id }} não encontrado",

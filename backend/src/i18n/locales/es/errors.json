@@ -209,7 +209,8 @@
     "restoreQueueFull": "Demasiadas restauraciones están esperando la capacidad de restauración de esta instalación. Vuelve a intentarlo en un momento.",
     "restoreQueueWaitTimeout": "Se agotó el tiempo de espera de la capacidad de restauración: otra restauración sigue en curso. Vuelve a intentarlo en un momento.",
     "restoreTicketUnavailable": "Esta instalación no puede autorizar cargas de restauración.",
-    "invalidNotificationFields": "Notificación no válida en la copia de seguridad: el título debe ser texto; el destino y la clave de deduplicación deben ser texto o null"
+    "invalidNotificationFields": "Notificación no válida en la copia de seguridad: el título debe ser texto; el destino y la clave de deduplicación deben ser texto o null",
+    "rowsNotRestored": "No se pudo restaurar la copia de seguridad: {{ declined }} de {{ total }} filas de {{ table }} entran en conflicto entre sí o con los datos existentes. No se cambió nada."
   },
   "budgets": {
     "notFound": "Presupuesto con ID {{ id }} no encontrado",
@@ -331,7 +332,11 @@
     "xlsxSheetNotFound": "No se encontró la hoja \"{{ sheetName }}\" en este libro.",
     "xlsxInvalidHeaderRow": "La fila {{ headerRow }} no es una fila de encabezado válida para esta hoja.",
     "xlsxEmptyHeader": "La fila {{ headerRow }} de \"{{ sheetName }}\" no tiene encabezados de columna. Elige otra fila.",
-    "xlsxNoDataRows": "\"{{ sheetName }}\" no tiene filas de datos después de la fila {{ headerRow }}."
+    "xlsxNoDataRows": "\"{{ sheetName }}\" no tiene filas de datos después de la fila {{ headerRow }}.",
+    "unreadableRowsUnresolved": "No se pudieron leer {{ count }} filas. Corríjalas en el archivo o elija omitirlas: {{ rows }}",
+    "sourceAccountsUnresolved": "{{ count }} filas no tienen cuenta. Asigne su origen u omítalas: {{ rows }}",
+    "overlapsUnreviewed": "{{ count }} filas parecen coincidir con movimientos existentes en sus cuentas. Revíselas antes de importar: {{ rows }}",
+    "batchRejected": "No se importó nada: fallaron {{ count }} filas. {{ rows }}"
   },
   "monteCarlo": {
     "scenarioNotFound": "Escenario {{ id }} no encontrado",

@@ -209,7 +209,8 @@
     "restoreQueueFull": "Trop de restaurations attendent déjà la capacité de restauration de ce déploiement. Réessayez dans un instant.",
     "restoreQueueWaitTimeout": "Délai dépassé en attendant la capacité de restauration : une autre restauration est encore en cours. Réessayez dans un instant.",
     "restoreTicketUnavailable": "Ce déploiement ne peut pas autoriser les téléversements de restauration.",
-    "invalidNotificationFields": "Notification de sauvegarde non valide : le titre doit être du texte ; la cible et la clé de déduplication doivent être du texte ou null"
+    "invalidNotificationFields": "Notification de sauvegarde non valide : le titre doit être du texte ; la cible et la clé de déduplication doivent être du texte ou null",
+    "rowsNotRestored": "La sauvegarde n’a pas pu être restaurée : {{ declined }} lignes sur {{ total }} de {{ table }} sont en conflit entre elles ou avec les données existantes. Rien n’a été modifié."
   },
   "budgets": {
     "notFound": "Budget avec l'ID {{ id }} introuvable",
@@ -331,7 +332,11 @@
     "xlsxSheetNotFound": "La feuille \"{{ sheetName }}\" est introuvable dans ce classeur.",
     "xlsxInvalidHeaderRow": "La ligne {{ headerRow }} n'est pas une ligne d'en-tête valide pour cette feuille.",
     "xlsxEmptyHeader": "La ligne {{ headerRow }} de \"{{ sheetName }}\" ne contient aucun en-tête de colonne. Choisissez une autre ligne.",
-    "xlsxNoDataRows": "\"{{ sheetName }}\" ne contient aucune ligne de données après la ligne {{ headerRow }}."
+    "xlsxNoDataRows": "\"{{ sheetName }}\" ne contient aucune ligne de données après la ligne {{ headerRow }}.",
+    "unreadableRowsUnresolved": "{{ count }} lignes n’ont pas pu être lues. Corrigez-les dans le fichier ou choisissez de les ignorer : {{ rows }}",
+    "sourceAccountsUnresolved": "{{ count }} lignes n’ont pas de compte. Associez leur source ou ignorez-les : {{ rows }}",
+    "overlapsUnreviewed": "{{ count }} lignes ressemblent à des écritures déjà présentes dans vos comptes. Vérifiez-les avant l’importation : {{ rows }}",
+    "batchRejected": "Rien n’a été importé : {{ count }} lignes ont échoué. {{ rows }}"
   },
   "monteCarlo": {
     "scenarioNotFound": "Scénario {{ id }} introuvable",

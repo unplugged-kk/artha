@@ -209,7 +209,8 @@
     "restoreQueueFull": "Troppi ripristini sono già in attesa della capacità di ripristino di questa installazione. Riprova tra un momento.",
     "restoreQueueWaitTimeout": "Tempo scaduto in attesa della capacità di ripristino: un altro ripristino è ancora in corso. Riprova tra un momento.",
     "restoreTicketUnavailable": "Questa installazione non può autorizzare i caricamenti di ripristino.",
-    "invalidNotificationFields": "Notifica del backup non valida: il titolo deve essere testo; la destinazione e la chiave di deduplicazione devono essere testo o null"
+    "invalidNotificationFields": "Notifica del backup non valida: il titolo deve essere testo; la destinazione e la chiave di deduplicazione devono essere testo o null",
+    "rowsNotRestored": "Impossibile ripristinare il backup: {{ declined }} delle {{ total }} righe di {{ table }} sono in conflitto tra loro o con i dati esistenti. Non è stato modificato nulla."
   },
   "budgets": {
     "notFound": "Budget con ID {{ id }} non trovato",
@@ -331,7 +332,11 @@
     "xlsxSheetNotFound": "Il foglio \"{{ sheetName }}\" non è stato trovato in questa cartella di lavoro.",
     "xlsxInvalidHeaderRow": "La riga {{ headerRow }} non è una riga di intestazione valida per questo foglio.",
     "xlsxEmptyHeader": "La riga {{ headerRow }} di \"{{ sheetName }}\" non contiene intestazioni di colonna. Scegli un'altra riga.",
-    "xlsxNoDataRows": "\"{{ sheetName }}\" non contiene righe di dati dopo la riga {{ headerRow }}."
+    "xlsxNoDataRows": "\"{{ sheetName }}\" non contiene righe di dati dopo la riga {{ headerRow }}.",
+    "unreadableRowsUnresolved": "Impossibile leggere {{ count }} righe. Correggile nel file o scegli di saltarle: {{ rows }}",
+    "sourceAccountsUnresolved": "{{ count }} righe non hanno un conto. Associa la loro origine o saltale: {{ rows }}",
+    "overlapsUnreviewed": "{{ count }} righe sembrano corrispondere a movimenti già presenti nei tuoi conti. Controllale prima di importare: {{ rows }}",
+    "batchRejected": "Non è stato importato nulla: {{ count }} righe non riuscite. {{ rows }}"
   },
   "monteCarlo": {
     "scenarioNotFound": "Scenario {{ id }} non trovato",
